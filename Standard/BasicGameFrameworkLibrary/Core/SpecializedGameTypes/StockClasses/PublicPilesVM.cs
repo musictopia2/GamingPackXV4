@@ -1,4 +1,4 @@
-﻿namespace BasicGameFrameworkLibrary.SpecializedGameTypes.StockClasses;
+﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.StockClasses;
 
 public abstract partial class PublicPilesVM<D> : SimpleControlObservable
     where D : IDeckObject, new()

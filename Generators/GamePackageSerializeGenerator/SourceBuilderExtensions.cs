@@ -8,7 +8,7 @@ internal static class SourceBuilderExtensions
         {
             w.Write("namespace ")
             .Write(compilation.Assembly.Name)
-            .Write(".AutoResumeContexts;");
+            .Write(".Core.AutoResumeContexts;");
         })
         .WriteLine(w =>
         {

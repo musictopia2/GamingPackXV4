@@ -143,7 +143,7 @@ internal class EmitClass
     private void ProcessRegistration()
     {
         SourceCodeStringBuilder builder = new();
-        builder.StartGlobalProcesses(_compilation, "AutoResumeContexts", "GlobalRegistrations", w =>
+        builder.StartGlobalProcesses(_compilation, "Core.AutoResumeContexts", "GlobalRegistrations", w =>
         {
             foreach (var result in _results.Values)
             {
