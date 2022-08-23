@@ -1,0 +1,13 @@
+﻿Currently, since I am able to capture the generics for the 4th source generator for dependency injection, I have to do the following:
+
+for now, i am using the names to match.
+
+If i ever have a case where I had to use a different name to mean the same thing for the processes, then will mean the following:
+
+it will mean i have to capture the symbol name for the generic constraint.
+and match on it.
+
+for now, will attempt to do by names.
+which means names has to be consistent.
+
+if the names don't work, then will need the generic constraint.
