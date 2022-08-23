@@ -1,0 +1,5 @@
+﻿Decided to change the namespace for the registrations.
+
+However, do for next version.
+Because templates should already register it anyways.
+we don't want any breaking changes anymore.
