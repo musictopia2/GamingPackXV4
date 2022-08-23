@@ -3,6 +3,6 @@ global using CommonBasicLibraries.CollectionClasses;
 global using Microsoft.CodeAnalysis;
 global using Microsoft.CodeAnalysis.CSharp.Syntax;
 global using System.Collections.Immutable;
-global using SourceGeneratorsAttributesLibrary;
+//global using SourceGeneratorsAttributesLibrary;
 global using CommonSourceGeneratorsHelpers;
 global using aa = CommandsGenerator.StaticHelpers;

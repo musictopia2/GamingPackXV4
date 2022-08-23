@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicGameFrameworkLibrary", "BasicGameFrameworkLibrary.csproj", "{B16141FE-A72B-4F9D-9F38-F621AE68E285}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandsGenerator", "..\..\Generators\CommandsGenerator\CommandsGenerator.csproj", "{3240C5CB-97F9-4475-B047-9C48CDC16DAD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamePackageSerializeGenerator", "..\..\Generators\GamePackageSerializeGenerator\GamePackageSerializeGenerator.csproj", "{023DAB4D-89C9-4353-9812-D8E257BF4C51}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabelGridGenerator", "..\..\Generators\LabelGridGenerator\LabelGridGenerator.csproj", "{C5389FEE-3F42-4F9D-9CFC-5134CA4FACAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoreBoardGenerator", "..\..\Generators\ScoreBoardGenerator\ScoreBoardGenerator.csproj", "{9261C135-AE0E-46DE-BDFB-C73081B5FC85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B16141FE-A72B-4F9D-9F38-F621AE68E285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B16141FE-A72B-4F9D-9F38-F621AE68E285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B16141FE-A72B-4F9D-9F38-F621AE68E285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B16141FE-A72B-4F9D-9F38-F621AE68E285}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3240C5CB-97F9-4475-B047-9C48CDC16DAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3240C5CB-97F9-4475-B047-9C48CDC16DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3240C5CB-97F9-4475-B047-9C48CDC16DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3240C5CB-97F9-4475-B047-9C48CDC16DAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{023DAB4D-89C9-4353-9812-D8E257BF4C51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{023DAB4D-89C9-4353-9812-D8E257BF4C51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{023DAB4D-89C9-4353-9812-D8E257BF4C51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{023DAB4D-89C9-4353-9812-D8E257BF4C51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5389FEE-3F42-4F9D-9CFC-5134CA4FACAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5389FEE-3F42-4F9D-9CFC-5134CA4FACAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5389FEE-3F42-4F9D-9CFC-5134CA4FACAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5389FEE-3F42-4F9D-9CFC-5134CA4FACAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9261C135-AE0E-46DE-BDFB-C73081B5FC85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9261C135-AE0E-46DE-BDFB-C73081B5FC85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9261C135-AE0E-46DE-BDFB-C73081B5FC85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9261C135-AE0E-46DE-BDFB-C73081B5FC85}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {085F8D6E-8857-4BA9-B3B9-D57317590CED}
+	EndGlobalSection
+EndGlobal
