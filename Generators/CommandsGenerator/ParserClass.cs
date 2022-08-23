@@ -48,7 +48,7 @@ internal class ParserClass
             else
             {
                 var ss = method2.Parameters.Single();
-                if (ss.Type.ContainingNamespace.ToDisplayString() == "BasicGameFrameworkLibrary.CommandClasses" && ss.Type.Name == "CommandContainer")
+                if (ss.Type.ContainingNamespace.ToDisplayString() == "BasicGameFrameworkLibrary.Core.CommandClasses" && ss.Type.Name == "CommandContainer")
                 {
                     info.ContainerName = ss.Name; //i think
                 }
@@ -57,10 +57,6 @@ internal class ParserClass
                     info.ContainerName = "";
                 }
             }
-            //var output = symbol.GetMembers().OfType<IMethodSymbol>().Where(xx => xx.DeclaredAccessibility == Accessibility.Public && xx.MethodKind == MethodKind.Ordinary && xx.HasAttribute(attributeName));
-            //return output.ToBasicList();
-            //looks like another issue.
-            //because if you inherit from controlobservable, then underlying method is not public.
             bool isControl = symbol.InheritsFrom("SimpleControlObservable");
             bool isSpecialCommand = symbol.Implements("IPlainObservable");
             if (isControl && isSpecialCommand)

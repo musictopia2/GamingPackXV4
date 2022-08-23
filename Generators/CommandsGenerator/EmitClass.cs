@@ -59,16 +59,6 @@ internal class EmitClass
                     _context.RaiseTooManyParameters(item.ClassSymbol!.Name, c.MethodSymbol!.Name);
                     c.ReportedError = true;
                 }
-                //if (c.MiscError == EnumMiscCategory.MisMatch)
-                //{
-                //    _context.RaiseMismatchParameters(item.ClassSymbol!.Name, c.MethodSymbol!.Name);
-                //    c.ReportedError = true;
-                //}
-                //if (c.MiscError == EnumMiscCategory.TooMany)
-                //{
-                //    _context.RaiseTooManyParameters(item.ClassSymbol!.Name, c.MethodSymbol!.Name);
-                //    c.ReportedError = true;
-                //}
                 if (c.WrongReturnType)
                 {
                     _context.RaiseWrongReturnType(item.ClassSymbol!.Name, c.MethodSymbol!.Name);
@@ -84,11 +74,6 @@ internal class EmitClass
                     _context.RaiseInvalidCast(item.ClassSymbol!.Name, c.MethodSymbol!.Name);
                     c.ReportedError = true;
                 }
-                //if (c.CannotUseNames)
-                //{
-                //    _context.RaiseWrongNameType(item.ClassSymbol!.Name, c.MethodSymbol!.Name);
-                //    c.ReportedError = true;
-                //}
             }
         }
     }
@@ -140,7 +125,7 @@ internal class EmitClass
                 {
                     w.WriteLine(w =>
                     {
-                        w.Write("partial void CreateCommands(global::BasicGameFrameworkLibrary.CommandClasses.CommandContainer ");
+                        w.Write("partial void CreateCommands(global::BasicGameFrameworkLibrary.Core.CommandClasses.CommandContainer ");
                         w.Write(item.ContainerName)
                         .Write(")");
                     })
@@ -210,11 +195,6 @@ internal class EmitClass
                 return;
             }
         }
-        //if (info.CommandProperty is null && info.IsControl && info.Commands.Any(x => x.CommandName == ""))
-        //{
-        //    return;
-        //}
-        //will rethink once i figure out how to support other command types
         w.WriteLine(w =>
         {
             if (info.AdvancedCategory == EnumAdvancedCategory.None)
@@ -239,8 +219,6 @@ internal class EmitClass
                 w.Write("CommandContainer");
             }
             string generic;
-            //this would account for enum pickers since generics are needed.
-            //if somehow its needed for other cases, requires rethinking.
             if (info.AdvancedCategory != EnumAdvancedCategory.None)
             {
                 generic = info.GenericInfo;

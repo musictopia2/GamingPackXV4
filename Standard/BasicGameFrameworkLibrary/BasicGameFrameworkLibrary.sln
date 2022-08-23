@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicGameFrameworkLibrary", "BasicGameFrameworkLibrary.csproj", "{B16141FE-A72B-4F9D-9F38-F621AE68E285}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicGameFrameworkLibrary", "BasicGameFrameworkLibrary.csproj", "{B16141FE-A72B-4F9D-9F38-F621AE68E285}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandsGenerator", "..\..\Generators\CommandsGenerator\CommandsGenerator.csproj", "{3240C5CB-97F9-4475-B047-9C48CDC16DAD}"
 EndProject
@@ -12,6 +12,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LabelGridGenerator", "..\..\Generators\LabelGridGenerator\LabelGridGenerator.csproj", "{C5389FEE-3F42-4F9D-9CFC-5134CA4FACAE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoreBoardGenerator", "..\..\Generators\ScoreBoardGenerator\ScoreBoardGenerator.csproj", "{9261C135-AE0E-46DE-BDFB-C73081B5FC85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D9155BF2-76D5-4858-8659-8FDB56E30B8E}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
