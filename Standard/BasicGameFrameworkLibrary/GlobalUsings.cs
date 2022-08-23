@@ -57,3 +57,4 @@ global using BasicGameFrameworkLibrary.Core.ChooserClasses;
 global using BasicGameFrameworkLibrary.Core.ViewModels;
 global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
+global using BasicGameFrameworkLibrary.Core.MahjongTileClasses;

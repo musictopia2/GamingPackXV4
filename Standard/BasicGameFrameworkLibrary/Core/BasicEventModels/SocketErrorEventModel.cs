@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicEventModels;
+
 public class SocketErrorEventModel
 {
     public EnumSocketCategory Category { get; set; }

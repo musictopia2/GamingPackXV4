@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
+
 public interface ITrickDummyHand<SU, TR> //only when possible dummy does this have to be used.
     where SU : IFastEnumSimple
     where TR : ITrickCard<SU>, new()

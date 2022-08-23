@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
+
 public partial class NumberPicker : SimpleControlObservable
 {
     private readonly ItemChooserClass<NumberModel> _privateChoose;
@@ -14,7 +15,7 @@ public partial class NumberPicker : SimpleControlObservable
     }
     public NumberPicker(CommandContainer command, IGamePackageResolver resolver) : base(command)
     {
-        _privateChoose = new (resolver)
+        _privateChoose = new(resolver)
         {
             ValueList = NumberList
         };

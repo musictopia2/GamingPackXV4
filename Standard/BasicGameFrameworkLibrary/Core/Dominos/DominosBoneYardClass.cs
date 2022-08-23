@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dominos;
+
 public class DominosBoneYardClass<D> : ScatteringPiecesObservable<D, DominosBasicShuffler<D>>
     where D : IDominoInfo, new()
 {

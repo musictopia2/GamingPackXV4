@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MiscHelpers;
+
 public static class MiscDelegates
 {
     public static Func<Task>? ColorsFinishedAsync { get; set; }

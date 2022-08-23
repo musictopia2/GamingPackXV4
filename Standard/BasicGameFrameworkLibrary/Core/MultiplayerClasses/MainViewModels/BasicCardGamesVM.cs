@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
+
 public abstract class BasicCardGamesVM<D> : BasicMultiplayerMainVM
     where D : IDeckObject, new()
 {

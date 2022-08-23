@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CombinationHelpers;
+
 internal class Combination : IComparer<BasicList<object>>
 {
     public static BasicList<BasicList<int>> CheckScores(int howManyExist, int howManyNeeded)

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
+
 /// <summary>
 /// this interface is needed in cases where the game has rounds and a person chose new game.
 /// i think every game needs something to reset because its truly different for every game.

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
+
 public class ItemChooserClass<O>
      where O : ISimpleValueObject<int>
 {

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.LoadingClasses;
+
 /// <summary>
 /// this is used in cases where you are restoring a saved game.
 /// </summary>

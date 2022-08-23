@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
+
 public class RegularLowAceCalculator : IRegularAceCalculator
 {
     void IRegularAceCalculator.PopulateAceValues(IRegularCard thisCard)

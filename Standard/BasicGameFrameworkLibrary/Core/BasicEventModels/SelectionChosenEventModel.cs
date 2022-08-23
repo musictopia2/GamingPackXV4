@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicEventModels;
+
 /// <summary>
 /// this is used with the warning.  what happens is as follows:
 /// first, a warning is sent to the ui.

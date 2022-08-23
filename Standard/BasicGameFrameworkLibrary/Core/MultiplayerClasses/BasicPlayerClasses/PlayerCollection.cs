@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses;
+
 public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayerCollection<P> where P : class, IPlayerItem, new()
 {
     internal enum EnumDirection

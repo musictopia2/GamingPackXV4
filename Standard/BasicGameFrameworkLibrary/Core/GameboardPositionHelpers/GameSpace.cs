@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GameboardPositionHelpers;
+
 public class GameSpace
 {
     public RectangleF Area

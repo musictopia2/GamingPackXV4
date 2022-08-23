@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.CheckersChessHelpers;
+
 public abstract class CheckersChessBaseBoard<E, S>
     where E : IFastEnumColorSimple
     where S : CheckersChessSpace<E>, new()

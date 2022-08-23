@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.SavedGameClasses;
+
 public interface IMultiplayerSaveState
 {
     Task DeleteGameAsync();

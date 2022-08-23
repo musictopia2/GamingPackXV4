@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.StockClasses;
+
 public class DiscardPilesVM<D> : BasicMultiplePilesCP<D>
     where D : IDeckObject, new()
 {

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
+
 public static class CommonMessages
 {
     public static async Task SendReadyMessageAsync(this IGameNetwork network, string yourName, string hostName)

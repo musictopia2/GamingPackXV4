@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.LoadingClasses;
+
 public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpdateGame, ILoadClientGame,
     IRequestNewGameRound, IRestoreMultiPlayerGame, IReconnectClientClass
 

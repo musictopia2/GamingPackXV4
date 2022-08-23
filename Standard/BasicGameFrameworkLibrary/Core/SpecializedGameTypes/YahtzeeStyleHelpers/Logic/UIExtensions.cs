@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic;
+
 public static class UIExtensions
 {
     public static string RenderPointsObtained(this RowInfo row)

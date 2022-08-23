@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.CheckersChessHelpers;
+
 public class CheckerChessPieceCP<E> : BasicPickerData<E>
     where E : IFastEnumColorSimple
 {

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
+
 public abstract partial class DiceGamesVM<D> : BasicMultiplayerMainVM
     where D : IStandardDice, new()
 {

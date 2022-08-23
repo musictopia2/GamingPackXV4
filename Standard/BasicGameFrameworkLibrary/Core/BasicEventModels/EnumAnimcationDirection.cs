@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicEventModels;
+
 public enum EnumAnimcationDirection
 {
     StartUpToCard = 1,

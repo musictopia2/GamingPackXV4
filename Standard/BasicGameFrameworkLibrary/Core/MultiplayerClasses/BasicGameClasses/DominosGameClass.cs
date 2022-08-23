@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
+
 public abstract class DominosGameClass<D, P, S> : BasicGameClass<P, S>
     , IDrewDominoNM, IPlayDominoNM, IDominoDrawProcesses<D>
     where D : IDominoInfo, new()

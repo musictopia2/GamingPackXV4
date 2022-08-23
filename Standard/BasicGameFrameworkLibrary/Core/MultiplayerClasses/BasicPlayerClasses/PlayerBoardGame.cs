@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses;
+
 public abstract class PlayerBoardGame<E> : SimplePlayer, IPlayerBoardGame<E>
     where E : IFastEnumColorSimple
 {

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
+
 public class TempSetsObservable<S, C, R>
     where S : IFastEnumSimple
     where C : IFastEnumColorSimple

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfaceModels;
+
 public interface IBasicDiceGamesData<D> : IViewModelData, ICup<D>
     where D : IStandardDice, new()
 {

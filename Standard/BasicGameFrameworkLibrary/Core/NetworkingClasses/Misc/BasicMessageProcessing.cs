@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc;
+
 public class BasicMessageProcessing : IMessageProcessor
 {
     private readonly IGamePackageResolver _thisContainer;

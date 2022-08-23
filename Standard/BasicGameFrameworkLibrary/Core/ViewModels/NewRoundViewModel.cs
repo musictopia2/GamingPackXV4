@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
+
 public partial class NewRoundViewModel : ScreenViewModel, INewRoundVM, IBlankGameVM
 {
     private readonly BasicData _basicData;

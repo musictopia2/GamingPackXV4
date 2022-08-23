@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
+
 public abstract class DominoGamesVM<D> : BasicMultiplayerMainVM
     where D : IDominoInfo, new()
 {

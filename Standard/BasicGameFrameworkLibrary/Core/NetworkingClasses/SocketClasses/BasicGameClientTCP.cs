@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.SocketClasses;
+
 public class BasicGameClientTCP : ISerializable //decided to have the option.  obviously won't work from webassembly though.
 {
     private TcpClient? _client;

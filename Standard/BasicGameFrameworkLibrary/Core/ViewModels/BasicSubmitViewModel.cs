@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
+
 public abstract partial class BasicSubmitViewModel : ScreenViewModel, IBlankGameVM, IMainScreen, ISubmitText
 {
     public abstract bool CanSubmit { get; } //i think this is the best way to go.

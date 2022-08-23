@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
+
 public class RummyProcesses<S, C, R>
     where S : IFastEnumSimple
     where C : IFastEnumColorSimple

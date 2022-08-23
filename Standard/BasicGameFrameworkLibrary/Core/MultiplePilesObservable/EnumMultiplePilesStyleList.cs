@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplePilesObservable;
+
 public enum EnumMultiplePilesStyleList
 {
     None = 0,

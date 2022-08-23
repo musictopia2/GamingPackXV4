@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Containers;
+
 public class YahtzeeGameContainer<D> : BasicGameContainer<YahtzeePlayerItem<D>, YahtzeeSaveInfo<D>>
     where D : SimpleDice, new()
 {

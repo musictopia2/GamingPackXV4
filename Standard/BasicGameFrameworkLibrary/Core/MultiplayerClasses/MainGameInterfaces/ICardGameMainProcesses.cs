@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainGameInterfaces;
+
 public interface ICardGameMainProcesses<D> : IEndTurn where D : IDeckObject, new()
 {
     Task ContinueTurnAsync(); //do need to keep the option open to be async.

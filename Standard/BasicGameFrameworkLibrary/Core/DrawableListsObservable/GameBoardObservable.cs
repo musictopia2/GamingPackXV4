@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
+
 public abstract partial class GameBoardObservable<D> : IPlainObservable, IControlObservable where D : IDeckObject, new()
 {
     public DeckRegularDict<D> ObjectList = new();

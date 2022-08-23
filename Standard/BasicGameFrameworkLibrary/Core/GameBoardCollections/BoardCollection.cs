@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GameBoardCollections;
+
 public class BoardCollection<C> : IEnumerable<C>, IAdvancedDIContainer, IBoardCollection<C> where C : class, IBasicSpace, new()
 {
     private readonly Dictionary<Vector, C> _privateDict = new();

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
+
 public abstract class BasicGameClass<P, S> :
     IGameSetUp<P, S>
     , ICommonMultiplayer<P, S>

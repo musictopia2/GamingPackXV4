@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Extensions;
+
 public static class SelectEnableDeckExtensions
 {
     public static string GetColorFromEnum<E>(this BasicPickerData<E> piece) where E : struct, IFastEnumColorSimple

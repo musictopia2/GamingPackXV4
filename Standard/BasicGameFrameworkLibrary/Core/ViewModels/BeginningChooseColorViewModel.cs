@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
+
 [UseLabelGrid]
 public partial class BeginningChooseColorViewModel<E, P> : ScreenViewModel, IBlankGameVM, IBeginningColorViewModel, IDisposable
     where E : struct, IFastEnumColorList<E>

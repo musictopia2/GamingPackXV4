@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
+
 public class TrickCoordinate
 {
     public int Row { get; set; }

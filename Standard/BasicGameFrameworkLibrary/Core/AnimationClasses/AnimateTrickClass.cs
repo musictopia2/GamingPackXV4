@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.AnimationClasses;
+
 public class AnimateTrickClass<S, T>
     where S : IFastEnumSimple
     where T : class, ITrickCard<S>, new()

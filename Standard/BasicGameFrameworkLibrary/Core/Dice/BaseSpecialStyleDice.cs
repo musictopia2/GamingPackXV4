@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
+
 public abstract class BaseSpecialStyleDice : IStandardDice, IGenerateDice<int>, ISelectableObject
 {
     public int HeightWidth { get; } = 60;

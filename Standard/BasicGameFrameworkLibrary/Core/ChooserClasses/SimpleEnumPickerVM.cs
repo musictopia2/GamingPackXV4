@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
+
 public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
     where E : IFastEnumSimple
 {

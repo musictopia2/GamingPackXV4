@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
+
 public abstract class TrickGameClass<SU, T, P, SA> : CardGameClass<T, P, SA>, ITrickNM
     where SU : IFastEnumSimple
     where T : class, ITrickCard<SU>, new()

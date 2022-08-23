@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
+
 public class MainSetsObservable<SU, CO, RU, SE, T> : SimpleControlObservable
     where SU : IFastEnumSimple
     where CO : IFastEnumColorSimple

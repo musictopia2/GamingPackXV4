@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.CheckersChessHelpers;
+
 public static class CheckersChessDelegates
 {
     public static Func<bool>? CanMove { get; set; }

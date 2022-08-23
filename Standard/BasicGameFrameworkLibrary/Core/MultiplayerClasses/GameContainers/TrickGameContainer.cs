@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.GameContainers;
+
 public class TrickGameContainer<D, P, SA, TS> : CardGameContainer<D, P, SA>
     where TS : IFastEnumSimple
     where D : class, ITrickCard<TS>, new()

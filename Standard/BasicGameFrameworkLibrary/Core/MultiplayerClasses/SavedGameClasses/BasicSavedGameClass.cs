@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.SavedGameClasses;
+
 /// <summary>
 /// This is the basic data needed to save a game.
 /// has to now inherit from simplesave to support the id part to make sure the private save matches the ids.

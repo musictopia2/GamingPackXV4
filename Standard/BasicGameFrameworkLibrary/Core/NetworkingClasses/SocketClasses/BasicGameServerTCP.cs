@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.SocketClasses;
+
 public class BasicGameServerTCP : ISerializable
 {
     private TcpListener? _mainListen;

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
+
 public partial class SingleObservablePile<D> : SimpleControlObservable where D : IDeckObject, new()
 {
     private readonly DeckRegularDict<D> _objectList;

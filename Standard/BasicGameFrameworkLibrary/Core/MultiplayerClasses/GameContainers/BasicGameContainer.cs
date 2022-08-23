@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.GameContainers;
+
 /// <summary>
 /// the purpose of this class is to hold information about a game but not require the game class to stop overflows
 /// and to stop lots of repeating.  would be best in the new templates to override this to do other things i want.

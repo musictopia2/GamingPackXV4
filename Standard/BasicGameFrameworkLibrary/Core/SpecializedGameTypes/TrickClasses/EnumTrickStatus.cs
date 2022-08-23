@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
+
 public enum EnumTrickStatus
 {
     FirstTrick = 0,

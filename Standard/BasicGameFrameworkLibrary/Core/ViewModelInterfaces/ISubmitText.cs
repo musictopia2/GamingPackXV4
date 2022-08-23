@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModelInterfaces;
+
 public interface ISubmitText
 {
     string Text { get; }

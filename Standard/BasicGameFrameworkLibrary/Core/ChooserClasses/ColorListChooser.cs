@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
+
 public class ColorListChooser<E> : IEnumListClass<E> where E : struct, IFastEnumColorList<E>
 {
     BasicList<E> IEnumListClass<E>.GetEnumList()

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
+
 /// <summary>
 /// This generates a list of enums that are possible items to choose from
 /// </summary>

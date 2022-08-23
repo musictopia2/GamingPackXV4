@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
+
 public class SortSimpleCards<R> : ISortObjects<R>
     where R : IRegularCard, new()
 {

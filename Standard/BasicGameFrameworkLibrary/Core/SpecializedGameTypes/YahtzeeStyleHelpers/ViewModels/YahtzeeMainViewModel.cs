@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
+
 public partial class YahtzeeMainViewModel<D> : DiceGamesVM<D>
     where D : SimpleDice, new()
 {

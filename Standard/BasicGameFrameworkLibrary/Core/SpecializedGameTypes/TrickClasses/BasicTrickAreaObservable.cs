@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
+
 public abstract partial class BasicTrickAreaObservable<S, T> : SimpleControlObservable
     where S : IFastEnumSimple
     where T : class, ITrickCard<S>, new()

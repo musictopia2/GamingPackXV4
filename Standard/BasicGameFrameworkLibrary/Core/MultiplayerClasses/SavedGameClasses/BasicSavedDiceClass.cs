@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.SavedGameClasses;
+
 public class BasicSavedDiceClass<D, P> : BasicSavedGameClass<P>, ISavedDiceList<D>
     where D : IStandardDice, new()
     where P : class, IPlayerItem, new()

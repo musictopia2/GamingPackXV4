@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicEventModels;
+
 public static class EventExtensions
 {
     public static async Task SendGameOverAsync(this IAggregatorContainer aggregator, ISystemError error)

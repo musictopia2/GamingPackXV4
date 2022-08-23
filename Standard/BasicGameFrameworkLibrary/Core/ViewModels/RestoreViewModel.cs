@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
+
 public partial class RestoreViewModel : ScreenViewModel, IRestoreVM, IBlankGameVM
 {
     public CommandContainer CommandContainer { get; set; }

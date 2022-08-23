@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
+
 public interface ITrickData
 {
     bool FirstPlayerAnySuit { get; }

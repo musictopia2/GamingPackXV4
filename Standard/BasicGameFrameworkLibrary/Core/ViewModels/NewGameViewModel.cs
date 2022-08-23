@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
+
 public sealed partial class NewGameViewModel : ScreenViewModel, INewGameVM, IBlankGameVM
 {
     private readonly BasicData _basicData;

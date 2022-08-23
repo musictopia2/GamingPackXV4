@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Data;
+
 [UseScoreboard]
 public partial class YahtzeePlayerItem<D> : SimplePlayer
     where D : SimpleDice, new()

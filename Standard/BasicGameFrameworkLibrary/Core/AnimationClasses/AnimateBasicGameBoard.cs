@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.AnimationClasses;
+
 public class AnimateBasicGameBoard
 {
     readonly IEventAggregator _thisE;

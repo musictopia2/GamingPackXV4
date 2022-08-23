@@ -1,5 +1,6 @@
 ﻿using BasicGameFrameworkLibrary.Core.NetworkingClasses.SocketClasses;
 namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc;
+
 public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
 {
     private readonly ITCPInfo _thisTCP;
@@ -228,7 +229,7 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
     public Task StartGameAsync()
     {
         return Task.CompletedTask; //tcp for now does not need to know about when a game has started.
-        //for tcp, i think the host needs to connect first anyways. for tcp, if one disconnects, all has to reconnect again.
+                                   //for tcp, i think the host needs to connect first anyways. for tcp, if one disconnects, all has to reconnect again.
     }
     Task IGameNetwork.EndGameEarlyAsync(string nickNameReconnected)
     {

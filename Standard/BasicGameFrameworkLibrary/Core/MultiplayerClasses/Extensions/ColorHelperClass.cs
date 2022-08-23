@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
+
 public static class ColorHelperClass
 {
     public static bool DidChooseColors<P>(this PlayerCollection<P> players)

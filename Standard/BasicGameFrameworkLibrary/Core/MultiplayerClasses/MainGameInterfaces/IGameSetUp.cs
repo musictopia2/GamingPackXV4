@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainGameInterfaces;
+
 public interface IGameSetUp<P, S> : IBasicGameProcesses<P>
     where P : class, IPlayerItem, new()
     where S : BasicSavedGameClass<P>

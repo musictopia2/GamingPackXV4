@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
+
 public class SavedScatteringPieces<D> where D : IDeckObject, new()
 {
     public bool HasDrawn { get; set; }

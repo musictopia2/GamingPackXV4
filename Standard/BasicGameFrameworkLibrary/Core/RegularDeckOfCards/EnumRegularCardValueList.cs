@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
+
 public readonly partial record struct EnumRegularCardValueList
 {
     private enum EnumInfo

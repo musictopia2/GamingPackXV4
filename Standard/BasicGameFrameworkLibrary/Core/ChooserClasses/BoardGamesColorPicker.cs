@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
+
 public class BoardGamesColorPicker<E, P> : SimpleEnumPickerVM<E>
     where E : struct, IFastEnumColorSimple
     where P : class, IPlayerBoardGame<E>, new()

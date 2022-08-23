@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
+
 public abstract partial class BoardDiceGameVM : BasicMultiplayerMainVM
 {
     private readonly IStandardRollProcesses _rollProcesses;

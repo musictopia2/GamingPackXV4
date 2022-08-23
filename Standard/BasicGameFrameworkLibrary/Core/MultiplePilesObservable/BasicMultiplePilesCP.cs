@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplePilesObservable;
+
 public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D : IDeckObject, new()
 {
     public EnumMultiplePilesStyleList Style { get; set; } = EnumMultiplePilesStyleList.None;

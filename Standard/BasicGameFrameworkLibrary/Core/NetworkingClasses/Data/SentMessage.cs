@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Data;
+
 public class SentMessage
 {
     public string Status { get; set; } = "";

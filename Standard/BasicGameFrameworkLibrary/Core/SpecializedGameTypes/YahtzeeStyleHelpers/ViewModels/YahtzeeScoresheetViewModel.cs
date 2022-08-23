@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
+
 public partial class YahtzeeScoresheetViewModel<D> : ScreenViewModel, IBlankGameVM, IHandleAsync<SelectionChosenEventModel>, IScoresheetAction
     where D : SimpleDice, new()
 {

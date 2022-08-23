@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dominos;
+
 public class SimpleDominoInfo : SimpleDeckObject,
     IDominoInfo, IDeckCount, IComparable<SimpleDominoInfo>
 {

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
+
 public static class BasicGameProcesses
 {
     public static async Task ProtectedGameOverNextAsync<P>(this IBasicGameProcesses<P> game) //no longer will send state since something else will delete it now.

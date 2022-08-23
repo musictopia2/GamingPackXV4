@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic;
+
 public static class ScoreExtensions
 {
     public static bool HasFullHouse(this ScoreContainer scoreContainer)

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicEventModels;
+
 public enum EnumRepaintCategories
 {
     FromBeginning,

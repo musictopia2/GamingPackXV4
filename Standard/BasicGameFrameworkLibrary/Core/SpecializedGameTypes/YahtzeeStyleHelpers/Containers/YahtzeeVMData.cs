@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Containers;
+
 [UseLabelGrid]
 public sealed partial class YahtzeeVMData<D> : IBasicDiceGamesData<D>
     where D : SimpleDice, new()

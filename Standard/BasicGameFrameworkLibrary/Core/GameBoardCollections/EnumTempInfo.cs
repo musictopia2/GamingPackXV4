@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GameBoardCollections;
+
 internal enum EnumTempInfo
 {
     None,

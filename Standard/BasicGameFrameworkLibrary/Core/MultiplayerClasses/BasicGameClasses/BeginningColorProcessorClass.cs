@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
+
 public class BeginningColorProcessorClass<E, P, S> : IBeginningColorProcesses<E>, IChoosePieceNM
     where E : struct, IFastEnumColorList<E>
     where P : class, IPlayerBoardGame<E>, new()

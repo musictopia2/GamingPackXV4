@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
+
 public class RegularRummyCard : RegularSimpleCard, IRummmyObject<EnumSuitList, EnumRegularColorList>
 {
     int IRummmyObject<EnumSuitList, EnumRegularColorList>.GetSecondNumber => SecondNumber.Value; //decided that even for rummy games, it will lean towards low.  if i am wrong, rethink.  for cases there is a choice, lean towards low.

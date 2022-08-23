@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic;
+
 public class ScoreLogic : IScoreLogic
 {
     private readonly ScoreContainer _scoreContainer;
@@ -30,14 +31,14 @@ public class ScoreLogic : IScoreLogic
         row = new(EnumRow.Header, false);
         row.RowNumber = 0;
         BasicList<string> tempList = new()
-        {
-            "Aces (1's)",
-            "Dueces (2's)",
-            "Treys (3's)",
-            "Fours",
-            "Fives",
-            "Sixes"
-        };
+    {
+        "Aces (1's)",
+        "Dueces (2's)",
+        "Treys (3's)",
+        "Fours",
+        "Fives",
+        "Sixes"
+    };
         int x = 0;
         foreach (var thisItem in tempList)
         {

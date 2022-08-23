@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.StockClasses;
+
 public abstract class StockPileVM<D>
     where D : IDeckObject, new()
 {

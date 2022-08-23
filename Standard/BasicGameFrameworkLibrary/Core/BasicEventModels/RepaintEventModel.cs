@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicEventModels;
+
 public class RepaintEventModel
 {
     public static Action? UpdatePartOfBoard { get; set; }

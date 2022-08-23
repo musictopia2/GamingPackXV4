@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GameBoardCollections;
+
 public enum EnumDirection
 {
     None,

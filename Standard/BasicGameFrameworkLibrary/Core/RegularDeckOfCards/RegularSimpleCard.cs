@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
+
 public class RegularSimpleCard : SimpleDeckObject, IRegularCard //i think i can inherit from this.
 {
     public RegularSimpleCard()

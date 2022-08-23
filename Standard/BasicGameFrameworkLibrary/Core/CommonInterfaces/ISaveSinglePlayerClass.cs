@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommonInterfaces;
+
 public interface ISaveSinglePlayerClass
 {
     Task<bool> CanOpenSavedSinglePlayerGameAsync();

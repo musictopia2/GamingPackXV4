@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses;
+
 public class SimplePlayer : IPlayerItem, IEquatable<SimplePlayer>
 {
     public int Id { get; set; }

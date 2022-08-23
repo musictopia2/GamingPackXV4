@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainGameInterfaces;
+
 public interface IBasicGameProcesses<P> : IAggregatorContainer
     where P : class, IPlayerItem, new()
 {

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
+
 /// <summary>
 /// this is everything the roll processes need to perform the work.
 /// part of it is the cup.  

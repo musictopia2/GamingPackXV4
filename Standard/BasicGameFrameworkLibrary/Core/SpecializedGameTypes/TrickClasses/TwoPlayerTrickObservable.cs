@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
+
 public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<SU, T>,
     ITrickPlay, IAdvancedTrickProcesses
     where SU : IFastEnumSimple

@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
+
 public interface IGameNetwork
 {
     Task DisconnectEverybodyAsync();

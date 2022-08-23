@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
+
 public class RegularTrickCard : RegularSimpleCard, ITrickCard<EnumSuitList>
 {
     public int Player { get; set; } //i don't think this needs binding.

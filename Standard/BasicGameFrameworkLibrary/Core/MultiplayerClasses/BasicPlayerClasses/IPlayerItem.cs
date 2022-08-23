@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses;
+
 public interface IPlayerItem
 {
     int Id { get; set; }

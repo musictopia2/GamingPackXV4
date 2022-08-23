@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
+
 public abstract class DiceGameClass<D, P, S> : BasicGameClass<P, S>,
     IStandardRoller<D, P>,
     IProcessHoldNM,

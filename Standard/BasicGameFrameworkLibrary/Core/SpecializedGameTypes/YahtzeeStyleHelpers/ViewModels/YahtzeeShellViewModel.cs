@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
+
 public class YahtzeeShellViewModel<D> : BasicMultiplayerShellViewModel<YahtzeePlayerItem<D>>
     where D : SimpleDice, new()
 {
@@ -16,15 +17,15 @@ public class YahtzeeShellViewModel<D> : BasicMultiplayerShellViewModel<YahtzeePl
     protected override BasicList<Type> GetAdditionalObjectsToReset()
     {
         BasicList<Type> output = new()
-        {
-            typeof(IYahtzeeStyle),
-            typeof(ScoreLogic),
-            typeof(ScoreContainer),
-            typeof(YahtzeeGameContainer<D>),
-            typeof(YahtzeeEndRoundLogic<D>),
-            typeof(YahtzeeMove<D>),
-            typeof(YahtzeeVMData<D>)
-        };
+    {
+        typeof(IYahtzeeStyle),
+        typeof(ScoreLogic),
+        typeof(ScoreContainer),
+        typeof(YahtzeeGameContainer<D>),
+        typeof(YahtzeeEndRoundLogic<D>),
+        typeof(YahtzeeMove<D>),
+        typeof(YahtzeeVMData<D>)
+    };
         return output;
     }
     protected override void ClearSubscriptions()

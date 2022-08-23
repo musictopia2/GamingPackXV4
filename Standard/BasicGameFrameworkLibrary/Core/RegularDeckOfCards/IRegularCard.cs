@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
+
 public interface IRegularCard : IDeckObject, ISimpleValueObject<int>, IWildObject
     , ISuitObject<EnumSuitList>, IColorObject<EnumRegularColorList>, IAdvancedDIContainer
 {

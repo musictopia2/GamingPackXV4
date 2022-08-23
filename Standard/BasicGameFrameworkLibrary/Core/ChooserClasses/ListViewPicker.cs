@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
+
 public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
 {
     public readonly BasicList<ListPieceModel> TextList = new(); //try list now.  since its intended to be used from blazor programming model.
@@ -39,7 +40,7 @@ public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
     partial void CreateCommands();
     public ListViewPicker(CommandContainer container, IGamePackageResolver resolver) : base(container)
     {
-        _privateChoose = new (resolver)
+        _privateChoose = new(resolver)
         {
             ValueList = TextList
         };

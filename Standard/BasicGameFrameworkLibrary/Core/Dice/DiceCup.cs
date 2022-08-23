@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
+
 public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> where D :
     IStandardDice, new()
 {

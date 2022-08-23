@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.GameContainers;
+
 public class CardGameContainer<D, P, S> : BasicGameContainer<P, S>
     where D : class, IDeckObject, new()
     where P : class, IPlayerSingleHand<D>, new()

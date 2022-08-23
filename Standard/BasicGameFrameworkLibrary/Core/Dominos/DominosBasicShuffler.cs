@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dominos;
+
 public class DominosBasicShuffler<D> : IDeckShuffler<D>, IScatterList<D>,
      IAdvancedDIContainer, ISimpleList<D>, IListShuffler<D> where D : IDominoInfo, new()
 {

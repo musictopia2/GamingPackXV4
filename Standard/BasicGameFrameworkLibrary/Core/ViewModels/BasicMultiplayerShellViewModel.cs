@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
+
 public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewModel,
     IHandleAsync<NewGameEventModel>,
     IHandleAsync<GameOverEventModel>,

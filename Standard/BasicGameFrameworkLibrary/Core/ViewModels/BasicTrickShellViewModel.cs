@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
+
 public abstract class BasicTrickShellViewModel<P> : BasicMultiplayerShellViewModel<P>
     where P : class, IPlayerItem, new()
 {

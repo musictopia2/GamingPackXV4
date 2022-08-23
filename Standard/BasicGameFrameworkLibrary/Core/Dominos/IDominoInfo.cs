@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dominos;
+
 /// <summary>
 /// this is everything that is needed to be a basic domino.
 /// the dicontainer is needed so it can populate the domino.

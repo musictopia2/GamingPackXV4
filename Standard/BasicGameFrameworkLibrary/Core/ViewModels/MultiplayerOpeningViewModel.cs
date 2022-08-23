@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
+
 [UseLabelGrid]
 public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGameVM, IOpeningMessenger, IReadyNM, IMultiplayerOpeningViewModel where P : class, IPlayerItem, new()
 {
@@ -279,7 +280,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         OpeningStatus = EnumOpeningStatus.None;
         PrivateClose();
         CommandContainer.OpenBusy = false;
-        return Task.CompletedTask; 
+        return Task.CompletedTask;
     }
 
     private async void PrivateClose()

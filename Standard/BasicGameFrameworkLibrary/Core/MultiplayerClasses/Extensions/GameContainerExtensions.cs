@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
+
 public static class GameContainerExtensions
 {
     public static void RepaintBoard(this IBasicGameContainer gameContainer)

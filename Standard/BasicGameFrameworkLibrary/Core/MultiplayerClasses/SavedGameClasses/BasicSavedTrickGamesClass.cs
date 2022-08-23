@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.SavedGameClasses;
+
 public class BasicSavedTrickGamesClass<S, T, P> : BasicSavedCardClass<P, T>
     where S : IFastEnumSimple
     where T : class, ITrickCard<S>, new()

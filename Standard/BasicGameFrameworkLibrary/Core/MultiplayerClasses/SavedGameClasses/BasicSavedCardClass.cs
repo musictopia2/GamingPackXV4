@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.SavedGameClasses;
+
 public class BasicSavedCardClass<P, D> : BasicSavedGameClass<P>
     where P : class, IPlayerItem, new()
     where D : IDeckObject, new()

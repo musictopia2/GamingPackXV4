@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.GameContainers;
+
 public interface IBasicGameContainer
 {
     IEventAggregator? Aggregator { get; }

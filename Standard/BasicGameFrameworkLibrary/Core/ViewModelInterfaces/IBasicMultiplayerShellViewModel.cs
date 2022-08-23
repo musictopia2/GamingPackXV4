@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModelInterfaces;
+
 public interface IBasicMultiplayerShellViewModel
 {
     IMainScreen? MainVM { get; set; }

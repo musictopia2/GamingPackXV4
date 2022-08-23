@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicEventModels;
+
 public class AnimatePieceEventModel<T> where T : class
 {
     public Vector PreviousSpace { get; set; }

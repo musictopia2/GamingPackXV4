@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GameBoardCollections;
+
 public interface IBasicSpace
 {
     void ClearSpace(); //anything that clears it. this will allow the collection to have a method to clear.

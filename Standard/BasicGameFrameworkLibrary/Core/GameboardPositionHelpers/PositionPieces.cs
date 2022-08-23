@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GameboardPositionHelpers;
+
 public static class PositionPieces
 {
     public static PointF GetPosition(GameSpace space, SizeF size)

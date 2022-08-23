@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
+
 public abstract partial class BasicMultiplayerMainVM : ConductorViewModel, ISimpleGame
 {
     public RestoreViewModel? RestoreScreen { get; set; }

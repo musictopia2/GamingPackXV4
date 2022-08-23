@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfaceModels;
+
 public interface IBasicCardGamesData<D> : IViewModelData where D : IDeckObject, new()
 {
     DeckObservablePile<D> Deck1 { get; set; }

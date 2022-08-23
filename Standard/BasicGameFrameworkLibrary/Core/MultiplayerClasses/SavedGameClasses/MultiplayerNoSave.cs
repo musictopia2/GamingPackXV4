@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.SavedGameClasses;
+
 public class MultiplayerNoSave : IMultiplayerSaveState
 {
     //we may eventually do something else so if no autoresume, won't even try.  well see.  otherwise, will do this.

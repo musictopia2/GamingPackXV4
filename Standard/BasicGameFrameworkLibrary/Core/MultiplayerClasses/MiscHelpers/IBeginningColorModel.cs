@@ -1,4 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MiscHelpers;
+
 public interface IBeginningColorModel<E>
     where E : IFastEnumColorSimple
 {
