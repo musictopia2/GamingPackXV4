@@ -14,7 +14,6 @@ public class SinglePlayerStartUpClass : IStartUp
         {
             throw new CustomBasicException("Must specify whether its wasm or not");
         }
-
         if (IsWasm.Value == true)
         {
             container.RegisterType<SinglePlayerNoSave>();

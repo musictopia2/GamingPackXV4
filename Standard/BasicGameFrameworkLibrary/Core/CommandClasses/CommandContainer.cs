@@ -24,7 +24,9 @@ public class CommandContainer
             ParentAction.Invoke();
             return; //try this way (?)  this means no need to do anything else i think because the parent will make sure everything else updates properly.
         }
-        throw new CustomBasicException("Needs parent action now for efficiency");
+        return; //since we could have a timing issue, then if no parent, then just ignore (?)
+
+        //throw new CustomBasicException("Needs parent action now for efficiency");
         //var list = _allActions.ToBasicList();
         //int x = 0;
         //list.ForEach(a =>

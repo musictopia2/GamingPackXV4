@@ -73,11 +73,11 @@ public partial class MultiplayerBasicParentShell
     {
         if (BasicData!.GamePackageMode == EnumGamePackageMode.Debug)
         {
-            if (OS == EnumOS.WindowsDT)
+            if (OS == EnumOS.Wasm)
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
         return false;
     }

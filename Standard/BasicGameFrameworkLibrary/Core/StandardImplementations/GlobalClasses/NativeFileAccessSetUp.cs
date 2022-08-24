@@ -9,7 +9,7 @@ internal static class NativeFileAccessSetUp
     public static string GetParentDirectory()
     {
         string tempPath;
-        if (OS == EnumOS.WindowsDT)
+        if (OS == EnumOS.WindowsDT || OS == EnumOS.WindowsMaui) //even windows maui should be able to access the windows stuff.
         {
             tempPath = GetApplicationPath();
         }
