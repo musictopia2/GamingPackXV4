@@ -1,0 +1,70 @@
+﻿@typeparam P
+
+@if (DataContext == null || GameData == null)
+{
+    <div>Help</div>
+    return;
+}
+<div>
+    @if (DataContext.OpeningStatus == EnumOpeningStatus.WaitingForHost)
+    {
+        <div>Either wait for host to start or cancel</div>
+    }
+    else
+    {
+        @if (GameData.CanAutoSave)
+        {
+            @if (DataContext.HostCanStart)
+            {
+                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeMultiplayerGameCommand" Display="Auto Resume Networked Game"  />
+            }
+            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.RejoinMultiplayerGameCommand" Display="Host rejoin Multiplayer Game" />
+            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeSinglePlayerCommand" Display="Auto Resume Local Game" />
+        }
+        @if (DataContext.HasServer)
+        {
+            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.HostCommand" Display="Start Network Game (Host)"  />
+            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ConnectCommand" Display="Join Network Game" />
+        }
+        @if (GameData.MinPlayers == 2 && DataContext.HostCanStart)
+        {
+            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game With No Extra Players" />
+            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
+        }
+        @if (DataContext.HostCanStart)
+        {
+            <LabelGridComponent DataContext="DataContext" Labels="_labels" />
+        }
+        @if (GameData!.CanHaveExtraComputerPlayers)
+        {
+            <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerExtra" />
+        }
+        @if (DataContext.CanShowSingleOptions)
+        {
+            @if (_canComputer && _canHuman)
+            {
+                <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="10px">
+                    <StackItem>
+                        <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerLocal" />
+                    </StackItem>
+                    <StackItem>
+                        <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.HumanLocal" />
+                    </StackItem>
+                </StackLayout>
+            }
+            else if (_canHuman)
+            {
+                <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.HumanLocal" />
+            }
+            else if (_canComputer)
+            {
+                <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerLocal" />
+            }
+            else if (GameData.SinglePlayerChoice == EnumPlayerChoices.Solitaire)
+            {
+                <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.Solitaire" />
+            }
+        }
+    }
+    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.CancelConnectionCommand" Display="Cancel Selection" />
+</div>

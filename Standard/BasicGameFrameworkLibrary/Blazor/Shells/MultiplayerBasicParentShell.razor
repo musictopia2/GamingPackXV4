@@ -1,0 +1,106 @@
+﻿@using BlazorMVVMHelpersLibrary
+@using BasicGameFrameworkLibrary.Blazor.Views
+@using aa = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
+@using BasicGameFrameworkLibrary.Core.TestUtilities
+@using BasicBlazorLibrary.Components.MediaQueries.ParentClasses
+@if (BasicData == null || GameData == null)
+{
+    return;
+}
+@{
+    SetNickNameAsync();
+}
+@if (_loading)
+{
+    <p>Loading Game Package</p>
+    return;
+}
+<CascadingValue Value="TestData">
+    <CascadingValue Value="BasicData">
+        <CascadingValue Value="GameData">
+            @*<Title Value="@GameData.GameName"></Title>*@
+            @if (BasicData.NickName == "")
+            {
+                <p>Enter Nick Name</p>
+                <div>
+                    <input type="text" @bind-value="BasicData.NickName" />
+                </div>
+                <div>
+                    <GameButtonComponent CustomCallBack="ProcessNickNameAsync" Display="Submit" />
+                </div>
+            }
+            else
+            {
+                <LeftOverLayout>
+                    <TopContent>
+                        <div style="width: 100%;  background-color: indigo; margin-bottom: 2px; margin-top: 2px; height: 8vh">
+                            @if (aa.BackToMainDelegate is not null)
+                            {
+                                @if (Media!.DeviceCategory == EnumDeviceCategory.Phone)
+                                {
+                                    <GameButtonComponent CustomCallBack="aa.BackToMainDelegate" FontSize="2vh" Display="Back To Main" />
+                                }
+                                <GameButtonComponent CustomCallBack="aa.BackToMainDelegate" Display="Back To Main" />
+                            }
+                            @if (TestData!.ShowNickNameOnShell)
+                            {
+                                <span style="font-size: 5vh; margin-right: 10px;">
+                                    @BasicData.NickName
+                                </span>
+                            }
+                            <span style="font-size: 5vh">
+                                @GameData.GameName
+                            </span>
+                            <ParentControl VM="NewGameViewModel">
+                                <NewGameView />
+                            </ParentControl>
+                            @if (GameData.GameType == EnumGameType.Rounds)
+                            {
+                                <ParentControl VM="NewRoundViewModel">
+                                    <NewRoundView />
+                                </ParentControl>
+                            }
+
+                            @if (TestData!.SaveOption == EnumTestSaveCategory.RestoreOnly)
+                            {
+                                <ParentControl VM="RestoreViewModel">
+                                    <RestoreView />
+                                </ParentControl>
+                            }
+                            @if (NeedsFullScreen() == true)
+                            {
+                                @if (Media!.DeviceCategory == EnumDeviceCategory.Phone)
+                                {
+                                    <GameButtonComponent CustomCallBack="ManuallyOpenCloseFullScreenAsync" FontSize="2vh" Display="@GetDisplay" />
+                                }
+                                else
+                                {
+                                    <GameButtonComponent CustomCallBack="ManuallyOpenCloseFullScreenAsync" Display="@GetDisplay" />
+                                }
+                            }
+                        </div>
+                    </TopContent>
+                    <MainContent>
+                        @{
+                            bool supported = IsSupported();
+                        }
+                        <VisibleHiddenComponent Visible="supported">
+                            <div style="height: 88vh; font-size: @FontSize">
+                                @ChildContent
+                            </div>
+                            
+                        </VisibleHiddenComponent>
+                        @if (IsSupported() == false)
+                        {
+                            <div>
+                                This game is not supported on phones.
+                            </div>
+                        }
+
+                        
+                    </MainContent>
+                </LeftOverLayout>
+            }
+        </CascadingValue>
+    </CascadingValue>
+</CascadingValue>

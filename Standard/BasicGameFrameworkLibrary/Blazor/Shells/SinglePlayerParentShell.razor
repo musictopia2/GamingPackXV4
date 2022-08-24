@@ -1,0 +1,29 @@
+﻿@using aa = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
+@using BlazorMVVMHelpersLibrary;
+@using BasicGameFrameworkLibrary.Blazor.Views
+<CascadingValue Value="BasicData">
+    @if (BasicData.GameDataLoading)
+    {
+        <div>Game Data Is Loading</div>
+        return;
+    }
+    <LeftOverLayout>
+        <TopContent>
+            <div style="width: 100%;  background-color: indigo; margin-bottom: 2px; margin-top: 2px; height: 8vh">
+                @if (aa.BackToMainDelegate is not null)
+                {
+                    <GameButtonComponent CustomCallBack="aa.BackToMainDelegate" Display="Back To Main" />
+                }
+                <span style="font-size: 5vh">
+                    @GameInfo.GameName
+                </span>
+                <ParentControl VM="NewGameViewModel">
+                    <NewGameView />
+                </ParentControl>
+            </div>
+        </TopContent>
+        <MainContent>
+            @ChildContent
+        </MainContent>
+    </LeftOverLayout>
+</CascadingValue>

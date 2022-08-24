@@ -8,12 +8,12 @@ public class AnimateDeckImageTimer
     private double _startY;
     //private int _totalSteps;
     private double _destinationY; //only y for this one.
-                                  //just do fast all the time now.
-                                  //private readonly bool _fastAnimation;
-                                  //public AnimateDeckImageTimer()
-                                  //{
-                                  //    _fastAnimation = true; //just set to true now.
-                                  //}
+    //just do fast all the time now.
+    //private readonly bool _fastAnimation;
+    //public AnimateDeckImageTimer()
+    //{
+    //    _fastAnimation = true; //just set to true now.
+    //}
     public double LocationYFrom { get; set; }
     public double LocationYTo { get; set; }
     public double CurrentYLocation { get; set; } = -1000; //if -1000, then location must be at 0 after all.

@@ -1,0 +1,86 @@
+﻿namespace BasicGameFrameworkLibrary.Blazor.GameGraphics.GamePieces;
+internal record NumberRecord(string Display, string TextColor, bool Enabled, bool IsSelected);
+public class NumberPiece : ComponentBase
+{
+    private NumberRecord? _previousRecord;
+    protected override void OnAfterRender(bool firstRender)
+    {
+        _previousRecord = GetRecord;
+        base.OnAfterRender(firstRender);
+    }
+    private NumberRecord GetRecord => new(GetValueToPrint(), TextColor, MainGraphics!.CustomCanDo.Invoke(), MainGraphics.IsSelected);
+    protected override bool ShouldRender()
+    {
+        var current = GetRecord;
+        return current.Equals(_previousRecord) == false;
+    }
+    [CascadingParameter]
+    public BasePieceGraphics? MainGraphics { get; set; } //still needed to get the start of the svg.  plus needs to have its start rectangle anyways.
+    [Parameter]
+    public NumberModel? DataContext { get; set; }
+    protected virtual bool CanDrawNumber()
+    {
+        return true;
+    }
+    protected virtual void SelectProcesses() { }
+    [Parameter]
+    public bool CanHighlight { get; set; } = true;
+    [Parameter]
+    public string TextColor { get; set; } = cs.Navy;
+    protected virtual string GetValueToPrint() // so the overrided version can display something else.
+    {
+        if (DataContext == null)
+        {
+            return "";
+        }
+        if (DataContext!.NumberValue < 0)
+        {
+            return "";
+        }
+        return DataContext!.NumberValue.ToString();
+    }
+    protected virtual void OriginalSizeProcesses() { }
+    protected override void OnInitialized()
+    {
+        MainGraphics!.NeedsHighlighting = CanHighlight;
+        OriginalSizeProcesses();
+    }
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        if (CanDrawNumber() == false)
+        {
+            return; //can't even continue because you can't draw.
+        }
+        string value = GetValueToPrint();
+        if (value == "")
+        {
+            return;
+        }
+        SelectProcesses();
+        ISvg svg = MainGraphics!.GetMainSvg();
+        SvgRenderClass render = new();
+        render.Allow0 = true; //i think allow here. as well.
+        Text text = new();
+        text.CenterText();
+        if (value.Length == 3)
+        {
+            text.Font_Size = 20;
+            text.PopulateStrokesToStyles();
+        }
+        else if (value.Length == 2)
+        {
+            text.Font_Size = 30;
+            text.PopulateStrokesToStyles(strokeWidth: 2);
+        }
+        else
+        {
+            text.Font_Size = 40;
+            text.PopulateStrokesToStyles(strokeWidth: 2);
+        }
+        text.Fill = TextColor.ToWebColor();
+        text.Content = value;
+        svg.Children.Add(text);
+        render.RenderSvgTree(svg, 0, builder);
+        base.BuildRenderTree(builder);
+    }
+}
