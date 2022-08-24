@@ -12,14 +12,14 @@ internal class ParserBasicClass
         {
             return new(); //i think.
         }
-        INamedTypeSymbol? container = _compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.DIContainers.IGamePackageRegister");
+        INamedTypeSymbol? container = _compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.Core.DIContainers.IGamePackageRegister");
         //INamedTypeSymbol? others = _compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.DIContainers.GamePackageDIContainer");
         BasicList<FirstInformation> output = new();
         //output.ContainerSymbol = container;
         var firstTemp = container!.GetAllPublicMethods();
         BasicList<string> generics = new();
         BasicList<string> regulars = new();
-        string objectText = "BasicGameFrameworkLibrary.DIContainers.GamePackageDIContainer.RegisterSingleton<TIn>(TIn, string)";
+        string objectText = "BasicGameFrameworkLibrary.Core.DIContainers.GamePackageDIContainer.RegisterSingleton<TIn>(TIn, string)";
         //string regular = "";
         string instance = "";
         foreach (var item in firstTemp)
@@ -121,6 +121,10 @@ internal class ParserBasicClass
                                 else
                                 {
                                     fins.MainClass = lasts1;
+                                }
+                                if (fins.MainClass is null)
+                                {
+
                                 }
                             }
                             output.Add(fins);

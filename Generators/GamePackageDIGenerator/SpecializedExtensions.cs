@@ -53,8 +53,8 @@ internal static class SpecializedExtensions
     public static void PopulateDiceAloneMethod(this ICodeBlock w, INamedTypeSymbol symbol, Compilation compilation)
     {
         INamedTypeSymbol dice = CaptureDiceSymbol(symbol);
-        INamedTypeSymbol player = compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Data.YahtzeePlayerItem`1")!;
-        INamedTypeSymbol saved = compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Data.YahtzeeSaveInfo`1")!;
+        INamedTypeSymbol player = compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Data.YahtzeePlayerItem`1")!;
+        INamedTypeSymbol saved = compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Data.YahtzeeSaveInfo`1")!;
         w.PopulateCommonMethod(player, saved, dice, compilation); //hopefully works (?)
         w.PopulateDiceMethod(dice, player, compilation);
         w.FinishDiceAloneMethod(dice, compilation);
@@ -67,31 +67,27 @@ internal static class SpecializedExtensions
             .GlobalWrite();
         return w;
     }
-    //string logicns = "BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Logic.";
-    //string containerns = "BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Containers.";
-    //string datans = "BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Data.";
-    //string viewmodelns = "BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels.";
     private static IWriter WithYahtzeeLogic(this IWriter w, string name)
     {
-        w.Write("BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Logic.")
+        w.Write("BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic.")
             .Write(name);
         return w;   
     }
     private static IWriter WithYahtzeeContainer(this IWriter w, string name)
     {
-        w.Write("BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Containers.")
+        w.Write("BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Containers.")
             .Write(name);
         return w;
     }
     private static IWriter WithYahtzeeData(this IWriter w, string name)
     {
-        w.Write("BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Data.")
+        w.Write("BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Data.")
             .Write(name);
         return w;
     }
     private static IWriter WithYahtzeeViewModel(this IWriter w, string name)
     {
-        w.Write("BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels.")
+        w.Write("BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels.")
             .Write(name);
         return w;
     }
@@ -176,10 +172,10 @@ internal static class SpecializedExtensions
     }
     private static BasicList<FirstInformation> GetDiceAloneList(INamedTypeSymbol dice, Compilation compilation)
     {
-        string logicns = "BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Logic.";
-        string containerns = "BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Containers.";
-        string datans = "BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.Data.";
-        string viewmodelns = "BasicGameFrameworkLibrary.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels.";
+        string logicns = "BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic.";
+        string containerns = "BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Containers.";
+        string datans = "BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Data.";
+        string viewmodelns = "BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels.";
         string lastg = "`1";
         BasicList<string> temps = new()
         {
@@ -242,7 +238,7 @@ internal static class SpecializedExtensions
         w.WriteLine(w =>
         {
             w.Write("container.RegisterType<").GlobalWrite()
-            .Write("BasicGameFrameworkLibrary.MultiplayerClasses.LoadingClasses.BasicGameLoader<")
+            .Write("BasicGameFrameworkLibrary.Core.MultiplayerClasses.LoadingClasses.BasicGameLoader<")
             .PopulatePlayerOrSaved(player, dice)
             .Write(", ")
             .PopulatePlayerOrSaved(saved, dice)
@@ -251,7 +247,7 @@ internal static class SpecializedExtensions
         .WriteLine(w =>
         {
             w.Write("container.RegisterType<").GlobalWrite()
-            .Write("BasicGameFrameworkLibrary.MiscProcesses.RetrieveSavedPlayers<")
+            .Write("BasicGameFrameworkLibrary.Core.MiscProcesses.RetrieveSavedPlayers<")
             .PopulatePlayerOrSaved(player, dice)
             .Write(", ")
             .PopulatePlayerOrSaved(saved, dice)
@@ -260,7 +256,7 @@ internal static class SpecializedExtensions
         .WriteLine(w =>
         {
             w.Write("container.RegisterType<").GlobalWrite()
-            .Write("BasicGameFrameworkLibrary.ViewModels.MultiplayerOpeningViewModel<")
+            .Write("BasicGameFrameworkLibrary.Core.ViewModels.MultiplayerOpeningViewModel<")
             .PopulatePlayerOrSaved(player, dice)
             .Write(">>();");
         });
@@ -274,7 +270,7 @@ internal static class SpecializedExtensions
     private static IWriter PopulateBeginningColorClass(this IWriter w, INamedTypeSymbol color, INamedTypeSymbol player, INamedTypeSymbol saved)
     {
         w.GlobalWrite()
-        .Write("BasicGameFrameworkLibrary.MultiplayerClasses.BasicGameClasses.BeginningColorProcessorClass<")
+        .Write("BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses.BeginningColorProcessorClass<")
             .Write(color.Name)
             .Write(", ")
             .Write(player.Name)
@@ -286,7 +282,7 @@ internal static class SpecializedExtensions
     private static IWriter PopulateBeginningChooseColorViewModel(this IWriter w, INamedTypeSymbol color, INamedTypeSymbol player)
     {
         w.GlobalWrite()
-        .Write("BasicGameFrameworkLibrary.ViewModels.BeginningChooseColorViewModel<")
+        .Write("BasicGameFrameworkLibrary.Core.ViewModels.BeginningChooseColorViewModel<")
            .Write(color.Name)
            .Write(", ")
            .Write(player.Name)
@@ -296,7 +292,7 @@ internal static class SpecializedExtensions
     private static IWriter PopulateBeginningColorModel(this IWriter w, INamedTypeSymbol color, INamedTypeSymbol player)
     {
         w.GlobalWrite()
-           .Write("BasicGameFrameworkLibrary.MultiplayerClasses.MiscHelpers.BeginningColorModel<")
+           .Write("BasicGameFrameworkLibrary.Core.MultiplayerClasses.MiscHelpers.BeginningColorModel<")
            .Write(color.Name)
            .Write(", ")
            .Write(player.Name)
@@ -329,15 +325,15 @@ internal static class SpecializedExtensions
            .Write(">();");
        });
         w.ProcessFinishDIRegistrations(list);
-        w.WriteLine("global::BasicGameFrameworkLibrary.MultiplayerClasses.MiscHelpers.MiscDelegates.GetAutoGeneratedObjectsToReplace = ReplaceBoardGameColorClasses;");
+        w.WriteLine("global::BasicGameFrameworkLibrary.Core.MultiplayerClasses.MiscHelpers.MiscDelegates.GetAutoGeneratedObjectsToReplace = ReplaceBoardGameColorClasses;");
     }
     private static BasicList<FirstInformation> GetColorList(INamedTypeSymbol color, INamedTypeSymbol player, INamedTypeSymbol saved, Compilation compilation)
     {
         BasicList<string> temps = new()
         {
-            "BasicGameFrameworkLibrary.MultiplayerClasses.BasicGameClasses.BeginningColorProcessorClass`3",
-            "BasicGameFrameworkLibrary.ViewModels.BeginningChooseColorViewModel`2",
-            "BasicGameFrameworkLibrary.MultiplayerClasses.MiscHelpers.BeginningColorModel`2"
+            "BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses.BeginningColorProcessorClass`3",
+            "BasicGameFrameworkLibrary.Core.ViewModels.BeginningChooseColorViewModel`2",
+            "BasicGameFrameworkLibrary.Core.MultiplayerClasses.MiscHelpers.BeginningColorModel`2"
         };
         Dictionary<string, INamedTypeSymbol> matches = new();
         matches.Add("P", player);
@@ -350,7 +346,7 @@ internal static class SpecializedExtensions
     {
         BasicList<string> temps = new()
         {
-            "BasicGameFrameworkLibrary.Dice.StandardRollProcesses`2",
+            "BasicGameFrameworkLibrary.Core.Dice.StandardRollProcesses`2",
             $"{dice.ContainingNamespace.ToDisplayString()}.{dice.Name}"
         };
         INamedTypeSymbol? intSymbol = compilation.GetTypeByMetadataName("System.Int32");
@@ -369,11 +365,11 @@ internal static class SpecializedExtensions
     {
         BasicList<string> temps = new()
         {
-            "BasicGameFrameworkLibrary.Dice.StandardRollProcesses`2",
-            "BasicGameFrameworkLibrary.Dice.SimpleDice"
+            "BasicGameFrameworkLibrary.Core.Dice.StandardRollProcesses`2",
+            "BasicGameFrameworkLibrary.Core.Dice.SimpleDice"
         };
         //simpledice this time.
-        INamedTypeSymbol? diceSymbol = compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.Dice.SimpleDice");
+        INamedTypeSymbol? diceSymbol = compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.Core.Dice.SimpleDice");
         if (diceSymbol is null)
         {
             throw new Exception("There was no simple dice found");
@@ -394,8 +390,8 @@ internal static class SpecializedExtensions
     {
         BasicList<string> temps = new()
         {
-            "BasicGameFrameworkLibrary.DrawableListsObservable.DeckObservablePile`1",
-            "BasicGameFrameworkLibrary.BasicDrawables.BasicClasses.GenericCardShuffler`1"
+            "BasicGameFrameworkLibrary.Core.DrawableListsObservable.DeckObservablePile`1",
+            "BasicGameFrameworkLibrary.Core.BasicDrawables.BasicClasses.GenericCardShuffler`1"
         };
         Dictionary<string, INamedTypeSymbol> matches = new();
         matches.Add("D", deck);
@@ -407,9 +403,9 @@ internal static class SpecializedExtensions
     {
         BasicList<string> temps = new()
         {
-            "BasicGameFrameworkLibrary.MultiplayerClasses.LoadingClasses.BasicGameLoader`2",
-            "BasicGameFrameworkLibrary.ViewModels.MultiplayerOpeningViewModel`1",
-            "BasicGameFrameworkLibrary.MiscProcesses.RetrieveSavedPlayers`2"
+            "BasicGameFrameworkLibrary.Core.MultiplayerClasses.LoadingClasses.BasicGameLoader`2",
+            "BasicGameFrameworkLibrary.Core.ViewModels.MultiplayerOpeningViewModel`1",
+            "BasicGameFrameworkLibrary.Core.MiscProcesses.RetrieveSavedPlayers`2"
         };
         Dictionary<string, INamedTypeSymbol> matches = new();
         matches.Add("P", player);
@@ -428,14 +424,14 @@ internal static class SpecializedExtensions
         w.WriteLine(w =>
         {
             w.Write("container.RegisterType<").GlobalWrite()
-            .Write("BasicGameFrameworkLibrary.DrawableListsObservable.DeckObservablePile<")
+            .Write("BasicGameFrameworkLibrary.Core.DrawableListsObservable.DeckObservablePile<")
             .Write(deck.Name)
             .Write(">>();");
         })
         .WriteLine(w =>
         {
             w.Write("container.RegisterType<").GlobalWrite()
-            .Write("BasicGameFrameworkLibrary.BasicDrawables.BasicClasses.GenericCardShuffler<")
+            .Write("BasicGameFrameworkLibrary.Core.BasicDrawables.BasicClasses.GenericCardShuffler<")
             .Write(deck.Name)
             .Write(">>();");
         });
@@ -447,7 +443,7 @@ internal static class SpecializedExtensions
         w.WriteLine(w =>
         {
             w.Write("container.RegisterType<").GlobalWrite()
-            .Write("BasicGameFrameworkLibrary.Dice.StandardRollProcesses<")
+            .Write("BasicGameFrameworkLibrary.Core.Dice.StandardRollProcesses<")
             .Write(dice.Name)
             .Write(", ")
             .Write(player.Name);
@@ -466,7 +462,7 @@ internal static class SpecializedExtensions
         .WriteLine(w =>
         {
             w.Write("container.RegisterSingleton<").GlobalWrite()
-            .Write("BasicGameFrameworkLibrary.Dice.IGenerateDice<int>, ")
+            .Write("BasicGameFrameworkLibrary.Core.Dice.IGenerateDice<int>, ")
             .Write(dice.Name)
             .Write(">();");
         });
@@ -478,11 +474,11 @@ internal static class SpecializedExtensions
         var player = CapturePlayerSymbol(symbol);
         w.WriteLine(w =>
         {
-            w.Write("container.RegisterType<global::BasicGameFrameworkLibrary.Dice.StandardRollProcesses<global::BasicGameFrameworkLibrary.Dice.SimpleDice, ")
+            w.Write("container.RegisterType<global::BasicGameFrameworkLibrary.Core.Dice.StandardRollProcesses<global::BasicGameFrameworkLibrary.Core.Dice.SimpleDice, ")
             .Write(player.Name)
             .Write(">>();");
         })
-        .WriteLine("container.RegisterSingleton<global::BasicGameFrameworkLibrary.Dice.IGenerateDice<int>, global::BasicGameFrameworkLibrary.Dice.SimpleDice>();");
+        .WriteLine("container.RegisterSingleton<global::BasicGameFrameworkLibrary.Core.Dice.IGenerateDice<int>, global::BasicGameFrameworkLibrary.Core.Dice.SimpleDice>();");
         var list = GetDiceList(compilation, player);
         w.ProcessFinishDIRegistrations(list);
     }

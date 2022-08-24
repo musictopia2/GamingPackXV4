@@ -1,0 +1,18 @@
+﻿::deep fieldset {
+    border-color: white;
+    border-width: 2px;
+    border-radius: 4px;
+    border-style: groove;
+    display: inline-block;
+    box-sizing: initial;
+    border-image: initial;
+}
+::deep legend {
+    width: initial;
+    max-width: initial;
+    margin-bottom: initial;
+    font-size: initial;
+    line-height: initial;
+    white-space: initial;
+    border-bottom: none;
+}

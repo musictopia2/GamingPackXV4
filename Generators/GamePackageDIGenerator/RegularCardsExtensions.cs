@@ -68,7 +68,7 @@ internal static class RegularCardsExtensions
     {
         BasicList<string> temps = new()
         {
-            "BasicGameFrameworkLibrary.RegularDeckOfCards.SortSimpleCards`1"
+            "BasicGameFrameworkLibrary.Core.RegularDeckOfCards.SortSimpleCards`1"
         };
         Dictionary<string, INamedTypeSymbol> matches = new();
         matches.Add("R", symbol!);
@@ -80,19 +80,19 @@ internal static class RegularCardsExtensions
         BasicList<string> temps = new();
         if (card.AceLow)
         {
-            temps.Add("BasicGameFrameworkLibrary.RegularDeckOfCards.RegularLowAceCalculator");
+            temps.Add("BasicGameFrameworkLibrary.Core.RegularDeckOfCards.RegularLowAceCalculator");
         }
         else
         {
-            temps.Add("BasicGameFrameworkLibrary.RegularDeckOfCards.RegularAceHighCalculator");
+            temps.Add("BasicGameFrameworkLibrary.Core.RegularDeckOfCards.RegularAceHighCalculator");
         }
         if (card.CustomDeck == false && card.AceLow)
         {
-            temps.Add("BasicGameFrameworkLibrary.RegularDeckOfCards.RegularAceLowSimpleDeck");
+            temps.Add("BasicGameFrameworkLibrary.Core.RegularDeckOfCards.RegularAceLowSimpleDeck");
         }
         else if (card.CustomDeck == false && card.AceLow == false)
         {
-            temps.Add("BasicGameFrameworkLibrary.RegularDeckOfCards.RegularAceHighSimpleDeck");
+            temps.Add("BasicGameFrameworkLibrary.Core.RegularDeckOfCards.RegularAceHighSimpleDeck");
         }
         Dictionary<string, INamedTypeSymbol> matches = new(); //this has no generics.
         BasicList<FirstInformation> output = temps.GetFirstInformation(matches, compilation);

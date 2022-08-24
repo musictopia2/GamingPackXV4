@@ -34,6 +34,10 @@ public class FourthSourceGenerator : IIncrementalGenerator
         {
             return null; //for sure don't consider if abstract.
         }
+        if (symbol.Name == "BasicYahtzeeGame")
+        {
+            return null; //cannot do the yahtzee game.
+        }
         //var list = symbol.AllInterfaces.Reverse().ToBasicList();
         //can't be inheritance this time.
         foreach (var temp in symbol.AllInterfaces) //try this way (?)
@@ -88,25 +92,25 @@ public class FourthSourceGenerator : IIncrementalGenerator
     private void Emit(SourceProductionContext context, INamedTypeSymbol symbol, Compilation compilation)
     {
         SourceCodeStringBuilder builder = new();
-        builder.StartGlobalProcesses(compilation, "DIFinishProcesses", "SpecializedRegistrationHelpers", w =>
+        builder.StartGlobalProcesses(compilation, "Core.DIFinishProcesses", "SpecializedRegistrationHelpers", w =>
         {
             if (symbol.Name == "IDiceAlone")
             {
-                w.WriteLine("public static void RegisterBasicYahtzeeStyleClasses(global::BasicGameFrameworkLibrary.DIContainers.IGamePackageDIContainer container)")
+                w.WriteLine("public static void RegisterBasicYahtzeeStyleClasses(global::BasicGameFrameworkLibrary.Core.DIContainers.IGamePackageDIContainer container)")
                 .WriteCodeBlock(w =>
                 {
                     w.PopulateDiceAloneMethod(symbol, compilation);
                 });
                 return;
             }
-            w.WriteLine("public static void RegisterCommonMultplayerClasses(global::BasicGameFrameworkLibrary.DIContainers.IGamePackageDIContainer container)")
+            w.WriteLine("public static void RegisterCommonMultplayerClasses(global::BasicGameFrameworkLibrary.Core.DIContainers.IGamePackageDIContainer container)")
             .WriteCodeBlock(w =>
             {
                 w.PopulateRegisterSpecializedMethod(symbol, compilation);
             });
             if (symbol.Name != "IBeginningDice")
             {
-                w.WriteLine("public static void RegisterStandardDice(global::BasicGameFrameworkLibrary.DIContainers.IGamePackageDIContainer container)")
+                w.WriteLine("public static void RegisterStandardDice(global::BasicGameFrameworkLibrary.Core.DIContainers.IGamePackageDIContainer container)")
                 .WriteCodeBlock(w =>
                 {
                     w.PopulateStandardDiceMethod(compilation, symbol);

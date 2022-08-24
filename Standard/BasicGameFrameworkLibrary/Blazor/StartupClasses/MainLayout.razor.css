@@ -1,0 +1,40 @@
+﻿.beginning {
+    flex: 1;
+    user-select: none;
+}
+::deep button:disabled {
+    color: lightgray;
+}
+::deep .layout {
+    flex: 1;
+}
+::deep .horizontalDiv {
+    display: inline;
+}
+::deep fieldset {
+    border-color: white;
+    border-width: 2px;
+    border-radius: 4px;
+    border-style: groove;
+    display: inline-block;
+    box-sizing: initial;
+    border-image: initial;
+}
+::deep legend {
+    width: initial;
+    max-width: initial;
+    margin-bottom: initial;
+    font-size: initial;
+    line-height: initial;
+    white-space: initial;
+    border-bottom: none;
+}
+::deep .scrollableField {
+    overflow: auto;
+}
+::deep .fullframe {
+    display: block;
+}
+::deep .centerText {
+    text-align: center;
+}

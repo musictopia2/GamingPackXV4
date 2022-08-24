@@ -24,13 +24,13 @@ internal class EmitClass
         //    return; //don't even bother doing if there are none.  could rethink later though.
         //}
         SourceCodeStringBuilder builder = new();
-        builder.StartGlobalProcesses(_compilation, "DIFinishProcesses", "AutoResetClass", w =>
+        builder.StartGlobalProcesses(_compilation, "Core.DIFinishProcesses", "AutoResetClass", w =>
         {
 
             w.WriteLine("public static void RegisterAutoResets()")
             .WriteCodeBlock(w =>
             {
-                w.WriteLine("global::BasicGameFrameworkLibrary.MultiplayerClasses.MiscHelpers.MiscDelegates.GetAutoResets = GetTypesToAutoReset;");
+                w.WriteLine("global::BasicGameFrameworkLibrary.Core.MultiplayerClasses.MiscHelpers.MiscDelegates.GetAutoResets = GetTypesToAutoReset;");
             });
 
             w.WriteLine("private static global::CommonBasicLibraries.CollectionClasses.BasicList<Type> GetTypesToAutoReset()")
@@ -56,9 +56,9 @@ internal class EmitClass
         FinishDIRegistrationsExtensions.StartMethod();
         //finishDIRegistrations has to change because of parameters now.
         SourceCodeStringBuilder builder = new();
-        builder.StartGlobalProcesses(_compilation, "DIFinishProcesses", "GlobalDIFinishClass", w =>
+        builder.StartGlobalProcesses(_compilation, "Core.DIFinishProcesses", "GlobalDIFinishClass", w =>
         {
-            w.WriteLine("public static void FinishDIRegistrations(global::BasicGameFrameworkLibrary.DIContainers.IGamePackageGeneratorDI container)")
+            w.WriteLine("public static void FinishDIRegistrations(global::BasicGameFrameworkLibrary.Core.DIContainers.IGamePackageGeneratorDI container)")
             .WriteCodeBlock(w =>
             {
                 w.ProcessFinishDIRegistrations(_list);
@@ -74,13 +74,13 @@ internal class EmitClass
         }
         FinishDIRegistrationsExtensions.StartMethod();
         SourceCodeStringBuilder builder = new();
-        builder.StartGlobalProcesses(_compilation, "DIFinishProcesses", "GlobalDIAutoRegisterClass", w =>
+        builder.StartGlobalProcesses(_compilation, "Core.DIFinishProcesses", "GlobalDIAutoRegisterClass", w =>
         {
             //i think should simulate the old function as much as possible.
-            w.WriteLine("public static void RegisterNonSavedClasses(global::BasicGameFrameworkLibrary.DIContainers.IGamePackageDIContainer container)")
+            w.WriteLine("public static void RegisterNonSavedClasses(global::BasicGameFrameworkLibrary.Core.DIContainers.IGamePackageDIContainer container)")
             .WriteCodeBlock(w =>
             {
-                w.WriteLine("container.RegisterSingleton<global::BasicGameFrameworkLibrary.MultiplayerClasses.BasicPlayerClasses.IPlayOrder, global::BasicGameFrameworkLibrary.MultiplayerClasses.BasicPlayerClasses.PlayOrderClass>();"); //had to change namespaces in order to support this.
+                w.WriteLine("container.RegisterSingleton<global::BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses.IPlayOrder, global::BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses.PlayOrderClass>();"); //had to change namespaces in order to support this.
                 RegisterBasics(w);
                 w.ProcessFinishDIRegistrations(_list);
             });

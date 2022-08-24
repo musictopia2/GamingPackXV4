@@ -65,3 +65,9 @@ global using BasicGameFrameworkLibrary.Core.SolitaireClasses.MiscClasses;
 global using BasicGameFrameworkLibrary.Core.SolitaireClasses.PileObservable;
 global using BasicGameFrameworkLibrary.Core.SolitaireClasses.GraphicsObservable;
 global using Microsoft.JSInterop;
+global using BasicGameFrameworkLibrary.Blazor.StartupClasses;
+global using Microsoft.AspNetCore.Components;
+global using BasicBlazorLibrary.Components.BaseClasses;
+global using BasicBlazorLibrary.Helpers;
+global using aa = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using BasicGameFrameworkLibrary.Blazor.Helpers; //try here.

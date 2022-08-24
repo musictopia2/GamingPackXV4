@@ -123,7 +123,7 @@ internal class FifthSourceGenerator : IIncrementalGenerator
         SourceCodeStringBuilder builder = new();
         builder.StartGlobalProcesses(compilation, "DIFinishProcesses", "SpecializedRegularCardHelpers", w =>
         {
-            w.WriteLine("public static void RegisterRegularDeckOfCardClasses(global::BasicGameFrameworkLibrary.DIContainers.IGamePackageDIContainer container)")
+            w.WriteLine("public static void RegisterRegularDeckOfCardClasses(global::BasicGameFrameworkLibrary.Core.DIContainers.IGamePackageDIContainer container)")
             .WriteCodeBlock(w =>
             {
                 w.PopulateRegularCardsMethod(card, compilation);

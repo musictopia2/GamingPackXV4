@@ -80,7 +80,7 @@ internal class ParserAttributesClass
         //BasicGameFrameworkLibrary.MultiplayerClasses.BasicPlayerClasses.PlayOrderClass
         //INamedTypeSymbol? container = _compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.DIContainers.IGamePackageRegister");
 
-        INamedTypeSymbol? playSymbol = _compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.MultiplayerClasses.BasicPlayerClasses.PlayOrderClass");
+        INamedTypeSymbol? playSymbol = _compilation.GetTypeByMetadataName("BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses.PlayOrderClass");
         FirstInformation lasts = new();
         lasts.MainClass = playSymbol;
         lasts.Assignments = playSymbol!.Interfaces.ToBasicList(); //try allinterfaces.
