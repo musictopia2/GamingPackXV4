@@ -64,3 +64,4 @@ global using BasicGameFrameworkLibrary.Core.SolitaireClasses.DataClasses;
 global using BasicGameFrameworkLibrary.Core.SolitaireClasses.MiscClasses;
 global using BasicGameFrameworkLibrary.Core.SolitaireClasses.PileObservable;
 global using BasicGameFrameworkLibrary.Core.SolitaireClasses.GraphicsObservable;
+global using Microsoft.JSInterop;

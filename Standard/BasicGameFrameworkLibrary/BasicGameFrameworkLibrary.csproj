@@ -10,7 +10,15 @@
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
-
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\deckofcardback.svg" />
+		<EmbeddedResource Include="Resources\Dice1.svg" />
+		<EmbeddedResource Include="Resources\Dice2.svg" />
+		<EmbeddedResource Include="Resources\Dice3.svg" />
+		<EmbeddedResource Include="Resources\Dice4.svg" />
+		<EmbeddedResource Include="Resources\Dice5.svg" />
+		<EmbeddedResource Include="Resources\Dice6.svg" />
+	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="BasicBlazorLibrary" Version="4.0.3" />
     <PackageReference Include="CommonBasicLibraries" Version="7.0.5" />
@@ -25,13 +33,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Generators\CommandsGenerator\CommandsGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\Generators\GamePackageDIGenerator\GamePackageDIGenerator.csproj" />
     <ProjectReference Include="..\..\Generators\GamePackageSerializeGenerator\GamePackageSerializeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\Generators\LabelGridGenerator\LabelGridGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\Generators\ScoreBoardGenerator\ScoreBoardGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Blazor\" />
   </ItemGroup>
 
 </Project>
