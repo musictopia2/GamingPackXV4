@@ -71,3 +71,6 @@ global using BasicBlazorLibrary.Components.BaseClasses;
 global using BasicBlazorLibrary.Helpers;
 global using aa = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 global using BasicGameFrameworkLibrary.Blazor.Helpers; //try here.
+global using BasicGameFrameworkLibrary.Core.GameBoardCollections;
+global using BasicGameFrameworkLibrary.Core.AnimationClasses;
+global using BasicGameFrameworkLibrary.Blazor.Extensions;
