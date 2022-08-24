@@ -1,0 +1,64 @@
+﻿@typeparam E
+@typeparam S
+@using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.CheckersChessHelpers;
+@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+@if (GameBoard == null || MainPiece == null)
+{
+    return;
+}
+<RawGameBoard BoardSize="@GetSize"
+              TargetHeight="@TargetHeight"
+              TargetWidth="@TargetWidth"
+              X="@X"
+              Y="@Y">
+
+    <RefreshComponent CanRender="CanRenderSpace">
+        @foreach (var space in CheckersChessBaseBoard<E, S>.PrivateSpaceList)
+        {
+            string color;
+            if (CheckersChessBaseBoard<E, S>.HasGreen && space.MainIndex == CheckersChessBaseBoard<E, S>.SpaceSelected)
+            {
+                color = cc.Green;
+            }
+            else
+            {
+                color = space.Color; //i think.
+            }
+            var piece = space.GetGamePiece();
+            <GameSpaceWithoutBorders FillColor="@color"
+                                     SpaceLocation="@space.GetLocation()"
+                                     SpaceSize="@space.GetSize()"
+                                     @key="space"
+                                     SpaceClicked="() => MakeMoveAsync(space.MainIndex)">
+                @if (piece != null)
+                {
+                    @if (GameBoard.GetGame() == EnumCheckerChessGame.Checkers && space.MainIndex == CheckersChessBaseBoard<E, S>.SpaceSelected && GameBoard.CanHighlight() == true)
+                    {
+                        piece.Highlighted = true;
+                    }
+                    else
+                    {
+                        piece.Highlighted = false;
+                    }
+                    @MainPiece(piece)
+                }
+            </GameSpaceWithoutBorders>
+        }
+    </RefreshComponent>
+    @if (AnimatePiece != null)
+    {
+        @AnimatePiece
+    }
+    @* highlighting *@
+    @if (GameBoard.CanHighlight() == false || GameBoard.GetGame() == EnumCheckerChessGame.Checkers || HighlightPiece == null)
+    {
+        return;
+    }
+    @foreach (var space in CheckersChessBaseBoard<E, S>.PrivateSpaceList)
+    {
+        @HighlightPiece(space)
+        <BlankClickableSquare SpaceLocation="space.GetLocation()"
+                              SpaceSize="space.GetSize()"
+                              SpaceClicked="() => MakeMoveAsync(space.MainIndex)" />
+    }
+</RawGameBoard>

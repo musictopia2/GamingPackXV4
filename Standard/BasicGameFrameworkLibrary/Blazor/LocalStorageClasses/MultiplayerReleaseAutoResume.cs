@@ -1,4 +1,4 @@
-﻿namespace BasicGamingUIBlazorLibrary.LocalStorageClasses;
+﻿namespace BasicGameFrameworkLibrary.Blazor.LocalStorageClasses;
 public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
 {
     private readonly IGameInfo _game;

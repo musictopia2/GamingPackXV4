@@ -1,4 +1,5 @@
-namespace BasicGamingUIBlazorLibrary.Animations;
+
+namespace BasicGameFrameworkLibrary.Blazor.Animations;
 public partial class AnimationVectorCanvas<S> : IHandleAsync<AnimatePieceEventModel<S>>, IDisposable //this requires generics since the other did and we are cascading to use the stuff from the parent board.
     where S : class, IBasicSpace, new()
 {

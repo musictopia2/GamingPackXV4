@@ -1,6 +1,8 @@
 ﻿using BasicGameFrameworkLibrary.Core.StandardImplementations.GlobalClasses; //not common enough to have everywhere.
 using static CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
 using fs = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
+using ss = System.IO.Path;
+
 namespace BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses;
 public class SinglePlayerReleaseNativeFileAccessAutoResume : ISaveSinglePlayerClass
 {
@@ -10,7 +12,7 @@ public class SinglePlayerReleaseNativeFileAccessAutoResume : ISaveSinglePlayerCl
     {
         _thisGame = thisGame;
         string tempPath = NativeFileAccessSetUp.GetParentDirectory();
-        _gamePath = Path.Combine(tempPath, $"{_thisGame.GameName}Release.json"); //this means we have the chance to switch between them.
+        _gamePath = ss.Combine(tempPath, $"{_thisGame.GameName}Release.json"); //this means we have the chance to switch between them.
     }
     Task<bool> ISaveSinglePlayerClass.CanOpenSavedSinglePlayerGameAsync()
     {

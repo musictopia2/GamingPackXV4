@@ -1,13 +1,14 @@
 ﻿using BasicGameFrameworkLibrary.Core.StandardImplementations.Settings;
 using ff = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
 using jj = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
+using ss = System.IO.Path;
 namespace BasicGameFrameworkLibrary.Core.StandardImplementations.GlobalClasses;
 public static class NativeGlobalSettingsFileAccess
 {
     private static string GetGlobalSettingsPath()
     {
         string output = NativeFileAccessSetUp.GetParentDirectory();
-        output = Path.Combine(output, "settings.json");
+        output = ss.Combine(output, "settings.json");
         return output;
     }
     public static async Task LoadSettingsAsync()

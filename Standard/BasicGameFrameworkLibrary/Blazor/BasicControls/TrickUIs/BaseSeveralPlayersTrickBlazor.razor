@@ -1,0 +1,36 @@
+﻿@typeparam P
+@typeparam B
+@typeparam S
+@typeparam T
+@if (DataContext == null || ChildContent == null || DataContext.ViewList == null)
+{
+    return;
+}
+<VisibleHiddenComponent Visible="DataContext.Visible" FullHeight = "false">
+    <div style="@GetEntireCss">
+        <div class="severalplayersrelative">
+            @foreach (var trick in DataContext.ViewList)
+            {
+                var card = GetCardInfo(trick);
+                <div style="@GetLabelCss(trick)">
+                    @if (trick.Text != "")
+                    {
+                        if (trick.Visible)
+                        {
+                            <b>@trick.Text</b>
+                        }
+                    }
+                    else
+                    {
+                        <b>@DataContext.GetSpecificPlayer(trick.Player).NickName</b>
+                    }
+                </div>
+                <div style="@GetCardCss(card)">
+                    <FlexibleDeckRenderComponent D="T" DeckObject="card">
+                        @ChildContent(card)
+                    </FlexibleDeckRenderComponent>
+                </div>
+            }
+        </div>
+    </div>
+</VisibleHiddenComponent>

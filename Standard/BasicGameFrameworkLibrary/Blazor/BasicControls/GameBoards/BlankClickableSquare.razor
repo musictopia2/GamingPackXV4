@@ -1,0 +1,7 @@
+﻿@if (SpaceClicked.HasDelegate == false)
+{
+    return;
+}
+<svg x="@GetX()" y="@GetY()" width="@GetWidth()" height="@GetHeight()" @onclick="PrivateClickAsync">
+    <rect width="0" height="0" fill="aqua" class="blankrectangle" />
+</svg>

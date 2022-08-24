@@ -1,0 +1,39 @@
+﻿@typeparam D
+@if (DataContext == null)
+{
+    return;
+}
+@if (DataContext.Rows == 1)
+{
+    <div>Needs more than one row.  Otherwise, try using scoreboard</div>
+    return;
+}
+@{
+    int rows = DataContext.Rows;
+    int columns = DataContext.Columns;
+}
+@if (DataContext.HasFrame)
+{
+    <BaseFrameBlazor IsEnabled = "false" TargetWidth="@TargetWidth" Text="@DataContext.Text">
+        @for (int r1 = 0; r1 < rows; r1++)
+        {
+            int r2 = r1;
+            <StackLayout>
+                @for (int c1 = 0; c1 < columns; c1++)
+                {
+                    int c2 = c1;
+                    var card = DataContext.GetObject(r2 + 1, c2 + 1);
+                    <StackItem Length="1fr">
+                        <div class="cardItem" style="@GetFontStyle">
+                            @ChildContent!(card)
+                        </div>
+                    </StackItem>
+                }
+            </StackLayout>
+        }
+    </BaseFrameBlazor>
+    return;
+}
+<div>
+    For now requires frames.  Once i figure out frames, do non frames.
+</div>

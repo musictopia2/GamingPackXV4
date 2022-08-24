@@ -7,7 +7,7 @@ public partial class BasePieceGraphics : GraphicsCommand
     public bool Animating { get; set; } = false; //maybe if animating, must render period now.  try that idea next.
     [Parameter]
     public bool ForceRender { get; set; }
-    public string FillColor { get; set; } = cc.Aqua; //defaults to aqua but child can set to something else.
+    public string FillColor { get; set; } = cs.Aqua; //defaults to aqua but child can set to something else.
     [Parameter]
     public RenderFragment? ChildContent { get; set; } //only one is required here.
 
@@ -51,19 +51,19 @@ public partial class BasePieceGraphics : GraphicsCommand
     {
         if (NeedsHighlighting == false)
         {
-            return cc.Transparent.ToWebColor(); //this means won't even do
+            return cs.Transparent.ToWebColor(); //this means won't even do
         }
         if (IsSelected)
         {
-            return cc.Lime.ToWebColor(); //will be lime
+            return cs.Lime.ToWebColor(); //will be lime
         }
         if (CustomCanDo.Invoke() == false)
         {
-            return cc.LightGray.ToWebColor();
+            return cs.LightGray.ToWebColor();
         }
         if (HighlightTransparent)
         {
-            return cc.Transparent.ToWebColor();
+            return cs.Transparent.ToWebColor();
         }
         return FillColor.ToWebColor();
     }

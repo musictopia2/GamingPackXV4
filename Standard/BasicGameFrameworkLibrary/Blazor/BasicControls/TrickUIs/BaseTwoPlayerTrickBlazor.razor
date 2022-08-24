@@ -1,0 +1,23 @@
+﻿@typeparam S
+@typeparam T
+@if (DataContext == null || ChildContent == null)
+{
+    return;
+}
+<VisibleHiddenComponent Visible="DataContext.Visible" FullHeight="false">
+    <div style="@GetEntireCss">
+        <div class="twoplayerrelative">
+            @foreach (var card in DataContext.CardList)
+            {
+                <div style="@GetLabelCss(card)">
+                    <b>@GetLabelText(card)</b>
+                </div>
+                <div style="@GetCardCss(card)">
+                    <FlexibleDeckRenderComponent D="T" DeckObject="card">
+                        @ChildContent(card)
+                    </FlexibleDeckRenderComponent>
+                </div>
+            }
+        </div>
+    </div>
+</VisibleHiddenComponent>

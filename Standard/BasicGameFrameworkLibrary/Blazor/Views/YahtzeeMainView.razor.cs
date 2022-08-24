@@ -1,4 +1,3 @@
-using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP; //not common enough.
 namespace BasicGameFrameworkLibrary.Blazor.Views;
 public partial class YahtzeeMainView<D>
     where D : SimpleDice, new()
@@ -15,7 +14,7 @@ public partial class YahtzeeMainView<D>
         _labels.Clear();
         IYahtzeeStyle yahtzeeStyle = Resolver!.Resolve<IYahtzeeStyle>();
         _bottomDescriptionWidth = yahtzeeStyle.BottomDescriptionWidth;
-        DataContext!.CommandContainer.AddAction(ShowChange);
+        //DataContext!.CommandContainer.AddAction(ShowChange);
         _labels.AddLabel("Turn", nameof(YahtzeeVMData<D>.NormalTurn))
             .AddLabel("Roll", nameof(YahtzeeVMData<D>.RollNumber))
             .AddLabel("Status", nameof(YahtzeeVMData<D>.Status))

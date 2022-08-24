@@ -1,0 +1,28 @@
+﻿@if (Width == "" && Height == "")
+{
+    <table>
+        @foreach (var item in Labels)
+        {
+            <tr>
+                <th>@item.Header:</th>
+                <td style="padding-right:10px;">
+                    @GetValue(item)
+                </td>
+            </tr>
+        }
+    </table>
+    return;
+}
+<div class="main" style="width: @Width; height: @Height;">
+    <table>
+        @foreach (var item in Labels)
+        {
+            <tr>
+                <th>@item.Header:</th>
+                <td style="padding-right:10px;">
+                    @GetValue(item)
+                </td>
+            </tr>
+        }
+    </table>
+</div>

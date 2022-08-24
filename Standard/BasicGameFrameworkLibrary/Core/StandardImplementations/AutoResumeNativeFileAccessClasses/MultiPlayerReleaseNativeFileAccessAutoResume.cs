@@ -1,6 +1,8 @@
 ﻿using BasicGameFrameworkLibrary.Core.StandardImplementations.GlobalClasses; //not common enough.
 using static CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
 using fs = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
+using ss = System.IO.Path;
+
 namespace BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses;
 public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveState
 {
@@ -15,8 +17,8 @@ public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveStat
         _game = game;
         _data = data;
         _test = test;
-        _localPath = Path.Combine(tempPath, $"{game.GameName} SingleRelease.json");
-        _multiPath = Path.Combine(tempPath, $"{game.GameName} MultiplayerRelease.json");
+        _localPath = ss.Combine(tempPath, $"{game.GameName} SingleRelease.json");
+        _multiPath = ss.Combine(tempPath, $"{game.GameName} MultiplayerRelease.json");
     }
     async Task IMultiplayerSaveState.DeleteGameAsync()
     {

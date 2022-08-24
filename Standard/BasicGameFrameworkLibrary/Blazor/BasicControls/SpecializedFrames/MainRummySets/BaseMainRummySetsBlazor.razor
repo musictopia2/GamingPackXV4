@@ -1,0 +1,43 @@
+﻿@typeparam SU
+@typeparam CO
+@typeparam RU
+@typeparam SE
+@typeparam T
+@if (DataContext == null || ChildContent == null)
+{
+    return;
+}
+@if (ContainerHeight == "" && ContainerWidth == "")
+{
+    return;
+}
+<CascadingValue Value="this">
+    @if (DataContext.HasFrame)
+    {
+        <fieldset style="@GetContainerStyle()" disabled="@IsDisabled">
+            <legend>@DataContext.Text</legend>
+            <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
+                @foreach (var set in DataContext.SetList)
+                {
+                    <StackItem>
+                        @ChildContent(set)
+                    </StackItem>
+                }
+            </StackLayout>
+        </fieldset>
+    }
+    else
+    {
+        //no frame
+        <div style="@GetContainerStyle()">
+            <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
+                @foreach (var set in DataContext.SetList)
+                {
+                    <StackItem>
+                        @ChildContent(set)
+                    </StackItem>
+                }
+            </StackLayout>
+        </div>
+    }
+</CascadingValue>
