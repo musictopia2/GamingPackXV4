@@ -1,0 +1,26 @@
+@inherits BasicGameView<DemonSolitaireMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <StackLayout>
+        <StackItem>
+            <DeckOfCardsDrawPileBlazor R="SolitaireCard" DeckPile="DataContext.DeckPile" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsSingleMiscPileBlazor R="SolitaireCard" SinglePile="DataContext.MainDiscardPile" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetMainPiles()" />
+        </StackItem>
+    </StackLayout>
+    <StackLayout>
+        <StackItem>
+            <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsDrawPileBlazor R="SolitaireCard" DeckPile="DataContext.Heel1" />
+        </StackItem>
+        <StackItem>
+            <SolitairePilesBlazor MainPiles="@GetWastePiles()" />
+        </StackItem>
+    </StackLayout>
+}
