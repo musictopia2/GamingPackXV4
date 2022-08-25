@@ -1,0 +1,52 @@
+@inherits BasicGameView<BlackjackMainViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+@if (DataContext!.DeckPile != null)
+{
+    <DeckOfCardsDrawPileBlazor R="BlackjackCardInfo" DeckPile="DataContext.DeckPile" />
+}
+<StackLayout ItemSpacing="10px">
+    <StackItem>
+        <div>
+            <DeckOfCardsDrawPileBlazor R="BlackjackCardInfo" DeckPile="DataContext.DeckPile" />
+        </div>
+        <div>
+            <LabelGridComponent Labels="WinLabels" DataContext="DataContext" />
+        </div>
+    </StackItem>
+    <StackItem>
+        <StackLayout>
+            <StackItem>
+                <div>
+                    <DeckOfCardsHandBlazor R="BlackjackCardInfo" Hand="DataContext.ComputerStack" />
+                </div>
+                <div>
+                    <DeckOfCardsHandBlazor R="BlackjackCardInfo" Hand="DataContext.HumanStack" />
+                </div>
+                <div>
+                    <LabelGridComponent Labels="PointLabels" DataContext="DataContext" />
+                </div>
+
+                <div>
+                    <GameButtonComponent CommandObject="HitCommand" Display="Hit Me" />
+                </div>
+                <div>
+                    <GameButtonComponent CommandObject="StayCommand" Display="Stay" />
+                </div>
+            </StackItem>
+            @if (DataContext.NeedsAceChoice)
+            {
+                <StackItem>
+                    <div>
+                        <GameButtonComponent CommandObject="AceCommand" CommandParameter="EnumAceChoice.Low" Display="Use Ace As One (1)" />
+                    </div>
+                    <div>
+                        <GameButtonComponent CommandObject="AceCommand" CommandParameter="EnumAceChoice.High" Display="Use Ace As 11 (11)" />
+                    </div>
+                </StackItem>
+            }
+        </StackLayout>
+    </StackItem>
+</StackLayout>
