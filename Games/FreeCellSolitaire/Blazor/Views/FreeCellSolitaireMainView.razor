@@ -1,0 +1,23 @@
+@inherits BasicGameView<FreeCellSolitaireMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <StackLayout ItemSpacing="20px">
+        <StackItem>
+            <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="DataContext.FreePiles1" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetMainPiles()" />
+        </StackItem>
+    </StackLayout>
+    <StackLayout>
+        <StackItem>
+            <SolitairePilesBlazor MainPiles="@GetWastePiles()" />
+        </StackItem>
+        <StackItem>
+            <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
+            <div>
+                <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
+            </div>
+        </StackItem>
+    </StackLayout>
+}
