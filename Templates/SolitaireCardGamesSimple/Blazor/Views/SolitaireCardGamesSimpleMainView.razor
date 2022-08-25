@@ -1,0 +1,19 @@
+@inherits BasicGameView<SolitaireCardGamesSimpleMainViewModel>
+<p>Welcome to SolitaireCardGamesSimple</p>
+@if (DataContext!.DeckPile != null)
+{
+    <DeckOfCardsDrawPileBlazor R="SolitaireCard" DeckPile="DataContext.DeckPile" />
+    <DeckOfCardsSingleMiscPileBlazor R="SolitaireCard" SinglePile="DataContext.MainDiscardPile" />
+    <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
+
+    <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
+
+    <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetMainPiles()" />
+    <div>
+        <SolitairePilesBlazor MainPiles="@GetWastePiles()" />
+    </div>
+    //there can be a discard multiple pile as well.  its here
+
+    //<DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetMainPiles()" />
+
+}
