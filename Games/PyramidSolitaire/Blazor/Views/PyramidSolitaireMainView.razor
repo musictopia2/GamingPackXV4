@@ -1,0 +1,31 @@
+@inherits BasicGameView<PyramidSolitaireMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <StackLayout ItemSpacing="10px">
+        <StackItem>
+            <StackLayout>
+                <StackItem>
+                    <DeckOfCardsDrawPileBlazor R="SolitaireCard" DeckPile="DataContext.DeckPile" />
+                </StackItem>
+                <StackItem>
+                    <DeckOfCardsSingleMiscPileBlazor R="SolitaireCard" SinglePile="DataContext.Discard" />
+                </StackItem>
+                <StackItem>
+                    <DeckOfCardsSingleMiscPileBlazor R="SolitaireCard" SinglePile="DataContext.CurrentPile" />
+                </StackItem>
+            </StackLayout>
+            <div>
+                <DeckOfCardsCardBoardBlazor R="SolitaireCard" DataContext="DataContext.PlayList1" />
+            </div>
+            <div>
+                <GameButtonComponent Display="Play Selected Cards" CommandObject="DataContext.PlaySelectedCardsCommand" />
+            </div>
+            <div>
+                Score @DataContext.Score
+            </div>
+        </StackItem>
+        <StackItem>
+            <TriangleBlazor DataContext="DataContext.GameBoard1" />
+        </StackItem>
+    </StackLayout>
+}
