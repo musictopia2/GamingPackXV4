@@ -1,0 +1,20 @@
+﻿<BaseFrameBlazor PaddingHeight="10" Text="@Score!.Text">
+    <StackLayout ItemSpacing="10px">
+        <StackItem>
+            <div class="handGrid">
+                @foreach (var card in Score.CardList)
+                {
+                    <div>
+                        <DeckOfCardsImageBlazor TargetHeight="@HeightString" R="CribbageCard" DeckObject="card" />
+                    </div>
+                }
+            </div>
+        </StackItem>
+        <StackItem>
+            @foreach (var score in Score.Scores)
+            {
+                <div>@score.Description - @score.Points</div>
+            }
+        </StackItem>
+    </StackLayout>
+</BaseFrameBlazor>

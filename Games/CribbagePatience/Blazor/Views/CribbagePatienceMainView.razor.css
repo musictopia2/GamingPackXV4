@@ -1,0 +1,10 @@
+﻿.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 45vh 45vh;
+}
+
+.firstGrid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
