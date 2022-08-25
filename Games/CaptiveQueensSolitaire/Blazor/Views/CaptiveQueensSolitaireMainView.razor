@@ -1,0 +1,22 @@
+@inherits BasicGameView<CaptiveQueensSolitaireMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <StackLayout>
+        <StackItem>
+            <StackLayout>
+                <StackItem>
+                        <DeckOfCardsDrawPileBlazor R="SolitaireCard" DeckPile="DataContext.DeckPile" />
+                </StackItem>
+                    <StackItem>
+                    <DeckOfCardsSingleMiscPileBlazor R="SolitaireCard" SinglePile="DataContext.MainDiscardPile" />
+                </StackItem>
+            </StackLayout>
+            <div>
+                <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
+            </div>
+        </StackItem>
+        <StackItem>
+            <MainUI Main="@GetMainPiles()" />
+        </StackItem>
+    </StackLayout>
+}
