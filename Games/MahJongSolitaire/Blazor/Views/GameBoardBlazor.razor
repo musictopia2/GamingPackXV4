@@ -1,0 +1,18 @@
+﻿@inherits BasicGameView<MahJongSolitaireMainViewModel>
+@using System.Drawing;
+@if (BoardList == null)
+{
+    <p></p>
+    return;
+}
+<svg @key="@GetGameKey" height="80vh" viewBox="0 0 2040 1408">
+    @foreach (var board in BoardList)
+    {
+        foreach (var tile in board.TileList)
+        {
+            <FlexibleDeckRenderComponent @key="tile" ConsiderEnabled="true" D="MahjongSolitaireTileInfo" DeckObject="tile">
+                <MahjongTilesComponent CommandObject="DataContext!.SelectTileCommand!"  DeckObject="tile" CommandParameter="tile" Location="new PointF(tile.Left, tile.Top)" />
+            </FlexibleDeckRenderComponent>
+        }
+    }
+</svg>
