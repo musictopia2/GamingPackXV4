@@ -1,0 +1,10 @@
+@inherits BasicGameView<HeapSolitaireMainViewModel>
+<DeckOfCardsMultiplePilesBlazor R="HeapSolitaireCardInfo" Piles="DataContext!.Main1" />
+<StackLayout ItemSpacing="0px">
+    <StackItem>
+        <CustomWasteUI />
+    </StackItem>
+    <StackItem>
+        Score: @DataContext!.Score
+    </StackItem>
+</StackLayout>
