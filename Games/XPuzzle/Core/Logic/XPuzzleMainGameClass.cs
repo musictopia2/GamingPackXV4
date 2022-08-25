@@ -44,7 +44,6 @@ public class XPuzzleMainGameClass : IAggregatorContainer
         _gameGoing = false;
         await _message.ShowMessageAsync("You Win");
         await _thisState.DeleteSinglePlayerGameAsync();
-        //send message to show win.
         await this.SendGameOverAsync(_error);
     }
 }

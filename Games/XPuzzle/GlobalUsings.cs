@@ -21,3 +21,10 @@ global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.MapHelper
 global using BasicGameFrameworkLibrary.Core.Attributes;
 global using BasicGameFrameworkLibrary.Blazor.Bootstrappers;
 global using XPuzzle.Core.ViewModels;
+global using cs = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using System.Collections;
+global using BasicGameFrameworkLibrary.Core.GameBoardCollections;
+global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.RandomGenerator;
+global using BasicGameFrameworkLibrary.Core.GeneratorHelpers;
+global using BasicGameFrameworkLibrary.Core.Extensions;
+global using aa = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
