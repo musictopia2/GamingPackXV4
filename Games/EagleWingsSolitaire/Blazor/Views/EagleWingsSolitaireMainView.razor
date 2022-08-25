@@ -1,0 +1,21 @@
+@inherits BasicGameView<EagleWingsSolitaireMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <StackLayout>
+        <StackItem>
+            <DeckOfCardsDrawPileBlazor R="SolitaireCard" DeckPile="DataContext.DeckPile" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsSingleMiscPileBlazor R="SolitaireCard" SinglePile="DataContext.MainDiscardPile" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetMainPiles()" />
+        </StackItem>
+    </StackLayout>
+    <div>
+        <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
+        <SolitairePilesBlazor PlaceAfter="4" MainPiles="@GetWastePiles()">
+            <DeckOfCardsDrawPileBlazor R="SolitaireCard" DeckPile="DataContext.Heel1" />
+        </SolitairePilesBlazor>
+    </div>
+}
