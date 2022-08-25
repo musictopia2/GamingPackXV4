@@ -1,0 +1,12 @@
+@inherits BasicGameView<BlockElevenSolitaireMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <StackLayout>
+        <StackItem>
+            <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetWastePiles()" />
+        </StackItem>
+        <StackItem>
+            <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
+        </StackItem>
+    </StackLayout>
+}
