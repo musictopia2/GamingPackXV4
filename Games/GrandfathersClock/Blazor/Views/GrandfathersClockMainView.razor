@@ -1,0 +1,17 @@
+@inherits BasicGameView<GrandfathersClockMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <StackLayout>
+        <StackItem Style="margin-right: 28vw">
+            <MainClockBlazor DataContext="GetMainPiles()">
+                <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
+                <div>
+                    <LabelGridComponent Labels="_labels" DataContext="DataContext" />
+                </div>
+            </MainClockBlazor>
+        </StackItem>
+        <StackItem>
+            <SolitairePilesBlazor MainPiles="@GetWastePiles()" />
+        </StackItem>
+    </StackLayout>
+}
