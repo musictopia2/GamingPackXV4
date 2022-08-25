@@ -1,0 +1,26 @@
+@inherits BasicGameView<EightOffSolitaireMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <StackLayout>
+        <StackItem>
+            <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetMainPiles()" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsHandBlazor Hand="DataContext.ReservePiles1" R="SolitaireCard" />
+        </StackItem>
+    </StackLayout>
+    <StackLayout>
+        <StackItem>
+            <SolitairePilesBlazor MainPiles="@GetWastePiles()" />
+        </StackItem>
+        <StackItem>
+            <GameButtonComponent CommandObject="DataContext.AddToReserveCommand" Display="Reserve Card" />
+            <div>
+                <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
+            </div>
+            <div>
+                <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
+            </div>
+        </StackItem>
+    </StackLayout>
+}
