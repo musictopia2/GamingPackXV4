@@ -1,0 +1,19 @@
+@inherits BasicGameView<PokerMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <StackLayout ItemSpacing="60px">
+        <StackItem>
+            <DeckOfCardsDrawPileBlazor R="PokerCardInfo" DeckPile="DataContext.DeckPile" />
+        </StackItem>
+        <StackItem>
+            <BetUI />
+            <GameButtonComponent CommandObject="DataContext.NewRoundCommand" Display="New Round" />
+        </StackItem>
+    </StackLayout>
+    <div>
+        <LabelGridComponent Labels="Labels" DataContext="DataContext" />
+    </div>
+    <div>
+        <HandUI />
+    </div>
+}
