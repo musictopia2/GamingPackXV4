@@ -19,7 +19,6 @@ public class Bootstrapper : SinglePlayerBootstrapper<SolitaireBoardGameShellView
     {
         register.RegisterType<SolitaireBoardGameShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
-        Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
     }
 }

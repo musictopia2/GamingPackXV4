@@ -1,6 +1,6 @@
 //i think this is the most common things i like to do
-namespace XPuzzle.Blazor;
-public class Bootstrapper : SinglePlayerBootstrapper<XPuzzleShellViewModel>
+namespace Minesweeper.Blazor;
+public class Bootstrapper : SinglePlayerBootstrapper<MinesweeperShellViewModel>
 {
     public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
     {
@@ -17,8 +17,7 @@ public class Bootstrapper : SinglePlayerBootstrapper<XPuzzleShellViewModel>
     //this part should not change
     protected override void FinishRegistrations(IGamePackageRegister register)
     {
-        register.RegisterType<XPuzzleShellViewModel>(); //has to use interface part to make it work with source generators.
+        register.RegisterType<MinesweeperShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
-        Core.AutoResumeContexts.GlobalRegistrations.Register();
     }
 }
