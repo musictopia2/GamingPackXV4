@@ -1,0 +1,24 @@
+@inherits BasicGameView<VegasSolitaireMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <StackLayout>
+        <StackItem>
+            <DeckOfCardsDrawPileBlazor R="SolitaireCard" DeckPile="DataContext.DeckPile" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsSingleMiscPileBlazor R="SolitaireCard" SinglePile="DataContext.MainDiscardPile" />
+        </StackItem>
+        <StackItem Style="margin-top: 15px;">
+            <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetMainPiles()" />
+        </StackItem>
+        <StackItem Style="margin-top: 15px;">
+            <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
+            <div>
+                <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
+            </div>
+        </StackItem>
+    </StackLayout>
+    <div>
+        <SolitairePilesBlazor MainPiles="@GetWastePiles()" />
+    </div>
+}
