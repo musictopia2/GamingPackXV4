@@ -1,0 +1,28 @@
+@inherits BasicGameView<RummyDiceMainViewModel>
+@if (DataContext == null || DataContext.MainGame.TempSets == null)
+{
+    return;
+}
+@foreach (var hand in DataContext.MainGame.TempSets)
+{
+    <div>
+        <RummyHandBlazor TargetHeight="12vh" DataContext="hand" />
+    </div>
+}
+<StackLayout ItemSpacing="10px">
+    <StackItem>
+        <GameButtonComponent CommandObject="RollCommand" Display="Roll" />
+        <GameButtonComponent CommandObject="PutBackCommand" Display="Put Back" />
+        <GameButtonComponent CommandObject="ScoreCommand" Display="Score Hand" />
+        <GameButtonComponent CommandObject="EndTurnCommand" Display="End Turn" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+    </StackItem>
+    <StackItem>
+        <ScoreBoardBlazor P="RummyDicePlayerItem" Columns="_scores" Players="DataContext.MainGame.PlayerList" />
+    </StackItem>
+</StackLayout>
+<div>
+    <RummyListBlazor TargetHeight="12vh" GameBoard="DataContext.MainGame.MainBoard1" />
+</div>

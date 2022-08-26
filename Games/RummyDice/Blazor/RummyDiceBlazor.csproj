@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+	
+  <ItemGroup>
+    <None Include="Views\RummyDiceMainView.razor" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BasicBlazorLibrary" Version="4.0.1" />
+		<PackageReference Include="BlazorMVVMHelpersLibrary" Version="2.0.1" />
+		<PackageReference Include="CommonBasicLibraries" Version="7.0.2" />
+		<PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
+		<PackageReference Include="MessengingHelpers" Version="2.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.2" />
+		<PackageReference Include="MVVMFramework" Version="2.0.1" />
+		<PackageReference Include="SvgHelper.Blazor" Version="4.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\CP\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
+	  <ProjectReference Include="..\..\..\CP\Standard\CommandsGenerator\CommandsGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	  <ProjectReference Include="..\..\..\CP\Standard\GamePackageDIGenerator\GamePackageDIGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	  <ProjectReference Include="..\..\..\CP\Games\RummyDiceCP\RummyDiceCP.csproj" />
+	  <ProjectReference Include="..\..\Standard\BasicGamingUIBlazorLibrary\BasicGamingUIBlazorLibrary.csproj" />
+	</ItemGroup>
+
+</Project>
