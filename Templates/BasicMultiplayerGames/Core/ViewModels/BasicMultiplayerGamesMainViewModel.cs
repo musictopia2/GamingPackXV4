@@ -1,4 +1,3 @@
-
 namespace BasicMultiplayerGames.Core.ViewModels;
 [InstanceGame]
 public class BasicMultiplayerGamesMainViewModel : BasicMultiplayerMainVM

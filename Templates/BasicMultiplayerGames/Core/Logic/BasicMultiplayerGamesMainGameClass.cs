@@ -1,5 +1,3 @@
-
-
 namespace BasicMultiplayerGames.Core.Logic;
 [SingletonGame]
 public class BasicMultiplayerGamesMainGameClass : BasicGameClass<BasicMultiplayerGamesPlayerItem, BasicMultiplayerGamesSaveInfo>
