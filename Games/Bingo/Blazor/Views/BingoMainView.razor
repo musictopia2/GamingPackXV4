@@ -1,0 +1,49 @@
+@inherits BasicGameView<BingoMainViewModel>
+@if (ParentElement!.BrowserInfo!.Height < 600 && ParentElement.BrowserInfo.Width < 600)
+{
+    //different layout completely.
+    <div style="font-size: 5vh">
+        Number Called: @DataContext!.VMData.NumberCalled
+    </div>
+    <StackLayout>
+        <StackItem>
+            <GridGameBoard S="SpaceInfoCP"
+                           SpaceList="_save!.BingoBoard"
+                           GridHeight="100%"
+                           GridWidth="100%"
+                           TargetSpaceHeight="100"
+                           TargetSpaceWidth="100">
+                <ItemTemplate Context="Space">
+                    <BingoSpaceBlazor CommandObject="DataContext.SelectSpaceCommand" CommandParameter="Space" />
+                </ItemTemplate>
+            </GridGameBoard>
+            
+        </StackItem>
+        <StackItem>
+            <GameButtonComponent Display="Bingo" CommandObject="DataContext.BingoCommand" StartOnNewLine="true" />
+        </StackItem>
+    </StackLayout>
+    <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+    return;
+}
+<GridContainer Columns="@ColumnText">
+    <GridItem>
+        <div style="font-size: 8vh">
+            Number Called: @DataContext!.VMData.NumberCalled
+        </div>
+        <GridGameBoard S="SpaceInfoCP"
+                       SpaceList="_save!.BingoBoard"
+                       GridHeight="75vh"
+                       GridWidth="95%"
+                       TargetSpaceHeight="100"
+                       TargetSpaceWidth="100">
+            <ItemTemplate Context="Space">
+                <BingoSpaceBlazor CommandObject="DataContext.SelectSpaceCommand" CommandParameter="Space" />
+            </ItemTemplate>
+        </GridGameBoard>
+    </GridItem>
+    <GridItem Column="2">
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        <GameButtonComponent Display="Bingo" CommandObject="DataContext.BingoCommand" StartOnNewLine="true" />
+    </GridItem>
+</GridContainer>
