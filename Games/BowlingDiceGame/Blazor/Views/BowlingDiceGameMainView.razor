@@ -1,0 +1,7 @@
+@inherits BasicGameView<BowlingDiceGameMainViewModel>
+<BowlingCompleteScoresheetBlazor MainGame="@DataContext!.MainGame" />
+<BowlingDiceListBlazor DiceList="DataContext.MainGame.DiceBoard!.DiceList" />
+<LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+<RollComponent CommandObject="DataContext.RollCommand" />
+<GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ContinueTurnCommand" Display="Contine" />
+<GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.EndTurnCommand" Display="End Turn"  />
