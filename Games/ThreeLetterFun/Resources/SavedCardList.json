@@ -1,0 +1,1562 @@
+[
+  {
+    "CharacterList": [
+      "a",
+      "n",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "a",
+      "r",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "e",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "u",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "c",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "c",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "d",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "d",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "d",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "f",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "f",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "f",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "g",
+      "u",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "h",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "h",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "j",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "l",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "m",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "m",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "p",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "p",
+      "e",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "r",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "r",
+      "u",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "s",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "s",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "t",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "t",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "w",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "a",
+      "\u0000",
+      "d"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "a",
+      "\u0000",
+      "e"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "a",
+      "\u0000",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "\u0000",
+      "d"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "\u0000",
+      "g"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "\u0000",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "c",
+      "\u0000",
+      "p"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "c",
+      "\u0000",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "d",
+      "\u0000",
+      "g"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "f",
+      "\u0000",
+      "n"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "h",
+      "\u0000",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "p",
+      "\u0000",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "r",
+      "\u0000",
+      "d"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "s",
+      "\u0000",
+      "e"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "s",
+      "\u0000",
+      "n"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "s",
+      "\u0000",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "t",
+      "\u0000",
+      "p"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "d"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "n"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "p"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "r"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "s"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "y"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "e",
+      "n"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "e",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "d"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "e"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "g"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "n"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "p"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "x"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "g"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "n"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "p"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "w"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "y"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "r",
+      "y"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "u",
+      "g"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "u",
+      "n"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "u",
+      "t"
+    ],
+    "Level": "Easy"
+  },
+  {
+    "CharacterList": [
+      "a",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "c",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "d",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "e",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "e",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "f",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "g",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "h",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "j",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "l",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "m",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "n",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "o",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "p",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "r",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "s",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "t",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "w",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "y",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "e",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "e",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "u",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "u",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "u",
+      "\u0000"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "b"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "d"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "e"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "g"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "m"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "n"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "o"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "p"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "r"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "s"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "t"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "w"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "x"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "y"
+    ],
+    "Level": "Moderate"
+  },
+  {
+    "CharacterList": [
+      "a",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "b",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "c",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "d",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "d",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "e",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "f",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "g",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "h",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "h",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "i",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "j",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "k",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "l",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "m",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "n",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "o",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "p",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "r",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "s",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "t",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "s",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "t",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "w",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "y",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "z",
+      "\u0000",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "a",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "e",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "e",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "e",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "i",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "o",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "u",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "u",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "u",
+      "\u0000"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "a"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "b"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "c"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "d"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "e"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "d"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "e"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "g"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "h"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "k"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "l"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "m"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "m"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "n"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "n"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "o"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "p"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "p"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "r"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "s"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "t"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "t"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "t"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "w"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "x"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "y"
+    ],
+    "Level": "Hard"
+  },
+  {
+    "CharacterList": [
+      "\u0000",
+      "\u0000",
+      "y"
+    ],
+    "Level": "Hard"
+  }
+]

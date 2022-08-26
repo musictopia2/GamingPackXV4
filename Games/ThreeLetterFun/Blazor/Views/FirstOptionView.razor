@@ -1,0 +1,16 @@
+﻿@inherits BasicGameView<FirstOptionViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+<div style="margin-top: 5px;">
+    <ListChooserBlazor ListPicker="DataContext.Option1" TextWidth="100" TextHeight="27vh" />
+</div>
+<StackLayout ItemSpacing="10px">
+    <StackItem>
+        <GameButtonComponent FontSize="20vh" Display="Submit" CommandObject="DataContext.SubmitCommand" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent AfterChange="ShowChange" FontSize="18vh" Display="Description" CommandObject="DataContext.DescriptionCommand" />
+    </StackItem>
+</StackLayout>

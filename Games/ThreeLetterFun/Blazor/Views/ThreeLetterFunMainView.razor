@@ -1,0 +1,32 @@
+@inherits BasicGameView<ThreeLetterFunMainViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+@if (DataContext.MainGame.BasicData.MultiPlayer)
+{
+    if (DataContext.VMData.PlayerWon != "" && _tempCard != null)
+    {
+        <div style="font-size: 6vh;">
+            @DataContext.VMData.PlayerWon Spelled
+        </div>
+        <div style="color: red; font-size: 12vh;">
+            @_tempCard!.GetWord().ToUpper()
+        </div>
+    }
+}
+<div>
+    <TileBoardBlazor @ref="Board" TargetHeight="10" />
+</div>
+<div>
+    <GameButtonComponent CommandObject="DataContext.PlayCommand" Display="Play" />
+    <GameButtonComponent CommandObject="DataContext.GiveUpCommand" Display="Give Up" />
+    <GameButtonComponent CommandObject="DataContext.TakeBackCommand" Display="Take Back" />
+</div>
+<div>
+    <TileHandBlazor TargetHeight="10vh" Board="DataContext.VMData.TileBoard1" />
+</div>
+@if (DataContext.MainGame.BasicData.MultiPlayer)
+{
+    <ScoreBoardBlazor P="ThreeLetterFunPlayerItem" Players="DataContext.MainGame.PlayerList" Columns="_scores" />
+}
