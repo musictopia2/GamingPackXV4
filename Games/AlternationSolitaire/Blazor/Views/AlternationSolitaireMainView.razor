@@ -1,0 +1,30 @@
+@inherits BasicGameView<AlternationSolitaireMainViewModel>
+@if (DataContext!.DeckPile != null)
+{
+    <GridTwoByTwo>
+        <GridItem>
+            <StackLayout>
+                <StackItem>
+                    <DeckOfCardsDrawPileBlazor R="SolitaireCard" DeckPile="DataContext.DeckPile" />
+                </StackItem>
+                <StackItem>
+                    <DeckOfCardsSingleMiscPileBlazor R="SolitaireCard" SinglePile="DataContext.MainDiscardPile" />
+                </StackItem>
+                <StackItem>
+                    <div>
+                        <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
+                    </div>
+                    <div>
+                        <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
+                    </div>
+                </StackItem>
+            </StackLayout>
+        </GridItem>
+        <GridItem Column="2" RowSpan="2">
+            <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetMainPiles()" />
+        </GridItem>
+        <GridItem Row="2">
+            <SolitairePilesBlazor MainPiles="@GetWastePiles()" />
+        </GridItem>
+    </GridTwoByTwo>
+}
