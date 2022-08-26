@@ -1,0 +1,60 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TileRummyBlazor", "TileRummyBlazor.csproj", "{0743BCE6-91FA-4A70-992C-77FCB98EC007}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicGameFrameworkLibrary", "..\..\..\CP\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj", "{E8137382-F1C2-4443-AE7F-1A81312DC5CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandsGenerator", "..\..\..\CP\Standard\CommandsGenerator\CommandsGenerator.csproj", "{CEC96338-DEF3-4E73-B995-F91AAE74AAE4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamePackageDIGenerator", "..\..\..\CP\Standard\GamePackageDIGenerator\GamePackageDIGenerator.csproj", "{4C54D983-F291-47BE-926D-3F42873B1698}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicGamingUIBlazorLibrary", "..\..\Standard\BasicGamingUIBlazorLibrary\BasicGamingUIBlazorLibrary.csproj", "{4C16AB7E-DA4C-455B-A2BA-E866CF940E28}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TileRummyCP", "..\..\..\CP\Games\TileRummyCP\TileRummyCP.csproj", "{E6F3DE7B-8AA7-48ED-9983-E91AE236A885}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoreBoardGenerator", "..\..\..\CP\Standard\ScoreBoardGenerator\ScoreBoardGenerator.csproj", "{6FD711F8-657C-48AB-9D59-9B7BD7D6D89F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0743BCE6-91FA-4A70-992C-77FCB98EC007}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0743BCE6-91FA-4A70-992C-77FCB98EC007}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0743BCE6-91FA-4A70-992C-77FCB98EC007}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0743BCE6-91FA-4A70-992C-77FCB98EC007}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8137382-F1C2-4443-AE7F-1A81312DC5CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8137382-F1C2-4443-AE7F-1A81312DC5CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8137382-F1C2-4443-AE7F-1A81312DC5CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8137382-F1C2-4443-AE7F-1A81312DC5CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEC96338-DEF3-4E73-B995-F91AAE74AAE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEC96338-DEF3-4E73-B995-F91AAE74AAE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEC96338-DEF3-4E73-B995-F91AAE74AAE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEC96338-DEF3-4E73-B995-F91AAE74AAE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C54D983-F291-47BE-926D-3F42873B1698}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C54D983-F291-47BE-926D-3F42873B1698}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C54D983-F291-47BE-926D-3F42873B1698}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C54D983-F291-47BE-926D-3F42873B1698}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C16AB7E-DA4C-455B-A2BA-E866CF940E28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C16AB7E-DA4C-455B-A2BA-E866CF940E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C16AB7E-DA4C-455B-A2BA-E866CF940E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C16AB7E-DA4C-455B-A2BA-E866CF940E28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F3DE7B-8AA7-48ED-9983-E91AE236A885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6F3DE7B-8AA7-48ED-9983-E91AE236A885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6F3DE7B-8AA7-48ED-9983-E91AE236A885}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F3DE7B-8AA7-48ED-9983-E91AE236A885}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FD711F8-657C-48AB-9D59-9B7BD7D6D89F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FD711F8-657C-48AB-9D59-9B7BD7D6D89F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FD711F8-657C-48AB-9D59-9B7BD7D6D89F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FD711F8-657C-48AB-9D59-9B7BD7D6D89F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5AC1F8A7-F919-4E28-8A95-BBCF0098C8F7}
+	EndGlobalSection
+EndGlobal

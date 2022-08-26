@@ -1,0 +1,33 @@
+@inherits BasicGameView<TileRummyMainViewModel>
+<StackLayout>
+    <StackItem>
+        <BaseBoneyardPileBlazor D="TileInfo"
+                                LI="TileShuffler"
+                                BoneyardPile="DataContext!.GetPool">
+            <TileRummyImageBlazor TargetHeight="7vh" DeckObject="GetTile" />
+        </BaseBoneyardPileBlazor>
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent StartOnNewLine="true" CommandObject="FirstSetCommand" FontSize="2vh" Display="Create First Sets" />
+        <GameButtonComponent StartOnNewLine="true" CommandObject="CreateNewSetCommand" FontSize="2vh" Display="Create New Set" />
+        <GameButtonComponent StartOnNewLine="true" CommandObject="ResetCommand" FontSize="2vh" Display="Reset Moves" />
+        <GameButtonComponent StartOnNewLine="true" CommandObject="EndCommand" FontSize="2vh" Display="End Turn" />
+        <div>
+            <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        </div>
+        <div>
+            <ScoreBoardBlazor Players="DataContext!.GetPlayers" P="TileRummyPlayerItem" Columns="_scores" />
+        </div>
+    </StackItem>
+    <StackItem>
+        <TileRummyTempSetBlazor TargetContainerSize="20vh" TempPiles="DataContext!.GetTempTiles" />
+    </StackItem>
+</StackLayout>
+<div>
+    <BaseHandBlazor D="TileInfo" TargetContainerSize="95vw" Context="Tile" Hand="DataContext!.GetHand">
+        <TileRummyImageBlazor CommandObject="DataContext.GetHand.ObjectSingleClickCommand" CommandParameter="Tile" DeckObject="Tile" />
+    </BaseHandBlazor>
+</div>
+<div>
+    <TileRummyMainSetBlazor ContainerHeight="35vh" ContainerWidth="90vw" DataContext="DataContext.GetMainSets" />
+</div>
