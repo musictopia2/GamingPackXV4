@@ -1,0 +1,23 @@
+@inherits BasicGameView<BattleshipLiteMainViewModel>
+<CascadingValue Value="@GetVH()" IsFixed="true">
+    <GridContainer Columns="@ColumnText">
+        <GridItem>
+            <GridGameBoard RowList="_rowList"
+                           ColumnList="_columnList"
+                           S="ShipInfo"
+                           SpaceList="DataContext!.YourCompleteShips"
+                           GridHeight="@GetVH()"
+                           GridWidth="100%"
+                           TargetSpaceHeight="50"
+                           TargetSpaceWidth="50">
+                <ItemTemplate Context="Ship">
+                    <SpaceControlBlazor CommandObject="DataContext!.MakeMoveCommand" Ship="Ship" CommandParameter="Ship" />
+                </ItemTemplate>
+            </GridGameBoard>
+        </GridItem>
+        <GridItem Column="2">
+            <PersonalShipComponent />
+        </GridItem>
+    </GridContainer>
+    <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+</CascadingValue>
