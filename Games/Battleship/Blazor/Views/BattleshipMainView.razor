@@ -1,0 +1,28 @@
+@inherits BasicGameView<BattleshipMainViewModel>
+@if (_humanList == null)
+{
+    return;
+}
+<GridContainer Columns="@ColumnText">
+    <GridItem>
+        <GridGameBoard RowList="_rowList"
+                       ColumnList="_columnList"
+                       @key="BattleshipMainViewModel.GamesPlayed"
+                       S="FieldInfoCP"
+                       SpaceList="_humanList"
+                       GridHeight="85vh"
+                       GridWidth="100%"
+                       TargetSpaceHeight="50"
+                       TargetSpaceWidth="50">
+            <ItemTemplate Context="Space">
+                <SpaceControlBlazor CommandObject="DataContext!.MakeMoveCommand" Field="Space" CommandParameter="Space.Vector" />
+            </ItemTemplate>
+        </GridGameBoard>
+    </GridItem>
+    <GridItem Column="2">
+        <ShipControlBlazor Ships="@_ships" />
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        <GameButtonComponent Display="Horizontal" CommandParameter="true" BackgroundColor="@Color(true)" CommandObject="DataContext.ShipDirectionCommand" StartOnNewLine="true" />
+        <GameButtonComponent Display="Vertical" CommandParameter="false" BackgroundColor="@Color(false)" CommandObject="DataContext.ShipDirectionCommand" StartOnNewLine="true" />
+    </GridItem>
+</GridContainer>
