@@ -1,0 +1,21 @@
+@inherits BasicGameView<SnakesAndLaddersMainViewModel>
+@if (DataContext!.CurrentPlayer == null)
+{
+    return; //hopefully this works too.
+}
+<StackLayout>
+    <StackItem>
+        <GameBoardBlazor PlayerList="DataContext!.GetPlayerList" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent CommandObject="DataContext.RollDiceCommand" Display="Roll Dice" />
+        <BasePieceGraphics TargetHeight="10vh"
+                           LongestSize="50">
+            <PieceGraphicsBlazor Index="@DataContext!.CurrentPlayer.Id" Number="@DataContext.CurrentPlayer.SpaceNumber" />
+        </BasePieceGraphics>
+        <DiceListConrolBlazor Cup="DataContext!.GetCup" D="SimpleDice" />
+        <div>
+            <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+        </div>
+    </StackItem>
+</StackLayout>
