@@ -1,0 +1,12 @@
+@inherits BasicGameView<ConnectTheDotsMainViewModel>
+<div style="margin-top: 5px; margin-left: 5px">
+    <StackLayout>
+        <StackItem>
+            <GameBoardBlazor Container="_container" Graphics="_graphics" TargetHeight="88vh" />
+        </StackItem>
+        <StackItem>
+            <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+            <ScoreBoardBlazor P="ConnectTheDotsPlayerItem" Columns="_scores" Players="_container!.PlayerList" />
+        </StackItem>
+    </StackLayout>
+</div>
