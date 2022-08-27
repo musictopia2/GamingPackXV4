@@ -1,0 +1,10 @@
+namespace ChineseCheckers.Core.Data;
+public class ChineseCheckersPlayerItem : PlayerBoardGame<EnumColorChoice>
+{
+    public override bool DidChooseColor => Color.IsNull == false && Color != EnumColorChoice.None;
+    public override void Clear()
+    {
+        Color = EnumColorChoice.None;
+    }
+    public BasicList<int> PieceList { get; set; } = new();
+}
