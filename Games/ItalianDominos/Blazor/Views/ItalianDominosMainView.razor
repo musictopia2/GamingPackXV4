@@ -1,0 +1,20 @@
+@inherits BasicGameView<ItalianDominosMainViewModel>
+<BaseBoneyardPileBlazor D="SimpleDominoInfo" BoneyardPile="DataContext!.BoneYard" LI="DominosBasicShuffler<SimpleDominoInfo>">
+    <BasicDominoBlazor D="SimpleDominoInfo" DeckObject="GetDomino" TargetHeight="10vh" />
+</BaseBoneyardPileBlazor>
+<div>
+    <BaseHandBlazor Hand="DataContext.PlayerHand" AdditionalSpacing="0" Context="Domino" D="SimpleDominoInfo">
+        <BasicDominoBlazor D="SimpleDominoInfo" PartOfBoard="true" DeckObject="Domino" CommandObject="DataContext.PlayerHand.ObjectSingleClickCommand" CommandParameter="Domino" />
+    </BaseHandBlazor>
+</div>
+<StackLayout>
+    <StackItem>
+        <GameButtonComponent CommandObject="PlayCommand" Display="Play" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+    </StackItem>
+    <StackItem>
+        <ScoreBoardBlazor UseAbbreviationForTrueFalse="false" P="ItalianDominosPlayerItem" Players="DataContext.GetPlayerList" Columns="_scores" />
+    </StackItem>
+</StackLayout>

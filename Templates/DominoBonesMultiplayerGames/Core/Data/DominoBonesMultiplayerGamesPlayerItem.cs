@@ -1,4 +1,3 @@
-
 namespace DominoBonesMultiplayerGames.Core.Data;
 [UseScoreboard]
 public partial class DominoBonesMultiplayerGamesPlayerItem : PlayerSingleHand<SimpleDominoInfo>
