@@ -1,0 +1,29 @@
+@inherits BasicGameView<DominosMexicanTrainMainViewModel>
+<BaseHandBlazor Hand="DataContext!.PlayerHand" AdditionalSpacing="0" TargetContainerSize="99vw" Context="Domino" D="MexicanDomino">
+    <BasicDominoBlazor PartOfBoard="true" D="SimpleDominoInfo" DeckObject="Domino" CommandObject="DataContext.PlayerHand.ObjectSingleClickCommand" CommandParameter="Domino" />
+</BaseHandBlazor>
+<StackLayout ItemSpacing="0px">
+    <StackItem>
+        <div>
+            <BaseBoneyardPileBlazor D="MexicanDomino" BoneyardPile="DataContext!.BoneYard" LI="DominosBasicShuffler<MexicanDomino>">
+                <BasicDominoBlazor D="MexicanDomino" DeckObject="GetDomino" TargetHeight="10vh" />
+            </BaseBoneyardPileBlazor>
+        </div>
+        <div>
+            <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
+            <GameButtonComponent CommandObject="LongestCommand" Display="Longest Train" />
+        </div>
+        <ScoreBoardBlazor P="DominosMexicanTrainPlayerItem" Players="DataContext.GetPlayerList" Columns="_scores" />
+        <div>
+            <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+        </div>
+    </StackItem>
+    <StackItem>
+        <TrainStationBlazor TargetWidth="39" GameBoard="DataContext.GameBoard" />
+    </StackItem>
+</StackLayout>
+<div>
+    <BaseHandBlazor Hand="DataContext.PrivateTrain" TargetContainerSize="99vw" AdditionalSpacing="0" Context="Domino" D="MexicanDomino">
+        <BasicDominoBlazor PartOfBoard="true" D="SimpleDominoInfo" DeckObject="Domino" CommandObject="DataContext.PrivateTrain.ObjectSingleClickCommand" CommandParameter="Domino" />
+    </BaseHandBlazor>
+</div>

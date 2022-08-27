@@ -1,0 +1,55 @@
+﻿@inherits KeyComponentBase 
+@using System.Drawing;
+@using BasicBlazorLibrary.Components.RenderHelpers; 
+@using static DominosMexicanTrain.Core.Logic.TrainStationBoardProcesses
+@using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards
+@using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
+@* risking using my custom frame instead of just fieldset (?) *@
+
+<CascadingValue Value="this">
+    <BaseFrameBlazor>
+        <svg width="@GetWidth" height="100%" viewBox="0 0 750 750">
+            <rect x="225" y="225" width="300" height="300" fill="lightgray" />
+            @if (GameBoard!.PrivateList.Count == 0)
+            {
+                return;
+            }
+            <RefreshComponent CanRender="GameBoard.GetAnimation.AnimationGoing == false">
+                <BasicDominoBlazor @key="GameBoard!.CenterDomino" PartOfBoard="true" D="MexicanDomino" Location="new PointF(300, 349)" LongestSize="@GetLongestSize" DeckObject="GameBoard!.CenterDomino" />
+
+                @foreach (var train in GameBoard.TrainList)
+                {
+                    PrivateTrain privateTrain = GameBoard.PrivateList[train.Value.Index];
+                    foreach (var domino in train.Value.DominoList)
+                    {
+                        <BasicDominoBlazor @key="domino" D="MexicanDomino" PartOfBoard="true" DeckObject="domino" LongestSize="@GetLongestSize" Location="domino.Location" />
+                    }
+                    <TrainPieceBlazor Self="@IsSelf(train.Key)"
+                                      PositionInfo="privateTrain"
+                                      Player="train.Key"
+                                      @key="train.Value"
+                                      TrainInfo="train.Value"
+                                      TrainClicked="TrainClicked"
+                                      WasDouble="GameBoard.Satisfy > 0"
+                                      Satisfy="Satisfy(train.Key)" />
+                }
+            </RefreshComponent>
+
+            @* try to do this last *@
+            @if (GameBoard.GetAnimation.AnimationGoing)
+            {
+                <UpdatePortionBoard>
+                    <BasicDominoBlazor PartOfBoard="true"
+                                       D="MexicanDomino"
+                                       @key="@Guid.NewGuid().ToString()"
+                                       LongestSize="@GetLongestSize"
+                                       Location="GameBoard.GetAnimation.CurrentLocation"
+                                       DeckObject="GameBoard.GetMovingDomino" />
+                </UpdatePortionBoard>
+
+            }
+
+
+        </svg>
+    </BaseFrameBlazor>
+</CascadingValue>
