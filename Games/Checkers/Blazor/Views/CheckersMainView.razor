@@ -1,0 +1,38 @@
+@inherits BasicGameView<CheckersMainViewModel>
+<div style="margin-left: 5px; margin-top: 5px;">
+    <StackLayout>
+        <StackItem>
+            <CheckersChessBoardBlazor E="EnumColorChoice"
+                                      S="SpaceCP"
+                                      TargetHeight="88vh"
+                                      CanRenderSpace="GameContainer!.CanUpdate"
+                                      GameBoard="GameBoard">
+                <MainPiece Context="Piece">
+                    <BasePieceGraphics LongestSize="@LongestSize">
+                        <CheckerPiece MainColor="@PieceColor(Piece)" PieceCategory="CheckerCategory(Piece)" />
+                    </BasePieceGraphics>
+                </MainPiece>
+                <AnimatePiece>
+                    @if (GameContainer!.Animates.AnimationGoing)
+                    {
+                        var player = GameContainer.PlayerList!.GetWhoPlayer();
+                        <UpdatePortionBoard>
+                            <BasePieceGraphics @key="@GetKey" Location="GameContainer.Animates.CurrentLocation" LongestSize="@LongestSize">
+                                <CheckerPiece MainColor="@PieceColor(player.Color)"
+                                              PieceCategory="@AnimationCategory" />
+                            </BasePieceGraphics>
+                        </UpdatePortionBoard>
+                        return;
+                    }
+                </AnimatePiece>
+            </CheckersChessBoardBlazor>
+        </StackItem>
+        <StackItem>
+            <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
+            <GameButtonComponent Display="Show Tie" CommandObject="TieCommand" />
+            <div>
+                <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+            </div>
+        </StackItem>
+    </StackLayout>
+</div>
