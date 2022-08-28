@@ -1,0 +1,17 @@
+﻿<BaseFrameBlazor
+                 IsEnabled="@DataContext!.IsEnabled"
+                 Text="@DataContext.VMData.DisplayScoreText"
+                 >
+    <GridList Context="text" Columns="2" RenderList="DataContext.VMData.TextList">
+        <GameButtonComponent CommandObject="ChangeCommand"
+                             BackgroundColor="@GetButtonColor(text)"
+                             Display="@text"
+                             CommandParameter="@text" />
+    </GridList>
+    <div>
+        <GameButtonComponent CommandObject="ScoreCommand"
+                             Display="Your Score" />
+        <GameButtonComponent CommandObject="DescriptionCommand"
+                             Display="Description" />
+    </div>
+</BaseFrameBlazor>
