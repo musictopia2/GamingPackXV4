@@ -1,0 +1,9 @@
+@inherits BasicGameView<DeadDie96MainViewModel>
+<div style="height: 22vh">
+    <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
+    <DiceListConrolBlazor D="TenSidedDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+</div>
+<LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+<div>
+    <ScoreBoardBlazor P="DeadDie96PlayerItem" Columns="@_scores" Players="@DataContext!.PlayerList" />
+</div>
