@@ -1,0 +1,29 @@
+@if (GameData == null || TestData == null || BasicData == null)
+{
+    if (GameData == null)
+    {
+        <div>No Game Data</div>
+    }
+    if (TestData == null)
+    {
+        <div>No Test Data</div>
+    }
+    if (BasicData == null)
+    {
+        <div>No Basic Data</div>
+    }
+    return;
+}
+<ParentControl VM="RiskMainViewModel">
+    <CascadingValue Value="TargetHeight">
+        <RiskMainView />
+    </CascadingValue>
+</ParentControl>
+<ParentControl VM="MultiplayerOpeningViewModel<RiskPlayerItem>">
+    <MultiplayerOpeningView P="RiskPlayerItem" />
+</ParentControl>
+<ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, RiskPlayerItem>">
+    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="RiskPlayerItem">
+        <ArmyColorComponent MainColor="@GetColor(Piece.EnumValue)" />
+    </BeginningChooseColorView>
+</ParentControl>

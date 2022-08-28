@@ -1,0 +1,28 @@
+﻿@if (HowManyArmies > 2)
+{
+    <div>You cannot have more than 2 armies</div>
+    return;
+}
+@if (HowManyArmies < 0)
+{
+    <div>You cannot have less than 0 armies</div>
+    return;
+}
+<ArmyBoard Text="Defend">
+    <BorderedSpace SpaceLocation="new(16, 0)" SpaceSize="new(33, 33)" BorderColor="@cc.Aqua" BorderWidth="1">
+        @if (HowManyArmies > 0)
+        {
+            <BasePieceGraphics LongestSize="33">
+                <ArmyColorComponent MainColor="@Color" />
+            </BasePieceGraphics>
+        }
+    </BorderedSpace>
+    <BorderedSpace SpaceLocation="new(49, 0)" SpaceSize="new(33, 33)" BorderColor="@cc.Aqua" BorderWidth="1">
+        @if (HowManyArmies == 2)
+        {
+            <BasePieceGraphics LongestSize="33">
+                <ArmyColorComponent MainColor="@Color" />
+            </BasePieceGraphics>
+        }
+    </BorderedSpace>
+</ArmyBoard>

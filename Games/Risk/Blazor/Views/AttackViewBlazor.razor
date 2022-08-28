@@ -1,0 +1,22 @@
+﻿@inherits BasicGameView<RiskMainViewModel>
+@using BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses
+@if (DataContext!.VMData.RollingProgress == false && _container.SingleInfo!.PlayerCategory != BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses.EnumPlayerCategory.Self)
+{
+    <div>Must show rolling in progress because its not self</div>
+    //throw new Exception("Must be rolling in progress");
+    return;
+}
+@if (DataContext!.VMData.RollingProgress == false)
+{
+    <ListChooserBlazor ListPicker="DataContext!.VMData.AttackPicker" TotalColumns="4" />
+
+    <GameButtonComponent CommandObject="RollCommand" StartOnNewLine="true" Display="Roll" />
+    return;
+}
+@* hopefully does not need to show extra details in this view (?) *@
+<DefenseArmyComponent HowManyArmies="@_container.SaveRoot.NumberDefenseArmies" Color="@_defenseColor" />
+<AttackArmyComponent HowManyArmies="@_container.SaveRoot.ArmiesInBattle" Color="@_attackColor" />
+<DiceListConrolBlazor Cup="@DataContext!.VMData.DefenseCup" D="SimpleDice" TargetHeight="20vh" />
+<div>
+    <DiceListConrolBlazor Cup="@DataContext!.VMData.AttackCup" D="AttackDice" TargetHeight="20vh" />
+</div>

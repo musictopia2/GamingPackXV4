@@ -1,0 +1,75 @@
+@inherits BasicGameView<RiskMainViewModel>
+@if (CanShowBoard)
+{
+    <StackLayout>
+        <StackItem>
+            <GameBoardBlazor TargetHeight="75vh"
+                         Territories="_container.SaveRoot.TerritoryList"
+                         OnTerritoryClicked="DataContext!.TerritorySelectedAsync" />
+        </StackItem>
+        <StackItem>
+            <div>
+                <ScoreBoardBlazor Players="_container.SaveRoot.PlayerList"
+                              Columns="_scores"
+                              P="RiskPlayerItem" />
+            </div>
+            @if (_container.SaveRoot.Stage == EnumStageList.EndTurn)
+            {
+                <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
+            }
+            else
+            {
+                <GameButtonComponent CommandObject="ToNextStepCommand" Display="Continue Turn" />
+            }
+            @if (_container.SaveRoot.Stage == EnumStageList.StartAttack)
+            {
+                <GameButtonComponent CommandObject="StartAttackCommand" Display="Start Attack" StartOnNewLine="true" />
+            }
+
+            @if ((_container.SaveRoot.Stage == EnumStageList.Move || _container.SaveRoot.Stage == EnumStageList.TransferAfterBattle) && _container.SaveRoot.PreviousTerritory > 0 && _container.SaveRoot.CurrentTerritory > 0)
+            {
+                <div>
+                    <NumberChooserBlazor Columns="5" TextHeight="8vh" NumberPicker="DataContext!.VMData.NumberPicker" />
+                </div>
+                <div>
+                    <GameButtonComponent Display="Move Armies" CommandObject="MoveArmiesCommand" />
+                </div>
+            }
+            else if (_container.SaveRoot.Stage == EnumStageList.Place && _container.SaveRoot.PreviousTerritory > 0)
+            {
+                <div>
+                    <NumberChooserBlazor Columns="5" TextHeight="8vh" NumberPicker="DataContext!.VMData.NumberPicker" />
+                </div>
+                <div>
+                    <GameButtonComponent Display="Place Armies" CommandObject="PlaceArmiesCommand" />
+                </div>
+            }
+            else
+            {
+                <div>
+                    <RiskHandBlazor Hand="DataContext!.VMData.PlayerHand1" />
+                </div>
+            }
+            @if (_container.SaveRoot.Stage == EnumStageList.Begin)
+            {
+                <GameButtonComponent Display="Return Risk Cards" StartOnNewLine="true" CommandObject="ReturnRiskCardsCommand" />
+            }
+        </StackItem>
+    </StackLayout>
+    <StackLayout>
+        <StackItem>
+            <BasePieceGraphics TargetHeight="12vh">
+                <ArmyColorComponent MainColor="@CurrentColor" />
+            </BasePieceGraphics>
+        </StackItem>
+        <StackItem Length="1fr">
+            <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        </StackItem>
+    </StackLayout>
+    return;
+}
+@if (_container.SaveRoot.Stage == EnumStageList.Roll)
+{
+    <AttackViewBlazor />
+    return;
+}

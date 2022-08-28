@@ -1,0 +1,22 @@
+﻿@{ 
+    if (Territories.Count == 0)
+    {
+        return;
+    }
+}
+<SvgBoard TargetHeight="@TargetHeight" BoardSize="new (749.81909f, 519.06781f)">
+    <FixedBoard />
+    <g transform="translate(-167.99651,-118.55507)">
+        @foreach (var item in UnselectedList)
+        {
+            <TerritoryBlazor Territory="item" OnClick="OnTerritoryClicked" />
+        }
+        @foreach (var item in SelectedList)
+        {
+            <TerritoryBlazor Territory="item" OnClick="OnTerritoryClicked" />
+        }
+        <text x="172" y="630" fill="navy" font-size="30px">
+            @_gameContainer.GetNextReenforcementLabel()
+        </text>
+    </g>
+</SvgBoard>

@@ -1,0 +1,15 @@
+﻿@if (Territory is null)
+{
+    return;
+}
+<path style="opacity: 1; fill: @Territory.Color; fill-opacity: 1; stroke-width: @Territory.BorderWidth(_gameContainer); stroke: @Territory.GetBorderColor(_gameContainer); "
+      d="@Territory.Name.GetPath()"
+      @onclick="PrivateClick" />
+<BorderedSpace FillColor="@cc.LightGray"
+               ShapeCategory="BorderedSpace.EnumShapeCategory.Oval"
+               SpaceSize="GetSize"
+               SpaceLocation="@Territory.GetLabelLocation()"
+               BorderColor="@cc.Black"
+               BorderWidth="2">
+    <CenteredTextBlazor BorderWidth="0" BorderColor="@cc.Transparent" TextColor="@cc.Black" FontSize="12" Text="@Territory.Armies.ToString()" />
+</BorderedSpace>
