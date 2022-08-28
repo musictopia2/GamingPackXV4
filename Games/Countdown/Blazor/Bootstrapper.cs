@@ -1,6 +1,6 @@
 //i think this is the most common things i like to do
-namespace A21DiceGame.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<A21DiceGameShellViewModel>
+namespace Countdown.Blazor;
+public class Bootstrapper : MultiplayerBasicBootstrapper<CountdownShellViewModel>
 {
     public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
     {
@@ -9,7 +9,7 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<A21DiceGameShellViewMod
 
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
-        IBasicDiceGamesData<SimpleDice>.NeedsRollIncrement = true;
+        IBasicDiceGamesData<SimpleDice>.NeedsRollIncrement = true; //default to true.
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
         Core.DIFinishProcesses.SpecializedRegistrationHelpers.RegisterCommonMultplayerClasses(GetDIContainer);
         Core.DIFinishProcesses.AutoResetClass.RegisterAutoResets();
@@ -20,7 +20,7 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<A21DiceGameShellViewMod
     //this part should not change
     protected override void FinishRegistrations(IGamePackageRegister register)
     {
-        register.RegisterType<A21DiceGameShellViewModel>(); //has to use interface part to make it work with source generators.
+        register.RegisterType<CountdownShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
     }

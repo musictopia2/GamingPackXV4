@@ -8,6 +8,7 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<YahtzeeShellViewModel<K
 
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
+        IBasicDiceGamesData<SimpleDice>.NeedsRollIncrement = true;
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
         Core.DIFinishProcesses.SpecializedRegistrationHelpers.RegisterBasicYahtzeeStyleClasses(GetDIContainer);
 

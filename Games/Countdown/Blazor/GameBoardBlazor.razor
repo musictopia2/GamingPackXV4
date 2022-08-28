@@ -1,0 +1,12 @@
+﻿@if (GameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    @foreach (var player in _players)
+    {
+        <StackItem>
+            <PlayerBoardBlazor TargetHeight="@TargetHeight" Player="player" />
+        </StackItem>
+    }
+</StackLayout>

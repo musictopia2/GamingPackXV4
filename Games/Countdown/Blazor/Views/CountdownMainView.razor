@@ -1,0 +1,11 @@
+@inherits BasicGameView<CountdownMainViewModel>
+<div>
+    <GameBoardBlazor GameContainer="_gameContainer"
+                     TargetHeight="25vh" />
+</div>
+<div style="height: 22vh">
+    <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
+    <GameButtonComponent CommandObject="HintsCommand" Display="Show Hints" />
+    <DiceListConrolBlazor D="CountdownDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+</div>
+<LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
