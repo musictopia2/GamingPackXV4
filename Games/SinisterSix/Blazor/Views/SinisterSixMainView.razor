@@ -1,0 +1,13 @@
+@inherits BasicGameView<SinisterSixMainViewModel>
+<div style="height: 22vh">
+    <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
+    <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
+    <DiceListConrolBlazor D="EightSidedDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+</div>
+<div>
+    <GameButtonComponent CommandObject="RemoveCommand" Display="Remove Selected Dice" />
+</div>
+<LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+<div>
+    <ScoreBoardBlazor P="SinisterSixPlayerItem" Columns="@_scores" Players="@DataContext!.PlayerList" />
+</div>
