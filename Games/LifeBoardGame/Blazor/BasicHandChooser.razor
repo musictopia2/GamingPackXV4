@@ -1,0 +1,11 @@
+﻿@typeparam B
+<StackLayout>
+    <StackItem>
+        <LifeHandBlazor Hand="GameContainer!.HandList" TargetContainerSize="75vh" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent Display="@DataContext!.Text"
+                             FontSize="20vh"
+                             CommandObject="DataContext.SubmitCommand" />
+    </StackItem>
+</StackLayout>

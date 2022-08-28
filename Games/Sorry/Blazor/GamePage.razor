@@ -24,6 +24,6 @@
     
     <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="SorryPlayerItem">
         @* if there is another piece, replace with proper piece. *@
-        <CheckerPiece HasImage="true" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" MainColor="@GetColor(Piece.EnumValue)" />
+        <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
     </BeginningChooseColorView>
 </ParentControl>

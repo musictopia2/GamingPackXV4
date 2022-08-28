@@ -1,0 +1,78 @@
+@inherits BasicGameView<LifeBoardGameMainViewModel>
+<CascadingValue Value="_vmData">
+    <CascadingValue Value="_gameContainer">
+        <StackLayout>
+            <StackItem>
+                <LifeCompleteGameBoardBlazor BoardProcesses="_boardProcesses"
+                                             TargetHeight="75vh"
+                                             GraphicsData="_graphicsData" />
+            </StackItem>
+            <StackItem>
+                @* screens to render *@
+                <div>
+                    <ParentControl VM="ChooseCareerViewModel">
+                        <ChooseCareerView />
+                    </ParentControl>
+                </div>
+                <div>
+                    <ParentControl VM="ChooseSalaryViewModel">
+                        <ChooseSalaryView />
+                    </ParentControl>
+                </div>
+                <div>
+                    <ParentControl VM="ChooseHouseViewModel">
+                        <ChooseHouseView />
+                    </ParentControl>
+                </div>
+                <div>
+                    <ParentControl VM="ChooseStockViewModel">
+                        <ChooseStockView />
+                    </ParentControl>
+                </div>
+                <div>
+                    <ParentControl VM="LifeScoreboardViewModel">
+                        <LifeScoreboardView />
+                    </ParentControl>
+                </div>
+                <div>
+                    <ParentControl VM="ReturnStockViewModel">
+                        <ReturnStockView />
+                    </ParentControl>
+                </div>
+                <div>
+                    <ParentControl VM="ShowCardViewModel">
+                        <ShowCardView />
+                    </ParentControl>
+                </div>
+                <div>
+                    <ParentControl VM="SpinnerViewModel">
+                        <SpinnerView />
+                    </ParentControl>
+                </div>
+                <div>
+                    <ParentControl VM="StealTilesViewModel">
+                        <StealTilesView />
+                    </ParentControl>
+                </div>
+                <div>
+                    <ParentControl VM="TradeSalaryViewModel">
+                        <TradeSalaryView />
+                    </ParentControl>
+                </div>
+            </StackItem>
+        </StackLayout>
+        <div>
+            <StackLayout>
+                <StackItem Length="25vw">
+                    <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+                </StackItem>
+                <StackItem>
+                    Space Details:
+                    <div>
+                        @DataContext!.VMData.GameDetails
+                    </div>
+                </StackItem>
+            </StackLayout>
+        </div>
+    </CascadingValue>
+</CascadingValue>
