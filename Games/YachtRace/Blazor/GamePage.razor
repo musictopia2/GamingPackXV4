@@ -1,0 +1,22 @@
+@if (GameData == null || TestData == null || BasicData == null)
+{
+    if (GameData == null)
+    {
+        <div>No Game Data</div>
+    }
+    if (TestData == null)
+    {
+        <div>No Test Data</div>
+    }
+    if (BasicData == null)
+    {
+        <div>No Basic Data</div>
+    }
+    return;
+}
+<ParentControl VM="YachtRaceMainViewModel">
+    <YachtRaceMainView />
+</ParentControl>
+<ParentControl VM="MultiplayerOpeningViewModel<YachtRacePlayerItem>">
+    <MultiplayerOpeningView P="YachtRacePlayerItem" />
+</ParentControl>
