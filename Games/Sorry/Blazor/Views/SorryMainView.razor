@@ -1,0 +1,20 @@
+@inherits BasicGameView<SorryMainViewModel>
+<StackLayout>
+    <StackItem Length="30vw">
+        <div>
+            <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
+        </div>
+        <div>
+            <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        </div>
+        <div>
+            <div>Cards Details:</div>
+            <div>
+                @DataContext!.VMData.CardDetails
+            </div>
+        </div>
+    </StackItem>
+    <StackItem>
+        <GameBoardBlazor GraphicsData="_graphics" TargetHeight="88vh" />
+    </StackItem>
+</StackLayout>
