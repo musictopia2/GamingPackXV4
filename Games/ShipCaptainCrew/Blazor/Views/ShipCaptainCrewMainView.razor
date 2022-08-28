@@ -1,0 +1,9 @@
+@inherits BasicGameView<ShipCaptainCrewMainViewModel>
+<div style="height: 22vh">
+    <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
+    <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+</div>
+<LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+<div>
+    <ScoreBoardBlazor P="ShipCaptainCrewPlayerItem" Columns="@_scores" Players="@DataContext!.PlayerList" />
+</div>
