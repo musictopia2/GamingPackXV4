@@ -116,12 +116,17 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
     {
         PrepStartTurn();
         _model!.Pool1!.NewTurn();
+        SaveRoot.FirstInit = false;
+        PopulateStartState();
+        SaveRoot.DidExpand = false;
+        await ContinueTurnAsync();
+    }
+    private void PopulateStartState()
+    {
         SaveRoot!.TilesFromField.Clear();
         SaveRoot.BeginningList = _model.MainSets1!.SavedSets();
         var firsts = PlayerHand();
         SaveRoot.YourTiles = firsts.GetDeckListFromObjectList();
-        SaveRoot.DidExpand = false;
-        await ContinueTurnAsync();
     }
     private DeckRegularDict<TileInfo> PlayerHand()
     {
@@ -359,7 +364,9 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
         _model.MainSets1.RedoSets();
         SingleInfo.MainHandList.ForEach(thisCard => thisCard.WhatDraw = EnumDrawType.IsNone);
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+        {
             SingleInfo.MainHandList.Sort();
+        }
     }
     private async Task ResetAsync()
     {
@@ -379,9 +386,11 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
             var thisTile = _model.Pool1.DrawTile();
             if (BasicData!.MultiPlayer)
             {
-                SendDraw thisSend = new();
-                thisSend.Deck = thisTile.Deck;
-                thisSend.FromEnd = true;
+                SendDraw thisSend = new()
+                {
+                    Deck = thisTile.Deck,
+                    FromEnd = true
+                };
                 await Network!.SendAllAsync("drewtile", thisSend);
             }
             await DrawTileAsync(thisTile, true);
@@ -431,6 +440,8 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
     public async Task InitialCompletedAsync()
     {
         SingleInfo!.InitCompleted = true;
+        SaveRoot.FirstInit = true;
+        PopulateStartState();
         await ContinueTurnAsync();
     }
     public async Task CreateNewSetAsync(TempInfo thisTemp, bool isInit)
@@ -567,6 +578,7 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
         {
             thisTile.Number = 20;
         }
+        thisTile.Drew = true; //try this now (?)
         thisSet.HandList.RemoveObjectByDeck(deck);
         SingleInfo!.MainHandList.Add(thisTile);
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)

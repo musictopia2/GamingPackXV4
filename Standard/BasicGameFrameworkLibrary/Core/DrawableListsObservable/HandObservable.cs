@@ -178,6 +178,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
                 {
                     await AutoSelectedOneCompletedAsync.Invoke();
                 }
+                ManualSelectUnselect?.Invoke(thisObject);
                 return;
             }
             if (BeforeAutoSelectObjectAsync != null)
@@ -193,6 +194,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
             {
                 await AutoSelectedOneCompletedAsync.Invoke();
             }
+            ManualSelectUnselect?.Invoke(thisObject);
             return;
         }
         if (AutoSelect == EnumHandAutoType.SelectOneOnly)
@@ -221,6 +223,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
             {
                 await AutoSelectedOneCompletedAsync.Invoke();
             }
+            ManualSelectUnselect?.Invoke(payLoad);
             return;
         }
         HandList.UnselectAllObjects();
@@ -233,6 +236,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
         {
             await AutoSelectedOneCompletedAsync.Invoke();
         }
+        ManualSelectUnselect?.Invoke(payLoad);
     }
     protected virtual async Task ProcessObjectClickedAsync(D thisObject, int index)
     {
@@ -273,5 +277,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
     public delegate Task BoardClickedEventHandler();
     public event ConsiderSelectOneEventHandler? ConsiderSelectOneAsync; // this is needed for games like fluxx.  so when you click on one, it can show the details of the card you chose.  since there is no mouse over.
     public delegate Task ConsiderSelectOneEventHandler(D payLoad);
+    public event ManualSelectUnselectEventHandler? ManualSelectUnselect;
+    public delegate void ManualSelectUnselectEventHandler(D payLoad);
     #endregion
 }

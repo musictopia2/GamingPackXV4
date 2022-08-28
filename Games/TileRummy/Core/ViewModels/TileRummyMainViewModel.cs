@@ -35,7 +35,7 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
     public override bool CanEndTurn()
     {
         bool didPlay = VMData.MainSets1!.PlayedAtLeastOneFromHand();
-        return didPlay == true || VMData.Pool1!.HasDrawn() || VMData.Pool1.HasTiles() == false;
+        return didPlay == true || _mainGame.SaveRoot.FirstInit || VMData.Pool1!.HasDrawn() || VMData.Pool1.HasTiles() == false;
     }
     public override async Task EndTurnAsync()
     {
@@ -51,9 +51,11 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
         valids = _mainGame.ValidPlay();
         if (_mainGame.BasicData!.MultiPlayer)
         {
-            SendCustom thisEnd = new();
-            thisEnd.DidPlay = didPlay;
-            thisEnd.ValidSets = valids;
+            SendCustom thisEnd = new()
+            {
+                DidPlay = didPlay,
+                ValidSets = valids
+            };
             await _mainGame.Network!.SendAllAsync("endcustom", thisEnd); //i think
         }
         await _mainGame.EndTurnAsync(didPlay, valids);
@@ -63,9 +65,11 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
     {
         if (_mainGame.BasicData.MultiPlayer)
         {
-            SendDraw thisDraw = new();
-            thisDraw.Deck = thisTile.Deck;
-            thisDraw.FromEnd = false;
+            SendDraw thisDraw = new()
+            {
+                Deck = thisTile.Deck,
+                FromEnd = false
+            };
             await _mainGame.Network!.SendAllAsync("drewtile", thisDraw);
         }
         await _mainGame!.DrawTileAsync(thisTile, false);
@@ -91,9 +95,11 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
             }
             if (_mainGame.BasicData!.MultiPlayer)
             {
-                SendSet thisSend = new();
-                thisSend.Index = setNumber;
-                thisSend.Tile = deck;
+                SendSet thisSend = new()
+                {
+                    Index = setNumber,
+                    Tile = deck
+                };
                 await _mainGame.Network!.SendAllAsync("removeonefromset", thisSend);
             }
             await _mainGame.RemoveTileFromSetAsync(setNumber, deck);
@@ -108,10 +114,12 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
         var newPos = thisSet.PositionToPlay(thisTile, section);
         if (_mainGame.BasicData!.MultiPlayer)
         {
-            SendSet finSend = new();
-            finSend.Index = setNumber;
-            finSend.Position = newPos;
-            finSend.Tile = thisTile.Deck;
+            SendSet finSend = new()
+            {
+                Index = setNumber,
+                Position = newPos,
+                Tile = thisTile.Deck
+            };
             await _mainGame.Network!.SendAllAsync("addtoset", finSend);
         }
         if (VMData.TempSets!.HasObject(thisTile.Deck))
@@ -132,6 +140,8 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
         }
         _isProcessing = true;
         var tempList = VMData.PlayerHand1!.ListSelectedObjects(true);
+        //var player = _mainGame.PlayerList.GetSelf();
+        //var tt = player.MainHandList.GetSelectedItems();
         VMData.TempSets!.AddCards(index, tempList);
         _isProcessing = false;
         CommandContainer.UpdateAll();
@@ -154,9 +164,11 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
             if (_mainGame.BasicData!.MultiPlayer == true)
             {
                 var tempList = thisTemp.CardList.GetDeckListFromObjectList();
-                SendCreateSet thisSend = new();
-                thisSend.CardList = tempList;
-                thisSend.WhatSet = thisTemp.WhatSet;
+                SendCreateSet thisSend = new()
+                {
+                    CardList = tempList,
+                    WhatSet = thisTemp.WhatSet
+                };
                 var thisStr = await js.SerializeObjectAsync(thisSend);
                 newList.Add(thisStr);
             }
@@ -180,10 +192,12 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
             return;
         }
         _mainGame.HasValidSet(thisCol, out int firstNumber, out int secondNumber);
-        TempInfo thisTemp = new();
-        thisTemp.CardList = thisCol;
-        thisTemp.FirstNumber = firstNumber;
-        thisTemp.SecondNumber = secondNumber;
+        TempInfo thisTemp = new()
+        {
+            CardList = thisCol,
+            FirstNumber = firstNumber,
+            SecondNumber = secondNumber
+        };
         if (thisTemp.FirstNumber == -1)
         {
             thisTemp.WhatSet = EnumWhatSets.Kinds;

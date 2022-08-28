@@ -36,7 +36,9 @@ public class MainSets : MainSetsObservable<EnumColorType, EnumColorType, TileInf
         foreach (var thisIndex in saveRoot.YourTiles)
         {
             if (tempList.Any(items => items == thisIndex))
+            {
                 return true;
+            }
         }
         return false;
     }

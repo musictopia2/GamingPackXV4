@@ -9,4 +9,5 @@ public class TileRummySaveInfo : BasicSavedGameClass<TileRummyPlayerItem>, IMapp
     public BasicList<int> TilesFromField { get; set; } = new();
     public BasicList<int> YourTiles { get; set; } = new();
     public bool DidExpand { get; set; }
+    public bool FirstInit { get; set; }
 }
