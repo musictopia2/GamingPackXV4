@@ -1,0 +1,34 @@
+@inherits BasicGameView<GoFishMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<CascadingValue Value="_vmData">
+    <StackLayout>
+        <StackItem>
+            <DeckOfCardsDrawPileBlazor R="RegularSimpleCard" DeckPile="_vmData.Deck1" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard" SinglePile="_vmData.Pile1" />
+        </StackItem>
+        <StackItem>
+            <GameButtonComponent CommandObject="EndCommand"
+                                 Display="End Turn"
+                                 StartOnNewLine="true" />
+            <div>
+                <LabelGridComponent DataContext="@_vmData" Labels="_labels" />
+            </div>
+            <div>
+                <ScoreBoardBlazor P="GoFishPlayerItem"
+                                  Columns="_scores"
+                                  Players="_gameContainer.SaveRoot.PlayerList" />
+            </div>
+        </StackItem>
+    </StackLayout>
+    <div>
+        <DeckOfCardsHandBlazor R="RegularSimpleCard" Hand="_vmData.PlayerHand1" />
+    </div>
+    <ParentControl VM="AskViewModel">
+        <AskView />
+    </ParentControl>
+</CascadingValue>
