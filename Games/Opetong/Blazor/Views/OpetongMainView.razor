@@ -1,0 +1,42 @@
+@inherits BasicGameView<OpetongMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsDrawPileBlazor R="RegularRummyCard" DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsCardBoardBlazor R="RegularRummyCard" DataContext="_vmData.Pool1" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsTempSetsBlazor RU="RegularRummyCard"
+                               TargetContainerSize="30vh"
+                               TempPiles="_vmData.TempSets" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent Display="Lay Down Single Set" CommandObject="LayCommand" />
+    </StackItem>
+    <StackItem>
+        <div>
+            <LabelGridComponent DataContext="@_vmData" Labels="_labels" />
+        </div>
+        <div>
+            <ScoreBoardBlazor P="OpetongPlayerItem"
+                              Columns="_scores"
+                              Players="_gameContainer.SaveRoot.PlayerList" />
+        </div>
+    </StackItem>
+</StackLayout>
+<div>
+    <DeckOfCardsHandBlazor R="RegularRummyCard" Hand="_vmData.PlayerHand1" />
+</div>
+<div>
+    <DeckOfCardsMainRummySetsBlazor 
+                                    RU="RegularRummyCard"
+                                    SE="RummySet"
+                                    T="SavedSet"
+                                    ContainerHeight="30vh"
+                                    DataContext="_vmData.MainSets" />
+</div>
