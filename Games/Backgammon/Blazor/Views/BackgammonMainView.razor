@@ -1,0 +1,18 @@
+@inherits BasicGameView<BackgammonMainViewModel>
+<GridContainer Columns="@GetColumns">
+    <GridItem>
+        <CascadingValue Value="_graphicsData">
+            <BackgammonCompleteBoard TargetHeight="88vh" />
+        </CascadingValue>
+    </GridItem>
+    <GridItem Column="2">
+        <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
+        <GameButtonComponent CommandObject="UndoCommand" Display="Undo All Moves" />
+        <div style="height: 15vh">
+            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="13vh" />
+        </div>
+        <div>
+            <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        </div>
+    </GridItem>
+</GridContainer>
