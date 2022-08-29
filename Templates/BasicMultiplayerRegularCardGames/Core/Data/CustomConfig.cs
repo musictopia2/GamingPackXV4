@@ -1,4 +1,4 @@
-﻿namespace BasicMultiplayerRegularCardGamesCP.Data;
+﻿namespace BasicMultiplayerRegularCardGames.Core.Data;
 [SingletonGame]
 public class CustomConfig : IRegularCardsSortCategory
 {
