@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
+	  <PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
+	  <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
+  </ItemGroup>
+<ItemGroup>
+    <EmbeddedResource Include="Resources\board.svg" />
+    <EmbeddedResource Include="Resources\Deal1.svg" />
+    <EmbeddedResource Include="Resources\Deal10.svg" />
+    <EmbeddedResource Include="Resources\Deal11.svg" />
+    <EmbeddedResource Include="Resources\Deal12.svg" />
+    <EmbeddedResource Include="Resources\Deal13.svg" />
+    <EmbeddedResource Include="Resources\Deal14.svg" />
+    <EmbeddedResource Include="Resources\Deal15.svg" />
+    <EmbeddedResource Include="Resources\Deal16.svg" />
+    <EmbeddedResource Include="Resources\Deal17.svg" />
+    <EmbeddedResource Include="Resources\Deal18.svg" />
+    <EmbeddedResource Include="Resources\Deal19.svg" />
+    <EmbeddedResource Include="Resources\Deal2.svg" />
+    <EmbeddedResource Include="Resources\Deal20.svg" />
+    <EmbeddedResource Include="Resources\Deal21.svg" />
+    <EmbeddedResource Include="Resources\Deal22.svg" />
+    <EmbeddedResource Include="Resources\Deal23.svg" />
+    <EmbeddedResource Include="Resources\Deal24.svg" />
+    <EmbeddedResource Include="Resources\Deal3.svg" />
+    <EmbeddedResource Include="Resources\Deal4.svg" />
+    <EmbeddedResource Include="Resources\Deal5.svg" />
+    <EmbeddedResource Include="Resources\Deal6.svg" />
+    <EmbeddedResource Include="Resources\Deal7.svg" />
+    <EmbeddedResource Include="Resources\Deal8.svg" />
+    <EmbeddedResource Include="Resources\Deal9.svg" />
+    <EmbeddedResource Include="Resources\MailEndangeredSpecies.svg" />
+    <EmbeddedResource Include="Resources\MailEnvironment.svg" />
+    <EmbeddedResource Include="Resources\MailMoveAhead.svg" />
+    <EmbeddedResource Include="Resources\MailPolution.svg" />
+    <EmbeddedResource Include="Resources\MailRecyling.svg" />
+    <EmbeddedResource Include="Resources\MailScholarship.svg" />
+    <EmbeddedResource Include="Resources\MailWhale.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Generators\CommandsGenerator\CommandsGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\Generators\GamePackageDIGenerator\GamePackageDIGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\Generators\GamePackageSerializeGenerator\GamePackageSerializeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	  <ProjectReference Include="..\..\Generators\LabelGridGenerator\LabelGridGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	  <ProjectReference Include="..\..\Generators\ScoreBoardGenerator\ScoreBoardGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
+  </ItemGroup>
+
+</Project>

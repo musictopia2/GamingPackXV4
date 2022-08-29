@@ -1,0 +1,30 @@
+@if (GameData == null || TestData == null || BasicData == null)
+{
+    if (GameData == null)
+    {
+        <div>No Game Data</div>
+    }
+    if (TestData == null)
+    {
+        <div>No Test Data</div>
+    }
+    if (BasicData == null)
+    {
+        <div>No Basic Data</div>
+    }
+    return;
+}
+<CascadingValue Value="_targetImageHeight">
+    <ParentControl VM="PaydayMainViewModel">
+        <PaydayMainView />
+    </ParentControl>
+    <ParentControl VM="MultiplayerOpeningViewModel<PaydayPlayerItem>">
+        <MultiplayerOpeningView P="PaydayPlayerItem" />
+    </ParentControl>
+    <ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, PaydayPlayerItem>">
+        <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="PaydayPlayerItem">
+            @* if there is another piece, replace with proper piece. *@
+            <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
+        </BeginningChooseColorView>
+    </ParentControl>
+</CascadingValue>

@@ -1,0 +1,15 @@
+﻿@typeparam V
+@if (VMData == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <ListChooserBlazor ListPicker="VMData.PopUpList" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent 
+                         CommandObject="SubmitCommand"
+                         Display="Submit" />
+    </StackItem>
+</StackLayout>

@@ -1,0 +1,85 @@
+@inherits BasicGameView<PaydayMainViewModel>
+@if (DataContext == null || _graphicsData == null || _graphicsData!.GameContainer.SingleInfo == null)
+{
+    return;
+}
+<CascadingValue Value="DataContext.VMData">
+    <GridContainer Columns="@GetColumns">
+        <GridItem>
+            <GameBoardBlazor GraphicsData="_graphicsData"
+                             TargetHeight="86vh" />
+        </GridItem>
+        <GridItem Column="2">
+            <GridContainer Rows="@RowData">
+                <GridItem>
+                    <GridContainer ColumnGap="5px" Columns="20vw 1fr auto">
+                        <GridItem>
+                            <ParentControl VM="MailPileViewModel">
+                                <MailPileView />
+                            </ParentControl>
+                            <ParentControl VM="DealPileViewModel">
+                                <DealPileView />
+                            </ParentControl>
+                            <ParentControl VM="RollerViewModel">
+                                <RollerView />
+                            </ParentControl>
+                        </GridItem>
+                        <GridItem Column="2">
+                            <div>
+                                Instructions:
+                            </div>
+                            <div style="overflow-y: auto; height: 13vh;">
+                                @DataContext.VMData.Instructions
+                            </div>
+                        </GridItem>
+                        <GridItem Column="3">
+                            <ScoreBoardBlazor P="PaydayPlayerItem"
+                                              Players="_graphicsData.GameContainer.SaveRoot.PlayerList"
+                                              Columns="_scores" />
+                        </GridItem>
+                    </GridContainer>
+                </GridItem>
+                <GridItem Row="2">
+                    <StackLayout>
+                        <StackItem>
+                            <BaseHandBlazor D="DealCard" HandType="EnumHandList.Vertical" UseKey="false" Hand="DataContext.VMData.CurrentDealList" Context="DeckObject">
+                                <PaydayCardBlazor CommandParameter="DeckObject"
+                                                  DeckObject="DeckObject"
+                                                  CommandObject="DataContext.VMData.CurrentDealList.ObjectSingleClickCommand" />
+                            </BaseHandBlazor>
+                        </StackItem>
+                        <StackItem>
+                            <ParentControl VM="MailListViewModel">
+                                <MailListView />
+                            </ParentControl>
+                            <ParentControl VM="DealOrBuyViewModel">
+                                <BasicPickerView V="DealOrBuyViewModel" />
+                            </ParentControl>
+                            <ParentControl VM="ChooseDealViewModel">
+                                <BasicPickerView V="ChooseDealViewModel" />
+                            </ParentControl>
+                            <ParentControl VM="LotteryViewModel">
+                                <BasicPickerView V="LotteryViewModel" />
+                            </ParentControl>
+                            <ParentControl VM="PlayerPickerViewModel">
+                                <BasicPickerView V="PlayerPickerViewModel" />
+                            </ParentControl>
+                        </StackItem>
+                    </StackLayout>
+                </GridItem>
+                <GridItem Row="3">
+                    <StackLayout>
+                        <StackItem>
+                            <BasePieceGraphics LongestSize="60" TargetHeight="10vh">
+                                <PawnPiece MainColor="@GetColor" />
+                            </BasePieceGraphics>
+                        </StackItem>
+                        <StackItem>
+                            <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+                        </StackItem>
+                    </StackLayout>
+                </GridItem>
+            </GridContainer>
+        </GridItem>
+    </GridContainer>
+</CascadingValue>
