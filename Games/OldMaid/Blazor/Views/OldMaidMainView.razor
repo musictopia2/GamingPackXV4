@@ -1,0 +1,24 @@
+@inherits BasicGameView<OldMaidMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <ParentControl VM="OpponentCardsViewModel">
+            <DeckOfCardsHandBlazor Divider="2" R="RegularSimpleCard" Hand="_vmData.OpponentCards1" />
+        </ParentControl>
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard" SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
+    </StackItem>
+</StackLayout>
+<div>
+    <DeckOfCardsHandBlazor Divider="2" R="RegularSimpleCard" Hand="_vmData.PlayerHand1" />
+</div>
+<div>
+    <LabelGridComponent DataContext="@_vmData" Labels="_labels" />
+</div>
