@@ -1,0 +1,46 @@
+@inherits BasicGameView<ClueBoardGameMainViewModel>
+<GridContainer RowGap="5px" Columns="auto auto 10vw 1fr">
+    <GridItem>
+        <GameBoardBlazor GraphicsData="_graphicsData"
+                         TargetHeight="88vh" />
+
+    </GridItem>
+    <GridItem Column="2">
+        <ClueHandBlazor Hand="DataContext!.GetHand" />
+        <div>
+            <CascadingValue Value="EnumDetectiveCategory.Prediction">
+                <DetectiveGraphicsBlazor DetectiveList="_graphicsData!.GameContainer!.DetectiveList" />
+            </CascadingValue>
+        </div>
+        <div style="margin-top: 20px">
+            <CascadingValue Value="EnumDetectiveCategory.Notebook">
+                <DetectiveGraphicsBlazor DetectiveList="DataContext.GetOwnDetectiveNotebook()" />
+            </CascadingValue>
+        </div>
+        <GridContainer Columns="auto auto">
+            <BasePieceGraphics LongestSize="50" TargetHeight="4.5vh">
+                <PawnPiece MainColor="@GetColor()" />
+            </BasePieceGraphics>
+            <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        </GridContainer>
+    </GridItem>
+    <GridItem Column="3">
+        <CluePileBlazor SinglePile="DataContext!.GetPile" />
+        <div>
+            Instructions: @DataContext!.VMData.Instructions
+        </div>
+        <GameButtonComponent CommandObject="RollCommand" StartOnNewLine="true" Display="Roll Dice" />
+        <div style="font-size: 8vh; color: white">
+            @DataContext!.VMData.LeftToMove
+            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="8vh" />
+        </div>
+    </GridItem>
+    <GridItem Column="4">
+        <div style="margin-top: 30vh">
+            <GameButtonComponent CommandObject="PredictCommand" StartOnNewLine="true" Display="Predict" />
+            <GameButtonComponent CommandObject="AccusationCommand" StartOnNewLine="true" Display="Accusation" />
+            <GameButtonComponent CommandObject="EndCommand" StartOnNewLine="true" Display="End Turn" />
+            <LabelGridComponent DataContext="DataContext!.VMData" Labels="_clues" />
+        </div>
+    </GridItem>
+</GridContainer>

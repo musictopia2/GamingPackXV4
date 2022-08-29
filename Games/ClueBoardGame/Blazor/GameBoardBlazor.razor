@@ -1,0 +1,104 @@
+﻿@inherits KeyComponentBase
+@using CommonBasicLibraries.CollectionClasses;
+@using gg = ClueBoardGame.Core.Logic.GameBoardGraphicsCP;
+@using p = BasicGameFrameworkLibrary.Core.GameboardPositionHelpers.PositionPieces;
+@if (GraphicsData == null)
+{
+    return;
+}
+<RawGameBoard TargetHeight="@TargetHeight" BoardSize="gg.OriginalSize">
+    <ResourceImage Assembly="@GetAssembly"
+                   FileName="board.svg"
+                   Width="@gg.OriginalSize.Width.ToString()"
+                   Height="@gg.OriginalSize.Height.ToString()" />
+
+    @if (GraphicsData.GameContainer!.RoomList.Count != 9)
+    {
+        return;
+    }
+    @{
+        int x = 0;
+        BasicList<WeaponInfo> weaponList;
+        BasicList<CharacterInfo> characterList;
+        SizeF spaceSize = new SizeF(gg.SpaceSize, gg.SpaceSize);
+        PointF location;
+        RectangleF rect;
+    }
+    @foreach (var room in GraphicsData.GameContainer.RoomList.Values)
+    {
+        x++;
+        if (room.Space == null)
+        {
+            return; //try this way.  did it before and somehow worked (?)
+        }
+        weaponList = GraphicsData.GameContainer.WeaponsInRoom(x);
+        characterList = GraphicsData.GameContainer.CharactersInRoom(x);
+        p.ClearArea(room.Space);
+        foreach (var weapon in weaponList)
+        {
+            location = p.GetPosition(room.Space, weapon.DefaultSize);
+            rect = new RectangleF(location, weapon.DefaultSize);
+            room.Space.PieceList.Add(rect);
+            p.AddRectToArea(room.Space, rect);
+            <BasePieceGraphics @key="GetKey" Location="location">
+                <WeaponBlazor Weapon="weapon" />
+            </BasePieceGraphics>
+        }
+        foreach (var character in characterList)
+        {
+            location = p.GetPosition(room.Space, spaceSize);
+            rect = new RectangleF(location, spaceSize);
+            //var roomKey = GetCharacterRoomKey(character, x);
+            room.Space.PieceList.Add(rect);
+            p.AddRectToArea(room.Space, rect);
+            <BasePieceGraphics @key="GetKey" Location="@location" LongestSize="@gg.SpaceSize">
+                <PawnPiece MainColor="@character.MainColor" />
+            </BasePieceGraphics>
+        }
+    }
+    @{
+        characterList = GraphicsData.GameContainer.CharactersOnStart();
+    }
+    @foreach (var character in characterList)
+    {
+        location = GraphicsData.PositionForStartSpace(character.FirstNumber);
+        <BasePieceGraphics @key="GetKey" Location="@location" LongestSize="@gg.SpaceSize">
+            <PawnPiece MainColor="@character.MainColor" />
+        </BasePieceGraphics>
+    }
+    @{
+        characterList = GraphicsData.GameContainer.CharactersOnBoard();
+    }
+    @foreach (var character in characterList)
+    {
+        location = GraphicsData.PositionForBoardPiece(character.Space);
+        <BasePieceGraphics @key="GetKey" Location="@location" LongestSize="@gg.SpaceSize">
+            <PawnPiece MainColor="@character.MainColor" />
+        </BasePieceGraphics>
+    }
+    @if (GraphicsData.GameContainer.Command.IsExecuting || GraphicsData.GameContainer.CanClickSpace() == false)
+    {
+        return; //because if executing then no need for clicking options.
+    }
+    @* click processes last *@
+    @{
+        var clickRoomList = GraphicsData.ClickRoomList();
+    }
+
+    @foreach (var item in clickRoomList)
+    {
+        <BlankClickableSquare SpaceLocation="item.rect.Location"
+                              SpaceSize="item.rect.Size"
+                              SpaceClicked="() => RoomClickedAsync(item.id)" />
+    }
+    @* take advantage that the square will override the room part. *@
+    @{
+        var clickSquareList = GraphicsData.ClickSquareList();
+    }
+    @foreach (var item in clickSquareList)
+    {
+        <BlankClickableSquare SpaceLocation="item.rect.Location"
+                              SpaceSize="item.rect.Size"
+                              SpaceClicked="() => SpaceClickedAsync(item.id)" />
+    }
+</RawGameBoard>
