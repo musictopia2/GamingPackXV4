@@ -1,0 +1,20 @@
+@inherits BasicGameView<ConcentrationMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsMultiplePilesBlazor Inline="true" R="RegularSimpleCard" Piles="_vmData.GameBoard1" />
+    </StackItem>
+    <StackItem>
+        <div>
+            <LabelGridComponent DataContext="@_vmData" Labels="_labels" />
+        </div>
+        <div>
+            <ScoreBoardBlazor P="ConcentrationPlayerItem"
+                              Columns="_scores"
+                              Players="_gameContainer.SaveRoot.PlayerList" />
+        </div>
+    </StackItem>
+</StackLayout>
