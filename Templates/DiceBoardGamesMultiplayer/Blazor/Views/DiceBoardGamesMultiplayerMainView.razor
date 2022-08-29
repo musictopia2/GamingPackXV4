@@ -1,0 +1,8 @@
+@inherits BasicGameView<DiceBoardGamesMultiplayerMainViewModel>
+<p>Welcome to DiceBoardGamesMultiplayer</p>
+<div style="height: 22vh">
+    <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
+    <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
+    <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+</div>
+<LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
