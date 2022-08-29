@@ -121,7 +121,7 @@ internal class FifthSourceGenerator : IIncrementalGenerator
     private void Emit(SourceProductionContext context, RegularCardInformation card, Compilation compilation)
     {
         SourceCodeStringBuilder builder = new();
-        builder.StartGlobalProcesses(compilation, "DIFinishProcesses", "SpecializedRegularCardHelpers", w =>
+        builder.StartGlobalProcesses(compilation, "Core.DIFinishProcesses", "SpecializedRegularCardHelpers", w =>
         {
             w.WriteLine("public static void RegisterRegularDeckOfCardClasses(global::BasicGameFrameworkLibrary.Core.DIContainers.IGamePackageDIContainer container)")
             .WriteCodeBlock(w =>
