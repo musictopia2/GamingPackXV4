@@ -1,0 +1,27 @@
+@inherits BasicGameView<SequenceDiceMainViewModel>
+@if (_saveRoot == null)
+{
+    return;
+}
+<GridContainer Columns="@ColumnText">
+    <GridItem>
+        <GridGameBoard S="SpaceInfoCP"
+                       SpaceList="@_saveRoot.GameBoard"
+                       GridHeight="88vh"
+                       GridWidth="100%"
+                       TargetSpaceHeight="50"
+                       TargetSpaceWidth="50">
+            <ItemTemplate Context="Space">
+                <SpaceBlazor CommandParameter="Space"
+                             CommandObject="MoveCommand" />
+            </ItemTemplate>
+        </GridGameBoard>
+    </GridItem>
+    <GridItem Column="2">
+        <div style="height: 22vh">
+            <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
+            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+        </div>
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+    </GridItem>
+</GridContainer>
