@@ -1,0 +1,21 @@
+@inherits BasicGameView<AggravationMainViewModel>
+<StackLayout>
+    <StackItem Length="45vw">
+        <GridContainer Columns="auto auto">
+            <GridItem>
+                <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
+            </GridItem>
+            <GridItem Column="2">
+                <div style="height: 22vh">
+                    <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+                </div>
+            </GridItem>
+        </GridContainer>
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+    </StackItem>
+    <StackItem>
+        <GameBoardBlazor TargetHeight="88vh"
+                         GameContainer="_gameContainer"
+                         GraphicsData="_graphicsData" />
+    </StackItem>
+</StackLayout>
