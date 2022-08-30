@@ -1,0 +1,47 @@
+@inherits BasicGameView<CribbageMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsDrawPileBlazor R="CribbageCard" DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsSingleMiscPileBlazor R="CribbageCard" SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsHandBlazor R="CribbageCard" Divider="1.5" Hand="_vmData.MainFrame" />
+    </StackItem>
+    <StackItem>
+        <div>
+            <LabelGridComponent DataContext="_vmData" Labels="_counts" />
+        </div>
+        <div>
+            <ScoreUI ScoreList="_vmData.ScoreBoard1.ScoreList" />
+        </div>
+    </StackItem>
+</StackLayout>
+<GridContainer Inline="true" Columns="@Columns" ColumnGap="10px">
+    <GridItem>
+        <div>
+            <DeckOfCardsHandBlazor R="CribbageCard" Hand="_vmData.PlayerHand1" />
+        </div>
+        <div>
+            <GameButtonComponent Display="Continue" CommandObject="ContinueCommand" />
+            <GameButtonComponent Display="To Crib" CommandObject="CribCommand" />
+            <GameButtonComponent Display="Play" CommandObject="PlayCommand" />
+        </div>
+        <div>
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </div>
+        <div>
+            <DeckOfCardsHandBlazor R="CribbageCard" Hand="_vmData.CribFrame" />
+        </div>
+    </GridItem>
+    <GridItem Column="2">
+        <ScoreBoardBlazor P="CribbagePlayerItem"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </GridItem>
+</GridContainer>
