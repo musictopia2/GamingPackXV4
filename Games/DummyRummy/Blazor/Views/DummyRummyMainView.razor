@@ -1,0 +1,46 @@
+@inherits BasicGameView<DummyRummyMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsHandBlazor R="RegularRummyCard" Hand="_vmData.PlayerHand1" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent CommandObject="LayDownCommand"
+                             Display="Lay Down"
+                             StartOnNewLine="true" />
+        <GameButtonComponent CommandObject="BackCommand"
+                             Display="Back"
+                             StartOnNewLine="true" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsDrawPileBlazor R="RegularRummyCard" DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsSingleMiscPileBlazor R="RegularRummyCard" SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem Length="1fr">
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+</StackLayout>
+<div>
+    <ScoreBoardBlazor P="DummyRummyPlayerItem"
+                      Columns="_scores"
+                      Players="_gameContainer.SaveRoot.PlayerList" />
+</div>
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsTempSetsBlazor RU="RegularRummyCard"
+                                   TargetContainerSize="58vh"
+                                   TempPiles="_vmData.TempSets" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsMainRummySetsBlazor RU="RegularRummyCard"
+                                        SE="DummySet"
+                                        T="SavedSet"
+                                        ContainerHeight="58vh"
+                                        DataContext="_vmData.MainSets" />
+    </StackItem>
+</StackLayout>
