@@ -1,0 +1,32 @@
+﻿@if (_data == null)
+{
+    return;
+}
+<BaseFrameBlazor Text="Scoring Guide">
+
+    <GridContainer ColumnGap="10px" Columns="@GetColumns()">
+        <GridItem>
+            <div>
+                <b>@_data.OffenseText</b>
+            </div>
+            
+            @foreach (var offense in _offenseList)
+            {
+                <div>
+                    @offense
+                </div>
+            }
+        </GridItem>
+        <GridItem Column="2">
+             <div>
+                <b>@_data.DefenseText</b>
+            </div>
+            @foreach (var defense in _defenseList)
+            {
+                <div>
+                    @defense
+                </div>
+            }
+        </GridItem>
+    </GridContainer>
+</BaseFrameBlazor>
