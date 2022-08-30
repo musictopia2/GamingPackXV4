@@ -1,0 +1,44 @@
+@inherits BasicGameView<MonasteryCardGameMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsHandBlazor R="MonasteryCardInfo" Hand="_vmData.PlayerHand1" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsDrawPileBlazor R="MonasteryCardInfo" DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsSingleMiscPileBlazor R="MonasteryCardInfo" SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+</StackLayout>
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsTempSetsBlazor RU="MonasteryCardInfo"
+                                   TargetContainerSize="40vh"
+                                   TempPiles="_vmData.TempSets" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsMainRummySetsBlazor RU="MonasteryCardInfo"
+                                        SE="RummySet"
+                                        T="SavedSet"
+                                        ContainerHeight="40vh"
+                                        DataContext="_vmData.MainSets" />
+    </StackItem>
+</StackLayout>
+<StackLayout>
+    <StackItem>
+        <ScoreBoardBlazor P="MonasteryCardGamePlayerItem"
+                          Columns="_scores"
+                          UseAbbreviationForTrueFalse="true"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </StackItem>
+    <StackItem>
+        <MissionUI MissionColumnWidth="20vw" Missions="_vmData.CompleteMissions" />
+    </StackItem>
+</StackLayout>
