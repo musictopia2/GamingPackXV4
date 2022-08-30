@@ -89,8 +89,8 @@ public static class CardProcedures
                 {
                     if (newPlayer.StartUpList.Count == 0)
                     {
-                        var TempList = thisList[z];
-                        TempList.Add(thisCol[y]);
+                        var tempList = thisList[z];
+                        tempList.Add(thisCol[y]);
                         y += 1;
 
                     }

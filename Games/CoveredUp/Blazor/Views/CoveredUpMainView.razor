@@ -1,0 +1,37 @@
+@inherits BasicGameView<CoveredUpMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem Length="auto">
+        <StackLayout ItemSpacing="5px">
+            <StackItem>
+                <DeckOfCardsDrawPileBlazor R="RegularSimpleCard" DeckPile="_vmData.Deck1" />
+            </StackItem>
+            <StackItem>
+                <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard" SinglePile="_vmData.Pile1" />
+            </StackItem>
+            <StackItem>
+                <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard" SinglePile="_vmData.OtherPile" PileAnimationTag="otherpile" />
+            </StackItem>
+        </StackLayout>
+        <DeckOfCardsCardBoardBlazor R="RegularSimpleCard" DataContext="DataContext.SelfBoard" />
+        <div>
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </div>
+        <div>
+            <ScoreBoardBlazor P="CoveredUpPlayerItem"
+                              Columns="_scores"
+                              Players="_gameContainer.SaveRoot.PlayerList" />
+        </div>
+    </StackItem>
+    <StackItem Length="1fr">
+       @foreach (var player in DataContext.Players)
+       {
+           <TextCardBoardBlazor D="RegularSimpleCard" DataContext="player.PlayerBoard!" Context="card">
+               @card.DisplayValue()
+           </TextCardBoardBlazor>
+       }
+    </StackItem>
+</StackLayout>
