@@ -1,0 +1,42 @@
+@inherits BasicGameView<FiveCrownsMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <HandBlazor Hand="_vmData.PlayerHand1" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent CommandObject="LayDownCommand"
+                             Display="Lay Down"
+                             StartOnNewLine="true" />
+        <GameButtonComponent CommandObject="BackCommand"
+                             Display="Back"
+                             StartOnNewLine="true" />
+    </StackItem>
+    <StackItem>
+        <DrawPileBlazor DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem Length="1fr">
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+</StackLayout>
+<div>
+    <ScoreBoardBlazor P="FiveCrownsPlayerItem"
+                      Columns="_scores"
+                      Players="_gameContainer.SaveRoot.PlayerList" />
+</div>
+<StackLayout>
+    <StackItem>
+        <TempSetsBlazor TargetContainerSize="58vh"
+                        TempPiles="_vmData.TempSets" />
+    </StackItem>
+    <StackItem>
+        <MainRummySetsBlazor ContainerHeight="58vh"
+                             DataContext="_vmData.MainSets" />
+    </StackItem>
+</StackLayout>
