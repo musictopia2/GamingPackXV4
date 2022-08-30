@@ -1,0 +1,31 @@
+@if (GameData == null || TestData == null || BasicData == null)
+{
+    if (GameData == null)
+    {
+        <div>No Game Data</div>
+    }
+    if (TestData == null)
+    {
+        <div>No Test Data</div>
+    }
+    if (BasicData == null)
+    {
+        <div>No Basic Data</div>
+    }
+    return;
+}
+<CascadingValue Value="TargetHeight">
+    <ParentControl VM="FirstViewModel">
+        <CascadingValue Value="@GetData">
+            <FirstView />
+        </CascadingValue>
+    </ParentControl>
+    <ParentControl VM="GolfCardGameMainViewModel">
+        <CascadingValue Value="@GetData">
+            <GolfCardGameMainView />
+        </CascadingValue>
+    </ParentControl>
+    <ParentControl VM="MultiplayerOpeningViewModel<GolfCardGamePlayerItem>">
+        <MultiplayerOpeningView P="GolfCardGamePlayerItem" />
+    </ParentControl>
+</CascadingValue>

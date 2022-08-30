@@ -1,0 +1,44 @@
+@inherits BasicGameView<GolfCardGameMainViewModel>
+@if (VMData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem Length="1fr">
+        <StackLayout>
+            <StackItem>
+                <DeckOfCardsDrawPileBlazor R="RegularSimpleCard" DeckPile="VMData.Deck1" />
+            </StackItem>
+            <StackItem>
+                <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard"
+                                                 SinglePile="VMData.Pile1" />
+            </StackItem>
+            <StackItem>
+                <GameButtonComponent CommandObject="KnockCommand" Display="Knock" />
+            </StackItem>
+        </StackLayout>
+        <div>
+            <DeckOfCardsMultiplePilesBlazor R="RegularSimpleCard"
+                                            Piles="VMData.HiddenCards1" />
+        </div>
+        <StackLayout>
+            <StackItem>
+                <DeckOfCardsCardBoardBlazor R="RegularSimpleCard" DataContext="VMData.GolfHand1" />
+            </StackItem>
+            <StackItem>
+                <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard"
+                                                 SinglePile="VMData.OtherPile"
+                                                 PileAnimationTag="" />
+            </StackItem>
+        </StackLayout>
+        <div>
+            <LabelGridComponent DataContext="VMData" Labels="_labels" />
+        </div>
+    </StackItem>
+    <StackItem Length="1fr">
+        <ScoreBoardBlazor P="GolfCardGamePlayerItem"
+                          UseAbbreviationForTrueFalse="true"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </StackItem>
+</StackLayout>

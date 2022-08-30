@@ -1,0 +1,16 @@
+﻿@if (VMData == null || DataContext == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsCardBoardBlazor R="RegularSimpleCard"
+                                DataContext="VMData.Beginnings1" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent Display="Choose First Cards" CommandObject="ChooseCommand" />
+    </StackItem>
+</StackLayout>
+<div>
+    <LabelGridComponent DataContext="VMData" Labels="_labels" />
+</div>
