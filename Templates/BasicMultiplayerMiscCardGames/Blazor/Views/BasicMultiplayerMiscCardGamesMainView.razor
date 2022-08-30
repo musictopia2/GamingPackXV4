@@ -1,0 +1,25 @@
+@inherits BasicGameView<BasicMultiplayerMiscCardGamesMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<p>Welcome to BasicMultiplayerMiscCardGames</p>
+<StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
+    <StackItem>
+        <DrawPileBlazor DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+    </StackItem>
+</StackLayout>
+<div>
+    <HandBlazor Hand="_vmData.PlayerHand1" />
+</div>
+<div>
+    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+</div>
+<div>
+    <ScoreBoardBlazor P="BasicMultiplayerMiscCardGamesPlayerItem"
+                      Columns="_scores"
+                      Players="_gameContainer.SaveRoot.PlayerList" />
+</div>
