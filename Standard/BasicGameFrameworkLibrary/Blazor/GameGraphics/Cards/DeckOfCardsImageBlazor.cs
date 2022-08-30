@@ -338,6 +338,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         }
         if (DeckObject.CardType == EnumRegularCardTypeList.Joker)
         {
+            //return;
             RectangleF firstRect;
             RectangleF secondRect;
             RectangleF middleRect;

@@ -200,6 +200,11 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
     {
         await EndTurnAsync(); //most of the time, end turn but not always
     }
+    protected virtual bool CanReshuffleAgain => true;
+    protected virtual Task NoReshuffleAgainAsync()
+    {
+        return Task.CompletedTask;
+    }
     public virtual async Task DrawAsync()
     {
         if (_model.Deck1.IsCutting)
@@ -240,6 +245,11 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
                     throw new CustomBasicException("Already reshuffled.  Therefore; must be a problem.  Find out what happened");
                 }
                 _didReshuffle = true;
+                if (CanReshuffleAgain == false)
+                {
+                    await NoReshuffleAgainAsync();
+                    return; //because can't reshuffle again.
+                }
                 bool canSendMessage;
                 canSendMessage = SingleInfo!.CanSendMessage(BasicData!); //try to use this function here too.
                 if (canSendMessage == true || BasicData!.MultiPlayer == false)

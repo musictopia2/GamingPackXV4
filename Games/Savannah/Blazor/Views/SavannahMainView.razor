@@ -1,0 +1,55 @@
+@inherits BasicGameView<SavannahMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout ItemSpacing="5px">
+    <StackItem>
+        <DeckOfCardsMultiplePilesBlazor AnimationTag="public" Piles="@_vmData.PublicPiles" R="RegularSimpleCard" />
+    </StackItem>
+    @*<StackItem Style="margin-left: 20px;">
+        <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard" SinglePile="_vmData.Pile1" />
+    </StackItem>*@
+    <StackItem>
+        <DeckOfCardsDrawPileBlazor R="RegularSimpleCard" DeckPile="_vmData.Deck1" />
+    </StackItem>
+</StackLayout>
+<StackLayout ItemSpacing="5px">
+    <StackItem Length="1fr">
+        <SelfDiscardBlazor DiscardPile="_vmData.SelfDiscard" Context="DeckObject">
+            <DeckOfCardsImageBlazor CommandParameter="DeckObject" DeckObject="DeckObject" CommandObject="_vmData.SelfDiscard!.ObjectSingleClickCommand" R="RegularSimpleCard" />
+        </SelfDiscardBlazor>
+    </StackItem>
+    <StackItem Length="auto">
+        <DeckOfCardsMultiplePilesBlazor AnimationTag="reserve" Piles="@_vmData.SelfStock.StockFrame" R="RegularSimpleCard" />
+    </StackItem>
+    <StackItem Length="4fr">
+        @{
+            var list = Opponents;
+        }
+        @foreach (var player in list)
+        {
+            <OpponentDiscardBlazor Player="player" IsEnabled="DataContext.CanEnablePlayer" Context="DeckObject">
+
+                <DeckOfCardsImageBlazor CommandParameter="player" DeckObject="DeckObject" TargetHeight="@HeightString" CommandObject="PlayerCommand" R="RegularSimpleCard" />
+            </OpponentDiscardBlazor>
+        }
+    </StackItem>
+</StackLayout>
+<StackLayout ItemSpacing="5px">
+    <StackItem>
+        <DeckOfCardsHandBlazor R="RegularSimpleCard" Hand="_vmData.PlayerHand1" />
+    </StackItem>
+
+    <StackItem>
+        <DiceListConrolBlazor D="SimpleDice" Cup="@_vmData.Cup" TargetHeight="18vh" />
+    </StackItem>
+</StackLayout>
+<div>
+    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+</div>
+<div>
+    <ScoreBoardBlazor P="SavannahPlayerItem"
+                      Columns="_scores"
+                      Players="_gameContainer.SaveRoot.PlayerList" />
+</div>

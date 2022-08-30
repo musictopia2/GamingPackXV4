@@ -1,0 +1,49 @@
+﻿@if (DiscardPile is null)
+{
+    return;
+}
+@if (DiscardPile.HasFrame == false)
+{
+    <div>Must use frames for the self discard piles for blazor</div>
+    return;
+}
+<CascadingValue Value="this">
+    <fieldset style="@GetContainerStyle() @GetColorStyle();" disabled="@IsDisabled">
+        <legend style="float:none;">@DiscardPile.Text</legend>
+        <svg style="@GetSvgStyle()" viewBox="@GetViewBox()" @onclick="ClickAsync">
+            @if (DiscardPile.HandList.Count > 0)
+            {
+                @for (var i = 0; i < DiscardPile.Maximum; i++)
+                {
+                    int x = i;
+                    if (x + 1 > DiscardPile.HandList.Count)
+                    {
+                        continue;
+                    }
+                    if (_points.Count == 0)
+                    {
+                        continue; //i think this should work.
+                    }
+                    var point = _points[x];
+                    RegularSimpleCard card = DiscardPile.HandList[x];
+                    <FlexibleDeckRenderComponent D="RegularSimpleCard" DeckObject="card" UseKey="true">
+                        <svg x="@point.X" y="@point.Y" width="@card.DefaultSize.Width" height="@card.DefaultSize.Height">
+                            @ChildContent!(card)
+                        </svg>
+                    </FlexibleDeckRenderComponent>
+                }
+                if (DiscardPile.HandList.Count > DiscardPile.Maximum && _points.Count > 0)
+                {
+                    var lastPoint = _points.Last();
+                    RegularSimpleCard lastCard = DiscardPile.HandList.Last();
+                    <FlexibleDeckRenderComponent D="RegularSimpleCard" DeckObject="lastCard" UseKey="true">
+                        <svg x="@lastPoint.X" y="@lastPoint.Y" width="@lastCard.DefaultSize.Width" height="@lastCard.DefaultSize.Height">
+                            @ChildContent!(lastCard)
+                        </svg>
+                    </FlexibleDeckRenderComponent>
+                    
+                }
+            }
+        </svg>
+    </fieldset>
+</CascadingValue>

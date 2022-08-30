@@ -94,5 +94,17 @@ public static class MiscGraphicExtensions
         ellipse.PopulateEllipse(rect_Eye);
         ellipse.Fill = eyeColor.ToWebColor();
         parent.Children.Add(ellipse);
+
+
+
+        //Ellipse ellipsef = new();
+        //ellipsef.PopulateEllipse(rectangle);
+        //if (solidColor != "")
+        //{
+        //    ellipsef.Fill = solidColor.ToWebColor();
+
+        //}
+        //ellipsef.PopulateStrokesToStyles(borderColor.ToWebColor(), (int)borderSize);
+        //parent.Children.Add(ellipsef);
     }
 }

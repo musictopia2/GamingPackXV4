@@ -1,0 +1,10 @@
+﻿<BaseFrameBlazor IsEnabled="@IsEnabled" Text="@Player!.NickName">
+    @{
+        RegularSimpleCard? card = LastCard;
+        @if (card is null)
+        {
+            return;
+        }
+    }
+    @ChildContent!(card)
+</BaseFrameBlazor>
