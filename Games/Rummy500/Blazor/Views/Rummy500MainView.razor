@@ -1,0 +1,42 @@
+@inherits BasicGameView<Rummy500MainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsHandBlazor TargetContainerSize="87vh" Divider="1.7" HandType="EnumHandList.Vertical" R="RegularRummyCard" Hand="_vmData.DiscardList1" />
+    </StackItem>
+    <StackItem>
+        <div>
+            <DeckOfCardsHandBlazor TargetContainerSize="75vw" R="RegularRummyCard" Hand="_vmData.PlayerHand1" />
+        </div>
+        <StackLayout>
+            <StackItem>
+                <DeckOfCardsDrawPileBlazor R="RegularRummyCard" DeckPile="_vmData.Deck1" />
+            </StackItem>
+            <StackItem>
+                <ScoreBoardBlazor P="Rummy500PlayerItem"
+                                  Columns="_scores"
+                                  Players="_gameContainer.SaveRoot.PlayerList" />
+            </StackItem>
+            <StackItem>
+                <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+            </StackItem>
+            <StackItem>
+                <GameButtonComponent CommandObject = "DiscardCommand"
+                                     Display="Discard Current" />
+                <GameButtonComponent CommandObject="CreateSetCommand"
+                                     Display="Create New Rummy Set" />
+            </StackItem>
+        </StackLayout>
+        <div>
+            <DeckOfCardsMainRummySetsBlazor 
+                                            RU="RegularRummyCard"
+                                            SE="RummySet"
+                                            T="SavedSet"
+                                            ContainerHeight="40vh"
+                                            DataContext="_vmData.MainSets1" />
+        </div>
+    </StackItem>
+</StackLayout>
