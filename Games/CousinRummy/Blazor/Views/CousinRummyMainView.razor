@@ -1,0 +1,63 @@
+@inherits BasicGameView<CousinRummyMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<div>
+    <DeckOfCardsHandBlazor R="RegularRummyCard" TargetContainerSize="95vw" Hand="_vmData.PlayerHand1" />
+</div>
+<GridContainer Rows="@GetFirstRows" Columns="45vw 50vw" RowGap="5px" ColumnGap="5px" Inline="true">
+    <GridItem>
+        <div>
+            <GameButtonComponent CommandObject="InitCommand"
+                                 StartOnNewLine="true"
+                                 Display="Lay Down Initial Sets" />
+            <GameButtonComponent CommandObject="OtherCommand"
+                                 StartOnNewLine="true"
+                                 Display="Lay Down Other Sets" />
+        </div>
+        <StackLayout>
+            <StackItem>
+                <ScoreBoardBlazor P="CousinRummyPlayerItem"
+                                  Columns="_scores"
+                                  Players="_gameContainer.SaveRoot.PlayerList" />
+            </StackItem>
+            <StackItem>
+                <GridContainer Rows="@GetFirstRows" Columns="@GetSecondColumns" RowGap="5px" ColumnGap="5px" Inline="true">
+                    <GridItem>
+                        <GameButtonComponent CommandObject="PassCommand"
+                                             StartOnNewLine="true"
+                                             Display="Pass" />
+                    </GridItem>
+                    <GridItem Column="2">
+                        <GameButtonComponent CommandObject="BuyCommand"
+                                             StartOnNewLine="true"
+                                             Display="Buy" />
+                    </GridItem>
+                    <GridItem Row="2">
+                        <DeckOfCardsDrawPileBlazor R="RegularRummyCard" DeckPile="_vmData.Deck1" />
+                    </GridItem>
+                    <GridItem Row="2" Column="2">
+                        <DeckOfCardsSingleMiscPileBlazor R="RegularRummyCard" SinglePile="_vmData.Pile1" />
+                    </GridItem>
+                    <GridItem Row="3" ColumnSpan="3">
+                        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+                    </GridItem>
+                </GridContainer>
+            </StackItem>
+        </StackLayout>
+    </GridItem>
+    <GridItem Column="2">
+        <DeckOfCardsTempSetsBlazor RU="RegularRummyCard"
+                                   TargetContainerSize="50vh"
+                                   TempPiles="_vmData.TempSets" />
+    </GridItem>
+    <GridItem Row="2" Column="1" ColumnSpan="2">
+        <DeckOfCardsMainRummySetsBlazor RU="RegularRummyCard"
+                                        SE="PhaseSet"
+                                        T="SavedSet"
+                                        Divider="2.5"
+                                        ContainerHeight="23vh"
+                                        DataContext="_vmData.MainSets" />
+    </GridItem>
+</GridContainer>
