@@ -1,0 +1,12 @@
+﻿@if (DataContext == null || _player == null)
+{
+    return;
+}
+<StackLayout ItemSpacing="0px">
+    <StackItem>
+        <MultiplePilesBlazor AnimationTag="@DiscardTag" Piles="DataContext.Model.DiscardPiles" />
+    </StackItem>
+    <StackItem>
+        <MultiplePilesBlazor AnimationTag="@StockTag" Piles="DataContext.Model.StockPile.StockFrame" />
+    </StackItem>
+</StackLayout>
