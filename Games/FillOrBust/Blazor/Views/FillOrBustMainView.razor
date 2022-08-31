@@ -1,0 +1,37 @@
+@inherits BasicGameView<FillOrBustMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DrawPileBlazor DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem>
+        <div>
+            <ScoreBoardBlazor P="FillOrBustPlayerItem"
+                              Columns="_scores"
+                              Players="_gameContainer.SaveRoot.PlayerList" />
+        </div>
+        <div>
+            <LabelGridComponent DataContext="_vmData" Labels="_temps" />
+        </div>
+        <div style="margin-top: 50px">
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </div>
+    </StackItem>
+</StackLayout>
+<div>
+    <GameButtonComponent CommandObject="RollCommand"
+                         Display="Roll Dice" />
+    <GameButtonComponent CommandObject="RemoveCommand"
+                         Display="Remove Dice" />
+    <GameButtonComponent CommandObject="EndCommand"
+                         Display="End Turn" />
+</div>
+<div>
+    <DiceListConrolBlazor D="SimpleDice" Cup="@_vmData.Cup" TargetHeight="20vh" />
+</div>
