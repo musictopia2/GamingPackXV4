@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 72" preserveAspectRatio="xMinYMin meet" >
+	<g >
+		<svg width="51" height="26" xmlns="http://www.w3.org/2000/svg" x="2" >
+			<text x="50%" y="55%" width="100%" height="100%" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle" dominant-baseline="middle" >Chance</text>
+		</svg> 
+		<svg width="60" height="70" xmlns="http://www.w3.org/2000/svg" y="10" >
+			<text x="50%" y="55%" width="100%" height="100%" fill="#FF0000" font-size="45" font-weight="bold" text-anchor="middle" dominant-baseline="middle" style="stroke: black; stroke-width: 1px; stroke-miterlimit:4; font-family:tahoma; opacity: 1" >?</text>
+		</svg> 
+	</g> 
+</svg> 

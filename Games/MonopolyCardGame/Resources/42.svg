@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 72" preserveAspectRatio="xMinYMin meet" >
+	<g >
+		<svg width="55" height="40" xmlns="http://www.w3.org/2000/svg" >
+			<text x="50%" y="55%" width="100%" height="100%" fill="#FF0000" font-size="30" font-weight="bold" text-anchor="middle" dominant-baseline="middle" style="stroke: black; stroke-width: 1px; stroke-miterlimit:4; font-family:tahoma; opacity: 1" >Go</text>
+		</svg> 
+		<svg width="55" height="20" xmlns="http://www.w3.org/2000/svg" y="35" >
+			<text x="50%" y="55%" width="100%" height="100%" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle" dominant-baseline="middle" >Collect</text>
+		</svg> 
+		<svg width="55" height="20" xmlns="http://www.w3.org/2000/svg" y="51" >
+			<text x="50%" y="55%" width="100%" height="100%" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle" dominant-baseline="middle" >$200</text>
+		</svg> 
+	</g> 
+</svg> 

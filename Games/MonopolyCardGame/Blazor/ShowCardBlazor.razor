@@ -1,0 +1,19 @@
+﻿@using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base 
+@if (GameData == null)
+{
+    return;
+}
+<BaseFrameBlazor Text="Card Information">
+    <div style="width: 50vw">
+        <StackLayout>
+            <StackItem>
+                <FlexibleDeckRenderComponent D="MonopolyCardGameCardInformation" DeckObject="GameData.AdditionalInfo1.CurrentCard">
+                    <CardGraphicsBlazor TargetHeight="@RealHeight" DeckObject="GameData.AdditionalInfo1.CurrentCard"  />
+                </FlexibleDeckRenderComponent>
+            </StackItem>
+            <StackItem>
+                @GameData.AdditionalInfo1.CurrentCard.Description
+            </StackItem>
+        </StackLayout>
+    </div>
+</BaseFrameBlazor>

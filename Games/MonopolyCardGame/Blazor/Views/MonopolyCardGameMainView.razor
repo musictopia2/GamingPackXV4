@@ -1,0 +1,66 @@
+@inherits BasicGameView<MonopolyCardGameMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<CascadingValue Value="_vmData">
+    @if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.ManuallyFigureOutMonopolies && IsSelf)
+    {
+        <div>
+            <HandBlazor Hand="_vmData.PlayerHand1" />
+        </div>
+        //needs to have button to put back as well.
+
+        return;
+    }
+    <GridContainer Inline="true" Columns="75vw 25vw">
+        <GridItem>
+            <div>
+                <ShowCardBlazor />
+            </div>
+            <StackLayout>
+                <StackItem>
+                    <DrawPileBlazor DeckPile="_vmData.Deck1" />
+                </StackItem>
+                <StackItem>
+                    <GameButtonComponent Display="Resume"
+                                         CommandObject="ResumeCommand"
+                                         StartOnNewLine="true" />
+                    <GameButtonComponent Display="Go Out"
+                                         CommandObject="GoOutCommand"
+                                         StartOnNewLine="true" />
+                </StackItem>
+            </StackLayout>
+            <div>
+                <HandBlazor Hand="_vmData.PlayerHand1" />
+            </div>
+            <div>
+                <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+            </div>
+            <div>
+                <ScoreBoardBlazor P="MonopolyCardGamePlayerItem"
+                                  Columns="_scores"
+                                  Players="_gameContainer.SaveRoot.PlayerList" />
+            </div>
+        </GridItem>
+        <GridItem Column="2">
+            <StackLayout>
+                @if (_gameContainer.SaveRoot.GameStatus != EnumWhatStatus.ManuallyFigureOutMonopolies)
+                {
+                    @foreach (var player in _players)
+                    {
+                        <StackItem>
+                            <HandBlazor TargetContainerSize="85vh" Hand="player.TradePile" HandType="EnumHandList.Vertical" Divider="1.6" />
+                        </StackItem>
+                    }
+                }
+                else
+                {
+                    <StackItem>
+                        Figure Out Monopoly Stuff
+                    </StackItem>
+                }
+            </StackLayout>
+        </GridItem>
+    </GridContainer>
+</CascadingValue>
