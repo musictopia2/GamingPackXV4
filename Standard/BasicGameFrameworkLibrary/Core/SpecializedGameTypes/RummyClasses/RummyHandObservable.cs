@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
-
 public class RummyHandObservable<S, C, R> : HandObservable<R>
     where S : IFastEnumSimple
     where C : IFastEnumColorSimple

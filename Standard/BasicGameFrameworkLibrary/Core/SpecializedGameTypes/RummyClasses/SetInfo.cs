@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
-
 public abstract class SetInfo<S, C, R, T> : HandObservable<R>
     where S : IFastEnumSimple
     where C : IFastEnumColorSimple
