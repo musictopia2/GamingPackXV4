@@ -1,0 +1,60 @@
+@inherits BasicGameView<MillebournesMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<CascadingValue Value="_gameContainer">
+    <GridContainer Columns="@GetColumns" Rows="@GetRows" ColumnGap="3px">
+        <GridItem RowSpan="3">
+            <StackLayout>
+                <StackItem>
+                    <DrawPileBlazor DeckPile="_vmData.Deck1" />
+                </StackItem>
+                <StackItem>
+                    <SingleMiscPileBlazor SinglePile="_vmData.Pile2" />
+                </StackItem>
+                <StackItem>
+                    <SingleMiscPileBlazor SinglePile="_vmData.Pile1" PileAnimationTag="" />
+                </StackItem>
+                <StackItem>
+                    <ParentControl VM="CoupeViewModel">
+                        <CoupeView />
+                    </ParentControl>
+                </StackItem>
+            </StackLayout>
+            <div>
+                <HandBlazor Hand="_vmData.PlayerHand1" />
+            </div>
+            <div>
+                <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+            </div>
+            <div>
+                <ScoreBoardBlazor P="MillebournesPlayerItem"
+                                  Columns="_scores"
+                                  Players="_gameContainer.SaveRoot.PlayerList" />
+            </div>
+        </GridItem>
+        @{
+            int x = 0;
+        }
+        @foreach (var team in _gameContainer.TeamList)
+        {
+            x++;
+            int y;
+            y = x;
+            <GridItem Row="@x" Column="2">
+                <StackLayout ItemSpacing="0px">
+                    <StackItem>
+                        <div style="text-align: center; font-weight: bold">
+                            @team.Text
+                        </div>
+                        <MultiplePilesBlazor AnimationTag="@GetAnimationTag(team)" Piles="team.CardPiles" />
+                    </StackItem>
+                    <StackItem>
+                        <SafetiesBlazor Team="team" Index="y" />
+                    </StackItem>
+                </StackLayout>
+            </GridItem>
+        }
+    </GridContainer>
+</CascadingValue>
