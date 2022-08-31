@@ -1,0 +1,31 @@
+@inherits BasicGameView<A8RoundRummyMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<GridContainer Columns="@GetColumns" ColumnGap="10px">
+    <GridItem>
+        <HandBlazor Hand="_vmData.PlayerHand1" />
+        <StackLayout>
+            <StackItem>
+                <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+            </StackItem>
+            <StackItem>
+                <DrawPileBlazor DeckPile="_vmData.Deck1" />
+            </StackItem>
+            <StackItem>
+                <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+                <GameButtonComponent CommandObject="GoOutCommand"
+                                     Display="Go Out" />
+            </StackItem>
+        </StackLayout>
+        <div>
+            <ScoreBoardBlazor P="A8RoundRummyPlayerItem"
+                              Columns="_scores"
+                              Players="_gameContainer.SaveRoot.PlayerList" />
+        </div>
+    </GridItem>
+    <GridItem Column="2">
+        <RoundUI Rounds="@_gameContainer.SaveRoot.RoundList" />
+    </GridItem>
+</GridContainer>

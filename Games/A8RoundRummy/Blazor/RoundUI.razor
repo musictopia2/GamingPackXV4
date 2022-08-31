@@ -1,0 +1,10 @@
+﻿@if (Rounds == null || Rounds.Count == 0)
+{
+    return;
+}
+@foreach (var round in Rounds)
+{
+    <div style="font-weight: bold; font-size: 4vh; margin-right: 5px; margin-bottom: 10px;">
+        @round.Description
+    </div>
+}
