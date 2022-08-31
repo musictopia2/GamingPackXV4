@@ -1,0 +1,39 @@
+@inherits BasicGameView<Phase10MainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <HandBlazor Hand="_vmData.PlayerHand1" />
+    </StackItem>
+    <StackItem>
+        <DrawPileBlazor DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem>
+        <ScoreBoardBlazor P="Phase10PlayerItem"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </StackItem>
+</StackLayout>
+<StackLayout>
+    <StackItem>
+        <GameButtonComponent CommandObject="CompleteCommand" Display="Complete Phase" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+</StackLayout>
+<StackLayout>
+    <StackItem>
+        <TempSetsBlazor TargetContainerSize="65vh"
+                        TempPiles="_vmData.TempSets" />
+    </StackItem>
+    <StackItem>
+        <MainRummySetsBlazor ContainerHeight="65vh"
+                             DataContext="_vmData.MainSets" />
+    </StackItem>
+</StackLayout>
