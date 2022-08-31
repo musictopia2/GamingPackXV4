@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
+	  <PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
+	  <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
+  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\GolfBall.svg" />
+	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Generators\CommandsGenerator\CommandsGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\Generators\GamePackageDIGenerator\GamePackageDIGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\Generators\GamePackageSerializeGenerator\GamePackageSerializeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	  <ProjectReference Include="..\..\Generators\LabelGridGenerator\LabelGridGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	  <ProjectReference Include="..\..\Generators\ScoreBoardGenerator\ScoreBoardGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
+  </ItemGroup>
+
+</Project>
