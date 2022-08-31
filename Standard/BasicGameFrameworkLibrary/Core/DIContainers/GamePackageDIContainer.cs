@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DIContainers;
-
 public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister, IGamePackageDIContainer, IGamePackageGeneratorDI
 {
     private readonly HashSet<ContainerData> _thisSet = new();
@@ -154,7 +153,7 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
             }
             catch (Exception ex)
             {
-                throw new Exception($"Unable to replace object.  The type you were trying to replace is {thisType.Name}.  Error was {ex.Message}");
+                throw new CustomBasicException($"Unable to replace object.  The type you were trying to replace is {thisType.Name}.  Error was {ex.Message}");
             }
         }
     }
@@ -166,7 +165,7 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
             List<ContainerData> tempList = _thisSet.Where(xx => xx.CanAssignFrom(thisType)).ToList();
             if (tempList.Count == 0)
             {
-                throw new Exception($"Nothing registered with requesting type of {thisType.Name} to replace registration");
+                throw new CustomBasicException($"Nothing registered with requesting type of {thisType.Name} to replace registration");
             }
             if (tempList.Count > 1)
 
@@ -174,11 +173,11 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
                 tempList = tempList = _thisSet.Where(Items => Items.TypeIn == thisType).ToList();
                 if (tempList.Count == 0)
                 {
-                    throw new Exception($"Nothing registered with requesting type of {thisType.Name} when attempting to use in for replacing registrations");
+                    throw new CustomBasicException($"Nothing registered with requesting type of {thisType.Name} when attempting to use in for replacing registrations");
                 }
                 else if (tempList.Count > 1)
                 {
-                    throw new Exception($"Was a duplicate.  Registered {tempList.Count} for requesting type of {thisType.Name}  Happened even when using in argument.  Was trying to replace registration");
+                    throw new CustomBasicException($"Was a duplicate.  Registered {tempList.Count} for requesting type of {thisType.Name}  Happened even when using in argument.  Was trying to replace registration");
                 }
             }
             ContainerData thisData = tempList.Single();
@@ -258,18 +257,18 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
             List<ContainerData> tempList = _thisSet.Where(xx => xx.CanAssignFrom(thisType) && xx.Tag == tag).ToList();
             if (tempList.Count == 0)
             {
-                throw new Exception($"Nothing registered requesting type of {thisType.Name}");
+                throw new CustomBasicException($"Nothing registered requesting type of {thisType.Name}");
             }
             if (tempList.Count > 1)
             {
                 tempList = _thisSet.Where(xx => xx.TypeIn == thisType && xx.Tag == tag).ToList();
                 if (tempList.Count == 0)
                 {
-                    throw new Exception($"Nothing registered requesting type of {thisType.Name} when attempting to use in");
+                    throw new CustomBasicException($"Nothing registered requesting type of {thisType.Name} when attempting to use in");
                 }
                 else if (tempList.Count > 1)
                 {
-                    throw new Exception($"Was a duplicate.  Registered {tempList.Count} for  requesting type of {thisType.Name}  Happened even when using in argument");
+                    throw new CustomBasicException($"Was a duplicate.  Registered {tempList.Count} for  requesting type of {thisType.Name}  Happened even when using in argument");
                 }
             }
             ContainerData thisData = tempList.Single();
@@ -281,14 +280,14 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
             {
                 if (thisData.GetNewObject == null)
                 {
-                    throw new Exception("Must have a custom function");
+                    throw new CustomBasicException("Must have a custom function");
                 }
                 thisData.ThisObject = thisData.GetNewObject();
                 return (T)thisData.ThisObject;
             }
             if (thisData.GetNewObject == null)
             {
-                throw new Exception("Must have a custom function");
+                throw new CustomBasicException("Must have a custom function");
             }
             return (T)thisData.GetNewObject();
         }

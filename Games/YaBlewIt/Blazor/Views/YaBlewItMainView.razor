@@ -1,0 +1,53 @@
+@inherits BasicGameView<YaBlewItMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
+    <StackItem>
+        <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem>
+        <DrawPileBlazor DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <HandBlazor Hand="_vmData.Claims" TargetContainerSize="80vw" />
+    </StackItem>
+</StackLayout>
+<div>
+    <HandBlazor Hand="_vmData.PlayerHand1" TargetContainerSize="95vw" />
+</div>
+<div>
+    <GameButtonComponent CommandObject="PlayCommand"
+                         Display="Play Card" />
+    <GameButtonComponent CommandObject="EndCommand"
+                         Display="End Turn" />
+    <GameButtonComponent CommandObject="PassCommand"
+                         Display="Pass" />
+    <GameButtonComponent CommandObject="RollCommand"
+                         Display="Roll Dice" />
+    <GameButtonComponent CommandObject="TakeClaimCommand"
+                         Display="Take Claim" />
+    <GameButtonComponent CommandObject="GambleCommand"
+                         Display="Gamble" />
+    <GameButtonComponent CustomCallBack = "OpenPopup"
+                         Display="Open Score Guide" />
+    
+</div>
+<div style="height: 14vh;">
+    <DiceListConrolBlazor D="EightSidedDice" Cup="@DataContext.VMData.Cup" TargetHeight="14vh" />
+</div>
+<div>
+    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+</div>
+<div>
+    <ScoreBoardBlazor P="YaBlewItPlayerItem"
+                      Columns="_scores"
+                      Players="_gameContainer.SaveRoot.PlayerList" />
+</div>
+<PopupFullScreen @bind-Visible="_showPopup">
+    <ScorePopupComponent Close="ClosePopup" />
+</PopupFullScreen>
+<PopupFullScreen Visible="@DataContext.ShowSafeScreen">
+    <SafeScreen />
+</PopupFullScreen>

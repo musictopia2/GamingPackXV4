@@ -1,0 +1,5 @@
+﻿<svg width="500" height="20" viewBox="0 0 500 20" xmlns="http://www.w3.org/2000/svg" >
+	<line x1="0" y1="0" x2="500" y2="0" stroke="black" stroke-width="20"
+          stroke-dasharray="8" />
+	
+</svg>

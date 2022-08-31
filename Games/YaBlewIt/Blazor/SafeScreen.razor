@@ -1,0 +1,11 @@
+﻿<GamePackageFullScreen>
+    <div>
+        <HandBlazor Hand="DataContext!.VMData.PlayerHand1" TargetContainerSize="95vw" />
+    </div>
+    <div>
+        <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+    </div>
+    <EnumPickerBlazor E="EnumColors" Context="Piece" ListPicker="DataContext.VMData.ColorPicker">
+        <CheckerPiece MainColor="@GetColor(Piece)" />
+    </EnumPickerBlazor>
+</GamePackageFullScreen>
