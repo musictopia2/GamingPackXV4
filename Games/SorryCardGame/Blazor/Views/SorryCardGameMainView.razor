@@ -1,0 +1,37 @@
+@inherits BasicGameView<SorryCardGameMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<CascadingValue Value="_gameContainer">
+    <StackLayout>
+        <StackItem>
+            <DrawPileBlazor DeckPile="_vmData.Deck1" />
+        </StackItem>
+        <StackItem>
+            <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+        </StackItem>
+        <StackItem>
+            <SingleMiscPileBlazor PileAnimationTag="otherpile" SinglePile="_vmData.OtherPile" />
+        </StackItem>
+        <StackItem>
+            <div style="font-weight: bold; font-size: 8vh;">
+                @_vmData.UpTo
+            </div>
+        </StackItem>
+    </StackLayout>
+    <div>
+        <HandBlazor Hand="_vmData.PlayerHand1" />
+    </div>
+    <StackLayout>
+        @foreach (var player in _playerList)
+        {
+            <StackItem>
+                <BoardBlazor Player="player" />
+            </StackItem>
+        }
+    </StackLayout>
+    <div>
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </div>
+</CascadingValue>

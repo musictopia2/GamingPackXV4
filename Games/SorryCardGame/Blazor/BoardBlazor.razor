@@ -1,0 +1,19 @@
+﻿@using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base 
+@if (Player == null || GameData == null || _list.Count != 4)
+{
+    return;
+}
+<BaseFrameBlazor  IsEnabled="@IsEnabled" Text="@Player.NickName">
+    <div @onclick="() => SorryPlayerAsync()">
+        <StackLayout ItemSpacing="0px">
+            @foreach (var card in _list)
+            {
+                <StackItem>
+                    <FlexibleDeckRenderComponent D="SorryCardGameCardInformation" DeckObject="card">
+                        <CardGraphicsBlazor TargetHeight="@RealHeight" DeckObject="card" />
+                    </FlexibleDeckRenderComponent>
+                </StackItem>
+            }
+        </StackLayout>
+    </div>
+</BaseFrameBlazor>

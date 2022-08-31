@@ -1,0 +1,29 @@
+@if (GameData == null || TestData == null || BasicData == null)
+{
+    if (GameData == null)
+    {
+        <div>No Game Data</div>
+    }
+    if (TestData == null)
+    {
+        <div>No Test Data</div>
+    }
+    if (BasicData == null)
+    {
+        <div>No Basic Data</div>
+    }
+    return;
+}
+<CascadingValue Value="TargetHeight">
+    <ParentControl VM="SorryCardGameMainViewModel">
+        <SorryCardGameMainView />
+    </ParentControl>
+    <ParentControl VM="MultiplayerOpeningViewModel<SorryCardGamePlayerItem>">
+        <MultiplayerOpeningView P="SorryCardGamePlayerItem" />
+    </ParentControl>
+    <ParentControl VM="BeginningChooseColorViewModel<EnumColorChoices, SorryCardGamePlayerItem>">
+        <BeginningChooseColorView E="EnumColorChoices" Context="Piece" P="SorryCardGamePlayerItem">
+            <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
+        </BeginningChooseColorView>
+    </ParentControl>
+</CascadingValue>
