@@ -3,23 +3,35 @@
 {
     return;
 }
-<p>Welcome to DutchBlitz</p>
-<StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
-    <StackItem>
-        <DrawPileBlazor DeckPile="_vmData.Deck1" />
-    </StackItem>
-    <StackItem>
-        <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
-    </StackItem>
-</StackLayout>
-<div>
-    <HandBlazor Hand="_vmData.PlayerHand1" />
-</div>
-<div>
-    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
-</div>
-<div>
-    <ScoreBoardBlazor P="DutchBlitzPlayerItem"
-                      Columns="_scores"
-                      Players="_gameContainer.SaveRoot.PlayerList" />
-</div>
+<CascadingValue Value="_vmData">
+    <div>
+        <ScoreBoardBlazor P="DutchBlitzPlayerItem"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </div>
+    <div>
+        <PublicPilesBlazor />
+    </div>
+    <StackLayout>
+        <StackItem>
+            <DrawPileBlazor DeckPile="_vmData.Deck1" />
+        </StackItem>
+        <StackItem>
+            <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+        </StackItem>
+        <StackItem>
+            <GameButtonComponent Display="Dutch" CommandObject="DutchCommand" />
+        </StackItem>
+        <StackItem>
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </StackItem>
+    </StackLayout>
+    <StackLayout ItemSpacing="0px">
+        <StackItem>
+            <MultiplePilesBlazor Piles="_vmData.DiscardPiles" />
+        </StackItem>
+        <StackItem>
+            <MultiplePilesBlazor Piles="_vmData.StockPile.StockFrame" />
+        </StackItem>
+    </StackLayout>
+</CascadingValue>

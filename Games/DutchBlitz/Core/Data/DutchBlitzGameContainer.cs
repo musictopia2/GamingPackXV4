@@ -14,4 +14,7 @@ public class DutchBlitzGameContainer : CardGameContainer<DutchBlitzCardInformati
         IRandomGenerator random) : base(basicData, test, gameInfo, delay, aggregator, command, resolver, deckList, random)
     {
     }
+    public int MaxDiscard;
+    public ComputerCards? CurrentComputer;
+    public BasicList<ComputerCards> ComputerPlayers = new();
 }

@@ -1,8 +1,6 @@
 namespace DutchBlitz.Blazor.Views;
 public partial class DutchBlitzMainView
 {
-    [CascadingParameter]
-    public TestOptions? TestData { get; set; }
     private readonly BasicList<LabelGridModel> _labels = new();
     private readonly BasicList<ScoreColumnModel> _scores = new();
     private DutchBlitzVMData? _vmData;
@@ -11,13 +9,14 @@ public partial class DutchBlitzMainView
     {
         _vmData = aa.Resolver!.Resolve<DutchBlitzVMData>();
         _gameContainer = aa.Resolver.Resolve<DutchBlitzGameContainer>();
-        _labels.Clear();
         _labels.AddLabel("Turn", nameof(DutchBlitzVMData.NormalTurn))
-            .AddLabel("Status", nameof(DutchBlitzVMData.Status));
+            .AddLabel("Status", nameof(DutchBlitzVMData.Status))
+            .AddLabel("Error", nameof(DutchBlitzVMData.ErrorMessage));
         _scores.Clear();
-        _scores.AddColumn("Cards Left", true, nameof(DutchBlitzPlayerItem.ObjectCount))
-
-            ; //cards left is common.  can be anything you need.
+        _scores.AddColumn("Stock Left", false, nameof(DutchBlitzPlayerItem.StockLeft))
+            .AddColumn("Points Round", false, nameof(DutchBlitzPlayerItem.PointsRound))
+            .AddColumn("Points Game", false, nameof(DutchBlitzPlayerItem.PointsGame));
         base.OnInitialized();
     }
+    private ICustomCommand DutchCommand => DataContext!.DutchCommand!;
 }

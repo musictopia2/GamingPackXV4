@@ -1,19 +1,19 @@
 namespace DutchBlitz.Blazor;
-public class CardGraphicsBlazor : BaseDeckGraphics<DutchBlitzCardInformation>
+public class CardGraphicsBlazor : BaseColorCardsImageBlazor<DutchBlitzCardInformation>
 {
-    protected override SizeF DefaultSize => new (55, 72); //this is default but can change to anything you want.
-    protected override bool NeedsToDrawBacks => true;
+    protected override string BackColor => cc.Aqua;
+    protected override string BackFontColor => cc.DarkGreen;
+    protected override string BackText => "Dutch Blitz";
     protected override bool CanStartDrawing()
     {
-        return true;
-    }
-    protected override void DrawBacks()
-    {
-        //any code necessary for drawing backs of cards.
+        if (DeckObject!.IsUnknown)
+        {
+            return true;
+        }
+        return DeckObject!.Display != "" && DeckObject!.Color != EnumColorTypes.None;
     }
     protected override void DrawImage()
     {
-        //code necessary to draw the card.
-
+        DrawValueCard(DefaultRectangle, DeckObject!.Display);
     }
 }

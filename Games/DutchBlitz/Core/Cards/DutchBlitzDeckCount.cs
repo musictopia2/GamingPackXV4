@@ -1,8 +1,13 @@
 namespace DutchBlitz.Core.Cards;
 public class DutchBlitzDeckCount : IDeckCount
 {
+    public static bool DoubleDeck { get; set; }
     public int GetDeckCount()
     {
-        return 0; //change to what it really is.
+        if (DoubleDeck)
+        {
+            return 320;
+        }
+        return 160;
     }
 }
