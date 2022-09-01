@@ -1,0 +1,22 @@
+@inherits BasicGameView<CaliforniaJackMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<div>
+    <DeckOfCardsDrawPileBlazor R="CaliforniaJackCardInformation" DeckPile="_vmData.Deck1" />
+</div>
+<div>
+    <DeckOfCardsTwoPlayerTrickBlazor T="CaliforniaJackCardInformation" DataContext="_vmData.TrickArea1" />
+</div>
+<div>
+    <DeckOfCardsHandBlazor R="CaliforniaJackCardInformation" Hand="_vmData.PlayerHand1" />
+</div>
+<div>
+    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+</div>
+<div>
+    <ScoreBoardBlazor P="CaliforniaJackPlayerItem"
+                      Columns="_scores"
+                      Players="_gameContainer.SaveRoot.PlayerList" />
+</div>
