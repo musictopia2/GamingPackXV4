@@ -1,0 +1,23 @@
+﻿@inherits SimpleActionView
+@if (CompleteContainer == null || DataContext == null)
+{
+    return;
+}
+<FinalActionLayout>
+    <StackLayout ItemSpacing="0px">
+        <StackItem>
+            <PlayerUI UsePlayerButton="false" />
+        </StackItem>
+        <StackItem>
+            <div>
+                <HandBlazor D="FluxxCardInformation" Hand="CompleteContainer.ActionContainer.TempHand" />
+            </div>
+            <div>
+                <GameButtonComponent CommandObject="GiveCommand"
+                                     StartOnNewLine="true"
+                                     Display="Give Cards To Selected Player" />
+                <KeeperButton K="ActionEverybodyGetsOneViewModel" @key="GetKey"  StartsOnNewLine="true" />
+            </div>
+        </StackItem>
+    </StackLayout>
+</FinalActionLayout>

@@ -1,0 +1,19 @@
+﻿@inherits SimpleActionView
+
+@if (CompleteContainer == null || DataContext == null)
+{
+    return;
+}
+<FinalActionLayout>
+    <PlayerUI Command="DataContext.ChoosePlayerCommand" UsePlayerButton="true" />
+    <HandBlazor D="FluxxCardInformation" Hand="CompleteContainer.ActionContainer.OtherHand" />
+    <div>
+        @if (DataContext.ButtonChooseCardVisible)
+        {
+        <GameButtonComponent CommandObject="ChooseCommand"
+                             StartOnNewLine="true"
+                             Display="Choose Card" />
+        }
+        <KeeperButton K="ActionTakeUseViewModel" @key="GetKey"  StartsOnNewLine="true" />
+    </div>
+</FinalActionLayout>

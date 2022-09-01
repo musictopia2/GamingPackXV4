@@ -1,0 +1,24 @@
+﻿@inherits SimpleActionView
+
+@if (CompleteContainer == null || DataContext == null)
+{
+    return;
+}
+<BaseFrameBlazor Text="Card List">
+    <FinalActionLayout>
+        <StackLayout>
+            <StackItem>
+                <ListChooserBlazor TextWidth="400" TextHeight="3vh" ListPicker="CompleteContainer.ActionContainer.CardList1" />
+            </StackItem>
+            <StackItem>
+                <GameButtonComponent CommandObject="SelectCommand"
+                                     StartOnNewLine="true"
+                                     Display="Select Card" />
+                <GameButtonComponent CommandObject="ViewCommand"
+                                     StartOnNewLine="true"
+                                     Display="View Card" />
+                <KeeperButton K="ActionDoAgainViewModel" @key="GetKey" StartsOnNewLine="true" />
+            </StackItem>
+        </StackLayout>
+    </FinalActionLayout>
+</BaseFrameBlazor>

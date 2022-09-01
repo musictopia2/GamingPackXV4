@@ -1,0 +1,67 @@
+@inherits BasicGameView<FluxxMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <RuleUI />
+    </StackItem>
+    <StackItem>
+        <ShowCardUI ShowCategory="EnumShowCategory.MainScreen" Width="60vw" />
+    </StackItem>
+    <StackItem>
+        <HandBlazor D="GoalCard" Hand="_vmData.Goal1" />
+    </StackItem>
+</StackLayout>
+<StackLayout ItemSpacing="0px">
+    <StackItem>
+        <GameButtonComponent CommandObject="EndCommand"
+                             Display="End Turn" />
+        <GameButtonComponent CommandObject="DiscardCommand"
+                             Display="Discard" />
+    </StackItem>
+    <StackItem>
+        <ParentControl VM="GiveViewModel">
+            <GiveView />
+        </ParentControl>
+        <ParentControl VM="PlayViewModel">
+            <PlayView />
+        </ParentControl>
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent CommandObject="UnselectCommand"
+                             Display="Unselect All" />
+        <GameButtonComponent CommandObject="SelectCommand"
+                             Display="Select All" />
+    </StackItem>
+    <StackItem>
+        <KeeperButton K="FluxxMainViewModel" @key="GetKey" />
+    </StackItem>
+</StackLayout>
+<StackLayout>
+    <StackItem>
+        <DrawPileBlazor DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem>
+        <HandBlazor D="KeeperCard" Hand="_vmData.Keeper1" />
+    </StackItem>
+</StackLayout>
+
+<GridContainer Inline="true" Columns="auto auto" ColumnGap="5px" Rows="auto auto">
+    <GridItem>
+        <HandBlazor D="FluxxCardInformation" Divider="1.6" TargetContainerSize="70vw" Hand="_vmData.PlayerHand1" />
+    </GridItem>
+    <GridItem Row="2">
+        <ScoreBoardBlazor P="FluxxPlayerItem"
+                          UseAbbreviationForTrueFalse="true"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </GridItem>
+    <GridItem Column="2" Row="1" RowSpan="2">
+        <DetailGameInformationBlazor DataContext="_vmData" Labels="_labels" Text="Additional Information" Width="25vw" />
+    </GridItem>
+</GridContainer>

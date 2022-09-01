@@ -1,0 +1,27 @@
+﻿@inherits SimpleActionView
+
+@if (CompleteContainer == null || DataContext == null)
+{
+    return;
+}
+<FinalActionLayout>
+    <div>
+        <LabelGridComponent DataContext="DataContext" Labels="_labels" />
+    </div>
+    <StackLayout>
+        <StackItem>
+            <div style="width: 50vw; height: 40vh; overflow: auto">
+                <ListChooserBlazor TextWidth="400" TextHeight="3vh" ListPicker="CompleteContainer.ActionContainer.Rule1" />
+            </div>
+        </StackItem>
+        <StackItem>
+            <GameButtonComponent StartOnNewLine="true"
+                                 CommandObject="ViewCommand"
+                                 Display="View Card" />
+            <GameButtonComponent StartOnNewLine="true"
+                                 CommandObject="DiscardCommand"
+                                 Display="Discard Selected Rule(s)" />
+            <KeeperButton K="ActionDiscardRulesViewModel" @key="GetKey" StartsOnNewLine="true" />
+        </StackItem>
+    </StackLayout>
+</FinalActionLayout>
