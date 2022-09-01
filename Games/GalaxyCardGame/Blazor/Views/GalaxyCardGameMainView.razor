@@ -1,0 +1,55 @@
+@inherits BasicDeckView<GalaxyCardGameMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsTwoPlayerTrickBlazor T="GalaxyCardGameCardInformation" DataContext="_vmData.TrickArea1" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsImageBlazor @key="@GetKey" R="GalaxyCardGameCardInformation" DeckObject="_gameContainer.SaveRoot.WinningCard" TargetHeight="@HeightString" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsDrawPileBlazor R="GalaxyCardGameCardInformation" DeckPile="_vmData.Deck1" />
+    </StackItem>
+</StackLayout>
+<StackLayout>
+    @foreach (var player in _players)
+    {
+        <StackItem>
+            <DeckOfCardsMainRummySetsBlazor ContainerHeight="25vh"
+                                        ContainerWidth="45vw"
+                                        RU="GalaxyCardGameCardInformation"
+                                        SE="MoonClass"
+                                        T="SavedSet"
+                                        DataContext="player.Moons" />
+        </StackItem>
+    }
+</StackLayout>
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsHandBlazor R="GalaxyCardGameCardInformation" Hand="_vmData.PlayerHand1" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+</StackLayout>
+<StackLayout>
+    <StackItem>
+        <GameButtonComponent CommandObject="EndCommand"
+                             Display="End Turn" />
+        <GameButtonComponent CommandObject="MoonCommand"
+                             Display="Create New Moon" />
+    </StackItem>
+    <StackItem>
+        <GridList Columns="2" Context="player" RenderList="_players">
+            <DeckOfCardsHandBlazor R="GalaxyCardGameCardInformation" Hand="player.PlanetHand" />
+        </GridList>
+    </StackItem>
+    <StackItem>
+        <ScoreBoardBlazor P="GalaxyCardGamePlayerItem"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </StackItem>
+</StackLayout>
