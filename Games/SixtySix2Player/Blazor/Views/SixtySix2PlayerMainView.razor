@@ -1,0 +1,41 @@
+@inherits BasicGameView<SixtySix2PlayerMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<GridContainer Inline="true" Rows="auto auto" Columns="60vw auto">
+    <GridItem Row="1" RowSpan="2">
+        <StackLayout>
+            <StackItem>
+                <DeckOfCardsSingleMiscPileBlazor R="SixtySix2PlayerCardInformation" SinglePile="_vmData.Pile1" />
+                <DeckOfCardsDrawPileBlazor R="SixtySix2PlayerCardInformation" DeckPile="_vmData.Deck1" />
+            </StackItem>
+            <StackItem>
+                <DeckOfCardsTwoPlayerTrickBlazor T="SixtySix2PlayerCardInformation" DataContext="_vmData.TrickArea1" />
+            </StackItem>
+        </StackLayout>
+        <div>
+            <DeckOfCardsHandBlazor R="SixtySix2PlayerCardInformation" Hand="_vmData.PlayerHand1" />
+        </div>
+        <div>
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </div>
+        <div>
+            <ScoreBoardBlazor P="SixtySix2PlayerPlayerItem"
+                              Columns="_scores"
+                              Players="_gameContainer.SaveRoot.PlayerList" />
+        </div>
+        <div>
+            <GameButtonComponent CommandObject="OutCommand"
+                                 Display="Go Out" />
+            <GameButtonComponent CommandObject="MarriageCommand"
+                                 Display="Announce Marriage" />
+        </div>
+    </GridItem>
+    <GridItem Column="2">
+        <GuideUI GameData="_vmData" />
+    </GridItem>
+    <GridItem Column="2" Row="2">
+        <DeckOfCardsHandBlazor R="SixtySix2PlayerCardInformation" Hand="_vmData.Marriage1" />
+    </GridItem>
+</GridContainer>
