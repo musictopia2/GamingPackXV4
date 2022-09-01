@@ -61,3 +61,4 @@ global using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Ha
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using MonopolyCardGame.Core.TempHandClasses;

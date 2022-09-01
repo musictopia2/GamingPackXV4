@@ -99,6 +99,12 @@ public class MonopolyCardGameMainGameClass
                 ProcessTrade(newTrade, tempCollection, SingleInfo!.TradePile!);
                 await ContinueTurnAsync();
                 return;
+            case "finishedsets":
+                SingleInfo = PlayerList.GetWhoPlayer();
+                var list = await GetSetInfoAsync(content);
+                await FinishManualProcessingAsync(list);
+                await ContinueTurnAsync(); //try this
+                return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
@@ -244,6 +250,12 @@ public class MonopolyCardGameMainGameClass
         {
             _model.Status = $"Waiting for {SingleInfo.NickName} to manually figure out the monopolies.";
         }
+        _model.TempSets1.ClearBoard(); //i think we need to clear out the board at this point.
+    }
+    public void SortTempHand(DeckRegularDict<MonopolyCardGameCardInformation> list)
+    {
+        SingleInfo!.TempHands.AddRange(list);
+        SortCards(SingleInfo.TempHands);
     }
     public void ProcessTrade(TradePile newTrade, DeckRegularDict<MonopolyCardGameCardInformation> oldCollection, TradePile yourTrade)
     {
@@ -277,18 +289,19 @@ public class MonopolyCardGameMainGameClass
             if (SingleInfo.MainHandList.ObjectExist(thisCard.Deck))
             {
                 SingleInfo.MainHandList.RemoveObjectByDeck(thisCard.Deck);
-                thisTrade.AddCard(thisCard.Deck);
+                
             }
+            thisTrade.AddCard(thisCard.Deck); //still needs this because may have already been removed now.
         });
+        SingleInfo.PreviousMoney = newScore;
+        SingleInfo.TotalMoney += newScore;
         _command.UpdateAll(); //just in case its needed for blazor (?)
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.5);
         }
-        SingleInfo.PreviousMoney = newScore;
-        SingleInfo.TotalMoney += newScore;
     }
-    public bool CanGoOut(DeckRegularDict<MonopolyCardGameCardInformation> whatGroup)
+    public bool CanGoOut(IDeckDict<MonopolyCardGameCardInformation> whatGroup, bool onlyOne = false)
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         var tempCol = whatGroup.ToRegularDeckDict();
@@ -296,6 +309,10 @@ public class MonopolyCardGameMainGameClass
         bool hasRailRoad = whatGroup.Any(items => items.WhatCard == EnumCardType.IsRailRoad);
         bool hasUtilities = whatGroup.Any(items => items.WhatCard == EnumCardType.IsUtilities);
         int numWilds = whatGroup.Count(items => items.WhatCard == EnumCardType.IsChance);
+        if (hasRailRoad && hasUtilities && onlyOne)
+        {
+            return false; //this means you cannot have both railroads and utilties.
+        }
         if (numWilds < 2 && hasRailRoad == false && hasUtilities == false && groupList.Count == 0)
         {
             return false; //cannot go out because do not have any properties, no railroads, no utilities, and not enough wilds
@@ -315,6 +332,18 @@ public class MonopolyCardGameMainGameClass
                 }
                 setList.Add(thisGroup.Key);
             }
+        }
+        if (hasRailRoad && setList.Count > 0 && onlyOne)
+        {
+            return false;
+        }
+        if (hasUtilities && setList.Count > 0 && onlyOne)
+        {
+            return false;
+        }
+        if (setList.Count > 1 && onlyOne)
+        {
+            return false;
         }
         if (hasRailRoad)
         {
@@ -716,6 +745,7 @@ public class MonopolyCardGameMainGameClass
         });
         return output;
     }
+    
     private decimal CalculateScore(int player, bool wentOut, out DeckRegularDict<MonopolyCardGameCardInformation> newGroup)
     {
         newGroup = new DeckRegularDict<MonopolyCardGameCardInformation>();
@@ -751,10 +781,12 @@ public class MonopolyCardGameMainGameClass
             if (mons.Count > 0)
             {
                 newGroup.AddRange(mons);
-                thisList = new();
-                thisList.RailRoads = mons.Count;
-                thisList.WhatCard = EnumCardType.IsRailRoad;
-                thisList.ID = listMons.Count + 1;
+                thisList = new()
+                {
+                    RailRoads = mons.Count,
+                    WhatCard = EnumCardType.IsRailRoad,
+                    ID = listMons.Count + 1
+                };
                 listMons.Add(thisList);
             }
             mons = MonopolyCol(tempCol, 0, EnumCardType.IsUtilities);
@@ -1195,18 +1227,22 @@ public class MonopolyCardGameMainGameClass
         if (mons.Count > 0)
         {
             newGroup.AddRange(mons);
-            thisList = new();
-            thisList.WhatCard = EnumCardType.IsUtilities;
-            thisList.ID = listMons.Count + 1;
+            thisList = new()
+            {
+                WhatCard = EnumCardType.IsUtilities,
+                ID = listMons.Count + 1
+            };
             listMons.Add(thisList);
         }
         mons = MonopolyCol(tempCol, 0, EnumCardType.IsRailRoad);
         if (mons.Count > 0)
         {
             newGroup.AddRange(mons);
-            thisList = new();
-            thisList.WhatCard = EnumCardType.IsRailRoad;
-            thisList.ID = listMons.Count + 1;
+            thisList = new()
+            {
+                WhatCard = EnumCardType.IsRailRoad,
+                ID = listMons.Count + 1
+            };
             listMons.Add(thisList);
         }
         tokens += manys;
@@ -1223,6 +1259,217 @@ public class MonopolyCardGameMainGameClass
             }
         }
         return tempScore;
+    }
+    #endregion
+    #region "ManuelSetProcesses"
+    public bool HasAllValidMonopolies()
+    {
+        bool usedChance = false;
+        for (int x = 1; x <= _model.TempSets1.HowManySets; x++)
+        {
+            var list = WhatSet(x);
+            if (list.Any(x => x.WhatCard == EnumCardType.IsChance))
+            {
+                usedChance = true;
+            }
+            if (list.Count > 0)
+            {
+                if (CanGoOut(list, true) == false)
+                {
+                    return false;
+                }
+            }
+        }
+        if (usedChance == false)
+        {
+            return false; //because you have to use at least one chance card.
+        }
+        return true;
+    }
+    public IDeckDict<MonopolyCardGameCardInformation> WhatSet(int whichOne)
+    {
+        return _model!.TempSets1!.ObjectList(whichOne);
+    }
+    //go ahead and make public.  can do private late.
+    //private decimal CalculateScore()
+    //{
+    //    decimal score = 0;
+    //    for (int x = 1; x <= _model.TempSets1.HowManySets; x++)
+    //    {
+    //        var list = WhatSet(x);
+    //        if (list.Count > 0)
+    //        {
+    //            score += CalculateScore(list);
+    //        }
+    //    }
+    //    //has to start taking risks now.
+    //    return score;
+    //}
+    public BasicList<TempInfo> ListValidSets()
+    {
+        BasicList<TempInfo> output = new();
+        for (int x = 1; x <= _model.TempSets1.HowManySets; x++)
+        {
+            var list = WhatSet(x);
+            if (CanGoOut(list, true))
+            {
+                output.Add(new TempInfo()
+                {
+                    CardList= list.ToRegularDeckDict(),
+                    SetNumber = x
+                });
+            }
+        }
+        return output;
+    }
+
+    private static decimal CalculateScore(IDeckDict<MonopolyCardGameCardInformation> list)
+    {
+        //this means it all has to match.
+        //unfortunately, lots of copy/paste though.
+        var tokenList = list.Where(x => x.WhatCard == EnumCardType.IsToken).ToRegularDeckDict();
+        int tokens = tokenList.Count;
+
+
+        BasicList<ListInfo> listMons = new();
+        //DeckRegularDict<MonopolyCardGameCardInformation> hou;
+        var possList = list.Where(items => items.Group > 0).GroupOrderDescending(items => items.Group).ToBasicList();
+
+        //bool isRailRoad = list.Any(x => x.WhatCard == EnumCardType.IsRailRoad);
+        //bool isUtility = list.Any(x => x.WhatCard == EnumCardType.IsUtilities);
+        int rawRailRoads = list.Count(x => x.WhatCard == EnumCardType.IsRailRoad);
+        bool hasUtilities = list.Any(x => x.WhatCard == EnumCardType.IsUtilities);
+        //int rawUtilitys = list.Count(x => x.WhatCard == EnumCardType.IsUtilities);
+        //do utilities and railroads first.
+        int chances = list.Count(x => x.WhatCard == EnumCardType.IsChance);
+        int totalChances = chances;
+        //temps = CalculateMoneyFromGroup(thisItem, tokens);
+        ListInfo item = new();
+
+        if (rawRailRoads > 0)
+        {
+            item.WhatCard = EnumCardType.IsRailRoad;
+
+            if (rawRailRoads + chances <= 4)
+            {
+                if (rawRailRoads == 3 && chances == 2)
+                {
+                    rawRailRoads = 4;
+                    chances = 1;
+                }
+                else
+                {
+                    rawRailRoads += chances;
+                    chances = 0;
+                }
+                rawRailRoads += chances;
+            }
+            tokens += totalChances;
+            item.RailRoads = rawRailRoads;
+        }
+        else if (hasUtilities)
+        {
+            item.WhatCard = EnumCardType.IsUtilities;
+            if (list.Count(x => x.WhatCard == EnumCardType.IsUtilities) == 1)
+            {
+                chances--;
+            }
+        }
+        else
+        {
+            item.WhatCard = EnumCardType.IsProperty;
+            var select = list.Where(x => x.Group > 0).First();
+            item.Group = select.Group;
+            //this means you have what is necessary.
+            var count = list.Count(x => x.Group == select.Group);
+            int required = RequiredFromGroup(select.Group);
+            if (count + chances == required)
+            {
+                chances = 0;
+            }
+            else if (count + chances - 1 == required && chances == 2)
+            {
+                chances = 1;
+            }
+            //next step is using for missing house.
+            int houses = list.Count(x => x.WhatCard == EnumCardType.IsHouse);
+            bool hasHotel = list.Any(x => x.WhatCard == EnumCardType.IsHotel);
+            if (houses == 4 && hasHotel == false && chances >= 1)
+            {
+                chances --;
+                hasHotel = true;
+            }
+            else if (houses == 3 && chances == 2)
+            {
+                houses = 4;
+                hasHotel = true;
+                chances = 0;
+            }
+            else if (chances > 0)
+            {
+                houses += chances;
+                chances = 0;
+            }
+            item.NumberOfHouses = houses;
+            item.HasHotel = hasHotel;
+        }
+        tokens += chances;
+        //temps = CalculateMoneyFromGroup(thisItem, tokens);
+        decimal output = CalculateMoneyFromGroup(item, tokens);
+        return output;
+    }
+    private static int RequiredFromGroup(int group)
+    {
+        if (group == 1 || group == 8)
+        {
+            return 2;
+        }
+        return 3;
+    }
+
+    private async Task<BasicList<DeckRegularDict<MonopolyCardGameCardInformation>>> GetSetInfoAsync(string message)
+    {
+        var firstTemp = await js.DeserializeObjectAsync<BasicList<string>>(message);
+        BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> output = new();
+        foreach (var thisFirst in firstTemp)
+        {
+            var thisCol = await thisFirst.GetObjectsFromDataAsync(SingleInfo!.MainHandList);
+            output.Add(thisCol);
+        }
+        return output;
+    }
+    public static BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> GetSetInfo(BasicList<TempInfo> payLoad)
+    {
+        BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> output = new();
+        foreach (var item in payLoad)
+        {
+            output.Add(item.CardList);
+        }
+        return output;
+    }
+    public async Task FinishManualProcessingAsync(BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> payLoad)
+    {
+        SaveRoot.GameStatus = EnumWhatStatus.LookOnly; //i think.
+        this.StartingStatus();
+        decimal score = 0;
+        SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
+        DeckRegularDict<MonopolyCardGameCardInformation> mans = new();
+        foreach (var item in payLoad)
+        {
+            score += CalculateScore(item);
+            mans.AddRange(item);
+            foreach (var card in item)
+            {
+                if (SingleInfo.MainHandList.ObjectExist(card.Deck))
+                {
+                    SingleInfo.MainHandList.RemoveObjectByDeck(card.Deck);
+                }
+            }
+        }
+        decimal finalScore = CalculateScore(WhoTurn, true, out DeckRegularDict<MonopolyCardGameCardInformation> lasts);
+        decimal totalScore = score + finalScore;
+        mans.AddRange(lasts);
+        await FinalProcessAsync(mans, totalScore);
     }
     #endregion
 }

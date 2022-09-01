@@ -1,6 +1,5 @@
 ﻿using ps = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses;
 namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
-
 public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMainProcesses<D>,
     IBeginningCards<D, P, S>
     , IReshuffledCardsNM, IDrawCardNM,

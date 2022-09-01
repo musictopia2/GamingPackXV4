@@ -21,12 +21,37 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         _toast = toast;
         _model.Deck1.NeverAutoDisable = true;
         CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
+        _model.TempSets1.SetClickedAsync += TempSets1_SetClickedAsync;
+        _model.TempSets1.Init(this);
         CreateCommands(commandContainer);
     }
+    private bool _isProcessing;
+    private Task TempSets1_SetClickedAsync(int index)
+    {
+        if (_isProcessing == true)
+        {
+            return Task.CompletedTask;
+        }
+        _isProcessing = true;
+        var tempList = _model.TempHand1!.ListSelectedObjects(true);
+        if (tempList.Any(x => x.WhatCard == EnumCardType.IsGo || x.WhatCard == EnumCardType.IsMr))
+        {
+            _toast.ShowUserErrorToast("You cannot place gos or mr monopolies into the tempsets to make a monopoly");
+            //_model.TempHand1.HandList.AddRange(tempList);
+            _mainGame.SortTempHand(tempList);
+            _isProcessing = false;
+            return Task.CompletedTask;
+        }
+        _model.TempSets1!.AddCards(index, tempList);
+        _isProcessing = false;
+        return Task.CompletedTask;
+    }
+
     partial void CreateCommands(CommandContainer command);
     protected override Task TryCloseAsync()
     {
         CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
+        _model.TempSets1.SetClickedAsync -= TempSets1_SetClickedAsync;
         return base.TryCloseAsync();
     }
     protected override bool CanEnableDeck()
@@ -105,5 +130,48 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
             await _mainGame.Network!.SendAllAsync("goout");
         }
         await _mainGame.ProcessGoingOutAsync();
+    }
+    [Command(EnumCommandCategory.Game)]
+    public void PutBack()
+    {
+        var thisList = _model.TempSets1!.ListSelectedObjects();
+        thisList.ForEach(thisCard =>
+        {
+            thisCard.IsSelected = false;
+            _model.TempSets1.RemoveObject(thisCard.Deck);
+        });
+        _mainGame.SortTempHand(thisList);
+    }
+    [Command(EnumCommandCategory.Game)]
+    public async Task ManuallyPlaySetsAsync()
+    {
+        bool rets = _mainGame.HasAllValidMonopolies();
+        if (rets == false)
+        {
+            _toast.ShowUserErrorToast("You do not have valid monopolies");
+            return;
+        }
+        if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsChance))
+        {
+            _toast.ShowUserErrorToast("You have to use up all the chances");
+            return;
+        }
+        var firsts = _mainGame.ListValidSets();
+        var list = MonopolyCardGameMainGameClass.GetSetInfo(firsts);
+        if (_mainGame.BasicData!.MultiPlayer == true)
+        {
+            BasicList<string> newList = new();
+            await firsts.ForEachAsync(async thisTemp =>
+            {
+                if (_mainGame.BasicData!.MultiPlayer == true)
+                {
+                    var tempList = thisTemp.CardList.GetDeckListFromObjectList();
+                    var thisStr = await js.SerializeObjectAsync(tempList);
+                    newList.Add(thisStr);
+                }
+            });
+            await _mainGame.Network!.SendSeveralSetsAsync(newList, "finishedsets");
+        }
+        await _mainGame.FinishManualProcessingAsync(list);
     }
 }

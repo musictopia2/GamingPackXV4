@@ -7,10 +7,16 @@
     @if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.ManuallyFigureOutMonopolies && IsSelf)
     {
         <div>
-            <HandBlazor Hand="_vmData.PlayerHand1" />
+            <HandBlazor Hand="_vmData.TempHand1" TargetContainerSize="80vw" />
         </div>
-        //needs to have button to put back as well.
-
+        
+        <div>
+            <GameButtonComponent Display="Put Back"
+                             CommandObject="BackCommand" />
+            <GameButtonComponent Display="Play Monopolies"
+                             CommandObject="ManuallyPlaySetsCommand" />
+        </div>
+        <TempSetsBlazor TargetContainerSize="60vh" Divider="1.5" TempPiles="_vmData.TempSets1" />
         return;
     }
     <GridContainer Inline="true" Columns="75vw 25vw">
@@ -45,19 +51,10 @@
         </GridItem>
         <GridItem Column="2">
             <StackLayout>
-                @if (_gameContainer.SaveRoot.GameStatus != EnumWhatStatus.ManuallyFigureOutMonopolies)
-                {
-                    @foreach (var player in _players)
-                    {
-                        <StackItem>
-                            <HandBlazor TargetContainerSize="85vh" Hand="player.TradePile" HandType="EnumHandList.Vertical" Divider="1.6" />
-                        </StackItem>
-                    }
-                }
-                else
+                @foreach (var player in _players)
                 {
                     <StackItem>
-                        Figure Out Monopoly Stuff
+                        <HandBlazor TargetContainerSize="85vh" Hand="player.TradePile" HandType="EnumHandList.Vertical" Divider="1.6" />
                     </StackItem>
                 }
             </StackLayout>
