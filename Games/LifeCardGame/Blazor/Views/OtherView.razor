@@ -1,0 +1,5 @@
+﻿@if (GameData == null || DataContext == null)
+{
+    return;
+}
+<GameButtonComponent CommandObject="SubmitCommand" Display="@GameData.OtherText" />

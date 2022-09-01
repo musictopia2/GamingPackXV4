@@ -1,0 +1,51 @@
+@inherits BasicGameView<LifeCardGameMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<CascadingValue Value="_vmData">
+    <GridContainer Inline="true" Columns="@GetColums" ColumnGap="5px">
+        <GridItem>
+            <StackLayout>
+                <StackItem>
+                    <DrawPileBlazor DeckPile="_vmData.Deck1" />
+                </StackItem>
+                <StackItem>
+                    <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+                </StackItem>
+                <StackItem>
+                    <SingleMiscPileBlazor SinglePile="_vmData.CurrentPile" PileAnimationTag="" />
+                </StackItem>
+            </StackLayout>
+            <div>
+                <GameButtonComponent CommandObject="YearsCommand"
+                                     Display="Years Passed" />
+                <GameButtonComponent CommandObject="PlayCardCommand"
+                                     Display="Play Card" />
+                <ParentControl VM="OtherViewModel">
+                    <OtherView />
+                </ParentControl>
+            </div>
+            <div>
+                <HandBlazor Hand="_vmData.PlayerHand1" />
+            </div>
+            <div>
+                <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+            </div>
+            <div>
+                <ScoreBoardBlazor P="LifeCardGamePlayerItem"
+                                  Columns="_scores"
+                                  Players="_gameContainer.SaveRoot.PlayerList" />
+            </div>
+        </GridItem>
+        <GridItem Column="2">
+            @foreach (var player in _players)
+            {
+                <HandBlazor Hand="player.LifeStory"
+                        HandType="EnumHandList.Vertical"
+                        TargetContainerSize="85vh"
+                        Divider="4" />
+            }
+        </GridItem>
+    </GridContainer>
+</CascadingValue>
