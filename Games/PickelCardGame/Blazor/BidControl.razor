@@ -1,0 +1,24 @@
+﻿@inherits BasicGameView<PickelBidViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+<BaseFrameBlazor Text="Bid Info">
+    <div>
+        <NumberChooserBlazor NumberPicker="DataContext.Model.Bid1" />
+    </div>
+    <div>
+        <EnumPickerBlazor E="EnumSuitList"
+                          Context="piece"
+                          TargetSize="16vh"
+                          ListPicker="DataContext.Model.Suit1">
+            <DeckPiece Suit="piece.EnumValue" />
+        </EnumPickerBlazor>
+    </div>
+    <div>
+        <GameButtonComponent CommandObject="BidCommand"
+                             Display="Place Bid" />
+        <GameButtonComponent CommandObject="PassCommand"
+                             Display="Pass" />
+    </div>
+</BaseFrameBlazor>
