@@ -1,0 +1,24 @@
+@inherits BasicGameView<BasicMultiplayerTrickCardGamesMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<p>Welcome to BasicMultiplayerTrickCardGames</p>
+<StackLayout>
+    <DeckOfCardsDrawPileBlazor R="BasicMultiplayerTrickCardGamesCardInformation" DeckPile="_vmData.Deck1" />
+</StackLayout>
+<div>
+    <DeckOfCardsTwoPlayerTrickBlazor T="BasicMultiplayerTrickCardGamesCardInformation" DataContext="_vmData.TrickArea1" />
+</div>
+<div>
+    <DeckOfCardsHandBlazor R="BasicMultiplayerTrickCardGamesCardInformation" Hand="_vmData.PlayerHand1" />
+    @*<HandBlazor Hand="_vmData.PlayerHand1" />*@
+</div>
+<div>
+    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+</div>
+<div>
+    <ScoreBoardBlazor P="BasicMultiplayerTrickCardGamesPlayerItem"
+                      Columns="_scores"
+                      Players="_gameContainer.SaveRoot.PlayerList" />
+</div>
