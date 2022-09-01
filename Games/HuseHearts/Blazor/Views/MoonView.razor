@@ -1,0 +1,13 @@
+﻿@inherits BasicGameView<MoonViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+<BaseFrameBlazor Text="Shoot Moon Options">
+    <GameButtonComponent CommandObject="MoonCommand"
+                         CommandParameter="EnumMoonOptions.GiveEverybodyPlus"
+                         Display="Give Other Players 26 Points" />
+    <GameButtonComponent CommandObject="MoonCommand"
+                         CommandParameter="EnumMoonOptions.GiveSelfMinus"
+                         Display="Reduce your score by 26 points" />
+</BaseFrameBlazor>
