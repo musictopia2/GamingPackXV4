@@ -1,0 +1,15 @@
+﻿@inherits BasicGameView<SkuckChoosePlayViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+<BaseFrameBlazor>
+    <GameButtonComponent CommandObject="PlayCommand"
+                         StartOnNewLine="true"
+                         CommandParameter="EnumChoiceOption.Play"
+                         Display="Play" />
+    <GameButtonComponent CommandObject="PlayCommand"
+                         StartOnNewLine="true"
+                         CommandParameter="EnumChoiceOption.Pass"
+                         Display="Pass" />
+</BaseFrameBlazor>

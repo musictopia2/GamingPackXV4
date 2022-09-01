@@ -1,0 +1,17 @@
+﻿@inherits BasicGameView<SkuckSuitViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+<BaseFrameBlazor Text="Trump Info">
+    <EnumPickerBlazor E="EnumSuitList"
+                          Context="piece"
+                          TargetSize="16vh"
+                          ListPicker="DataContext.Model.Suit1">
+            <DeckPiece Suit="piece.EnumValue" />
+        </EnumPickerBlazor>
+    <div>
+        <GameButtonComponent CommandObject="TrumpCommand"
+                             Display="Choose Trump Suit" />
+    </div>
+</BaseFrameBlazor>
