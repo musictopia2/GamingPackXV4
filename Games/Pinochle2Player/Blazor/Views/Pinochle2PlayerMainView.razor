@@ -1,0 +1,58 @@
+@inherits BasicGameView<Pinochle2PlayerMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<GridContainer Columns="70vw auto">
+    <GridItem>
+        <StackLayout>
+            <StackItem>
+                <DeckOfCardsSingleMiscPileBlazor R="Pinochle2PlayerCardInformation" SinglePile="_vmData.Pile1" />
+                <DeckOfCardsDrawPileBlazor R="Pinochle2PlayerCardInformation" DeckPile="_vmData.Deck1" />
+            </StackItem>
+            <StackItem>
+                <DeckOfCardsTwoPlayerTrickBlazor T="Pinochle2PlayerCardInformation" DataContext="_vmData.TrickArea1" />
+            </StackItem>
+        </StackLayout>
+        <div>
+            <DeckOfCardsHandBlazor R="Pinochle2PlayerCardInformation" Hand="_vmData.PlayerHand1" />
+        </div>
+        <StackLayout>
+            <StackItem>
+                <GameButtonComponent StartOnNewLine="true"
+                                     CommandObject="MeldCommand"
+                                     Display="Meld" />
+                <GameButtonComponent StartOnNewLine="true"
+                                     CommandObject="EndCommand"
+                                     Display="End Turn" />
+            </StackItem>
+            <StackItem>
+                <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+            </StackItem>
+            <StackItem>
+                 <DeckOfCardsHandBlazor HandType="EnumHandList.Vertical"
+                                    Divider="1.7"
+                                    Hand="_vmData.YourMelds"
+                                    TargetContainerSize="50vh"
+                                    R="Pinochle2PlayerCardInformation" />
+            </StackItem>
+            <StackItem>
+                <DeckOfCardsHandBlazor HandType="EnumHandList.Vertical"
+                                       Divider="1.7"
+                                       Hand="_vmData.OpponentMelds"
+                                       TargetContainerSize="50vh"
+                                       R="Pinochle2PlayerCardInformation" />
+            </StackItem>
+            <StackItem>
+                <ScoreBoardBlazor P="Pinochle2PlayerPlayerItem"
+                                  Columns="_scores"
+                                  Players="_gameContainer.SaveRoot.PlayerList" />
+            </StackItem>
+        </StackLayout>
+    </GridItem>
+    <GridItem Column="2">
+        <div>
+            <GuideUI GameData="_vmData" />
+        </div>
+    </GridItem>
+</GridContainer>
