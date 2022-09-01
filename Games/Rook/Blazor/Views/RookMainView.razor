@@ -1,0 +1,33 @@
+@inherits BasicGameView<RookMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <ScoreBoardBlazor P="RookPlayerItem"
+                      Columns="_scores"
+                      Players="_gameContainer.SaveRoot.PlayerList" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+    <StackItem>
+        <ParentControl VM="RookBiddingViewModel">
+            <RookBiddingView />
+        </ParentControl>
+        <ParentControl VM="RookColorViewModel">
+            <RookColorView />
+        </ParentControl>
+        <ParentControl VM="RookNestViewModel">
+            <RookNestView />
+        </ParentControl>
+        <SeveralPlayersTrickBlazor DataContext="_vmData.TrickArea1" />
+    </StackItem>
+</StackLayout>
+<div>
+    <HandBlazor TargetContainerSize="95vw" Hand="_vmData.PlayerHand1" />
+</div>
+<div>
+    <HandBlazor Hand="_vmData.Dummy1" />
+</div>
