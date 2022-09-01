@@ -1,0 +1,24 @@
+﻿@inherits BasicGameView<SpadesBeginningViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsDrawPileBlazor R="Spades2PlayerCardInformation"
+                               DeckPile="DataContext.Model.Deck1" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsSingleMiscPileBlazor R="Spades2PlayerCardInformation"
+                                     SinglePile="DataContext.Model.Pile1" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent CommandObject="TakeCommand"
+                         Display="Take Card" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsSingleMiscPileBlazor R="Spades2PlayerCardInformation"
+                                     PileAnimationTag="otherpile"
+                                     SinglePile="DataContext.Model.OtherPile" />
+    </StackItem>
+</StackLayout>
