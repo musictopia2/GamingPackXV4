@@ -1,0 +1,11 @@
+﻿@inherits BasicGameView<XactikaModeViewModel>
+@if (DataContext == null || DataContext.WasResumed == true)
+{
+    return;
+}
+<div style="margin-top:5px;">
+    <ListChooserBlazor ListPicker="DataContext.Model.ModeChoose1" TextWidth="110" TextHeight="15vh" />
+</div>
+<div>
+    <GameButtonComponent FontSize="25vh" Display="Submit" CommandObject="SubmitCommand" />
+</div>

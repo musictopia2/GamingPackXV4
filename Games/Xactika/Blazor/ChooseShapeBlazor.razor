@@ -1,0 +1,22 @@
+﻿@using BasicBlazorLibrary.Components.RenderHelpers; 
+@if (ShapeData == null )
+{
+    return;
+}
+<div style="display: @GetDisplay">
+    <StackLayout>
+        @foreach (var piece in ShapeData.PieceList)
+        {
+            <StackItem>
+                <BasePieceGraphics CommandObject="ShapeData.ShapeSelectedCommand"
+                                   CommandParameter="piece"
+                                   @key="piece"
+                                   IsSelected="piece.IsSelected"
+                                   TargetHeight="@TargetHeight">
+                    <PieceBlazor HowMany="piece.HowMany"
+                                 ShapeUsed="piece.ShapeUsed" />
+                </BasePieceGraphics>
+            </StackItem>
+        }
+    </StackLayout>
+</div>
