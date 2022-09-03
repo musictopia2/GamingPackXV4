@@ -1,5 +1,3 @@
-using BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainGameInterfaces;
-
 namespace FillOrBust.Core.Logic;
 [SingletonGame]
 public class FillOrBustMainGameClass
@@ -9,8 +7,6 @@ public class FillOrBustMainGameClass
     private readonly FillOrBustVMData _model;
     private readonly CommandContainer _command;
     public StandardRollProcesses<SimpleDice, FillOrBustPlayerItem> Roller;
-    private readonly IMessageBox _message;
-
     public FillOrBustMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
         BasicData basicData,
@@ -23,14 +19,12 @@ public class FillOrBustMainGameClass
         FillOrBustGameContainer gameContainer,
         StandardRollProcesses<SimpleDice, FillOrBustPlayerItem> roller,
         ISystemError error,
-        IToast toast,
-        IMessageBox message
+        IToast toast
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
         _command = command;
         Roller = roller;
-        _message = message;
         Roller.AfterRollingAsync = AfterRollingAsync;
         Roller.AfterSelectUnselectDiceAsync = AfterSelectUnselectDiceAsync;
         Roller.CurrentPlayer = (() => SingleInfo!);
@@ -69,6 +63,13 @@ public class FillOrBustMainGameClass
     }
     public async Task AfterRollingAsync()
     {
+        if (Test!.DoubleCheck)
+        {
+            foreach (var item in _model.Cup!.DiceList)
+            {
+                item.Value = 1; //try to make sure its all ones
+            }
+        }
         if (SaveRoot!.GameStatus == EnumGameStatusList.ChoosePlay)
         {
             SaveRoot.FillsRequired = 1; //because you chose vengence.
@@ -170,7 +171,7 @@ public class FillOrBustMainGameClass
     }
     public Task FinishStartAsync()
     {
-        if (SaveRoot!.GameStatus == EnumGameStatusList.RollDice || SaveRoot.GameStatus == EnumGameStatusList.ChooseRoll)
+        if (SaveRoot!.GameStatus == EnumGameStatusList.RollDice || SaveRoot.GameStatus == EnumGameStatusList.ChooseRoll || SaveRoot.GameStatus == EnumGameStatusList.ChooseDice)
         {
             _model!.Cup!.HowManyDice = _model!.Cup.DiceList.Count;
             _model.Cup.CanShowDice = true;

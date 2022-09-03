@@ -3,10 +3,10 @@ public class FillOrBustCardInformation : SimpleDeckObject, IDeckObject
 {
     public EnumCardStatusList Status { get; set; } = EnumCardStatusList.Unknown;
     public int Value { get; set; }
-    public int BonusAmount;
-    public int FillsRequired;
-    public bool IsOptional;
-    public bool AddToScore;
+    public int BonusAmount { get; set; }
+    public int FillsRequired { get; set; }
+    public bool IsOptional { get; set; }
+    public bool AddToScore { get; set; }
     private void CalculateBindings()
     {
         if (Value > 0)

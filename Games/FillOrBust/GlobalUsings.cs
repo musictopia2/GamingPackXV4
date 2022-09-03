@@ -61,3 +61,4 @@ global using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Ha
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
 global using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainGameInterfaces;
