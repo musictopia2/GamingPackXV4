@@ -26,6 +26,10 @@ public partial class MultiplayerBasicParentShell
         }
         return true; //for now.
     }
+    private async Task TransferToDesktop()
+    {
+        await GlobalDelegates.TransferToDesktop!.Invoke(GameData!.GameName);
+    }
     protected override void OnInitialized()
     {
         BasicData = Resolver!.Resolve<BasicData>();

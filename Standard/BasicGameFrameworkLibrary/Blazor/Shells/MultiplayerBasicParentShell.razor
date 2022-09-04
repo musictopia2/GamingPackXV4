@@ -1,6 +1,7 @@
 ﻿@using BlazorMVVMHelpersLibrary
 @using BasicGameFrameworkLibrary.Blazor.Views
 @using aa = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
+@using bb = BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalDelegates;
 @using BasicGameFrameworkLibrary.Core.TestUtilities
 @using BasicBlazorLibrary.Components.MediaQueries.ParentClasses
 @if (BasicData == null || GameData == null)
@@ -41,6 +42,10 @@
                                     <GameButtonComponent CustomCallBack="aa.BackToMainDelegate" FontSize="2vh" Display="Back To Main" />
                                 }
                                 <GameButtonComponent CustomCallBack="aa.BackToMainDelegate" Display="Back To Main" />
+                            }
+                            @if (bb.TransferToDesktop is not null && Media!.DeviceCategory != EnumDeviceCategory.Phone)
+                            {
+                                <GameButtonComponent CustomCallBack="TransferToDesktop" Display="Transfer To Desktop" />
                             }
                             @if (TestData!.ShowNickNameOnShell)
                             {

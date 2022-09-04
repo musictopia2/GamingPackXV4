@@ -44,12 +44,13 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         js.RequireCustomSerialization = true; //for the entire game package requires custom serialization.
         ResetGlobals();
         _isInitialized = true;
-        GlobalDelegates.RefreshSubscriptions = (a =>
-        {
-            Unsubscribe(); //do this too.
-            EventAggravatorProcesses.GlobalEventAggravatorClass.ClearSubscriptions(_aggregator); //i think this first
-            Subscribe(); //i think
-        });
+
+        //GlobalDelegates.RefreshSubscriptions = a =>
+        //{
+        //    Unsubscribe(); //do this too.
+        //    EventAggravatorProcesses.GlobalEventAggravatorClass.ClearSubscriptions(_aggregator); //i think this first
+        //    Subscribe(); //i think
+        //};
         await StartRuntimeAsync();
     }
     protected BasicData? GameData;

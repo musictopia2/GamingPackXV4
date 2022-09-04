@@ -1,0 +1,40 @@
+﻿@page "/"
+<MainPage>
+    @if (_loadedOnce == false)
+    {
+        <div>Loading Game Package Loader........</div>
+        return;
+    }
+    @if (DataContext!.GameList.Count == 0)
+    {
+        return;
+    }
+    @if (DataContext.GameName == "")
+    {
+        @if (_showSettings)
+        {
+            <GameSettingsComponent CloseSettings="ClosedSettings" />
+            return;
+        }
+        <LeftOverLayout>
+            <TopContent>
+                @if (GlobalClass.Multiplayer)
+                {
+                    <div>
+                        <GameButtonComponent CustomCallBack="OpenSettings" Display="Show Settings" />
+                    </div>
+                }
+            </TopContent>
+            <MainContent>
+                @if (CanShowGameList())
+                {
+                    <WrapLayout ColumnWidth="22vw" Margins="3px" RenderList="DataContext.GameList" Context="game">
+                        <GameButtonComponent Width="22vw" CustomCallBack="() => DataContext.ChoseGame(game)" Display="@game" />
+                    </WrapLayout>
+                }
+            </MainContent>
+        </LeftOverLayout>
+        return;
+    }
+    @DataContext.GameRendered
+</MainPage>

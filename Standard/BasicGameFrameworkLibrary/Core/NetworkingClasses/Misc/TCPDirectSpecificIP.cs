@@ -1,6 +1,5 @@
-﻿using BasicGameFrameworkLibrary.Core.NetworkingClasses.SocketClasses;
+﻿using BasicGameFrameworkLibrary.Core.NetworkingClasses.SocketClasses; //not common enough.
 namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc;
-
 public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
 {
     private readonly ITCPInfo _thisTCP;
@@ -12,7 +11,8 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
     private readonly object _synLock = new();
     private BasicGameClientTCP? _client1;
     public TCPDirectSpecificIP(ITCPInfo thisTCP,
-        IMessageProcessor thisMessage, IGamePackageResolver resolver,
+        IMessageProcessor thisMessage, 
+        IGamePackageResolver resolver,
         IExit exit,
         IToast toast
         )
