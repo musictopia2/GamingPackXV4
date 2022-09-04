@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicGameFrameworkLibrary",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamePackageSignalRClasses", "..\GamePackageSignalRClasses\GamePackageSignalRClasses.csproj", "{9426C261-DEB8-4DD3-8514-3C1A4A796C6B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamePackageDIGenerator", "..\..\Generators\GamePackageDIGenerator\GamePackageDIGenerator.csproj", "{14E4C7F0-2E71-4874-92F5-4D2004E28929}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{9426C261-DEB8-4DD3-8514-3C1A4A796C6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9426C261-DEB8-4DD3-8514-3C1A4A796C6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9426C261-DEB8-4DD3-8514-3C1A4A796C6B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14E4C7F0-2E71-4874-92F5-4D2004E28929}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14E4C7F0-2E71-4874-92F5-4D2004E28929}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14E4C7F0-2E71-4874-92F5-4D2004E28929}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14E4C7F0-2E71-4874-92F5-4D2004E28929}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,7 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
-    <ProjectReference Include="..\GamePackageSignalRClasses\GamePackageSignalRClasses.csproj" />
+    <ProjectReference Include="..\GameLoaderBlazorLibrary\GameLoaderBlazorLibrary.csproj" />
+	  <ProjectReference Include="..\..\Generators\GamePackageDIGenerator\GamePackageDIGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   
