@@ -25,6 +25,14 @@ public partial class BasicLoaderPage : IDisposable
             {
                 _showSettings = true;
             }
+            if (GlobalDataModel.DataContext!.ServerMode == EnumServerMode.HomeHosting)
+            {
+                BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.CanUseHome = true;
+            }
+            else
+            {
+                BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.CanUseHome = false;
+            }
             StateHasChanged();
         }
     }

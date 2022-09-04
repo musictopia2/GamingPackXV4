@@ -36,11 +36,21 @@ public partial class GameSettingsComponent
         {
             _useCustom = true;
         }
+        GlobalDataModel.DataContext.ServerMode = EnumServerMode.AzureHosting; //in this case, do azure hosting.
+        BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = false;
     }
     private void UpdateMiscServerOptions(EnumServerMode mode)
     {
         GlobalDataModel.DataContext!.ServerMode = mode;
-        //does not care about what azure mode it is now though.
+        //will not update the azure mode though.
+        if (mode == EnumServerMode.HomeHosting)
+        {
+            BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = true;
+        }
+        else
+        {
+            BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = false;
+        }
     }
     private async Task SaveChangesAsync()
     {

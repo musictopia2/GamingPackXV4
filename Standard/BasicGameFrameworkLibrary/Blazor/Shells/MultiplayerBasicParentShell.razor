@@ -43,7 +43,7 @@
                                 }
                                 <GameButtonComponent CustomCallBack="aa.BackToMainDelegate" Display="Back To Main" />
                             }
-                            @if (bb.TransferToDesktop is not null && Media!.DeviceCategory != EnumDeviceCategory.Phone)
+                            @if (bb.TransferToDesktop is not null && Media!.DeviceCategory != EnumDeviceCategory.Phone &&  BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome )
                             {
                                 <GameButtonComponent CustomCallBack="TransferToDesktop" Display="Transfer To Desktop" />
                             }

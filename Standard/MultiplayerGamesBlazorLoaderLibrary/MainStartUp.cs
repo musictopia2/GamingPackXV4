@@ -43,6 +43,7 @@ public class MainStartUp : IStartUp
         {
             throw new CustomBasicException("Must have the data filled out in order to get the nick names");
         }
+        //can still be iffy for now though (?)
         data.NickName = GlobalDataModel.DataContext.NickName; //looks like needs this.
     }
 }
