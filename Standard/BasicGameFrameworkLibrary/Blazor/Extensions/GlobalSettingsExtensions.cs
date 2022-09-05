@@ -30,4 +30,17 @@ public static class GlobalSettingsExtensions
         }
         await js.StorageSetItemAsync(GlobalDataModel.LocalStorageKey, GlobalDataModel.DataContext);
     }
+    public static async Task SaveLatestGameAsync(this IJSRuntime js, string gameName)
+    {
+        await js.StorageSetStringAsync("latestgame", gameName);
+    }
+    public static async Task<string> GetLatestGameAsync(this IJSRuntime js)
+    {
+        bool rets = await js.ContainsKeyAsync("latestgame");
+        if (rets == false)
+        {
+            return "";
+        }
+        return await js.StorageGetStringAsync("latestgame");
+    }
 }

@@ -361,7 +361,9 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         //still only supports one game (to make it simplier).
         if (gameName != _hostGame && _hostGame != "")
         {
-            await SendErrorAsync($"The host game was {_hostGame} but the game sent was {gameName}");
+            //this means that you cannot send errors anymore for sending messages.
+            //because they may be at the old game but have not yet moved over to the new game.
+            //await SendErrorAsync($"The host game was {_hostGame} but the game sent was {gameName}");
             return;
         }
         if (_playerList.IsEmpty)

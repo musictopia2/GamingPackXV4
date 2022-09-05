@@ -87,10 +87,16 @@ public partial class MultiplayerBasicParentShell
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            await JS!.SaveLatestGameAsync(GameData!.GameName);
+            LoaderGlobalClass.ChangeLatestGame?.Invoke(GameData!.GameName);
+        }
         if (BasicData == null || JS == null || _hadNickName)
         {
             return;
         }
+        
         if (firstRender && BasicData.NickName == "")
         {
             string item = await JS.StorageGetStringAsync("nickname"); //maybe here but different behavior with wasm

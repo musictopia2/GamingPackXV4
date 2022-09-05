@@ -20,9 +20,17 @@
             <TopContent>
                 @if (GlobalClass.Multiplayer)
                 {
-                    <div>
-                        <GameButtonComponent CustomCallBack="OpenSettings" Display="Show Settings" />
-                    </div>
+                    <StackLayout>
+                        <StackItem>
+                            <GameButtonComponent CustomCallBack="OpenSettings" Display="Show Settings" />
+                        </StackItem>
+                        @if (_previousGame != "")
+                        {
+                            <StackItem>
+                                <GameButtonComponent CustomCallBack="OpenPreviousGame" Display="@OpenText" />
+                            </StackItem>
+                        }
+                    </StackLayout>  
                 }
             </TopContent>
             <MainContent>

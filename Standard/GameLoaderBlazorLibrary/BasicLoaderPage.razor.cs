@@ -1,3 +1,5 @@
+using BasicGameFrameworkLibrary.Blazor.Extensions;
+
 namespace GameLoaderBlazorLibrary;
 public partial class BasicLoaderPage : IDisposable
 {
@@ -7,6 +9,7 @@ public partial class BasicLoaderPage : IDisposable
     public IJSRuntime? JS { get; set; }
     private bool _loadedOnce;
     private bool _showSettings;
+    private string _previousGame = "";
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (GlobalClass.Multiplayer == false)
@@ -27,15 +30,23 @@ public partial class BasicLoaderPage : IDisposable
             }
             if (GlobalDataModel.DataContext!.ServerMode == EnumServerMode.HomeHosting)
             {
-                BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.CanUseHome = true;
+                BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = true;
             }
             else
             {
-                BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.CanUseHome = false;
+                BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = false;
             }
+            _previousGame = await JS!.GetLatestGameAsync();
             StateHasChanged();
         }
     }
+    private void OpenPreviousGame()
+    {
+        //if you cannot find the previous game, then not found.
+        DataContext!.ChoseGame(_previousGame);
+        //DataContext!.GameName = _previousGame; //hopefully this simple.
+    }
+    private string OpenText => $"Open {_previousGame}";
     private bool CanShowGameList()
     {
         if (_showSettings)
@@ -75,7 +86,12 @@ public partial class BasicLoaderPage : IDisposable
     protected override void OnInitialized()
     {
         LoaderGlobalClass.BackToMainDelegate = BackToMain;
+        LoaderGlobalClass.ChangeLatestGame = (string game) =>
+        {
+            _previousGame = game;
+        };
         DataContext!.StateChanged = () => InvokeAsync(StateHasChanged);
+        
         if (GlobalClass.Multiplayer == false)
         {
             _loadedOnce = true; //because not important since not using the settings.
