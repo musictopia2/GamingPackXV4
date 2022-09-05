@@ -1,5 +1,3 @@
-using BasicGameFrameworkLibrary.Blazor.Extensions;
-
 namespace GameLoaderBlazorLibrary;
 public partial class BasicLoaderPage : IDisposable
 {
@@ -46,7 +44,6 @@ public partial class BasicLoaderPage : IDisposable
         DataContext!.ChoseGame(_previousGame);
         //DataContext!.GameName = _previousGame; //hopefully this simple.
     }
-    private string OpenText => $"Open {_previousGame}";
     private bool CanShowGameList()
     {
         if (_showSettings)

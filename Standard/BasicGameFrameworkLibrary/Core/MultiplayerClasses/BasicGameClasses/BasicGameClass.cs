@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
-
 public abstract class BasicGameClass<P, S> :
     IGameSetUp<P, S>
     , ICommonMultiplayer<P, S>
@@ -64,7 +63,7 @@ public abstract class BasicGameClass<P, S> :
     protected bool IsLoaded; //so when loaded, then can act differently.
     public PlayerCollection<P> PlayerList { get; set; }
     protected IMultiplayerSaveState State; //not sure yet.
-                                           //games like three letter fun needed to know the information about it.
+    //games like three letter fun needed to know the information about it.
     public BasicData BasicData { private set; get; } //this way others can access this data.
     public IGameNetwork? Network { get; set; } //has to be completely open now.
     public TestOptions? Test { private set; get; }

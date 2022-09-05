@@ -36,6 +36,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     }
     public bool HasServer => _nets.HasServer;
     partial void CreateCommands(CommandContainer container);
+    private string _savedData = "";
     protected override async Task ActivateAsync()
     {
         _singleRestore = await _state.SinglePlayerRestoreCategoryAsync();
@@ -43,11 +44,11 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         if (_multiRestore != EnumRestoreCategory.NoRestore)
         {
             IRetrieveSavedPlayers<P> rr = Resolver!.Resolve<IRetrieveSavedPlayers<P>>();
-            string thisStr = await _state.TempMultiSavedAsync();
-            if (thisStr != "")
+            _savedData = await _state.TempMultiSavedAsync();
+            if (_savedData != "")
             {
                 //can't do my custom error anymore.  hopefully this will fix problem with mancala
-                _saveList = await rr.GetPlayerListAsync(thisStr);
+                _saveList = await rr.GetPlayerListAsync(_savedData);
                 _saveList.RemoveNonHumanPlayers();
             }
         }
@@ -110,6 +111,17 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     {
         _rejoin = true;
         await HostAsync();
+    }
+    [Command(EnumCommandCategory.Open)]
+    public async Task TransferToDesktopAsync()
+    {
+        TransferAutoResumeModel payLoad = new()
+        {
+            GameDisplayName = _game.GameName,
+            Content = _savedData
+        };
+        await GlobalDelegates.TransferToDesktop!.Invoke(payLoad);
+
     }
     public bool CanResumeMultiplayerGame
     {
@@ -315,6 +327,18 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         }
     }
     public bool HostCanStart => OpeningStatus == EnumOpeningStatus.HostingReadyToStart;
+    public bool CanShowTransferToDesktop()
+    {
+        if (GlobalDelegates.TransferToDesktop is null)
+        {
+            return false;
+        }
+        if (HostCanStart == true)
+        {
+            return false; //too late.
+        }
+        return CanRejoinMultiplayerGame();
+    }
     public bool CanShowSingleOptions => OpeningStatus == EnumOpeningStatus.None;
     [LabelColumn]
     public int PreviousNonComputerNetworkedPlayers { get; set; }

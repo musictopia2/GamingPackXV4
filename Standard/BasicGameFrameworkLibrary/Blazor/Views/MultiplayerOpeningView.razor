@@ -18,6 +18,10 @@
                 <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeMultiplayerGameCommand" Display="Auto Resume Networked Game"  />
             }
             <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.RejoinMultiplayerGameCommand" Display="Host rejoin Multiplayer Game" />
+            @if (DataContext.CanShowTransferToDesktop())
+            {
+                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.TransferToDesktopCommand" Display="Transfer To Desktop" />
+            }
             <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeSinglePlayerCommand" Display="Auto Resume Local Game" />
         }
         @if (DataContext.HasServer)

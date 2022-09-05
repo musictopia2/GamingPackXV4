@@ -6,5 +6,5 @@ public static class GlobalDelegates
     //public static Action<IEventAggregator>? RefreshSubscriptions { get; set; }
     //try to not even do the refreshsubscriptions.  if i am wrong, rethink.
 
-    public static Func<string, Task>? TransferToDesktop { get; set; }
+    public static Func<TransferAutoResumeModel, Task>? TransferToDesktop { get; set; }
 }

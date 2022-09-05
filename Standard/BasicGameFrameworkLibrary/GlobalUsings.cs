@@ -96,4 +96,6 @@ global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
 global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
 global using ab = BasicBlazorLibrary.Components.CssGrids.Helpers;
 global using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
+global using BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses; //looks like became common enough because transfer to desktop.
+
 //global using static BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalDelegates;

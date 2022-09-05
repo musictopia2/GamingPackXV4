@@ -13,3 +13,4 @@ global using aa = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
 global using gg = BasicBlazorLibrary.Components.CssGrids.Helpers;
 global using CommonBasicLibraries.BasicUIProcesses;
+global using BasicGameFrameworkLibrary.Blazor.Extensions;
