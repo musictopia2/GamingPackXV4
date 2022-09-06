@@ -31,4 +31,9 @@ public class MultiplayerNoSave : IMultiplayerSaveState
     {
         return Task.FromResult("");
     }
+
+    Task IMultiplayerSaveState.DeleteMultiplayerGameAsync()
+    {
+        return Task.CompletedTask;
+    }
 }

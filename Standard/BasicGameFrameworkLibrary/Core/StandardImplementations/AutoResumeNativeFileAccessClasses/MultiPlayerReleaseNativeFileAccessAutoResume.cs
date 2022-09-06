@@ -35,6 +35,10 @@ public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveStat
             await DeleteFileAsync(_multiPath);
         }
     }
+    async Task IMultiplayerSaveState.DeleteMultiplayerGameAsync()
+    {
+        await DeleteFileAsync(_multiPath);
+    }
     async Task<EnumRestoreCategory> IMultiplayerSaveState.MultiplayerRestoreCategoryAsync()
     {
         await Task.Delay(0);
@@ -140,4 +144,5 @@ public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveStat
         return output;
     }
 
+    
 }

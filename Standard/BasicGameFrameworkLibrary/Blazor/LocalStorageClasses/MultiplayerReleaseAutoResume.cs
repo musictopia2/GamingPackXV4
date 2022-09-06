@@ -35,6 +35,10 @@ public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
     }
     async Task IMultiplayerSaveState.DeleteGameAsync()
     {
+        await DeleteGameAsync();
+    }
+    private async Task DeleteGameAsync()
+    {
         if (CanChange() == false)
         {
             return;
@@ -45,6 +49,10 @@ public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
             return;
         }
         await _js.StorageRemoveItemAsync(name);
+    }
+    async Task IMultiplayerSaveState.DeleteMultiplayerGameAsync()
+    {
+        await DeleteGameAsync();
     }
     async Task<EnumRestoreCategory> IMultiplayerSaveState.MultiplayerRestoreCategoryAsync()
     {
@@ -142,4 +150,6 @@ public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
             return "";
         }
     }
+
+    
 }

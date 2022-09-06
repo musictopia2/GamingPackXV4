@@ -121,7 +121,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
             Content = _savedData
         };
         await GlobalDelegates.TransferToDesktop!.Invoke(payLoad);
-
+        await _state.DeleteMultiplayerGameAsync(); //hopefully can do this as well (?)
     }
     public bool CanResumeMultiplayerGame
     {
