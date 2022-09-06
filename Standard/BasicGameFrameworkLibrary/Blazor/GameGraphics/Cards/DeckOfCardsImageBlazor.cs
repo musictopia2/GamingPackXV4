@@ -341,11 +341,13 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
             //return;
             RectangleF firstRect;
             RectangleF secondRect;
-            RectangleF middleRect;
-            middleRect = new(4, 70, 160, 70);
-            var fontSize = middleRect.Height * 0.8f; // can adjust as needed
-            firstRect = new(50, 6, 70, 70);
-            secondRect = new(50, 130, 70, 70);
+            //RectangleF middleRect;
+            //middleRect = new(4, 70, 160, 70);
+            
+            firstRect = new(20, 10, 120, 120);
+            //secondRect = new(50, 130, 70, 70);
+            secondRect = new(4, 130, 160, 70);
+            var fontSize = secondRect.Height * 0.8f; // can adjust as needed
             string textColor;
             string tempEye;
             string tempSolid;
@@ -362,8 +364,8 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
             }
             tempEye = tempBorder;
             MainGroup!.DrawSmiley(firstRect, tempSolid, tempBorder, tempEye, 4);
-            MainGroup!.DrawSmiley(secondRect, tempSolid, tempBorder, tempEye, 4);
-            MainGroup!.DrawCenteredText(middleRect, fontSize, "Joker", textColor);
+            //MainGroup!.DrawSmiley(secondRect, tempSolid, tempBorder, tempEye, 4);
+            MainGroup!.DrawCenteredText(secondRect, fontSize, "Joker", textColor);
             return;
         }
         Ellipse ellipse;
