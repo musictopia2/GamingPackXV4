@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.Dictionary;
-
 public class DeckRegularDict<D> : BasicList<D>, IDeckDict<D>, IEnumerableDeck<D> where D : IDeckObject
 {
     private DictionaryBehavior<D>? _thisB;

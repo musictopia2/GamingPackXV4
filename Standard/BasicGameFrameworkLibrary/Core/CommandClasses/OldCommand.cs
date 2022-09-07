@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
 public class OldCommand : ParentCommand, ICustomCommand
 {
     public OldCommand(object model,

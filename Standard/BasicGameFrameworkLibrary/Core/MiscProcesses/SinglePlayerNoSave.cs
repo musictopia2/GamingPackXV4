@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MiscProcesses;
-
 public class SinglePlayerNoSave : ISaveSinglePlayerClass
 {
     Task<bool> ISaveSinglePlayerClass.CanOpenSavedSinglePlayerGameAsync()

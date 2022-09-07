@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic;
-
 public class BasicYahtzeeGame<D> : DiceGameClass<D, YahtzeePlayerItem<D>, YahtzeeSaveInfo<D>>
 where D : SimpleDice, new()
 {
@@ -31,10 +30,10 @@ where D : SimpleDice, new()
         _model = currentMod;
         _scoreContainer.StartTurn = () => SingleInfo!.MissNextTurn = false;
     }
-    protected override bool ShowDiceUponAutoSave => false; //try this way.
+    protected override bool ShowDiceUponAutoSave => false;
     public override async Task EndTurnAsync()
     {
-        WhoTurn = await PlayerList!.CalculateWhoTurnAsync(true); //could be.
+        WhoTurn = await PlayerList!.CalculateWhoTurnAsync(true);
         _model.Cup!.CanShowDice = false;
     }
     private async Task PrepTurnAsync()
@@ -43,7 +42,7 @@ where D : SimpleDice, new()
         _scoreContainer.RowList = SingleInfo.RowList;
         if (_gameContainer.GetNewScoreAsync != null)
         {
-            await _gameContainer.GetNewScoreAsync.Invoke(); //if nobody is handling it, then skip it.
+            await _gameContainer.GetNewScoreAsync.Invoke();
         }
         _scoreLogic.StartTurn();
         ProtectedStartTurn();
@@ -55,7 +54,7 @@ where D : SimpleDice, new()
         {
             if (player.RowList.Count == 0)
             {
-                _scoreContainer.RowList = player.RowList.ToBasicList(); //try this way.  hopefully will allow cloning back later.
+                _scoreContainer.RowList = player.RowList.ToBasicList();
                 _scoreLogic.LoadBoard();
                 player.RowList = _scoreContainer.RowList.ToBasicList();
             }
@@ -81,7 +80,7 @@ where D : SimpleDice, new()
         SingleInfo = PlayerList.GetWhoPlayer();
         if (_gameContainer.GetNewScoreAsync != null)
         {
-            await _gameContainer.GetNewScoreAsync.Invoke(); //if nobody is handling it, then skip it.
+            await _gameContainer.GetNewScoreAsync.Invoke();
         }
     }
     public override async Task SetUpGameAsync(bool isBeginning)

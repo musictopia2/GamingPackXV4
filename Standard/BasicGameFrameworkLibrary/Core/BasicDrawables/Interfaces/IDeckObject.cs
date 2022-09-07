@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.Interfaces;
-
 public interface IDeckObject : ICommonObject, IPopulateObject<int>
 {
     int Deck { get; set; }

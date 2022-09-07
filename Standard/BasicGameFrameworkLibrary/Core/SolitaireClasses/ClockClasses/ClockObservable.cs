@@ -16,7 +16,7 @@ public partial class ClockObservable : IPlainObservable
             thisClock.CardList.Clear();
             var thisCard = new SolitaireCard();
             decks++;
-            thisCard.Deck = decks; //because of how the dictionary works.
+            thisCard.Deck = decks;
             thisClock.CardList.Add(thisCard);
             if (ShowCenter || ClockList.IndexOf(thisClock) + 1 <= 4)
             {
@@ -37,7 +37,7 @@ public partial class ClockObservable : IPlainObservable
         var thisClock = ClockList![pile];
         thisClock.LeftGuide--;
         thisClock.CardList.Add(thisCard);
-        _aggregator.PublishAll(thisClock); //try tu allow all for this.  has to retest regular clock solitaire.
+        _aggregator.PublishAll(thisClock);
     }
     public void RemoveCardFromPile(int pile)
     {

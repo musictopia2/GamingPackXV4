@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dominos;
-
 public class SimpleDominoInfo : SimpleDeckObject,
     IDominoInfo, IDeckCount, IComparable<SimpleDominoInfo>
 {
@@ -10,7 +9,7 @@ public class SimpleDominoInfo : SimpleDeckObject,
     public int CurrentSecond { get; set; }
     public SimpleDominoInfo()
     {
-        DefaultSize = new SizeF(95, 31); //that is always default size.
+        DefaultSize = new SizeF(95, 31);
         CurrentFirst = -1;
         CurrentSecond = -1;
     }
@@ -20,7 +19,7 @@ public class SimpleDominoInfo : SimpleDeckObject,
     {
         CurrentFirst = FirstNum;
         CurrentSecond = SecondNum;
-        Rotated = false; //i think.
+        Rotated = false;
     }
     public void Populate(int chosen)
     {

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
-
 public interface IRegularCard : IDeckObject, ISimpleValueObject<int>, IWildObject
     , ISuitObject<EnumSuitList>, IColorObject<EnumRegularColorList>, IAdvancedDIContainer
 {
@@ -7,7 +6,7 @@ public interface IRegularCard : IDeckObject, ISimpleValueObject<int>, IWildObjec
     EnumSuitList Suit { get; set; }
     EnumRegularCardValueList Value { get; set; }
     EnumSuitList DisplaySuit { get; set; }
-    EnumRegularCardValueList DisplayNumber { get; set; } //this means it can show differently than what it really is.
+    EnumRegularCardValueList DisplayNumber { get; set; }
     int Section { get; }
-    EnumRegularCardTypeList CardType { get; set; } //this is needed after all.
+    EnumRegularCardTypeList CardType { get; set; }
 }

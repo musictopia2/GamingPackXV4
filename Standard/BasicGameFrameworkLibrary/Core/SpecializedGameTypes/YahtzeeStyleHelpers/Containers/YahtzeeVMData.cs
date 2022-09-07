@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Containers;
-
 [UseLabelGrid]
 public sealed partial class YahtzeeVMData<D> : IBasicDiceGamesData<D>
     where D : SimpleDice, new()
@@ -35,8 +34,8 @@ public sealed partial class YahtzeeVMData<D> : IBasicDiceGamesData<D>
         {
             Cup.CanShowDice = true;
         }
-        Cup.HowManyDice = 5; //you specify how many dice here.
-        Cup.Visible = true; //i think.
+        Cup.HowManyDice = 5;
+        Cup.Visible = true;
         Cup.ShowHold = true;
     }
 }

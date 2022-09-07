@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-
 public abstract partial class GameBoardObservable<D> : IPlainObservable, IControlObservable where D : IDeckObject, new()
 {
     public DeckRegularDict<D> ObjectList = new();
@@ -13,7 +12,7 @@ public abstract partial class GameBoardObservable<D> : IPlainObservable, IContro
     protected virtual void ChangeEnabled() { }
     public void LoadSavedGame(IDeckDict<D> list)
     {
-        ObjectList.ReplaceRange(list); //risk a breaking change here. so i don't have to use strings anymore for this.
+        ObjectList.ReplaceRange(list);
     }
     public int CalculateMaxCards()
     {
@@ -103,13 +102,13 @@ public abstract partial class GameBoardObservable<D> : IPlainObservable, IContro
     {
         if (CommandContainer.IsExecuting == true && BusyCategory == EnumCommandBusyCategory.None)
         {
-            IsEnabled = false; //i think
+            IsEnabled = false;
             return;
         }
         if (_networkProcess == null)
         {
             IsEnabled = true;
-            return; //because you did not send something in.
+            return;
         }
         if (_networkProcess.CanEnableBasics() == false)
         {
@@ -118,8 +117,8 @@ public abstract partial class GameBoardObservable<D> : IPlainObservable, IContro
         }
         IsEnabled = _customFunction!();
     }
-    public EnumCommandBusyCategory BusyCategory { get; set; } = EnumCommandBusyCategory.None; //most of the time, none.
-    public CommandContainer CommandContainer; //decided to make public so others can hook into it.
+    public EnumCommandBusyCategory BusyCategory { get; set; } = EnumCommandBusyCategory.None;
+    public CommandContainer CommandContainer;
     public PlainCommand? ObjectCommand { get; set; }
     protected virtual bool CanExecute(D card)
     {
@@ -127,19 +126,13 @@ public abstract partial class GameBoardObservable<D> : IPlainObservable, IContro
         {
             return false;
         }
-        //attempt to not consider whether its enabled.
-        //because there was many cases where it showed not enabled which was wrong.
-        //if (IsEnabled == false)
-        //{
-        //    return false;
-        //}
-        return Visible; //for now, we have visible.  ma not 
+        return Visible;
     }
     public GameBoardObservable(CommandContainer container)
     {
         CommandContainer = container;
         CreateCommands(container);
-        CommandContainer.AddControl(this); //i think it should be here instead.
+        CommandContainer.AddControl(this);
     }
     partial void CreateCommands(CommandContainer container);
 }

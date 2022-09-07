@@ -1,9 +1,8 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
-
 public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
     where E : IFastEnumSimple
 {
-    public BasicList<BasicPickerData<E>> ItemList = new(); //since its intended to work with blazor now, we don't need the collection anymore.  could change my mind though.
+    public BasicList<BasicPickerData<E>> ItemList = new();
     public EnumAutoSelectCategory AutoSelectCategory { get; set; }
     private E? _itemChosen;
     public E? ItemChosen
@@ -20,7 +19,7 @@ public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
     public event ItemClickedEventHandler? ItemClickedAsync;
     public delegate Task ItemClickedEventHandler(E piece);
     public event ItemChangedEventHandler? ItemSelectionChanged;
-    public delegate void ItemChangedEventHandler(E? piece); //can't be async since property does this.
+    public delegate void ItemChangedEventHandler(E? piece);
     protected BasicList<BasicPickerData<E>> PrivateGetList()
     {
         BasicList<E> firstList = _thisChoice.GetEnumList();
@@ -30,7 +29,7 @@ public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
             BasicPickerData<E> thisTemp = new();
             thisTemp.EnumValue = items;
             thisTemp.IsSelected = false;
-            thisTemp.IsEnabled = IsEnabled; //start with false.  to prove the problem with bindings.
+            thisTemp.IsEnabled = IsEnabled;
             tempList.Add(thisTemp);
         });
         return tempList;

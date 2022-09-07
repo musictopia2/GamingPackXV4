@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-
 public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, IHandleAsync<NewGameEventModel>,
     IHandleAsync<GameOverEventModel>,
     IMainGPXShellVM
@@ -12,14 +11,13 @@ public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, I
         IEventAggregator aggregator
         ) : base(aggregator)
     {
-        MainContainer = mainContainer; //the subscribe part is already done for me too.
+        MainContainer = mainContainer; 
         CommandContainer = container;
         GameData = gameData;
         _saves = saves;
     }
     protected override async Task ActivateAsync()
     {
-        //RegularSimpleCard.ClearSavedList(); //needs this.   allows being able to go from one game to another.  did for multiplayer but forgot to do for single player games too.
         await base.ActivateAsync();
         if (AlwaysNewGame)
         {
@@ -65,8 +63,8 @@ public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, I
     public IGamePackageResolver MainContainer { get; }
     protected CommandContainer CommandContainer { get; }
     protected IGameInfo GameData { get; }
-    public INewGameVM? NewGameVM { get; set; } //this is one for the ui to know
-    public IMainScreen? MainVM { get; set; } //this is another one for the ui to know.
+    public INewGameVM? NewGameVM { get; set; }
+    public IMainScreen? MainVM { get; set; } 
 
     /// <summary>
     /// this is the view model that represents the body.  its used when you decide on new game.
@@ -74,7 +72,6 @@ public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, I
     /// <returns></returns>
     protected abstract IMainScreen GetMainViewModel();
     protected abstract bool AlwaysNewGame { get; }
-
     /// <summary>
     /// usually can automatically start a new game upon loading.
     /// however some games requires settings to be chosen first.
@@ -90,15 +87,15 @@ public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, I
         if (AlwaysNewGame == false)
         {
             await CloseSpecificChildAsync(NewGameVM);
-            NewGameVM = null;//forgot to set to null.
+            NewGameVM = null;
         }
         if (MainVM != null)
         {
             await CloseSpecificChildAsync(MainVM);
         }
-        MainVM = null; //looks like i have to set to null manually.
-        await _saves.DeleteSinglePlayerGameAsync(); //i think.
-        await Task.Delay(50); //try to set here just in case.
+        MainVM = null;
+        await _saves.DeleteSinglePlayerGameAsync();
+        await Task.Delay(50);
         await NewGameRequestedAsync();
         await StartNewGameAsync();
     }
@@ -115,12 +112,12 @@ public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, I
     protected virtual Task GameOverScreenAsync() => Task.CompletedTask;
     async Task IHandleAsync<GameOverEventModel>.HandleAsync(GameOverEventModel message)
     {
-        CommandContainer.ClearLists(); //try this too.
+        CommandContainer.ClearLists();
         if (MainVM == null)
         {
             throw new CustomBasicException("The main view model was not even available.  Rethink");
         }
-        await _saves.DeleteSinglePlayerGameAsync(); //just in case its forgotten, it will be deleted.
+        await _saves.DeleteSinglePlayerGameAsync();
         await CloseSpecificChildAsync(MainVM);
         MainVM = null;
         if (NewGameVM != null)
@@ -134,7 +131,7 @@ public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, I
         }
         else
         {
-            await ShowNewGameAsync(); //try this way (?)
+            await ShowNewGameAsync();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.TestUtilities;
-
 public interface ITestCardSetUp<D, P>
     where D : IDeckObject, new()
     where P : class, IPlayerObject<D>, new()

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
-
 public partial class NumberPicker : SimpleControlObservable
 {
     private readonly ItemChooserClass<NumberModel> _privateChoose;
@@ -20,8 +19,6 @@ public partial class NumberPicker : SimpleControlObservable
             ValueList = NumberList
         };
         CreateCommands();
-        //MethodInfo method = this.GetPrivateMethod(nameof(ChooseNumberAsync));
-        //NumberPickedCommand = new ControlCommand(this, method, command);
     }
     partial void CreateCommands();
     public int NumberToChoose(bool requiredToChoose = true, bool useHalf = true)

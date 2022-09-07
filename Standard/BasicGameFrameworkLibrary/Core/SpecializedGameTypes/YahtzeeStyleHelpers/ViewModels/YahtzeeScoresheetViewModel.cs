@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
-
 public partial class YahtzeeScoresheetViewModel<D> : ScreenViewModel, IBlankGameVM, IHandleAsync<SelectionChosenEventModel>, IScoresheetAction
     where D : SimpleDice, new()
 {
@@ -50,9 +49,9 @@ public partial class YahtzeeScoresheetViewModel<D> : ScreenViewModel, IBlankGame
         }
         if (_gameContainer.SaveRoot.RollNumber == 1)
         {
-            return false; //hopefully this simple this time.
+            return false;
         }
-        return !row.HasFilledIn(); //hopefully this simple now.
+        return !row.HasFilledIn();
     }
     [Command(EnumCommandCategory.Plain)]
     public async Task RowAsync(RowInfo row)
@@ -72,7 +71,6 @@ public partial class YahtzeeScoresheetViewModel<D> : ScreenViewModel, IBlankGame
     {
         if (_privateChosen == null)
         {
-            //return; //try to ignore.  if this works, then won't matter if one is remaining (because host rejoined game).
             throw new CustomBasicException("Did not save selection");
         }
         _privateChosen = null;

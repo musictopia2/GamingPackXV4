@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.Interfaces;
-
 public interface IDeckShuffler<D> : IDeckLookUp<D>, IDeckCount where D : IDeckObject, new()
 {
     bool NeedsToRedo { get; set; }

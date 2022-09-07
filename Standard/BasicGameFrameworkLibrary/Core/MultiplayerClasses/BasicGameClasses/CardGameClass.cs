@@ -1,4 +1,4 @@
-﻿using ps = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses;
+﻿using ps = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses; //not common enough.
 namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
 public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMainProcesses<D>,
     IBeginningCards<D, P, S>
@@ -47,19 +47,18 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         get => _gameContainer.LeftToDraw;
         set => _gameContainer.LeftToDraw = value;
     }
-
-    public bool DoDraw { get; set; } //somehow this was used.
+    public bool DoDraw { get; set; }
     public ICardInfo<D> CardInfo { get; }
     protected override async Task ShowHumanCanPlayAsync()
     {
         await base.ShowHumanCanPlayAsync();
         _model.PlayerHand1.ReportCanExecuteChange();
     }
-    public override Task FinishGetSavedAsync() //the overrided will do the regular and extras.
+    public override Task FinishGetSavedAsync()
     {
-        _gameContainer.DeckList!.ClearObjects(); //just in case.
-        _gameContainer.DeckList.OrderedObjects(); //maybe this is needed in this case.
-        var newList = SaveRoot!.PublicDeckList.GetNewObjectListFromDeckList(_gameContainer.DeckList); //hopefully this will work.
+        _gameContainer.DeckList!.ClearObjects();
+        _gameContainer.DeckList.OrderedObjects();
+        var newList = SaveRoot!.PublicDeckList.GetNewObjectListFromDeckList(_gameContainer.DeckList);
         if (newList.Count > 0)
         {
             _model.Deck1!.OriginalList(newList);
@@ -73,9 +72,9 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         {
             if (CardInfo!.PlayerGetsCards == true)
             {
-                SetHand(); //i think needs this instead.  so other things can happen instead.
-                PrepSort(); //i think  if i am wrong, rethink.
-                SortCards(); //looks like its better to be safe than sorry.
+                SetHand();
+                PrepSort(); 
+                SortCards();
             }
         }
         if (_model.OtherPile != null)
@@ -103,8 +102,8 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         PrepStartTurn();
         _gameContainer.AlreadyDrew = false;
         _gameContainer.PreviousCard = 0;
-        PlayerDraws = 0; // i think
-        this.ShowTurn(); //must specify this though since its an extension.
+        PlayerDraws = 0;
+        this.ShowTurn();
         return Task.CompletedTask;
     }
     /// <summary>
@@ -139,8 +138,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         }
         return Task.CompletedTask;
     }
-
-    public virtual async Task EndRoundAsync() //not sure if the interface needs this or not (?)
+    public virtual async Task EndRoundAsync() 
     {
         await SaveRoundAsync();
     }
@@ -157,7 +155,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         }
         if (Test!.ComputerEndsTurn == true || Test.ComputerNoCards == true)
         {
-            return false; //the computer can't win under those conditions.
+            return false;
         }
         return true;
     }
@@ -183,21 +181,21 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
                 {
                     _model.Pile1.AddCard(thisCard);
                 }
-            }); //this is default.
+            });
         }
         else if (_model.Pile1!.Visible == true)
         {
             _model.Pile1.AddCard(thisCard);
         }
     }
-    public virtual async Task DiscardAsync(D thisCard) //done
+    public virtual async Task DiscardAsync(D thisCard)
     {
         await AnimatePlayAsync(thisCard);
-        await AfterDiscardingAsync(); //this is default.  but can override it.
+        await AfterDiscardingAsync();
     }
-    protected virtual async Task AfterDiscardingAsync() //done.
+    protected virtual async Task AfterDiscardingAsync()
     {
-        await EndTurnAsync(); //most of the time, end turn but not always
+        await EndTurnAsync();
     }
     protected virtual bool CanReshuffleAgain => true;
     protected virtual Task NoReshuffleAgainAsync()
@@ -208,8 +206,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
     {
         if (_model.Deck1.IsCutting)
         {
-            //throw new CustomBasicException("You cannot draw when its cutting"); //this should hopefully stop from going further.
-            return; //try this way (?)
+            return;
         }
         DoDraw = true;
         if (PlayerDraws == 0)
@@ -234,7 +231,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         {
             if (_model.Deck1!.IsEndOfDeck() == true && _model.Deck1.NeverAutoDisable == false)
             {
-                await AfterDrawingAsync(); //because its at the end of the deck and does not reshuffle.
+                await AfterDrawingAsync();
                 return;
             }
             if (_model.Deck1.IsEndOfDeck() == true)
@@ -247,7 +244,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
                 if (CanReshuffleAgain == false)
                 {
                     await NoReshuffleAgainAsync();
-                    return; //because can't reshuffle again.
+                    return;
                 }
                 bool canSendMessage;
                 canSendMessage = SingleInfo!.CanSendMessage(BasicData!); //try to use this function here too.
@@ -303,7 +300,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
     }
     protected virtual void SortAfterDrawing() //games like blades of steele could do something else.
     {
-        SortCards();//this should be fine.
+        SortCards();
     }
     protected virtual Task AddCardAsync(D thisCard, P tempPlayer) //games like spades 2 player, they may or may not add to list.
     {
@@ -313,7 +310,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
     }
     protected virtual bool CardToCurrentPile()
     {
-        return true; //defaults to true.
+        return true;
     }
     protected virtual bool ShowNewCardDrawn(P tempPlayer)
     {
@@ -325,21 +322,21 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
     }
     protected virtual async Task PlayerReceivesNoCardsAfterDrawingAsync(D thisCard)
     {
-        _gameContainer.Command.UpdateAll(); //try this.
+        _gameContainer.Command.UpdateAll();
         await Aggregator.AnimatePlayAsync(thisCard, () =>
         {
             if (_model.Pile1!.Visible == true)
             {
-                _model.Pile1.AddCard(thisCard); //this needs a delegate as well.  otherwise, does not add to list.
+                _model.Pile1.AddCard(thisCard);
             }
-        }); //usually just this.
+        });
         await AfterDrawingAsync();
     }
     protected async Task ReshuffleCardsAsync(bool canSend) //needs to be protected so games like hit the deck can call into it when cutting deck.
     {
         var thisCol = GetReshuffleList();
         thisCol.ShuffleList();
-        _model.Deck1!.OriginalList(thisCol); //i think here makes most sense.
+        _model.Deck1!.OriginalList(thisCol);
         await MiddleReshuffleCardsAsync(thisCol, canSend);
     }
     protected virtual DeckRegularDict<D> GetReshuffleList() //games like milk run requires something else to get the list of cards to reshuffle.
@@ -348,11 +345,11 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         if (CardInfo!.ReshuffleAllCardsFromDiscard == true)
         {
             thisCol.Add(_model.Pile1.GetCardInfo());
-            _model.Pile1.ClearCards(); //did call it cards.  probably best to leave it.
+            _model.Pile1.ClearCards();
         }
         foreach (var thisCard in thisCol)
         {
-            thisCard.Reset();// has to be here.
+            thisCard.Reset();
         }
         return thisCol;
     }
@@ -373,7 +370,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         }
         else
         {
-            _model.Pile1!.CardsReshuffled(); //this was forgotten.  was a serious problem.
+            _model.Pile1!.CardsReshuffled();
         }
         if (DoDraw == true)
         {
@@ -503,11 +500,11 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         }
         else if (CardInfo.PassOutAll == false)
         {
-            _model.Deck1!.OriginalList(_gameContainer.DeckList!); //i think
+            _model.Deck1!.OriginalList(_gameContainer.DeckList!);
         }
         if (_gameContainer.GameInfo!.SinglePlayerChoice != EnumPlayerChoices.HumanOnly)
         {
-            SingleInfo = PlayerList!.GetSelf(); //hopefully this is fine.
+            SingleInfo = PlayerList!.GetSelf();
         }
         if (CardInfo.NoPass == false)
         {
@@ -649,15 +646,15 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
             await Aggregator.AnimatePickUpDiscardAsync(card);
         }
     }
-    public virtual async Task PickupFromDiscardAsync() //i think done.
+    public virtual async Task PickupFromDiscardAsync()
     {
         await PlayerChosenForPickingUpFromDiscardAsync();
         if (SingleInfo!.CanSendMessage(BasicData!) == true)
         {
-            await Network!.SendAllAsync("pickup"); //this simple this time.
+            await Network!.SendAllAsync("pickup");
         }
         var thisCard = _model.Pile1!.GetCardInfo();
-        _gameContainer.AlreadyDrew = true; //forgot this part.
+        _gameContainer.AlreadyDrew = true;
         SaveRoot!.PreviousCard = thisCard.Deck;
         _model.Pile1.RemoveFromPile();
         await AnimatePickupAsync(thisCard);
@@ -670,7 +667,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         thisCard.Drew = true;
         SingleInfo!.MainHandList.Add(thisCard);
         SortCards();
-        await AfterPickupFromDiscardAsync(); //forgot this line of code.
+        await AfterPickupFromDiscardAsync();
     }
     protected async Task<DeckRegularDict<D>> PopulateCardsFromTurnHandAsync(string data)
     {
@@ -696,7 +693,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
             D card = new();
             card.Populate(index);
             newList.Add(card);
-            _gameContainer.DeckList!.RelinkObject(index, card); //maybe this is the only case where its needed.
+            _gameContainer.DeckList!.RelinkObject(index, card);
         });
         _model.Deck1!.OriginalList(newList);
         await AfterReshuffleAsync();

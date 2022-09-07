@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-
 public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewModel,
     IHandleAsync<NewGameEventModel>,
     IHandleAsync<GameOverEventModel>,
@@ -28,7 +27,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         IToast toast
         ) : base(aggregator)
     {
-        MainContainer = mainContainer; //the subscribe part is already done for me too.
+        MainContainer = mainContainer;
         CommandContainer = container;
         GameData = gameData;
         BasicData = basicData;
@@ -36,7 +35,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         _test = test;
         _toast = toast;
     }
-    public string NickName { get; set; } = ""; //if you need nick name shown for test purposes that is an option.
+    public string NickName { get; set; } = "";
     public IGamePackageResolver MainContainer { get; }
     protected CommandContainer CommandContainer { get; }
     protected IGameInfo GameData { get; }
@@ -131,11 +130,11 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
                 }
             }
             await BeforeLoadingOpeningScreenAsync();
-            NickName = BasicData.NickName; //i think.
+            NickName = BasicData.NickName;
             if (CanStartWithOpenScreen)
             {
                 OpeningScreen = MainContainer.Resolve<IMultiplayerOpeningViewModel>();
-                await LoadScreenAsync(OpeningScreen); //so for testing purposes like three letter fun or other situations, i can more easily test.
+                await LoadScreenAsync(OpeningScreen);
             }
         }
         catch (Exception ex)
@@ -146,14 +145,14 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
     }
     protected virtual bool CanStartWithOpenScreen => true;
     protected virtual Task BeforeLoadingOpeningScreenAsync() => Task.CompletedTask;
-    public IMultiplayerOpeningViewModel? OpeningScreen { get; set; } //has to be property so it hooks up properly.
+    public IMultiplayerOpeningViewModel? OpeningScreen { get; set; }
     public INewRoundVM? NewRoundScreen { get; set; }
     public INewGameVM? NewGameScreen { get; set; }
     private readonly IMultiplayerSaveState _save;
     private readonly TestOptions _test;
     private readonly IToast _toast;
     private IBasicGameProcesses<P>? _mainGame;
-    public IMainScreen? MainVM { get; set; } //this is another one for the ui to know.
+    public IMainScreen? MainVM { get; set; }
     protected virtual Task NewGameOrRoundRequestedAsync() => Task.CompletedTask;
     /// <summary>
     /// this is when somebody chooses new game.
@@ -164,9 +163,9 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
     {
         if (_test.AlwaysNewGame)
         {
-            CommandContainer.ClearLists(); //try this too.
-            await _save.DeleteGameAsync(); //i think.
-            ReplaceGame(); //try this too.
+            CommandContainer.ClearLists();
+            await _save.DeleteGameAsync();
+            ReplaceGame();
         }
         IRequestNewGameRound gameRound;
         if (NewGameScreen is null)
@@ -177,7 +176,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
             {
                 throw new CustomBasicException("Failed to replace game when requesting new game.  Rethink");
             }
-            ReplaceGame(); //try this too.
+            ReplaceGame();
             gameRound = MainContainer.Resolve<IRequestNewGameRound>();
             await gameRound.RequestNewGameAsync();
             return;
@@ -188,9 +187,9 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
             throw new CustomBasicException("New game was not even active.  Therefore, I should not have received message for requesting new game");
         }
         await CloseMainAsync("Should have shown main game when showing new game.");
-        await _save.DeleteGameAsync(); //i think.
+        await _save.DeleteGameAsync();
         await CloseSpecificChildAsync(NewGameScreen);
-        NewGameScreen = null;//forgot to set to null.
+        NewGameScreen = null;
         await NewGameOrRoundRequestedAsync();
         if (_mainGame == null)
         {
@@ -210,8 +209,8 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
             throw new CustomBasicException(message);
         }
         await CloseSpecificChildAsync(MainVM!);
-        MainVM = null; //looks like i have to set to null manually.
-        await Task.Delay(50); //try to set here just in case.
+        MainVM = null;
+        await Task.Delay(50);
     }
     private async Task LoadGameScreenAsync()
     {
@@ -236,13 +235,11 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
             await LoadScreenAsync(NewGameScreen);
         }
     }
-
     /// <summary>
     /// this is used for cases like when you have to choose colors.  good example are the board games.
     /// </summary>
     /// <returns></returns>
     protected async virtual Task GetStartingScreenAsync() => await Task.CompletedTask;
-
     /// <summary>
     /// this is the view model that represents the body.  its used when you decide on new game.
     /// </summary>
@@ -265,22 +262,18 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         CommandContainer.IsExecuting = true;
         CommandContainer.ManuelFinish = true;
     }
-
     /// <summary>
     /// this is when the game is over.
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>
-    async Task IHandleAsync<GameOverEventModel>.HandleAsync(GameOverEventModel message) //done.
+    async Task IHandleAsync<GameOverEventModel>.HandleAsync(GameOverEventModel message)
     {
-
-        //i propose just having the extra button for new game that appears when the game is over.
-        CommandContainer.ClearLists(); //try this too.
-        ReplaceGame(); //i think here it should replace the game. not so for rounds.
-                       //replacegame is where the problem is at.  for clients, that seems to happen as well.
+        CommandContainer.ClearLists();
+        ReplaceGame();
         if (BasicData.MultiPlayer == true && BasicData.Client == true)
         {
-            return; //because only host can choose new game unless its single player game.
+            return;
         }
         await _save.DeleteGameAsync();
         if (MainVM == null)
@@ -290,24 +283,22 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         if (_test.AlwaysNewGame)
         {
             await CloseSpecificChildAsync(NewGameScreen!);
-            NewGameScreen = null; //has to do again.  that is the best way to handle so i can click new game.
+            NewGameScreen = null;
         }
         await ShowNewGameAsync();
     }
     protected virtual void ReplaceVMData()
     {
-        _ = MainContainer.ReplaceObject<IViewModelData>(); //this has to be replaced before the game obviously.
+        _ = MainContainer.ReplaceObject<IViewModelData>();
     }
     protected virtual void ClearSubscriptions()
     {
-        Aggregator.Clear<AskEventModel>(); //trying this one too.
+        Aggregator.Clear<AskEventModel>();
     }
     protected virtual void ReplaceGame()
     {
         ClearSubscriptions();
         ReplaceVMData();
-        //Assembly assembly = Assembly.GetAssembly(GetType())!;
-        //BasicList<Type> thisList = assembly.GetTypes().Where(items => items.HasAttribute<AutoResetAttribute>()).ToBasicList();
         BasicList<Type> thisList = new();
         thisList.AddRange(GetAdditionalObjectsToReset());
         Type? type = MainContainer.LookUpType<IStandardRollProcesses>();
@@ -321,14 +312,12 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         }
         if (MiscDelegates.GetAutoResets != null)
         {
-            thisList.AddRange(MiscDelegates.GetAutoResets.Invoke()); //this way 2 source generations can do their jobs.
+            thisList.AddRange(MiscDelegates.GetAutoResets.Invoke());
         }
         if (MiscDelegates.GetAutoGeneratedObjectsToReplace != null)
         {
             thisList.AddRange(MiscDelegates.GetAutoGeneratedObjectsToReplace.Invoke());
         }
-        //since i don't have the autoreset attribute, has to later figure out what to do about that part now (?)
-        //probably would use a source generator (so no reflection).
         MainContainer.ResetSeveralObjects(thisList);
         _mainGame = MainContainer.ReplaceObject<IBasicGameProcesses<P>>(); //hopefully this works
     }
@@ -339,7 +328,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         {
             if (message == "")
             {
-                return;//ignore if its already null.
+                return;
             }
             throw new CustomBasicException(message);
         }
@@ -364,7 +353,6 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
     }
     async Task IHandleAsync<RoundOverEventModel>.HandleAsync(RoundOverEventModel message)
     {
-
         NewRoundScreen = MainContainer.Resolve<INewRoundVM>();
         await LoadScreenAsync(NewRoundScreen);
         CommandContainer.ManuelFinish = true;
@@ -397,23 +385,18 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         IClientUpdateGame clientUpdate = MainContainer.Resolve<IClientUpdateGame>();
         await clientUpdate.UpdateGameAsync(data);
     }
-    async Task ILoadGameNM.LoadGameAsync(string data) //first time only.
+    async Task ILoadGameNM.LoadGameAsync(string data)
     {
         if (OpeningScreen != null)
         {
             throw new CustomBasicException("The opening screen should have been closed.  Rethink");
         }
-        //trying to ignore the mainview model already being opened because of rejoining.
-        //if (MainVM != null)
-        //{
-        //    throw new CustomBasicException("The main screen was already opened.  Rethink");
-        //}
         ILoadClientGame client = MainContainer.Resolve<ILoadClientGame>();
         await client.LoadGameAsync(data);
     }
     async Task IHandleAsync<LoadMainScreenEventModel>.HandleAsync(LoadMainScreenEventModel message)
     {
-        await StartNewGameAsync(); //i think this simple now.
+        await StartNewGameAsync();
     }
     async Task IRestoreNM.RestoreMessageAsync(string payLoad)
     {
@@ -436,7 +419,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         ReplaceGame();
         if (MainVM is null)
         {
-            return; //to attempt to make it simple.
+            return;
         }
         await CloseMainAsync("Failed to restore because never had game");
     }
@@ -449,8 +432,6 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
 
     async Task IHandleAsync<ReconnectEventModel>.HandleAsync(ReconnectEventModel message)
     {
-        //hopefully the game loader can figure out what is needed.
-        //if not, then rethinking is required.
         IReconnectClientClass client = MainContainer.Resolve<IReconnectClientClass>();
         await client.ReconnectClientAsync(message.NickName);
     }

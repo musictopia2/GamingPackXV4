@@ -1,6 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MiscProcesses;
-
-public abstract class SimpleControlObservable : IControlObservable //not sure if we need IObservable (?)
+public abstract class SimpleControlObservable : IControlObservable
 {
     private bool _isEnabled;
     public bool IsEnabled

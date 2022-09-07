@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplePilesObservable;
-
 public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D : IDeckObject, new()
 {
     public EnumMultiplePilesStyleList Style { get; set; } = EnumMultiplePilesStyleList.None;
@@ -50,15 +49,15 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
             }
         }
     }
-    public BasicList<BasicPileInfo<D>>? PileList; //decided to not set to begin with so i have to call loadboard.
+    public BasicList<BasicPileInfo<D>>? PileList; 
     public ControlCommand? PileCommand { get; set; }
 
-    public ControlCommand? ExtraCommand; //will not set this.  if set, can enable too.  this will allow this to be notified when enable change.
+    public ControlCommand? ExtraCommand;
     protected virtual async Task OnPileClickedAsync(int index, BasicPileInfo<D> thisPile)
     {
         if (thisPile.IsEnabled == false)
         {
-            return; //since tablets sometimes has the problem, this provides a way to catch so it still won't run after all.
+            return;
         }
         if (PileClickedAsync == null)
         {
@@ -71,8 +70,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
     {
         await OnPileClickedAsync(PileList!.IndexOf(pile), pile);
     }
-
-    public event PileClickedEventHandler? PileClickedAsync; // sometimes, this Is needed
+    public event PileClickedEventHandler? PileClickedAsync;
     public delegate Task PileClickedEventHandler(int index, BasicPileInfo<D> thisPile);
     public BasicMultiplePilesCP(CommandContainer command) : base(command)
     {
@@ -251,7 +249,6 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
         RemoveCardFromPile(previousPile);
         AddCardToPile(newPile, thisCard);
     }
-
     public virtual void RemoveCardFromPile(int index) //so games like heap solitaire can do something else in addition.
     {
         BasicPileInfo<D> thisPile;

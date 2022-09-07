@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainGameInterfaces;
-
 public interface ISetObjects
 {
     /// <summary>

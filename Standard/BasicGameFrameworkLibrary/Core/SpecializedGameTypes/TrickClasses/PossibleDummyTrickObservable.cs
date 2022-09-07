@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
-
 public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<SU, T>, IMultiplayerTrick<SU, T, P>
     , ITrickPlay
     where SU : IFastEnumSimple
@@ -30,7 +29,7 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
     {
         T thisCard = _gameContainer.GetSpecificCardFromDeck(deck);
         thisCard.Player = _gameContainer.WhoTurn;
-        PopulateOldCard(thisCard); // sometimes, its needed.  othertimes its not needed.
+        PopulateOldCard(thisCard);
         int index;
         index = GetCardIndex();
         if (index == -1)
@@ -41,9 +40,9 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
         newCard = _gameContainer.GetBrandNewCard(deck);
         newCard.Player = _gameContainer.WhoTurn;
         newCard.Visible = true;
-        PopulateOldCard(newCard); // i think
+        PopulateOldCard(newCard);
         OrderList.Add(newCard);
-        TradeCard(index, newCard); // try this
+        TradeCard(index, newCard);
         int nums;
         nums = GetMaxCount();
         _gameContainer.Command.UpdateAll();
@@ -86,7 +85,7 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
             thisPlayer = new();
             thisPlayer.IsSelf = true;
             thisPlayer.Row = 2;
-            thisPlayer.Column = 1; // 1 based
+            thisPlayer.Column = 1;
             thisPlayer.Player = _gameContainer.SelfPlayer;
             thisPlayer.Text = FirstHumanText();
             output.Add(thisPlayer);
@@ -200,8 +199,8 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
             T newCard = new();
             newCard.Populate(x);
             newCard.IsUnknown = true;
-            newCard.Deck = x + 1000; //try this way.  to at least make it work.
-            CardList.Add(newCard); //i think
+            newCard.Deck = x + 1000;
+            CardList.Add(newCard);
         }
     }
     public P GetSpecificPlayer(int id)

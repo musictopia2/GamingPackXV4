@@ -2,7 +2,6 @@
 using System.Net.NetworkInformation;
 using System.Text;
 namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc;
-
 public static class GlobalStaticClasses
 {
     public static string LocalIPAddress

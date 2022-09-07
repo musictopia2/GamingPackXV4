@@ -1,6 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-
-public partial class DeckObservablePile<D> : SimpleControlObservable where D : IDeckObject, new()//decided to keep generics for this.
+public partial class DeckObservablePile<D> : SimpleControlObservable where D : IDeckObject, new()
 {
     private readonly DeckRegularDict<D> _objectList;
     public event Func<Task>? DeckClickedAsync;
@@ -19,7 +18,7 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
         }
         await DeckClickedAsync.Invoke();
     }
-    public DeckObservablePile(CommandContainer command) : base(command) //realy don't want to have to resolve with this library.
+    public DeckObservablePile(CommandContainer command) : base(command)
     {
         _objectList = new DeckRegularDict<D>();
         CreateCommands();
@@ -114,7 +113,7 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
         });
         UpdateCards();
     }
-    public DeckRegularDict<D> DeckList() // try this way
+    public DeckRegularDict<D> DeckList()
     {
         _objectList.ForEach(thisO => thisO.Visible = true);
         return _objectList.ToRegularDeckDict();
@@ -199,7 +198,7 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
         index = _objectList.Count / 2;
         if (DeckStyle == EnumDeckPileStyle.Unknown)
         {
-            thisCard.IsUnknown = true; //i think if putting in middle, should be unknown
+            thisCard.IsUnknown = true;
         }
         else
         {

@@ -1,6 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
-
-public interface IRegularModifyDeck //i think this should be separate.
+public interface IRegularModifyDeck
 {
     void RemoveSuit(EnumSuitList suitToRemove);
     void ReloadSuits();

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
-
 public abstract partial class BoardDiceGameVM : BasicMultiplayerMainVM
 {
     private readonly IStandardRollProcesses _rollProcesses;
@@ -18,10 +17,10 @@ public abstract partial class BoardDiceGameVM : BasicMultiplayerMainVM
     partial void CreateCommands(CommandContainer command);
     public virtual bool CanRollDice()
     {
-        return true;  //can be false in some cases (?)
+        return true;
     }
     [Command(EnumCommandCategory.Game)]
-    public virtual async Task RollDiceAsync() //some games require something else.
+    public virtual async Task RollDiceAsync()
     {
         await _rollProcesses.RollDiceAsync();
     }

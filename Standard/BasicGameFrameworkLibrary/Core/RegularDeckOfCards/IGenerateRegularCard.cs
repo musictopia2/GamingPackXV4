@@ -1,6 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
-
-public interface IGenerateRegularCard<R> where R : IRegularCard // you always send in a deck for this one.
+public interface IGenerateRegularCard<R> where R : IRegularCard
 {
     R GetRegularCard(int chosen);
 }

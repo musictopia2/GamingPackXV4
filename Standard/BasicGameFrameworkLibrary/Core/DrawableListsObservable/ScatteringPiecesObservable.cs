@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-
 public class SavedScatteringPieces<D> where D : IDeckObject, new()
 {
     public bool HasDrawn { get; set; }
@@ -18,7 +17,7 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
     public DeckRegularDict<D> RemainingList = new();
     public ControlCommand? ObjectCommand { get; set; } // needs the commands
     public ControlCommand? BoardCommand { get; set; }
-    private bool _privateObjectClicked; //no need for tags because no proportions for blazor
+    private bool _privateObjectClicked;
     private readonly IRandomGenerator _rs;
     private readonly IEventAggregator _thisE;
     [Command(EnumCommandCategory.Control, Name = nameof(ObjectCommand))]
@@ -95,7 +94,7 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
         {
             throw new Exception("There must be at least one piece in order to get the first pieces");
         }
-        thisList = new DeckRegularDict<D>(); //i think.
+        thisList = new DeckRegularDict<D>();
         if (RemainingList.Count < howMany)
         {
             throw new Exception("There are only " + RemainingList.Count + " but was trying to get " + howMany + " pieces");
@@ -107,7 +106,10 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
             throw new Exception("Can't have 0 pieces remaining after getting random list");
         }
         foreach (var thisCard in newList)
+        {
             thisCard.IsUnknown = false;
+        }
+
         thisList.ReplaceRange(newList);
     }
     public void ScatterPieces()
@@ -120,7 +122,7 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
         }
         if (RemainingList.Count == 0)
         {
-            return;// nothing to scatter anymore.
+            return;
         }
         D tempObject;
         tempObject = RemainingList.First();
@@ -134,9 +136,9 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
             thisCard.Location = new PointF(locx, locy); // you need location now.
         }
     }
-    public void PopulateBoard() //try this way this time.
+    public void PopulateBoard() 
     {
-        ObjectList!.ClearObjects(); //i think.
+        ObjectList!.ClearObjects();
         ObjectList.ShuffleObjects();
         if (ObjectList.Count == 0)
         {
@@ -149,8 +151,8 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
         RemainingList.ReplaceRange(ObjectList);
         if (MaxSize.Width > 0 && MaxSize.Height > 0)
         {
-            ScatterPieces(); // the next time, the cross platform processes has to do it.
-            _thisE.Publish(new ScatteringCompletedEventModel()); //could be iffy (?)
+            ScatterPieces();
+            _thisE.Publish(new ScatteringCompletedEventModel());
         }
     }
     public void PopulateTotals()
@@ -166,7 +168,7 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
         }
         else
         {
-            totals = RemainingList.Count;// try this way.
+            totals = RemainingList.Count;
         }
         TextToAppear = ProtectedText + " (" + totals + ")";
     }

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
-
 public static class ScoreExtensions
 {
     public static BasicList<ScoreColumnModel> AddColumn(this BasicList<ScoreColumnModel> scores, string header, bool isHorizontal, string normalPath, string visiblePath = "", EnumScoreSpecialCategory category = EnumScoreSpecialCategory.None)

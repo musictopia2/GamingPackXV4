@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
 public class BoardCommand : PlainCommand
 {
     public BoardCommand(
@@ -16,5 +15,5 @@ public class BoardCommand : PlainCommand
     {
         Name = name;
     }
-    public string Name { get; private set; } = ""; //this is used for lookup.
+    public string Name { get; private set; } = "";
 }

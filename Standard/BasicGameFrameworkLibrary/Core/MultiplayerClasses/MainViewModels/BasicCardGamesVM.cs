@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
-
 public abstract class BasicCardGamesVM<D> : BasicMultiplayerMainVM
     where D : IDeckObject, new()
 {
@@ -31,26 +30,26 @@ public abstract class BasicCardGamesVM<D> : BasicMultiplayerMainVM
             {
                 return CanEnableHand();
             });
-            _model.PlayerHand1.IsEnabled = false; // start with false
+            _model.PlayerHand1.IsEnabled = false;
         }
         else
         {
-            _model.PlayerHand1.SendAlwaysEnable(this);// will handle this part
+            _model.PlayerHand1.SendAlwaysEnable(this);
         }
         _model.PlayerHand1.Text = "Your Cards";
-        _model.PlayerHand1.ObjectClickedAsync += ProcessHandClickedAsync; //done.
-        _model.PlayerHand1.ConsiderSelectOneAsync += OnConsiderSelectOneCardAsync; //done
-        _model.PlayerHand1.BeforeAutoSelectObjectAsync += BeforeUnselectCardFromHandAsync; //done
-        _model.PlayerHand1.AutoSelectedOneCompletedAsync += OnAutoSelectedHandAsync; //done.
+        _model.PlayerHand1.ObjectClickedAsync += ProcessHandClickedAsync;
+        _model.PlayerHand1.ConsiderSelectOneAsync += OnConsiderSelectOneCardAsync;
+        _model.PlayerHand1.BeforeAutoSelectObjectAsync += BeforeUnselectCardFromHandAsync;
+        _model.PlayerHand1.AutoSelectedOneCompletedAsync += OnAutoSelectedHandAsync;
     }
     protected override Task TryCloseAsync()
     {
         _model.Deck1.DeckClickedAsync -= Deck1_DeckClickedAsync;
         _model.Pile1.PileClickedAsync -= ProcessDiscardClickedAsync;
-        _model.PlayerHand1.ObjectClickedAsync -= ProcessHandClickedAsync; //done.
-        _model.PlayerHand1.ConsiderSelectOneAsync -= OnConsiderSelectOneCardAsync; //done
-        _model.PlayerHand1.BeforeAutoSelectObjectAsync -= BeforeUnselectCardFromHandAsync; //done
-        _model.PlayerHand1.AutoSelectedOneCompletedAsync -= OnAutoSelectedHandAsync; //done.
+        _model.PlayerHand1.ObjectClickedAsync -= ProcessHandClickedAsync;
+        _model.PlayerHand1.ConsiderSelectOneAsync -= OnConsiderSelectOneCardAsync;
+        _model.PlayerHand1.BeforeAutoSelectObjectAsync -= BeforeUnselectCardFromHandAsync;
+        _model.PlayerHand1.AutoSelectedOneCompletedAsync -= OnAutoSelectedHandAsync;
         return base.TryCloseAsync();
     }
     protected bool CanSendDrawMessage = true; // for games like dutch blitz, cannot send the message for drawing card.
@@ -73,11 +72,11 @@ public abstract class BasicCardGamesVM<D> : BasicMultiplayerMainVM
     protected abstract bool CanEnablePile1();
     protected virtual bool CanEnableHand()
     {
-        return false; // most likely won't be this simple.
+        return false;
     }
     protected virtual bool AlwaysEnableHand()
     {
-        return true; // most of the time, you can enable hand.  if you can't then will be here
+        return true;
     }
     protected abstract Task ProcessDiscardClickedAsync();
     protected virtual Task BeforeUnselectCardFromHandAsync()

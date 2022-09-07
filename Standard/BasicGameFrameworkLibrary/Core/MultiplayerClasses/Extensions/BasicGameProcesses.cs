@@ -1,8 +1,7 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
-
 public static class BasicGameProcesses
 {
-    public static async Task ProtectedGameOverNextAsync<P>(this IBasicGameProcesses<P> game) //no longer will send state since something else will delete it now.
+    public static async Task ProtectedGameOverNextAsync<P>(this IBasicGameProcesses<P> game)
         where P : class, IPlayerItem, new()
     {
         game.CurrentMod.NormalTurn = "None";
@@ -10,8 +9,8 @@ public static class BasicGameProcesses
         {
             CommandContainer command = Resolver!.Resolve<CommandContainer>();
             command.ManuelFinish = true;
-            command.IsExecuting = true; //to double check.  since its waiting for message.
-            InProgressHelpers.MoveInProgress = false; //for sure not in progress.
+            command.IsExecuting = true;
+            InProgressHelpers.MoveInProgress = false;
             game.Network!.IsEnabled = true;
             return;
         }
@@ -32,8 +31,8 @@ public static class BasicGameProcesses
             game.CurrentMod.Status = "Waiting for host to goto the next round";
             game.Network!.IsEnabled = true;
             command.ManuelFinish = true;
-            command.IsExecuting = true; //to double check.  since its waiting for message.
-            InProgressHelpers.MoveInProgress = false; //for sure not in progress.
+            command.IsExecuting = true;
+            InProgressHelpers.MoveInProgress = false;
         }
         command.UpdateAll();
     }

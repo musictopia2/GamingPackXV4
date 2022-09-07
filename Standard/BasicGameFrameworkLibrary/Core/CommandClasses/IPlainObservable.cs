@@ -1,5 +1,2 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
-public interface IPlainObservable
-{
-}
+public interface IPlainObservable { }

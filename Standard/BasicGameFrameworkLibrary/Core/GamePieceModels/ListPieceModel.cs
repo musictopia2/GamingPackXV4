@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GamePieceModels;
-
 public class ListPieceModel : ISimpleValueObject<int>, ISelectableObject, IEnabledObject
 {
     public int Index { get; set; }

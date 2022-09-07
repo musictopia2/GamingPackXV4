@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-
 [UseLabelGrid]
 public partial class BeginningChooseColorViewModel<E, P> : ScreenViewModel, IBlankGameVM, IBeginningColorViewModel, IDisposable
     where E : struct, IFastEnumColorList<E>
@@ -21,8 +20,8 @@ public partial class BeginningChooseColorViewModel<E, P> : ScreenViewModel, IBla
         CommandContainer = commandContainer;
         _model = model;
         _processes = processes;
-        _processes.SetInstructions = (x => Instructions = x);
-        _processes.SetTurn = (x => Turn = x); //has to set delegates before init obviously.
+        _processes.SetInstructions = x => Instructions = x;
+        _processes.SetTurn = x => Turn = x;
         _model.ColorChooser.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
         _model.ColorChooser.ItemClickedAsync += ColorChooser_ItemClickedAsync;
     }
@@ -49,7 +48,6 @@ public partial class BeginningChooseColorViewModel<E, P> : ScreenViewModel, IBla
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

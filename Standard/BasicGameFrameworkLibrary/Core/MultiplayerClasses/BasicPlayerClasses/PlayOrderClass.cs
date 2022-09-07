@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses;
-
 public class PlayOrderClass : IPlayOrder
 {
     public int WhoTurn { get; set; }

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
-
 public class EightSidedDice : BaseSpecialStyleDice
 {
     public override string DotColor { get; set; } = cs.Black;

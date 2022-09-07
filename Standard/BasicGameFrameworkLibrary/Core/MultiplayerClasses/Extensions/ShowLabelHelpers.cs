@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
-
 public static class ShowLabelHelpers
 {
     public static void ShowTurn<P>(this IBasicGameProcesses<P> game)

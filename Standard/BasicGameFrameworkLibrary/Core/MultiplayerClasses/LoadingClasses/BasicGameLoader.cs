@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.LoadingClasses;
-
 public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpdateGame, ILoadClientGame,
     IRequestNewGameRound, IRestoreMultiPlayerGame, IReconnectClientClass
 
@@ -96,7 +95,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
         _resolver.ReplaceObject(_gameSetUp!.SaveRoot);
         if (_gameSetUp.SaveRoot!.PlayerList != null)
         {
-            _gameSetUp.SaveRoot.PlayerList.MainContainer = _resolver; //has to redo that part.
+            _gameSetUp.SaveRoot.PlayerList.MainContainer = _resolver;
             _gameSetUp.SaveRoot.PlayerList.AutoSaved(_gameSetUp.SaveRoot.PlayOrder);
             _gameSetUp.PlayerList = _gameSetUp.SaveRoot.PlayerList;
         }
@@ -105,7 +104,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
         {
             throw new CustomBasicException("Did not set the load game function when getting saved or restored.  Rethink");
         }
-        await GlobalHelpers.LoadGameScreenAsync.Invoke(); //hopefully this simple.  risk it here
+        await GlobalHelpers.LoadGameScreenAsync.Invoke();
     }
     private async Task FinishStartAsync()
     {
@@ -134,7 +133,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
     async Task IStartMultiPlayerGame<P>.LoadNewGameAsync(PlayerCollection<P> startList)
     {
         SetGame();
-        await StartServerGameAsync(); //only host can call this.
+        await StartServerGameAsync();
         _gameSetUp!.SaveRoot!.PlayOrder = (PlayOrderClass)_resolver.Resolve<IPlayOrder>();
         if (_resolver.RegistrationExist<ISetObjects>())
         {
@@ -284,7 +283,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             _error.ShowSystemError("Clients cannot reconnect anybody");
             return;
         }
-        await Task.Delay(500); //maybe half a second wait is good enough.  
+        await Task.Delay(500); 
         bool busy = false;
         int x = 0;
         bool sentMessage = false;
@@ -308,7 +307,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             _toast.ShowInfoToast("Has to wait 2 seconds to attempt to finish process");
             await Task.Delay(2000);
         }
-        _gameSetUp!.Network!.ClearMessages(); //i think should clear out messages as well.
+        _gameSetUp!.Network!.ClearMessages();
         if (_gameInfo.CanAutoSave == false)
         {
             _toast.ShowInfoToast($"Has to start new game because {nickName} was reconnected but the game does not support autoresume");
@@ -317,7 +316,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             await _aggregator.PublishAsync(new NewGameEventModel());
             return;
         }
-        _toast.ShowInfoToast($"{nickName} was reconnected"); //i think the user needs to know that person got reconnected again.
+        _toast.ShowInfoToast($"{nickName} was reconnected");
         await _aggregator.PublishAsync(new RestoreEventModel());
     }
 }

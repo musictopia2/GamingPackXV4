@@ -1,8 +1,7 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MiscProcesses;
-
-public struct Vector //it does have to be a structure though.
+public struct Vector
 {
-    public int Column { get; set; } //hopefully i can still do as vector and not have to come up with another name (?)
+    public int Column { get; set; }
     public int Row { get; set; }
     public Vector(int row, int column)
     {

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
 public class LimitedGameCommand : BasicGameCommand
 {
     public LimitedGameCommand(

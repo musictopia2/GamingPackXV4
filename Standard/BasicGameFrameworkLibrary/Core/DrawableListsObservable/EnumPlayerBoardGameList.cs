@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-
 public enum EnumPlayerBoardGameList
 {
     None = 0,

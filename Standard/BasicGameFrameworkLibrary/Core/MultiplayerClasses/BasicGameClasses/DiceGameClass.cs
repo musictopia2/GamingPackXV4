@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
-
 public abstract class DiceGameClass<D, P, S> : BasicGameClass<P, S>,
     IStandardRoller<D, P>,
     IProcessHoldNM,
@@ -60,7 +59,7 @@ public abstract class DiceGameClass<D, P, S> : BasicGameClass<P, S>,
     {
         SaveRoot!.RollNumber = 1;
     }
-    protected StandardRollProcesses<D, P> Roller { get; } //the computer may need it.
+    protected StandardRollProcesses<D, P> Roller { get; }
     protected void AfterRestoreDice()
     {
         _model.LoadCup(SaveRoot!, true);

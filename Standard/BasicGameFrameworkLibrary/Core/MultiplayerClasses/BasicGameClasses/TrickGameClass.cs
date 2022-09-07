@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
-
 public abstract class TrickGameClass<SU, T, P, SA> : CardGameClass<T, P, SA>, ITrickNM
     where SU : IFastEnumSimple
     where T : class, ITrickCard<SU>, new()
@@ -39,8 +38,8 @@ public abstract class TrickGameClass<SU, T, P, SA> : CardGameClass<T, P, SA>, IT
     public virtual bool CanEnableTrickAreas => true; //has to be overridable because some trick games, you can't enable in some situations like when bidding.
     protected virtual void LoadVM()
     {
-        var thisA = _gameContainer.Resolver.Resolve<IAdvancedTrickProcesses>(); //hopefully this simple (?)
-        thisA.FirstLoad(); //try when loading vm.
+        var thisA = _gameContainer.Resolver.Resolve<IAdvancedTrickProcesses>();
+        thisA.FirstLoad();
         SaveRoot!.LoadTrickVM(_model);
     }
     private bool HeartsValidMove(int deck)
@@ -192,7 +191,7 @@ public abstract class TrickGameClass<SU, T, P, SA> : CardGameClass<T, P, SA>, IT
         }
         return true;
     }
-    protected virtual async Task PlayCardAsync(int deck) //most of the time this simple.  could rethink if necessary.
+    protected virtual async Task PlayCardAsync(int deck)
     {
         if (_trickData!.HasDummy == true)
         {
@@ -240,7 +239,7 @@ public abstract class TrickGameClass<SU, T, P, SA> : CardGameClass<T, P, SA>, IT
             await ShowHumanCanPlayAsync();
             return;
         }
-        if (decks == 0) //if you did not choose a card, its already handled if no message is sent.
+        if (decks == 0)
         {
             _toast.ShowUserErrorToast("Must choose a card to play");
             await ShowHumanCanPlayAsync();
@@ -249,13 +248,13 @@ public abstract class TrickGameClass<SU, T, P, SA> : CardGameClass<T, P, SA>, IT
         if (IsValidMove(decks) == false)
         {
             _toast.ShowUserErrorToast(PlayErrorMessage);
-            PlayErrorMessage = "Illegal Move"; //to set back.  will accomodate games like sixty six and maybe pinacle.
+            PlayErrorMessage = "Illegal Move";
             await ShowHumanCanPlayAsync();
             return;
         }
         if (BasicData!.MultiPlayer == true)
         {
-            await Network!.SendAllAsync("trickplay", decks); //i think
+            await Network!.SendAllAsync("trickplay", decks);
         }
         await PlayCardAsync(decks);
     }
@@ -264,7 +263,7 @@ public abstract class TrickGameClass<SU, T, P, SA> : CardGameClass<T, P, SA>, IT
     {
         if (CanEndTurnToContinueTrick == true)
         {
-            await EndTurnAsync(); //usually will end turn but can have exceptions.
+            await EndTurnAsync();
         }
         else
         {

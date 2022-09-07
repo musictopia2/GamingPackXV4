@@ -20,6 +20,7 @@ public class BasicGameServerTCP : ISerializable
         await Task.Run(() =>
         {
             do
+            {
                 try
                 {
                     var thisClient = _mainListen!.AcceptTcpClient();
@@ -28,6 +29,7 @@ public class BasicGameServerTCP : ISerializable
                 catch (Exception)
                 {
                 }
+            }
             while (true);
         });
     }
@@ -39,7 +41,7 @@ public class BasicGameServerTCP : ISerializable
         var results = js.SerializeObject(thisSend);
         var ends = NetworkStreamHelpers.CreateDataPacket(results);
         thisStream.Write(ends, 0, ends.Length);
-        thisStream.Flush(); //i think this too.
+        thisStream.Flush();
     }
     private async void ProcessMainClientRequests(TcpClient thisClient)
     {
@@ -94,17 +96,19 @@ public class BasicGameServerTCP : ISerializable
                                     _hostName = thisMessage.YourNickName; //i think the entire message will be nick name in this case.
                                     Console.WriteLine($"{_hostName} Is Hosting"); //to get hints.
                                     foreach (var item in _playerList.Values)
+                                    {
                                         item.ThisStream!.Dispose();
+                                    }
                                     _playerList.Clear();
                                     thisInfo = new();
                                     thisInfo.Socket = thisClient;
                                     thisInfo.ThisStream = thisStream;
                                     _playerList.Add(_hostName, thisInfo);
                                     SentMessage temp1 = new();
-                                    temp1.Status = "hosting"; //i think.
+                                    temp1.Status = "hosting";
                                     string str1 = js.SerializeObject(temp1);
                                     ends = NetworkStreamHelpers.CreateDataPacket(str1);
-                                    thisStream.Write(ends, 0, ends.Length); //confirmation.
+                                    thisStream.Write(ends, 0, ends.Length);
                                     thisStream.Flush();
                                 }
                                 break;
@@ -155,8 +159,8 @@ public class BasicGameServerTCP : ISerializable
                                         }
                                         ends = NetworkStreamHelpers.CreateDataPacket(thisMessage.Message);
                                         thisInfo.ThisStream!.Write(ends, 0, ends.Length);
-                                        thisInfo.ThisStream.Flush(); //i think
-                                        thisStream.Flush(); //i think here too.
+                                        thisInfo.ThisStream.Flush();
+                                        thisStream.Flush();
                                         break;
                                     }
                                     //message gets sent to everybody except for self.
@@ -182,7 +186,7 @@ public class BasicGameServerTCP : ISerializable
                 }
                 catch (Exception)
                 {
-                    break; //not sure
+                    break;
                 }
             }
             while (true);

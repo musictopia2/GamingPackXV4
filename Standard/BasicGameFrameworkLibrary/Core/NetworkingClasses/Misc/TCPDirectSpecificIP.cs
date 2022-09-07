@@ -30,7 +30,7 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
         _client1.NickName = NickName;
         return Task.CompletedTask;
     }
-    public async Task<bool> InitNetworkMessagesAsync(string nickName, bool client) //i think done for now for the sample.
+    public async Task<bool> InitNetworkMessagesAsync(string nickName, bool client)
     {
         bool rets;
         if (string.IsNullOrWhiteSpace(nickName))
@@ -43,12 +43,12 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
             await InitAsync();
         }
 
-        rets = await _client1!.ConnectToServerAsync(); //i think
+        rets = await _client1!.ConnectToServerAsync();
         if (rets == false)
         {
             return false;
         }
-        IsEnabled = true; //i think
+        IsEnabled = true;
         if (client == false)
         {
             await _client1.HostGameAsync();
@@ -62,8 +62,8 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
     public async Task CloseConnectionAsync()
     {
         await _client1!.DisconnectAllAsync();
-        _messages.Clear(); //can clear all messages though.
-        _client1 = null; //just get rid of it.  will just redo again.
+        _messages.Clear();
+        _client1 = null;
     }
     public async Task SendAllAsync(string message)
     {
@@ -116,7 +116,7 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
         set
         {
             if (SetProperty(ref _isEnabled, value))
-                //can decide what to do when property changes
+            {
                 if (value == true)
                 {
                     int Count;
@@ -136,6 +136,7 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
                         }
                     }
                 }
+            }
         }
     }
     public string NickName { get; set; } = "";
@@ -147,42 +148,42 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
     }
     public async Task SendToParticularPlayerAsync(string status, int data, string toWho)
     {
-        SentMessage thisM = StartNewMessage(status, data.ToString()); //nothing to deserialize.
+        SentMessage thisM = StartNewMessage(status, data.ToString());
         await SendToParticularPlayerAsync(thisM, toWho);
     }
     public async Task SendToParticularPlayerAsync(string status, float data, string toWho)
     {
-        SentMessage thisM = StartNewMessage(status, data.ToString()); //nothing to deserialize.
+        SentMessage thisM = StartNewMessage(status, data.ToString());
         await SendToParticularPlayerAsync(thisM, toWho);
     }
     public async Task SendToParticularPlayerAsync(string status, bool data, string toWho)
     {
-        SentMessage thisM = StartNewMessage(status, data.ToString()); //nothing to deserialize.
+        SentMessage thisM = StartNewMessage(status, data.ToString());
         await SendToParticularPlayerAsync(thisM, toWho);
     }
     public async Task SendToParticularPlayerAsync(string status, string data, string toWho)
     {
-        SentMessage thisM = StartNewMessage(status, data); //nothing to deserialize.
+        SentMessage thisM = StartNewMessage(status, data);
         await SendToParticularPlayerAsync(thisM, toWho);
     }
     public async Task SendAllAsync(string status, string data)
     {
-        SentMessage thisM = StartNewMessage(status, data); //try this way.
+        SentMessage thisM = StartNewMessage(status, data);
         await SendAllAsync(thisM);
     }
     public async Task SendAllAsync(string status, int data)
     {
-        SentMessage thisM = StartNewMessage(status, data.ToString()); //try this way.
+        SentMessage thisM = StartNewMessage(status, data.ToString());
         await SendAllAsync(thisM);
     }
     public async Task SendAllAsync(string status, float data)
     {
-        SentMessage thisM = StartNewMessage(status, data.ToString()); //try this way.
+        SentMessage thisM = StartNewMessage(status, data.ToString());
         await SendAllAsync(thisM);
     }
     public async Task SendAllAsync(string status, bool data)
     {
-        SentMessage thisM = StartNewMessage(status, data.ToString()); //try this way.
+        SentMessage thisM = StartNewMessage(status, data.ToString());
         await SendAllAsync(thisM);
     }
     public async Task SendAllAsync<T>(string Status, T Body)
@@ -191,12 +192,15 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
         SentMessage ThisM = StartNewMessage(Status, News);
         await SendAllAsync(ThisM);
     }
-    public async Task ProcessDataAsync(SentMessage thisData) //done.
+    public async Task ProcessDataAsync(SentMessage thisData)
     {
-        if (IsEnabled == false) //no more bypass.
+        if (IsEnabled == false)
         {
             lock (_synLock)
+            {
                 _messages.Enqueue(thisData);
+            }
+
             return;
         }
         IsEnabled = false;
@@ -229,18 +233,16 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
     public Task StartGameAsync()
     {
         return Task.CompletedTask; //tcp for now does not need to know about when a game has started.
-                                   //for tcp, i think the host needs to connect first anyways. for tcp, if one disconnects, all has to reconnect again.
+        //for tcp, i think the host needs to connect first anyways. for tcp, if one disconnects, all has to reconnect again.
     }
     Task IGameNetwork.EndGameEarlyAsync(string nickNameReconnected)
     {
         return Task.CompletedTask; //not sure how tcp will end game early though.
     }
-
     public Task RestoreStateForReconnectionAsync(string nickNameReconnected)
     {
         return Task.CompletedTask;
     }
-
     public void ClearMessages()
     {
         lock (_synLock)
@@ -254,7 +256,6 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
     {
         return Task.CompletedTask; //maybe can be ignored (?)
     }
-
     Task IGameNetwork.DisconnectEverybodyAsync()
     {
         return Task.CompletedTask; //not sure how tcp will disconnect everybody.

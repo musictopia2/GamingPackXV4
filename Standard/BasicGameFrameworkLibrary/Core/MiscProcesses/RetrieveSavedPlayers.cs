@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MiscProcesses;
-
 public class RetrieveSavedPlayers<P, S> : IRetrieveSavedPlayers<P>
     where P : class, IPlayerItem, new()
 

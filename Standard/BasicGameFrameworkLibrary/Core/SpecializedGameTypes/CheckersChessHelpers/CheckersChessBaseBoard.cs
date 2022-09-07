@@ -1,11 +1,10 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.CheckersChessHelpers;
-
 public abstract class CheckersChessBaseBoard<E, S>
     where E : IFastEnumColorSimple
     where S : CheckersChessSpace<E>, new()
 {
     public static SizeF OriginalSize { get; set; } = new(500, 500);
-    public static BasicList<S> PrivateSpaceList { get; set; } = new(); // looks like blazor needs to reference this as well.
+    public static BasicList<S> PrivateSpaceList { get; set; } = new();
     private static string _firstColor = "";
     private static string _secondColor = "";
     public static bool HasGreen { get; set; }
@@ -163,10 +162,10 @@ public abstract class CheckersChessBaseBoard<E, S>
         }
         return newList;
     }
-    public abstract bool CanHighlight(); // so if you can't won't even both doing that part.
+    public abstract bool CanHighlight();
     private readonly EnumCheckerChessGame _thisGame;
     public abstract EnumCheckerChessGame GetGame();
-    public static int SpaceSelected { get; set; } // this is used so it can do something different.
+    public static int SpaceSelected { get; set; }
     public void ClearBoard()
     {
         foreach (var thisSpace in PrivateSpaceList)

@@ -13,8 +13,6 @@ public static class NativeGlobalSettingsFileAccess
     }
     public static async Task LoadSettingsAsync()
     {
-        //ignore js.
-        //must be in this class since this is wpf anyways.
         GlobalDataModel output;
         string tempPath = GetGlobalSettingsPath();
         if (ff.FileExists(tempPath) == false)

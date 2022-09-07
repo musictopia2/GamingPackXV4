@@ -1,16 +1,15 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
-
 public class RegularMultiTRCard : RegularSimpleCard, ITrickCard<EnumSuitList>, IRummmyObject<EnumSuitList, EnumRegularColorList>
 {
     public int Player { get; set; }
-    public virtual int GetPoints => Points; //different games can have different formulas for calculating points.
+    public virtual int GetPoints => Points;
     public object CloneCard()
     {
-        return MemberwiseClone(); //hopefully this simple (?)
+        return MemberwiseClone();
     }
-    int IRummmyObject<EnumSuitList, EnumRegularColorList>.GetSecondNumber => SecondNumber.Value; //decided that even for rummy games, it will lean towards low.  if i am wrong, rethink.  for cases there is a choice, lean towards low.
+    int IRummmyObject<EnumSuitList, EnumRegularColorList>.GetSecondNumber => SecondNumber.Value;
     bool IIgnoreObject.IsObjectIgnored => false;
-    public EnumRegularCardValueList SecondNumber //since i use low ace, here, use there too.
+    public EnumRegularCardValueList SecondNumber
     {
         get
         {
@@ -18,7 +17,7 @@ public class RegularMultiTRCard : RegularSimpleCard, ITrickCard<EnumSuitList>, I
             {
                 return Value;
             }
-            return EnumRegularCardValueList.LowAce; //second seemed to lean towards low.
+            return EnumRegularCardValueList.LowAce;
         }
     }
     public PointF Location { get; set; }

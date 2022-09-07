@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-
 public abstract class BasicTrickShellViewModel<P> : BasicMultiplayerShellViewModel<P>
     where P : class, IPlayerItem, new()
 {
@@ -16,6 +15,6 @@ public abstract class BasicTrickShellViewModel<P> : BasicMultiplayerShellViewMod
     }
     protected override BasicList<Type> GetAdditionalObjectsToReset()
     {
-        return new BasicList<Type>() { typeof(IAdvancedTrickProcesses) }; //hopefully this simple.
+        return new BasicList<Type>() { typeof(IAdvancedTrickProcesses) };
     }
 }

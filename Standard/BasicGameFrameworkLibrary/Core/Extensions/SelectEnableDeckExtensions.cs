@@ -1,10 +1,9 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Extensions;
-
 public static class SelectEnableDeckExtensions
 {
     public static string GetColorFromEnum<E>(this BasicPickerData<E> piece) where E : struct, IFastEnumColorSimple
     {
-        return piece.EnumValue.Color; //now can do this way.
+        return piece.EnumValue.Color;
     }
     public static void SelectUnselectItem(this ISelectableObject thisItem)
     {
@@ -43,7 +42,7 @@ public static class SelectEnableDeckExtensions
     public static void SelectSeveralItems<S, V>(this ISimpleList<S> thisList, Func<S, V> selector,
         ISimpleList<V> valuelist) where S : ISelectableObject
     {
-        thisList.UnselectAllObjects(); //has to first select all objects.
+        thisList.UnselectAllObjects(); 
 
         valuelist.ForEach(value =>
         {
@@ -59,7 +58,6 @@ public static class SelectEnableDeckExtensions
     public static BasicList<S> GetSelectedItems<S>(this ISimpleList<S> thisList)
         where S : ISelectableObject => thisList.Where(items =>
         items.IsSelected == true).ToBasicList();
-
     //this was still needed for games like blades of steele.
     public static DeckRegularDict<D> GetSelectedItems<D>(this IDeckDict<D> thisList)
        where D : IDeckObject => thisList.Where(items =>
@@ -69,12 +67,10 @@ public static class SelectEnableDeckExtensions
     {
         return thisList.Count(items => items.IsSelected);
     }
-
     public static void UnselectAllObjects<S>(this ISimpleList<S> thisList) where S : ISelectableObject
     {
         thisList.ForEach(items => items.IsSelected = false);
     }
-
     public static void SetEnabled<E>(this ISimpleList<E> thisList, bool isEnabled) where E : IEnabledObject
     {
         thisList.ForEach(items => items.IsEnabled = isEnabled);
@@ -83,7 +79,6 @@ public static class SelectEnableDeckExtensions
     {
         return await js.DeserializeObjectAsync<BasicList<int>>(data);
     }
-
     public static DeckRegularDict<D> ToRegularDeckDict<D>(this IEnumerable<D> thisList) where D : IDeckObject
     {
         return new DeckRegularDict<D>(thisList);
@@ -121,7 +116,6 @@ public static class SelectEnableDeckExtensions
     {
         thisList.ForEach(items => items.IsSelected = true);
     }
-
     public static bool HasSelectedObject<D>(this IDeckDict<D> thisList) where D : IDeckObject
     {
         return thisList.Any(items => items.IsSelected == true);
@@ -261,6 +255,5 @@ public static class SelectEnableDeckExtensions
             return suit;
         }
         throw new CustomBasicException("Invalid cast when getting regular suit");
-        //return (EnumSuitList)Enum.Parse(typeof(EnumSuitList), value.ToString());
     }
 }

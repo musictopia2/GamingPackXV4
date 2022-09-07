@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainGameInterfaces;
-
 /// <summary>
 /// if special things has to happen when its finished starting, will be here.
 /// crazy eights for example does have something special.

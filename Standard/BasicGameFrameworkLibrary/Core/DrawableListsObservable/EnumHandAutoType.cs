@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-
 public enum EnumHandAutoType
 {
     None = 0,

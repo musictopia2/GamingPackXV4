@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
 public class OpenCommand : PlainCommand
 {
     public OpenCommand(object model,

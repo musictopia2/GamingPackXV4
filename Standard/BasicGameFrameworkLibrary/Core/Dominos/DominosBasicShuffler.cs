@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dominos;
-
 public class DominosBasicShuffler<D> : IDeckShuffler<D>, IScatterList<D>,
      IAdvancedDIContainer, ISimpleList<D>, IListShuffler<D> where D : IDominoInfo, new()
 {
@@ -141,7 +140,6 @@ public class DominosBasicShuffler<D> : IDeckShuffler<D>, IScatterList<D>,
     {
         _thisShuffle.RelinkObject(oldDeck, newObject);
     }
-
     public void PutCardOnTop(int deck)
     {
         _thisShuffle.PutCardOnTop(deck);

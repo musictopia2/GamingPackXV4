@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
-
 /// <summary>
 /// This is for the pickers to choose what approach to take.
 /// </summary>

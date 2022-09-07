@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Data;
-
 public class FirstGameData
 {
     public bool Client { get; set; }

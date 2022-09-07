@@ -1,48 +1,26 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
 public class CommandContainer
 {
     private readonly BasicList<IGameCommand> _commandList = new();
     private readonly BasicList<IGameCommand> _openList = new();
-    public event ExecutingChangedEventHandler? ExecutingChanged; //don't need anything else because can call a method to see where it stands.
-    public delegate void ExecutingChangedEventHandler(); //i think
+    public event ExecutingChangedEventHandler? ExecutingChanged;
+    public delegate void ExecutingChangedEventHandler();
     private readonly BasicList<IControlObservable> _controlList = new();
-    //todo:  may have to remove the AllActions but instead have to use the standard event system.
-    //because i found many cases where i was trying to remove from the list and it actually failed (causing memory leaks).
-    //private readonly BasicList<Action> _allActions = new(); //this is not static though like the other one.
     private readonly Dictionary<string, Action> _specialActions = new();
-    public Action? ParentAction { get; set; } //not sure if i can attempt where it focuses the parent.  if so, then can refactor.
+    public Action? ParentAction { get; set; }
     public CommandContainer()
     {
-        IsExecuting = true; //i think it needs to start out as true.
+        IsExecuting = true;
     }
-    public void UpdateAll() //this will update all no matter what.
+    public void UpdateAll()
     {
-        if (ParentAction is not null)
-        {
-            //if there is a master parent, try to do this way.
-            ParentAction.Invoke();
-            return; //try this way (?)  this means no need to do anything else i think because the parent will make sure everything else updates properly.
-        }
-        return; //since we could have a timing issue, then if no parent, then just ignore (?)
-
-        //throw new CustomBasicException("Needs parent action now for efficiency");
-        //var list = _allActions.ToBasicList();
-        //int x = 0;
-        //list.ForEach(a =>
-        //{
-        //    if (a != null)
-        //    {
-        //        x++;
-        //        a.Invoke();
-        //    }
-        //});
+        ParentAction?.Invoke();
     }
     public void UpdateSpecificAction(string key)
     {
         if (_specialActions.ContainsKey(key) == false)
         {
-            return; //because there is nothing.
+            return;
         }
         _specialActions[key].Invoke();
     }
@@ -50,13 +28,13 @@ public class CommandContainer
     {
         return !IsExecuting;
     }
-    public void StartExecuting() //this goes to the update actions.
+    public void StartExecuting()
     {
         if (IsExecuting)
         {
-            Processing = true; //try this way.  this is processing though.
-            return; //try to ignore because its already executing.  this will prevent this other bug.
-        } //try to not have any warnings anymore
+            Processing = true;
+            return;
+        }
         IsExecuting = true;
         Processing = true;
     }
@@ -76,17 +54,15 @@ public class CommandContainer
     {
         if (ManuelFinish == false)
         {
-            IsExecuting = false; //one issue
+            IsExecuting = false;
         }
-        Processing = false; //another issue.
+        Processing = false;
     }
     public void ClearLists()
     {
         _commandList.Clear();
         _openList.Clear();
         _controlList.Clear();
-        //_allActions.Clear(); //i think
-        //hopefully the parent will be okay.  if the parent never goes away, maybe this will work.
     }
     private bool _executing;
     /// <summary>
@@ -105,7 +81,6 @@ public class CommandContainer
         }
         set
         {
-            //eventually need more once i get the multiplayer processes completed.
             if (value == _executing)
             {
                 return;
@@ -140,7 +115,7 @@ public class CommandContainer
     /// the purpose of this one is if a move is in progress, then even if being rejoined, then has to wait until move is not in progress anymore.
     /// </summary>
 
-    private bool _processing = true; //you need to start out that its processing.
+    private bool _processing = true;
     public bool Processing
     {
         get { return _processing; }
@@ -169,14 +144,14 @@ public class CommandContainer
     {
         _commandList.RemoveAllOnly(x => x.Context == payLoad);
     }
-    public void ReportAll() //when changing, will report to all no matter what.  decided it can be good to notify all that something has changed.
+    public void ReportAll()
     {
         ReportItems(EnumCommandBusyCategory.None);
         if (ExecutingChanged != null)
         {
             ExecutingChanged.Invoke();
         }
-        UpdateAll(); //issue is for sure in the updateall.
+        UpdateAll();
     }
     private void ReportItems(EnumCommandBusyCategory thisBusy)
     {
@@ -188,39 +163,15 @@ public class CommandContainer
     public void AddOpen(IGameCommand thisOpen)
     {
         _openList.Add(thisOpen);
-        //AddAction(action);
     }
-    //public void AddCommand(IGameCommand thisCommand)
-    //{
-    //    _commandList.Add(thisCommand);
-    //    //AddAction(action);
-    //}
     public void AddCommand(IGameCommand command)
     {
         _commandList.Add(command);
     }
-    //public void AddControl(IControlObservable thisControl)
-    //{
-    //    AddControl(thisControl);
-    //    //AddAction(action);
-    //}
     public void AddControl(IControlObservable thisControl)
     {
         _controlList.Add(thisControl);
     }
-    //try to not do addaction anymore.
-    //public void AddAction(Action action)
-    //{
-    //    if (ParentAction is not null)
-    //    {
-    //        _allActions.Clear();
-    //        return; //because you have parent instead.
-    //    }
-    //    if (_allActions.Contains(action) == false)
-    //    {
-    //        _allActions.Add(action);
-    //    } //only if debugging do i need the else.
-    //}
     public void AddAction(Action action, string key)
     {
         if (_specialActions.ContainsKey(key) == false)
@@ -228,21 +179,10 @@ public class CommandContainer
             _specialActions.Add(key, action);
         }
     }
-    //this means some breaking changes now.
     public void RemoveCommand(IGameCommand command)
     {
         _commandList.RemoveSpecificItem(command);
-        //RemoveAction(action);
     }
-    //public void RemoveAction(Action action)
-    //{
-    //    if (ParentAction is not null)
-    //    {
-    //        _allActions.Clear();
-    //        return; //because you have parent instead.
-    //    }
-    //    _allActions.RemoveSpecificItem(action);
-    //}
     public void RemoveAction(string key)
     {
         if (_specialActions.ContainsKey(key) == false)

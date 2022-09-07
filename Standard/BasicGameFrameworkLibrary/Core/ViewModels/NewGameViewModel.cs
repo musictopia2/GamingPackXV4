@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-
 public sealed partial class NewGameViewModel : ScreenViewModel, INewGameVM, IBlankGameVM
 {
     private readonly BasicData _basicData;
@@ -16,10 +15,10 @@ public sealed partial class NewGameViewModel : ScreenViewModel, INewGameVM, IBla
     }
     partial void CreateCommands();
     public bool CanStartNewGame() => _basicData.MultiPlayer == false || _basicData.Client == false;
-    [Command(EnumCommandCategory.Old)] //try old.
+    [Command(EnumCommandCategory.Old)]
     public Task StartNewGameAsync()
     {
-        _basicData.GameDataLoading = true; //hopefully this simple (?)
-        return Aggregator.PublishAsync(new NewGameEventModel()); //this does not care what happens with the new game.
+        _basicData.GameDataLoading = true;
+        return Aggregator.PublishAsync(new NewGameEventModel());
     }
 }

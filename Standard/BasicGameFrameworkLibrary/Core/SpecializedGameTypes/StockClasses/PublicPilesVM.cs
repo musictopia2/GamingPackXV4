@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.StockClasses;
-
 public abstract partial class PublicPilesVM<D> : SimpleControlObservable
     where D : IDeckObject, new()
 {
@@ -24,22 +23,22 @@ public abstract partial class PublicPilesVM<D> : SimpleControlObservable
         }
         return thisPile.ObjectList.Count + 1;
     }
-    public void CreateNewPile(D thisCard) // because this appears to be the only game that has it this way. (?)
+    public void CreateNewPile(D thisCard)
     {
         BasicPileInfo<D> thisPile = new();
         thisPile.ObjectList.Add(thisCard);
-        PileList.Add(thisPile); // the bindings should do what it needs to (because of observable) well see
+        PileList.Add(thisPile);
     }
     public void UnselectAllPiles()
     {
         foreach (var thisPile in PileList)
         {
-            thisPile.IsSelected = false;// i think its this simple (?)
+            thisPile.IsSelected = false;
         }
     }
     public void ClearBoard()
     {
-        PileList.Clear(); // i think its as simple as clearing the pilelist (?)
+        PileList.Clear();
     }
     public bool NeedToRemovePile(int pile)
     {
@@ -67,7 +66,7 @@ public abstract partial class PublicPilesVM<D> : SimpleControlObservable
     public void AddCardToPile(int pile, D thisCard)
     {
         var thisPile = PileList[pile];
-        thisPile.ObjectList.Add(thisCard); // i think its this simple
+        thisPile.ObjectList.Add(thisCard);
     }
     public int MaxPiles()
     {

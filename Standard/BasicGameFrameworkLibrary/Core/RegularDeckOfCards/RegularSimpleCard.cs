@@ -1,18 +1,17 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
-
-public class RegularSimpleCard : SimpleDeckObject, IRegularCard //i think i can inherit from this.
+public class RegularSimpleCard : SimpleDeckObject, IRegularCard
 {
     public RegularSimpleCard()
     {
-        DefaultSize = new SizeF(165, 216); //decided to double the size.  its okay this time because no more proportion classes since the web has better scaling anyways and don't need the lots of weird categories anymore.
+        DefaultSize = new SizeF(165, 216);
     }
     public EnumRegularCardValueList Value { get; set; }
     public EnumSuitList Suit { get; set; }
     public EnumSuitList DisplaySuit { get; set; } = EnumSuitList.None;
-    public EnumRegularCardValueList DisplayNumber { get; set; } = EnumRegularCardValueList.None; //do this as well
+    public EnumRegularCardValueList DisplayNumber { get; set; } = EnumRegularCardValueList.None;
     public EnumRegularCardTypeList CardType { get; set; }
     public EnumRegularColorList Color { get; set; }
-    public int Points { get; set; } //points is common enough here that decided to go ahead and include here.
+    public int Points { get; set; }
     public EnumSuitList GetSuit => Suit;
     public EnumRegularColorList GetColor => Color;
     public int Section { get; private set; }
@@ -25,7 +24,7 @@ public class RegularSimpleCard : SimpleDeckObject, IRegularCard //i think i can 
         _list.Clear();
     }
     public IGamePackageResolver? MainContainer { get; set; }
-    int ISimpleValueObject<int>.ReadMainValue => Value.Value; //no more castings.
+    int ISimpleValueObject<int>.ReadMainValue => Value.Value;
     private static IRegularDeckWild? _thisWild;
     private void SetObjects()
     {
@@ -42,7 +41,7 @@ public class RegularSimpleCard : SimpleDeckObject, IRegularCard //i think i can 
         ThisAce = MainContainer.Resolve<IRegularAceCalculator>();
         if (MainContainer.RegistrationExist<IRegularDeckWild>() == true)
         {
-            _thisWild = MainContainer.Resolve<IRegularDeckWild>(); //decided to do this way so i don't have to inherit just for the wild part.
+            _thisWild = MainContainer.Resolve<IRegularDeckWild>();
         }
     }
     public virtual bool IsObjectWild
@@ -58,7 +57,7 @@ public class RegularSimpleCard : SimpleDeckObject, IRegularCard //i think i can 
             {
                 return _thisWild.IsWild(this);
             }
-            return Value == EnumRegularCardValueList.Joker; //most of the time, only the jokers are wild.
+            return Value == EnumRegularCardValueList.Joker;
         }
     }
     private static bool CanUse(EnumSuitList thisSuit, int number)
@@ -92,7 +91,7 @@ public class RegularSimpleCard : SimpleDeckObject, IRegularCard //i think i can 
     {
         ThisAce!.PopulateAceValues(this);
     }
-    private static readonly DeckRegularDict<RegularSimpleCard> _list = new(); //needs to be this way now unfortunately.  otherwise going from game to game gets hosed.  sometimes was too slow otherwise as well.
+    private static readonly DeckRegularDict<RegularSimpleCard> _list = new();
     public void Populate(int chosen)
     {
         SetObjects();
@@ -275,7 +274,6 @@ public class RegularSimpleCard : SimpleDeckObject, IRegularCard //i think i can 
     }
     public override BasicDeckRecordModel GetRecord => new(Deck, IsSelected, Drew, IsUnknown, IsEnabled, Visible, $"{DisplayNumber} {DisplaySuit}");
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
-    //if a game like monastery requires something else, can do it.
     public override string GetKey()
     {
         if (Value != EnumRegularCardValueList.Joker)

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses;
-
 public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayerCollection<P> where P : class, IPlayerItem, new()
 {
     internal enum EnumDirection
@@ -8,7 +7,7 @@ public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayer
     }
     public int Count => _privateDict.Count;
     public IGamePackageResolver? MainContainer { get; set; }
-    public void ForConditionalItems(Predicate<P> match, Action<P> action) //decided to do this way.
+    public void ForConditionalItems(Predicate<P> match, Action<P> action)
     {
         BasicList<P> privateList = _privateDict.Values.ToBasicList();
         privateList.ForConditionalItems(match, action);
@@ -28,7 +27,7 @@ public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayer
             }
         });
     }
-    private bool _canAddMore = true; //default is true.
+    private bool _canAddMore = true;
     private IPlayOrder? _order;
     private IMissTurnClass<P>? _thisMiss; //this means even though something else implements it, i still have to define this as well
     private Dictionary<string, P> _privateDict = new();
@@ -39,14 +38,13 @@ public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayer
         _nickList = _privateDict.Values.Select(Items => Items.NickName).ToBasicList();
         if (previousList.Any())
         {
-            _canAddMore = false; //because yuo already added it.
+            _canAddMore = false;
         }
     }
-    public int GetTemporaryCount => _tempList.Count; //this is needed so for multiplayers you know how many temporary players there are.
+    public int GetTemporaryCount => _tempList.Count;
     public void DisconnectEverybody()
     {
         _tempList.RemoveAllOnly(x => x.IsHost == false);
-        //_tempList.Clear(); //means no other players.
     }
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
 
@@ -94,7 +92,7 @@ public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayer
         }
         if (_tempList.Any(x => x.NickName == thisPlayer.NickName))
         {
-            return; //can't add because you already have it.
+            return;
         }
         _tempList.Add(thisPlayer);
     }
@@ -133,7 +131,7 @@ public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayer
             throw new CustomBasicException("You have to finish loading before you can get all players starting with self");
         }
         P thisP = GetSelf();
-        int id = thisP.Id; //because i wanted to make it one based for this.
+        int id = thisP.Id;
         BasicList<P> output = new();
         for (int i = 0; i < _privateDict.Count; i++)
         {
@@ -349,13 +347,10 @@ public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayer
             tempPlayer = PrivatePlayer(newPlayer);
             if (tempPlayer.MissNextTurn == true)
             {
-                if (_thisMiss == null)
-                {
-                    _thisMiss = MainContainer!.Resolve<IMissTurnClass<P>>("");
-                }
-                await _thisMiss.PlayerMissTurnAsync(tempPlayer); //this is a better way to do it.
-                tempPlayer.MissNextTurn = false; //i think a player will never miss more than one turn.
-                x = 0; //so you can be considered again.
+                _thisMiss ??= MainContainer!.Resolve<IMissTurnClass<P>>("");
+                await _thisMiss.PlayerMissTurnAsync(tempPlayer);
+                tempPlayer.MissNextTurn = false;
+                x = 0;
             }
             else
             {
@@ -484,7 +479,7 @@ public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayer
     {
         if (howMany <= 0)
         {
-            return; //just ignore in this case.
+            return;
         }
         howMany.Times(x =>
         {
@@ -495,10 +490,10 @@ public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayer
                 PlayerCategory = EnumPlayerCategory.Computer
             };
             _privateDict.Add(thisPlayer.NickName, thisPlayer);
-            _nickList.Add(thisPlayer.NickName); //i think this may have been missing too.
+            _nickList.Add(thisPlayer.NickName);
         });
     }
-    public void AutoSaved(IPlayOrder thisOrder) //if anything else is needed, will be here.
+    public void AutoSaved(IPlayOrder thisOrder)
     {
         _order = thisOrder;
     }

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
-
 public abstract class SimpleBoardGameClass<P, S, E, M> : BasicGameClass<P, S>, IMoveProcesses<M>,
     IBeginningColors<E, P, S>
     , IMoveNM, IAfterColorProcesses
@@ -53,13 +52,13 @@ public abstract class SimpleBoardGameClass<P, S, E, M> : BasicGameClass<P, S>, I
     {
         _currentMod.Instructions = "None";
         await base.ShowWinAsync();
-        EraseColors(); //try here instead.
+        EraseColors();
     }
     public override async Task ShowTieAsync()
     {
         _currentMod.Instructions = "None";
         await base.ShowTieAsync();
-        EraseColors(); //try here as well
+        EraseColors();
     }
     public override bool CanMakeMainOptionsVisibleAtBeginning => PlayerList.DidChooseColors();
     protected bool CanPrepTurnOnSaved { get; set; } = true;
@@ -82,7 +81,7 @@ public abstract class SimpleBoardGameClass<P, S, E, M> : BasicGameClass<P, S>, I
     {
         if (PlayerList.DidChooseColors())
         {
-            return; //because you already chose colors.
+            return;
         }
         if (SingleInfo == null)
         {
@@ -96,7 +95,7 @@ public abstract class SimpleBoardGameClass<P, S, E, M> : BasicGameClass<P, S>, I
     }
     public void EraseColors()
     {
-        PlayerList.EraseColors(); //should be this simple.  just for convenience.  maybe something else will do it (not sure).
+        PlayerList.EraseColors();
     }
     async Task IMoveNM.MoveReceivedAsync(string data)
     {

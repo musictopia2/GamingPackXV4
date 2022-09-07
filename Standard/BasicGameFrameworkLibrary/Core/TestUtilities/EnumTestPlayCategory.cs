@@ -1,6 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.TestUtilities;
-
-public enum EnumTestPlayCategory //okay to be regular and not fast.
+public enum EnumTestPlayCategory
 {
     Normal, NoShuffle, Reverse
 }

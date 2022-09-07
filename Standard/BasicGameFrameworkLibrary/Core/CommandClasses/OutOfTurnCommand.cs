@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
 public class OutOfTurnCommand : ParentCommand, IGameCommand
 {
     private new readonly IEnableAlways _model;

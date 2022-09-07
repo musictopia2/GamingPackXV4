@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc;
-
 public class BasicMessageProcessing : IMessageProcessor
 {
     private readonly IGamePackageResolver _thisContainer;
@@ -10,7 +9,7 @@ public class BasicMessageProcessing : IMessageProcessor
         TestOptions thisTest,
         ISystemError error,
         IToast toast
-        ) //we need the isimpleui for the errors if any.
+        )
     {
         _thisContainer = thisContainer;
         _thisTest = thisTest;
@@ -24,7 +23,6 @@ public class BasicMessageProcessing : IMessageProcessor
     }
     public async Task ProcessMessageAsync(SentMessage thisMessage)
     {
-        //if there are any exceptions, rethink.
         if (thisMessage.Status != "newgame" && thisMessage.Status != "restoregame" && InProgressHelpers.Reconnecting)
         {
             IGameNetwork network = _thisContainer.Resolve<IGameNetwork>();
@@ -37,7 +35,6 @@ public class BasicMessageProcessing : IMessageProcessor
             {
                 _toast.ShowInfoToast("Move is in progress.  Waiting to finish move to receive message");
             }
-            //if reconnecting, then has to do this loop part to finish up.
             do
             {
                 if (InProgressHelpers.MoveInProgress == false)

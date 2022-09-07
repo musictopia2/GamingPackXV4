@@ -1,6 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
-
-public interface IRegularAceCalculator //i think the individaul should do this, not the deck part.
+public interface IRegularAceCalculator
 {
-    void PopulateAceValues(IRegularCard thisCard); //this is all this does.
+    void PopulateAceValues(IRegularCard thisCard);
 }

@@ -1,4 +1,2 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MiscProcesses;
-public interface ISerializable
-{
-}
+public interface ISerializable { }

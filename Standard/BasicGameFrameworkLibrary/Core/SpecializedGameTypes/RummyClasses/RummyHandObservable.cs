@@ -6,15 +6,15 @@ public class RummyHandObservable<S, C, R> : HandObservable<R>
 {
     public event SetClickedEventHandler? SetClickedAsync;
     public delegate Task SetClickedEventHandler(RummyHandObservable<S, C, R> ThisSet);
-    public bool DidClickObject { get; set; } = false; //sometimes this is needed for mobile.
+    public bool DidClickObject { get; set; } = false;
     public void RemoveObject(int deck)
     {
         HandList.RemoveObjectByDeck(deck);
     }
     protected override Task ProcessObjectClickedAsync(R thisObject, int index)
     {
-        DidClickObject = true; //this is needed too.  so if other gets raised, will be ignored because already handled.
-        thisObject.IsSelected = !thisObject.IsSelected; //try here.  hopefully works well.
+        DidClickObject = true;
+        thisObject.IsSelected = !thisObject.IsSelected;
         return Task.CompletedTask;
     }
     protected override async Task PrivateBoardSingleClickedAsync()
@@ -55,7 +55,7 @@ public class RummyHandObservable<S, C, R> : HandObservable<R>
     }
     public RummyHandObservable(CommandContainer container, IGamePackageResolver resolver) : base(container)
     {
-        _resolver = resolver; //has to be set first.
+        _resolver = resolver;
         PrepSort();
     }
 }

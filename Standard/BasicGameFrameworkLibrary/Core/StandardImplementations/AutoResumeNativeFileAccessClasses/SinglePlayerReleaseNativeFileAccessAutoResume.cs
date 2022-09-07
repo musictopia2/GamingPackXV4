@@ -2,7 +2,6 @@
 using static CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
 using fs = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
 using ss = System.IO.Path;
-
 namespace BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses;
 public class SinglePlayerReleaseNativeFileAccessAutoResume : ISaveSinglePlayerClass
 {
@@ -12,7 +11,7 @@ public class SinglePlayerReleaseNativeFileAccessAutoResume : ISaveSinglePlayerCl
     {
         _thisGame = thisGame;
         string tempPath = NativeFileAccessSetUp.GetParentDirectory();
-        _gamePath = ss.Combine(tempPath, $"{_thisGame.GameName}Release.json"); //this means we have the chance to switch between them.
+        _gamePath = ss.Combine(tempPath, $"{_thisGame.GameName}Release.json");
     }
     Task<bool> ISaveSinglePlayerClass.CanOpenSavedSinglePlayerGameAsync()
     {
@@ -28,7 +27,7 @@ public class SinglePlayerReleaseNativeFileAccessAutoResume : ISaveSinglePlayerCl
         {
             return;
         }
-        await DeleteFileAsync(_gamePath); //no limited list for this version at all.
+        await DeleteFileAsync(_gamePath);
     }
     async Task<T> ISaveSinglePlayerClass.RetrieveSinglePlayerGameAsync<T>()
     {

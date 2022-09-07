@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-
 public partial class PlayerBoardObservable<TR> : SimpleControlObservable
     where TR : RegularTrickCard, new()
 {
@@ -29,10 +28,10 @@ public partial class PlayerBoardObservable<TR> : SimpleControlObservable
         }
     }
     public bool IsSelf { get; set; }
-    public int HowManyRows { get; private set; } //this works too.
-    private const int _columns = 4; // this is always 4
+    public int HowManyRows { get; private set; }
+    private const int _columns = 4;
     public DeckRegularDict<TR> CardList = new();
-    public event SelectedCardEventHandler? SelectedCard; // all this needs is selectedcard.  that way if you have a hand, then the hand can unselect all cards.
+    public event SelectedCardEventHandler? SelectedCard;
     public delegate void SelectedCardEventHandler();
     public ControlCommand? CardCommand { get; set; }
     [Command(EnumCommandCategory.Control)]
@@ -82,12 +81,12 @@ public partial class PlayerBoardObservable<TR> : SimpleControlObservable
         CardList.ReplaceRange(thisList);
         RepositionCards();
     }
-    private void RepositionCards() //i think you do have to redo though when doing autoresume.
+    private void RepositionCards()
     {
         foreach (var thisCard in CardList)
         {
             var (row, _) = GetRowColumnData(thisCard);
-            thisCard.IsEnabled = false; // must be proven true.
+            thisCard.IsEnabled = false;
             if (Game == EnumPlayerBoardGameList.HorseShoe)
             {
                 if (IsSelf == true & row == 2)
@@ -256,7 +255,7 @@ public partial class PlayerBoardObservable<TR> : SimpleControlObservable
 
         if (isEnd == true && row == HowManyRows)
         {
-            return -1;// no more
+            return -1;
         }
 
         if (isEnd == false && row == 1)

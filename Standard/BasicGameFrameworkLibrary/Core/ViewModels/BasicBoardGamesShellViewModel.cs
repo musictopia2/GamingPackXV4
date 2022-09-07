@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-
 public abstract class BasicBoardGamesShellViewModel<P> : BasicMultiplayerShellViewModel<P>, IBasicBoardGamesShellViewModel where P : class, IPlayerColors, new()
 {
     public BasicBoardGamesShellViewModel(
@@ -21,7 +20,7 @@ public abstract class BasicBoardGamesShellViewModel<P> : BasicMultiplayerShellVi
             toast
             )
     {
-        MiscDelegates.ColorsFinishedAsync = CloseColorsAsync; //hopefully this simple this time.
+        MiscDelegates.ColorsFinishedAsync = CloseColorsAsync;
     }
     public IBeginningColorViewModel? ColorScreen { get; set; }
     protected override async Task GetStartingScreenAsync()
@@ -47,6 +46,6 @@ public abstract class BasicBoardGamesShellViewModel<P> : BasicMultiplayerShellVi
             await StartNewGameAsync();
         }
         IAfterColorProcesses processes = MainContainer.Resolve<IAfterColorProcesses>();
-        await processes.AfterChoosingColorsAsync(); //hopefully this simple.
+        await processes.AfterChoosingColorsAsync();
     }
 }

@@ -247,13 +247,17 @@ public class RummyProcesses<S, C, R>
         }
         intAvailableObject = colObj.Count;
         if (UseSecond == false)
+        {
             firstList = (from xx in colObj
                          orderby xx.ReadMainValue
                          select xx).ToBasicList();
+        }
         else
+        {
             firstList = (from xx in colObj
                          orderby xx.GetSecondNumber
                          select xx).ToBasicList();
+        }
         if (UseSecond == false)
         {
             intObjectNumber = firstList.Last().ReadMainValue;
@@ -269,6 +273,7 @@ public class RummyProcesses<S, C, R>
                 if (minonly)
                 {
                     if (intHowMany > intAvailableObject)
+                    {
                         if (intHowMany - intAvailableObject > HighNumber - intObjectNumber)
                         {
                             intHigh = HighNumber;
@@ -281,6 +286,7 @@ public class RummyProcesses<S, C, R>
                             intAvailableWild -= intHowMany - intAvailableObject;
                             intAvailableObject = intHowMany;
                         }
+                    }
                     else if (HighNumber - intObjectNumber > intAvailableWild)
                     {
                         intHigh = intObjectNumber + intAvailableWild;
@@ -355,7 +361,7 @@ public class RummyProcesses<S, C, R>
         int lngTotalWild;
         int lngObjectInStraight;
         int lngEnd;
-        bool output = true; //this time it was set to true.
+        bool output = true;
         int intObjectNumber;
         if (firstList.Count + wildList.Count < lngHowMany)
         {
@@ -368,7 +374,7 @@ public class RummyProcesses<S, C, R>
         if (HasWild)
         {
             lngTotalWild = wildList.Count;
-            lngAvailableWild = lngTotalWild; // 'initally available wild will be same as total wild
+            lngAvailableWild = lngTotalWild;
             lngUnUsedWild = lngTotalWild;
         }
         else
@@ -420,6 +426,7 @@ public class RummyProcesses<S, C, R>
             else if (HasWild == true)
             {
                 if ((long)(Math.Abs(aObject[lngIndex].ObjectNumber - aObject[lngIndex + 1].ObjectNumber) - 1) <= lngAvailableWild & lngAvailableWild > 0)
+                {
                     if (minonly == true)
                     {
                         if (lngObjectInStraight < lngHowMany)
@@ -440,6 +447,7 @@ public class RummyProcesses<S, C, R>
                         lngAvailableWild -= Math.Abs(aObject[lngIndex].ObjectNumber - aObject[lngIndex + 1].ObjectNumber) - 1;
                         lngEnd = lngIndex + 1;
                     }
+                }
                 else if (lngObjectInStraight >= lngHowMany)
                 {
                     lngEnd = lngIndex;
@@ -468,7 +476,7 @@ public class RummyProcesses<S, C, R>
             else
             {
                 startAt = lngIndex + 1;
-                lngAvailableWild = lngTotalWild; // 'Make all wild available
+                lngAvailableWild = lngTotalWild;
                 lngObjectInStraight = 1;
                 lngEnd = startAt;
             }
@@ -515,14 +523,18 @@ public class RummyProcesses<S, C, R>
         }
         IEnumerable<R> firstLinq;
         if (UseSecond == false)
+        {
             firstLinq = from xx in _tempList
                         where xx.IsObjectIgnored == false && xx.IsObjectWild == false
                         orderby xx.ReadMainValue
                         select xx;
+        }
         else
+        {
             firstLinq = from xx in _tempList
                         where xx.IsObjectIgnored == false && xx.IsObjectWild == false
                         select xx;
+        }
         BasicList<R> firstList = new();
         firstList.AddRange(firstLinq);
         var exps = firstLinq.GroupBy(xx => xx.ReadMainValue).ToBasicList();
@@ -583,7 +595,7 @@ public class RummyProcesses<S, C, R>
         int lngIndex;
         if (bStraightFound == true)
         {
-            lngObjectInStraight = aObjectIndex!.GetUpperBound(0) - 1; // i think
+            lngObjectInStraight = aObjectIndex!.GetUpperBound(0) - 1;
             var loopTo = (long)Start + lngObjectInStraight;
             for (lngIndex = Start; lngIndex <= loopTo; lngIndex++)
             {

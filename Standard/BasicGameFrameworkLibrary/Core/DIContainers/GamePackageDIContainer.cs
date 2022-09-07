@@ -26,7 +26,7 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
     }
     public bool RegistrationExist<T>()
     {
-        return RegistrationExist<T>(""); //has to be no tag period this time.
+        return RegistrationExist<T>("");
     }
     private void SetResults(ContainerData thisResults, string tag)
     {
@@ -39,7 +39,6 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
     }
     public void RegisterInstanceType(Type type)
     {
-        //this needs to capture the instance type.
         ContainerData thisResults = new()
         {
             IsSingle = false,
@@ -48,7 +47,7 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
         };
         SetResults(thisResults, "");
     }
-    public void RegisterType<TIn>(bool isSingleton = true) //i think if you want to register a type, you are not allowed to use a factory.
+    public void RegisterType<TIn>(bool isSingleton = true)
     {
         ContainerData thisResults = new()
         {
@@ -73,7 +72,7 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
         ContainerData results = new()
         {
             IsSingle = true,
-            TypeOut = typeof(TOut), //i think
+            TypeOut = typeof(TOut),
             TypeIn = typeof(TIn)
         };
         SetResults(results, "");
@@ -168,7 +167,6 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
                 throw new CustomBasicException($"Nothing registered with requesting type of {thisType.Name} to replace registration");
             }
             if (tempList.Count > 1)
-
             {
                 tempList = tempList = _thisSet.Where(Items => Items.TypeIn == thisType).ToList();
                 if (tempList.Count == 0)
@@ -341,7 +339,7 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
         var possResults = _thisSet.Where(x => x.CanAssignFrom(type)).ToBasicList();
         if (possResults.Count == 0)
         {
-            return null; //go ahead and return null.  more efficient to just return null and let whoever requests it do something with it.
+            return null;
         }
         if (possResults.Count > 1)
         {
@@ -394,7 +392,7 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
         var item = _thisSet.SingleOrDefault(x => x.TypeOut == type && x.Tag == tag);
         if (item is null)
         {
-            return; //ignore because was not used.  this means it could be used but does not mean it will be used.
+            return;
         }
         item.AssignedFrom = assignedFrom;
         item.GetNewObject = action;
@@ -405,7 +403,7 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
         var item = _thisSet.SingleOrDefault(x => x.TypeIn == type && x.Tag == tag); //try this way (?)
         if (item is null)
         {
-            return; //ignore because was not used.  this means it could be used but does not mean it will be used.
+            return;
         }
         item.AssignedFrom = assignedFrom;
     }

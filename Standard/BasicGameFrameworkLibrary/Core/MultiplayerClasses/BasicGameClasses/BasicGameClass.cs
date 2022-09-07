@@ -62,7 +62,7 @@ public abstract class BasicGameClass<P, S> :
     }
     protected bool IsLoaded; //so when loaded, then can act differently.
     public PlayerCollection<P> PlayerList { get; set; }
-    protected IMultiplayerSaveState State; //not sure yet.
+    protected IMultiplayerSaveState State;
     //games like three letter fun needed to know the information about it.
     public BasicData BasicData { private set; get; } //this way others can access this data.
     public IGameNetwork? Network { get; set; } //has to be completely open now.
@@ -84,14 +84,12 @@ public abstract class BasicGameClass<P, S> :
     }
     public virtual Task PopulateSaveRootAsync()
     {
-        return Task.CompletedTask; //most of the time, nothing but can be something
+        return Task.CompletedTask;
     }
     public virtual bool CanMakeMainOptionsVisibleAtBeginning => true; //so others can decide not to after all.
-
     public Func<bool, Task>? FinishUpAsync { get; set; }
     public ISystemError Error { get; }
     public IToast Toast { get; }
-
     /// <summary>
     /// this is after getting saved data.
     /// </summary>
@@ -126,18 +124,18 @@ public abstract class BasicGameClass<P, S> :
     protected virtual Task LoadPossibleOtherScreensAsync() { return Task.CompletedTask; } //most of the time nothing but we reserve the option to do something if necessary including async.
     protected virtual async Task ShowHumanCanPlayAsync() //reserve the right to be async.
     {
-        InProgressHelpers.MoveInProgress = false; //if it reached this point, then moveinprogress should be false.
+        InProgressHelpers.MoveInProgress = false;
         _command.IsExecuting = false;
-        _command.ManuelFinish = false; //does not have to manually be done anymore.
-        _command.Processing = false; //just in case it was done another way.  hopefully i won't regret this.
-        _command.ManualReport(); //try here.  has to risk performance problems.
+        _command.ManuelFinish = false;
+        _command.Processing = false;
+        _command.ManualReport();
         await Task.CompletedTask;
     }
     public async Task SaveStateAsync()
     {
         if (BasicData!.MultiPlayer == true && BasicData.Client == true)
         {
-            return; //because clients can't save.  they don't even need the thisstate object
+            return;
         }
         await PopulateSaveRootAsync();
         await State!.SaveStateAsync(SaveRoot!);
@@ -164,17 +162,16 @@ public abstract class BasicGameClass<P, S> :
     }
     public async virtual Task ContinueTurnAsync() //we do open the possibility of overriding if necessary.
     {
-        //for now, move is in progress.
-        InProgressHelpers.MoveInProgress = true; //i think.
+        InProgressHelpers.MoveInProgress = true;
         await SaveStateAsync();
-        GetPlayerToContinueTurn(); //usually will set to current turn but can be different.
+        GetPlayerToContinueTurn();
         await LoadPossibleOtherScreensAsync();
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             await ShowHumanCanPlayAsync();
             return;
         }
-        _command.ManuelFinish = true; //has to manually be done now.
+        _command.ManuelFinish = true;
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Computer)
         {
             if (BasicData!.MultiPlayer == false || BasicData.Client == false)
@@ -183,15 +180,15 @@ public abstract class BasicGameClass<P, S> :
                 {
                     throw new CustomBasicException("If the computer player is going to skip their turns and its multiplayer, then why did you add extra computer players?");
                 }
-                if (_computerEndsTurn) //needs to try to figure out another situation where the computer can't go even without testing.
+                if (_computerEndsTurn)
                 {
-                    _command.Processing = false; //because its testing anyways
+                    _command.Processing = false;
                     if (Test.NoComputerPause == false)
                     {
                         await Delay!.DelayMilli(500); //i think you should see it showed computer player though.
                     }
                     await EndTurnAsync();
-                    return; //forgot the return.
+                    return;
                 }
                 _command.UpdateAll();
                 await ComputerTurnAsync();
@@ -204,19 +201,19 @@ public abstract class BasicGameClass<P, S> :
         }
         if (InProgressHelpers.Reconnecting == false)
         {
-            Network!.IsEnabled = true; //to wait for messages again.
+            Network!.IsEnabled = true;
         }
         else
         {
-            Network!.IsEnabled = false; //i think.
+            Network!.IsEnabled = false;
         }
-        _command.IsExecuting = true; //hopefully this is the way to go in order to double check.
-        InProgressHelpers.MoveInProgress = false; //try this way now.
-        _command.UpdateAll(); //to show ui stuff.
+        _command.IsExecuting = true;
+        InProgressHelpers.MoveInProgress = false;
+        _command.UpdateAll();
     }
     public virtual async Task EndTurnReceivedAsync(string data)
     {
-        await EndTurnAsync(); //most of the time, simple but you can override if necessary.
+        await EndTurnAsync();
     }
     protected virtual void PrepStartTurn() //board games has to do something else in addition.  so upon autoresume, it can still if color is not chosen to show colors to choose.
     {

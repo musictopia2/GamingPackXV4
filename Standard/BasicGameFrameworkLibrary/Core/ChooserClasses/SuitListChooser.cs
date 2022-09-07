@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
-
 public class SuitListChooser : IEnumListClass<EnumSuitList>
 {
     BasicList<EnumSuitList> IEnumListClass<EnumSuitList>.GetEnumList()

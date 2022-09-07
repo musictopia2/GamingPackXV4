@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
-
 public class ScoreColumnModel
 {
     public string MainPath { get; set; } = "";

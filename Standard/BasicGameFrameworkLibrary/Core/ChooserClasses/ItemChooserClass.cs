@@ -1,10 +1,9 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
-
 public class ItemChooserClass<O>
      where O : ISimpleValueObject<int>
 {
     private readonly IRandomGenerator _rs;
-    public BasicList<O>? ValueList; //most likely something else will call into it.
+    public BasicList<O>? ValueList;
     public int ItemToChoose(bool requiredToChoose = true, bool useHalf = true)
     {
         if (requiredToChoose == false)

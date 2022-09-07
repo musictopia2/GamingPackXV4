@@ -89,9 +89,9 @@ public abstract class SetInfo<S, C, R, T> : HandObservable<R>
         thisSection = SectionClicked;
         if (CanExpandRuns == true)
         {
-            thisSection = 1;// this means since it does not matter, will return 1.
+            thisSection = 1;
         }
-        SectionClicked = 0; // reset back to 0
+        SectionClicked = 0;
         await SetClickedAsync.Invoke(this, thisSection);
     }
     public SetInfo(CommandContainer command) : base(command) { }

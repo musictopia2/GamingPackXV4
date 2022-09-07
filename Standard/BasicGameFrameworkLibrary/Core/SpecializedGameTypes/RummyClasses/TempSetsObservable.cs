@@ -7,11 +7,11 @@ public class TempSetsObservable<S, C, R>
     public event SetClickedEventHandler? SetClickedAsync;
     public delegate Task SetClickedEventHandler(int index);
     public int Spacing { get; set; }
-    public int HowManySets { get; set; } = 5; // defaults at 5
-    public BasicList<RummyHandObservable<S, C, R>> SetList = new(); //has to be public because of data binding
+    public int HowManySets { get; set; } = 5;
+    public BasicList<RummyHandObservable<S, C, R>> SetList = new();
     public DeckRegularDict<R> ObjectList(int index)
     {
-        return SetList[index - 1].HandList; //i send in one based.
+        return SetList[index - 1].HandList;
     }
     public TempSetsObservable(CommandContainer command, IGamePackageResolver resolver)
     {
@@ -56,7 +56,7 @@ public class TempSetsObservable<S, C, R>
             thisSet.DidClickObject = false;
             return;
         }
-        await SetClickedAsync.Invoke(SetList.IndexOf(thisSet) + 1); //wanted to make it one based.
+        await SetClickedAsync.Invoke(SetList.IndexOf(thisSet) + 1);
     }
     public void ResetCards()
     {
@@ -86,7 +86,7 @@ public class TempSetsObservable<S, C, R>
     }
     public void ClearBoard(int index)
     {
-        SetList[index - 1].ClearHand(); //sending in one based.
+        SetList[index - 1].ClearHand();
         PublicCount();
     }
     public void PublicCount()
@@ -115,7 +115,7 @@ public class TempSetsObservable<S, C, R>
             {
                 throw new CustomBasicException("There was no pile with only one selected card.  Find out what happened");
             }
-            return SetList.IndexOf(thisVM) + 1; //returning 1 based.
+            return SetList.IndexOf(thisVM) + 1;
         }
     }
     public int DeckForSelectedObjected(int pile)
@@ -136,12 +136,15 @@ public class TempSetsObservable<S, C, R>
     public void RemoveObject(int deck)
     {
         foreach (var thisSet in SetList)
+        {
             if (thisSet.HandList.ObjectExist(deck))
             {
                 thisSet.HandList.RemoveObjectByDeck(deck);
                 PublicCount();
                 return;
             }
+        }
+
         throw new CustomBasicException($"There is no card with the deck {deck} to remove for tempsets");
     }
     public DeckRegularDict<R> ListSelectedObjects(bool alsoRemove = false)

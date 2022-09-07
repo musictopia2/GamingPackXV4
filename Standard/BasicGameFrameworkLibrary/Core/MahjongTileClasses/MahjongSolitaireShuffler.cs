@@ -12,7 +12,6 @@ public class MahjongShuffler : IDeckShuffler<MahjongSolitaireTileInfo>,
     public int Count => _objectList.Count;
     public bool NeedsToRedo { get => _thisShuffle.NeedsToRedo; set => _thisShuffle.NeedsToRedo = value; }
     public IGamePackageGeneratorDI? GeneratorContainer { get => _thisShuffle.GeneratorContainer; set => _thisShuffle.GeneratorContainer = value; }
-
     public void AddRelinkedTiles(IEnumerable<MahjongSolitaireTileInfo> previousList)
     {
         _objectList.AddRange(previousList);

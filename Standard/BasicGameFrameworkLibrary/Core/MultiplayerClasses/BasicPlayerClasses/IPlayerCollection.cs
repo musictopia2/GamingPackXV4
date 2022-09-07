@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses;
-
 public interface IPlayerCollection<P> : IEnumerable<P> where P : IPlayerItem, new()
 {
     P this[int iD] { get; }

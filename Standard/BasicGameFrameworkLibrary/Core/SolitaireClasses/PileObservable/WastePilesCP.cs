@@ -49,13 +49,13 @@ public abstract class WastePilesCP : IWaste, ISerializable
     public CustomMultiplePile? Discards;
     protected DeckRegularDict<SolitaireCard> CardList = new();
     protected bool HasDiscard;
-    public int CardsNeededToBegin { get; set; } //the bad news is if part of interface, forced to be public when in c#.
+    public int CardsNeededToBegin { get; set; }
     protected DeckRegularDict<SolitaireCard> TempList = new();
     private readonly CommandContainer _command;
 
     public event WastePileSelectedEventHandler? PileSelectedAsync;
     public event WasteDoubleClickEventHandler? DoubleClickAsync;
-    public int HowManyPiles { get; set; } //has to be public unfortunately.
+    public int HowManyPiles { get; set; }
     protected virtual void BeforeLoadingBoard() { }
     protected virtual void AfterFirstLoad() { }
     public void FirstLoad(bool isKlondike, IDeckDict<SolitaireCard> cardList)
@@ -210,7 +210,7 @@ public abstract class WastePilesCP : IWaste, ISerializable
         {
             if (Piles.HasCardInColumn(whichOne) == false)
             {
-                PreviousSelected = -1; // needs to be set to 0
+                PreviousSelected = -1;
                 return;
             }
             Piles.SelectUnselectPile(whichOne);
@@ -219,7 +219,7 @@ public abstract class WastePilesCP : IWaste, ISerializable
         {
             if (Discards!.HasCard(whichOne) == false)
             {
-                PreviousSelected = -1; // there is no card.  therefore previousselected is 0
+                PreviousSelected = -1;
                 return;
             }
             Discards.SelectUnselectSinglePile(whichOne);

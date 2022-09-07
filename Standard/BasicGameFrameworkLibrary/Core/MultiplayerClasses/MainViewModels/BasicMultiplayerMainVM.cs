@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
-
 public abstract partial class BasicMultiplayerMainVM : ConductorViewModel, ISimpleGame
 {
     public RestoreViewModel? RestoreScreen { get; set; }
@@ -17,7 +16,7 @@ public abstract partial class BasicMultiplayerMainVM : ConductorViewModel, ISimp
         ) : base(aggregator)
     {
         CommandContainer = commandContainer;
-        CommandContainer.IsExecuting = true; //has to be proven false.
+        CommandContainer.IsExecuting = true;
         CommandContainer.ManuelFinish = true;
         _mainGame = mainGame;
         _basicData = basicData;
@@ -44,7 +43,7 @@ public abstract partial class BasicMultiplayerMainVM : ConductorViewModel, ISimp
                 await LoadScreenAsync(RestoreScreen);
             }
         }
-        await base.ActivateAsync(); //now we have to do the base as well.
+        await base.ActivateAsync();
     }
     public virtual bool CanEnableAlways()
     {
@@ -62,10 +61,10 @@ public abstract partial class BasicMultiplayerMainVM : ConductorViewModel, ISimp
     public CommandContainer CommandContainer { get; set; }
     public virtual bool CanEndTurn()
     {
-        return true; //on default can end turn.  but there are exceptions.
+        return true;
     }
     [Command(EnumCommandCategory.Game)]
-    public virtual async Task EndTurnAsync() //forgot needs to be virtual.  since that replaces the endturnprocess now.
+    public virtual async Task EndTurnAsync()
     {
         if (_basicData.MultiPlayer)
         {

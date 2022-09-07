@@ -1,11 +1,9 @@
 ﻿using static CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
 using static CommonBasicLibraries.BasicDataSettingsAndProcesses.ApplicationPath;
 using ss = System.IO.Path;
-//not common enough to put in global for these 3 areas.
 namespace BasicGameFrameworkLibrary.Core.StandardImplementations.GlobalClasses;
 internal static class NativeFileAccessSetUp
 {
-    //hopefully this is the only change needed (?)
     public static string GetParentDirectory()
     {
         string tempPath;
@@ -22,10 +20,10 @@ internal static class NativeFileAccessSetUp
         {
             throw new CustomBasicException("Only android and windows desktop are supported for native file access implementations");
         }
-        tempPath = ss.Combine(tempPath, "json"); //only desktop does it.  since xamarin form does something else.
+        tempPath = ss.Combine(tempPath, "json");
         if (DirectoryExists(tempPath) == false)
         {
-            CreateFolder(tempPath); //hopefully this works.
+            CreateFolder(tempPath);
         }
         return tempPath;
     }

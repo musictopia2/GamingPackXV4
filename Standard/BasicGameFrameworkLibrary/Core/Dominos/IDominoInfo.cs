@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dominos;
-
 /// <summary>
 /// this is everything that is needed to be a basic domino.
 /// the dicontainer is needed so it can populate the domino.
@@ -11,5 +10,5 @@ public interface IDominoInfo : IDeckObject, ILocationDeck
     int CurrentFirst { get; set; }
     int CurrentSecond { get; set; } //these 2 are needed so it can know how to display it.
     int Points { get; }
-    int HighestDomino { get; } //i think that is best.
+    int HighestDomino { get; }
 }

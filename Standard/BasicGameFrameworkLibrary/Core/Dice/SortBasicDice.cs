@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
-
 public class SortBasicDice<D> : IComparer<D> where D : IStandardDice, new()
 {
     public bool IsDescending;

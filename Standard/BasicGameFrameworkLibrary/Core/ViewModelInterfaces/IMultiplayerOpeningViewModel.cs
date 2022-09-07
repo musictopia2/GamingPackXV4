@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModelInterfaces;
-
 public interface IMultiplayerOpeningViewModel : IScreen
 {
     int ClientsConnected { get; }

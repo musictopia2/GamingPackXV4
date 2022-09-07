@@ -1,14 +1,13 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.BasicClasses;
-
 public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, ISerializable where D : IDeckObject, new()
 {
     private readonly IDeckDict<D> _privateDict;
     private IDeckCount? _deckCount; //maybe needed. to stop overflow exceptions.
     private readonly IRandomGenerator _rs;
-    public IGamePackageResolver? MainContainer { get; set; } //decided to be this way so it can be populated automatically.
-    public IGamePackageGeneratorDI? GeneratorContainer { get; set; } //can be iffy for now.
+    public IGamePackageResolver? MainContainer { get; set; }
+    public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
     private readonly Action<D>? _beforePopulate;
-    public bool NeedsToRedo { get; set; } //realized it had to be public so tile rummy can call into it.
+    public bool NeedsToRedo { get; set; }
     public void RelinkObject(int oldDeck, D newObject)
     {
         _privateDict.RemoveObjectByDeck(oldDeck);

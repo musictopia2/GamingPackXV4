@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Extensions;
-
 public static class CommonMessageStrings
 {
     public const string EndTurn = "endturn";

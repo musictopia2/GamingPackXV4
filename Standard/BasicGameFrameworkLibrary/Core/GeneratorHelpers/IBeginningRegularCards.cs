@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GeneratorHelpers;
-
 public interface IBeginningRegularCards<R>
     where R : IRegularCard
 {

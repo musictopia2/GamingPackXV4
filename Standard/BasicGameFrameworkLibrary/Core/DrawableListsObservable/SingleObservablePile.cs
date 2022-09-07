@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-
 public partial class SingleObservablePile<D> : SimpleControlObservable where D : IDeckObject, new()
 {
     private readonly DeckRegularDict<D> _objectList;
@@ -16,14 +15,14 @@ public partial class SingleObservablePile<D> : SimpleControlObservable where D :
         }
         await PileClickedAsync.Invoke();
     }
-    public SingleObservablePile(CommandContainer command) : base(command) //realy don't want to have to resolve with this library.
+    public SingleObservablePile(CommandContainer command) : base(command)
     {
         _objectList = new DeckRegularDict<D>();
         CreateCommands();
     }
     partial void CreateCommands();
     public D CurrentCard { get; private set; } = new();
-    private int _previousNum; // used to doublecheck
+    private int _previousNum;
     private bool _isFirst;
     public string Text { get; set; } = "Discard";
     private void NotifyCommands()

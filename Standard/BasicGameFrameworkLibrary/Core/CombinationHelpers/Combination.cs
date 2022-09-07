@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CombinationHelpers;
-
 internal class Combination : IComparer<BasicList<object>>
 {
     public static BasicList<BasicList<int>> CheckScores(int howManyExist, int howManyNeeded)
@@ -16,13 +15,12 @@ internal class Combination : IComparer<BasicList<object>>
         {
             mySet[i] = i + 1;
         }
-        // Get the unique combinations of numbers.
         BasicList<BasicList<object>> mySubsets = GetSubsets(mySet, howManyNeeded);
         Sort(mySubsets);
         foreach (BasicList<object> i in mySubsets)
         {
             BasicList<int> arr_Sample = new();
-            foreach (int j in i)
+            foreach (int j in i.Select(v => (int)v))
             {
                 arr_Sample.Add(j);
             }
@@ -66,6 +64,7 @@ internal class Combination : IComparer<BasicList<object>>
         }
         finalList.Add(firstSubList);
         while (indexs[0] != n - k && finalList.Count < 2147483647)
+        {
             if (indexs[i] < i + (n - k))
             {
                 indexs[i] += 1;
@@ -97,6 +96,8 @@ internal class Combination : IComparer<BasicList<object>>
                 finalList.Add(subList);
                 i = k - 1;
             }
+        }
+
         return finalList;
     }
     /// <summary>
@@ -118,7 +119,7 @@ internal class Combination : IComparer<BasicList<object>>
             catch (Exception)
             {
                 combLists[0].Sort();
-            }// as alternative if problem.
+            }
         }
     }
     /// <summary>

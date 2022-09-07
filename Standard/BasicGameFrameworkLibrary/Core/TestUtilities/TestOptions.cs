@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.TestUtilities;
-
 public class TestOptions
 {
     public bool ImmediatelyEndGame { get; set; } //if set to true, then a game can be over nearly right away.  used to easily test new game.

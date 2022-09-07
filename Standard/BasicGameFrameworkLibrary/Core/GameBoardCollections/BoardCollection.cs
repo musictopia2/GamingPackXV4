@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GameBoardCollections;
-
 public class BoardCollection<C> : IEnumerable<C>, IAdvancedDIContainer, IBoardCollection<C> where C : class, IBasicSpace, new()
 {
     private readonly Dictionary<Vector, C> _privateDict = new();
@@ -163,7 +162,9 @@ public class BoardCollection<C> : IEnumerable<C>, IAdvancedDIContainer, IBoardCo
                         currentC = startC;
                     }
                     if (currentR > _howManyRows)
+                    {
                         return output;
+                    }
                     break;
                 case EnumTempInfo.DiagRightV:
 
@@ -183,6 +184,7 @@ public class BoardCollection<C> : IEnumerable<C>, IAdvancedDIContainer, IBoardCo
     public BasicList<C> GetWinCombo(BasicList<BasicList<C>> comboList)
     {
         foreach (var currentCombo in comboList)
+        {
             if (currentCombo.All(temps => temps.IsFilled()) == true)
             {
                 object searchObject = MainObjectSelector!.Invoke(currentCombo.First());
@@ -201,7 +203,8 @@ public class BoardCollection<C> : IEnumerable<C>, IAdvancedDIContainer, IBoardCo
                 {
                     return currentCombo;
                 }
-            };
+            }
+        };
         return new();
     }
     public BasicList<C> GetEmptySpaces()
@@ -224,6 +227,7 @@ public class BoardCollection<C> : IEnumerable<C>, IAdvancedDIContainer, IBoardCo
                 C? fillItem = null;
                 allTrue = true;
                 foreach (var item in currentCombo)
+                {
                     if (item.IsFilled() == false)
                     {
                         fillItem = item;
@@ -241,6 +245,7 @@ public class BoardCollection<C> : IEnumerable<C>, IAdvancedDIContainer, IBoardCo
                             break;
                         }
                     }
+                }
                 if (fillItem == null)
                 {
                     throw new CustomBasicException("There was no fill item.  Rethink");
@@ -266,6 +271,7 @@ public class BoardCollection<C> : IEnumerable<C>, IAdvancedDIContainer, IBoardCo
     public bool DidWin(BasicList<BasicList<C>> comboList)
     {
         foreach (var currentCombo in comboList)
+        {
             if (currentCombo.All(Temps => Temps.IsFilled()) == true)
             {
                 object searchObject = MainObjectSelector!.Invoke(currentCombo.First());
@@ -284,7 +290,8 @@ public class BoardCollection<C> : IEnumerable<C>, IAdvancedDIContainer, IBoardCo
                 {
                     return true;
                 }
-            };
+            }
+        };
         return false;
     }
     public bool IsAllFilled()

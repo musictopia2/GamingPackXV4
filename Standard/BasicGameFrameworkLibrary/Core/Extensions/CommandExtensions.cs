@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Extensions;
-
 public static class CommandExtensions
 {
     public static bool CanExecuteBasics(this CommandContainer command)

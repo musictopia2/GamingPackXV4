@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
-
 public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<SU, T>, IMultiplayerTrick<SU, T, P>
     , ITrickPlay, IAdvancedTrickProcesses
     where SU : IFastEnumSimple
@@ -24,7 +23,7 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
             thisPlayer = new();
             thisPlayer.IsSelf = true;
             thisPlayer.Row = 1;
-            thisPlayer.Column = 1; // 1 based
+            thisPlayer.Column = 1;
             thisPlayer.Player = _gameContainer.SelfPlayer;
             output.Add(thisPlayer);
             thisPlayer = new();
@@ -116,11 +115,11 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
             T newCard = new();
             newCard.Populate(x);
             newCard.IsUnknown = true;
-            newCard.Deck = x + 1000; //to try to make it work.
-            CardList.Add(newCard); //i think
+            newCard.Deck = x + 1000;
+            CardList.Add(newCard);
         }
     }
-    public virtual void ClearBoard() // so the lead color for rage will happen after this.
+    public virtual void ClearBoard()
     {
         DeckRegularDict<T> tempList = new();
         int x = 0;
@@ -129,14 +128,14 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
             T tempCard = new();
             x++;
             tempCard.Populate(x);
-            tempCard.Deck += 1000; //try this way.
+            tempCard.Deck += 1000;
             tempCard.IsUnknown = true;
             tempCard.Visible = true;
             tempList.Add(tempCard);
         }
         OrderList.Clear();
-        CardList.ReplaceRange(tempList); // hopefully its that simple.
-        Visible = true; // now it is visible.
+        CardList.ReplaceRange(tempList);
+        Visible = true;
     }
     private int GetCardIndex()
     {
@@ -150,7 +149,7 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
     {
         var tempList = OrderList.ToRegularDeckDict();
         ClearBoard();
-        ViewList = GetCoordinateList(); // needs this as well
+        ViewList = GetCoordinateList();
         if (tempList.Count == 0)
         {
             return;
@@ -172,9 +171,9 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
             lastCard = _gameContainer.GetBrandNewCard(thisCard.Deck);
             lastCard.Player = thisCard.Player;
             TradeCard(index, lastCard);
-            otherList.Add(lastCard); //i think
+            otherList.Add(lastCard);
         });
-        OrderList.ReplaceRange(otherList); //i think we have to do it this way this tiem.
+        OrderList.ReplaceRange(otherList);
         _gameContainer.WhoTurn = tempTurn;
     }
     protected T GetWinningCard(int wins)
@@ -200,7 +199,7 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
         _gameContainer.Command.UpdateAll();
         await AfterPlayCardAsync(thisCard);
     }
-    protected virtual async Task AfterPlayCardAsync(T thisCard) //overrided versions may need this.
+    protected virtual async Task AfterPlayCardAsync(T thisCard)
     {
         if (OrderList.Count == _gameContainer.PlayerList!.Count)
         {
@@ -215,7 +214,7 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
     {
         if (CardList.IndexOf(thisCard) == 0)
         {
-            await _gameContainer.CardClickedAsync!.Invoke(); //because only human can do it for 2 player trick games.
+            await _gameContainer.CardClickedAsync!.Invoke();
         }
     }
     public P GetSpecificPlayer(int id)

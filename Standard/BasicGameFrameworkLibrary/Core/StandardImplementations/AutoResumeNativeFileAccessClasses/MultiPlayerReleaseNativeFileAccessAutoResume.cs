@@ -2,7 +2,6 @@
 using static CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
 using fs = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
 using ss = System.IO.Path;
-
 namespace BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses;
 public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveState
 {
@@ -106,10 +105,6 @@ public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveStat
         {
             return "";
         }
-        //if (CanChange() == false)
-        //{
-        //    return "";
-        //}
         if (FileExists(_multiPath) == false)
         {
             return "";
@@ -126,7 +121,6 @@ public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveStat
         if (_data.MultiPlayer == false && FileExists(_localPath) == false)
         {
             return "";
-            //pathUsed = _localPath;
         }
         if (_data.MultiPlayer && FileExists(_multiPath) == false)
         {
@@ -140,9 +134,7 @@ public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveStat
         {
             pathUsed = _localPath;
         }
-        string output = await AllTextAsync(pathUsed); //try this way (?)
+        string output = await AllTextAsync(pathUsed);
         return output;
     }
-
-    
 }

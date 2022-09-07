@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
-
 public abstract partial class BasicTrickAreaObservable<S, T> : SimpleControlObservable
     where S : IFastEnumSimple
     where T : class, ITrickCard<S>, new()
@@ -27,13 +26,13 @@ public abstract partial class BasicTrickAreaObservable<S, T> : SimpleControlObse
         {
             throw new CustomBasicException("Can't animate win because no card sent");
         }
-        await _aggregator.PublishAsync(new AnimateTrickEventModel()); //hopefully this simple this time.
+        await _aggregator.PublishAsync(new AnimateTrickEventModel());
     }
     protected override void EnableChange()
     {
         CardSingleClickCommand!.ReportCanExecuteChange();
     }
-    public BasicTrickAreaObservable(CommandContainer container, IEventAggregator aggregator) : base(container) //this still needs the ieventaggregator for trick animations.
+    public BasicTrickAreaObservable(CommandContainer container, IEventAggregator aggregator) : base(container)
     {
         _aggregator = aggregator;
         CreateCommands();
@@ -50,7 +49,7 @@ public abstract partial class BasicTrickAreaObservable<S, T> : SimpleControlObse
         newCard.IsSelected = false;
         newCard.Drew = false;
         var oldCard = CardList[index];
-        CardList.ReplaceItem(oldCard, newCard); // hopefully that simple.
+        CardList.ReplaceItem(oldCard, newCard);
     }
     public bool Visible { get; set; }
     public void HideCards()

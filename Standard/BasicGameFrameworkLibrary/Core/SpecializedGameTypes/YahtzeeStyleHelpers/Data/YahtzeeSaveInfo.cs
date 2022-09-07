@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Data;
-
 public class YahtzeeSaveInfo<D> : BasicSavedDiceClass<D, YahtzeePlayerItem<D>>
 where D : SimpleDice, new()
 {
@@ -19,7 +18,7 @@ where D : SimpleDice, new()
             }
         }
     }
-    private YahtzeeVMData<D>? _model; //this is needed so it can hook up.
+    private YahtzeeVMData<D>? _model;
     internal void LoadMod(YahtzeeVMData<D> model)
     {
         _model = model;

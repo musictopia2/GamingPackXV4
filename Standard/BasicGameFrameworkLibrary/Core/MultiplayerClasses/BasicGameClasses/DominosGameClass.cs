@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
-
 public abstract class DominosGameClass<D, P, S> : BasicGameClass<P, S>
     , IDrewDominoNM, IPlayDominoNM, IDominoDrawProcesses<D>
     where D : IDominoInfo, new()
@@ -102,7 +101,9 @@ public abstract class DominosGameClass<D, P, S> : BasicGameClass<P, S>
     protected async Task SendPlayDominoAsync(int deck)
     {
         if (SingleInfo!.CanSendMessage(BasicData!) == false)
+        {
             return;
+        }
         await Network!.SendPlayDominoAsync(deck);
     }
     public abstract Task PlayDominoAsync(int deck); //every game like this requires playing domino.  if i am wrong, rethink

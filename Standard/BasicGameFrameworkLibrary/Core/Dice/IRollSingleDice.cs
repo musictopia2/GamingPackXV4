@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
-
 public interface IRollSingleDice<T> : IAdvancedDIContainer
 {
     Task ShowRollingAsync(BasicList<T> thisCol);

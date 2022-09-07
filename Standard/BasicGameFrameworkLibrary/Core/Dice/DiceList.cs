@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
-
 public class DiceList<D> : ISimpleList<D>
     where D : IStandardDice, new()
 {
@@ -37,16 +36,16 @@ public class DiceList<D> : ISimpleList<D>
     public DiceList() { }
     public DiceList(IEnumerable<D> tempList)
     {
-        _privateList.ReplaceRange(tempList); // so i keep the linking.
+        _privateList.ReplaceRange(tempList);
     }
     public void Clear(int howMany)
     {
-        SetContainer(); //i think here too.
-        _privateList.ReplaceWithNewObjects(howMany, () => new D()); //if i don't do it this way, then i have breaking changes.
+        SetContainer();
+        _privateList.ReplaceWithNewObjects(howMany, () => new D());
     }
     public IGamePackageResolver? MainContainer { get; set; }
     public int Count => _privateList.Count;
-    private readonly SortBasicDice<D> _thisSort = new(); //this for sure needs it.
+    private readonly SortBasicDice<D> _thisSort = new();
     private void SetContainer()
     {
         if (MainContainer != null)

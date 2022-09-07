@@ -43,12 +43,12 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
 
         CommandContainer = command;
         _resolver = resolver;
-        _ = resolver.ReplaceObject<IScoreData>(); //to start over. //try this at the beginning.
+        _ = resolver.ReplaceObject<IScoreData>();
         CommandContainer!.ExecutingChanged += CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SolitaireCard>>();
         DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
-        _basicData = _resolver.Resolve<BasicData>(); //i think.
+        _basicData = _resolver.Resolve<BasicData>();
         DeckPile.SendEnableProcesses(this, () =>
         {
             if (_mainGame!.GameGoing == false)
@@ -66,10 +66,10 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
             return true;
         });
         MainDiscardPile = new SingleObservablePile<SolitaireCard>(command);
-        MainDiscardPile.PileClickedAsync += MainDiscardPile_PileClickedAsync; //we don't have double for now.
+        MainDiscardPile.PileClickedAsync += MainDiscardPile_PileClickedAsync;
         MainPiles1 = resolver.ReplaceObject<IMain>();
         WastePiles1 = resolver.ReplaceObject<IWaste>();
-        MainPiles1.PileSelectedAsync += MainPiles1_PileSelectedAsync; //this does not support double for now.
+        MainPiles1.PileSelectedAsync += MainPiles1_PileSelectedAsync;
         WastePiles1.PileSelectedAsync += WastePiles1_PileSelectedAsync;
         WastePiles1.DoubleClickAsync += WastePiles1_DoubleClickAsync;
         CreateCommands(CommandContainer);
@@ -127,7 +127,6 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
     }
     private async Task MainDiscardPile_PileClickedAsync()
     {
-        //no need for double click since its not supported for now.
         await Task.CompletedTask;
         _mainGame!.SelectDiscard();
     }
@@ -141,8 +140,8 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
         {
             return;
         }
-        CommandExecutingChanged(); //this is needed so for games like eagle wings, can determine whether to enable the heel or not (?)
-        await _mainGame.SaveGameAsync();//i think
+        CommandExecutingChanged();
+        await _mainGame.SaveGameAsync();
     }
     protected virtual void CommandExecutingChanged() { }
     protected override Task TryCloseAsync()

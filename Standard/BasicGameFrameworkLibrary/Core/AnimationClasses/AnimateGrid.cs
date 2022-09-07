@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.AnimationClasses;
-
 public class AnimateGrid
 {
     public Action? StateChanged { get; set; }

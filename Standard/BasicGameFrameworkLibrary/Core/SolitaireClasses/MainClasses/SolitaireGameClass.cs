@@ -17,7 +17,6 @@ public abstract class SolitaireGameClass<S> : IAggregatorContainer where S : Sol
     public bool NoCardsToShuffle { get; set; }
     public IEventAggregator Aggregator { get; }
     public CommandContainer Command { get; }
-
     protected bool HadWaste;
     protected ISolitaireData SolitaireData1;
     internal bool GameGoing { get; set; }
@@ -251,13 +250,13 @@ public abstract class SolitaireGameClass<S> : IAggregatorContainer where S : Sol
     }
     protected async Task ShowWinAsync()
     {
-        Command.UpdateAll(); //so you can see the last move that caused you to win.
+        Command.UpdateAll();
         _toast.ShowSuccessToast("Congratulations, you won");
         await Task.Delay(2000);
         GameGoing = false;
         await this.SendGameOverAsync(_error);
     }
-    protected int ValidMainColumn(SolitaireCard thisCard) //grandfathers clock has to be different
+    protected int ValidMainColumn(SolitaireCard thisCard)
     {
         int piles = _thisMod!.MainPiles1!.HowManyPiles();
         for (int x = 1; x <= piles; x++)
@@ -338,7 +337,7 @@ public abstract class SolitaireGameClass<S> : IAggregatorContainer where S : Sol
             int y = ValidMainColumn(thisCard);
             if (z > 1)
             {
-                await Task.Delay(75); //hopefully i don't regret this.  was 150 but changed now to 75
+                await Task.Delay(75);
             }
             await FinishAddingToMainPileAsync(y, thisCard);
         } while (true);
@@ -370,13 +369,15 @@ public abstract class SolitaireGameClass<S> : IAggregatorContainer where S : Sol
     {
         var thisCol = _thisMod!.MainDiscardPile!.DiscardList();
         if (_thisMod.MainDiscardPile.PileEmpty() == false)
+        {
             thisCol.Add(_thisMod.MainDiscardPile.GetCardInfo());
+        }
         HadOneDeal = true;
         _thisMod.MainDiscardPile.ClearCards();
         _thisMod.DeckPile!.OriginalList(thisCol);
         DealsRemaining--;
     }
-    public virtual void DrawCard() //different for spider solitaire
+    public virtual void DrawCard()
     {
         if (_thisMod!.DeckPile!.IsEndOfDeck())
         {

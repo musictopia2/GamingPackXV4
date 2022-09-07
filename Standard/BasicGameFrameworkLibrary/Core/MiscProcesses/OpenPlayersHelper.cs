@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MiscProcesses;
-
 public static class OpenPlayersHelper
 {
     public static bool CanHuman(IGameInfo game)

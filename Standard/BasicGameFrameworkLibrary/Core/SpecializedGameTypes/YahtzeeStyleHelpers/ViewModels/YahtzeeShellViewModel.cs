@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
-
 public class YahtzeeShellViewModel<D> : BasicMultiplayerShellViewModel<YahtzeePlayerItem<D>>
     where D : SimpleDice, new()
 {

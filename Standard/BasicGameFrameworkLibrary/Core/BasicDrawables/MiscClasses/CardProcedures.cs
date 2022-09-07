@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses;
-
 public static class CardProcedures
 {
     public static void PassOutCards<P, D>(this IPlayerCollection<P> playerList, IBasicList<D> thisCol, bool noComputerPass) where P : IPlayerObject<D>, new()
@@ -56,10 +55,7 @@ public static class CardProcedures
         else
         {
             var loopTo = thisCol.Count;
-            if (leftOverList == null)
-            {
-                leftOverList = new DeckRegularDict<D>();
-            }
+            leftOverList ??= new DeckRegularDict<D>();
             for (x = newcount + 1; x <= loopTo; x++)
             {
                 leftOverList.Add(thisCol[x - 1]);// because 0 based
@@ -112,7 +108,7 @@ public static class CardProcedures
             {
                 newPlayer.MainHandList.ReplaceRange(thisList[z]); // i think
             }
-            z += 1; //this could be it.
+            z += 1;
         }
     }
 }

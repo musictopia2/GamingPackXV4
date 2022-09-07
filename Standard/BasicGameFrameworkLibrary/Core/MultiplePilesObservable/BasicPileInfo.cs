@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplePilesObservable;
-
 public class BasicPileInfo<D> where D : IDeckObject, new()
 {
     public BasicPileInfo() { }

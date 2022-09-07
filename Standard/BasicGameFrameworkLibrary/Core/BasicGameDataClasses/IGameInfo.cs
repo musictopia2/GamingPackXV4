@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicGameDataClasses;
-
 public interface IGameInfo
 {
     EnumGameType GameType { get; }

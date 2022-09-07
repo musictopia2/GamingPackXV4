@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
 public class PlainCommand : ParentCommand, IGameCommand
 {
     public PlainCommand(object model,

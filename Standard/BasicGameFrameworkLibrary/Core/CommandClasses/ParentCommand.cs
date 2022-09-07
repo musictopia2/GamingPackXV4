@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
 public abstract class ParentCommand
 {
     public event EventHandler CanExecuteChanged = delegate { };
@@ -87,7 +86,7 @@ public abstract class ParentCommand
         AddCommand();
         if (_canExecute1 is null && _canExecute2 is null)
         {
-            return; //because there was no canexecute.
+            return;
         }
         if (_model is INotifyCanExecuteChanged notifier)
         {
@@ -119,7 +118,7 @@ public abstract class ParentCommand
         {
             return _canExecute2.Invoke(parameter);
         }
-        return true; //if there is none, then let it happen.
+        return true;
     }
     public async virtual Task ExecuteAsync(object? parameter)
     {
@@ -159,7 +158,7 @@ public abstract class ParentCommand
         if (UpdateBlazor is not null)
         {
             UpdateBlazor.Invoke();
-            await Task.Delay(1); //so blazor can update.
+            await Task.Delay(1);
         }
     }
 }

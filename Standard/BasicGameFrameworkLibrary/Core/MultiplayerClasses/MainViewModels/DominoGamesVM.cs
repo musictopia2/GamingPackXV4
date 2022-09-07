@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
-
 public abstract class DominoGamesVM<D> : BasicMultiplayerMainVM
     where D : IDominoInfo, new()
 {
@@ -26,7 +25,7 @@ public abstract class DominoGamesVM<D> : BasicMultiplayerMainVM
         }
         else
         {
-            _model.PlayerHand1.SendAlwaysEnable(this);// will handle this part
+            _model.PlayerHand1.SendAlwaysEnable(this);
         }
         _model.BoneYard.SendEnableProcesses(this, () =>
         {
@@ -41,7 +40,7 @@ public abstract class DominoGamesVM<D> : BasicMultiplayerMainVM
     }
     protected virtual bool AlwaysEnableHand()
     {
-        return true; // most of the time, you can enable hand.  if you can't then will be here
+        return true;
     }
     protected virtual bool CanEnableHand()
     {

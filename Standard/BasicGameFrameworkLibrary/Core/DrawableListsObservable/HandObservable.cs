@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-
 public partial class HandObservable<D> : SimpleControlObservable where D : IDeckObject, new()
 {
     public bool Visible { get; set; } = true;
@@ -14,10 +13,10 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
     public bool HasFrame { get; set; } = true;
     protected virtual bool CanEverEnable()
     {
-        return true; // usually, it can.   however sometimes, you can't
+        return true;
     }
     public string Text { get; set; } = "";
-    public int Maximum { get; set; } //useful for ui  the cross platform can set this
+    public int Maximum { get; set; }
     public int SectionClicked { get; set; }
     public virtual bool HasSections => false;
     public bool IgnoreMaxRules { get; set; }
@@ -54,7 +53,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
         }
         return HandList.GetDeckListFromObjectList();
     }
-    public void PopulateObjects(IDeckDict<D> thisList) // try just t (if regularcardinfo; then that will be the list.  knows it has to be at least baseimages.cardinfo
+    public void PopulateObjects(IDeckDict<D> thisList)
     {
         if (IgnoreMaxRules == false)
         {
@@ -63,7 +62,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
                 throw new CustomBasicException("The maximum objects allowed are " + Maximum);
             }
         }
-        HandList.ReplaceRange(thisList); // i think its being replace.  if its different, can fix
+        HandList.ReplaceRange(thisList);
         AfterPopulateObjects();
     }
     protected virtual void AfterPopulateObjects() { }
@@ -79,9 +78,9 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
     public void SelectAllObjects()
     {
         HandList.SelectAllObjects();
-        _orderOfObjectsSelectedList.Clear(); // because its doing automatically instead of manually
+        _orderOfObjectsSelectedList.Clear();
     }
-    public virtual void UnselectAllObjects() //decided to make it virtual so overrided versions can do other things after unselecting all or before.
+    public virtual void UnselectAllObjects()
     {
         HandList.UnselectAllObjects();
         _orderOfObjectsSelectedList.Clear();
@@ -94,7 +93,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
             var id = (from x in HandList
                       where x.IsSelected == true
                       select x.Deck).SingleOrDefault();
-            return id; // try this way.
+            return id;
         }
         catch (Exception)
         {
@@ -135,11 +134,11 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
         {
             return;
         }
-        await BoardClickedAsync.Invoke(); //most likely an issue because using async.
+        await BoardClickedAsync.Invoke();
     }
     protected virtual bool CanSelectSingleObject(D thisObject)
     {
-        return true; // so something else can do something else
+        return true;
     }
     protected override void SetCommandsLimited()
     {
@@ -158,7 +157,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
             if (BoardClickedAsync is not null)
             {
                 await BoardClickedAsync.Invoke();
-                return; //try this way.  there are cases where a card is show only but clicking has to do board click.
+                return;
             }
         }
         if (AutoSelect == EnumHandAutoType.SelectAsMany)
@@ -209,7 +208,6 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
         }
         await ProcessObjectClickedAsync(thisObject, HandList.IndexOf(thisObject));
     }
-    //added new overrided method here so games like savannah, you can do something special for selectoneonly.
     protected virtual async Task ProcessSelectOneOnlyAsync(D payLoad)
     {
         if (ConsiderSelectOneAsync != null)
@@ -246,7 +244,6 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
         }
         await ObjectClickedAsync.Invoke(thisObject, HandList.IndexOf(thisObject));
     }
-
     #region Events
     protected async Task OnBoardClickedAsync()
     {

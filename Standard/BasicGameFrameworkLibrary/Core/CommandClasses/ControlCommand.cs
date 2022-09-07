@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
 public class ControlCommand : ParentCommand, IGameCommand
 {
     protected new readonly IControlObservable _model;

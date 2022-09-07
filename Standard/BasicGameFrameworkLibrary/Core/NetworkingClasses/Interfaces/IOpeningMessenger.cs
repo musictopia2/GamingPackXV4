@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
-
 public interface IOpeningMessenger
 {
     Task ConnectedToHostAsync(IGameNetwork network, string hostName);

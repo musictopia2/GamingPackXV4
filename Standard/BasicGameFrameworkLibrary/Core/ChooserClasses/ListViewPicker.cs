@@ -1,8 +1,7 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
-
 public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
 {
-    public readonly BasicList<ListPieceModel> TextList = new(); //try list now.  since its intended to be used from blazor programming model.
+    public readonly BasicList<ListPieceModel> TextList = new();
     public enum EnumIndexMethod
     {
         Unknown = 0,
@@ -14,8 +13,6 @@ public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
         SingleItem = 1,
         MultipleItems = 2
     }
-    //i propose having attribute.
-
     [Command(EnumCommandCategory.Control)]
     private async Task ProcessClickAsync(ListPieceModel piece)
     {
@@ -33,7 +30,7 @@ public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
         }
         if (ItemSelectedAsync == null)
         {
-            return; //ignore because not there.
+            return;
         }
         await ItemSelectedAsync.Invoke(piece.Index, piece.DisplayText);
     }
@@ -46,14 +43,12 @@ public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
         };
         CreateCommands();
     }
-    public EnumIndexMethod IndexMethod { get; set; } // so when i send the list, it knows whether to start with 0 or 1.
+    public EnumIndexMethod IndexMethod { get; set; }
     public EnumSelectionMode SelectionMode { get; set; } = EnumSelectionMode.SingleItem;
-    public event ItemSelectedEventHandler? ItemSelectedAsync; // better to have too much information than not enough information.
+    public event ItemSelectedEventHandler? ItemSelectedAsync;
     public delegate Task ItemSelectedEventHandler(int selectedIndex, string selectedText);
     private readonly ItemChooserClass<ListPieceModel> _privateChoose;
-
     public int SelectedIndex { get; set; }
-
     public string GetText(int index)
     {
         if (IndexMethod == EnumIndexMethod.ZeroBased)
@@ -141,9 +136,9 @@ public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
         UnselectAll();
         foreach (var thisItem in thisList)
         {
-            var news = (from Items in TextList
-                        where Items.Index == thisItem
-                        select Items).Single();
+            var news = (from xx in TextList
+                        where xx.Index == thisItem
+                        select xx).Single();
             news.IsSelected = true;
         }
     }
@@ -153,18 +148,18 @@ public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
         {
             throw new CustomBasicException("Cannot get all selected items because there was only one selected.  Try using the property SelectedIndex");
         }
-        return (from Items in TextList
-                where Items.IsSelected == true
-                select Items.Index).ToBasicList();
+        return (from xx in TextList
+                where xx.IsSelected == true
+                select xx.Index).ToBasicList();
     }
 
-    public ControlCommand? ItemSelectedCommand { get; set; } //this time you have it.
+    public ControlCommand? ItemSelectedCommand { get; set; }
     ICustomCommand IListViewPicker.ItemSelectedCommand { get => ItemSelectedCommand!; }
     BasicList<ListPieceModel> IListViewPicker.TextList => TextList;
     protected override void EnableChange()
     {
-        TextList.SetEnabled(IsEnabled); //i think this was needed too.
-        CommandContainer.UpdateAll(); //try this now.
+        TextList.SetEnabled(IsEnabled);
+        CommandContainer.UpdateAll();
     }
     protected override void PrivateEnableAlways() { }
     public int ItemToChoose(bool requiredToChoose = true, bool useHalf = true)

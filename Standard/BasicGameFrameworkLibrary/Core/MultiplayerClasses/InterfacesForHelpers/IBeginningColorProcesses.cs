@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
-
 public interface IBeginningColorProcesses<E>
     where E : IFastEnumColorSimple
 {

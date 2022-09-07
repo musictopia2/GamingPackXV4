@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
-
 public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> where D :
     IStandardDice, new()
 {
@@ -50,8 +49,8 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
     }
     partial void CreateCommands();
     public bool CanShowDice { get; set; }
-    public int TotalDiceValue => DiceList.Sum(Items => Items.Value); //this is so common might as well have a routine for it.
-    public DiceList<D> DiceList { get; } //only because its needed for the wpf/xamarin forms part.
+    public int TotalDiceValue => DiceList.Sum(Items => Items.Value);
+    public DiceList<D> DiceList { get; }
     int _originalNumber;
     private int _howManyDice;
     public int HowManyDice
@@ -70,8 +69,8 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
     }
     public bool HasDice { get; set; }
     public bool ShowDiceListAlways { get; set; }
-    public bool ShowHold { get; set; } //i think this does not need to pass on information to the view model.
-    public void SelectUnselectDice(int index) //since i have shortcut, if i do through another way, it will be allowed.
+    public bool ShowHold { get; set; }
+    public void SelectUnselectDice(int index)
     {
         if (ShowHold == true)
         {
@@ -127,7 +126,7 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
             RedoList();
         }
         BasicList<BasicList<D>> output = new();
-        AsyncDelayer.SetDelayer(this, ref _delay!); //try both places.
+        AsyncDelayer.SetDelayer(this, ref _delay!);
         IGenerateDice<int> thisG = MainContainer!.Resolve<IGenerateDice<int>>();
         BasicList<int> possList = thisG.GetPossibleList;
         D tempDice;
@@ -138,14 +137,14 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
             for (int i = 0; i < HowManyDice; i++)
             {
                 tempDice = DiceList[i];
-                if (tempDice.Hold == false) //its uncommon enough that has to be different for different types of dice games.
+                if (tempDice.Hold == false)
                 {
                     chosen = possList.GetRandomItem();
                     tempDice = new()
                     {
-                        Index = i + 1 //i think
+                        Index = i + 1
                     };
-                    tempDice.Populate(chosen); //so they can do what they need to.
+                    tempDice.Populate(chosen);
                 }
                 firsts.Add(tempDice);
             }
@@ -163,7 +162,6 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
     {
         DiceList.Clear(HowManyDice);
     }
-
     public async Task SendMessageAsync(BasicList<BasicList<D>> thisList)
     {
         await _network!.SendAllAsync("rolled", thisList);
@@ -176,7 +174,7 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
     public async Task ShowRollingAsync(BasicList<BasicList<D>> diceCollection, bool showVisible)
     {
         CanShowDice = showVisible;
-        AsyncDelayer.SetDelayer(this, ref _delay!); //because for multiplayer, they do this part but not the other.
+        AsyncDelayer.SetDelayer(this, ref _delay!);
         await diceCollection.ForEachAsync(async firsts =>
         {
             DiceList.ReplaceDiceRange(firsts);
@@ -202,7 +200,7 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
         }
         else
         {
-            UpdateDiceAction.Invoke(); //to accomodate trouble game.
+            UpdateDiceAction.Invoke(); //to accomodate trouble game or other games like it.
         }
     }
     public async Task ShowRollingAsync(BasicList<BasicList<D>> thisCol)

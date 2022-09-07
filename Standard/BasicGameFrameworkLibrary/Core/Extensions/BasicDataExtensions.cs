@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Extensions;
-
 public static class BasicDataExtensions
 {
     public static IGameNetwork? GetNetwork(this BasicData basicData)

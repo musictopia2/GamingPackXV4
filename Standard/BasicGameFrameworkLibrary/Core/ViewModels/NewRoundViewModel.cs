@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-
 public partial class NewRoundViewModel : ScreenViewModel, INewRoundVM, IBlankGameVM
 {
     private readonly BasicData _basicData;
@@ -25,6 +24,6 @@ public partial class NewRoundViewModel : ScreenViewModel, INewRoundVM, IBlankGam
     [Command(EnumCommandCategory.Old)]
     public Task StartNewRoundAsync()
     {
-        return Aggregator.PublishAsync(new NewRoundEventModel()); //this does not care what happens with the new round.
+        return Aggregator.PublishAsync(new NewRoundEventModel()); 
     }
 }

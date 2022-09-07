@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.StockClasses;
-
 public abstract class StockPileVM<D>
     where D : IDeckObject, new()
 {
@@ -8,7 +7,7 @@ public abstract class StockPileVM<D>
     public BasicMultiplePilesCP<D> StockFrame;
     public void ClearCards()
     {
-        StockFrame.PileList!.Single().ObjectList.Clear(); // i think
+        StockFrame.PileList!.Single().ObjectList.Clear();
     }
     public void AddCard(D thisCard)
     {
@@ -16,7 +15,7 @@ public abstract class StockPileVM<D>
     }
     public D GetCard()
     {
-        return StockFrame.PileList!.Single().ObjectList.Last(); // because that is what the ui shows.  this means you do in opposite order.
+        return StockFrame.PileList!.Single().ObjectList.Last();
     }
     public int CardSelected()
     {
@@ -31,24 +30,24 @@ public abstract class StockPileVM<D>
         }
         return thisCard.Deck;
     }
-    public DeckRegularDict<D> GetStockList() // try list of.  if i need observable, can do as well
+    public DeckRegularDict<D> GetStockList()
     {
         return StockFrame.PileList!.Single().ObjectList.ToRegularDeckDict();
     }
     public void RemoveCard()
     {
-        StockFrame.PileList!.Single().ObjectList.RemoveLastItem(); // has to get rid of last item because of how the piles work.
-        StockFrame.PileList!.Single().IsSelected = false; //just in case.
+        StockFrame.PileList!.Single().ObjectList.RemoveLastItem();
+        StockFrame.PileList!.Single().IsSelected = false;
         if (StockFrame!.PileList!.Single().ObjectList.Count > 0)
         {
             var thisCard = GetCard();
-            thisCard.IsUnknown = false; // to guarantee no matter what,.
+            thisCard.IsUnknown = false;
         }
     }
     public StockPileVM(CommandContainer command)
     {
         StockFrame = new(command);
-        StockFrame.Style = EnumMultiplePilesStyleList.HasList; // for sure has a list
+        StockFrame.Style = EnumMultiplePilesStyleList.HasList;
         StockFrame.Rows = 1;
         StockFrame.Columns = 1;
         StockFrame.HasText = true;
@@ -65,13 +64,13 @@ public abstract class StockPileVM<D>
         }
         D thisCard = GetCard();
         thisCard.IsSelected = false;
-        StockFrame!.PileList!.Single().IsSelected = false; //i think this too.
+        StockFrame!.PileList!.Single().IsSelected = false;
     }
     public void SelectCard()
     {
         var thisCard = GetCard();
         thisCard.IsSelected = true;
-        StockFrame.PileList!.Single().IsSelected = true; //i think this too now to be compatible with blazor.
+        StockFrame.PileList!.Single().IsSelected = true;
     }
     public bool DidGoOut()
     {
@@ -85,7 +84,7 @@ public abstract class StockPileVM<D>
     {
         return StockFrame!.PileList!.Single().ObjectList.Count;
     }
-    public abstract string NextCardInStock(); // could be W even
+    public abstract string NextCardInStock();
     private async Task StockFrame_PileClickedAsync(int index, BasicPileInfo<D> thisPile)
     {
         if (StockClickedAsync == null)

@@ -2,7 +2,7 @@
 public interface ISolitaireData
 {
     EnumSolitaireMoveType MoveColumns { get; }
-    int WastePiles { get; } //once i have autoimplemented interfaces, i can specify default amounts here too.
+    int WastePiles { get; }
     int Rows { get; }
     int Columns { get; }
     bool IsKlondike { get; }

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
-
 public abstract class BoardDiceGameClass<P, S, E, M> : SimpleBoardGameClass<P, S, E, M>,
     IStandardRoller<SimpleDice, P>,
     IBeginningColors<E, P, S>
@@ -50,13 +49,13 @@ public abstract class BoardDiceGameClass<P, S, E, M> : SimpleBoardGameClass<P, S
     protected void SetUpDice()
     {
         LoadCup(false);
-        SaveRoot.DiceList.MainContainer = MainContainer; //maybe has to be here.
+        SaveRoot.DiceList.MainContainer = MainContainer;
     }
     protected virtual bool ShowDiceUponAutoSave => true;
     protected void AfterRestoreDice()
     {
         LoadCup(true);
-        SaveRoot!.DiceList.MainContainer = MainContainer; //maybe has to be here.
+        SaveRoot!.DiceList.MainContainer = MainContainer;
         if (ShowDiceUponAutoSave == true)
         {
             _model.Cup!.CanShowDice = true;

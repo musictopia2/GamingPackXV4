@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfaceModels;
-
 public interface IDominoGamesData<D> : IViewModelData, IBasicEnableProcess, IEnableAlways
     where D : IDominoInfo, new()
 {

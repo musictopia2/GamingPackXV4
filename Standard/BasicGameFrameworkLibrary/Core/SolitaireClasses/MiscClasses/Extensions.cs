@@ -64,7 +64,7 @@ public static class Extensions
     }
     public static bool CanMoveCardsAlternateColors(this IDeckDict<SolitaireCard> validList, SolitaireCard oldCard, ref int lastOne)
     {
-        lastOne = -1; //i think.
+        lastOne = -1;
         int x;
         for (x = validList.Count; x >= 1; x += -1)
         {

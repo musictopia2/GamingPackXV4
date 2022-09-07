@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic;
-
 public class ScoreLogic : IScoreLogic
 {
     private readonly ScoreContainer _scoreContainer;

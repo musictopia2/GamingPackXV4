@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.AnimationClasses;
-
 public class AnimateBasicGameBoard
 {
     readonly IEventAggregator _thisE;
@@ -17,22 +16,22 @@ public class AnimateBasicGameBoard
     private const int _interval = 20;
     public AnimateBasicGameBoard(IEventAggregator thisE)
     {
-        _thisE = thisE; //try this way.
+        _thisE = thisE;
     }
     private bool _xup = false;
     private bool _yup = false;
     public async Task DoAnimateAsync()
     {
-        _startX = LocationFrom.X;  // myLocation.X
-        _startY = LocationFrom.Y; // myLocation.Y
+        _startX = LocationFrom.X; 
+        _startY = LocationFrom.Y;
         _destinationX = LocationTo.X;
         _destinationY = LocationTo.Y;
         _totalSteps = LongestTravelTime / _interval;
-        CurrentLocation = LocationFrom; // for now.
+        CurrentLocation = LocationFrom;
         _xup = LocationTo.X > LocationFrom.X;
         _yup = LocationTo.Y > LocationFrom.Y;
         AnimationGoing = true; // so when they access the information, they will do something different.
-        _thisE.RepaintMessage(EnumRepaintCategories.Main); //try main this time
+        _thisE.RepaintMessage(EnumRepaintCategories.Main);
         float totalXDistance;
         float totalYDistance;
         float eachx = 0;
@@ -96,6 +95,6 @@ public class AnimateBasicGameBoard
             await Task.Delay(5);
         }
         AnimationGoing = false;
-        RepaintEventModel.UpdatePartOfBoard = null; // no matter what.
+        RepaintEventModel.UpdatePartOfBoard = null;
     }
 }

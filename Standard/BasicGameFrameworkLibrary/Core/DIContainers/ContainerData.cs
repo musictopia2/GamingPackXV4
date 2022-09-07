@@ -1,8 +1,6 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DIContainers;
-
 public class ContainerData
 {
-    //may need to be public so it can work with source generators in various projects.
     public Type? TypeIn { get; set; }
     public Type? TypeOut { get; set; }
     public BasicList<Type> AssignedFrom { get; set; } = new();

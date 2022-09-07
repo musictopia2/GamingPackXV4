@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
-
 public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<SU, T>,
     ITrickPlay, IAdvancedTrickProcesses
     where SU : IFastEnumSimple
@@ -19,14 +18,14 @@ public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<S
             throw new CustomBasicException("Must have 2 players in order to load");
         }
         int x;
-        CardList.Clear(); //just in case.
+        CardList.Clear();
         for (x = 1; x <= 2; x++)
         {
             T newCard = new();
             newCard.Populate(x);
-            newCard.Deck = x + 1000; //try to do it this way so at least it will work.
+            newCard.Deck = x + 1000;
             newCard.IsUnknown = true;
-            CardList.Add(newCard); //i think
+            CardList.Add(newCard);
         }
     }
     protected int GetCardIndex()
@@ -47,14 +46,14 @@ public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<S
             T tempCard = new();
             x++;
             tempCard.Populate(x);
-            tempCard.Deck += 1000; //try this way.  hopefully won't cause any other issues.
+            tempCard.Deck += 1000;
             tempCard.IsUnknown = true;
             tempCard.Visible = true;
             tempList.Add(tempCard);
         }
         OrderList.Clear();
-        CardList.ReplaceRange(tempList); // hopefully its that simple.
-        Visible = true; // now it is visible.
+        CardList.ReplaceRange(tempList);
+        Visible = true;
     }
     public virtual void LoadGame()
     {
@@ -81,9 +80,9 @@ public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<S
             lastCard = _gameContainer.GetBrandNewCard(thisCard.Deck);
             lastCard.Player = thisCard.Player;
             TradeCard(index, lastCard);
-            otherList.Add(lastCard); //i think
+            otherList.Add(lastCard);
         });
-        OrderList.ReplaceRange(otherList); //i think we have to do it this way this tiem.
+        OrderList.ReplaceRange(otherList);
         _gameContainer.WhoTurn = tempTurn;
     }
     protected T GetWinningCard(int wins)
@@ -109,7 +108,7 @@ public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<S
         _gameContainer.Command.UpdateAll();
         await AfterPlayCardAsync(thisCard);
     }
-    protected virtual async Task AfterPlayCardAsync(T thisCard) //overrided versions may need this.
+    protected virtual async Task AfterPlayCardAsync(T thisCard) 
     {
         if (OrderList.Count == _gameContainer.PlayerList!.Count)
         {
@@ -124,6 +123,8 @@ public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<S
     protected override async Task ProcessCardClickAsync(T thisCard)
     {
         if (CardList.IndexOf(thisCard) == 0)
-            await _gameContainer.CardClickedAsync!.Invoke(); //because only human can do it for 2 player trick games.
+        {
+            await _gameContainer.CardClickedAsync!.Invoke();
+        }
     }
 }

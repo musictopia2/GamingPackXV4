@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
-
 public static class CommonMessages
 {
     public static async Task SendReadyMessageAsync(this IGameNetwork network, string yourName, string hostName)
@@ -16,8 +15,7 @@ public static class CommonMessages
     }
     public static async Task SendRestoreGameAsync<T>(this IGameNetwork network, T payLoad)
     {
-        //hopefully restoregame works even for the new client.
-        await network.SendAllAsync("restoregame", payLoad); //try this way.  hopefully i don't need bypassing  if so, rethink again.
+        await network.SendAllAsync("restoregame", payLoad);
     }
     public static async Task SendMoveAsync<T>(this IGameNetwork network, T payLoad)
     {

@@ -1,13 +1,13 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.PileObservable;
 public class MainPilesCP : IMain, ISerializable
 {
-    public int CardsNeededToBegin { get; set; } //the bad news is if part of interface, forced to be public when in c#.
+    public int CardsNeededToBegin { get; set; }
     public bool IsRound { get; set; }
     public int Rows { get; set; }
     public int Columns { get; set; }
     private bool _suitsNeedToMatch;
     internal bool ShowNextNeeded { get; set; }
-    protected int Increments = 1; // increase by 1.  however; some games may increment by a different amount
+    protected int Increments = 1;
     public event MainPileClickedEventHandler? PileSelectedAsync;
     public BasicMultiplePilesCP<SolitaireCard> Piles;
     protected IRegularDeckInfo DeckContents;
@@ -27,9 +27,9 @@ public class MainPilesCP : IMain, ISerializable
         }
         await PileSelectedAsync.Invoke(Index);
     }
-    public void SetSavedScore(int score) //hopefully this way still works.  may rethink but not sure yet.
+    public void SetSavedScore(int score)
     {
-        _score.Score = score; //try this way.
+        _score.Score = score;
     }
     public virtual void ClearBoard(IDeckDict<SolitaireCard> thisList)
     {

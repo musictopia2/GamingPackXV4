@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.SavedGameClasses;
-
 public class MultiplayerNoSave : IMultiplayerSaveState
 {
     //we may eventually do something else so if no autoresume, won't even try.  well see.  otherwise, will do this.
@@ -13,11 +12,11 @@ public class MultiplayerNoSave : IMultiplayerSaveState
     }
     public static Task<string> SavedDataAsync()
     {
-        return Task.FromResult(""); // a blank string means no autoresume.
+        return Task.FromResult("");
     }
     public Task<string> SavedDataAsync<T>() where T : IMappable, new()
     {
-        return Task.FromResult(""); // a blank string means no autoresume.throw new System.NotImplementedException();
+        return Task.FromResult("");
     }
     public Task SaveStateAsync<T>(T thisState) where T : IMappable, new()
     {

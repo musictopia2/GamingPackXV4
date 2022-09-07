@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.Dictionary;
-
 internal class DictionaryBehavior<D> : IListModifiers<D> where D : IDeckObject
 {
     private Dictionary<int, D> _privateDict = new();

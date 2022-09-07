@@ -1,19 +1,18 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicEventModels;
-
 public static class EventExtensions
 {
     public static async Task SendGameOverAsync(this IAggregatorContainer aggregator, ISystemError error)
     {
         try
         {
-            await aggregator.Aggregator.PublishAsync(new GameOverEventModel()); //problem seems to be whoever handles the game over in this case.
+            await aggregator.Aggregator.PublishAsync(new GameOverEventModel());
         }
         catch (Exception ex)
         {
             error.ShowSystemError(ex.Message);
         }
     }
-    public static bool AnimationCompleted { get; set; } //needs to bring this back.  because otherwise the animation of cards did not work properly.  not sure why others worked but does not matter.
+    public static bool AnimationCompleted { get; set; }
     public static async Task AnimateMovePiecesAsync<S>(this IEventAggregator thisE, Vector previousSpace,
         Vector moveToSpace, S temporaryObject, bool useColumn = false) where S : class
     {
@@ -26,14 +25,12 @@ public static class EventExtensions
     }
     public static void RepaintBoard(this IEventAggregator thisE)
     {
-        thisE.RepaintMessage(EnumRepaintCategories.Main); //if nothing is specified, then do from skiaboard.
+        thisE.RepaintMessage(EnumRepaintCategories.Main);
     }
     public static void RepaintMessage(this IEventAggregator thisE, EnumRepaintCategories thisCategory)
     {
-        //try to do all.  because countdown has more than one gameboard.
         thisE.PublishAll(new RepaintEventModel(), thisCategory.ToString());
     }
-
     #region Animation Objects Helpers
     public static async Task AnimatePlayAsync<D>(this IEventAggregator thisE,
         D thisCard, Action? finalAction = null) where D : class, IDeckObject, new()
@@ -57,13 +54,11 @@ public static class EventExtensions
     public static async Task AnimatePickUpDiscardAsync<D>(this IEventAggregator thisE, D thisCard) where D : class, IDeckObject, new()
     {
         await thisE.AnimatePickUpDiscardAsync(thisCard, EnumAnimcationDirection.StartCardToDown);
-        //ResetDiscard(thisE);
     }
     public static async Task AnimatePickUpDiscardAsync<D>(this IEventAggregator thisE, D thisCard
         , EnumAnimcationDirection direction) where D : class, IDeckObject, new()
     {
         await thisE.AnimateCardAsync(thisCard, direction, "maindiscard");
-        //ResetDiscard(thisE);
     }
     private static async Task CompleteAnimationAsync()
     {
@@ -72,13 +67,13 @@ public static class EventExtensions
             await Task.Delay(1);
             if (AnimationCompleted == true)
             {
-                return; //because done.
+                return;
             }
         } while (true);
     }
     private static void ResetDiscard(this IEventAggregator thisE)
     {
-        thisE.PublishAll(new ResetCardsEventModel()); //try this way.
+        thisE.PublishAll(new ResetCardsEventModel());
     }
     public static async Task AnimateCardAsync<D>(this IEventAggregator thisE,
         D thisCard, EnumAnimcationDirection direction, string tag

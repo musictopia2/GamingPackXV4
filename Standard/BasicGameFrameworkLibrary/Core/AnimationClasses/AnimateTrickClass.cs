@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.AnimationClasses;
-
 public class AnimateTrickClass<S, T>
     where S : IFastEnumSimple
     where T : class, ITrickCard<S>, new()
@@ -27,7 +26,7 @@ public class AnimateTrickClass<S, T>
     {
         if (GetStartingPoint == null || StateChanged == null)
         {
-            return; //i think.
+            return;
         }
         _tempArea = thisArea;
         _destinationX = (int)thisArea.WinCard!.Location.X;
@@ -80,7 +79,7 @@ public class AnimateTrickClass<S, T>
                 var card = _tempArea.CardList[thisTrick.Index];
                 card.Location = new PointF(thisTrick.CurrentX, thisTrick.CurrenyY);
             }
-            StateChanged(); //try this way now (?)
+            StateChanged();
         }
         foreach (var thisTrick in _trickList!)
         {

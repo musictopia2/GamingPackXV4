@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
-
 public static class MessageHelper
 {
     public static bool CanSendMessage<P>(this P singleInfo, BasicData thisData) where P : class, IPlayerItem, new()

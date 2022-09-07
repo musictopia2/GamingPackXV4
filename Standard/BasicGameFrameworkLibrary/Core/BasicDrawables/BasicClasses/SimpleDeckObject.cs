@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.BasicClasses;
-
 public abstract class SimpleDeckObject : IEquatable<SimpleDeckObject>
 {
     protected virtual void ChangeDeck() { }

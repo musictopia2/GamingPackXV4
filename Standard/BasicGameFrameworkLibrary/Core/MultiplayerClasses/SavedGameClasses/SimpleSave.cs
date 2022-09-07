@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.SavedGameClasses;
-
 public abstract class SimpleSave
 {
     public bool CanPrivateSave { get; set; }

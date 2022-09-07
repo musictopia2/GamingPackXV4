@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses;
-
 /// <summary>
 /// This class is used for games that is not technically a card game but has cards like Candyland, or Sorry Board Game.
 /// Has routines for drawing, shuffling and reshuffling.
@@ -7,12 +6,11 @@
 public class DrawShuffleClass<D, P> : nm.IDrawCardNM, nm.IReshuffledCardsNM
     where D : class, IDeckObject, new() where P : class, IPlayerItem, new()
 {
-    public ISavedCardList<D>? SaveRoot; //this is all it needs.
+    public ISavedCardList<D>? SaveRoot;
     private readonly IListShuffler<D> _deckList;
     private readonly IGameNetwork? _network;
     private readonly BasicData _basicData;
     private readonly IToast _toast;
-
     public Func<P>? CurrentPlayer { get; set; }
     public Func<Task>? AfterDrawingAsync { get; set; }
     public Action<IListShuffler<D>>? AfterFirstShuffle { get; set; }
@@ -79,7 +77,7 @@ public class DrawShuffleClass<D, P> : nm.IDrawCardNM, nm.IReshuffledCardsNM
     private bool _isBeginning;
     public async Task FirstShuffleAsync(bool canAutoDraw)
     {
-        _deckList.ClearObjects(); //just in case.
+        _deckList.ClearObjects();
         _deckList.ShuffleObjects();
         if (AfterFirstShuffle != null)
         {
@@ -93,7 +91,7 @@ public class DrawShuffleClass<D, P> : nm.IDrawCardNM, nm.IReshuffledCardsNM
         }
         else
         {
-            SaveRoot.CurrentCard = new D(); //not sure if we need this (but could).
+            SaveRoot.CurrentCard = new D();
         }
     }
     public DrawShuffleClass(IListShuffler<D> deckList, BasicData basicData, IToast toast)
@@ -115,7 +113,7 @@ public class DrawShuffleClass<D, P> : nm.IDrawCardNM, nm.IReshuffledCardsNM
         BasicList<int> firstList = await js.DeserializeObjectAsync<BasicList<int>>(data);
         if (_deckList.Any() == false)
         {
-            _deckList.OrderedObjects(); //maybe this was needed.  i think this is the best way to handle this situation.
+            _deckList.OrderedObjects();
         }
         DeckRegularDict<D> newList = firstList.GetNewObjectListFromDeckList(_deckList);
         SaveRoot!.CardList = newList.ToRegularDeckDict();

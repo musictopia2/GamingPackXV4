@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CombinationHelpers;
-
 public static class Extensions
 {
     public static BasicList<BasicList<T>> GetCombinations<T>(this BasicList<T> thisList, int howMany)

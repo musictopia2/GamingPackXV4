@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GamePieceModels;
-
 /// <summary>
 /// this is intended for crossplatform for pickers.  since the part that varies is the enumvalue.  can even be used from things like suit pickers
 /// decided to try using the new enums.

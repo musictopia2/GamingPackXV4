@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
-
 public abstract partial class DiceGamesVM<D> : BasicMultiplayerMainVM
     where D : IStandardDice, new()
 {
@@ -47,7 +46,7 @@ public abstract partial class DiceGamesVM<D> : BasicMultiplayerMainVM
     }
     public virtual bool CanRollDice()
     {
-        return true;  //can be false in some cases (?)
+        return true;
     }
     [Command(EnumCommandCategory.Game)]
     public async Task RollDiceAsync()

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.GameContainers;
-
 public class CardGameContainer<D, P, S> : BasicGameContainer<P, S>
     where D : class, IDeckObject, new()
     where P : class, IPlayerSingleHand<D>, new()
@@ -42,7 +41,7 @@ public class CardGameContainer<D, P, S> : BasicGameContainer<P, S>
     }
     public int PlayerDraws { get; set; }
     public int LeftToDraw { get; set; }
-    public IListShuffler<D> DeckList; //i think this could be okay.
+    public IListShuffler<D> DeckList;
     public int PlayerWentOut()
     {
         P player = PlayerList!.Where(x => x.MainHandList.Count == 0).SingleOrDefault()!;

@@ -2,5 +2,5 @@
 
 public enum EnumTrickStyle
 {
-    None = 0, Hearts, Spades //hearts and spades are more common.
+    None = 0, Hearts, Spades
 }

@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicGameDataClasses;
-
 public class BasicData
 {
     public bool MultiPlayer { get; set; }

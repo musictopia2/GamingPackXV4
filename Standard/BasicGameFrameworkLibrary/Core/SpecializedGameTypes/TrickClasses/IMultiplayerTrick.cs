@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
-
 public interface IMultiplayerTrick<S, T, P>
     where S : IFastEnumSimple
     where T : ITrickCard<S>, new()

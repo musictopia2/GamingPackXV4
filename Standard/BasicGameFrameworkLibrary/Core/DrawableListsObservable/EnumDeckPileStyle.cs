@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-
 public enum EnumDeckPileStyle
 {
     Unknown = 1,

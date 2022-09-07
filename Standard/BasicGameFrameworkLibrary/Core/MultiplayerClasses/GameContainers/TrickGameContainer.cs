@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.GameContainers;
-
 public class TrickGameContainer<D, P, SA, TS> : CardGameContainer<D, P, SA>
     where TS : IFastEnumSimple
     where D : class, ITrickCard<TS>, new()
@@ -19,7 +18,7 @@ public class TrickGameContainer<D, P, SA, TS> : CardGameContainer<D, P, SA>
     public D GetBrandNewCard(int deck)
     {
         D thisCard = DeckList!.GetSpecificItem(deck);
-        return (D)thisCard.CloneCard(); //hopefully this works.
+        return (D)thisCard.CloneCard();
     }
     public D GetSpecificCardFromDeck(int deck)
     {

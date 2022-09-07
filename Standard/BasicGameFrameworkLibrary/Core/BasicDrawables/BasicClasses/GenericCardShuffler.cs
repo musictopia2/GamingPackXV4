@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.BasicClasses;
-
 public class GenericCardShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer
     , ISimpleList<D>, IListShuffler<D> where D : IDeckObject, new()
 {

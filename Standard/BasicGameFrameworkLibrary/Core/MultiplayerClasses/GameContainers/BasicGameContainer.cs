@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.GameContainers;
-
 /// <summary>
 /// the purpose of this class is to hold information about a game but not require the game class to stop overflows
 /// and to stop lots of repeating.  would be best in the new templates to override this to do other things i want.
@@ -24,15 +23,15 @@ public class BasicGameContainer<P, S>
         get => SaveRoot.PlayOrder.WhoStarts;
         set => SaveRoot.PlayOrder.WhoStarts = value;
     }
-    public PlayerCollection<P>? PlayerList => SaveRoot!.PlayerList; //hopefully this simple.
+    public PlayerCollection<P>? PlayerList => SaveRoot!.PlayerList;
     public IGameNetwork? Network { get; }
     public BasicData BasicData { get; }
     public TestOptions Test { get; }
     public IGameInfo GameInfo { get; }
     public IAsyncDelayer Delay { get; }
     public IEventAggregator Aggregator { get; }
-    public CommandContainer Command { get; } //this is common to go ahead and ask for it here.  so each of the processes that need it don't have to ask for it each time.
-    public IGamePackageResolver Resolver { get; } //i think this is common too.
+    public CommandContainer Command { get; }
+    public IGamePackageResolver Resolver { get; }
     public IRandomGenerator Random { get; }
     public async Task ProcessCustomCommandAsync<T>(Func<T, Task> action, T argument)
     {

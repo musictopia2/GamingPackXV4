@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
-
 public partial class YahtzeeMainViewModel<D> : DiceGamesVM<D>
     where D : SimpleDice, new()
 {
@@ -13,14 +12,12 @@ public partial class YahtzeeMainViewModel<D> : DiceGamesVM<D>
         IGamePackageResolver resolver,
         IStandardRollProcesses rollProcesses,
         YahtzeeGameContainer<D> gameContainer,
-        IEventAggregator aggregator,
-        IToast toast
+        IEventAggregator aggregator
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, rollProcesses, aggregator)
     {
         _resolver = resolver;
         _gameContainer = gameContainer;
-        _toast = toast;
         _gameContainer.GetNewScoreAsync = LoadNewScoreAsync;
         VMData = viewModel;
         IBasicDiceGamesData<D>.NeedsRollIncrement = false;
@@ -53,7 +50,7 @@ public partial class YahtzeeMainViewModel<D> : DiceGamesVM<D>
     }
     public override bool CanRollDice()
     {
-        return VMData.RollNumber <= 3; //iffy now.
+        return VMData.RollNumber <= 3;
     }
     protected override bool CanEnableDice()
     {
@@ -61,7 +58,6 @@ public partial class YahtzeeMainViewModel<D> : DiceGamesVM<D>
     }
     private readonly IGamePackageResolver _resolver;
     private readonly YahtzeeGameContainer<D> _gameContainer;
-    private readonly IToast _toast;
 
     public PlayerCollection<YahtzeePlayerItem<D>> PlayerList => _gameContainer.PlayerList!;
     public DiceCup<D> GetCup => VMData.Cup!;

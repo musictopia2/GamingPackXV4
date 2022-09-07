@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DIContainers;
-
 public interface IGamePackageResolver : IIgnoreSerialize
 {
     /// <summary>
@@ -8,7 +7,7 @@ public interface IGamePackageResolver : IIgnoreSerialize
     /// <typeparam name="T"></typeparam>
     /// <param name="Tag">This is extra info so it can more easily return the proper implementation  its an object so can represent anything</param>
     /// <returns></returns>
-    T Resolve<T>(string tag); //sometimes a person has a tag that will be used to resolve. was going to be string but decided to make it object.
+    T Resolve<T>(string tag);
     /// <summary>
     /// This is used in cases where the object was replaced.
     /// 

@@ -2,7 +2,7 @@
 public interface IMain
 {
     int HowManyPiles();
-    bool CanAddCard(int pile, SolitaireCard thisCard); //decided to be interface because we never know if we need a special card.
+    bool CanAddCard(int pile, SolitaireCard thisCard);
     void SetSavedScore(int score);
     void ClearBoard(IDeckDict<SolitaireCard> thisList);
     void ClearBoard();

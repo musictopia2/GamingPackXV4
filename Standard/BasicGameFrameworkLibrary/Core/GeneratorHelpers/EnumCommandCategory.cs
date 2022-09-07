@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.GeneratorHelpers;
-
 public enum EnumCommandCategory
 {
     Plain = 1,

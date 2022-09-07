@@ -1,8 +1,7 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
-
 public class BasicGameCommand : ParentCommand, IGameCommand
 {
-    protected new readonly IBasicEnableProcess _model; //this is this version of new.
+    protected new readonly IBasicEnableProcess _model;
     public BasicGameCommand(
         IBasicEnableProcess model,
         CommandContainer command,
@@ -24,7 +23,7 @@ public class BasicGameCommand : ParentCommand, IGameCommand
     {
         if (InProgressHelpers.Reconnecting)
         {
-            return false; //can't execute because its reconnecting.
+            return false;
         }
         if (CommandContainer.IsExecuting == true && BusyCategory == EnumCommandBusyCategory.None)
         {

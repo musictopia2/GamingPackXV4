@@ -5,11 +5,11 @@ public class MainSetsObservable<SU, CO, RU, SE, T> : SimpleControlObservable
     where RU : IRummmyObject<SU, CO>, IDeckObject, new()
     where SE : SetInfo<SU, CO, RU, T>
 {
-    public bool HasFrame { get; set; } = false; // i think default should actually be false  if i am wrong; can change
+    public bool HasFrame { get; set; } = false; 
     public string Text { get; set; } = "Main Sets";
     public BasicList<SE> SetList = new();
     public MainSetsObservable(CommandContainer command) : base(command) { }
-    public event SetClickedEventHandler? SetClickedAsync; //we may have more than one so just do old fashioned events.
+    public event SetClickedEventHandler? SetClickedAsync;
     public delegate Task SetClickedEventHandler(int setNumber, int section, int deck);
     public virtual BasicList<T> SavedSets()
     {
@@ -47,7 +47,7 @@ public class MainSetsObservable<SU, CO, RU, SE, T> : SimpleControlObservable
         {
             thisSet.SendEnableProcesses(_networkProcess!, _customFunction!);
         }
-        SetList.Add(thisSet); // we don't have scrolltoset anymore.
+        SetList.Add(thisSet);
     }
     protected void RemoveSet(SE thisSet)
     {

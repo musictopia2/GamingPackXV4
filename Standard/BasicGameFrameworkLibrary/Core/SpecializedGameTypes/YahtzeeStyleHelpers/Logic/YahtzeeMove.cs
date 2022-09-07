@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic;
-
 public class YahtzeeMove<D> : IYahtzeeMove, IMoveNM
     where D : SimpleDice, new()
 {

@@ -1,11 +1,10 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
-
 public class BoardGamesColorPicker<E, P> : SimpleEnumPickerVM<E>
     where E : struct, IFastEnumColorSimple
     where P : class, IPlayerBoardGame<E>, new()
 {
     public PlayerCollection<P>? PlayerList;
-    public void FillInRestOfColors() //this means fill rest of colors is no problem.
+    public void FillInRestOfColors()
     {
         var thisList = ColorsLeft();
         thisList.ShuffleList();

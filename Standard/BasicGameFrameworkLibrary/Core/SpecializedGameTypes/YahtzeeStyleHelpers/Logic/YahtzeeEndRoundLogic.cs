@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic;
-
 public class YahtzeeEndRoundLogic<D> : IYahtzeeEndRoundLogic
     where D : SimpleDice, new()
 {
@@ -17,7 +16,7 @@ public class YahtzeeEndRoundLogic<D> : IYahtzeeEndRoundLogic
     {
         _gameContainer.SingleInfo = _gameContainer.PlayerList!.OrderByDescending(items => items.Points).Take(1).Single();
         _gameContainer.SaveRoot!.Round = 0;
-        _gameContainer.SaveRoot.RollNumber = 0; //i think
+        _gameContainer.SaveRoot.RollNumber = 0;
         await _gameContainer.ShowWinAsync!.Invoke();
     }
     public bool IsGameOver => _scoreContainer.RowList.Where(items => items.RowSection == EnumRow.Regular)
@@ -30,7 +29,7 @@ public class YahtzeeEndRoundLogic<D> : IYahtzeeEndRoundLogic
         }
         if (_gameContainer.WhoTurn == _gameContainer.SaveRoot!.Begins)
         {
-            if (IsGameOver == true || _gameContainer.Test.ImmediatelyEndGame) //to test new game quickly.
+            if (IsGameOver == true || _gameContainer.Test.ImmediatelyEndGame)
             {
                 await GameOverAsync();
                 return;

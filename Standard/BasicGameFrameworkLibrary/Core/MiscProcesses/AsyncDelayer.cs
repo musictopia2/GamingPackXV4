@@ -1,14 +1,10 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MiscProcesses;
-
 public class AsyncDelayer : IAsyncDelayer
 {
     private TestOptions? _test;
     private bool GetTester()
     {
-        if (_test is null)
-        {
-            _test = Resolver!.Resolve<TestOptions>();
-        }
+        _test ??= Resolver!.Resolve<TestOptions>();
         if (InProgressHelpers.MoveInProgress == false)
         {
             InProgressHelpers.MoveInProgress = true;

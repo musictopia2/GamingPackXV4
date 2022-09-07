@@ -1,11 +1,9 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DIContainers;
-
 public static class Helpers
 {
     public static IGamePackageResolver? Resolver { get; set; }
-    public static void PopulateContainer(IAdvancedDIContainer thisMain) //this is probably the best thing to do.
+    public static void PopulateContainer(IAdvancedDIContainer thisMain)
     {
-
         if (thisMain.MainContainer is not null)
         {
             return;

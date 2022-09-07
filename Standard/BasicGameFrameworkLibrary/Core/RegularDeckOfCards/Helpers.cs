@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
-
 public static class Helpers
 {
     public static BasicList<ExcludeRCard> AppendExclude(this BasicList<ExcludeRCard> thisList,

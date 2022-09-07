@@ -1,5 +1,4 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
-
 public class BeginningColorProcessorClass<E, P, S> : IBeginningColorProcesses<E>, IChoosePieceNM
     where E : struct, IFastEnumColorList<E>
     where P : class, IPlayerBoardGame<E>, new()
@@ -21,10 +20,10 @@ public class BeginningColorProcessorClass<E, P, S> : IBeginningColorProcesses<E>
         };
         MiscDelegates.ManuelSetColors = () =>
         {
-            _model.ColorChooser.IsEnabled = true; //try manually this time.
+            _model.ColorChooser.IsEnabled = true;
         };
     }
-    protected virtual void RecordColor() { }//if we ever do risk, will be needed.
+    protected virtual void RecordColor() { }
     public Action<string>? SetTurn { get; set; }
     public Action<string>? SetInstructions { get; set; }
     public async Task ChoseColorAsync(E colorChosen)
@@ -53,7 +52,7 @@ public class BeginningColorProcessorClass<E, P, S> : IBeginningColorProcesses<E>
             _gameContainer.SaveRoot.PlayOrder.WhoTurn = await _gameContainer.SaveRoot.PlayerList.CalculateWhoTurnAsync();
             _gameContainer.SingleInfo = _gameContainer.SaveRoot.PlayerList.GetWhoPlayer();
             _gameContainer.SingleInfo.Color = tempList.Single();
-            finished = true; //in this case, has to be finished because one more left.
+            finished = true;
         }
         if (finished == false)
         {
@@ -68,7 +67,7 @@ public class BeginningColorProcessorClass<E, P, S> : IBeginningColorProcesses<E>
         {
             throw new CustomBasicException("Nobody is handling the finishing of the colors.  Rethink");
         }
-        await MiscDelegates.ColorsFinishedAsync.Invoke(); //this is it.
+        await MiscDelegates.ColorsFinishedAsync.Invoke();
     }
     private async Task ContinueColorsAsync()
     {
@@ -91,13 +90,13 @@ public class BeginningColorProcessorClass<E, P, S> : IBeginningColorProcesses<E>
             SetInstructions.Invoke($"Waiting for {_gameContainer.SingleInfo.NickName} to choose color");
         }
         SetTurn(_gameContainer.SingleInfo.NickName);
-        await Task.CompletedTask; //maybe not needed anymore.
+        await Task.CompletedTask;
     }
     public Task InitAsync()
     {
         if (_gameContainer.SingleInfo == null)
         {
-            return Task.CompletedTask; //try this.
+            return Task.CompletedTask;
         }
         return ContinueColorsAsync();
     }
