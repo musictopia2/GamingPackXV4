@@ -1,17 +1,9 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RollEm", "RollEm.csproj", "{148BD290-4121-4B7D-AF21-AF671296644F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicGameFrameworkLibrary", "..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj", "{E0440C27-8B46-43CF-B54B-C1899932B00A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandsGenerator", "..\..\Generators\CommandsGenerator\CommandsGenerator.csproj", "{1CC8AA3B-D578-4923-B473-18E50EFA8C7E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamePackageDIGenerator", "..\..\Generators\GamePackageDIGenerator\GamePackageDIGenerator.csproj", "{C2A47870-C92F-4B5D-A1ED-2271685BF2B5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamePackageSerializeGenerator", "..\..\Generators\GamePackageSerializeGenerator\GamePackageSerializeGenerator.csproj", "{AFA75C53-D711-43A2-83A2-652133C7AE59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,22 +15,6 @@ Global
 		{148BD290-4121-4B7D-AF21-AF671296644F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{148BD290-4121-4B7D-AF21-AF671296644F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{148BD290-4121-4B7D-AF21-AF671296644F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E0440C27-8B46-43CF-B54B-C1899932B00A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0440C27-8B46-43CF-B54B-C1899932B00A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E0440C27-8B46-43CF-B54B-C1899932B00A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0440C27-8B46-43CF-B54B-C1899932B00A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1CC8AA3B-D578-4923-B473-18E50EFA8C7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1CC8AA3B-D578-4923-B473-18E50EFA8C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1CC8AA3B-D578-4923-B473-18E50EFA8C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1CC8AA3B-D578-4923-B473-18E50EFA8C7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2A47870-C92F-4B5D-A1ED-2271685BF2B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2A47870-C92F-4B5D-A1ED-2271685BF2B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2A47870-C92F-4B5D-A1ED-2271685BF2B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2A47870-C92F-4B5D-A1ED-2271685BF2B5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFA75C53-D711-43A2-83A2-652133C7AE59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFA75C53-D711-43A2-83A2-652133C7AE59}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFA75C53-D711-43A2-83A2-652133C7AE59}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFA75C53-D711-43A2-83A2-652133C7AE59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
