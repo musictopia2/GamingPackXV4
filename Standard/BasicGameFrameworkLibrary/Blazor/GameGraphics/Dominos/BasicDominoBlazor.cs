@@ -2,13 +2,13 @@
 public class BasicDominoBlazor<D> : BaseDeckGraphics<D>
     where D : class, IDominoInfo, new()
 {
-    protected override SizeF DefaultSize => new(95, 31); //i think.
+    protected override SizeF DefaultSize => new(95, 31);
     protected override bool NeedsToDrawBacks => true;
     protected override bool CanStartDrawing()
     {
         if (DeckObject!.IsUnknown)
         {
-            return true; //allow when its unknown to support the boneyard.
+            return true;
         }
         if (DeckObject!.HighestDomino == 0 || DeckObject.CurrentFirst == -1 || DeckObject.CurrentSecond == -1)
         {
@@ -24,7 +24,7 @@ public class BasicDominoBlazor<D> : BaseDeckGraphics<D>
         Path path = new();
         path.PopulateStrokesToStyles(strokeWidth: 4);
         path.Fill = "none";
-        path.D = "M47.5 0L47.5 31"; //now i can hard code because of translations, rotations, and scalings.
+        path.D = "M47.5 0L47.5 31";
         MainGroup!.Children.Add(path);
         DrawDice(MainGroup, DeckObject!.CurrentFirst);
         G g = new();
@@ -77,7 +77,7 @@ public class BasicDominoBlazor<D> : BaseDeckGraphics<D>
     {
         if (value == 0)
         {
-            return; //don't draw it because its 0.
+            return;
         }
         string color = GetDominoColor(value);
         if (_rowList.Count == 0 || _columnList.Count == 0)
@@ -87,7 +87,7 @@ public class BasicDominoBlazor<D> : BaseDeckGraphics<D>
         SVG svg = new();
         svg.Width = "47.5";
         svg.Height = "31";
-        g.Children.Add(svg); //try this now.
+        g.Children.Add(svg);
         if (value <= 9)
         {
             DrawUpToNine(svg, value, color);

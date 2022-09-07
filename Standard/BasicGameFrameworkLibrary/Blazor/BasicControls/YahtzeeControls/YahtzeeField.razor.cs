@@ -37,7 +37,7 @@ public partial class YahtzeeField
             {
                 return BottomDescriptionWidth + 300;
             }
-            return 10; //make it obvious there is a bug.
+            return 10;
         }
     }
     private int GetY => (Row - 1) * 200;

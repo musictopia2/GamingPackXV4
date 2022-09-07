@@ -16,11 +16,11 @@ public partial class BaseTwoPlayerTrickBlazor<S, T> : IHandleAsync<AnimateTrickE
     public BaseTwoPlayerTrickBlazor()
     {
         _animates = new ();
-        _animates.LongestTravelTime = 200; //can adjust as needed.
+        _animates.LongestTravelTime = 200;
         _animates.StateChanged = () => InvokeAsync(StateHasChanged);
         _animates.GetStartingPoint = GetStartingPoint;
         T card = new();
-        _tempSize = card.DefaultSize; //for proportions.
+        _tempSize = card.DefaultSize;
     }
     private readonly int _marginLeft = 10;
     private readonly int _labelHeight = 4;
@@ -129,7 +129,6 @@ public partial class BaseTwoPlayerTrickBlazor<S, T> : IHandleAsync<AnimateTrickE
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

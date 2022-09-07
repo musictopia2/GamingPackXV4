@@ -64,11 +64,10 @@ public partial class BaseHandBlazor<D>
         }
         if (HandType == EnumHandList.Vertical && TargetImageHeight > 0)
         {
-            //figure out what it is.  has to use proportions.
             D image = new();
             SizeF size = image.DefaultSize;
             var temps = TargetImageHeight * size.Width / size.Height;
-            return $"width: {temps}vh"; //hopefully this works.
+            return $"width: {temps}vh";
         }
         if (TargetImageSize == "")
         {

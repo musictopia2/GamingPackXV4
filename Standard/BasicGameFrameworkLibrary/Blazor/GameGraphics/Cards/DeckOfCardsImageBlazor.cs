@@ -10,7 +10,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
     {
         if (DeckObject == null)
         {
-            return false; //we don't even have one.
+            return false;
         }
         if (DeckObject.Suit == EnumSuitList.None && DeckObject.CardType == EnumRegularCardTypeList.None && DeckObject.IsUnknown == false && EmptyBorders == false)
         {
@@ -69,7 +69,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         {
             return "K";
         }
-        return tempValue.Value.ToString(); //try this way (?)
+        return tempValue.Value.ToString();
     }
     private void DrawCardAndStartingSuit()
     {
@@ -104,7 +104,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         {
             color = cs.Red;
         }
-        text.Fill = color.ToWebColor(); //try this.
+        text.Fill = color.ToWebColor();
         MainGroup!.Children.Add(text);
 
         MainGroup.DrawCardSuit(suit, 3, 46, _suitSize, _suitSize, color);
@@ -281,7 +281,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         }
         else
         {
-            currentGroup = new G(); //rotations
+            currentGroup = new G();
             currentGroup.Rotate180Degrees(rect_Suit);
             MainGroup!.Children.Add(currentGroup);
         }
@@ -338,22 +338,17 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         }
         if (DeckObject.CardType == EnumRegularCardTypeList.Joker)
         {
-            //return;
             RectangleF firstRect;
             RectangleF secondRect;
-            //RectangleF middleRect;
-            //middleRect = new(4, 70, 160, 70);
-            
             firstRect = new(20, 10, 120, 120);
-            //secondRect = new(50, 130, 70, 70);
             secondRect = new(4, 130, 160, 70);
-            var fontSize = secondRect.Height * 0.8f; // can adjust as needed
+            var fontSize = secondRect.Height * 0.8f;
             string textColor;
             string tempEye;
             string tempSolid;
             string tempBorder;
             textColor = clr_Suit;
-            tempSolid = clr_Suit; //this too.
+            tempSolid = clr_Suit;
             if (clr_Suit == cs.Black)
             {
                 tempBorder = cs.Aqua;
@@ -363,8 +358,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
                 tempBorder = cs.Black;
             }
             tempEye = tempBorder;
-            MainGroup!.DrawSmiley(firstRect, tempSolid, tempBorder, tempEye, 4);
-            //MainGroup!.DrawSmiley(secondRect, tempSolid, tempBorder, tempEye, 4);
+            MainGroup!.DrawSmiley(firstRect, tempSolid, tempBorder, tempEye, 4); //one larger smiley to stop the maui bugs for now.
             MainGroup!.DrawCenteredText(secondRect, fontSize, "Joker", textColor);
             return;
         }

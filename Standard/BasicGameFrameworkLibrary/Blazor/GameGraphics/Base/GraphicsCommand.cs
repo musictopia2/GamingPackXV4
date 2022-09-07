@@ -3,8 +3,6 @@ namespace BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 public abstract class GraphicsCommand : KeyComponentBase, IDisposable
 {
     private bool _disposedValue;
-    //related to the game button.  but this time only focus on the command part.
-
     /// <summary>
     /// this is the view model being used.  can be main view model, deck, etc.  this is not the card, etc.
     /// </summary>
@@ -55,9 +53,9 @@ public abstract class GraphicsCommand : KeyComponentBase, IDisposable
             return CommandObject.CanExecute(CommandParameter);
         }
     }
-    public void CreateClick(ISvg svg) //needs to be entire svg
+    public void CreateClick(ISvg svg)
     {
-        if (CommandObject != null) //don't always need the datacontext anymore.
+        if (CommandObject != null)
         {
             svg.EventData.ActionClicked = Clicked;
         }
@@ -66,14 +64,13 @@ public abstract class GraphicsCommand : KeyComponentBase, IDisposable
     {
         await Submit();
     }
-    //needs to be protected so i can use razor syntax to override and would still work.
-    protected virtual async Task Submit() //anything may need to do this.
+    protected virtual async Task Submit()
     {
         try
         {
             if (CommandObject == null)
             {
-                return; //nothing to submit
+                return;
             }
             if (CommandObject.CanExecute(CommandParameter) == false)
             {
@@ -111,23 +108,18 @@ public abstract class GraphicsCommand : KeyComponentBase, IDisposable
             {
                 if (_commandContainer is null)
                 {
-                    return; //because there was no commandobject sent
+                    return;
                 }
                 if (CommandObject is IGameCommand other)
                 {
                     _commandContainer!.RemoveCommand(other);
                 }
-                //else
-                //{
-                //    _commandContainer!.RemoveAction();
-                //}
             }
             _disposedValue = true;
         }
     }
     public virtual void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

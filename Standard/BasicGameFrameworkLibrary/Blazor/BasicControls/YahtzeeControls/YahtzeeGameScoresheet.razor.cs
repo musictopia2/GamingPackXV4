@@ -14,10 +14,10 @@ public partial class YahtzeeGameScoresheet<D>
     {
         if (DataContext!.CanRow(row) == false)
         {
-            CommandContainer!.StopExecuting(); //try this.
+            CommandContainer!.StopExecuting();
             return;
         }
-        await DataContext.RowAsync(row); //i think.
+        await DataContext.RowAsync(row);
     }
     private RowInfo GetBonus()
     {

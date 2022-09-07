@@ -28,7 +28,7 @@ public class MarblePiece : ComponentBase
     {
         MainGraphics!.OriginalSize = new SizeF(150, 150); //decided to use 150 by 150 this time.
         MainGraphics.BorderWidth = 1;
-        MainGraphics.HighlightTransparent = true; //i think.
+        MainGraphics.HighlightTransparent = true;
         base.OnInitialized();
     }
     private void BuildRadicalDefs(ISvg svg)
@@ -44,7 +44,7 @@ public class MarblePiece : ComponentBase
             FY = "50%"
         };
         defs.Children.Add(radial);
-        svg.Children.Add(defs); //hopefully this simple.
+        svg.Children.Add(defs);
         Stop stop = new();
         stop.Offset = "0%";
         stop.Stop_Color = "rgb(255,255,255)";
@@ -66,10 +66,9 @@ public class MarblePiece : ComponentBase
         ellipse.Fill = $"url(#grad{MainColor})";
         svg.Children.Add(ellipse);
     }
-    //decided to give up doing trouble pieces.
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        ISvg svg = MainGraphics!.GetMainSvg(false); //try to set this to false (?)
+        ISvg svg = MainGraphics!.GetMainSvg(false);
         SvgRenderClass render = new();
         DrawRegularMarblePiece(svg);
         render.RenderSvgTree(svg, 0, builder);

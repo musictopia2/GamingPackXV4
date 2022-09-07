@@ -60,7 +60,7 @@ public partial class BlankClickableSquare
         {
             return;
         }
-        _command.StartExecuting(); //try here so all board games would have it accounted for.
+        _command.StartExecuting();
         await SpaceClicked.InvokeAsync();
     }
 }

@@ -8,7 +8,7 @@ public partial class BaseMainRummySetsBlazor<SU, CO, RU, SE, T>
     [Parameter]
     public RenderFragment<SE>? ChildContent { get; set; }
     [Parameter]
-    public MainSetsObservable<SU, CO, RU, SE, T>? DataContext { get; set; } //hopefully this simple.
+    public MainSetsObservable<SU, CO, RU, SE, T>? DataContext { get; set; }
     [Parameter]
     public string ContainerWidth { get; set; } = "";
     [Parameter]
@@ -22,6 +22,6 @@ public partial class BaseMainRummySetsBlazor<SU, CO, RU, SE, T>
     private bool IsDisabled => !DataContext!.IsEnabled;
     private string GetContainerStyle()
     {
-        return $"width: {ContainerWidth}; height: {ContainerHeight}; overflow: auto; white-space: nowrap; "; //hopefully this simple.
+        return $"width: {ContainerWidth}; height: {ContainerHeight}; overflow: auto; white-space: nowrap; ";
     }
 }

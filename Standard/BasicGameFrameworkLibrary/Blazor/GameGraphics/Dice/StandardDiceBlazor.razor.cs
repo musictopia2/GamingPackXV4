@@ -7,7 +7,7 @@ public partial class StandardDiceBlazor : GraphicsCommand
     {
         if (Dice == null)
         {
-            return; //to attempt to fix null reference exception issue.
+            return;
         }
         _previous = GetRecord;
         base.OnAfterRender(firstRender);
@@ -29,7 +29,7 @@ public partial class StandardDiceBlazor : GraphicsCommand
     [Parameter]
     public string TargetHeight { get; set; } = "";
     [Parameter]
-    public IStandardDice? Dice { get; set; } //this means if you need to click, then needs to do twice.  otherwise graphicscommand requires generics.
+    public IStandardDice? Dice { get; set; }
     private static float DiceRadius => 10;
     private string WhiteString()
     {

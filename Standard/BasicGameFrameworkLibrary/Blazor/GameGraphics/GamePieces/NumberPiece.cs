@@ -15,7 +15,7 @@ public class NumberPiece : ComponentBase
         return current.Equals(_previousRecord) == false;
     }
     [CascadingParameter]
-    public BasePieceGraphics? MainGraphics { get; set; } //still needed to get the start of the svg.  plus needs to have its start rectangle anyways.
+    public BasePieceGraphics? MainGraphics { get; set; } 
     [Parameter]
     public NumberModel? DataContext { get; set; }
     protected virtual bool CanDrawNumber()
@@ -49,7 +49,7 @@ public class NumberPiece : ComponentBase
     {
         if (CanDrawNumber() == false)
         {
-            return; //can't even continue because you can't draw.
+            return;
         }
         string value = GetValueToPrint();
         if (value == "")
@@ -59,7 +59,7 @@ public class NumberPiece : ComponentBase
         SelectProcesses();
         ISvg svg = MainGraphics!.GetMainSvg();
         SvgRenderClass render = new();
-        render.Allow0 = true; //i think allow here. as well.
+        render.Allow0 = true;
         Text text = new();
         text.CenterText();
         if (value.Length == 3)

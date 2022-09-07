@@ -6,7 +6,7 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
     where T : class, ITrickCard<S>, new()
 {
     [CascadingParameter]
-    public int TargetHeight { get; set; } = 15; //its the view height.
+    public int TargetHeight { get; set; } = 15;
     [Parameter]
     public RenderFragment<T>? ChildContent { get; set; } //this is the card that will actually appear.
     [Parameter]
@@ -20,15 +20,15 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
     public BaseSeveralPlayersTrickBlazor()
     {
         _animates = new ();
-        _animates.LongestTravelTime = 200; //can adjust as needed.
+        _animates.LongestTravelTime = 200;
         _animates.StateChanged = () => InvokeAsync(StateHasChanged);
         _animates.GetStartingPoint = GetStartingPoint;
         T card = new();
-        _tempSize = card.DefaultSize; //for proportions.
+        _tempSize = card.DefaultSize;
     }
     private PointF GetStartingPoint(int index)
     {
-        TrickCoordinate trick = DataContext!.ViewList![index]; //i think
+        TrickCoordinate trick = DataContext!.ViewList![index];
         int x;
         if (trick.Column == 1)
         {
@@ -39,7 +39,7 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
             x = GetLeft(trick.Column);
         }
         int y = GetCardTop(trick.Row);
-        return new PointF(x, y); //for now, this is fine (?)
+        return new PointF(x, y);
     }
     async Task IHandleAsync<AnimateTrickEventModel>.HandleAsync(AnimateTrickEventModel message)
     {
@@ -93,9 +93,9 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
                 {
                     widths = 70;
                 }
-                return $"height: {heights}vh; width: {widths}vw;"; //this is fine when its 2 columns.
+                return $"height: {heights}vh; width: {widths}vw;";
             }
-            return $"height: {heights}vh; width: 50vw;"; //try to make this 50 percent period.  hopefully i won't regret this.
+            return $"height: {heights}vh; width: 50vw;";
         }
     }
     private static string GetCardCss(T card)
@@ -147,7 +147,7 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
         tops += _marginBottom;
         return $"top: {tops}vh;";
     }
-    private string RealLabelHeight => $"font-size: {_labelHeight}vh;"; //can adjust as needed.
+    private string RealLabelHeight => $"font-size: {_labelHeight}vh;";
     private string GetLabelCss(TrickCoordinate trick)
     {
         string lefts = GetLeft(trick);
@@ -179,7 +179,6 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

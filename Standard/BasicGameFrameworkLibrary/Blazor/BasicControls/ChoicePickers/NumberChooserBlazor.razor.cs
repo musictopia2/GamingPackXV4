@@ -33,10 +33,9 @@ public partial class NumberChooserBlazor
         int c;
         int r;
         c = 0;
-        r = 1; //has to have at least one row though.
+        r = 1;
         int mc;
         int mr;
-        //made a change because of poker.  if i have to make more changes, then retest poker to make sure i don't break poker again.
         if (Columns < 2)
         {
             mc = 1;
@@ -81,7 +80,6 @@ public partial class NumberChooserBlazor
             }
             else
             {
-                //r++;
                 if (r > mr)
                 {
                     mr = r;

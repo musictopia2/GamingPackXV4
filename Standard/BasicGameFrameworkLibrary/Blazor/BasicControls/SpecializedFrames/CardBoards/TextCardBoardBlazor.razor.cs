@@ -3,7 +3,7 @@ public partial class TextCardBoardBlazor<D>
     where D : class, IDeckObject, new()
 {
     [Parameter]
-    public GameBoardObservable<D>? DataContext { get; set; } //only iffy part is new game.
+    public GameBoardObservable<D>? DataContext { get; set; }
     [Parameter]
     public string TargetWidth { get; set; } = "95%";
     [Parameter]

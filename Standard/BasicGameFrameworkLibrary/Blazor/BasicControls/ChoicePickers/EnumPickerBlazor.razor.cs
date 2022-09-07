@@ -9,7 +9,7 @@ public partial class EnumPickerBlazor<E>
     [Parameter]
     public int Columns { get; set; }
     [Parameter]
-    public string TargetSize { get; set; } = "25vh"; //can be adjustable as needed.
+    public string TargetSize { get; set; } = "25vh";
     [Parameter]
     public RenderFragment<BasicPickerData<E>>? ChildContent { get; set; }
     private int TotalRows()
@@ -83,7 +83,7 @@ public partial class EnumPickerBlazor<E>
         }
         if (Columns == 1 && Rows == 1)
         {
-            return 1; //has to have at least 1.
+            return 1;
         }
         var (columns, _) = SmartRowsColumns();
         return columns;

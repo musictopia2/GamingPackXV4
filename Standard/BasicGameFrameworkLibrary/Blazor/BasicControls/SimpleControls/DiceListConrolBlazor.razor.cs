@@ -28,14 +28,13 @@ public partial class DiceListConrolBlazor<D> : IDisposable
         {
             if (disposing)
             {
-                _command.RemoveAction(Cup!.CommandActionString); //no need for the action since this uses a dictionary.
+                _command.RemoveAction(Cup!.CommandActionString);
             }
             _disposedValue = true;
         }
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

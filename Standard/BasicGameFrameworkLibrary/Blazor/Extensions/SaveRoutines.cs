@@ -16,13 +16,12 @@ public static class SaveRoutines
     }
     private static async Task<BasicList<string>> GetKeyListAsync(this IJSRuntime js)
     {
-        //this should just return the list of all keys.
         var length = await js.GetLengthAsync();
         BasicList<string> output = new();
         for (int i = 0; i < length; i++)
         {
             int j = i;
-            output.Add(await js.KeyAsync(j)); //just to make sure it does not get hosed.
+            output.Add(await js.KeyAsync(j));
 
         }
         return output;

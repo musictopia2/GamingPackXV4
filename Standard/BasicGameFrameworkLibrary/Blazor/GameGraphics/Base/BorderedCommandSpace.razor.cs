@@ -6,7 +6,7 @@ public partial class BorderedCommandSpace
     [Parameter]
     public int BorderWidth { get; set; }
     [Parameter]
-    public string BorderColor { get; set; } = ""; //if no bordercolor, then don't even use this.
+    public string BorderColor { get; set; } = "";
     [Parameter]
     public string FillColor { get; set; } = cs.Transparent;
     private string ShapeStyle()

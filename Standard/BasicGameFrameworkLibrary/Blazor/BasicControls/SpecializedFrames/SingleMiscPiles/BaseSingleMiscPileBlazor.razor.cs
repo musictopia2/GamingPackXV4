@@ -12,7 +12,7 @@ public partial class BaseSingleMiscPileBlazor<D> : IDisposable, IHandleAsync<Ani
     [Parameter]
     public SingleObservablePile<D>? SinglePile { get; set; }
     [Parameter]
-    public bool UseKey { get; set; } = true; //allow the possibility of setting to false to see if that helps for a game like payday.
+    public bool UseKey { get; set; } = true;
     private D GetCard
     {
         get
@@ -39,7 +39,7 @@ public partial class BaseSingleMiscPileBlazor<D> : IDisposable, IHandleAsync<Ani
         });
     }
     [Parameter]
-    public RenderFragment<D>? CanvasTemplate { get; set; } //can't use generics because that control is responsible for knowing which one it is (via event aggregation).
+    public RenderFragment<D>? CanvasTemplate { get; set; }
     [Parameter]
     public RenderFragment<D>? MainTemplate { get; set; }
     private IEventAggregator? Aggregator { get; set; }
@@ -125,7 +125,6 @@ public partial class BaseSingleMiscPileBlazor<D> : IDisposable, IHandleAsync<Ani
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

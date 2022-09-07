@@ -3,7 +3,7 @@ public partial class GridGameBoard<S>
      where S : class, IBasicSpace, new()
 {
     [Parameter]
-    public IBoardCollection<S>? SpaceList { get; set; } //i do need it to be a boardcollection this time for sure.
+    public IBoardCollection<S>? SpaceList { get; set; }
     [Parameter]
     public string PreserveAspectRatio { get; set; } = "xMinYMin meet";
     [Parameter]
@@ -11,13 +11,13 @@ public partial class GridGameBoard<S>
     [Parameter]
     public RenderFragment<S>? ItemTemplate { get; set; }
     [Parameter]
-    public int TargetSpaceHeight { get; set; } //this the other controls can use as well.
+    public int TargetSpaceHeight { get; set; }
     [Parameter]
     public string GridHeight { get; set; } = "";
     [Parameter]
-    public string GridWidth { get; set; } = ""; //to make it more flexible
+    public string GridWidth { get; set; } = "";
     [Parameter]
-    public int TargetSpaceWidth { get; set; } //this can be used as well.
+    public int TargetSpaceWidth { get; set; }
     [Parameter]
     public BasicList<string> RowList { get; set; } = new();
     [Parameter]
@@ -76,7 +76,7 @@ public partial class GridGameBoard<S>
         return true;
     }
     protected bool CanHeadersBold = true;
-    protected virtual bool CanAddControl(IBoardCollection<S> itemsSource, int row, int column) => true; //defaults to true.
+    protected virtual bool CanAddControl(IBoardCollection<S> itemsSource, int row, int column) => true;
     internal string HeaderString(string value)
     {
         string boldText = "";

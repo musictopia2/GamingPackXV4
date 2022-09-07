@@ -12,5 +12,5 @@ public partial class DeckOfCardsMainRummySetsBlazor<RU, SE, T>
     [Parameter]
     public double AdditionalSpacing { get; set; } = -5;
     [Parameter]
-    public MainSetsObservable<EnumSuitList, EnumRegularColorList, RU, SE, T>? DataContext { get; set; } //hopefully this simple.
+    public MainSetsObservable<EnumSuitList, EnumRegularColorList, RU, SE, T>? DataContext { get; set; }
 }

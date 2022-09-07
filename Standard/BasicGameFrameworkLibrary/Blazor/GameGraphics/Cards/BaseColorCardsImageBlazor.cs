@@ -17,7 +17,7 @@ public abstract class BaseColorCardsImageBlazor<C> : BaseDarkCardsBlazor<C>
         }
         if (DeckObject!.Color == EnumColorTypes.ZOther || DeckObject!.Color == EnumColorTypes.None)
         {
-            return cs.White; //this will get hints of problems too.
+            return cs.White;
         }
         return PrivateColor();
     }

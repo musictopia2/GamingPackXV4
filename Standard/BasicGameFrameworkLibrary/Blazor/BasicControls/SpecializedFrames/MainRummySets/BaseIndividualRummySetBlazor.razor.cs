@@ -22,7 +22,7 @@ public partial class BaseIndividualRummySetBlazor<SU, CO, RU, SE, T>
         RU image = new();
         SizeF size = image.DefaultSize;
         var temps = TargetImageHeight * size.Width / size.Height;
-        return $"width: {temps}vh"; //hopefully this works.
+        return $"width: {temps}vh";
     }
     private async Task BoardClicked()
     {

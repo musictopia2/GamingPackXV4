@@ -10,7 +10,7 @@ public partial class LabelGridComponent
     [Parameter]
     public string Height { get; set; } = "";
     [Parameter]
-    public int DecimalPlaces { get; set; } = 2; //so if 0, then can do as well
+    public int DecimalPlaces { get; set; } = 2;
     private string GetValue(LabelGridModel label)
     {
         return DataContext!.GetValue(label.Name, DecimalPlaces);

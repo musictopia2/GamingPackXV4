@@ -9,5 +9,5 @@ public partial class YahtzeeTopPortionBlazor
     public RowInfo? TopScore { get; set; }
     private int GetRow(RowInfo row) => TopList.IndexOf(row) + 2;
     [Parameter]
-    public EventCallback<RowInfo> RowClicked { get; set; } //something else should handle this one.
+    public EventCallback<RowInfo> RowClicked { get; set; }
 }

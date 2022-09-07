@@ -1,6 +1,5 @@
-
 namespace BasicGameFrameworkLibrary.Blazor.Animations;
-public partial class AnimationVectorCanvas<S> : IHandleAsync<AnimatePieceEventModel<S>>, IDisposable //this requires generics since the other did and we are cascading to use the stuff from the parent board.
+public partial class AnimationVectorCanvas<S> : IHandleAsync<AnimatePieceEventModel<S>>, IDisposable
     where S : class, IBasicSpace, new()
 {
     private bool _disposedValue;
@@ -37,7 +36,7 @@ public partial class AnimationVectorCanvas<S> : IHandleAsync<AnimatePieceEventMo
         AnimatePiece = message.TemporaryObject!;
         if (AnimatePiece is ISelectableObject selects)
         {
-            selects.IsSelected = false; //set to false.
+            selects.IsSelected = false;
         }
         _animates.LocationFrom = MainBoard!.GetControlLocation(message.PreviousSpace.Row, message.PreviousSpace.Column);
         _animates.LocationTo = MainBoard.GetControlLocation(message.MoveToSpace.Row, message.MoveToSpace.Column);

@@ -5,11 +5,11 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
     [Parameter]
     public bool AlwaysUnknown { get; set; }
     [Parameter]
-    public D? DeckObject { get; set; } //they have to provide not only the command parameter but also the deckobject.
+    public D? DeckObject { get; set; }
     [Parameter]
-    public bool ClickBlank { get; set; } = false; //not sure if we need the ability to click a blank one in all cases or not (?)
+    public bool ClickBlank { get; set; } = false;
     [Parameter]
-    public PointF Location { get; set; } //this needs to be an option.
+    public PointF Location { get; set; }
     /// <summary>
     /// if this is part of a gameboard, then won't do the extra stuff to make borders fit.
     /// </summary>
@@ -69,7 +69,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
     }
     protected double GetDarkHighlighter() => .25;
     protected double GetLightHighlighter() => .1;
-    protected string FillColor { set; get; } = cs.White; //defaults to white but can be any color.
+    protected string FillColor { set; get; } = cs.White;
     protected float RoundedRadius = 6;
     protected virtual bool ShowDisabledColors { get; } = false;
     protected virtual void DrawHighlighters()
@@ -178,7 +178,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
             svg.ViewBox = $"0 0 {DefaultSize.Height} {DefaultSize.Width}";
         }
         MainGroup = new G();
-        svg.Children.Add(MainGroup); //everything is happening on the group because of the rotations.
+        svg.Children.Add(MainGroup);
         PopulateRotation();
         Rect rect = StartRectangle();
         rect.PopulateStrokesToStyles(strokeWidth: (int)BorderWidth);
@@ -200,7 +200,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         ISvg svg = new SVG();
         SvgRenderClass render = new()
         {
-            Allow0 = true //try this way.  because some cards can display 0.
+            Allow0 = true
         };
         if (TargetSize != "")
         {
@@ -234,7 +234,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         {
             if (DeckObject!.Rotated == false)
             {
-                svg.Height = TargetHeight; //trying something else.
+                svg.Height = TargetHeight;
             }
             else
             {
@@ -329,7 +329,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
                 DrawBacks();
                 if (DeckObject!.IsSelected)
                 {
-                    DrawHighlighters(); //has to do again since it overrided the highlighters.
+                    DrawHighlighters();
                 }
             }
             else if (EmptyBorders && DeckObject!.Deck == 0)
@@ -339,7 +339,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
             }
             else if (AlwaysUnknown && DeckObject!.Deck > 0)
             {
-                DrawBacks(); //attempt to keep the flickering from happening.
+                DrawBacks();
             }
 
             else if (DeckObject!.Deck != 0)
@@ -347,13 +347,13 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
                 DrawImage();
             }
         }
-        CreateClick(svg); //now it can do automatically.  has to do before drawing the image.
+        CreateClick(svg);
         render.RenderSvgTree(svg, 0, builder);
         base.BuildRenderTree(builder);
     }
     protected virtual void BeforeFilling() { }
     protected abstract void DrawImage();
-    private void PopulateRotation() //the location is already handled.
+    private void PopulateRotation()
     {
         if (DeckObject!.Rotated == false)
         {

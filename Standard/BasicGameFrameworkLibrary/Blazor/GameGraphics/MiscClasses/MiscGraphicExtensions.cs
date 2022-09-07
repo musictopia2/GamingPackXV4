@@ -5,7 +5,7 @@ public static class MiscGraphicExtensions
     public static void DrawPawnPiece(this IParentGraphic parent, RectangleF rectangle, string customColor)
     {
         SVG svg = new();
-        svg.PopulateSVGStartingPoint(rectangle); //well see about doing it this way as well.
+        svg.PopulateSVGStartingPoint(rectangle);
         svg.ViewBox = "0 0 100 100";
         svg.DrawPawnPiece(customColor);
         parent.Children.Add(svg);
@@ -37,7 +37,6 @@ public static class MiscGraphicExtensions
     }
     public static void DrawDice(this IParentGraphic parent, RectangleF rectangle, int value)
     {
-        //decided to be G because this is intended to be used with cards.  could change if i have to though.
         Image image = new();
         Assembly current = Assembly.GetExecutingAssembly(); //needs reflection because of needing assembly for the svg.
         string name = $"Dice{value}.svg";
@@ -68,7 +67,6 @@ public static class MiscGraphicExtensions
         if (solidColor != "")
         {
             ellipse.Fill = solidColor.ToWebColor();
-
         }
         ellipse.PopulateStrokesToStyles(borderColor.ToWebColor(), (int)borderSize);
         parent.Children.Add(ellipse);
@@ -94,17 +92,5 @@ public static class MiscGraphicExtensions
         ellipse.PopulateEllipse(rect_Eye);
         ellipse.Fill = eyeColor.ToWebColor();
         parent.Children.Add(ellipse);
-
-
-
-        //Ellipse ellipsef = new();
-        //ellipsef.PopulateEllipse(rectangle);
-        //if (solidColor != "")
-        //{
-        //    ellipsef.Fill = solidColor.ToWebColor();
-
-        //}
-        //ellipsef.PopulateStrokesToStyles(borderColor.ToWebColor(), (int)borderSize);
-        //parent.Children.Add(ellipsef);
     }
 }

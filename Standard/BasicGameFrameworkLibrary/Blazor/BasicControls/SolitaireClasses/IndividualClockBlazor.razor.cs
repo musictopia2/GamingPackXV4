@@ -29,7 +29,7 @@ public partial class IndividualClockBlazor : IDisposable, IHandle<CurrentCardEve
         else if (SingleClock != null && _didUpdate == false && DataContext!.ShowCenter == false && SingleClock.CardList.Count > 0)
         {
             _didUpdate = true;
-            UpdateClock(0); //try this too.
+            UpdateClock(0);
         }
     }
     private void LinkCard()
@@ -127,7 +127,6 @@ public partial class IndividualClockBlazor : IDisposable, IHandle<CurrentCardEve
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

@@ -9,7 +9,7 @@ public partial class DeckOfCardsSingleMiscPileBlazor<R>
     [Parameter]
     public SingleObservablePile<R>? SinglePile { get; set; }
     [Parameter]
-    public bool UseKey { get; set; } = true; //allow the possibility of setting to false to see if that helps for a game like payday.
+    public bool UseKey { get; set; } = true;
     [Parameter]
     public string PileAnimationTag { get; set; } = "maindiscard";
     private string RealHeight => $"{TargetHeight}vh";

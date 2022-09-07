@@ -64,7 +64,7 @@ public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
         bool rets = _js.ContainsKey(_multiName);
         if (rets == false)
         {
-            return EnumRestoreCategory.NoRestore; //because there is no autoresume game.
+            return EnumRestoreCategory.NoRestore;
         }
         if (_test.SaveOption == EnumTestSaveCategory.RestoreOnly)
         {
@@ -82,7 +82,7 @@ public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
         bool rets = _js.ContainsKey(_singleName);
         if (rets == false)
         {
-            return EnumRestoreCategory.NoRestore; //because there is no autoresume game.
+            return EnumRestoreCategory.NoRestore;
         }
         if (_test.SaveOption == EnumTestSaveCategory.RestoreOnly)
         {
@@ -150,6 +150,4 @@ public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
             return "";
         }
     }
-
-    
 }

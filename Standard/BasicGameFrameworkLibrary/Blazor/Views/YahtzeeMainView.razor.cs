@@ -14,7 +14,6 @@ public partial class YahtzeeMainView<D>
         _labels.Clear();
         IYahtzeeStyle yahtzeeStyle = Resolver!.Resolve<IYahtzeeStyle>();
         _bottomDescriptionWidth = yahtzeeStyle.BottomDescriptionWidth;
-        //DataContext!.CommandContainer.AddAction(ShowChange);
         _labels.AddLabel("Turn", nameof(YahtzeeVMData<D>.NormalTurn))
             .AddLabel("Roll", nameof(YahtzeeVMData<D>.RollNumber))
             .AddLabel("Status", nameof(YahtzeeVMData<D>.Status))

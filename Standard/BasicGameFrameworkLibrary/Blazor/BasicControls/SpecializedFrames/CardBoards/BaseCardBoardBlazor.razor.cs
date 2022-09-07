@@ -3,9 +3,9 @@ public partial class BaseCardBoardBlazor<D>
     where D : class, IDeckObject, new()
 {
     [CascadingParameter]
-    public int TargetHeight { get; set; } //i like this idea.  this seems to be working really well.
+    public int TargetHeight { get; set; }
     [Parameter]
-    public GameBoardObservable<D>? DataContext { get; set; } //only iffy part is new game.
+    public GameBoardObservable<D>? DataContext { get; set; }
     [Parameter]
     public RenderFragment<D>? ChildContent { get; set; }
     private SizeF DefaultSize { get; set; }

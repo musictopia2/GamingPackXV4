@@ -14,10 +14,7 @@ public partial class BaseDrawPileBlazor<D> : IDisposable, IHandleAsync<AnimateCa
     [Parameter]
     public string DeckAnimationTag { get; set; } = "maindeck";
     private AnimateDeckImageTimer? _animates;
-    public BaseDrawPileBlazor()
-    {
-
-    }
+    public BaseDrawPileBlazor(){ }
     private partial void Subscribe(string tag);
     private partial void Unsubscribe(string tag);
     private void ShowChange()
@@ -28,7 +25,7 @@ public partial class BaseDrawPileBlazor<D> : IDisposable, IHandleAsync<AnimateCa
         });
     }
     [Parameter]
-    public RenderFragment<D>? CanvasTemplate { get; set; } //can't use generics because that control is responsible for knowing which one it is (via event aggregation).
+    public RenderFragment<D>? CanvasTemplate { get; set; }
     [Parameter]
     public RenderFragment<D>? MainTemplate { get; set; }
     private IEventAggregator? Aggregator { get; set; }
@@ -40,7 +37,7 @@ public partial class BaseDrawPileBlazor<D> : IDisposable, IHandleAsync<AnimateCa
     private string GetMarginsForTextCenter()
     {
         float tops = GetHalfTop();
-        return $"margin-top: -{tops}vh"; //hopefully this works.
+        return $"margin-top: -{tops}vh";
     }
     private SizeF _defaultSize;
     private bool _disposedValue;
@@ -49,9 +46,9 @@ public partial class BaseDrawPileBlazor<D> : IDisposable, IHandleAsync<AnimateCa
         _animates = new();
         D card = new();
         _defaultSize = card.DefaultSize;
-        Aggregator = aa.Resolver!.Resolve<IEventAggregator>();
+        Aggregator = Resolver!.Resolve<IEventAggregator>();
         Subscribe(DeckAnimationTag);
-        _animates.StateChanged = ShowChange; //tried the statechanged but still did not work.
+        _animates.StateChanged = ShowChange;
         _animates.LongestTravelTime = 200;
         base.OnInitialized();
     }
@@ -64,7 +61,7 @@ public partial class BaseDrawPileBlazor<D> : IDisposable, IHandleAsync<AnimateCa
     private D? AnimateDeckImage { get; set; }
     private double ObjectLocation { get; set; } = 0;
     private double TopLocation { get; set; }
-    private double BottomLocation { get; set; } //if its 8, then has to figure out what else to do (?)
+    private double BottomLocation { get; set; }
     async Task IHandleAsync<AnimateCardInPileEventModel<D>>.HandleAsync(AnimateCardInPileEventModel<D> message)
     {
         var card = new D();
@@ -78,7 +75,7 @@ public partial class BaseDrawPileBlazor<D> : IDisposable, IHandleAsync<AnimateCa
             card.IsUnknown = true;
         }
         AnimateDeckImage = card;
-        AnimateDeckImage!.IsSelected = false; //just in case.
+        AnimateDeckImage!.IsSelected = false;
         switch (message.Direction)
         {
             case EnumAnimcationDirection.StartUpToCard:
@@ -117,7 +114,6 @@ public partial class BaseDrawPileBlazor<D> : IDisposable, IHandleAsync<AnimateCa
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

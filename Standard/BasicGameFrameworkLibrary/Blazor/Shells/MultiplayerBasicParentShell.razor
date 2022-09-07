@@ -1,7 +1,6 @@
 ﻿@using BlazorMVVMHelpersLibrary
 @using BasicGameFrameworkLibrary.Blazor.Views
 @using aa = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
-@*@using bb = BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalDelegates;*@
 @using BasicGameFrameworkLibrary.Core.TestUtilities
 @using BasicBlazorLibrary.Components.MediaQueries.ParentClasses
 @if (BasicData == null || GameData == null)
@@ -43,10 +42,6 @@
                                 }
                                 <GameButtonComponent CustomCallBack="aa.BackToMainDelegate" Display="Back To Main" />
                             }
-                            @*@if (bb.TransferToDesktop is not null && Media!.DeviceCategory != EnumDeviceCategory.Phone &&  BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome  )
-                            {
-                                <GameButtonComponent CustomCallBack="TransferToDesktop" Display="Transfer To Desktop" />
-                            }*@
                             @if (TestData!.ShowNickNameOnShell)
                             {
                                 <span style="font-size: 5vh; margin-right: 10px;">
@@ -65,7 +60,6 @@
                                     <NewRoundView />
                                 </ParentControl>
                             }
-
                             @if (TestData!.SaveOption == EnumTestSaveCategory.RestoreOnly)
                             {
                                 <ParentControl VM="RestoreViewModel">
@@ -101,8 +95,6 @@
                                 This game is not supported on phones.
                             </div>
                         }
-
-                        
                     </MainContent>
                 </LeftOverLayout>
             }

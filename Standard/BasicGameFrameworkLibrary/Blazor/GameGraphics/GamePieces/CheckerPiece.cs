@@ -31,7 +31,7 @@ public class CheckerPiece : ComponentBase
     [CascadingParameter]
     public BasePieceGraphics? MainGraphics { get; set; }
     [Parameter]
-    public string MainColor { get; set; } = cs.Transparent; //if not set, then nothing will show obviously.
+    public string MainColor { get; set; } = cs.Transparent;
     [Parameter]
     public EnumCheckerPieceCategory PieceCategory { get; set; } = EnumCheckerPieceCategory.OnlyPiece; //only game of checkers has to do with single/crowned.
     [Parameter]
@@ -74,7 +74,7 @@ public class CheckerPiece : ComponentBase
         linear.X2 = "300";
         linear.Y2 = linear.Y1;
         defs.Children.Add(linear);
-        svg.Children.Add(defs); //hopefully this simple.
+        svg.Children.Add(defs);
         Stop stop = new()
         {
             Offset = "0",
@@ -90,7 +90,7 @@ public class CheckerPiece : ComponentBase
     }
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        ISvg svg = MainGraphics!.GetMainSvg(false); //try to set this to false (?)
+        ISvg svg = MainGraphics!.GetMainSvg(false);
         SvgRenderClass render = new();
         if (HasImage == false)
         {
@@ -98,7 +98,7 @@ public class CheckerPiece : ComponentBase
             render.RenderSvgTree(svg, 0, builder);
             return;
         }
-        BuildDefs(svg); //forgot this too.
+        BuildDefs(svg);
         if (PieceCategory == EnumCheckerPieceCategory.FlatPiece)
         {
             PopulateFlatPiece(svg);
@@ -111,7 +111,7 @@ public class CheckerPiece : ComponentBase
     }
     private void PopulateCrownOrRegular(ISvg svg)
     {
-        Ellipse ellipse; //looks like was not necessary to change the numbers this time.  that was good.
+        Ellipse ellipse;
         ellipse = new()
         {
             Fill = MainColor.ToWebColor(),

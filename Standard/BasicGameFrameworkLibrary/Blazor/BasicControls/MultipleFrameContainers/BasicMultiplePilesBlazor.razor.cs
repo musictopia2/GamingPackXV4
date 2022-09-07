@@ -30,7 +30,7 @@ public partial class BasicMultiplePilesBlazor<D> : IDisposable, IHandleAsync<Ani
         _animates = new();
         D item = new();
         Aggregator = Resolver!.Resolve<IEventAggregator>();
-        Subscribe(AnimationTag); //hopefully will work.
+        Subscribe(AnimationTag);
         _animates.StateChanged = ShowChange;
         _animates.LongestTravelTime = 200;
         base.OnInitialized();
@@ -44,9 +44,9 @@ public partial class BasicMultiplePilesBlazor<D> : IDisposable, IHandleAsync<Ani
         base.OnParametersSet();
     }
     [Parameter]
-    public RenderFragment<D>? CanvasTemplate { get; set; } //can't use generics because that control is responsible for knowing which one it is (via event aggregation).
+    public RenderFragment<D>? CanvasTemplate { get; set; }
     [Parameter]
-    public RenderFragment<BasicPileInfo<D>>? MainTemplate { get; set; } //because of cascading, hopefully the child can render what is needed.
+    public RenderFragment<BasicPileInfo<D>>? MainTemplate { get; set; }
     [Parameter]
     public RenderFragment? MiscRowTemplate { get; set; }
     [Parameter]
@@ -96,12 +96,12 @@ public partial class BasicMultiplePilesBlazor<D> : IDisposable, IHandleAsync<Ani
     }
     async Task IHandleAsync<AnimateCardInPileEventModel<D>>.HandleAsync(AnimateCardInPileEventModel<D> message)
     {
-        ShowPrevious = false; //just in case.
+        ShowPrevious = false;
         AnimatePile = message.ThisPile;
         AltShowImage = null;
         AnimateDeckImage = message.ThisCard;
         CurrentObject = message.ThisCard!;
-        CurrentObject.IsSelected = false; //just in case.
+        CurrentObject.IsSelected = false;
         switch (message.Direction)
         {
             case EnumAnimcationDirection.StartUpToCard:
@@ -150,7 +150,6 @@ public partial class BasicMultiplePilesBlazor<D> : IDisposable, IHandleAsync<Ani
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

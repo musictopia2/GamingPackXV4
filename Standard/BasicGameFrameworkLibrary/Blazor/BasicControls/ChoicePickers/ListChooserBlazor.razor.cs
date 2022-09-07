@@ -28,7 +28,7 @@ public partial class ListChooserBlazor
         }
         return ListPicker.TextList.Count;
     }
-    private int TotalRows(int total) //this is useful for more than one occasion.
+    private int TotalRows(int total)
     {
         if (TotalColumns == 0)
         {

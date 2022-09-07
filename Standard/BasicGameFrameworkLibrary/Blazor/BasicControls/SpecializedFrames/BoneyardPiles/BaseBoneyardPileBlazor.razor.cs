@@ -4,7 +4,6 @@ public partial class BaseBoneyardPileBlazor<D, LI> : IDisposable
     where LI : class, IScatterList<D>, new()
 {
     private bool _disposedValue;
-
     //had to do a workaround because was unable to scatter for now.
     [Parameter]
     public ScatteringPiecesObservable<D, LI>? BoneyardPile { get; set; }
@@ -18,7 +17,7 @@ public partial class BaseBoneyardPileBlazor<D, LI> : IDisposable
     protected override void OnInitialized()
     {
         CommandContainer command = Resolver!.Resolve<CommandContainer>();
-        command.AddAction(ShowChange, "bone"); //try this way (?)
+        command.AddAction(ShowChange, "bone");
         base.OnInitialized();
     }
     [Parameter]
@@ -38,14 +37,13 @@ public partial class BaseBoneyardPileBlazor<D, LI> : IDisposable
             if (disposing)
             {
                 CommandContainer command = Resolver!.Resolve<CommandContainer>();
-                command.RemoveAction("bone"); //iffy (?)
+                command.RemoveAction("bone");
             }
             _disposedValue = true;
         }
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

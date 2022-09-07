@@ -13,12 +13,12 @@ public class ListViewPiece : ComponentBase
     {
         if (_previousRecord == null)
         {
-            return true; //try this way just in case.
+            return true;
         }
         return _previousRecord!.Equals(GetRecord) == false;
     }
     [CascadingParameter]
-    public BasePieceGraphics? MainGraphics { get; set; } //still needed to get the start of the svg.  plus needs to have its start rectangle anyways.
+    public BasePieceGraphics? MainGraphics { get; set; }
     [Parameter]
     public ListPieceModel? DataContext { get; set; }
     [Parameter]
@@ -34,12 +34,12 @@ public class ListViewPiece : ComponentBase
     {
         if (CanDrawText() == false)
         {
-            return; //can't even continue because you can't draw.
+            return;
         }
         SelectProcesses();
         ISvg svg = MainGraphics!.GetMainSvg();
         SvgRenderClass render = new();
-        render.Allow0 = true; //try this.  because games like payday may need 0 to be allowed (?)
+        render.Allow0 = true;
         Text text = new();
         text.CenterText();
         text.Fill = TextColor.ToWebColor();

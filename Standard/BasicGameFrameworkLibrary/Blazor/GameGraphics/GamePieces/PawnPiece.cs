@@ -23,7 +23,7 @@ public class PawnPiece : ComponentBase
     [CascadingParameter]
     public BasePieceGraphics? MainGraphics { get; set; }
     [Parameter]
-    public string MainColor { get; set; } = cs.Transparent; //if not set, then nothing will show obviously.
+    public string MainColor { get; set; } = cs.Transparent;
     protected override void OnInitialized()
     {
         MainGraphics!.OriginalSize = new SizeF(100, 100); //decided to use 150 by 150 this time.
@@ -33,7 +33,7 @@ public class PawnPiece : ComponentBase
     }
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        ISvg svg = MainGraphics!.GetMainSvg(false); //try to set this to false (?)
+        ISvg svg = MainGraphics!.GetMainSvg(false);
         svg.DrawPawnPiece(MainColor);
         SvgRenderClass render = new();
         render.RenderSvgTree(svg, 0, builder);

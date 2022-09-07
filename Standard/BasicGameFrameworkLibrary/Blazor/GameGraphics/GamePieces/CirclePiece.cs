@@ -20,7 +20,7 @@ public class CirclePiece : ComponentBase
     [CascadingParameter]
     public BasePieceGraphics? MainGraphics { get; set; }
     [Parameter]
-    public string MainColor { get; set; } = cs.Transparent; //if not set, then nothing will show obviously.
+    public string MainColor { get; set; } = cs.Transparent;
     [Parameter]
     public bool NeedsWhiteBorders { get; set; }
     protected override void OnInitialized()

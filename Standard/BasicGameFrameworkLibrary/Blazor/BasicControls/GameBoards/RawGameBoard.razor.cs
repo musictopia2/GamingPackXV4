@@ -8,14 +8,14 @@ public partial class RawGameBoard : IDisposable, IHandle<RepaintEventModel>
     {
         if (UseBuiltInAnimations == true)
         {
-            _aggregator = aa.Resolver!.Resolve<IEventAggregator>();
-            Subscribe(); //later can rethink.
+            _aggregator = Resolver!.Resolve<IEventAggregator>();
+            Subscribe();
         }
         base.OnInitialized();
     }
     private partial void Subscribe();
     private partial void Unsubscribe();
-    protected virtual bool UseBuiltInAnimations { get; } = true; //defaults to true.  however, game of life spinner will do something different.
+    protected virtual bool UseBuiltInAnimations { get; } = true;
     [Parameter]
     public string TargetHeight { get; set; } = "";
     [Parameter]
@@ -36,7 +36,7 @@ public partial class RawGameBoard : IDisposable, IHandle<RepaintEventModel>
         }
         if (TargetHeight != "" && TargetWidth != "")
         {
-            return ""; //try this too so you have to pick between 2 options.
+            return "";
         }
 
         if (TargetHeight != "")
@@ -53,7 +53,7 @@ public partial class RawGameBoard : IDisposable, IHandle<RepaintEventModel>
     {
         if (UseBuiltInAnimations)
         {
-            Unsubscribe(); //has to be protected now.
+            Unsubscribe();
         }
     }
     protected void RefreshBoard()
@@ -85,7 +85,6 @@ public partial class RawGameBoard : IDisposable, IHandle<RepaintEventModel>
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

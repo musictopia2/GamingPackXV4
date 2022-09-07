@@ -7,10 +7,9 @@ public static class GlobalSettingsExtensions
         GlobalDataModel output;
         bool rets;
         rets = await js.ContainsKeyAsync(GlobalDataModel.LocalStorageKey); //has to use async version in order to work with wpf.
-        //if (js.con)
         if (rets == false)
         {
-            output = new GlobalDataModel(); //just return a new global data model if not there
+            output = new GlobalDataModel();
         }
         else
         {

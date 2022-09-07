@@ -1,9 +1,7 @@
-﻿using BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses; //has to be here because not common enough.
-namespace BasicGameFrameworkLibrary.Blazor.StartupClasses;
+﻿namespace BasicGameFrameworkLibrary.Blazor.StartupClasses;
 public class SinglePlayerStartUpClass : IStartUp
 {
     public static bool? IsWasm { get; set; }
-    //hopefully has a way to do another way of doing autoresume for desktop (to help in testing).  besides, that is flexible.
     void IStartUp.RegisterCustomClasses(IGamePackageDIContainer container, bool multiplayer, BasicData data)
     {
         if (multiplayer == true)

@@ -5,14 +5,11 @@ public partial class MultiplayerBasicParentShell
     public RenderFragment? ChildContent { get; set; }
     [CascadingParameter]
     private MediaQueryListComponent? Media { get; set; }
-    public BasicData? BasicData { get; set; } //maybe this should be cascaded.
-    public IGameInfo? GameData { get; set; } //i don't think this one needs to
+    public BasicData? BasicData { get; set; }
+    public IGameInfo? GameData { get; set; }
     public TestOptions? TestData { get; set; }
-    //good news is worked in desktop mode.
-    //however, very iffy because i would like the possibility of not even requiring the js.
-    //could be okay (for now. not sure).
     [Inject]
-    private IJSRuntime? JS { get; set; } //now needs this because will attempt to do into local storage even on desktop mode (not sure if this will work or not).
+    private IJSRuntime? JS { get; set; }
     private bool _loading = true;
     private bool _hadNickName;
     private bool _fullScreen;
@@ -37,18 +34,18 @@ public partial class MultiplayerBasicParentShell
             }
             await JS!.OpenFullScreen();
             _fullScreen = true;
-            StateHasChanged(); //i think.
+            StateHasChanged();
         };
         TestData = Resolver!.Resolve<TestOptions>();
         GameData = Resolver!.Resolve<IGameInfo>();
         CommandContainer command = Resolver!.Resolve<CommandContainer>();
         command.ParentAction = StateHasChanged;
         IStartUp starts = Resolver!.Resolve<IStartUp>();
-        starts.StartVariables(BasicData); //eventually would do something else to figure out who it is.
+        starts.StartVariables(BasicData);
         if (BasicData.NickName != "")
         {
-            _hadNickName = true; //because it got it somehow even if from native or other external process.
-            _loading = false; //try this.
+            _hadNickName = true;
+            _loading = false;
         }
         base.OnInitialized();
     }
@@ -95,7 +92,7 @@ public partial class MultiplayerBasicParentShell
         
         if (firstRender && BasicData.NickName == "")
         {
-            string item = await JS.StorageGetStringAsync("nickname"); //maybe here but different behavior with wasm
+            string item = await JS.StorageGetStringAsync("nickname");
             if (item is not null)
             {
                 item = item.Replace(Constants.QQ, "");
@@ -106,7 +103,7 @@ public partial class MultiplayerBasicParentShell
                 _hadNickName = true;
             }
             _loading = false;
-            StateHasChanged(); //try this too.
+            StateHasChanged();
         }
     }
     protected override void OnParametersSet()

@@ -18,7 +18,7 @@ public partial class GameButtonComponent : IDisposable
         {
             return;
         }
-        _commandContainer = Resolver!.Resolve<CommandContainer>(); //try this way.
+        _commandContainer = Resolver!.Resolve<CommandContainer>();
         if (CommandObject is not null)
         {
 
@@ -67,7 +67,7 @@ public partial class GameButtonComponent : IDisposable
     {
         if (CustomCallBack.HasDelegate || CommandObject is null)
         {
-            return false; //because a callback has to always allow or if we don't even have commandboject.
+            return false;
         }
         bool rets = CommandObject.CanExecute(CommandParameter);
         return rets == false;
@@ -76,12 +76,12 @@ public partial class GameButtonComponent : IDisposable
     {
         if (CustomCallBack.HasDelegate)
         {
-            await CustomCallBack.InvokeAsync(); //in this case, always allow no matter what.
+            await CustomCallBack.InvokeAsync();
             return;
         }
         if (CommandObject == null)
         {
-            return; //nothing to submit
+            return;
         }
         if (CommandObject.CanExecute(CommandParameter) == false)
         {
@@ -100,22 +100,16 @@ public partial class GameButtonComponent : IDisposable
                 {
                     return;
                 }
-                //CommandContainer command = aa.Resolver.Resolve<CommandContainer>();
                 if (CommandObject is IGameCommand other)
                 {
                     _commandContainer!.RemoveCommand(other);
                 }
-                //else
-                //{
-                //    _commandContainer!.RemoveAction();
-                //}
             }
             _disposedValue = true;
         }
     }
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
