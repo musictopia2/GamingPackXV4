@@ -6,12 +6,6 @@ using System.Drawing; //don't worry about globalusings because this is all there
 namespace MahjongTilesBlazor;
 public class MahjongTilesComponent : BaseDeckGraphics<MahjongSolitaireTileInfo>
 {
-    //somehow don't have this anymore (?)
-    //iffy now
-    //protected override bool NeedsCommand()
-    //{
-    //    return DeckObject!.IsEnabled;
-    //}
     public MahjongTilesComponent() { }
     protected override SizeF DefaultSize { get; } = new SizeF(136, 176);
     protected override bool NeedsToDrawBacks { get; } = false;
@@ -26,7 +20,6 @@ public class MahjongTilesComponent : BaseDeckGraphics<MahjongSolitaireTileInfo>
     }
     protected override void DrawImage() //what makes this one so big is the mahjong tiles.
     {
-        //this is where i focus on the image i am drawing.
         Image image = new();
         image.PopulateFullExternalImage(this, $"{DeckObject!.Index}.svg");
         PopulateImage(image);
