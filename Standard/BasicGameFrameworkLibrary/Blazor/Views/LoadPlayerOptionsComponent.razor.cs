@@ -1,3 +1,5 @@
+using System.Runtime.Intrinsics.Arm;
+
 namespace BasicGameFrameworkLibrary.Blazor.Views;
 public partial class LoadPlayerOptionsComponent<P>
     where P : class, IPlayerItem, new()
@@ -61,10 +63,17 @@ public partial class LoadPlayerOptionsComponent<P>
             {
                 _completeList[i] = _completeList[i] - DataContext!.ClientsConnected;
             }
-            if (_completeList.First() == 0)
+            do
             {
-                _completeList.RemoveFirstItem(); //because there is already an option to have no extra computer players.
-            }
+                if (_completeList.First() < 1)
+                {
+                    _completeList.RemoveFirstItem();
+                }
+                if (_completeList.Count == 0 || _completeList.First() >= 1)
+                {
+                    break;
+                }
+            } while (true);
         }
         base.OnParametersSet();
     }

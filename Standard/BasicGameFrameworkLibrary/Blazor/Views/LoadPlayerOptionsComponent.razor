@@ -7,6 +7,10 @@
 {
     return; //if this is extras, then if not visible, then can't consider.
 }
+@if (PlayOption == EnumPlayOptions.ComputerExtra && DataContext.ClientsConnected == 0)
+{
+    return; //because there has to be at least one connected first.
+}
 @if (PlayOption == EnumPlayOptions.Solitaire)
 {
     var temps = SolitaireData();
