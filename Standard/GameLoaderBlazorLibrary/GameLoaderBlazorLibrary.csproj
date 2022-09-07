@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<Version>1.0.1</Version>
   </PropertyGroup>
 
 
@@ -12,12 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="1.0.1" />
+    <PackageReference Include="GamePackageSignalRClasses" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
-    <ProjectReference Include="..\GamePackageSignalRClasses\GamePackageSignalRClasses.csproj" />
   </ItemGroup>
 
   
