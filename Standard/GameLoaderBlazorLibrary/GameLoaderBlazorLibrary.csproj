@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <PackageReference Include="BasicGameFrameworkLibrary" Version="1.0.1" />
-    <PackageReference Include="GamePackageSignalRClasses" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
   </ItemGroup>
 
