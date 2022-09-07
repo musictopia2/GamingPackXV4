@@ -4,15 +4,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <Version>1.0.1</Version>
   </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+		<PackageReference Include="BasicGameFrameworkLibrary" Version="1.0.1" />
+		<PackageReference Include="GamePackageSerializeGenerator" Version="1.0.1" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-		<PackageReference Include="Microsoft.Azure.SignalR" Version="1.18.1" />
+		<PackageReference Include="Microsoft.Azure.SignalR" Version="1.18.3" />
 	</ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Generators\GamePackageSerializeGenerator\GamePackageSerializeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
-  </ItemGroup>
 
 </Project>
