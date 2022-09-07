@@ -14,7 +14,7 @@ global using BasicGameFrameworkLibrary.Core.CommandClasses;
 global using BasicGameFrameworkLibrary.Core.DIContainers;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
 global using static CommonBasicLibraries.BasicDataSettingsAndProcesses.BasicDataFunctions;
-global using js = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //this is very common too
+global using js = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExtensions;
 global using System.Collections;
 global using cs = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
@@ -97,5 +97,3 @@ global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHel
 global using ab = BasicBlazorLibrary.Components.CssGrids.Helpers;
 global using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
 global using BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses; //looks like became common enough because transfer to desktop.
-
-//global using static BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalDelegates;
