@@ -44,25 +44,27 @@ public static class MiscGraphicExtensions
         image.PopulateImagePositionings(rectangle);
         parent.Children.Add(image);
     }
-    public static void DrawStar(this IParentGraphic parent, RectangleF bounds, string solidColor, string borderColor, float borderSize)
+    public static void DrawStar(this IParentContainer parent, RectangleF bounds, string solidColor, string borderColor, float borderSize)
     {
         var svg = new SVG();
         svg.PopulateSVGStartingPoint(bounds);
         svg.ViewBox = "0 0 51 48";
         parent.Children.Add(svg);
         Path path = new();
+        path.AutoIncrementElement(parent);
         path.D = "m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z";
         path.Fill = solidColor.ToWebColor();
         path.PopulateStrokesToStyles(borderColor.ToWebColor(), borderSize);
         svg.Children.Add(path);
     }
-    public static void DrawSmiley(this IParentGraphic parent, RectangleF rectangle, string solidColor, string borderColor, string eyeColor, float borderSize) //i think
+    public static void DrawSmiley(this IParentContainer parent, RectangleF rectangle, string solidColor, string borderColor, string eyeColor, float borderSize) //i think
     {
         if (borderColor == "" || eyeColor == "")
         {
             throw new CustomBasicException("Must have an eye color and border color at least");
         }
         Ellipse ellipse = new();
+        ellipse.AutoIncrementElement(parent);
         ellipse.PopulateEllipse(rectangle);
         if (solidColor != "")
         {
@@ -80,15 +82,18 @@ public static class MiscGraphicExtensions
         path.D = $"M {firstPoint.X} {firstPoint.Y} Q {secondPoint.X} {secondPoint.Y} {thirdPoint.X} {thirdPoint.Y}";
         parent.Children.Add(path);
         ellipse = new Ellipse();
+        ellipse.AutoIncrementElement(parent);
         ellipse.PopulateEllipse(rectangle);
         parent.Children.Add(ellipse);
         var rect_Eye = new RectangleF(rectangle.Location.X + rectangle.Width / 4, rectangle.Location.Y + rectangle.Height / 4, rectangle.Width / 10, rectangle.Width / 10);
         ellipse = new Ellipse();
+        ellipse.AutoIncrementElement(parent);
         ellipse.PopulateEllipse(rect_Eye);
         ellipse.Fill = eyeColor.ToWebColor();
         parent.Children.Add(ellipse);
         rect_Eye = new RectangleF(rectangle.Location.X + rectangle.Width * 3 / 4 - rectangle.Width / 10, rectangle.Location.Y + rectangle.Height / 4, rectangle.Width / 10, rectangle.Width / 10);
         ellipse = new Ellipse();
+        ellipse.AutoIncrementElement(parent);
         ellipse.PopulateEllipse(rect_Eye);
         ellipse.Fill = eyeColor.ToWebColor();
         parent.Children.Add(ellipse);

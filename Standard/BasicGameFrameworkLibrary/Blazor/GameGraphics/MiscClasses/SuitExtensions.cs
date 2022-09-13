@@ -1,15 +1,16 @@
 ﻿namespace BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
 public static class SuitExtensions
 {
-    public static void DrawCardSuit(this IParentGraphic parent, EnumSuitList suit, float x, float y, float width, float height, string color)
+    public static void DrawCardSuit(this IParentContainer parent, EnumSuitList suit, float x, float y, float width, float height, string color)
     {
         RectangleF rect = new(x, y, width, height);
         parent.DrawCardSuit(suit, rect, color);
     }
-    public static void DrawRoyalSuits(this IParentGraphic parent, RectangleF rectangle, string fillColor, string borderColor = "", int borderSize = 0)
+    public static void DrawRoyalSuits(this IParentContainer parent, RectangleF rectangle, string fillColor, string borderColor = "", int borderSize = 0)
     {
         ISvg svg = new SVG();
         svg.PopulateSVGStartingPoint(rectangle);
+        svg.AutoIncrementElement(parent);
         svg.ViewBox = "0 0 792 792";
         Path path = new();
         svg.Children.Add(path);
@@ -23,7 +24,7 @@ public static class SuitExtensions
         }
         parent.Children.Add(svg);
     }
-    public static void DrawCardSuit(this IParentGraphic parent, EnumSuitList suit, RectangleF rectangle, string color)
+    public static void DrawCardSuit(this IParentContainer parent, EnumSuitList suit, RectangleF rectangle, string color)
     {
         if (suit == EnumSuitList.Clubs)
         {
@@ -33,8 +34,8 @@ public static class SuitExtensions
         ISvg svg;
         if (suit == EnumSuitList.Spades)
         {
-
             svg = new SVG();
+            svg.AutoIncrementElement(parent);
             svg.PopulateSVGStartingPoint(rectangle);
             svg.ViewBox = "68.547241 122.68109 537.42297 635.16461";
             parent.Children.Add(svg);
@@ -48,6 +49,7 @@ public static class SuitExtensions
         if (suit == EnumSuitList.Hearts)
         {
             svg = new SVG();
+            svg.AutoIncrementElement(parent);
             svg.PopulateSVGStartingPoint(rectangle);
             svg.ViewBox = "0 0 40 40";
             parent.Children.Add(svg);
@@ -61,6 +63,7 @@ public static class SuitExtensions
         if (suit == EnumSuitList.Diamonds)
         {
             svg = new SVG();
+            svg.AutoIncrementElement(parent);
             svg.PopulateSVGStartingPoint(rectangle);
             svg.ViewBox = "0 0 127 175";
             parent.Children.Add(svg);
@@ -74,12 +77,13 @@ public static class SuitExtensions
             return;
         }
     }
-    private static void DrawClubs(IParentGraphic parent, RectangleF rectangle, string color)
+    private static void DrawClubs(IParentContainer parent, RectangleF rectangle, string color)
     {
         ISvg svg = new SVG
         {
             ViewBox = "0 0 400 400"
         };
+        svg.AutoIncrementElement(parent);
         svg.PopulateSVGStartingPoint(rectangle);
         parent.Children.Add(svg);
         Circle circle = new();

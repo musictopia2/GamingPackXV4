@@ -260,7 +260,6 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
             }
         }
     }
-
     private void DrawSuit(RectangleF rect_Suit, bool bln_Flip)
     {
         EnumSuitList suitName = SuitToDisplay;
@@ -273,7 +272,6 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         {
             color = cs.Red;
         }
-
         G currentGroup;
         if (bln_Flip == false)
         {
