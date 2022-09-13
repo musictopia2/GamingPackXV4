@@ -119,6 +119,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         }
         output.RX = RoundedRadius.ToString();
         output.RY = RoundedRadius.ToString();
+        output.AutoIncrementElement(MainGroup!);
         return output;
     }
     protected void PopulateImage(Image image)
@@ -300,7 +301,6 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
                 }
             }
         }
-
         MainGroup = new G();
         svg.Children.Add(MainGroup);
         PopulateRotation();
@@ -348,7 +348,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
             }
         }
         CreateClick(svg);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
     protected virtual void BeforeFilling() { }

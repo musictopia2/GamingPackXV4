@@ -36,7 +36,7 @@ public class PawnPiece : ComponentBase
         ISvg svg = MainGraphics!.GetMainSvg(false);
         svg.DrawPawnPiece(MainColor);
         SvgRenderClass render = new();
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
 }

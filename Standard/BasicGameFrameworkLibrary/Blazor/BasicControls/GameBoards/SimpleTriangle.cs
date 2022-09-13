@@ -62,7 +62,7 @@ public class SimpleTriangle : ComponentBase
             poly.PopulateStrokesToStyles(BorderColor.ToWebColor(), BorderWidth);
         }
         svg.Children.Add(poly);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
     protected override bool ShouldRender()

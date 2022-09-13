@@ -71,7 +71,7 @@ public class MarblePiece : ComponentBase
         ISvg svg = MainGraphics!.GetMainSvg(false);
         SvgRenderClass render = new();
         DrawRegularMarblePiece(svg);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
 }

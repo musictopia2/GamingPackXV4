@@ -48,7 +48,7 @@ public class DeckPiece : ComponentBase
         ISvg svg = MainGraphics!.GetMainSvg(false);
         SvgRenderClass render = new();
         svg.DrawCardSuit(Suit, 0, 0, 100, 100, GetColor);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
 }

@@ -78,7 +78,7 @@ public class CirclePiece : ComponentBase
             circle.Fill = MainColor.ToWebColor();
             svg.Children.Add(circle);
         }
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
 }

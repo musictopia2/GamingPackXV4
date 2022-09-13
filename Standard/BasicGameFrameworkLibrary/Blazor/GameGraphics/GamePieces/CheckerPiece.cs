@@ -95,18 +95,18 @@ public class CheckerPiece : ComponentBase
         if (HasImage == false)
         {
             PopulateBlank(svg);
-            render.RenderSvgTree(svg, 0, builder);
+            render.RenderSvgTree(svg, builder);
             return;
         }
         BuildDefs(svg);
         if (PieceCategory == EnumCheckerPieceCategory.FlatPiece)
         {
             PopulateFlatPiece(svg);
-            render.RenderSvgTree(svg, 0, builder);
+            render.RenderSvgTree(svg, builder);
             return;
         }
         PopulateCrownOrRegular(svg);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
     private void PopulateCrownOrRegular(ISvg svg)
