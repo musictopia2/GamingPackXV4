@@ -229,6 +229,7 @@ public class CribbageMainGameClass
         ShowDealer();
         HookUpControls();
         if (SaveRoot.MainFrameList.Count > 0)
+        {
             _model!.TotalCount = SaveRoot.MainFrameList.Sum(items =>
             {
                 if (items.Value >= EnumRegularCardValueList.Ten)
@@ -240,6 +241,8 @@ public class CribbageMainGameClass
                     return items.Value.Value;
                 }
             });
+        }
+
         if (SaveRoot.WhatStatus == EnumGameStatus.CardsForCrib)
         {
             StartCardsCrib();
@@ -541,7 +544,7 @@ public class CribbageMainGameClass
         if (SaveRoot!.WhatStatus == EnumGameStatus.GetResultsHand)
         {
             newList.AddRange(SingleInfo.MainHandList);
-            thisCol = ListCribbageCombos(newList, false);
+            thisCol = ListCribbageCombos(newList);
             PrivateSortCards();
         }
         else
@@ -549,7 +552,7 @@ public class CribbageMainGameClass
             SingleInfo.MainHandList.Clear();
             _model!.PlayerHand1!.HandList.Clear();
             newList.AddRange(_model.CribFrame!.HandList);
-            thisCol = ListCribbageCombos(newList, true);
+            thisCol = ListCribbageCombos(newList);
             SortCards(_model.CribFrame.HandList);
         }
         if (WhoTurn == 0)
@@ -588,7 +591,7 @@ public class CribbageMainGameClass
         }
         _model!.PlayerHand1!.HandList.ReplaceRange(SingleInfo.MainHandList); //for some strange reason, i am forced to put to other.  otherwise, it deletes the other.
     }
-    private BasicList<CribbageCombos> ListCribbageCombos(IDeckDict<CribbageCard> thisCol, bool fromCrib)
+    private BasicList<CribbageCombos> ListCribbageCombos(IDeckDict<CribbageCard> thisCol)
     {
         BasicList<CribbageCombos> output = new();
         var mostSuits = thisCol.GroupOrderDescending(items => items.Suit);
@@ -755,6 +758,10 @@ public class CribbageMainGameClass
                     }
                 }
             }
+            else if (thisCombo.WhatEqual == EnumCribbageEquals.ToGreaterThan)
+            {
+                newCol = _model.MainFrame.HandList.ToRegularDeckDict(); //try this way (?)
+            }
             int manys;
             CribbageCombos newCombo;
             bool hadss;
@@ -870,6 +877,10 @@ public class CribbageMainGameClass
         {
             output.RemoveAllOnly(x => x.NumberForKind == 2);
         }
+        if (output.Any(x => x.NumberInStraight == 4))
+        {
+            output.RemoveAllOnly(x => x.NumberInStraight == 3);
+        }
         return output;
     }
     public async Task PlayCardAsync(int Deck)
@@ -887,7 +898,9 @@ public class CribbageMainGameClass
         }
         SingleInfo.MainHandList.RemoveObjectByDeck(thisCard.Deck);
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+        {
             _model.PlayerHand1!.HandList.RemoveObjectByDeck(thisCard.Deck);
+        }
         thisCard.Player = WhoTurn;
         if (thisCard.Player == 0)
         {

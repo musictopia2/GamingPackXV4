@@ -5,6 +5,13 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<CribbageShellViewModel>
     public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
     {
     }
+    //protected override Task RegisterTestsAsync()
+    //{
+    //    var container = GetDIContainer;
+    //    //TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
+    //    container.RegisterSingleton<ITestCardSetUp<CribbageCard, CribbagePlayerItem>, TestCards>();
+    //    return base.RegisterTestsAsync();
+    //}
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
