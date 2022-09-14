@@ -6,29 +6,34 @@ public class PlayerPilesViewModel : ScreenViewModel, IBlankGameVM
     private readonly SkipboMainGameClass _mainGame;
     public PlayerPilesViewModel(CommandContainer commandContainer, SkipboGameContainer gameContainer, SkipboVMData model, SkipboMainGameClass mainGame, IEventAggregator aggregator) : base(aggregator)
     {
+        Model = model;
+        Model.DiscardPiles = new DiscardPilesVM<SkipboCardInformation>(commandContainer);
+        Model.DiscardPiles.Init(HowManyDiscards);
+        Model.DiscardPiles.PileClickedAsync += DiscardPiles_PileClickedAsync;
+        Model.StockPile!.StockClickedAsync += StockPile_StockClickedAsync;
         gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
         CommandContainer = commandContainer;
         GameContainer = gameContainer;
-        Model = model;
         _mainGame = mainGame;
         Model.StockPile.ClearCards();
         gameContainer.SingleInfo!.StockList.ForEach(x =>
         {
             model.StockPile.AddCard(x);
         });
-        Model.DiscardPiles = new DiscardPilesVM<SkipboCardInformation>(commandContainer);
-        Model.DiscardPiles.Init(HowManyDiscards);
         if (gameContainer.SingleInfo!.DiscardList.Count > 0)
         {
             model.DiscardPiles!.PileList!.ReplaceRange(gameContainer.SingleInfo.DiscardList);
         }
-        Model.DiscardPiles.PileClickedAsync += DiscardPiles_PileClickedAsync;
-        Model.StockPile!.StockClickedAsync += StockPile_StockClickedAsync;
     }
     protected override Task TryCloseAsync()
     {
-        Model.DiscardPiles!.PileClickedAsync -= DiscardPiles_PileClickedAsync;
-        Model.StockPile!.StockClickedAsync -= StockPile_StockClickedAsync;
+        if (OS == EnumOS.Wasm || OS == EnumOS.WindowsDT)
+        {
+            Model.DiscardPiles!.PileClickedAsync -= DiscardPiles_PileClickedAsync;
+            Model.StockPile!.StockClickedAsync -= StockPile_StockClickedAsync;
+            //hint:  somehow or another, on wasm and wpf, needs to unhook.  however, on maui, it keeps hold so if you unhook, then it gets hosed.
+        }
+
         return base.TryCloseAsync();
     }
     public CommandContainer CommandContainer { get; set; }
