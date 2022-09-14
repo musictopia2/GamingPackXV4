@@ -721,7 +721,8 @@ public class MonopolyCardGameMainGameClass
         {
             return output;
         }
-        output *= (numTokens + 1);
+        int tt = numTokens + 1;
+        output *= tt;
         return output;
     }
     private int MostMrs()
@@ -731,6 +732,8 @@ public class MonopolyCardGameMainGameClass
         PlayerList!.ForEach(thisPlayer =>
         {
             var tempList = thisPlayer.MainHandList.ToRegularDeckDict();
+            var nexts = thisPlayer.TradePile!.HandList.ToRegularDeckDict();
+            tempList.AddRange(nexts);
             int manys = tempList.Count(items => items.WhatCard == EnumCardType.IsMr);
             if (manys == mostss)
             {
