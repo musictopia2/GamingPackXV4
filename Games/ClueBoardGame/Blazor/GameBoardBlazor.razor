@@ -1,5 +1,4 @@
-﻿@inherits KeyComponentBase
-@using CommonBasicLibraries.CollectionClasses;
+﻿@using CommonBasicLibraries.CollectionClasses;
 @using gg = ClueBoardGame.Core.Logic.GameBoardGraphicsCP;
 @using p = BasicGameFrameworkLibrary.Core.GameboardPositionHelpers.PositionPieces;
 @if (GraphicsData == null)
@@ -28,7 +27,7 @@
     @foreach (var character in characterList)
     {
         location = GraphicsData.PositionForStartSpace(character.FirstNumber);
-        <BasePieceGraphics @key="GetKey" Location="@location" LongestSize="@gg.SpaceSize">
+        <BasePieceGraphics @key="location" Location="@location" LongestSize="@gg.SpaceSize">
             <PawnPiece MainColor="@character.MainColor" />
         </BasePieceGraphics>
     }
@@ -38,7 +37,7 @@
     @foreach (var character in characterList)
     {
         location = GraphicsData.PositionForBoardPiece(character.Space);
-        <BasePieceGraphics @key="GetKey" Location="@location" LongestSize="@gg.SpaceSize">
+        <BasePieceGraphics @key="location" Location="@location" LongestSize="@gg.SpaceSize">
             <PawnPiece MainColor="@character.MainColor" />
         </BasePieceGraphics>
     }
