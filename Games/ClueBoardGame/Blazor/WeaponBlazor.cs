@@ -5,6 +5,25 @@ public class WeaponBlazor : ComponentBase
     public WeaponInfo? Weapon { get; set; }
     [CascadingParameter]
     public BasePieceGraphics? MainGraphics { get; set; }
+    private PointF? _previousLocation;
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+    }
+
+    protected override bool ShouldRender()
+    {
+        //return false;
+        if (_previousLocation is null)
+        {
+            return false;
+        }
+        if (MainGraphics!.Location.X == _previousLocation.Value.X && MainGraphics!.Location.Y == _previousLocation.Value.Y)
+        {
+            return false;
+        }
+        return true;
+    }
     protected override void OnInitialized()
     {
         MainGraphics!.OriginalSize = Weapon!.DefaultSize;
@@ -13,12 +32,14 @@ public class WeaponBlazor : ComponentBase
     private string GetFileName => $"{Weapon!.Weapon}.svg";
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        _previousLocation = MainGraphics!.Location;
         ISvg svg = MainGraphics!.GetMainSvg(false);
         SvgRenderClass render = new ();
         Image image = new ();
+        image.AutoIncrementElement(svg); //try this way (?)
         image.PopulateFullExternalImage(this, GetFileName);
         svg.Children.Add(image);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
 }

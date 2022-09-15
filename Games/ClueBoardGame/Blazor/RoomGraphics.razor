@@ -1,0 +1,22 @@
+﻿@using CommonBasicLibraries.CollectionClasses;
+@using gg = ClueBoardGame.Core.Logic.GameBoardGraphicsCP;
+@using p = BasicGameFrameworkLibrary.Core.GameboardPositionHelpers.PositionPieces;
+@{
+    int x = 0;
+    BasicList<WeaponInfo> weaponList;
+    BasicList<CharacterInfo> characterList;
+    SizeF spaceSize = new SizeF(gg.SpaceSize, gg.SpaceSize);
+}
+@foreach (var room in GraphicsData!.GameContainer!.RoomList.Values)
+{
+    x++;
+    if (room.Space == null)
+    {
+        return; //try this way.  did it before and somehow worked (?)
+    }
+    weaponList = GraphicsData.GameContainer.WeaponsInRoom(x);
+    characterList = GraphicsData.GameContainer.CharactersInRoom(x);
+    p.ClearArea(room.Space);
+    <RoomWeaponGraphics GraphicsData="GraphicsData" Room="room" Weapons="weaponList" />
+    <RoomCharacterGraphics GraphicsData="GraphicsData" Room="room" Characters="characterList" SpaceSize="spaceSize" />
+}

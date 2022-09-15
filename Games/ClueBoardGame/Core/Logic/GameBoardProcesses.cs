@@ -435,6 +435,14 @@ public class GameBoardProcesses
         thisMove.SpaceNumber = space;
         PreviousMoves.Add(thisMove);
         int previousSpace = _gameContainer.CurrentCharacter!.Space;
+        if (_gameContainer.CurrentCharacter.Space == 0 && _gameContainer.CurrentCharacter.CurrentRoom > 0)
+        {
+            _gameContainer.PreviousRoomForRefreshing = _gameContainer.CurrentCharacter.CurrentRoom;
+        }
+        else
+        {
+            _gameContainer.PreviousRoomForRefreshing = 0;
+        }
         _gameContainer.CurrentCharacter.Space = space;
         if (_gameContainer.CurrentCharacter.CurrentRoom == 0 && _gameContainer.CurrentCharacter.Space == 0 && _gameContainer.CurrentCharacter.PreviousRoom == 0)
         {

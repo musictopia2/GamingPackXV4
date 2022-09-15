@@ -1,0 +1,16 @@
+﻿@using BasicBlazorLibrary.Components.RenderHelpers;
+@using gg = ClueBoardGame.Core.Logic.GameBoardGraphicsCP;
+@using p = BasicGameFrameworkLibrary.Core.GameboardPositionHelpers.PositionPieces;
+@foreach (var weapon in Weapons)
+{
+    var location = p.GetPosition(Room!.Space!, weapon.DefaultSize);
+    RectangleF rect = new(location, weapon.DefaultSize);
+    Room.Space!.PieceList.Add(rect);
+    p.AddPieceToArea(Room.Space, rect);
+    <RefreshComponent CanRender="GraphicsData!.CanRefreshBasicRoomsInfo()">
+        <BasePieceGraphics Location="location" @key=location>
+            <WeaponBlazor Weapon="weapon" />
+        </BasePieceGraphics>
+    </RefreshComponent>
+    
+}

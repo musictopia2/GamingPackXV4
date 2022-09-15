@@ -10,6 +10,31 @@ public class GameBoardGraphicsCP
         InitializeRooms();
         InitializeSquares();
     }
+    public bool CanRefreshBasicRoomsInfo()
+    {
+        if (GameContainer!.SaveRoot.GameStatus == EnumClueStatusList.MoveSpaces)
+        {
+            return false;
+        }
+        return true;
+    }
+    public bool CanRefreshCharactersRoomInfo(RoomInfo room)
+    {
+        if (GameContainer!.SaveRoot.GameStatus != EnumClueStatusList.MoveSpaces)
+        {
+            return true;
+        }
+        if (GameContainer!.CurrentCharacter!.Space == 0)
+        {
+            return false;
+        }
+        int index = GameContainer.GetRoomIndex(room);
+        if (index == GameContainer.PreviousRoomForRefreshing)
+        {
+            return true;
+        }
+        return false;
+    }
     public struct Room
     {
         public string Name;
@@ -36,32 +61,32 @@ public class GameBoardGraphicsCP
         Room obj_TempRoom;
         Door obj_TempDoor;
         RectangleF tempRect;
-        ArrSquares = new ();
+        ArrSquares = new();
         // *** Create the rooms
-        ArrRooms = new ();
+        ArrRooms = new();
         // ******************************
         // *** Create the kitchen
-        obj_TempRoom = new ();
+        obj_TempRoom = new();
         obj_TempRoom.Name = "Kitchen";
         obj_TempRoom.FloorColor1 = cc.Black;
         obj_TempRoom.FloorColor2 = cc.White;
         obj_TempRoom.MiscList = new();
-        obj_TempRoom.PieceArea = new (19, 19, 6, 7);
-        tempRect = new (24, 18, 1, 1);
+        obj_TempRoom.PieceArea = new(19, 19, 6, 7);
+        tempRect = new(24, 18, 1, 1);
         obj_TempRoom.MiscList.Add(tempRect);
-        tempRect = new (18, 24, 1, 2);
+        tempRect = new(18, 24, 1, 2);
         obj_TempRoom.MiscList.Add(tempRect);
-        tempRect = new (16, 25, 2, 1);
+        tempRect = new(16, 25, 2, 1);
         obj_TempRoom.MiscList.Add(tempRect);
-        obj_TempRoom.TextPoint = new (20.5f, 22);
+        obj_TempRoom.TextPoint = new(20.5f, 22);
         obj_TempRoom.Doors = new();
         obj_TempDoor.Direction = "Down";
-        obj_TempDoor.Point = new (20, 19);
+        obj_TempDoor.Point = new(20, 19);
         obj_TempRoom.Doors.Add(obj_TempDoor);
         ArrRooms.Add(obj_TempRoom);
         // ******************************
         // *** Create the Ball Room
-        obj_TempRoom = new ();
+        obj_TempRoom = new();
         obj_TempRoom.Name = "Ball Room";
         obj_TempRoom.FloorColor1 = cc.SaddleBrown;
         obj_TempRoom.FloorColor2 = cc.SaddleBrown;
@@ -85,7 +110,7 @@ public class GameBoardGraphicsCP
         ArrRooms.Add(obj_TempRoom);
         // ******************************
         // *** Create the conservatory
-        obj_TempRoom = new ();
+        obj_TempRoom = new();
         obj_TempRoom.Name = "Conservatory";
         obj_TempRoom.FloorColor1 = cc.Green;
         obj_TempRoom.FloorColor2 = cc.White;
@@ -103,7 +128,7 @@ public class GameBoardGraphicsCP
         ArrRooms.Add(obj_TempRoom);
         // ******************************
         // *** Create the billiard room
-        obj_TempRoom = new ();
+        obj_TempRoom = new();
         obj_TempRoom.Name = "Billiard Room";
         obj_TempRoom.FloorColor1 = cc.DarkGreen;
         obj_TempRoom.FloorColor2 = cc.DarkGreen;
@@ -123,7 +148,7 @@ public class GameBoardGraphicsCP
         ArrRooms.Add(obj_TempRoom);
         // ******************************
         // *** Create the library
-        obj_TempRoom = new ();
+        obj_TempRoom = new();
         obj_TempRoom.Name = "Library";
         obj_TempRoom.FloorColor1 = cc.Blue;
         obj_TempRoom.FloorColor2 = cc.Blue;
@@ -141,7 +166,7 @@ public class GameBoardGraphicsCP
         ArrRooms.Add(obj_TempRoom);
         // ******************************
         // *** Create the study
-        obj_TempRoom = new ();
+        obj_TempRoom = new();
         obj_TempRoom.Name = "Study";
         obj_TempRoom.FloorColor1 = cc.Green;
         obj_TempRoom.FloorColor2 = cc.Green;
@@ -161,7 +186,7 @@ public class GameBoardGraphicsCP
         ArrRooms.Add(obj_TempRoom);
         // ******************************
         // *** Create the hall
-        obj_TempRoom = new ();
+        obj_TempRoom = new();
         obj_TempRoom.Name = "Hall";
         obj_TempRoom.FloorColor1 = cc.Maroon;
         obj_TempRoom.FloorColor2 = cc.Maroon;
@@ -184,7 +209,7 @@ public class GameBoardGraphicsCP
         ArrRooms.Add(obj_TempRoom);
         // ******************************
         // *** Create the lounge
-        obj_TempRoom = new ();
+        obj_TempRoom = new();
         obj_TempRoom.Name = "Lounge";
         obj_TempRoom.FloorColor1 = cc.SeaGreen;
         obj_TempRoom.FloorColor2 = cc.SeaGreen;
@@ -199,7 +224,7 @@ public class GameBoardGraphicsCP
         ArrRooms.Add(obj_TempRoom);
         // ******************************
         // *** Create the dining room
-        obj_TempRoom = new ();
+        obj_TempRoom = new();
         obj_TempRoom.Name = "Dining Room";
         obj_TempRoom.FloorColor1 = cc.Brown;
         obj_TempRoom.FloorColor2 = cc.Brown;
@@ -309,7 +334,9 @@ public class GameBoardGraphicsCP
         for (int_Row = 13; int_Row <= 15; int_Row++)
         {
             for (int_Col = 15; int_Col <= 16; int_Col++)
+            {
                 ArrSquares.Add(new PointF(int_Col, int_Row), "S" + Convert.ToString(ArrSquares.Count + 1));
+            }
         }
         // 105-117
         for (int_Col = 7; int_Col <= 19; int_Col++)

@@ -456,7 +456,9 @@ public class ClueBoardGameMainGameClass
             }
         }
         if (thisList.Count > 0)
+        {
             return thisList.First().Clue;
+        }
         ClueBoardGamePlayerItem tempPlayer = PlayerList!.GetOtherPlayer();
         tempPlayer.MainHandList.ForEach(thisCard =>
         {

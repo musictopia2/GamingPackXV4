@@ -14,8 +14,10 @@ public class ClueBoardGameGameContainer : BasicGameContainer<ClueBoardGamePlayer
     {
     }
     public Dictionary<int, DetectiveInfo> DetectiveList { get; set; } = new();
-    public Dictionary<int, RoomInfo> RoomList = new();
+    public Dictionary<int, RoomInfo> RoomList { get; set; } = new();
     public CharacterInfo? CurrentCharacter { get; set; }
+    public int PreviousRoomForRefreshing { get; set; }
+    //public bool NeedsToRefreshCharacterRooms { get; set; }
     public Dictionary<int, CharacterInfo> CharacterList
     {
         get
@@ -145,6 +147,10 @@ public class ClueBoardGameGameContainer : BasicGameContainer<ClueBoardGamePlayer
     public BasicList<CharacterInfo> CharactersInRoom(int room)
     {
         return CharacterList.Values.Where(items => items.CurrentRoom == room).ToBasicList();
+    }
+    public int GetRoomIndex(RoomInfo room)
+    {
+        return RoomList.Where(x => x.Value.Name == room.Name).Single().Key;
     }
     public RoomInfo GetRoom(string room)
     {

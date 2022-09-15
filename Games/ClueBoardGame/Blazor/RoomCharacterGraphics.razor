@@ -1,0 +1,12 @@
+﻿@using gg = ClueBoardGame.Core.Logic.GameBoardGraphicsCP;
+@using p = BasicGameFrameworkLibrary.Core.GameboardPositionHelpers.PositionPieces;
+@foreach (var character in Characters)
+{
+    var location = p.GetPosition(Room!.Space!, SpaceSize);
+    RectangleF rect = new(location, SpaceSize);
+    Room.Space!.PieceList.Add(rect);
+    p.AddPieceToArea(Room.Space, rect);
+    <BasePieceGraphics Location="location" @key="location" LongestSize="@gg.SpaceSize">
+        <PawnPiece MainColor="@character.MainColor" />
+    </BasePieceGraphics>
+}
