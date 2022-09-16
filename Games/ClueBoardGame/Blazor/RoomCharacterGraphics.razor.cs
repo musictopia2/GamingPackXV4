@@ -5,6 +5,7 @@ public partial class RoomCharacterGraphics
     public GameBoardGraphicsCP? GraphicsData { get; set; }
     protected override bool ShouldRender()
     {
+        //return true;
         if (GraphicsData is null)
         {
             return true;

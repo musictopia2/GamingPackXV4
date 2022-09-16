@@ -1,6 +1,7 @@
 ﻿@using CommonBasicLibraries.CollectionClasses;
 @using gg = ClueBoardGame.Core.Logic.GameBoardGraphicsCP;
 @using p = BasicGameFrameworkLibrary.Core.GameboardPositionHelpers.PositionPieces;
+@using BasicBlazorLibrary.Components.RenderHelpers;
 @if (GraphicsData == null)
 {
     return;
@@ -41,21 +42,21 @@
             <PawnPiece MainColor="@character.MainColor" />
         </BasePieceGraphics>
     }
-    @if (GraphicsData.GameContainer.Command.IsExecuting || GraphicsData.GameContainer.CanClickSpace() == false)
+    @*@if (GraphicsData.GameContainer.Command.IsExecuting || GraphicsData.GameContainer.CanClickSpace() == false)
     {
         return; //because if executing then no need for clicking options.
-    }
+    }*@
+
     @* click processes last *@
     @{
         var clickRoomList = GraphicsData.ClickRoomList();
     }
-
     @foreach (var item in clickRoomList)
     {
         <BlankClickableSquare SpaceLocation="item.rect.Location"
-                              SpaceSize="item.rect.Size"
-                              Fixed = "true"
-                              SpaceClicked="() => RoomClickedAsync(item.id)" />
+                          SpaceSize="item.rect.Size"
+                          Fixed="true"
+                          SpaceClicked="() => RoomClickedAsync(item.id)" />
     }
     @* take advantage that the square will override the room part. *@
     @{
@@ -64,8 +65,9 @@
     @foreach (var item in clickSquareList)
     {
         <BlankClickableSquare SpaceLocation="item.rect.Location"
-                              SpaceSize="item.rect.Size"
-                              Fixed = "true"
-                              SpaceClicked="() => SpaceClickedAsync(item.id)" />
+                          SpaceSize="item.rect.Size"
+                          Fixed="true"
+                          SpaceClicked="() => SpaceClickedAsync(item.id)" />
     }
+    
 </RawGameBoard>

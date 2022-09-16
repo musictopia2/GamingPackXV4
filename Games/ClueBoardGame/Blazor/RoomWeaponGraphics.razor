@@ -7,10 +7,7 @@
     RectangleF rect = new(location, weapon.DefaultSize);
     Room.Space!.PieceList.Add(rect);
     p.AddPieceToArea(Room.Space, rect);
-    <RefreshComponent CanRender="GraphicsData!.CanRefreshBasicRoomsInfo()">
-        <BasePieceGraphics Location="location" Fixed = "true" @key=location>
-            <WeaponBlazor Weapon="weapon" />
-        </BasePieceGraphics>
-    </RefreshComponent>
-    
+    <BasePieceGraphics Location="location" @key=location>
+        <WeaponBlazor Weapon="weapon" />
+    </BasePieceGraphics>
 }

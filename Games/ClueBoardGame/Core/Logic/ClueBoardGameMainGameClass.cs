@@ -65,6 +65,11 @@ public class ClueBoardGameMainGameClass
             _gameBoard.LoadSavedGame();
             _model.Cup!.CanShowDice = SaveRoot.MovesLeft > 0;
             SaveRoot.Instructions = "None";
+            if (WhoTurn == MyID && SaveRoot.PreviousClue > 0)
+            {
+                var card = _gameContainer.ClueInfo(SaveRoot.PreviousClue);
+                _model.Pile.AddCard(card);
+            }
         }
         SingleInfo = PlayerList.GetWhoPlayer();
         return Task.CompletedTask;
@@ -202,7 +207,7 @@ public class ClueBoardGameMainGameClass
         }
         await ShufflePassCardsAsync();
     }
-    public void MarkCard(ClueBoardGamePlayerItem player, CardInfo card)
+    public void MarkCard(ClueBoardGamePlayerItem player, CardInfo card, bool beginning)
     {
         if (_gameContainer is null)
         {
@@ -213,6 +218,10 @@ public class ClueBoardGameMainGameClass
             if (item.Name == card.Name)
             {
                 item.IsChecked = true;
+                if (beginning == false)
+                {
+                    SaveRoot.PreviousClue = card.Deck; //i think
+                }
                 return;
             }
         }
@@ -245,7 +254,7 @@ public class ClueBoardGameMainGameClass
             player.DetectiveList = GetDetectiveList();
             foreach (var card in player.MainHandList)
             {
-                MarkCard(player, card);
+                MarkCard(player, card, true);
             }
         }
         SingleInfo = PlayerList!.GetSelf();
@@ -303,7 +312,7 @@ public class ClueBoardGameMainGameClass
                 var thisCard = _gameContainer!.ClueInfo(int.Parse(content));
                 SingleInfo = PlayerList.GetWhoPlayer();
                 SaveRoot!.GameStatus = EnumClueStatusList.EndTurn;
-                MarkCard(SingleInfo, thisCard);
+                MarkCard(SingleInfo, thisCard, false);
                 if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
                 {
                     _model!.Pile!.AddCard(thisCard);
@@ -325,6 +334,7 @@ public class ClueBoardGameMainGameClass
             _gameBoard.NewTurn();
             SaveRoot!.Instructions = "None";
             SaveRoot.AccusationMade = false;
+            SaveRoot.PreviousClue = 0;
             SaveRoot.CurrentPrediction = new PredictionInfo();
             OtherTurn = 0;
             _model.CurrentCharacterName = "";
@@ -563,7 +573,7 @@ public class ClueBoardGameMainGameClass
             {
                 _model.Pile.AddCard(thisCard);
             }
-            MarkCard(SingleInfo, thisCard);
+            MarkCard(SingleInfo, thisCard, false);
             await EndStepAsync();
             return;
         }

@@ -6,7 +6,7 @@
     RectangleF rect = new(location, SpaceSize);
     Room.Space!.PieceList.Add(rect);
     p.AddPieceToArea(Room.Space, rect);
-    <BasePieceGraphics Location="location" @key="location" Fixed="true" LongestSize="@gg.SpaceSize">
+    <BasePieceGraphics Location="location" @key=location LongestSize="@gg.SpaceSize">
         <PawnPiece MainColor="@character.MainColor" />
     </BasePieceGraphics>
 }

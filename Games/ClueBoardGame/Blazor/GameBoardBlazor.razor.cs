@@ -15,4 +15,8 @@ public partial class GameBoardBlazor
     {
         await GraphicsData!.GameContainer!.ProcessCustomCommandAsync(GraphicsData.GameContainer.RoomClickedAsync!, room);
     }
+    protected override bool ShouldRender()
+    {
+        return false;
+    }
 }

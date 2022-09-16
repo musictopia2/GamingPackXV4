@@ -203,7 +203,7 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
         }
         CommandContainer!.ManuelFinish = true;
         payLoad.IsSelected = false;
-        _mainGame.MarkCard(tempPlayer, payLoad);
+        _mainGame.MarkCard(tempPlayer, payLoad, false);
         _gameContainer.SaveRoot!.GameStatus = EnumClueStatusList.EndTurn;
         if (_gameContainer.BasicData.MultiPlayer == false)
         {

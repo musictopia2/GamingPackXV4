@@ -16,7 +16,6 @@ public class ClueBoardGameSaveInfo : BasicSavedBoardDiceGameClass<ClueBoardGameP
                     _model.Instructions = value;
                 }
             }
-
         }
     }
     private ClueBoardGameVMData? _model;
@@ -25,6 +24,12 @@ public class ClueBoardGameSaveInfo : BasicSavedBoardDiceGameClass<ClueBoardGameP
         _model = model;
         _model.Instructions = Instructions;
         _model.LeftToMove = MovesLeft;
+        if (CurrentPrediction is not null)
+        {
+            _model.CurrentCharacterName = CurrentPrediction.CharacterName;
+            _model.CurrentWeaponName = CurrentPrediction.WeaponName;
+            _model.CurrentRoomName = CurrentPrediction.RoomName;
+        }
     }
     public int DiceNumber { get; set; }
     public PredictionInfo? CurrentPrediction { get; set; }
@@ -44,10 +49,12 @@ public class ClueBoardGameSaveInfo : BasicSavedBoardDiceGameClass<ClueBoardGameP
         }
     }
     public bool AccusationMade { get; set; }
-    public bool ShowedMessage { get; set; }
+    //public bool ShowedMessage { get; set; }
     public Dictionary<int, CharacterInfo> CharacterList { get; set; } = new();
     public PredictionInfo Solution { get; set; } = new();
     public Dictionary<int, MoveInfo> PreviousMoves { get; set; } = new();
     public Dictionary<int, WeaponInfo> WeaponList { get; set; } = new();
     public EnumClueStatusList GameStatus { get; set; }
+    public int PreviousClue { get; set; } //this means if given, then whoevers turn it is can show that clue.
+
 }

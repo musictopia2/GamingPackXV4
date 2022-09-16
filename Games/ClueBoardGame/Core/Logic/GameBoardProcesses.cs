@@ -469,6 +469,7 @@ public class GameBoardProcesses
         _gameContainer.CurrentCharacter!.Space = 0;
         _gameContainer.CurrentCharacter.CurrentRoom = room;
         _gameContainer.CurrentCharacter.PreviousRoom = room;
+        _gameContainer.PreviousRoomForRefreshing = room; //try this
         RepaintBoard();
     }
     #region "Loading Board Processes"
