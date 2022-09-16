@@ -8,7 +8,7 @@
     Room.Space!.PieceList.Add(rect);
     p.AddPieceToArea(Room.Space, rect);
     <RefreshComponent CanRender="GraphicsData!.CanRefreshBasicRoomsInfo()">
-        <BasePieceGraphics Location="location" @key=location>
+        <BasePieceGraphics Location="location" Fixed = "true" @key=location>
             <WeaponBlazor Weapon="weapon" />
         </BasePieceGraphics>
     </RefreshComponent>

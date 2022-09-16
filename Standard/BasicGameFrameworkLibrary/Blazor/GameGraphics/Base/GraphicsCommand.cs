@@ -10,10 +10,16 @@ public abstract class GraphicsCommand : KeyComponentBase, IDisposable
     public object? CommandParameter { get; set; }
     [Parameter]
     public Action? AfterChange { get; set; }
+    [Parameter]
+    public bool Fixed { get; set; }
     protected Assembly GetAssembly => Assembly.GetAssembly(GetType())!; //needs reflection namespace for the images.  decided to not attempt to string based on problems i ran across.
     [Parameter]
     public ICustomCommand? CommandObject { get; set; } //you always need this now.
     private CommandContainer? _commandContainer;
+    protected override bool ShouldRender() //allow the possibility of any graphics command to be fixed to help with performance.  in this case, then needs to ensure nothing changes (any changes would not be rerendered automatically).
+    {
+        return Fixed == false;
+    }
     private void RunProcess()
     {
         if (AfterChange is not null)

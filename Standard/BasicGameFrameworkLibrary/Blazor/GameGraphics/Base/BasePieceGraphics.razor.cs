@@ -5,6 +5,7 @@ public partial class BasePieceGraphics : GraphicsCommand
     //this means a person would use this then the template will be graphics item
     [Parameter]
     public bool Animating { get; set; } = false; //maybe if animating, must render period now.  try that idea next.
+    
     [Parameter]
     public bool ForceRender { get; set; }
     public string FillColor { get; set; } = cs.Aqua; //defaults to aqua but child can set to something else.
@@ -35,6 +36,7 @@ public partial class BasePieceGraphics : GraphicsCommand
     public bool IsSelected { get; set; }
     public bool UsedSelected = false; // the checker piece will not use that part.  if that changes, can do.
     public float BorderWidth { get; set; } = 4;
+    
     public float Scale()
     {
         if (LongestSize == 0)

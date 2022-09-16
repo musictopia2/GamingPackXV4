@@ -27,7 +27,7 @@
     @foreach (var character in characterList)
     {
         location = GraphicsData.PositionForStartSpace(character.FirstNumber);
-        <BasePieceGraphics @key="location" Location="@location" LongestSize="@gg.SpaceSize">
+        <BasePieceGraphics @key="location" Location="@location" Fixed="true" LongestSize="@gg.SpaceSize">
             <PawnPiece MainColor="@character.MainColor" />
         </BasePieceGraphics>
     }
@@ -37,7 +37,7 @@
     @foreach (var character in characterList)
     {
         location = GraphicsData.PositionForBoardPiece(character.Space);
-        <BasePieceGraphics @key="location" Location="@location" LongestSize="@gg.SpaceSize">
+        <BasePieceGraphics @key="location" Location="@location" Fixed="true" LongestSize="@gg.SpaceSize">
             <PawnPiece MainColor="@character.MainColor" />
         </BasePieceGraphics>
     }
@@ -54,6 +54,7 @@
     {
         <BlankClickableSquare SpaceLocation="item.rect.Location"
                               SpaceSize="item.rect.Size"
+                              Fixed = "true"
                               SpaceClicked="() => RoomClickedAsync(item.id)" />
     }
     @* take advantage that the square will override the room part. *@
@@ -64,6 +65,7 @@
     {
         <BlankClickableSquare SpaceLocation="item.rect.Location"
                               SpaceSize="item.rect.Size"
+                              Fixed = "true"
                               SpaceClicked="() => SpaceClickedAsync(item.id)" />
     }
 </RawGameBoard>
