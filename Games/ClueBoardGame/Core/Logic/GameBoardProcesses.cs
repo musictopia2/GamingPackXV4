@@ -494,7 +494,7 @@ public class GameBoardProcesses
         }
         thisField.Neighbors.Add(thisNeighbor);
     }
-    private void SetNeighborsFor(int fieldNumber, int topField, int bottomField, int leftField, int rightField) //name is not used for room now.
+    private void SetNeighborsFor(int fieldNumber, int topField, int rightField, int bottomField, int leftField) //name is not used for room now.
     {
         var thisField = FieldList[fieldNumber];
         if (topField != 0)

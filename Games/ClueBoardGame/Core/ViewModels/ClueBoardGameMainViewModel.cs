@@ -43,20 +43,24 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
     public HandObservable<CardInfo> GetHand => VMData.HandList;
     public SingleObservablePile<CardInfo> GetPile => VMData.Pile;
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
+    private bool _wasManuel;
     private async Task MoveSpaceAsync(int space)
     {
         if (_gameContainer.Test.DoubleCheck)
         {
             _gameContainer.TempClicked = space;
             _gameBoard.RepaintBoard();
+            ManuallyEnable();
             return;
         }
         if (_gameBoard.CanMoveToSpace(space) == false)
         {
+            ManuallyEnable();
             return;
         }
         if (_mainGame.SaveRoot.MovesLeft == 0)
         {
+            ManuallyEnable();
             return;
         }
         if (_mainGame.BasicData.MultiPlayer)
@@ -66,7 +70,100 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
         _gameBoard.MoveToSpace(space);
         await _mainGame.ContinueMoveAsync();
     }
+    public async Task LeftArrowAsync()
+    {
+        await ArrowNavigationAsync(EnumPositionInfo.Left);
+    }
+    public async Task RightArrowAsync()
+    {
+        await ArrowNavigationAsync(EnumPositionInfo.Right);
+    }
+    public async Task UpArrowAsync()
+    {
+        await ArrowNavigationAsync(EnumPositionInfo.Top);
+    }
+    public async Task DownArrowAsync()
+    {
+        await ArrowNavigationAsync(EnumPositionInfo.Bottom);
+    }
+    private async Task ArrowNavigationAsync(EnumPositionInfo direction)
+    {
+        //no need to send to other players.
+        //because if you are able to make move, just send normal move anyways.
+        //this is view alone.
+        if (_gameContainer.Command.Processing)
+        {
+            return; //because everything should have been disabled.
+        }
+        if (_gameContainer.Command.IsExecuting)
+        {
+            return;
+        }
+        //if you are not on a space, can't do it.
+        if (_gameContainer.SaveRoot.GameStatus != EnumClueStatusList.MoveSpaces)
+        {
+            return; //you can't do it because the status is not even move spaces.
+        }
+        if (_gameContainer.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+        {
+            //only self can do it.
+            return;
+        }
+        //if you can't make move, then can't do it.
+        if (_gameContainer.CurrentCharacter!.CurrentRoom > 0)
+        {
+            return; //because you are currently in a room.
+        }
+        if (_gameContainer.CurrentCharacter.Space == 0)
+        {
+            if (_gameContainer.CurrentCharacter.FirstSpace == 41 && direction != EnumPositionInfo.Bottom) //space 1
+            {
+                return;
+            }
+            if ((_gameContainer.CurrentCharacter.FirstSpace == 15 || _gameContainer.CurrentCharacter.FirstSpace == 19) && direction != EnumPositionInfo.Right) //space 2 and 3
+            {
+                return;
+            }
+            if ((_gameContainer.CurrentCharacter.FirstSpace == 171 || _gameContainer.CurrentCharacter.FirstSpace == 172) && direction != EnumPositionInfo.Top) //space 4 and 5
+            {
+                return;
+            }
+            if (_gameContainer.CurrentCharacter.FirstSpace == 53 && direction != EnumPositionInfo.Left) //space 6
+            {
+                return;
+            }
+        }
+        //int space = GetSpace(direction);
+        _gameContainer.Command.StartExecuting(); //has to do manually
+        int space = GetMove(direction);
+        _wasManuel = true;
+        if (space == 0)
+        {
+            ManuallyEnable();
+            return;
+        }
+        await MoveSpaceAsync(space);
+    }
+    private int GetMove(EnumPositionInfo direction)
+    {
+        if (_gameContainer.CurrentCharacter!.Space > 0)
+        {
+            var currentField = _gameBoard.FieldList[_gameContainer.CurrentCharacter.Space];
+            var output = currentField.Neighbors.Values.Where(x => x.Position == direction).Single();
+            return output.SpaceNumber;
+        }
+        return _gameContainer.CurrentCharacter.FirstSpace;
 
+    }
+    private void ManuallyEnable()
+    {
+        if (_wasManuel == false)
+        {
+            return;
+        }
+        _wasManuel = false; //set to false again.
+        _gameContainer.Command.StopExecuting();
+    }
     private async Task MoveRoomAsync(int room)
     {
         if (_gameBoard.CanMoveToRoom(room) == false)
@@ -132,7 +229,7 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
     }
     public bool CanStartOver()
     {
-        if (_gameContainer.SaveRoot.GameStatus == EnumClueStatusList.StartTurn 
+        if (_gameContainer.SaveRoot.GameStatus == EnumClueStatusList.StartTurn
             || _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.FindClues
             || _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction
             || _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.EndGame)

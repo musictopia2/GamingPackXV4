@@ -1,3 +1,4 @@
+@using BasicBlazorLibrary.Components.Arrows;
 @inherits BasicGameView<ClueBoardGameMainViewModel>
 <GridContainer RowGap="5px" Columns="auto auto 10vw 1fr">
     <GridItem>
@@ -25,22 +26,34 @@
         </GridContainer>
     </GridItem>
     <GridItem Column="3">
+
         <CluePileBlazor SinglePile="DataContext!.GetPile" />
         <div>
             Instructions: @DataContext!.VMData.Instructions
         </div>
         <GameButtonComponent CommandObject="RollCommand" StartOnNewLine="true" Display="Roll Dice" />
+        <div style="margin-left: -10px;">
+            <ArrowCompleteComponent 
+                ArrowCategory="EnumArrowCategory.All" 
+                DownClicked="DataContext.DownArrowAsync"
+                UpClicked="DataContext.UpArrowAsync"
+                LeftClicked="DataContext.LeftArrowAsync"
+                RightClicked="DataContext.RightArrowAsync"
+                BackgroundColor="aqua"
+                TargetHeight="6vh" />
+        </div>
         <div style="font-size: 8vh; color: white">
             @DataContext!.VMData.LeftToMove
             <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="8vh" />
         </div>
+        
     </GridItem>
     <GridItem Column="4">
         <div style="margin-top: 30vh">
+            <GameButtonComponent CommandObject="StartOverCommand" StartOnNewLine="true" Display="Start Over" />
             <GameButtonComponent CommandObject="PredictCommand" StartOnNewLine="true" Display="Predict" />
             <GameButtonComponent CommandObject="AccusationCommand" StartOnNewLine="true" Display="Accusation" />
             <GameButtonComponent CommandObject="EndCommand" StartOnNewLine="true" Display="End Turn" />
-            <GameButtonComponent CommandObject="StartOverCommand" StartOnNewLine="true" Display="Start Over" />
             <LabelGridComponent DataContext="DataContext!.VMData" Labels="_clues" />
         </div>
     </GridItem>
