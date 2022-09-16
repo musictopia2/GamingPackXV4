@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+
 namespace ClueBoardGame.Core.Logic;
 [SingletonGame]
 public class ClueBoardGameMainGameClass
@@ -308,6 +310,9 @@ public class ClueBoardGameMainGameClass
                 }
                 await ContinueTurnAsync(); //try this (?)
                 return;
+            case "startover":
+                await StartOverAsync();
+                return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
@@ -372,8 +377,53 @@ public class ClueBoardGameMainGameClass
         }
         _gameContainer.CurrentCharacter = _gameContainer.CharacterList.Values.Single(items => items.Player == OtherTurn);
     }
+    public async Task StartOverAsync()
+    {
+        _gameContainer.SaveRoot.MovesLeft = _model.Cup!.ValueOfOnlyDice;
+        _gameContainer.SaveRoot.GameStatus = EnumClueStatusList.MoveSpaces;
+        _gameBoard.PreviousMoves.Clear();
+        if (SingleInfo!.StartTurnStatus == EnumStartStatus.Start)
+        {
+            _gameContainer.CurrentCharacter!.Space = 0;
+            _gameContainer.CurrentCharacter.CurrentRoom = 0;
+            _gameContainer.PreviousRoomForRefreshing = 0;
+        }
+        else if (SingleInfo.StartTurnStatus == EnumStartStatus.Room)
+        {
+            _gameContainer.CurrentCharacter!.CurrentRoom = SingleInfo.StartingTurnPosition;
+            _gameContainer.CurrentCharacter.Space = 0;
+            _gameContainer.PreviousRoomForRefreshing = SingleInfo.StartingTurnPosition;
+        }
+        else
+        {
+            _gameContainer.CurrentCharacter!.CurrentRoom = 0;
+            _gameContainer.CurrentCharacter.Space = SingleInfo.StartingTurnPosition;
+            _gameContainer.PreviousRoomForRefreshing = 0;
+        }
+        await EndStepAsync();
+    }
     private async Task EndStepAsync()
     {
+        if (SaveRoot.GameStatus == EnumClueStatusList.StartTurn)
+        {
+            //here is where i can reset.
+            var current = _gameContainer.CurrentCharacter;
+            if (current!.CurrentRoom == 0 && current.Space == 0)
+            {
+                SingleInfo!.StartTurnStatus = EnumStartStatus.Start;
+                SingleInfo.StartingTurnPosition = current.FirstNumber;
+            }
+            else if (current.CurrentRoom > 0)
+            {
+                SingleInfo!.StartTurnStatus = EnumStartStatus.Room;
+                SingleInfo.StartingTurnPosition = current.CurrentRoom;
+            }
+            else
+            {
+                SingleInfo!.StartTurnStatus = EnumStartStatus.Space;
+                SingleInfo.StartingTurnPosition = current.Space;
+            }
+        }
         await SaveStateAsync(); //i tihnk needs to be here now.
         Aggregator.RepaintBoard();
         if (Test!.ImmediatelyEndGame && SaveRoot.GameStatus != EnumClueStatusList.StartTurn)
@@ -381,6 +431,7 @@ public class ClueBoardGameMainGameClass
             await ShowWinAsync();
             return;
         }
+        
         if (SaveRoot!.GameStatus == EnumClueStatusList.EndTurn)
         {
             OtherTurn = 0;
@@ -655,6 +706,10 @@ public class ClueBoardGameMainGameClass
             return;
         }
         SaveRoot!.MovesLeft--;
+        if (SaveRoot.MovesLeft < 0)
+        {
+            SaveRoot.MovesLeft = 0;
+        }
         if (SaveRoot.MovesLeft == 0)
         {
             SaveRoot.GameStatus = EnumClueStatusList.EndTurn;

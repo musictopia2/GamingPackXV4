@@ -24,11 +24,23 @@ public class GameBoardGraphicsCP
         {
             return true;
         }
+        if (GameContainer.PreviousRoomForRefreshing == 0)
+        {
+            return false;
+        }
+        if (GameContainer!.CurrentCharacter!.CurrentRoom > 0)
+        {
+            return IsProperRoom(room);
+        }
         if (GameContainer!.CurrentCharacter!.Space == 0)
         {
             return false;
         }
-        int index = GameContainer.GetRoomIndex(room);
+        return IsProperRoom(room);
+    }
+    private bool IsProperRoom(RoomInfo room)
+    {
+        int index = GameContainer!.GetRoomIndex(room);
         if (index == GameContainer.PreviousRoomForRefreshing)
         {
             return true;

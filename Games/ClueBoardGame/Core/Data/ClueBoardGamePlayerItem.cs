@@ -22,6 +22,8 @@ public partial class ClueBoardGamePlayerItem : PlayerBoardGame<EnumColorChoice>,
             return true;
         }
     }
+    public int StartingTurnPosition { get; set; } //can be room, start, or space.
+    public EnumStartStatus StartTurnStatus { get; set; }
     public Dictionary<int, DetectiveInfo> DetectiveList { get; set; } = new();
     [JsonIgnore]
     public DeckRegularDict<CardInfo> StartUpList { get; set; } = new DeckRegularDict<CardInfo>();

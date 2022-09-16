@@ -20,6 +20,7 @@ public partial class ClueBoardGameMainView
     private ICustomCommand RollCommand => DataContext!.RollDiceCommand!;
     private ICustomCommand PredictCommand => DataContext!.MakePredictionCommand!;
     private ICustomCommand AccusationCommand => DataContext!.MakeAccusationCommand!;
+    private ICustomCommand StartOverCommand => DataContext.StartOverCommand!;
     private string GetColor()
     {
         var player = _graphicsData!.GameContainer!.PlayerList!.GetWhoPlayer();

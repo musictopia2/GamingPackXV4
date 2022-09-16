@@ -130,6 +130,40 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
     {
         VMData.CurrentWeaponName = weapon.Name;
     }
+    public bool CanStartOver()
+    {
+        if (_gameContainer.SaveRoot.GameStatus == EnumClueStatusList.StartTurn 
+            || _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.FindClues
+            || _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction
+            || _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.EndGame)
+        {
+            return false;
+        }
+        if (_gameContainer.SaveRoot.GameStatus == EnumClueStatusList.EndTurn)
+        {
+            return _gameContainer.CurrentCharacter!.CurrentRoom == 0; //if you made it into the room, then you can't.
+        }
+        //has to move one space.  or its not even worth doing it.
+        if (VMData.LeftToMove == VMData.Cup!.ValueOfOnlyDice)
+        {
+            return false;
+        }
+        return true;
+        //return _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MoveSpaces;
+    }
+    [Command(EnumCommandCategory.Game)]
+    public async Task StartOverAsync()
+    {
+        //see if i can figure out when it needs to enable it.
+
+        //VMData.LeftToMove = VMData.Cup!.ValueOfOnlyDice;
+        //start out with extending move (will eventually rethink).
+        if (_gameContainer.BasicData.MultiPlayer)
+        {
+            await _gameContainer.Network!.SendAllAsync("startover");
+        }
+        await _mainGame.StartOverAsync();
+    }
     public bool CanMakePrediction
     {
         get
