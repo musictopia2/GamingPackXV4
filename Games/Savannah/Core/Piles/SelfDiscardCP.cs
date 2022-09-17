@@ -40,6 +40,11 @@ public class SelfDiscardCP : HandObservable<RegularSimpleCard>
             _player.WhenToStackDiscards--; //i think.  hopefully this will work.  this means that for now one starts stacking sooner.
             Maximum--;
         }
+        if (_player.WhenToStackDiscards < 0)
+        {
+            _player.WhenToStackDiscards = 0; //can't be less than 0 period.
+            Maximum = 1; //needs to be at least one (?)
+        }
         if (HandList.Count > 0)
         {
             HandList.Last().IsUnknown = false;
@@ -49,14 +54,6 @@ public class SelfDiscardCP : HandObservable<RegularSimpleCard>
     {
         HandList = _player.DiscardList;
         Maximum = _player.WhenToStackDiscards + 1;
-        //if (_player.WhenToStackDiscards == -1)
-        //{
-        //    Maximum = 1;
-        //}
-        //else
-        //{
-            
-        //}
     }
     protected override bool CanSelectSingleObject(RegularSimpleCard thisObject)
     {
