@@ -44,7 +44,7 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
         CommandContainer = command;
         _resolver = resolver;
         _ = resolver.ReplaceObject<IScoreData>();
-        CommandContainer!.ExecutingChanged += CommandContainer_ExecutingChanged;
+        CommandContainer.ExecutingChangedMethod = CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SolitaireCard>>();
         DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
@@ -144,11 +144,7 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
         await _mainGame.SaveGameAsync();
     }
     protected virtual void CommandExecutingChanged() { }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
-    }
+    
     void IHandle<IScoreData>.Handle(IScoreData message)
     {
         Score = message.Score;

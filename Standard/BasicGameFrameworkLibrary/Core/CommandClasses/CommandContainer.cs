@@ -3,8 +3,9 @@ public class CommandContainer
 {
     private readonly BasicList<IGameCommand> _commandList = new();
     private readonly BasicList<IGameCommand> _openList = new();
-    public event ExecutingChangedEventHandler? ExecutingChanged;
-    public delegate void ExecutingChangedEventHandler();
+    public Action? ExecutingChangedMethod { get; set; }
+    //public event ExecutingChangedEventHandler? ExecutingChanged;
+    //public delegate void ExecutingChangedEventHandler();
     private readonly BasicList<IControlObservable> _controlList = new();
     private readonly Dictionary<string, Action> _specialActions = new();
     public Action? ParentAction { get; set; }
@@ -147,10 +148,7 @@ public class CommandContainer
     public void ReportAll()
     {
         ReportItems(EnumCommandBusyCategory.None);
-        if (ExecutingChanged != null)
-        {
-            ExecutingChanged.Invoke();
-        }
+        ExecutingChangedMethod?.Invoke(); //i don't think there is a need for more than one process to subscribe.  since its possible to have many timimg issues for maui.
         UpdateAll();
     }
     private void ReportItems(EnumCommandBusyCategory thisBusy)
