@@ -7,7 +7,7 @@ public interface IMain
     void ClearBoard(IDeckDict<SolitaireCard> thisList);
     void ClearBoard();
     void AddCard(int pile, SolitaireCard thisCard);
-    event MainPileClickedEventHandler PileSelectedAsync;
+    Func<int, Task>? PileSelectedAsync { get; set; }
     int CardsNeededToBegin { get; set; }
     void FirstLoad(bool needToMatch, bool showNextNeeded);
     bool IsRound { get; set; }

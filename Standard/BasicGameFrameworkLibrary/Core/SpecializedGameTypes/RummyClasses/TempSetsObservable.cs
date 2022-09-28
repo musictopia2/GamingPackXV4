@@ -4,8 +4,7 @@ public class TempSetsObservable<S, C, R>
     where C : IFastEnumColorSimple
     where R : IDeckObject, IRummmyObject<S, C>, new()
 {
-    public event SetClickedEventHandler? SetClickedAsync;
-    public delegate Task SetClickedEventHandler(int index);
+    public Func<int, Task>? SetClickedAsync { get; set; }
     public int Spacing { get; set; }
     public int HowManySets { get; set; } = 5;
     public BasicList<RummyHandObservable<S, C, R>> SetList = new();
@@ -41,7 +40,7 @@ public class TempSetsObservable<S, C, R>
             thisSet.AutoSelect = EnumHandAutoType.None;
             thisSet.SendAlwaysEnable(enables);
             thisSet.Text = "Set";
-            thisSet.SetClickedAsync += ThisSet_SetClickedAsync;
+            thisSet.SetClickedAsync = ThisSet_SetClickedAsync;
             SetList.Add(thisSet);
         }
     }
@@ -103,14 +102,14 @@ public class TempSetsObservable<S, C, R>
         }
         _thisE!.Publish(thisU);
     }
-    public int TotalObjects => SetList.Sum(Items => Items.HandList.Count);
-    public int HowManySelectedObjects => SetList.Sum(Items => Items.HowManySelectedObjects);
-    public bool HasSelectedObject => SetList.Any(Items => Items.HowManySelectedObjects > 0);
+    public int TotalObjects => SetList.Sum(xx => xx.HandList.Count);
+    public int HowManySelectedObjects => SetList.Sum(xx => xx.HowManySelectedObjects);
+    public bool HasSelectedObject => SetList.Any(xx => xx.HowManySelectedObjects > 0);
     public int PileForSelectedObject
     {
         get
         {
-            RummyHandObservable<S, C, R> thisVM = SetList.FirstOrDefault(Items => Items.HowManySelectedObjects > 0)!;
+            RummyHandObservable<S, C, R> thisVM = SetList.FirstOrDefault(xx => xx.HowManySelectedObjects > 0)!;
             if (thisVM == null)
             {
                 throw new CustomBasicException("There was no pile with only one selected card.  Find out what happened");
@@ -144,7 +143,6 @@ public class TempSetsObservable<S, C, R>
                 return;
             }
         }
-
         throw new CustomBasicException($"There is no card with the deck {deck} to remove for tempsets");
     }
     public DeckRegularDict<R> ListSelectedObjects(bool alsoRemove = false)

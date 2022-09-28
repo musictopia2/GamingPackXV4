@@ -4,7 +4,7 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
 {
     public IGamePackageResolver? MainContainer { get; set; }
     private IAsyncDelayer? _delay;
-    public event Func<D, Task>? DiceClickedAsync;
+    public Func<D, Task>? DiceClickedAsync { get; set; }
     public string CommandActionString { get; set; } = "dicecup";
     public bool Visible { get; set; }
     [Command(EnumCommandCategory.Control)]

@@ -9,8 +9,7 @@ public class MainSetsObservable<SU, CO, RU, SE, T> : SimpleControlObservable
     public string Text { get; set; } = "Main Sets";
     public BasicList<SE> SetList = new();
     public MainSetsObservable(CommandContainer command) : base(command) { }
-    public event SetClickedEventHandler? SetClickedAsync;
-    public delegate Task SetClickedEventHandler(int setNumber, int section, int deck);
+    public Func<int, int, int, Task>? SetClickedAsync { get; set; }
     public virtual BasicList<T> SavedSets()
     {
         BasicList<T> output = new();
@@ -28,8 +27,8 @@ public class MainSetsObservable<SU, CO, RU, SE, T> : SimpleControlObservable
         }
         foreach (var thisSet in SetList)
         {
-            thisSet.ObjectClickedAsync += ThisSet_ObjectClickedAsync;
-            thisSet.SetClickedAsync += ThisSet_SetClickedAsync;
+            thisSet.ObjectClickedAsync = ThisSet_ObjectClickedAsync;
+            thisSet.SetClickedAsync = ThisSet_SetClickedAsync;
         }
         SetList.Clear();
     }
@@ -40,8 +39,8 @@ public class MainSetsObservable<SU, CO, RU, SE, T> : SimpleControlObservable
     }
     public void CreateNewSet(SE thisSet)
     {
-        thisSet.ObjectClickedAsync += ThisSet_ObjectClickedAsync;
-        thisSet.SetClickedAsync += ThisSet_SetClickedAsync;
+        thisSet.ObjectClickedAsync = ThisSet_ObjectClickedAsync;
+        thisSet.SetClickedAsync = ThisSet_SetClickedAsync;
         thisSet.AutoSelect = EnumHandAutoType.None;
         if (_useSpecial)
         {
@@ -55,8 +54,8 @@ public class MainSetsObservable<SU, CO, RU, SE, T> : SimpleControlObservable
         {
             if (tempSet.Equals(thisSet))
             {
-                tempSet.ObjectClickedAsync -= ThisSet_ObjectClickedAsync;
-                tempSet.SetClickedAsync -= ThisSet_SetClickedAsync;
+                //tempSet.ObjectClickedAsync -= ThisSet_ObjectClickedAsync;
+                //tempSet.SetClickedAsync -= ThisSet_SetClickedAsync;
                 SetList.RemoveSpecificItem(thisSet);
                 return;
             }

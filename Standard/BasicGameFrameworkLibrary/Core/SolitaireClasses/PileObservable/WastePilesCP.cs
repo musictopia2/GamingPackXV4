@@ -4,8 +4,8 @@ public abstract class WastePilesCP : IWaste, ISerializable
     public WastePilesCP(CommandContainer command)
     {
         Piles = new SolitairePilesCP(command);
-        Piles.DoubleClickedAsync += Piles_DoubleClickedAsync;
-        Piles.ColumnClickedAsync += Piles_ColumnClickedAsync;
+        Piles.DoubleClickedAsync = Piles_DoubleClickedAsync;
+        Piles.ColumnClickedAsync = Piles_ColumnClickedAsync;
         _command = command;
     }
     private async Task Piles_ColumnClickedAsync(int index)
@@ -52,10 +52,9 @@ public abstract class WastePilesCP : IWaste, ISerializable
     public int CardsNeededToBegin { get; set; }
     protected DeckRegularDict<SolitaireCard> TempList = new();
     private readonly CommandContainer _command;
-
-    public event WastePileSelectedEventHandler? PileSelectedAsync;
-    public event WasteDoubleClickEventHandler? DoubleClickAsync;
     public int HowManyPiles { get; set; }
+    public Func<int, Task>? PileSelectedAsync { get; set; }
+    public Func<int, Task>? DoubleClickAsync { get; set; }
     protected virtual void BeforeLoadingBoard() { }
     protected virtual void AfterFirstLoad() { }
     public void FirstLoad(bool isKlondike, IDeckDict<SolitaireCard> cardList)
@@ -84,7 +83,7 @@ public abstract class WastePilesCP : IWaste, ISerializable
         Discards.HasFrame = true;
         Discards.Rows = rows;
         Discards.Style = EnumMultiplePilesStyleList.HasList;
-        Discards.PileClickedAsync += Discards_PileClickedAsync;
+        Discards.PileClickedAsync = Discards_PileClickedAsync;
         BeforeLoadingBoard();
         Discards.LoadBoard();
         AfterFirstLoad();

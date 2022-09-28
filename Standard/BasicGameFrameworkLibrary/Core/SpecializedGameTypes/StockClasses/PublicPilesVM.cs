@@ -72,10 +72,8 @@ public abstract partial class PublicPilesVM<D> : SimpleControlObservable
     {
         return PileList.Count;
     }
-    public event PileClickedEventHandler? PileClickedAsync;
-    public delegate Task PileClickedEventHandler(int Index);
-    public event NewPileClickedEventHandler? NewPileClickedAsync;
-    public delegate Task NewPileClickedEventHandler();
+    public Func<int, Task>? PileClickedAsync { get; set; }
+    public Func<Task>? NewPileClickedAsync { get; set; }
     public ControlCommand? NewCommand { get; set; }
     public ControlCommand? PileCommand { get; set; }
     [Command(EnumCommandCategory.Control, Name = nameof(NewCommand))]

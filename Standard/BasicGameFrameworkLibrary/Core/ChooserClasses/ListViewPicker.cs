@@ -45,8 +45,7 @@ public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
     }
     public EnumIndexMethod IndexMethod { get; set; }
     public EnumSelectionMode SelectionMode { get; set; } = EnumSelectionMode.SingleItem;
-    public event ItemSelectedEventHandler? ItemSelectedAsync;
-    public delegate Task ItemSelectedEventHandler(int selectedIndex, string selectedText);
+    public Func<int, string, Task>? ItemSelectedAsync { get; set; }
     private readonly ItemChooserClass<ListPieceModel> _privateChoose;
     public int SelectedIndex { get; set; }
     public string GetText(int index)

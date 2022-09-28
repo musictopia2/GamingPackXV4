@@ -16,10 +16,8 @@ public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
             }
         }
     }
-    public event ItemClickedEventHandler? ItemClickedAsync;
-    public delegate Task ItemClickedEventHandler(E piece);
-    public event ItemChangedEventHandler? ItemSelectionChanged;
-    public delegate void ItemChangedEventHandler(E? piece);
+    public Func<E, Task>? ItemClickedAsync { get; set; }
+    public Action<E?>? ItemSelectionChanged { get; set; }
     protected BasicList<BasicPickerData<E>> PrivateGetList()
     {
         BasicList<E> firstList = _thisChoice.GetEnumList();

@@ -4,8 +4,7 @@ public partial class NumberPicker : SimpleControlObservable
     private readonly ItemChooserClass<NumberModel> _privateChoose;
     public readonly BasicList<NumberModel> NumberList = new();
     public ControlCommand? NumberPickedCommand { get; set; }
-    public event ChangedNumberValueEventHandler? ChangedNumberValueAsync;
-    public delegate Task ChangedNumberValueEventHandler(int Chosen);
+    public Func<int, Task>? ChangedNumberValueAsync { get; set; }
     [Command(EnumCommandCategory.Control)]
     private async Task ChooseNumberAsync(NumberModel piece)
     {

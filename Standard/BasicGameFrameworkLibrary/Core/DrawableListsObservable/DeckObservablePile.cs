@@ -2,7 +2,7 @@
 public partial class DeckObservablePile<D> : SimpleControlObservable where D : IDeckObject, new()
 {
     private readonly DeckRegularDict<D> _objectList;
-    public event Func<Task>? DeckClickedAsync;
+    public Func<Task>? DeckClickedAsync { get; set; }
     public bool IsCutting { get; set; }
     private void CommandChanges()
     {

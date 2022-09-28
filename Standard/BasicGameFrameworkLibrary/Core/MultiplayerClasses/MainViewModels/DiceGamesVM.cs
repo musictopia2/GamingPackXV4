@@ -26,7 +26,7 @@ public abstract partial class DiceGamesVM<D> : BasicMultiplayerMainVM
             throw new CustomBasicException("There was no cup.  Rethink");
         }
         _model.Cup.SendEnableProcesses(this, CanEnableDice);
-        _model.Cup.DiceClickedAsync += Cup_DiceClickedAsync;
+        _model.Cup.DiceClickedAsync = Cup_DiceClickedAsync;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
@@ -52,15 +52,6 @@ public abstract partial class DiceGamesVM<D> : BasicMultiplayerMainVM
     public async Task RollDiceAsync()
     {
         await _rollProcesses.RollDiceAsync();
-    }
-    protected override Task TryCloseAsync()
-    {
-        if (_model.Cup == null)
-        {
-            return Task.CompletedTask;
-        }
-        _model.Cup.DiceClickedAsync -= Cup_DiceClickedAsync;
-        return base.TryCloseAsync();
     }
     protected abstract bool CanEnableDice();
 }

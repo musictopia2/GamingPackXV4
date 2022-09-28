@@ -59,7 +59,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
         {
             return;
         }
-        if (PileClickedAsync == null)
+        if (PileClickedAsync is null)
         {
             return;
         }
@@ -70,8 +70,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
     {
         await OnPileClickedAsync(PileList!.IndexOf(pile), pile);
     }
-    public event PileClickedEventHandler? PileClickedAsync;
-    public delegate Task PileClickedEventHandler(int index, BasicPileInfo<D> thisPile);
+    public Func<int, BasicPileInfo<D>, Task>? PileClickedAsync { get; set; }
     public BasicMultiplePilesCP(CommandContainer command) : base(command)
     {
         CreateCommands();

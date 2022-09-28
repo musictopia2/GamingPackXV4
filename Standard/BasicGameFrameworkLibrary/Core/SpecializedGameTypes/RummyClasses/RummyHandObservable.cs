@@ -4,8 +4,7 @@ public class RummyHandObservable<S, C, R> : HandObservable<R>
     where C : IFastEnumColorSimple
     where R : IDeckObject, IRummmyObject<S, C>, new()
 {
-    public event SetClickedEventHandler? SetClickedAsync;
-    public delegate Task SetClickedEventHandler(RummyHandObservable<S, C, R> ThisSet);
+    public Func<RummyHandObservable<S, C, R>, Task>? SetClickedAsync { get; set; }
     public bool DidClickObject { get; set; } = false;
     public void RemoveObject(int deck)
     {

@@ -2,8 +2,7 @@
 public partial class SingleObservablePile<D> : SimpleControlObservable where D : IDeckObject, new()
 {
     private readonly DeckRegularDict<D> _objectList;
-    public event PileClickedEventHandler? PileClickedAsync;
-    public delegate Task PileClickedEventHandler();
+    public Func<Task>? PileClickedAsync { get; set; }
     public ControlCommand? PileObjectClickedCommand { get; set; }
     public bool Visible { get; set; } = true;
     [Command(EnumCommandCategory.Control)]

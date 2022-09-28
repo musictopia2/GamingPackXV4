@@ -20,8 +20,8 @@ public abstract class BasicCardGamesVM<D> : BasicMultiplayerMainVM
         _model = viewModel;
         _basicData = basicData;
         _toast = toast;
-        _model.Deck1.DeckClickedAsync += Deck1_DeckClickedAsync;
-        _model.Pile1.PileClickedAsync += ProcessDiscardClickedAsync;
+        _model.Deck1.DeckClickedAsync = Deck1_DeckClickedAsync;
+        _model.Pile1.PileClickedAsync = ProcessDiscardClickedAsync;
         _model.Deck1.SendEnableProcesses(this, () => CanEnableDeck());
         _model.Pile1.SendEnableProcesses(this, () => CanEnablePile1());
         if (AlwaysEnableHand() == false)
@@ -37,20 +37,10 @@ public abstract class BasicCardGamesVM<D> : BasicMultiplayerMainVM
             _model.PlayerHand1.SendAlwaysEnable(this);
         }
         _model.PlayerHand1.Text = "Your Cards";
-        _model.PlayerHand1.ObjectClickedAsync += ProcessHandClickedAsync;
-        _model.PlayerHand1.ConsiderSelectOneAsync += OnConsiderSelectOneCardAsync;
-        _model.PlayerHand1.BeforeAutoSelectObjectAsync += BeforeUnselectCardFromHandAsync;
-        _model.PlayerHand1.AutoSelectedOneCompletedAsync += OnAutoSelectedHandAsync;
-    }
-    protected override Task TryCloseAsync()
-    {
-        _model.Deck1.DeckClickedAsync -= Deck1_DeckClickedAsync;
-        _model.Pile1.PileClickedAsync -= ProcessDiscardClickedAsync;
-        _model.PlayerHand1.ObjectClickedAsync -= ProcessHandClickedAsync;
-        _model.PlayerHand1.ConsiderSelectOneAsync -= OnConsiderSelectOneCardAsync;
-        _model.PlayerHand1.BeforeAutoSelectObjectAsync -= BeforeUnselectCardFromHandAsync;
-        _model.PlayerHand1.AutoSelectedOneCompletedAsync -= OnAutoSelectedHandAsync;
-        return base.TryCloseAsync();
+        _model.PlayerHand1.ObjectClickedAsync = ProcessHandClickedAsync;
+        _model.PlayerHand1.ConsiderSelectOneAsync = OnConsiderSelectOneCardAsync;
+        _model.PlayerHand1.BeforeAutoSelectObjectAsync = BeforeUnselectCardFromHandAsync;
+        _model.PlayerHand1.AutoSelectedOneCompletedAsync = OnAutoSelectedHandAsync;
     }
     protected bool CanSendDrawMessage = true; // for games like dutch blitz, cannot send the message for drawing card.
     private async Task Deck1_DeckClickedAsync()

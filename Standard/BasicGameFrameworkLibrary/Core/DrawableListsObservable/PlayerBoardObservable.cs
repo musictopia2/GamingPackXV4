@@ -31,8 +31,7 @@ public partial class PlayerBoardObservable<TR> : SimpleControlObservable
     public int HowManyRows { get; private set; }
     private const int _columns = 4;
     public DeckRegularDict<TR> CardList = new();
-    public event SelectedCardEventHandler? SelectedCard;
-    public delegate void SelectedCardEventHandler();
+    public Action? SelectedCard { get; set; }
     public ControlCommand? CardCommand { get; set; }
     [Command(EnumCommandCategory.Control)]
     private void CardClick(TR card)

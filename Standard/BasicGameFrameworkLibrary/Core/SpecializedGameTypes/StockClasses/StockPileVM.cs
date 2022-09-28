@@ -2,8 +2,7 @@
 public abstract class StockPileVM<D>
     where D : IDeckObject, new()
 {
-    public event StockClickedEventHandler? StockClickedAsync;
-    public delegate Task StockClickedEventHandler();
+    public Func<Task>? StockClickedAsync { get; set; }
     public BasicMultiplePilesCP<D> StockFrame;
     public void ClearCards()
     {
@@ -54,7 +53,7 @@ public abstract class StockPileVM<D>
         StockFrame.HasFrame = true;
         StockFrame.LoadBoard();
         StockFrame.PileList!.Single().Text = TextToAppear;
-        StockFrame.PileClickedAsync += StockFrame_PileClickedAsync;
+        StockFrame.PileClickedAsync = StockFrame_PileClickedAsync;
     }
     public void UnselectCard()
     {

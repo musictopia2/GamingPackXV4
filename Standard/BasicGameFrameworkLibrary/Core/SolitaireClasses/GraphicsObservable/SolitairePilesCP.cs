@@ -14,8 +14,8 @@ public partial class SolitairePilesCP : IPlainObservable, ISerializable
     public int NumberOfPiles { get; set; }
     #endregion
     #region "Events/Commands"
-    public event WastePileSelectedEventHandler? ColumnClickedAsync;
-    public event WasteDoubleClickEventHandler? DoubleClickedAsync;
+    public Func<int, Task>? ColumnClickedAsync { get; set; }
+    public Func<int, Task>? DoubleClickedAsync { get; set; }
     public PlainCommand? ColumnCommand { get; set; }
     public PlainCommand? DoubleCommand { get; set; }
     [Command(EnumCommandCategory.Plain, Name = nameof(ColumnCommand))]

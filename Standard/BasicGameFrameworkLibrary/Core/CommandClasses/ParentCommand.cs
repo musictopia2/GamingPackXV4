@@ -1,7 +1,7 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
 public abstract class ParentCommand
 {
-    public event EventHandler CanExecuteChanged = delegate { };
+    public Action? CanExecuteChanged { get; set; } = delegate { };
     protected readonly object _model;
     protected readonly Func<Task>? _simpleAsync1;
     protected readonly Func<object?, Task>? _simpleAsync2;
@@ -95,7 +95,7 @@ public abstract class ParentCommand
     }
     public void ReportCanExecuteChange()
     {
-        CanExecuteChanged?.Invoke(this, new EventArgs());
+        CanExecuteChanged?.Invoke();
     }
     private void Notifier_CanExecuteChanged(object sender, CanExecuteChangedEventArgs e)
     {

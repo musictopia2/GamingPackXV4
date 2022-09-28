@@ -12,8 +12,8 @@ public interface IWaste
     bool CanMoveToAnotherPile(int whichOne);
     void MoveSingleCard(int whichOne);
     IDeckDict<SolitaireCard> GetAllCards();
-    event WastePileSelectedEventHandler PileSelectedAsync;
-    event WasteDoubleClickEventHandler DoubleClickAsync;
+    Func<int, Task>? PileSelectedAsync { get; set; }
+    Func<int, Task>? DoubleClickAsync { get; set; }
     int HowManyPiles { get; set; }
     Task<SavedWaste> GetSavedGameAsync();
     Task LoadGameAsync(SavedWaste gameData);

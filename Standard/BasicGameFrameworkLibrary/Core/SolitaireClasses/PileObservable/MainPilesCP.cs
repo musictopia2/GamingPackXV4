@@ -8,7 +8,7 @@ public class MainPilesCP : IMain, ISerializable
     private bool _suitsNeedToMatch;
     internal bool ShowNextNeeded { get; set; }
     protected int Increments = 1;
-    public event MainPileClickedEventHandler? PileSelectedAsync;
+    public Func<int, Task>? PileSelectedAsync { get; set; }
     public BasicMultiplePilesCP<SolitaireCard> Piles;
     protected IRegularDeckInfo DeckContents;
     private readonly IScoreData _score;
@@ -17,15 +17,15 @@ public class MainPilesCP : IMain, ISerializable
         _score = thisMod;
         DeckContents = resolver.Resolve<IRegularDeckInfo>();
         Piles = new BasicMultiplePilesCP<SolitaireCard>(command);
-        Piles.PileClickedAsync += Piles_PileClickedAsync;
+        Piles.PileClickedAsync = Piles_PileClickedAsync;
     }
-    private async Task Piles_PileClickedAsync(int Index, BasicPileInfo<SolitaireCard> thisPile)
+    private async Task Piles_PileClickedAsync(int index, BasicPileInfo<SolitaireCard> thisPile)
     {
-        if (PileSelectedAsync == null)
+        if (PileSelectedAsync is null)
         {
             return;
         }
-        await PileSelectedAsync.Invoke(Index);
+        await PileSelectedAsync.Invoke(index);
     }
     public void SetSavedScore(int score)
     {

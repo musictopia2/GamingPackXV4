@@ -44,9 +44,9 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
         CommandContainer = command;
         _resolver = resolver;
         _ = resolver.ReplaceObject<IScoreData>();
-        CommandContainer.ExecutingChangedMethod = CommandContainer_ExecutingChanged;
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SolitaireCard>>();
-        DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
+        DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
         _basicData = _resolver.Resolve<BasicData>();
         DeckPile.SendEnableProcesses(this, () =>
@@ -66,12 +66,12 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
             return true;
         });
         MainDiscardPile = new SingleObservablePile<SolitaireCard>(command);
-        MainDiscardPile.PileClickedAsync += MainDiscardPile_PileClickedAsync;
+        MainDiscardPile.PileClickedAsync = MainDiscardPile_PileClickedAsync;
         MainPiles1 = resolver.ReplaceObject<IMain>();
         WastePiles1 = resolver.ReplaceObject<IWaste>();
-        MainPiles1.PileSelectedAsync += MainPiles1_PileSelectedAsync;
-        WastePiles1.PileSelectedAsync += WastePiles1_PileSelectedAsync;
-        WastePiles1.DoubleClickAsync += WastePiles1_DoubleClickAsync;
+        MainPiles1.PileSelectedAsync = MainPiles1_PileSelectedAsync;
+        WastePiles1.PileSelectedAsync = WastePiles1_PileSelectedAsync;
+        WastePiles1.DoubleClickAsync = WastePiles1_DoubleClickAsync;
         CreateCommands(CommandContainer);
     }
     partial void CreateCommands(CommandContainer container);

@@ -7,10 +7,8 @@ public abstract class SetInfo<S, C, R, T> : HandObservable<R>
     public abstract T SavedSet();
     public abstract void LoadSet(T save);
     private int _tempSection;
-    public event SetClickedEventHandler? SetClickedAsync;
-    public delegate Task SetClickedEventHandler(SetInfo<S, C, R, T> thisSet, int section);
-    public new event ObjectClickedEventHandler? ObjectClickedAsync;
-    public new delegate Task ObjectClickedEventHandler(SetInfo<S, C, R, T> thisSet, int deck, int section);
+    public Func<SetInfo<S, C, R, T>, int, Task>? SetClickedAsync { get; set; }
+    public new Func<SetInfo<S, C, R, T>, int, int, Task>? ObjectClickedAsync { get; set; }
     protected bool CanExpandRuns;
     protected virtual bool IsRun()
     {

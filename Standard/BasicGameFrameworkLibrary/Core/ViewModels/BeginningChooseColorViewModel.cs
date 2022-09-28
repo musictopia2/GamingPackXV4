@@ -1,12 +1,11 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
 [UseLabelGrid]
-public partial class BeginningChooseColorViewModel<E, P> : ScreenViewModel, IBlankGameVM, IBeginningColorViewModel, IDisposable
+public partial class BeginningChooseColorViewModel<E, P> : ScreenViewModel, IBlankGameVM, IBeginningColorViewModel
     where E : struct, IFastEnumColorList<E>
     where P : class, IPlayerBoardGame<E>, new()
 {
     private readonly BeginningColorModel<E, P> _model;
     private readonly IBeginningColorProcesses<E> _processes;
-    private bool _disposedValue;
     [LabelColumn]
     public string Turn { get; set; } = "";
     [LabelColumn]
@@ -23,7 +22,7 @@ public partial class BeginningChooseColorViewModel<E, P> : ScreenViewModel, IBla
         _processes.SetInstructions = x => Instructions = x;
         _processes.SetTurn = x => Turn = x;
         _model.ColorChooser.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
-        _model.ColorChooser.ItemClickedAsync += ColorChooser_ItemClickedAsync;
+        _model.ColorChooser.ItemClickedAsync = ColorChooser_ItemClickedAsync;
     }
     public BoardGamesColorPicker<E, P> GetColorPicker => _model.ColorChooser;
     protected override Task ActivateAsync()
@@ -35,20 +34,4 @@ public partial class BeginningChooseColorViewModel<E, P> : ScreenViewModel, IBla
         return _processes.ChoseColorAsync(piece);
     }
     public CommandContainer CommandContainer { get; set; }
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposedValue)
-        {
-            if (disposing)
-            {
-                _model.ColorChooser.ItemClickedAsync -= ColorChooser_ItemClickedAsync;
-            }
-            _disposedValue = true;
-        }
-    }
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
 }

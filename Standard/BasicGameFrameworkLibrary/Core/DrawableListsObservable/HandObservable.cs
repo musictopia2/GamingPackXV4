@@ -264,17 +264,11 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
         ObjectSingleClickCommand!.BusyCategory = EnumCommandBusyCategory.Limited;
     }
 
-    public event ObjectClickedEventHandler? ObjectClickedAsync;
-    public delegate Task ObjectClickedEventHandler(D payLoad, int index);
-    public event AutoSelectedOneCompletedEventHandler? AutoSelectedOneCompletedAsync;
-    public delegate Task AutoSelectedOneCompletedEventHandler();
-    public event BeforeAutoSelectCardEventHandler? BeforeAutoSelectObjectAsync;
-    public delegate Task BeforeAutoSelectCardEventHandler();
-    public event BoardClickedEventHandler? BoardClickedAsync;
-    public delegate Task BoardClickedEventHandler();
-    public event ConsiderSelectOneEventHandler? ConsiderSelectOneAsync; // this is needed for games like fluxx.  so when you click on one, it can show the details of the card you chose.  since there is no mouse over.
-    public delegate Task ConsiderSelectOneEventHandler(D payLoad);
-    public event ManualSelectUnselectEventHandler? ManualSelectUnselect;
-    public delegate void ManualSelectUnselectEventHandler(D payLoad);
+    public Func<D, int, Task>? ObjectClickedAsync { get; set; }
+    public Func<Task>? AutoSelectedOneCompletedAsync { get; set; }
+    public Func<Task>? BeforeAutoSelectObjectAsync { get; set; }
+    public Func<Task>? BoardClickedAsync { get; set; }
+    public Func<D, Task>? ConsiderSelectOneAsync { get; set; }
+    public Action<D>? ManualSelectUnselect { get; set; }
     #endregion
 }

@@ -7,9 +7,9 @@ public class SinglePlayerCardGamesMainViewModel : ScreenViewModel, IBasicEnableP
     public SinglePlayerCardGamesMainViewModel(IEventAggregator aggregator, CommandContainer commandContainer, IGamePackageResolver resolver) : base(aggregator)
     {
         CommandContainer = commandContainer;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged; //hopefully no problem (?)
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SinglePlayerCardGamesCardInfo>>();
-        DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
+        DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
         _mainGame = resolver.ReplaceObject<SinglePlayerCardGamesMainGameClass>();
     }
@@ -41,10 +41,5 @@ public class SinglePlayerCardGamesMainViewModel : ScreenViewModel, IBasicEnableP
     {
         await base.ActivateAsync();
         await _mainGame.NewGameAsync(DeckPile);
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
 }
