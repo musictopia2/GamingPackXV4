@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
+    
 	  <PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
 	  <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
   </ItemGroup>

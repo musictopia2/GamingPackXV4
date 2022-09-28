@@ -13,7 +13,7 @@ public class SinglePlayerCardGamesMainViewModel : ScreenViewModel, IBasicEnableP
         DeckPile.NeverAutoDisable = true;
         _mainGame = resolver.ReplaceObject<SinglePlayerCardGamesMainGameClass>();
     }
-    private async Task DeckPile_DeckClickedAsync()
+    private static async Task DeckPile_DeckClickedAsync()
     {
         //if we click on deck, will do code for this.
         await Task.CompletedTask;

@@ -6,7 +6,7 @@ public class CustomMain : IMain, ISerializable //good news is if nothing is foun
     public bool IsRound { get; set; }
     public int Rows { get; set; }
     public int Columns { get; set; }
-    public event MainPileClickedEventHandler? PileSelectedAsync;
+    public Func<int, Task>? PileSelectedAsync { get; set; }
     public CustomMain() //only used to stop the warnings.
     {
         if (PileSelectedAsync is null)
