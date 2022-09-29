@@ -24,18 +24,13 @@ public partial class FillOrBustMainViewModel : BasicCardGamesVM<FillOrBustCardIn
         {
             return _mainGame!.SaveRoot!.GameStatus == EnumGameStatusList.ChooseDice;
         });
-        _model.Cup!.DiceClickedAsync += FillOrBustMainViewModel_DiceClickedAsync;
+        _model.Cup!.DiceClickedAsync = FillOrBustMainViewModel_DiceClickedAsync;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
     private async Task FillOrBustMainViewModel_DiceClickedAsync(SimpleDice arg)
     {
         await _mainGame!.Roller!.SelectUnSelectDiceAsync(arg.Index); // i think
-    }
-    protected override Task TryCloseAsync()
-    {
-        _model.Cup!.DiceClickedAsync -= FillOrBustMainViewModel_DiceClickedAsync;
-        return base.TryCloseAsync();
     }
     protected override bool CanEnableDeck()
     {

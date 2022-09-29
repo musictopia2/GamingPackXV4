@@ -15,7 +15,7 @@ public class SpiderSolitaireOpeningViewModel : ScreenViewModel, IBlankGameVM
         CommandContainer = container;
         LevelChosen = _global.LevelChosen;
         LevelPicker.LoadTextList(new() { "1 Suit", "2 Suits", "4 Suits" });
-        LevelPicker.ItemSelectedAsync += LevelPicker_ItemSelectedAsync;
+        LevelPicker.ItemSelectedAsync = LevelPicker_ItemSelectedAsync;
         LevelPicker.SelectSpecificItem(LevelChosen);
         LevelPicker.IsEnabled = true;
     }

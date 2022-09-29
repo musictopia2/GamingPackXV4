@@ -23,18 +23,13 @@ public partial class GolfCardGameMainViewModel : BasicCardGamesVM<RegularSimpleC
         _gameContainer = gameContainer;
         _toast = toast;
         _model.Deck1.NeverAutoDisable = true;
-        _model.OtherPile!.PileClickedAsync += OtherPile_PileClickedAsync;
+        _model.OtherPile!.PileClickedAsync = OtherPile_PileClickedAsync;
         _model.OtherPile.SendEnableProcesses(this, (() => gameContainer.AlreadyDrew));
         _model.GolfHand1.SendEnableProcesses(this, () => gameContainer.AlreadyDrew);
         _model.HiddenCards1.SendEnableProcesses(this, () => gameContainer.AlreadyDrew);
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer commandContainer);
-    protected override Task TryCloseAsync()
-    {
-        _model.OtherPile!.PileClickedAsync -= OtherPile_PileClickedAsync;
-        return base.TryCloseAsync();
-    }
     private async Task OtherPile_PileClickedAsync()
     {
         var tempCard = _model.OtherPile!.GetCardInfo();

@@ -25,7 +25,7 @@ public partial class ScoreViewModel : ScreenViewModel, IBlankGameVM
         VMData = model;
         _gameContainer = gameContainer;
         _message = message;
-        _gameContainer.Command.ExecutingChanged += Command_ExecutingChanged;
+        _gameContainer.Command.ExecutingChanged = Command_ExecutingChanged;
         CommandContainer = _gameContainer.Command;
         VMData.ItemSelected = VMData.ItemSelected;
         CreateCommands(CommandContainer);
@@ -42,11 +42,6 @@ public partial class ScoreViewModel : ScreenViewModel, IBlankGameVM
             return true;
         }
         return VMData.ItemSelected > -1;
-    }
-    protected override Task TryCloseAsync()
-    {
-        _gameContainer.Command.ExecutingChanged -= Command_ExecutingChanged;
-        return base.TryCloseAsync();
     }
     private void Command_ExecutingChanged()
     {

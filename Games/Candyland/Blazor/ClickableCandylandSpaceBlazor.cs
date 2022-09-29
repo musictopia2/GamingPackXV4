@@ -26,7 +26,7 @@ public class ClickableCandylandSpaceBlazor : ComponentBase
         path.Fill_Opacity = "0.0";
         path.D = GetPathData();
         svg.Children.Add(path);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
     private async Task Clicked(object args1, object args2)

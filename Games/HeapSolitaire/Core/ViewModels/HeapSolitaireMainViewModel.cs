@@ -20,9 +20,9 @@ public partial class HeapSolitaireMainViewModel : ScreenViewModel,
     {
         CommandContainer = commandContainer;
         _basicData = basicData;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged; //hopefully no problem (?)
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged; //hopefully no problem (?)
         DeckPile = resolver.ReplaceObject<DeckObservablePile<HeapSolitaireCardInfo>>();
-        DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
+        DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
         DeckPile.SendEnableProcesses(this, () =>
         {
@@ -30,9 +30,9 @@ public partial class HeapSolitaireMainViewModel : ScreenViewModel,
         });
         _mainGame = resolver.ReplaceObject<HeapSolitaireMainGameClass>();
         Waste1 = new WastePiles(CommandContainer, _mainGame);
-        Waste1.PileClickedAsync += Waste1_PileClickedAsync;
+        Waste1.PileClickedAsync = Waste1_PileClickedAsync;
         Main1 = new MainPiles(CommandContainer, _mainGame);
-        Main1.PileClickedAsync += Main1_PileClickedAsync;
+        Main1.PileClickedAsync = Main1_PileClickedAsync;
     }
     private async Task Main1_PileClickedAsync(int index, BasicPileInfo<HeapSolitaireCardInfo> pile)
     {
@@ -71,11 +71,6 @@ public partial class HeapSolitaireMainViewModel : ScreenViewModel,
         Waste1.IsEnabled = true;
         Main1.IsEnabled = true;
         CommandContainer.UpdateAll();
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
     void IHandle<ScoreEventModel>.Handle(ScoreEventModel message)
     {

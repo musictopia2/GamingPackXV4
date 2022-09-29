@@ -76,8 +76,7 @@ public partial class PublicPilesViewModel : SimpleControlObservable, ISerializab
     {
         return PileList.Count;
     }
-    public event PileClickedEventHandler? PileClickedAsync;
-    public delegate Task PileClickedEventHandler(int index);
+    public Func<int, Task>? PileClickedAsync { get; set; }
     public ControlCommand? PileCommand { get; set; }
     [Command(EnumCommandCategory.Control)]
     private async Task PrivatePileAsync(BasicPileInfo<FlinchCardInformation> card)

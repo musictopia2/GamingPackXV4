@@ -40,24 +40,12 @@ public partial class BladesOfSteelMainViewModel : BasicCardGamesVM<RegularSimple
         }
         return !_model.MainDefense1!.HasCards;
     }
-    protected override Task TryCloseAsync()
-    {
-        CloseAttackCommands();
-        return base.TryCloseAsync();
-    }
     private void LoadAttackCommands()
     {
-        _model.MainDefense1.BoardClickedAsync += MainDefense1_BoardClickedAsync;
-        _model.YourAttackPile.BoardClickedAsync += YourAttackPile_BoardClickedAsync;
-        _model.YourDefensePile.BoardClickedAsync += YourDefensePile_BoardClickedAsync;
-        _model.YourDefensePile.ObjectClickedAsync += YourDefensePile_ObjectClickedAsync;
-    }
-    private void CloseAttackCommands()
-    {
-        _model.MainDefense1.BoardClickedAsync -= MainDefense1_BoardClickedAsync;
-        _model.YourAttackPile.BoardClickedAsync -= YourAttackPile_BoardClickedAsync;
-        _model.YourDefensePile.BoardClickedAsync -= YourDefensePile_BoardClickedAsync;
-        _model.YourDefensePile.ObjectClickedAsync -= YourDefensePile_ObjectClickedAsync;
+        _model.MainDefense1.BoardClickedAsync = MainDefense1_BoardClickedAsync;
+        _model.YourAttackPile.BoardClickedAsync = YourAttackPile_BoardClickedAsync;
+        _model.YourDefensePile.BoardClickedAsync = YourDefensePile_BoardClickedAsync;
+        _model.YourDefensePile.ObjectClickedAsync = YourDefensePile_ObjectClickedAsync;
     }
     protected override bool CanEnableDeck()
     {

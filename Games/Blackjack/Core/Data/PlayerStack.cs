@@ -1,8 +1,9 @@
 ﻿namespace Blackjack.Core.Data;
 public class PlayerStack : HandObservable<BlackjackCardInfo>
 {
-    public event CardSelectedEventHandler? CardSelectedAsync;
-    public delegate Task CardSelectedEventHandler(bool hasChoice);
+    public Func<bool, Task>? CardSelectedAsync { get; set; }
+    //public event CardSelectedEventHandler? CardSelectedAsync;
+    //public delegate Task CardSelectedEventHandler(bool hasChoice);
     public BlackjackCardInfo? MainCard;
     public BlackjackCardInfo? SecondCard;
     private bool _mVarComputer;

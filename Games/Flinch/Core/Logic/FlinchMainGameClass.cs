@@ -30,7 +30,7 @@ public class FlinchMainGameClass
         _gameContainer = gameContainer;
         _ai = ai;
         _toast = toast;
-        _model.PublicPiles.PileClickedAsync += PublicPiles_PileClickedAsync;
+        _model.PublicPiles.PileClickedAsync = PublicPiles_PileClickedAsync;
         _gameContainer.IsValidMove = IsValidMove;
     }
     private async Task PublicPiles_PileClickedAsync(int index)

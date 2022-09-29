@@ -26,7 +26,7 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
         _gameContainer.SpaceClickedAsync = MoveSpaceAsync;
         _gameContainer.RoomClickedAsync = MoveRoomAsync;
         VMData.Pile.SendEnableProcesses(this, () => false);
-        VMData.HandList.ObjectClickedAsync += HandList_ObjectClickedAsync;
+        VMData.HandList.ObjectClickedAsync = HandList_ObjectClickedAsync;
         VMData.HandList.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.FindClues);
         CreateCommands(commandContainer);
     }
@@ -312,11 +312,6 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
         _gameContainer.SaveRoot.CurrentPrediction.WeaponName = VMData.CurrentWeaponName;
         _gameContainer.SaveRoot.CurrentPrediction.RoomName = VMData.CurrentRoomName;
         await _mainGame.MakeAccusationAsync();
-    }
-    protected override Task TryCloseAsync()
-    {
-        VMData.HandList.ObjectClickedAsync -= HandList_ObjectClickedAsync;
-        return base.TryCloseAsync();
     }
     public override bool CanRollDice()
     {

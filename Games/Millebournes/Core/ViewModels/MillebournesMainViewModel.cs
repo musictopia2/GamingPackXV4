@@ -25,8 +25,8 @@ public partial class MillebournesMainViewModel : BasicCardGamesVM<MillebournesCa
         _gameContainer = gameContainer;
         _toast = toast;
         _model.Deck1.NeverAutoDisable = false;
-        _model.Pile2!.PileClickedAsync += Pile2_PileClickedAsync;
-        CommandContainer!.ExecutingChanged += CommandContainer_ExecutingChanged;
+        _model.Pile2!.PileClickedAsync = Pile2_PileClickedAsync;
+        CommandContainer!.ExecutingChanged = CommandContainer_ExecutingChanged;
         _model.Pile1.Text = "New Card";
         _model.Pile1.Visible = false;
         _model.Pile2.Text = "Throw Away";
@@ -54,29 +54,12 @@ public partial class MillebournesMainViewModel : BasicCardGamesVM<MillebournesCa
         if (CoupeScreen == null)
         {
             return;
-            //throw new CustomBasicException("The coupe screen was never loaded.  Rethink");
         }
         await CloseSpecificChildAsync(CoupeScreen);
         CoupeScreen = null;
     }
     private void CommandContainer_ExecutingChanged()
     {
-        //if (_model.Pile1!.PileEmpty())
-        //{
-        //    _model.Pile1.Visible = false;
-        //}
-        //else
-        //{
-        //    _model.Pile1.Visible = true;
-        //}
-        //if (CommandContainer!.IsExecuting || _model.Pile1!.PileEmpty())
-        //{
-        //    _model.Pile1!.Visible = false;
-        //}
-        //else
-        //{
-        //    _model.Pile1.Visible = true;
-        //}
         _model.Pile1.ReportCanExecuteChange();
         _gameContainer!.TeamList.ForEach(thisTeam =>
         {
@@ -95,8 +78,6 @@ public partial class MillebournesMainViewModel : BasicCardGamesVM<MillebournesCa
     }
     protected override async Task TryCloseAsync()
     {
-        _model.Pile2!.PileClickedAsync -= Pile2_PileClickedAsync;
-        CommandContainer!.ExecutingChanged -= CommandContainer_ExecutingChanged;
         await CloseCoupeAsync();
         await base.TryCloseAsync();
     }

@@ -20,7 +20,7 @@ public partial class ChooseNumberViewModel : ScreenViewModel, IBlankGameVM
             throw new CustomBasicException("Can't load the choose number view model because the status is not even choose number");
         }
         Number1 = new NumberPicker(commandContainer, resolver);
-        Number1.ChangedNumberValueAsync += Number1_ChangedNumberValueAsync;
+        Number1.ChangedNumberValueAsync = Number1_ChangedNumberValueAsync;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);

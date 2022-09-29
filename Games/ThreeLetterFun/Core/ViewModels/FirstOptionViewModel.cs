@@ -16,7 +16,7 @@ public partial class FirstOptionViewModel : ScreenViewModel, IBlankGameVM, IHand
         _first = first;
         _message = message;
         Option1 = new ListViewPicker(commandContainer, resolver);
-        Option1.ItemSelectedAsync += Option1_ItemSelectedAsync;
+        Option1.ItemSelectedAsync = Option1_ItemSelectedAsync;
         BasicList<string> list = new() { "Beginner", "Advanced" };
         Option1.IndexMethod = EnumIndexMethod.OneBased;
         Option1.LoadTextList(list);

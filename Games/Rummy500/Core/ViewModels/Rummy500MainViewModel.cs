@@ -24,20 +24,13 @@ public partial class Rummy500MainViewModel : BasicCardGamesVM<RegularRummyCard>
         _toast = toast;
         _model.Deck1.NeverAutoDisable = true;
         _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
-        _model.MainSets1.SetClickedAsync += MainSets1_SetClickedAsync;
-        _model.DiscardList1.ObjectClickedAsync += DiscardList1_ObjectClickedAsync;
-        _model.DiscardList1.BoardClickedAsync += DiscardList1_BoardClickedAsync;
+        _model.MainSets1.SetClickedAsync = MainSets1_SetClickedAsync;
+        _model.DiscardList1.ObjectClickedAsync = DiscardList1_ObjectClickedAsync;
+        _model.DiscardList1.BoardClickedAsync = DiscardList1_BoardClickedAsync;
         _model.MainSets1.SendEnableProcesses(this, () => _gameContainer!.AlreadyDrew);
         CreateCommands(CommandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
-    {
-        _model.MainSets1.SetClickedAsync -= MainSets1_SetClickedAsync;
-        _model.DiscardList1.ObjectClickedAsync -= DiscardList1_ObjectClickedAsync;
-        _model.DiscardList1.BoardClickedAsync -= DiscardList1_BoardClickedAsync;
-        return base.TryCloseAsync();
-    }
     protected override bool CanEnableDeck()
     {
         return !_gameContainer.AlreadyDrew;
@@ -108,7 +101,9 @@ public partial class Rummy500MainViewModel : BasicCardGamesVM<RegularRummyCard>
         {
             x++;
             if (newSet.Equals(thisSet))
+            {
                 nums = x;
+            }
         });
         if (nums == 0)
         {

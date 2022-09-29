@@ -31,7 +31,7 @@ public class SkipboMainGameClass
         _gameContainer = gameContainer;
         _ai = ai;
         _toast = toast;
-        _model.PublicPiles.PileClickedAsync += PublicPiles_PileClickedAsync;
+        _model.PublicPiles.PileClickedAsync = PublicPiles_PileClickedAsync;
         _gameContainer.IsValidMove = IsValidMove;
         delegates.GetPlayerCount = GetCount;
     }

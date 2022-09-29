@@ -4,8 +4,8 @@ public class CustomWaste : IWaste, ISerializable
     public bool IsEnabled { get; set; }
     public int CardsNeededToBegin { get; set; }
     public int HowManyPiles { get; set; }
-    public event WastePileSelectedEventHandler? PileSelectedAsync;
-    public event WasteDoubleClickEventHandler? DoubleClickAsync;
+    public Func<int, Task>? PileSelectedAsync { get; set; }
+    public Func<int, Task>? DoubleClickAsync { get; set; }
     public CustomWaste()
     {
         if (PileSelectedAsync is null || DoubleClickAsync is null)

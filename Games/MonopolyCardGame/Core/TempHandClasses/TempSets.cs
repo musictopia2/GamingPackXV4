@@ -1,8 +1,7 @@
 ﻿namespace MonopolyCardGame.Core.TempHandClasses;
 public class TempSets
 {
-    public event SetClickedEventHandler? SetClickedAsync;
-    public delegate Task SetClickedEventHandler(int index);
+    public Func<int, Task>? SetClickedAsync { get; set; }
     public int Spacing { get; set; }
     public int HowManySets { get; set; } = 5; // defaults at 5
     public BasicList<TempHand> SetList = new(); //has to be public because of data binding
@@ -38,7 +37,7 @@ public class TempSets
             thisSet.AutoSelect = EnumHandAutoType.None;
             thisSet.SendAlwaysEnable(enables);
             thisSet.Text = "Set";
-            thisSet.SetClickedAsync += ThisSet_SetClickedAsync;
+            thisSet.SetClickedAsync = ThisSet_SetClickedAsync;
             SetList.Add(thisSet);
         }
     }
@@ -133,12 +132,14 @@ public class TempSets
     public void RemoveObject(int deck)
     {
         foreach (var thisSet in SetList)
+        {
             if (thisSet.HandList.ObjectExist(deck))
             {
                 thisSet.HandList.RemoveObjectByDeck(deck);
                 PublicCount();
                 return;
             }
+        }
         throw new CustomBasicException($"There is no card with the deck {deck} to remove for tempsets");
     }
     public DeckRegularDict<MonopolyCardGameCardInformation> ListSelectedObjects(bool alsoRemove = false)

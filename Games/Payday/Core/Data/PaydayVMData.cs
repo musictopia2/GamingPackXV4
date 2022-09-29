@@ -12,7 +12,7 @@ public partial class PaydayVMData : IDiceBoardGamesData
         _resolver = resolver;
         PopUpList = new(command, resolver);
         PopUpList.IndexMethod = ListViewPicker.EnumIndexMethod.OneBased;
-        PopUpList.ItemSelectedAsync += PopUpList_ItemSelectedAsync;
+        PopUpList.ItemSelectedAsync = PopUpList_ItemSelectedAsync;
         CurrentDealList = new(command);
         CurrentDealList.AutoSelect = EnumHandAutoType.None;
         CurrentDealList.Text = "Deal List";

@@ -29,7 +29,7 @@ public class ScoreGuideComponent : ComponentBase
         text.Font_Size = 40;
         text.Content = "(or more)";
         text.CenterText(_mains, bounds);
-        render.RenderSvgTree(_mains, 0, builder);
+        render.RenderSvgTree(_mains, builder);
         base.BuildRenderTree(builder);
     }
     private void DrawDottedLine(int y)

@@ -29,7 +29,7 @@ public partial class FourSuitRummyMainViewModel : BasicCardGamesVM<RegularRummyC
         player.DoInit();
         _model.TempSets.Init(this);
         _model.TempSets.ClearBoard();
-        _model.TempSets.SetClickedAsync += TempSets_SetClickedAsync;
+        _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
         _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
         CreateCommands(commandContainer);
     }
@@ -46,7 +46,6 @@ public partial class FourSuitRummyMainViewModel : BasicCardGamesVM<RegularRummyC
     public PlayerSetsViewModel? OpponentSetsScreen { get; set; }
     protected override async Task TryCloseAsync()
     {
-        _model.TempSets.SetClickedAsync -= TempSets_SetClickedAsync;
         await CloseSpecificChildAsync(YourSetsScreen!);
         await CloseSpecificChildAsync(OpponentSetsScreen!);
         await base.TryCloseAsync();

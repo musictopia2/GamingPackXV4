@@ -46,9 +46,9 @@ public partial class PyramidSolitaireMainViewModel : ScreenViewModel,
         _basicData = basicData;
         _toast = toast;
         _message = message;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged; //hopefully no problem (?)
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SolitaireCard>>();
-        DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
+        DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
         DeckPile.SendEnableProcesses(this, () =>
         {
@@ -63,11 +63,11 @@ public partial class PyramidSolitaireMainViewModel : ScreenViewModel,
         CurrentPile.SendEnableProcesses(this, () => CurrentPile.PileEmpty() == false);
         CurrentPile.Text = "Current";
         CurrentPile.CurrentOnly = true;
-        CurrentPile.PileClickedAsync += CurrentPile_PileClickedAsync;
+        CurrentPile.PileClickedAsync = CurrentPile_PileClickedAsync;
         Discard = new SingleObservablePile<SolitaireCard>(CommandContainer);
         Discard.SendEnableProcesses(this, () => Discard.PileEmpty() == false);
         Discard.Text = "Discard";
-        Discard.PileClickedAsync += Discard_PileClickedAsync;
+        Discard.PileClickedAsync = Discard_PileClickedAsync;
         PlayList1 = new PlayList(CommandContainer);
         PlayList1.SendEnableProcesses(this, () => PlayList1.HasChosenCards());
         PlayList1.Visible = true;
@@ -102,11 +102,6 @@ public partial class PyramidSolitaireMainViewModel : ScreenViewModel,
         await _mainGame.NewGameAsync(this);
         DeckPile.IsEnabled = true;
         CommandContainer.UpdateAll();
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
     void IHandle<MoveEventModel>.Handle(MoveEventModel message)
     {

@@ -24,7 +24,7 @@ public partial class LifeBoardGameVMData : ISimpleBoardGamesData, IEnableAlways
         GenderChooser.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
         PlayerPicker = new(command, resolver);
         PlayerPicker.IndexMethod = EnumIndexMethod.OneBased;
-        PlayerPicker.ItemSelectedAsync += PlayerPicker_ItemSelectedAsync;
+        PlayerPicker.ItemSelectedAsync = PlayerPicker_ItemSelectedAsync;
         SinglePile = new(command);
         SinglePile.SendAlwaysEnable(this); //hopefuly this simple.
         SinglePile.Text = "Card";

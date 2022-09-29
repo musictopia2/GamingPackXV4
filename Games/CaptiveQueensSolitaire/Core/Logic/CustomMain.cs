@@ -3,11 +3,8 @@ public class CustomMain : BasicMultiplePilesCP<SolitaireCard>, IMain, ISerializa
 {
     public int CardsNeededToBegin { get; set; }
     public bool IsRound { get; set; }
-#pragma warning disable 0067
-    public event MainPileClickedEventHandler? PileSelectedAsync;
-#pragma warning restore 0067
+    public Func<int, Task>? PileSelectedAsync { get; set; }
     private readonly IScoreData _score;
-
     public CustomMain(IScoreData score, CommandContainer command) : base(command)
     {
         _score = score;

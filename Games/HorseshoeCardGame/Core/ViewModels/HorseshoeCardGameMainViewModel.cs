@@ -38,8 +38,7 @@ public class HorseshoeCardGameMainViewModel : BasicCardGamesVM<HorseshoeCardGame
             });
             if (thisPlayer.PlayerCategory == EnumPlayerCategory.Self)
             {
-                thisPlayer.TempHand.SelectedCard -= TempHand_SelectedCard;
-                thisPlayer.TempHand.SelectedCard += TempHand_SelectedCard;
+                thisPlayer.TempHand.SelectedCard = TempHand_SelectedCard;
             }
         });
     }

@@ -83,9 +83,9 @@ public partial class CribbagePatienceMainViewModel : ScreenViewModel,
         _toast = toast;
         _error = error;
         _message = message;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged; //hopefully no problem (?)
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged; //hopefully no problem (?)
         DeckPile = resolver.ReplaceObject<DeckObservablePile<CribbageCard>>();
-        DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
+        DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = false;
         DeckPile.SendEnableProcesses(this, () =>
         {
@@ -143,11 +143,6 @@ public partial class CribbagePatienceMainViewModel : ScreenViewModel,
         await _mainGame.NewGameAsync(this);
         Hand1.IsEnabled = true; //somehow a timing issue.  this should fix this one.  not sure if its going to be more of a problem later or not (?)
         CommandContainer.UpdateAll();
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
     void IHandle<HandScoresEventModel>.Handle(HandScoresEventModel message)
     {

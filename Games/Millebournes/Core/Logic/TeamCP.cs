@@ -15,7 +15,7 @@ public class TeamCP
         TeamNumber = team;
         _gameContainer = gameContainer;
         _model = model;
-        CardPiles.PileClickedAsync += CardPiles_PileClickedAsync;
+        CardPiles.PileClickedAsync = CardPiles_PileClickedAsync;
         Init();
         MillebournesPlayerItem thisPlayer = _gameContainer.PlayerList!.GetSelf();
         _selfPlayer = thisPlayer.Id;

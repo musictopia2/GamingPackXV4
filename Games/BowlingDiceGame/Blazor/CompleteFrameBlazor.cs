@@ -51,7 +51,7 @@ public class CompleteFrameBlazor : ComponentBase
             score = Frame.Score.ToString();
         }
         svg.DrawCenteredText(f, 20, score, cc.White);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
 }

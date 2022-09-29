@@ -50,7 +50,7 @@ public class PieceGraphicsBlazor : ComponentBase
             text.Content = Number.ToString();
         }
         svg.Children.Add(text);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
 }

@@ -17,17 +17,11 @@ public partial class PickelBidViewModel : ScreenViewModel, IBlankGameVM
         Model = model;
         _gameContainer = gameContainer;
         _processes = processes;
-        Model.Bid1.ChangedNumberValueAsync += Bid1_ChangedNumberValueAsync;
-        Model.Suit1.ItemSelectionChanged += Suit1_ItemSelectionChanged;
+        Model.Bid1.ChangedNumberValueAsync = Bid1_ChangedNumberValueAsync;
+        Model.Suit1.ItemSelectionChanged = Suit1_ItemSelectionChanged;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
-    {
-        Model.Bid1.ChangedNumberValueAsync -= Bid1_ChangedNumberValueAsync;
-        Model.Suit1.ItemSelectionChanged -= Suit1_ItemSelectionChanged;
-        return base.TryCloseAsync();
-    }
     private void Suit1_ItemSelectionChanged(EnumSuitList piece)
     {
         _gameContainer!.SaveRoot!.TrumpSuit = piece;

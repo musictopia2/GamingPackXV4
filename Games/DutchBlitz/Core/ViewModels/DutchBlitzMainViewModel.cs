@@ -31,13 +31,13 @@ public partial class DutchBlitzMainViewModel : BasicCardGamesVM<DutchBlitzCardIn
         {
             throw new CustomBasicException("No discard piles.  Rethink");
         }
-        _model.DiscardPiles.PileClickedAsync += DiscardPiles_PileClickedAsync;
+        _model.DiscardPiles.PileClickedAsync = DiscardPiles_PileClickedAsync;
         _model.StockPile.StockFrame.SendEnableProcesses(this, () => _model.StockPile.CardsLeft() > 0);
-        _model.StockPile.StockClickedAsync += StockPile_StockClickedAsync;
-        _model.PublicPiles1.PileClickedAsync += PublicPiles1_PileClickedAsync;
-        _model.PublicPiles1.NewPileClickedAsync += PublicPiles1_NewPileClickedAsync;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
-        _model.Stops.TimeUp += Stops_TimeUp;
+        _model.StockPile.StockClickedAsync = StockPile_StockClickedAsync;
+        _model.PublicPiles1.PileClickedAsync = PublicPiles1_PileClickedAsync;
+        _model.PublicPiles1.NewPileClickedAsync = PublicPiles1_NewPileClickedAsync;
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
+        _model.Stops.TimeUp += Stops_TimeUp; //iffy.  but can't do anything about it for now though (?)
         return base.ActivateAsync();
     }
     private void CommandContainer_ExecutingChanged()
@@ -74,11 +74,6 @@ public partial class DutchBlitzMainViewModel : BasicCardGamesVM<DutchBlitzCardIn
     }
     protected override Task TryCloseAsync()
     {
-        _model.DiscardPiles!.PileClickedAsync -= DiscardPiles_PileClickedAsync;
-        _model.StockPile.StockClickedAsync -= StockPile_StockClickedAsync;
-        _model.PublicPiles1.PileClickedAsync -= PublicPiles1_PileClickedAsync;
-        _model.PublicPiles1.NewPileClickedAsync -= PublicPiles1_NewPileClickedAsync;
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
         _model.Stops.TimeUp -= Stops_TimeUp;
         return base.TryCloseAsync();
     }

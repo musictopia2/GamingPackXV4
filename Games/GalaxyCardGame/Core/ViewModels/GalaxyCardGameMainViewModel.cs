@@ -51,18 +51,13 @@ public partial class GalaxyCardGameMainViewModel : BasicCardGamesVM<GalaxyCardGa
                 return player.CanEnableMoon();
             }));
 
-            commandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
+            commandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
 
         });
         _model.TrickArea1.SendEnableProcesses(this, () => _mainGame.CanEnableTrickAreas);
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
-    }
     private void CommandContainer_ExecutingChanged()
     {
         if (_mainGame!.SaveRoot!.GameStatus == EnumGameStatus.PlaceSets)

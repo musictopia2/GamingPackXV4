@@ -24,11 +24,11 @@ public partial class TileRummyVMData : IViewModelData, IEnableAlways
         {
             HowManySets = 4
         };
-        TempSets.SetClickedAsync += TempSets_SetClickedAsync;
+        TempSets.SetClickedAsync = TempSets_SetClickedAsync;
         MainSets1 = new MainSets(command);
-        MainSets1.SetClickedAsync += MainSets1_SetClickedAsync;
+        MainSets1.SetClickedAsync = MainSets1_SetClickedAsync;
         PlayerHand1 = new TileHand(command);
-        PlayerHand1.ManualSelectUnselect += PlayerHand1_ManualSelectUnselect;
+        PlayerHand1.ManualSelectUnselect = PlayerHand1_ManualSelectUnselect;
         Pool1 = new PoolCP(command, resolver, shuffle);
         _gameContainer = gameContainer;
     }

@@ -24,7 +24,7 @@ public class BowlingSingleDiceBlazor : ComponentBase
             image.PopulateFullExternalImage(this, "bowlingdice.svg");
             svg.Children.Add(image);
         }
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
 }

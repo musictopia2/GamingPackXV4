@@ -17,13 +17,13 @@ public partial class GalaxyCardGamePlayerItem : PlayerTrick<EnumSuitList, Galaxy
         _model = model;
         _toast = toast;
         PlanetHand = new(command);
-        PlanetHand.BoardClickedAsync += PlanetHand_BoardClickedAsync;
+        PlanetHand.BoardClickedAsync = PlanetHand_BoardClickedAsync;
         PlanetHand.AutoSelect = EnumHandAutoType.ShowObjectOnly; //try this way.
         PlanetHand.Maximum = 2;
         PlanetHand.Visible = true;
         PlanetHand.Text = $"{NickName} Planet";
         Moons = new(command);
-        Moons.SetClickedAsync += Moons_SetClickedAsync;
+        Moons.SetClickedAsync = Moons_SetClickedAsync;
         Moons.HasFrame = true;
         Moons.Text = $"{NickName} Moons";
     }

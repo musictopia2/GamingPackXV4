@@ -56,8 +56,7 @@ public partial class SkuckCardGameMainViewModel : BasicCardGamesVM<SkuckCardGame
 
             if (thisPlayer.PlayerCategory == EnumPlayerCategory.Self)
             {
-                thisPlayer.TempHand.SelectedCard -= TempHand_SelectedCard;
-                thisPlayer.TempHand.SelectedCard += TempHand_SelectedCard;
+                thisPlayer.TempHand.SelectedCard = TempHand_SelectedCard;
             }
         });
     }

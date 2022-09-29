@@ -13,7 +13,7 @@ public partial class CardsPlayerViewModel : ScreenViewModel, IBlankGameVM, IHand
         _processes = processes;
         CardList1 = new (CommandContainer, resolver);
         CardList1.IndexMethod = EnumIndexMethod.ZeroBased;
-        CardList1.ItemSelectedAsync += CardList1_ItemSelectedAsync;
+        CardList1.ItemSelectedAsync = CardList1_ItemSelectedAsync;
         BasicList<string> thisList = new() { "4 Cards", "6 Cards", "8 Cards", "10 Cards" };
         CardList1.LoadTextList(thisList);
         CreateCommands(CommandContainer);
@@ -79,9 +79,4 @@ public partial class CardsPlayerViewModel : ScreenViewModel, IBlankGameVM, IHand
         SelectGivenValue();
         await SubmitAsync();
     }
-    //protected override Task TryCloseAsync()
-    //{
-    //    Aggregator.Unsubscribe(this);
-    //    return base.TryCloseAsync();
-    //}
 }

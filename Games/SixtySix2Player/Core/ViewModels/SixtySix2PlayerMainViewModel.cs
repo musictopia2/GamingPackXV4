@@ -20,15 +20,10 @@ public partial class SixtySix2PlayerMainViewModel : BasicCardGamesVM<SixtySix2Pl
         _model = viewModel;
         _toast = toast;
         _model.Deck1.NeverAutoDisable = true;
-        commandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
+        commandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
-    }
     private void CommandContainer_ExecutingChanged()
     {
         if (CommandContainer!.IsExecuting)

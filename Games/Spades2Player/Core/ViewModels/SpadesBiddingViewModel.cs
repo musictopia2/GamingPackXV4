@@ -9,15 +9,10 @@ public partial class SpadesBiddingViewModel : ScreenViewModel, IBlankGameVM
         CommandContainer = commandContainer;
         Model = model;
         _mainGame = mainGame;
-        Model.Bid1.ChangedNumberValueAsync += Bid1_ChangedNumberValueAsync;
+        Model.Bid1.ChangedNumberValueAsync = Bid1_ChangedNumberValueAsync;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
-    {
-        Model.Bid1.ChangedNumberValueAsync -= Bid1_ChangedNumberValueAsync;
-        return base.TryCloseAsync();
-    }
     public CommandContainer CommandContainer { get; set; }
     private Task Bid1_ChangedNumberValueAsync(int chosen)
     {

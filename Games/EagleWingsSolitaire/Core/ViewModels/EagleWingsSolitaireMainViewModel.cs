@@ -12,7 +12,7 @@ public partial class EagleWingsSolitaireMainViewModel : SolitaireMainViewModel<E
     {
         GlobalClass.MainModel = this;
         Heel1 = new DeckObservablePile<SolitaireCard>(command);
-        Heel1.DeckClickedAsync += Heel1_DeckClickedAsync;
+        Heel1.DeckClickedAsync = Heel1_DeckClickedAsync;
         Heel1.SendEnableProcesses(this, () => Heel1.CardsLeft() == 1);
     }
     private EagleWingsSolitaireMainGameClass? _mainGame;

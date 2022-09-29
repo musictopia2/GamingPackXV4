@@ -28,18 +28,10 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
         player.DoInit();
         _model.TempSets.Init(this);
         _model.TempSets.ClearBoard();
-        _model.TempSets.SetClickedAsync += TempSets_SetClickedAsync;
-        _model.MainSets.SetClickedAsync += MainSets_SetClickedAsync;
         _model.MainSets.SendEnableProcesses(this, () => _gameContainer!.AlreadyDrew);
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
-    {
-        _model.TempSets.SetClickedAsync -= TempSets_SetClickedAsync;
-        _model.MainSets.SetClickedAsync -= MainSets_SetClickedAsync;
-        return base.TryCloseAsync();
-    }
     protected override bool CanEnableDeck()
     {
         return !_gameContainer!.AlreadyDrew;

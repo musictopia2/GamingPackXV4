@@ -39,7 +39,7 @@ public partial class MilkRunPlayerItem : PlayerSingleHand<MilkRunCardInformation
         _mainGame = mainGame;
         _gameContainer = gameContainer;
         StrawberryPiles = new BasicMultiplePilesCP<MilkRunCardInformation>(_gameContainer.Command);
-        StrawberryPiles.PileClickedAsync += StrawberryPiles_PileClickedAsync;
+        StrawberryPiles.PileClickedAsync = StrawberryPiles_PileClickedAsync;
         StrawberryPiles.Rows = 1;
         StrawberryPiles.Columns = 3;
         StrawberryPiles.HasText = true;
@@ -73,7 +73,7 @@ public partial class MilkRunPlayerItem : PlayerSingleHand<MilkRunCardInformation
             }
         });
         ChocolatePiles = new BasicMultiplePilesCP<MilkRunCardInformation>(_gameContainer.Command);
-        ChocolatePiles.PileClickedAsync += ChocolatePiles_PileClickedAsync;
+        ChocolatePiles.PileClickedAsync = ChocolatePiles_PileClickedAsync;
         x = 0;
         ChocolatePiles.Rows = 1;
         ChocolatePiles.Columns = 3;

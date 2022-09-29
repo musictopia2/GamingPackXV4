@@ -99,9 +99,9 @@ public partial class PokerMainViewModel : ScreenViewModel, IBasicEnableProcess, 
         Round = 1;
         CommandContainer = commandContainer;
         _basicData = basicData;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged; //hopefully no problem (?)
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged; //hopefully no problem (?)
         DeckPile = resolver.ReplaceObject<DeckObservablePile<PokerCardInfo>>();
-        DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
+        DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
         DeckPile.SendEnableProcesses(this, () =>
         {
@@ -115,7 +115,7 @@ public partial class PokerMainViewModel : ScreenViewModel, IBasicEnableProcess, 
         });
         Bet1.LoadNumberList(new BasicList<int>() { 5, 10, 25 });
         Bet1.SelectNumberValue(5); //something else has to set to large (?)
-        Bet1.ChangedNumberValueAsync += Bet1_ChangedNumberValueAsync;
+        Bet1.ChangedNumberValueAsync = Bet1_ChangedNumberValueAsync;
         _mainGame = resolver.ReplaceObject<PokerMainGameClass>(); //hopefully this works.  means you have to really rethink.
         CreateCommands(CommandContainer);
     }
@@ -154,10 +154,5 @@ public partial class PokerMainViewModel : ScreenViewModel, IBasicEnableProcess, 
         await base.ActivateAsync();
         await _mainGame.NewGameAsync(this);
         CommandContainer.UpdateAll();
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
 }

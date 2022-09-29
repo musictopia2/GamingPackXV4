@@ -19,7 +19,7 @@ public partial class MastermindMainViewModel : ConductorViewModel, IBasicEnableP
         Color1 = new(commandContainer, colorClass);
         Color1.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
         Color1.IsEnabled = true;
-        Color1.ItemClickedAsync += Color1_ItemClickedAsync;
+        Color1.ItemClickedAsync = Color1_ItemClickedAsync;
         CreateCommands(CommandContainer);
     }
     partial void CreateCommands(CommandContainer command);

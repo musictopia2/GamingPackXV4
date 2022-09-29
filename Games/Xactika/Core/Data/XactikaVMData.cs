@@ -32,8 +32,8 @@ public partial class XactikaVMData : ITrickCardGamesData<XactikaCardInformation,
         ModeChoose1 = new ListViewPicker(command, gameContainer.Resolver);
         ShapeChoose1 = new ChooseShapeObservable(_gameContainer);
         Bid1 = new NumberPicker(command, gameContainer.Resolver);
-        ModeChoose1.ItemSelectedAsync += ModeChooser1_ItemSelectedAsync;
-        Bid1.ChangedNumberValueAsync += Bid1_ChangedNumberValueAsync;
+        ModeChoose1.ItemSelectedAsync = ModeChooser1_ItemSelectedAsync;
+        Bid1.ChangedNumberValueAsync = Bid1_ChangedNumberValueAsync;
         PlayerHand1!.Maximum = 8;
         ModeChoose1.IndexMethod = EnumIndexMethod.OneBased;
         BasicList<string> tempList = new() { "To Win", "To Lose", "Bid" };

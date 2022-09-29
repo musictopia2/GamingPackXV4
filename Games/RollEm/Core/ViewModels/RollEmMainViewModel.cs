@@ -26,7 +26,7 @@ public class RollEmMainViewModel : DiceGamesVM<SimpleDice>
         VMData = viewModel;
         _gameBoard = gameBoard;
         _toast = toast;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         gameContainer.MakeMoveAsync = MakeMoveAsync;
         _basicData = basicData;
         _aggregator = aggregator;
@@ -66,10 +66,5 @@ public class RollEmMainViewModel : DiceGamesVM<SimpleDice>
     private void CommandContainer_ExecutingChanged()
     {
         _aggregator.RepaintBoard();
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
 }

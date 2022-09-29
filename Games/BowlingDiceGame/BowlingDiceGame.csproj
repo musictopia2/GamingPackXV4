@@ -13,12 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="1.0.1" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="2.0.6" />
     <PackageReference Include="CommandsGenerator" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.1" PrivateAssets="all"  />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
   </ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\bowlingdice.svg" />

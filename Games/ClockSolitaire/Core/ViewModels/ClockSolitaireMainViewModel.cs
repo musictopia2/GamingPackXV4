@@ -23,9 +23,9 @@ public partial class ClockSolitaireMainViewModel : ScreenViewModel,
         CommandContainer = commandContainer;
         _basicData = basicData;
         _toast = toast;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SolitaireCard>>();
-        DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
+        DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
         DeckPile.SendEnableProcesses(this, () =>
         {
@@ -61,11 +61,6 @@ public partial class ClockSolitaireMainViewModel : ScreenViewModel,
         await _mainGame.NewGameAsync(this);
         CommandContainer.UpdateAll();
         _basicData.GameDataLoading = false;
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
     async Task IClockVM.ClockClickedAsync(int index)
     {

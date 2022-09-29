@@ -33,9 +33,9 @@ public partial class RageCardGameVMData : ITrickCardGamesData<RageCardGameCardIn
         _toast = toast;
         Color1 = new(command, new ColorListChooser<EnumColor>());
         Color1.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
-        Color1.ItemClickedAsync += Color1_ItemClickedAsync;
+        Color1.ItemClickedAsync = Color1_ItemClickedAsync;
         Bid1 = new(command, resolver);
-        Bid1.ChangedNumberValueAsync += Bid1_ChangedNumberValueAsync;
+        Bid1.ChangedNumberValueAsync = Bid1_ChangedNumberValueAsync;
     }
     private async Task Color1_ItemClickedAsync(EnumColor piece)
     {

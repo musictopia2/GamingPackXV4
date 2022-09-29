@@ -54,7 +54,7 @@ public class BingoSpaceBlazor : GraphicsCommand
             svg.Children.Add(circle);
         }
         CreateClick(svg);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
     protected override void OnInitialized()

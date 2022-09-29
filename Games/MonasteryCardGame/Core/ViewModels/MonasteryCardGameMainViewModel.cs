@@ -30,8 +30,8 @@ public partial class MonasteryCardGameMainViewModel : BasicCardGamesVM<Monastery
         player.DoInit();
         _model.TempSets.Init(this);
         _model.TempSets.ClearBoard();
-        _model.TempSets.SetClickedAsync += TempSets_SetClickedAsync;
-        _model.MainSets.SetClickedAsync += MainSets_SetClickedAsync;
+        _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
+        _model.MainSets.SetClickedAsync = MainSets_SetClickedAsync;
         _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectAsMany;
         _model.MainSets.SendEnableProcesses(this, () =>
         {
@@ -46,12 +46,6 @@ public partial class MonasteryCardGameMainViewModel : BasicCardGamesVM<Monastery
     }
     partial void CreateCommands();
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
-    {
-        _model.TempSets.SetClickedAsync -= TempSets_SetClickedAsync;
-        _model.MainSets.SetClickedAsync -= MainSets_SetClickedAsync;
-        return base.TryCloseAsync();
-    }
     private bool _isProcessing;
     private Task TempSets_SetClickedAsync(int index)
     {

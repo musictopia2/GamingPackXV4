@@ -11,9 +11,9 @@ public partial class RiskVMData : ISimpleBoardGamesData, IBasicEnableProcess
         _resolver = resolver;
         AttackPicker = new(command, resolver);
         AttackPicker.IndexMethod = ListViewPicker.EnumIndexMethod.OneBased;
-        AttackPicker.ItemSelectedAsync += AttackPicker_ItemSelectedAsync;
+        AttackPicker.ItemSelectedAsync = AttackPicker_ItemSelectedAsync;
         NumberPicker = new(command, resolver);
-        NumberPicker.ChangedNumberValueAsync += MovePicker_ChangedNumberValueAsync;
+        NumberPicker.ChangedNumberValueAsync = MovePicker_ChangedNumberValueAsync;
         PlayerHand1 = new(_command);
         PlayerHand1.Text = "Your Risk Cards";
         PlayerHand1.Maximum = 5;

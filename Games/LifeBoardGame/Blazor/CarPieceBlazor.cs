@@ -35,7 +35,7 @@ public class CarPieceBlazor : ComponentBase
         SvgRenderClass render = new();
         DrawBasicCar(svg);
         DrawPegs(svg);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
     private void DrawBasicCar(ISvg svg)

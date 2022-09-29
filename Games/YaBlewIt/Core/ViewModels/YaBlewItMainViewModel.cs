@@ -24,14 +24,9 @@ public partial class YaBlewItMainViewModel : BasicCardGamesVM<YaBlewItCardInform
         _gameContainer = gameContainer;
         VMData = viewModel;
         _colorProcesses = colorProcesses;
-        VMData.ColorPicker.ItemClickedAsync += ColorPicker_ItemClickedAsync;
+        VMData.ColorPicker.ItemClickedAsync = ColorPicker_ItemClickedAsync;
         _toast = toast;
         CreateCommands(commandContainer);
-    }
-    protected override Task TryCloseAsync()
-    {
-        VMData.ColorPicker.ItemClickedAsync -= ColorPicker_ItemClickedAsync;
-        return base.TryCloseAsync();
     }
     partial void CreateCommands(CommandContainer command);
     public bool CanRollDice()

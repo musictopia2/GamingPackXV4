@@ -12,7 +12,7 @@ public class CustomMain : ClockObservable, IMain, ISerializable
     public bool IsRound { get; set; }
     public int Rows { get; set; }
     public int Columns { get; set; }
-    public event MainPileClickedEventHandler? PileSelectedAsync;
+    public Func<int, Task>? PileSelectedAsync { get; set; }
     public void SetSavedScore(int previousScore)
     {
         _thisMod.Score = previousScore;

@@ -27,7 +27,7 @@ public partial class MastermindOpeningViewModel : ScreenViewModel, IBlankGameVM
         CommandContainer = container;
         LevelChosen = _global.LevelChosen;
         LevelPicker.LoadTextList(new BasicList<string>() { "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6" });
-        LevelPicker.ItemSelectedAsync += LevelPicker_ItemSelectedAsync;
+        LevelPicker.ItemSelectedAsync = LevelPicker_ItemSelectedAsync;
         LevelPicker.SelectSpecificItem(LevelChosen);
         LevelPicker.IsEnabled = true;
         CreateCommands();

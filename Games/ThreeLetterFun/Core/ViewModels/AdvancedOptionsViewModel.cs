@@ -21,8 +21,8 @@ public partial class AdvancedOptionsViewModel : ScreenViewModel, IBlankGameVM, I
         thisList = new() { "Short Game", "Regular Game" };
         Game1.LoadTextList(thisList);
         SelectSpecificOptions();
-        Game1.ItemSelectedAsync += Game1_ItemSelectedAsync;
-        Easy1.ItemSelectedAsync += Easy1_ItemSelectedAsync;
+        Game1.ItemSelectedAsync = Game1_ItemSelectedAsync;
+        Easy1.ItemSelectedAsync = Easy1_ItemSelectedAsync;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
@@ -104,9 +104,4 @@ public partial class AdvancedOptionsViewModel : ScreenViewModel, IBlankGameVM, I
         SelectSpecificOptions();
         await SubmitAsync();
     }
-    //protected override Task TryCloseAsync()
-    //{
-    //    Aggregator.Unsubscribe(this);
-    //    return base.TryCloseAsync();
-    //}
 }

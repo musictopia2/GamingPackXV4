@@ -11,7 +11,7 @@ public partial class FreeCellSolitaireMainViewModel : SolitaireMainViewModel<Fre
         : base(aggregator, command, resolver)
     {
         FreePiles1 = new FreePiles(command);
-        FreePiles1.PileClickedAsync += FreePiles1_PileClickedAsync;
+        FreePiles1.PileClickedAsync = FreePiles1_PileClickedAsync;
     }
     private FreeCellSolitaireMainGameClass? _mainGame;
     protected override SolitaireGameClass<FreeCellSolitaireSaveInfo> GetGame(IGamePackageResolver resolver)

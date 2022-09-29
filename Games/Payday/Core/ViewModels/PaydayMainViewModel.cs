@@ -28,12 +28,11 @@ public partial class PaydayMainViewModel : BasicMultiplayerMainVM, IHandle<EnumS
     {
         await base.ActivateAsync();
         VMData.DealPile.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumStatus.ChooseBuy);
-        VMData.CurrentDealList.ObjectClickedAsync += CurrentDealList_ObjectClickedAsync;
+        VMData.CurrentDealList.ObjectClickedAsync = CurrentDealList_ObjectClickedAsync;
         LoadProperScreensAsync();
     }
     protected override async Task TryCloseAsync()
     {
-        VMData.CurrentDealList.ObjectClickedAsync -= CurrentDealList_ObjectClickedAsync;
         await CloseBuyDealScreenAsync();
         await CloseChooseDealScreenAsync();
         await CloseDealOrBuyScreenAsync();

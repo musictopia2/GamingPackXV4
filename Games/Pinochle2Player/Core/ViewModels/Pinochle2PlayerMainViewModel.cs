@@ -21,7 +21,7 @@ public partial class Pinochle2PlayerMainViewModel : BasicCardGamesVM<Pinochle2Pl
         _toast = toast;
         _model.Deck1.NeverAutoDisable = true;
         _model.OpponentMelds.SendEnableProcesses(this, () => false);
-        commandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
+        commandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         _model.YourMelds.SendEnableProcesses(this, () =>
         {
             if (_mainGame!.SaveRoot!.ChooseToMeld)
@@ -49,11 +49,6 @@ public partial class Pinochle2PlayerMainViewModel : BasicCardGamesVM<Pinochle2Pl
         {
             _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectOneOnly;
         }
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
     protected override bool CanEnableDeck()
     {

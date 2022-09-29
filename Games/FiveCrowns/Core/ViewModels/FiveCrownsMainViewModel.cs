@@ -28,7 +28,7 @@ public partial class FiveCrownsMainViewModel : BasicCardGamesVM<FiveCrownsCardIn
         _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
         _model.TempSets.Init(this);
         _model.TempSets.ClearBoard();
-        _model.TempSets.SetClickedAsync += TempSets_SetClickedAsync;
+        _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
         _model.MainSets.SendEnableProcesses(this, () => false);
         CreateCommands(commandContainer);
     }
@@ -77,11 +77,6 @@ public partial class FiveCrownsMainViewModel : BasicCardGamesVM<FiveCrownsCardIn
         }
         var thisCol2 = _mainGame.ListValidSets();
         await ProcessValidSetsAsync(thisCol2);
-    }
-    protected override Task TryCloseAsync()
-    {
-        _model.TempSets.SetClickedAsync -= TempSets_SetClickedAsync;
-        return base.TryCloseAsync();
     }
     protected override bool CanEnableDeck()
     {

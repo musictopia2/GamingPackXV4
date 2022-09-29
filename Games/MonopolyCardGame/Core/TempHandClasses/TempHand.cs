@@ -1,8 +1,7 @@
 ﻿namespace MonopolyCardGame.Core.TempHandClasses;
 public class TempHand : HandObservable<MonopolyCardGameCardInformation>
 {
-    public event SetClickedEventHandler? SetClickedAsync;
-    public delegate Task SetClickedEventHandler(TempHand setUsed);
+    public Func<TempHand, Task>? SetClickedAsync { get; set; }
     public TempHand(CommandContainer command, IGamePackageResolver resolver) : base(command)
     {
         _resolver = resolver;

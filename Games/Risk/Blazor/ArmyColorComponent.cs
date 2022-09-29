@@ -10,7 +10,7 @@ public class ArmyColorComponent : ComponentBase
     {
         MainGraphics!.OriginalSize = new SizeF(2000, 2000);
         MainGraphics.BorderWidth = 1;
-        MainGraphics.HighlightTransparent = true; //i think.
+        MainGraphics.HighlightTransparent = true;
         base.OnInitialized();
     }
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -18,7 +18,7 @@ public class ArmyColorComponent : ComponentBase
         ISvg svg = MainGraphics!.GetMainSvg(false);
         svg.DrawArmyPiece(MainColor);
         SvgRenderClass render = new();
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
 }

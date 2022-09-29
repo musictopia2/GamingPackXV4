@@ -9,16 +9,11 @@ public class ChooseSuitViewModel : ScreenViewModel, IBlankGameVM
         CommandContainer = commandContainer;
         _model = model;
         _processes = processes;
-        _model.SuitChooser.ItemClickedAsync += SuitChooser_ItemClickedAsync;
+        _model.SuitChooser.ItemClickedAsync = SuitChooser_ItemClickedAsync;
     }
     private Task SuitChooser_ItemClickedAsync(EnumSuitList piece)
     {
         return _processes.SuitChosenAsync(piece);
     }
     public CommandContainer CommandContainer { get; set; }
-    protected override Task TryCloseAsync()
-    {
-        _model.SuitChooser.ItemClickedAsync -= SuitChooser_ItemClickedAsync;
-        return base.TryCloseAsync();
-    }
 }

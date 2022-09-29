@@ -29,14 +29,8 @@ public class PlayerPilesViewModel : ScreenViewModel, IBlankGameVM
         {
             model.DiscardPiles!.PileList!.ReplaceRange(gameContainer.SingleInfo.DiscardList);
         }
-        Model.DiscardPiles.PileClickedAsync += DiscardPiles_PileClickedAsync;
-        Model.StockPile!.StockClickedAsync += StockPile_StockClickedAsync;
-    }
-    protected override Task TryCloseAsync()
-    {
-        Model.DiscardPiles!.PileClickedAsync -= DiscardPiles_PileClickedAsync;
-        Model.StockPile!.StockClickedAsync -= StockPile_StockClickedAsync;
-        return base.TryCloseAsync();
+        Model.DiscardPiles.PileClickedAsync = DiscardPiles_PileClickedAsync;
+        Model.StockPile!.StockClickedAsync = StockPile_StockClickedAsync;
     }
     public CommandContainer CommandContainer { get; set; }
     public FlinchGameContainer GameContainer { get; }

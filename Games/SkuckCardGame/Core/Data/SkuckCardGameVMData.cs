@@ -26,8 +26,8 @@ public partial class SkuckCardGameVMData : ITrickCardGamesData<SkuckCardGameCard
         Bid1 = new(command, resolver);
         Suit1 = new(command, new SuitListChooser());
         Suit1.AutoSelectCategory = EnumAutoSelectCategory.AutoSelect;
-        Bid1.ChangedNumberValueAsync += Bid1_ChangedNumberValueAsync;
-        Suit1.ItemSelectionChanged += Suit1_ItemSelectionChanged;
+        Bid1.ChangedNumberValueAsync = Bid1_ChangedNumberValueAsync;
+        Suit1.ItemSelectionChanged = Suit1_ItemSelectionChanged;
         Bid1.LoadNormalNumberRangeValues(1, 26);
     }
     public Action? ChangeScreen { get; set; }

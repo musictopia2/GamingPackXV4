@@ -9,12 +9,7 @@ public class ChooseColorViewModel : ScreenViewModel, IBlankGameVM
         CommandContainer = commandContainer;
         Model = model;
         _processes = processes;
-        Model.ColorPicker.ItemClickedAsync += ColorPicker_ItemClickedAsync;
-    }
-    protected override Task TryCloseAsync()
-    {
-        Model.ColorPicker.ItemClickedAsync -= ColorPicker_ItemClickedAsync;
-        return base.TryCloseAsync();
+        Model.ColorPicker.ItemClickedAsync = ColorPicker_ItemClickedAsync;
     }
     private async Task ColorPicker_ItemClickedAsync(EnumColorTypes piece)
     {

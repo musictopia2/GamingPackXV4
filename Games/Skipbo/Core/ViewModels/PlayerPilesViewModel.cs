@@ -9,8 +9,8 @@ public class PlayerPilesViewModel : ScreenViewModel, IBlankGameVM
         Model = model;
         Model.DiscardPiles = new DiscardPilesVM<SkipboCardInformation>(commandContainer);
         Model.DiscardPiles.Init(HowManyDiscards);
-        Model.DiscardPiles.PileClickedAsync += DiscardPiles_PileClickedAsync;
-        Model.StockPile!.StockClickedAsync += StockPile_StockClickedAsync;
+        Model.DiscardPiles.PileClickedAsync = DiscardPiles_PileClickedAsync;
+        Model.StockPile!.StockClickedAsync = StockPile_StockClickedAsync;
         gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
         CommandContainer = commandContainer;
         GameContainer = gameContainer;
@@ -24,17 +24,6 @@ public class PlayerPilesViewModel : ScreenViewModel, IBlankGameVM
         {
             model.DiscardPiles!.PileList!.ReplaceRange(gameContainer.SingleInfo.DiscardList);
         }
-    }
-    protected override Task TryCloseAsync()
-    {
-        if (OS == EnumOS.Wasm || OS == EnumOS.WindowsDT)
-        {
-            Model.DiscardPiles!.PileClickedAsync -= DiscardPiles_PileClickedAsync;
-            Model.StockPile!.StockClickedAsync -= StockPile_StockClickedAsync;
-            //hint:  somehow or another, on wasm and wpf, needs to unhook.  however, on maui, it keeps hold so if you unhook, then it gets hosed.
-        }
-
-        return base.TryCloseAsync();
     }
     public CommandContainer CommandContainer { get; set; }
     public SkipboGameContainer GameContainer { get; }

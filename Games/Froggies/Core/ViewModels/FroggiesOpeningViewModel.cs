@@ -18,7 +18,7 @@ public class FroggiesOpeningViewModel : ScreenViewModel, IBlankGameVM
         LevelPicker = new NumberPicker(container, resolver);
         LevelPicker.LoadNormalNumberRangeValues(3, 60); //maybe 60 at a max is good enough.
         LevelPicker.SelectNumberValue(NumberOfFrogs);
-        LevelPicker.ChangedNumberValueAsync += LevelPicker_ChangedNumberValueAsync;
+        LevelPicker.ChangedNumberValueAsync = LevelPicker_ChangedNumberValueAsync;
     }
     private Task LevelPicker_ChangedNumberValueAsync(int chosen)
     {

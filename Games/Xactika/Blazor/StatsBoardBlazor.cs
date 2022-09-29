@@ -56,7 +56,7 @@ public class StatsBoardBlazor : ComponentBase
             tops += diffY;
             doPaint = !doPaint;
         }
-        render.RenderSvgTree(_mains, 0, builder);
+        render.RenderSvgTree(_mains, builder);
         base.BuildRenderTree(builder);
     }
     private void DrawBorders(RectangleF bounds)

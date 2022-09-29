@@ -18,26 +18,26 @@ public class ActionContainer : IEnableAlways, IBasicEnableProcess
             Text = "Your Keepers"
         };
         YourKeepers.SendAlwaysEnable(this);
-        YourKeepers.ConsiderSelectOneAsync += YourKeepers_ConsiderSelectOneAsync;
+        YourKeepers.ConsiderSelectOneAsync = YourKeepers_ConsiderSelectOneAsync;
         PrivateGoals = new(command)
         {
             AutoSelect = EnumHandAutoType.ShowObjectOnly,
             Text = "Goal Cards",
             Maximum = 3
         };
-        PrivateGoals.ConsiderSelectOneAsync += PrivateGoals_ConsiderSelectOneAsync;
+        PrivateGoals.ConsiderSelectOneAsync = PrivateGoals_ConsiderSelectOneAsync;
         YourCards = new(command)
         {
             Text = "Your Cards"
         };
-        YourCards.ConsiderSelectOneAsync += YourCards_ConsiderSelectOneAsync;
+        YourCards.ConsiderSelectOneAsync = YourCards_ConsiderSelectOneAsync;
         YourCards.AutoSelect = EnumHandAutoType.ShowObjectOnly;
         OtherHand = new(command)
         {
             AutoSelect = EnumHandAutoType.SelectOneOnly,
             Text = "Other Player's Cards"
         };
-        OtherHand.ConsiderSelectOneAsync += YourCards_ConsiderSelectOneAsync;
+        OtherHand.ConsiderSelectOneAsync = YourCards_ConsiderSelectOneAsync;
         OtherHand.SendEnableProcesses(this, () =>
         {
             if (OtherHand.Visible == false)
@@ -51,29 +51,29 @@ public class ActionContainer : IEnableAlways, IBasicEnableProcess
             AutoSelect = EnumHandAutoType.SelectOneOnly,
             Text = "Temporary Cards"
         };
-        TempHand.ConsiderSelectOneAsync += YourCards_ConsiderSelectOneAsync;
+        TempHand.ConsiderSelectOneAsync = YourCards_ConsiderSelectOneAsync;
         TempHand.SendEnableProcesses(this, () =>
         {
             return ActionCategory == EnumActionCategory.Everybody1 || ActionCategory == EnumActionCategory.DrawUse;
         });
         Direction1 = new ListViewPicker(command, resolver);
-        Direction1.ItemSelectedAsync += Direction1_ItemSelectedAsync;
+        Direction1.ItemSelectedAsync = Direction1_ItemSelectedAsync;
         Direction1.IndexMethod = ListViewPicker.EnumIndexMethod.ZeroBased;
         Direction1.LoadTextList(new() { "Left", "Right" });
         Rule1 = new ListViewPicker(command, resolver);
-        Rule1.ItemSelectedAsync += Rule1_ItemSelectedAsync;
+        Rule1.ItemSelectedAsync = Rule1_ItemSelectedAsync;
         Rule1.IndexMethod = ListViewPicker.EnumIndexMethod.ZeroBased;
         Rule1.SendEnableProcesses(this, () =>
         {
             return ActionCategory == EnumActionCategory.Rules;
         });
         Player1 = new ListViewPicker(command, resolver);
-        Player1.ItemSelectedAsync += Player1_ItemSelectedAsync;
+        Player1.ItemSelectedAsync = Player1_ItemSelectedAsync;
         Player1.IndexMethod = ListViewPicker.EnumIndexMethod.ZeroBased;
         Player1.SendEnableProcesses(this, () => CanEnableChoosePlayer());
 
         CardList1 = new ListViewPicker(command, resolver);
-        CardList1.ItemSelectedAsync += CardList1_ItemSelectedAsync;
+        CardList1.ItemSelectedAsync = CardList1_ItemSelectedAsync;
         CardList1.IndexMethod = ListViewPicker.EnumIndexMethod.ZeroBased;
         CardList1.SendEnableProcesses(this, () =>
         {

@@ -11,7 +11,7 @@ public partial class AskViewModel : ScreenViewModel, IBlankGameVM, IBasicEnableP
         _model = model;
         _gameContainer = gameContainer;
         _processes = processes;
-        _model.AskList.ItemClickedAsync += AskList_ItemClickedAsync;
+        _model.AskList.ItemClickedAsync = AskList_ItemClickedAsync;
         _model.AskList.SendEnableProcesses(this, () => _gameContainer.SaveRoot.RemovePairs == false && _gameContainer.SaveRoot.NumberAsked == false);
         CreateCommands(commandContainer);
     }
@@ -23,11 +23,6 @@ public partial class AskViewModel : ScreenViewModel, IBlankGameVM, IBasicEnableP
         return Task.CompletedTask;
     }
     public CommandContainer CommandContainer { get; set; }
-    protected override Task TryCloseAsync()
-    {
-        _model.AskList.ItemClickedAsync -= AskList_ItemClickedAsync;
-        return base.TryCloseAsync();
-    }
     bool IBasicEnableProcess.CanEnableBasics()
     {
         return true;

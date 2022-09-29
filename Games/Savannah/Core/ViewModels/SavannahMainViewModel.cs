@@ -2,7 +2,7 @@ namespace Savannah.Core.ViewModels;
 [InstanceGame]
 public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
 {
-    private readonly SavannahMainGameClass _mainGame; //if we don't need, delete.
+    private readonly SavannahMainGameClass _mainGame;
     private readonly SavannahGameContainer _gameContainer;
     private readonly IToast _toast;
     public SavannahVMData VMData { get; set; }
@@ -30,9 +30,9 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
         VMData.Deck1.NeverAutoDisable = true;
         VMData.PlayerHand1.Maximum = 4;
         CreateCommands(commandContainer);
-        VMData.PlayerHand1.BeforeAutoSelectObjectAsync += PlayerHand1_BeforeAutoSelectObjectAsync;
-        VMData.SelfStock.StockClickedAsync += SelfStock_StockClickedAsync;
-        VMData.PublicPiles.PileClickedAsync += PublicPiles_PileClickedAsync;
+        VMData.PlayerHand1.BeforeAutoSelectObjectAsync = PlayerHand1_BeforeAutoSelectObjectAsync;
+        VMData.SelfStock.StockClickedAsync = SelfStock_StockClickedAsync;
+        VMData.PublicPiles.PileClickedAsync = PublicPiles_PileClickedAsync;
     }
     private async Task PublicPiles_PileClickedAsync(int index, BasicPileInfo<RegularSimpleCard> thisPile)
     {
@@ -40,7 +40,7 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
         {
             _toast.ShowUserErrorToast(message);
         });
-        await Task.Delay(0); //for now.
+        await Task.Delay(0);
         if (plays.Deck == 0)
         {
             return;
@@ -77,8 +77,7 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
     {
         if (VMData.PlayerHand1.HasSelectedObject())
         {
-            //if you selected something, then do nothing (because will do automatically anyways).
-            return; //if you selected something, then just unselect period.
+            return;
         }
         await UnselectAllAsync();
     }
@@ -89,13 +88,6 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
             throw new CustomBasicException("Nobody is handling the UnselectAllPilesAsync");
         }
         await _gameContainer.UnselectAllPilesAsync.Invoke(); //hopefully nothing else because the proper one should be done automatically here.
-    }
-    protected override Task TryCloseAsync()
-    {
-        VMData.PlayerHand1.BeforeAutoSelectObjectAsync -= PlayerHand1_BeforeAutoSelectObjectAsync;
-        VMData.SelfStock.StockClickedAsync -= SelfStock_StockClickedAsync;
-        VMData.PublicPiles.PileClickedAsync -= PublicPiles_PileClickedAsync;
-        return base.TryCloseAsync();
     }
     partial void CreateCommands(CommandContainer command);
     [Command(EnumCommandCategory.Game)]
@@ -113,9 +105,6 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
         await UnselectAllAsync();
         player.DiscardList.Last().IsSelected = true; //i think.  this is all that is needed.  because you can choose the card.  but still has to choose what public pile to play on.
     }
-
-    //anything else needed is here.
-    //if i need something extra, will add to template as well.
     protected override bool CanEnableDeck()
     {
         return false; //otherwise, can't compile.
@@ -123,19 +112,10 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
     protected override bool CanEnablePile1()
     {
         return false;
-        //return VMData.SelfDiscard!.NeedsToDiscardToSelf() == false;
     }
     protected override Task ProcessDiscardClickedAsync()
     {
         throw new CustomBasicException("You cannot click on discard anymore");
-        //int decks = VMData.PlayerHand1.ObjectSelected();
-        //if (decks == 0)
-        //{
-        //    _toast.ShowUserErrorToast("You need to select a card from hand in order to discard to public");
-        //    return;
-        //}
-        //await _gameContainer.SendDiscardMessageAsync(decks);
-        //await _mainGame.DiscardAsync(decks);
     }
     public override bool CanEnableAlways()
     {
@@ -157,7 +137,6 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
             {
                 return false;
             }
-            //hopefully this simple (?)
             return VMData.Cup!.DiceList.First().Value == VMData.Cup.DiceList.Last().Value;
         }
     }

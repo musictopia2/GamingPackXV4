@@ -10,7 +10,7 @@ public partial class SayUnoViewModel : ScreenViewModel, IBlankGameVM
         _processes = processes;
         _model = model;
         _model.Stops.TimeUp += Stops_TimeUp;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
@@ -32,11 +32,9 @@ public partial class SayUnoViewModel : ScreenViewModel, IBlankGameVM
     protected override Task TryCloseAsync()
     {
         _model.Stops.TimeUp -= Stops_TimeUp;
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
         return base.TryCloseAsync();
     }
     public CommandContainer CommandContainer { get; set; }
-    //hopefully no need for canuno (?)
     [Command(EnumCommandCategory.Plain)]
     public async Task SayUnoAsync()
     {

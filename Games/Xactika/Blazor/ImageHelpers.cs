@@ -95,7 +95,7 @@ public static class ImageHelpers
         circle.PopulateStrokesToStyles();
         container.Children.Add(circle);
     }
-    public static void DrawStar(this IParentGraphic container, RectangleF bounds)
+    public static void DrawStar(this IParentContainer container, RectangleF bounds)
     {
         container.DrawStar(bounds, cc.Yellow, cc.Black, 1);
     }

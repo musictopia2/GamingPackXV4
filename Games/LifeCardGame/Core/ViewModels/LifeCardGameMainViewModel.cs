@@ -27,7 +27,7 @@ public partial class LifeCardGameMainViewModel : BasicCardGamesVM<LifeCardGameCa
         _model.Deck1.NeverAutoDisable = true;
         _model.PlayerHand1.Maximum = 5;
         _model.CurrentPile.SendEnableProcesses(this, () => false);
-        CommandContainer!.ExecutingChanged += CommandContainer_ExecutingChanged;
+        CommandContainer!.ExecutingChanged = CommandContainer_ExecutingChanged;
         _gameContainer.LoadOtherScreenAsync = LoadOtherScreenAsync;
         _gameContainer.CloseOtherScreenAsync = CloseOtherScreenAsync;
         CreateCommands();
@@ -54,11 +54,6 @@ public partial class LifeCardGameMainViewModel : BasicCardGamesVM<LifeCardGameCa
         OtherScreen = null;
     }
     public OtherViewModel? OtherScreen { get; set; }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer!.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
-    }
     private void CommandContainer_ExecutingChanged()
     {
         _mainGame!.PlayerList!.EnableLifeStories(_mainGame, _model, !CommandContainer!.IsExecuting); //i think

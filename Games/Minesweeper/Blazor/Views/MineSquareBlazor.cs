@@ -165,7 +165,7 @@ public class MineSquareBlazor : GraphicsCommand
         final.Fill = "none";
         final.PopulateStrokesToStyles("rgb(112,128,144)", 4);
         svg.Children.Add(final);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
     protected override bool ShouldRender()

@@ -15,8 +15,8 @@ public partial class DominosMexicanTrainVMData : IDominoGamesData<MexicanDomino>
         PlayerHand1 = new HandObservable<MexicanDomino>(command);
         BoneYard = new DominosBoneYardClass<MexicanDomino>(this, command, resolver, shuffle);
 
-        PlayerHand1.ObjectClickedAsync += PlayerHand1_ObjectClickedAsync;
-        PlayerHand1.BoardClickedAsync += PlayerHand1_BoardClickedAsync;
+        PlayerHand1.ObjectClickedAsync = PlayerHand1_ObjectClickedAsync;
+        PlayerHand1.BoardClickedAsync = PlayerHand1_BoardClickedAsync;
         _global = global;
         _global.BoneYard = BoneYard;
         TrainStation1 = trainStation;
@@ -24,8 +24,8 @@ public partial class DominosMexicanTrainVMData : IDominoGamesData<MexicanDomino>
         PrivateTrain1 = new HandObservable<MexicanDomino>(command);
         PlayerHand1.AutoSelect = EnumHandAutoType.None;
         PrivateTrain1.AutoSelect = EnumHandAutoType.None;
-        PrivateTrain1.BoardClickedAsync += PrivateTrain1_BoardClickedAsync;
-        PrivateTrain1.ObjectClickedAsync += PrivateTrain1_ObjectClickedAsync;
+        PrivateTrain1.BoardClickedAsync = PrivateTrain1_BoardClickedAsync;
+        PrivateTrain1.ObjectClickedAsync = PrivateTrain1_ObjectClickedAsync;
     }
     public Func<MexicanDomino, int, Task>? PrivateTrainObjectClickedAsync { get; set; }
     public Func<Task>? PrivateTrainBoardClickedAsync { get; set; }

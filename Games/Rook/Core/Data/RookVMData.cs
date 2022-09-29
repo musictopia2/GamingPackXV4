@@ -43,9 +43,9 @@ public partial class RookVMData : ITrickCardGamesData<RookCardInformation, EnumC
         Bid1 = new NumberPicker(command, resolver);
         Color1 = new SimpleEnumPickerVM<EnumColorTypes>(command, new ColorListChooser<EnumColorTypes>());
         Dummy1 = new DummyHandCP(command);
-        Bid1.ChangedNumberValueAsync += Bid1_ChangedNumberValueAsync;
+        Bid1.ChangedNumberValueAsync = Bid1_ChangedNumberValueAsync;
         Color1.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
-        Color1.ItemClickedAsync += Color1_ItemClickedAsync;
+        Color1.ItemClickedAsync = Color1_ItemClickedAsync;
     }
     public Action? ChangeScreen { get; set; }
     private Task Bid1_ChangedNumberValueAsync(int chosen)

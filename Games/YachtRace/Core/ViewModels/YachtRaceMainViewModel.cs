@@ -17,15 +17,10 @@ public partial class YachtRaceMainViewModel : DiceGamesVM<SimpleDice>
     {
         _mainGame = mainGame;
         VMData = viewModel;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
-    }
     private void CommandContainer_ExecutingChanged()
     {
         if (_mainGame.HasRolled && CommandContainer.IsExecuting)

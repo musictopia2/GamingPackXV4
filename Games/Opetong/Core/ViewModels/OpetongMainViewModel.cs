@@ -26,15 +26,10 @@ public partial class OpetongMainViewModel : BasicCardGamesVM<RegularRummyCard>
         _model.TempSets.ClearBoard();
         _model.MainSets.SendEnableProcesses(this, () => false);
         _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
-        _model.TempSets.SetClickedAsync += TempSets_SetClickedAsync;
+        _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
-    {
-        _model.TempSets.SetClickedAsync -= TempSets_SetClickedAsync;
-        return base.TryCloseAsync();
-    }
     private bool _isProcessing;
     private Task TempSets_SetClickedAsync(int index)
     {

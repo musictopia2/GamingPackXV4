@@ -39,17 +39,14 @@ public partial class FluxxMainViewModel : BasicCardGamesVM<FluxxCardInformation>
         _model.Deck1.NeverAutoDisable = true;
         _gameContainer.LoadGiveAsync = LoadGiveAsync;
         _gameContainer.LoadPlayAsync = LoadPlayAsync;
-        _model.Keeper1.ConsiderSelectOneAsync += OnConsiderSelectOneCardAsync;
-        _model.Goal1.ConsiderSelectOneAsync += OnConsiderSelectOneCardAsync;
+        _model.Keeper1.ConsiderSelectOneAsync = OnConsiderSelectOneCardAsync;
+        _model.Goal1.ConsiderSelectOneAsync = OnConsiderSelectOneCardAsync;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
     protected override async Task TryCloseAsync()
     {
         await ClosePlayGiveAsync();
-        _model.Keeper1.ConsiderSelectOneAsync -= OnConsiderSelectOneCardAsync;
-        _model.Goal1.ConsiderSelectOneAsync -= OnConsiderSelectOneCardAsync;
-        await ClosePlayGiveAsync(); //just in case.
         await base.TryCloseAsync();
     }
     protected override async Task ActivateAsync()

@@ -55,6 +55,6 @@ public class LineComponent : ComponentBase
                 break;
         }
         svg.DrawLine(firstPoint, lastPoint, cc.Red.ToWebColor(), 20, .5);
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
     }
 }

@@ -11,7 +11,7 @@ public class OpponentCardsViewModel : ScreenViewModel, IBlankGameVM, IBasicEnabl
         _model = model;
         _process = process;
         _model.OpponentCards1.SendEnableProcesses(this, () => gameContainer.SaveRoot.RemovePairs == false && gameContainer.SaveRoot.AlreadyChoseOne == false);
-        _model.OpponentCards1.ObjectClickedAsync += OpponentCards1_ObjectClickedAsync;
+        _model.OpponentCards1.ObjectClickedAsync = OpponentCards1_ObjectClickedAsync;
     }
     private Task OpponentCards1_ObjectClickedAsync(RegularSimpleCard payLoad, int index)
     {
@@ -20,10 +20,5 @@ public class OpponentCardsViewModel : ScreenViewModel, IBlankGameVM, IBasicEnabl
     public bool CanEnableBasics()
     {
         return true;
-    }
-    protected override Task TryCloseAsync()
-    {
-        _model.OpponentCards1.ObjectClickedAsync -= OpponentCards1_ObjectClickedAsync;
-        return base.TryCloseAsync();
     }
 }

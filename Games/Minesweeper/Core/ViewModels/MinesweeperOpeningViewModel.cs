@@ -31,7 +31,7 @@ public class MinesweeperOpeningViewModel : ScreenViewModel, ILevelVM, IMainScree
         _global = global;
         LevelChosen = _global.Level;
         this.PopulateMinesNeeded();
-        LevelPicker.ItemSelectedAsync += LevelPicker_ItemSelectedAsync;
+        LevelPicker.ItemSelectedAsync = LevelPicker_ItemSelectedAsync;
         var list = EnumLevel.CompleteList.Select(x => x.Words).ToBasicList();
         LevelPicker.LoadTextList(list);
         LevelPicker.SelectSpecificItem(LevelChosen.Value);

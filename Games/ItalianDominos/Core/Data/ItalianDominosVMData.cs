@@ -10,8 +10,8 @@ public partial class ItalianDominosVMData : IDominoGamesData<SimpleDominoInfo>
     {
         PlayerHand1 = new HandObservable<SimpleDominoInfo>(command);
         BoneYard = new DominosBoneYardClass<SimpleDominoInfo>(this, command, resolver, shuffle);
-        PlayerHand1.ObjectClickedAsync += PlayerHand1_ObjectClickedAsync;
-        PlayerHand1.BoardClickedAsync += PlayerHand1_BoardClickedAsync;
+        PlayerHand1.ObjectClickedAsync = PlayerHand1_ObjectClickedAsync;
+        PlayerHand1.BoardClickedAsync = PlayerHand1_BoardClickedAsync;
     }
     private Task PlayerHand1_BoardClickedAsync()
     {

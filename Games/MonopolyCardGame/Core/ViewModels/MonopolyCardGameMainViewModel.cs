@@ -20,8 +20,8 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         _model = viewModel;
         _toast = toast;
         _model.Deck1.NeverAutoDisable = true;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged;
-        _model.TempSets1.SetClickedAsync += TempSets1_SetClickedAsync;
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
+        _model.TempSets1.SetClickedAsync = TempSets1_SetClickedAsync;
         _model.TempSets1.Init(this);
         CreateCommands(commandContainer);
     }

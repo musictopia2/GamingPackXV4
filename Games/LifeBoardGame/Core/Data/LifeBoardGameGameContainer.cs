@@ -16,7 +16,7 @@ public class LifeBoardGameGameContainer : BasicGameContainer<LifeBoardGamePlayer
     {
         _model = model;
         LoadSpaceProcesses.PopulateSpaces(this);
-        command.ExecutingChanged += Command_ExecutingChanged;
+        command.ExecutingChanged = Command_ExecutingChanged;
     }
     private void Command_ExecutingChanged()
     {

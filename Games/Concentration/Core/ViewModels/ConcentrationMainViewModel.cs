@@ -18,12 +18,7 @@ public class ConcentrationMainViewModel : BasicCardGamesVM<RegularSimpleCard>
         _mainGame = mainGame;
         VMData = viewModel;
         viewModel.Deck1.NeverAutoDisable = true;
-        viewModel.GameBoard1.PileClickedAsync += GameBoard1_PileClickedAsync;
-    }
-    protected override Task TryCloseAsync()
-    {
-        VMData.GameBoard1.PileClickedAsync -= GameBoard1_PileClickedAsync;
-        return base.TryCloseAsync();
+        viewModel.GameBoard1.PileClickedAsync = GameBoard1_PileClickedAsync;
     }
     private async Task GameBoard1_PileClickedAsync(int index, BasicPileInfo<RegularSimpleCard> thisPile)
     {

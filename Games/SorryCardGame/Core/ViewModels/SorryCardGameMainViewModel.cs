@@ -5,7 +5,6 @@ public class SorryCardGameMainViewModel : BasicCardGamesVM<SorryCardGameCardInfo
     private readonly SorryCardGameMainGameClass _mainGame;
     private readonly SorryCardGameVMData _model;
     private readonly IToast _toast;
-
     public SorryCardGameMainViewModel(CommandContainer commandContainer,
         SorryCardGameMainGameClass mainGame,
         SorryCardGameVMData viewModel,
@@ -26,11 +25,11 @@ public class SorryCardGameMainViewModel : BasicCardGamesVM<SorryCardGameCardInfo
             return _mainGame.SaveRoot!.GameStatus == EnumGameStatus.Regular;
         });
         _model.PlayerHand1!.Maximum = 8;
-        CommandContainer!.ExecutingChanged += CommandContainer_ExecutingChanged;
+        CommandContainer!.ExecutingChanged = CommandContainer_ExecutingChanged;
         Stops = new();
         Stops.MaxTime = 7000;
         Stops.TimeUp += Stops_TimeUp;
-        _model.OtherPile.PileClickedAsync += OtherPile_PileClickedAsync;
+        _model.OtherPile.PileClickedAsync = OtherPile_PileClickedAsync;
     }
     private async Task OtherPile_PileClickedAsync()
     {
@@ -54,9 +53,7 @@ public class SorryCardGameMainViewModel : BasicCardGamesVM<SorryCardGameCardInfo
     }
     protected override Task TryCloseAsync()
     {
-        CommandContainer!.ExecutingChanged -= CommandContainer_ExecutingChanged;
         Stops.TimeUp -= Stops_TimeUp;
-        _model.OtherPile!.PileClickedAsync -= OtherPile_PileClickedAsync;
         return base.TryCloseAsync();
     }
     private async void Stops_TimeUp()

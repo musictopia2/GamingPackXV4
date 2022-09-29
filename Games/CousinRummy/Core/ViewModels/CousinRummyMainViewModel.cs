@@ -28,8 +28,8 @@ public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCar
         player.DoInit();
         _model.TempSets.Init(this);
         _model.TempSets.ClearBoard(); //try this too.
-        _model.TempSets.SetClickedAsync += TempSets_SetClickedAsync;
-        _model.MainSets.SetClickedAsync += MainSets_SetClickedAsync;
+        _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
+        _model.MainSets.SetClickedAsync = MainSets_SetClickedAsync;
         _model.MainSets.SendEnableProcesses(this, () =>
         {
             if (_mainGame!.OtherTurn > 0)
@@ -41,12 +41,6 @@ public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCar
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
-    {
-        _model.TempSets.SetClickedAsync -= TempSets_SetClickedAsync;
-        _model.MainSets.SetClickedAsync -= MainSets_SetClickedAsync;
-        return base.TryCloseAsync();
-    }
     protected override bool CanEnableDeck()
     {
         return false;

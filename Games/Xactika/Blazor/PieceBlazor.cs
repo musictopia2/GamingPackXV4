@@ -43,10 +43,11 @@ public class PieceBlazor : ComponentBase
             }
             else if (ShapeUsed == EnumShapes.Stars)
             {
+                //svg.DrawStar(thisRect, )
                 ImageHelpers.DrawStar(svg, thisRect);
             }
         }
-        render.RenderSvgTree(svg, 0, builder);
+        render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }
 }

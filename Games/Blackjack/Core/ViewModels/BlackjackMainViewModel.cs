@@ -13,15 +13,15 @@ public partial class BlackjackMainViewModel : ScreenViewModel, IBasicEnableProce
         ) : base(aggregator)
     {
         CommandContainer = commandContainer;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged; //hopefully no problem (?)
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged; //hopefully no problem (?)
         DeckPile = resolver.ReplaceObject<DeckObservablePile<BlackjackCardInfo>>();
-        DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
+        DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         _stats = stats;
         _basicData = basicData;
-        HumanStack = new PlayerStack(commandContainer);
-        ComputerStack = new PlayerStack(commandContainer);
+        HumanStack = new (commandContainer);
+        ComputerStack = new (commandContainer);
         HumanStack.ProcessLabel(false);
-        HumanStack.CardSelectedAsync += HumanStack_CardSelectedAsync;
+        HumanStack.CardSelectedAsync = HumanStack_CardSelectedAsync;
         ComputerStack.ProcessLabel(true);
         ComputerStack.AlwaysDisabled = true;
         HumanStack.SendFunction(() => NeedsAceChoice == false && SelectedYet == false);
@@ -193,10 +193,5 @@ public partial class BlackjackMainViewModel : ScreenViewModel, IBasicEnableProce
         await _mainGame.NewGameAsync(DeckPile, this);
         CommandContainer.ManualReport(); //just had to run the code to manually report.
         CommandContainer.UpdateAll();
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
 }

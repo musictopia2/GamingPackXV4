@@ -25,9 +25,9 @@ public class TriangleSolitaireMainViewModel : ScreenViewModel,
         _basicData = basicData;
         _toast = toast;
         _error = error;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged; //hopefully no problem (?)
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged; //hopefully no problem (?)
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SolitaireCard>>();
-        DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
+        DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
         DeckPile.SendEnableProcesses(this, () =>
         {
@@ -87,11 +87,6 @@ public class TriangleSolitaireMainViewModel : ScreenViewModel,
         await _mainGame.NewGameAsync(DeckPile);
         DeckPile.IsEnabled = true; //has to be done manually.
         StateHasChanged?.Invoke();
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
     async Task ITriangleVM.CardClickedAsync(SolitaireCard thisCard)
     {

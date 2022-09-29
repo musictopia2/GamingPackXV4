@@ -16,7 +16,7 @@ public class HiddenCards : BasicMultiplePilesCP<RegularSimpleCard>
         {
             throw new CustomBasicException("Must have 2 piles");
         }
-        PileClickedAsync += HiddenCards_PileClickedAsync;
+        PileClickedAsync = HiddenCards_PileClickedAsync;
         int x = 0;
         PileList.ForEach(thisPile =>
         {

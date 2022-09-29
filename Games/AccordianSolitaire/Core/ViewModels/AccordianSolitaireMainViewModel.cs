@@ -26,16 +26,16 @@ public partial class AccordianSolitaireMainViewModel : ScreenViewModel,
         CommandContainer = commandContainer;
         _basicData = basicData;
         _toast = toast;
-        CommandContainer.ExecutingChanged += CommandContainer_ExecutingChanged; //hopefully no problem (?)
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged; //hopefully no problem (?)
         DeckPile = resolver.ReplaceObject<DeckObservablePile<AccordianSolitaireCardInfo>>();
-        DeckPile.DeckClickedAsync += DeckPile_DeckClickedAsync;
+        DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
         DeckPile.SendEnableProcesses(this, () =>
         {
             return false;
         });
         GameBoard1 = new GameBoard(commandContainer);
-        GameBoard1.ObjectClickedAsync += GameBoard1_ObjectClickedAsync;
+        GameBoard1.ObjectClickedAsync = GameBoard1_ObjectClickedAsync;
         _mainGame = resolver.ReplaceObject<AccordianSolitaireMainGameClass>(); //hopefully this works.  means you have to really rethink.
     }
     private async Task GameBoard1_ObjectClickedAsync(AccordianSolitaireCardInfo card, int index)
@@ -74,11 +74,6 @@ public partial class AccordianSolitaireMainViewModel : ScreenViewModel,
         {
             await _mainGame.SaveStateAsync();
         }
-    }
-    protected override Task TryCloseAsync()
-    {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
-        return base.TryCloseAsync();
     }
     public CommandContainer CommandContainer { get; set; }
     public bool CanEnableBasics()

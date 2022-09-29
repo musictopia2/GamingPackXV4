@@ -27,7 +27,7 @@ public class KeeperContainer
             thisHand.AutoSelect = EnumHandAutoType.None;
             thisHand.HandList = thisPlayer.KeeperList;
             thisHand.Text = thisPlayer.NickName;
-            thisHand.ObjectClickedAsync += ThisHand_ObjectClickedAsync;
+            thisHand.ObjectClickedAsync = ThisHand_ObjectClickedAsync;
             KeeperHandList!.Add(thisHand);
         });
     }
