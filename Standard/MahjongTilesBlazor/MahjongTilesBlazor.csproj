@@ -101,8 +101,7 @@
     <EmbeddedResource Include="Resources\9.svg" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="2.0.6" />
   </ItemGroup>
 
 </Project>

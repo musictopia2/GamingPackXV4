@@ -7,7 +7,7 @@
 	  <Version>1.0.1</Version>
   </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="BasicGameFrameworkLibrary" Version="1.0.1" />
+		<PackageReference Include="BasicGameFrameworkLibrary" Version="2.0.6" />
 		<PackageReference Include="GamePackageSerializeGenerator" Version="1.0.1" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
 		<PackageReference Include="Microsoft.Azure.SignalR" Version="1.18.3" />

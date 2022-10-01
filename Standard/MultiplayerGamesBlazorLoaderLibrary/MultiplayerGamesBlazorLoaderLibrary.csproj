@@ -16,7 +16,6 @@
     <PackageReference Include="GameLoaderBlazorLibrary" Version="1.0.2" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="GamePackageSignalRClasses" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
   </ItemGroup>
 
   
