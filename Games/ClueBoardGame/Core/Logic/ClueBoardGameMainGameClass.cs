@@ -1,5 +1,3 @@
-using System.Xml.Linq;
-
 namespace ClueBoardGame.Core.Logic;
 [SingletonGame]
 public class ClueBoardGameMainGameClass
@@ -441,7 +439,7 @@ public class ClueBoardGameMainGameClass
             await ShowWinAsync();
             return;
         }
-        
+
         if (SaveRoot!.GameStatus == EnumClueStatusList.EndTurn)
         {
             OtherTurn = 0;

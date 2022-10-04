@@ -149,7 +149,11 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
         if (_gameContainer.CurrentCharacter!.Space > 0)
         {
             var currentField = _gameBoard.FieldList[_gameContainer.CurrentCharacter.Space];
-            var output = currentField.Neighbors.Values.Where(x => x.Position == direction).Single();
+            var output = currentField.Neighbors.Values.Where(x => x.Position == direction).SingleOrDefault();
+            if (output is null)
+            {
+                return 0; //you for sure can't do it.
+            }
             return output.SpaceNumber;
         }
         return _gameContainer.CurrentCharacter.FirstSpace;
@@ -169,6 +173,10 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
         if (_gameBoard.CanMoveToRoom(room) == false)
         {
             return;
+        }
+        if (_mainGame!.SaveRoot.GameStatus == EnumClueStatusList.EndTurn)
+        {
+            return; //because you are supposed to end turn.
         }
         if (_mainGame!.SaveRoot!.GameStatus == EnumClueStatusList.MoveSpaces && _gameContainer.CurrentCharacter!.PreviousRoom > 0)
         {
