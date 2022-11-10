@@ -220,6 +220,7 @@ public class SavannahMainGameClass
             if (totals < leastCards)
             {
                 SingleInfo = player;
+                leastCards = totals; //hopefully this will fix the bug
             }
         }
         await ShowWinAsync();
