@@ -308,6 +308,7 @@ public class MillebournesMainGameClass
     {
         _gameContainer.CurrentCoupe.Player = 0;
         _gameContainer.CurrentCoupe.Card = 0;
+        _model.Pile1.ClearCards(); //try here.
         _model.Pile1.Visible = false;
         PlayerList!.ForEach(thisPlayer => thisPlayer.OtherTurn = false);
         await base.StartNewTurnAsync();
@@ -415,10 +416,6 @@ public class MillebournesMainGameClass
                 var newCard = _model.Pile1.GetCardInfo();
                 SingleInfo.MainHandList.Add(newCard);
             }
-        }
-        if (_model!.Pile1!.PileEmpty() == false)
-        {
-            _model.Pile1.RemoveFromPile();
         }
     }
     public bool HasCoupe(out int newDeck)

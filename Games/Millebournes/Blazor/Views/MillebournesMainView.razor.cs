@@ -17,6 +17,7 @@ public partial class MillebournesMainView
         _scores.Clear();
         _scores.AddColumn("Team", true, nameof(MillebournesPlayerItem.Team))
             .AddColumn("Miles", true, nameof(MillebournesPlayerItem.Miles))
+            .AddColumn("Cards", true, nameof(MillebournesPlayerItem.ObjectCount))
             .AddColumn("Other Points", true, nameof(MillebournesPlayerItem.OtherPoints))
             .AddColumn("Total Points", true, nameof(MillebournesPlayerItem.TotalPoints))
             .AddColumn("# 200s", true, nameof(MillebournesPlayerItem.Number200s));

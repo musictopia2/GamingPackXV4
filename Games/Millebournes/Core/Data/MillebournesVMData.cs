@@ -13,8 +13,10 @@ public partial class MillebournesVMData : IBasicCardGamesData<MillebournesCardIn
     {
         Deck1 = new(command);
         Pile1 = new(command);
+        Pile1.CurrentOnly = true; //try this.
         PlayerHand1 = new(command);
         OtherPile = Pile1;
+
         Pile2 = new(command);
 
         Stops = new();
