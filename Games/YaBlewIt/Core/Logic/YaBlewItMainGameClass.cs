@@ -603,7 +603,7 @@ public class YaBlewItMainGameClass
     }
     private async Task EndOtherTurnAsync()
     {
-        OtherTurn = await PlayerList.CalculateOtherTurnAsync();
+        OtherTurn = await PlayerList.CalculateOtherTurnAsync(useCurrentPlayer: false, includeOutPlayers: false);
         if (OtherTurn == 0)
         {
             if (PlayerList.All(x => x.InGame == false))

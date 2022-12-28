@@ -299,16 +299,28 @@ public class PlayerCollection<P> : IEnumerable<P>, IAdvancedDIContainer, IPlayer
             return await PrivateCalculateTurnAsync(EnumDirection.Normal, useCurrentPlayer, includeOutPlayers);
         }
         int newPlayer = _order.OtherTurn;
-        newPlayer++;
-        if (newPlayer > _privateDict.Count)
+        P tempPlayer;
+        do
         {
-            newPlayer = 1;
-        }
-        if (newPlayer == _order.WhoTurn && useCurrentPlayer == false)
-        {
-            return 0;
-        }
-        return newPlayer;
+            newPlayer++;
+            if (newPlayer > _privateDict.Count)
+            {
+                newPlayer = 1;
+            }
+            if (newPlayer == _order.WhoTurn && useCurrentPlayer == false)
+            {
+                return 0;
+            }
+            if (includeOutPlayers)
+            {
+                return newPlayer;
+            }
+            tempPlayer = PrivatePlayer(newPlayer);
+            if (tempPlayer.InGame)
+            {
+                return newPlayer;
+            }
+        } while (true);
     }
     private async Task<int> PrivateCalculateTurnAsync(EnumDirection direction, bool useCurrentPlayer, bool includeOutPlayers)
     {
