@@ -19,6 +19,9 @@ public partial class Phase10VMData : IBasicCardGamesData<Phase10CardInformation>
         TempSets = new TempSetsObservable<EnumColorTypes, EnumColorTypes, Phase10CardInformation>(command, resolver);
         MainSets = new MainSetsObservable<EnumColorTypes, EnumColorTypes, Phase10CardInformation, PhaseSet, SavedSet>(command);
         TempSets.HowManySets = 5;
+        PlayerPicker = new(command, resolver);
+        PlayerPicker.IndexMethod = EnumIndexMethod.OneBased;
+        PlayerPicker.ItemSelectedAsync = PlayerPicker_ItemSelectedAsync;
     }
     public DeckObservablePile<Phase10CardInformation> Deck1 { get; set; }
     public SingleObservablePile<Phase10CardInformation> Pile1 { get; set; }
@@ -26,4 +29,12 @@ public partial class Phase10VMData : IBasicCardGamesData<Phase10CardInformation>
     public SingleObservablePile<Phase10CardInformation>? OtherPile { get; set; }
     public TempSetsObservable<EnumColorTypes, EnumColorTypes, Phase10CardInformation> TempSets;
     public MainSetsObservable<EnumColorTypes, EnumColorTypes, Phase10CardInformation, PhaseSet, SavedSet> MainSets;
+    public ListViewPicker PlayerPicker { get; set; }
+    public string PlayerChosen { get; set; } = "";
+    private Task PlayerPicker_ItemSelectedAsync(int SelectedIndex, string SelectedText)
+    {
+        PlayerChosen = SelectedText;
+        return Task.CompletedTask;
+    }
+
 }

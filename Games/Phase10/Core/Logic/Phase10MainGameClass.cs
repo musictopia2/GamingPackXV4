@@ -1,4 +1,5 @@
 using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
+using System.Numerics;
 
 namespace Phase10.Core.Logic;
 [SingletonGame]
@@ -222,7 +223,13 @@ public class Phase10MainGameClass
                 await ProcessCompletedPhaseAsync();
                 break;
             case "playerskipped":
-                _toast.ShowUserErrorToast("Needs To Think About Skipping Player"); //we never did anything for skipping player.
+                _model.PlayerPicker.ShowOnlyOneSelectedItem(content);
+                _command.UpdateAll();
+                if (_gameContainer.Test.NoAnimations == false)
+                {
+                    await _gameContainer.Delay.DelaySeconds(1);
+                }
+                await SkipPlayerAsync(content); //hopefully this simple.
                 break;
             case "expandrummy":
                 SendExpandedSet Expands = await js.DeserializeObjectAsync<SendExpandedSet>(content);
@@ -264,6 +271,7 @@ public class Phase10MainGameClass
         {
             UnselectCards();
         }
+        SaveRoot.Skips = false;
         SingleInfo = PlayerList!.GetSelf();
         var tempCol = _model!.TempSets!.ListObjectsRemoved();
         SingleInfo.MainHandList.AddRange(tempCol);
@@ -323,6 +331,13 @@ public class Phase10MainGameClass
         {
             throw new CustomBasicException("You should never have only 9 cards");
         }
+        if (SaveRoot.Skips == true)
+        {
+            var list = PossibleSkipList;
+            _model.PlayerPicker.LoadTextList(list);
+            _model.PlayerPicker.UnselectAll();
+            _model.PlayerChosen = "";
+        }
         return base.ContinueTurnAsync();
     }
     private void RemoveCard(int deck)
@@ -377,7 +392,7 @@ public class Phase10MainGameClass
     {
         get
         {
-            return PlayerList!.Where(xx => xx.MissNextTurn == false && xx.Id != WhoTurn).Select(Items => Items.NickName).ToBasicList();
+            return PlayerList!.Where(xx => xx.MissNextTurn == false && xx.Id != WhoTurn).Select(xx => xx.NickName).ToBasicList();
         }
     }
     public override async Task DiscardAsync(Phase10CardInformation thisCard)
@@ -391,26 +406,32 @@ public class Phase10MainGameClass
             return;
         }
         if (thisCard.CardCategory == EnumCardCategory.Skip)
+        {
             await ChooseSkipAsync();
+        }
         else
+        {
             await EndTurnAsync();
+        }
     }
     private async Task ChooseSkipAsync()
     {
-        var ThisList = PossibleSkipList;
-        if (ThisList.Count == 0)
+        var list = PossibleSkipList;
+        if (list.Count == 0)
         {
             await EndTurnAsync();
             return;
         }
-        if (ThisList.Count == 1)
+        if (list.Count == 1)
         {
-            await SkipPlayerAsync(ThisList.Single());
+            await SkipPlayerAsync(list.Single());
             return;
         }
         SaveRoot!.Skips = true; //means you have to choose someone to skip
         _command.ManuelFinish = true;
-        _toast.ShowUserErrorToast("Needs To Think About Skipping Player");
+        _model.PlayerChosen = "";
+        await ContinueTurnAsync();
+        //_toast.ShowUserErrorToast("Needs To Think About Skipping Player");
     }
     public async Task SkipPlayerAsync(string nickName)
     {
@@ -520,6 +541,7 @@ public class Phase10MainGameClass
                 thisCollection.AddRange(tempCollection);
             }
             if (thisCollection.Count > 0)
+            {
                 foreach (var newSet in thisPhase.PhaseSets)
                 {
                     if (newSet.DidSucceed == false)
@@ -547,6 +569,7 @@ public class Phase10MainGameClass
                         }
                     }
                 }
+            }
             if (output.Count == thisPhase.PhaseSets.Count)
             {
                 break;
@@ -599,7 +622,9 @@ public class Phase10MainGameClass
             decks = _model.TempSets.DeckForSelectedObjected(piles);
         }
         else
+        {
             decks = _model.PlayerHand1.ObjectSelected();
+        }
         whatCard = _gameContainer.DeckList!.GetSpecificItem(decks);
         int Nums = thisPhase.PositionToPlay(whatCard, position);
         if (Nums == 0)

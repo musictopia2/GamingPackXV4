@@ -21,4 +21,6 @@ public partial class Phase10MainView
         base.OnInitialized();
     }
     private ICustomCommand CompleteCommand => DataContext!.CompletePhaseCommand!;
+    private ICustomCommand SKipCommand => DataContext!.SkipPlayerCommand!;
+    private bool NeedsToChooseSkip => _gameContainer!.SaveRoot.Skips;
 }

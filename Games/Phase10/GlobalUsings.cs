@@ -62,3 +62,5 @@ global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
 global using Phase10.Core.SetClasses;
 global using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Cards;
+global using BasicGameFrameworkLibrary.Core.ChooserClasses;
+global using static BasicGameFrameworkLibrary.Core.ChooserClasses.ListViewPicker;

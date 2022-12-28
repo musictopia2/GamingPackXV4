@@ -42,6 +42,16 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
     {
         return true;
     }
+    public bool CanSkipPlayer() => _model.PlayerChosen != "";
+    [Command(EnumCommandCategory.Game)]
+    public async Task SkipPlayerAsync()
+    {
+        if (_mainGame.BasicData.MultiPlayer)
+        {
+            await _mainGame.Network!.SendAllAsync("playerskipped", _model.PlayerChosen);
+        }
+        await _mainGame.SkipPlayerAsync(_model.PlayerChosen);
+    }
     public bool CanCompletePhase()
     {
         if (_gameContainer!.AlreadyDrew == false)

@@ -32,8 +32,20 @@
         <TempSetsBlazor TargetContainerSize="65vh"
                         TempPiles="_vmData.TempSets" />
     </StackItem>
+
     <StackItem>
-        <MainRummySetsBlazor ContainerHeight="65vh"
+        @if (NeedsToChooseSkip == false)
+        {
+            <MainRummySetsBlazor ContainerHeight="65vh"
                              DataContext="_vmData.MainSets" />
+        }
+        else
+        {
+            <ListChooserBlazor ListPicker="@_vmData.PlayerPicker" />
+            <div style="margin-top: 20px;">
+                <GameButtonComponent CommandObject="SKipCommand" Display="Submit Chosen Player To Skip" />
+            </div>
+            
+        }
     </StackItem>
 </StackLayout>
