@@ -59,7 +59,9 @@ public class ClueBoardGameMainGameClass
             _model.Pile.ClearCards();
             SingleInfo = PlayerList.GetSelf();
             _model.HandList.HandList = SingleInfo!.MainHandList;
-            SetCurrentPlayer(); //because no autoresume.
+            SetCurrentPlayer();
+            this.ShowTurn();
+            _command.UpdateAll();
             _gameBoard.LoadSavedGame();
             _model.Cup!.CanShowDice = SaveRoot.MovesLeft > 0;
             SaveRoot.Instructions = "None";
@@ -328,7 +330,11 @@ public class ClueBoardGameMainGameClass
     {
         if (PlayerList.DidChooseColors())
         {
+            SetCurrentPlayer();
+            SaveRoot.GameStatus = EnumClueStatusList.StartTurn;
+            SingleInfo = PlayerList!.GetWhoPlayer();
             PrepStartTurn();
+            _command.UpdateAll();
             _gameBoard.NewTurn();
             SaveRoot!.Instructions = "None";
             SaveRoot.AccusationMade = false;
@@ -342,9 +348,6 @@ public class ClueBoardGameMainGameClass
             {
                 throw new CustomBasicException("WhoTurn cannot be 0");
             }
-            SetCurrentPlayer();
-            SaveRoot.GameStatus = EnumClueStatusList.StartTurn;
-            SingleInfo = PlayerList!.GetWhoPlayer();
             await EndStepAsync();
             return;
         }
