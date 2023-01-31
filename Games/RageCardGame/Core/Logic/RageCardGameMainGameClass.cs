@@ -176,17 +176,26 @@ public class RageCardGameMainGameClass
         {
             return true;
         }
-        var LeadCard = thisList.FirstOrDefault(Items => Items.Color != EnumColor.None);
-        if (LeadCard == null)
+        var leadCard = thisList.FirstOrDefault(xx => xx.Color != EnumColor.None);
+        if (leadCard == null)
         {
             return true;
         }
         var cardPlayed = _gameContainer.DeckList!.GetSpecificItem(deck);
-        if (cardPlayed.Color == LeadCard.Color)
+        if (cardPlayed.Color == leadCard.Color)
         {
             return true;
         }
-        return base.IsValidMove(deck);
+        
+        if (SingleInfo!.MainHandList.Any(x => x.Color == leadCard.Color))
+        {
+            return false;
+        }
+        return true;
+
+
+        //var leadCard = thisList.First();
+        //return base.IsValidMove(deck);
     }
     private int WhoWonTrick(DeckRegularDict<RageCardGameCardInformation> thisCol)
     {
