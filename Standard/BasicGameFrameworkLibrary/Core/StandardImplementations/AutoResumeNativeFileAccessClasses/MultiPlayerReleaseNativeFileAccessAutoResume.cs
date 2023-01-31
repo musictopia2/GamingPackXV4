@@ -1,7 +1,7 @@
 ﻿using BasicGameFrameworkLibrary.Core.StandardImplementations.GlobalClasses; //not common enough.
 using static CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
-using fs = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
-using ss = System.IO.Path;
+using fs1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
+using ss1 = System.IO.Path;
 namespace BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses;
 public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveState
 {
@@ -16,8 +16,8 @@ public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveStat
         _game = game;
         _data = data;
         _test = test;
-        _localPath = ss.Combine(tempPath, $"{game.GameName} SingleRelease.json");
-        _multiPath = ss.Combine(tempPath, $"{game.GameName} MultiplayerRelease.json");
+        _localPath = ss1.Combine(tempPath, $"{game.GameName} SingleRelease.json");
+        _multiPath = ss1.Combine(tempPath, $"{game.GameName} MultiplayerRelease.json");
     }
     async Task IMultiplayerSaveState.DeleteGameAsync()
     {
@@ -97,7 +97,7 @@ public class MultiPlayerReleaseNativeFileAccessAutoResume : IMultiplayerSaveStat
         {
             pathUsed = _localPath;
         }
-        await fs.SaveObjectAsync(pathUsed, thisState);
+        await fs1.SaveObjectAsync(pathUsed, thisState);
     }
     async Task<string> IMultiplayerSaveState.TempMultiSavedAsync()
     {

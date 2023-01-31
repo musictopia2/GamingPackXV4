@@ -1,27 +1,27 @@
 ﻿using BasicGameFrameworkLibrary.Core.StandardImplementations.Settings;
-using ff = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
-using jj = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
-using ss = System.IO.Path;
+using ff1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
+using jj1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
+using ss1 = System.IO.Path;
 namespace BasicGameFrameworkLibrary.Core.StandardImplementations.GlobalClasses;
 public static class NativeGlobalSettingsFileAccess
 {
     private static string GetGlobalSettingsPath()
     {
         string output = NativeFileAccessSetUp.GetParentDirectory();
-        output = ss.Combine(output, "settings.json");
+        output = ss1.Combine(output, "settings.json");
         return output;
     }
     public static async Task LoadSettingsAsync()
     {
         GlobalDataModel output;
         string tempPath = GetGlobalSettingsPath();
-        if (ff.FileExists(tempPath) == false)
+        if (ff1.FileExists(tempPath) == false)
         {
             output = new();
         }
         else
         {
-            output = await jj.RetrieveSavedObjectAsync<GlobalDataModel>(tempPath);
+            output = await jj1.RetrieveSavedObjectAsync<GlobalDataModel>(tempPath);
         }
         GlobalDataModel.DataContext = output;
     }
@@ -32,6 +32,6 @@ public static class NativeGlobalSettingsFileAccess
             throw new CustomBasicException("Must have the data information filled out");
         }
         string tempPath = GetGlobalSettingsPath();
-        await jj.SaveObjectAsync(tempPath, GlobalDataModel.DataContext);
+        await jj1.SaveObjectAsync(tempPath, GlobalDataModel.DataContext);
     }
 }

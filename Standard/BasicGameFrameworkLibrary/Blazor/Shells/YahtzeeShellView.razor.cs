@@ -8,7 +8,7 @@ public partial class YahtzeeShellView : IHandleAsync<WarningEventModel>, IDispos
     private IEventAggregator? _aggregator;
     protected override void OnInitialized()
     {
-        _aggregator = aa.Resolver!.Resolve<IEventAggregator>();
+        _aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
         Subscribe();
         base.OnInitialized();
     }

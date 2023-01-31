@@ -11,5 +11,5 @@ public partial class SolitairePilesBlazor
     /// </summary>
     [Parameter]
     public int PlaceAfter { get; set; }
-    private string GetColumns => ab.RepeatMinimum(MainPiles!.PileList.Count);
+    private string GetColumns => ab1.RepeatMinimum(MainPiles!.PileList.Count);
 }

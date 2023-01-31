@@ -98,11 +98,11 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         suit = SuitToDisplay;
         if (suit == EnumSuitList.Clubs || suit == EnumSuitList.Spades)
         {
-            color = cs.Black;
+            color = cs1.Black;
         }
         else
         {
-            color = cs.Red;
+            color = cs1.Red;
         }
         text.Fill = color.ToWebColor();
         MainGroup!.Children.Add(text);
@@ -266,11 +266,11 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         string color;
         if (suitName == EnumSuitList.Clubs || suitName == EnumSuitList.Spades)
         {
-            color = cs.Black;
+            color = cs1.Black;
         }
         else
         {
-            color = cs.Red;
+            color = cs1.Red;
         }
         G currentGroup;
         if (bln_Flip == false)
@@ -291,11 +291,11 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         string color;
         if (suit == EnumSuitList.Clubs || suit == EnumSuitList.Spades)
         {
-            color = cs.Black;
+            color = cs1.Black;
         }
         else
         {
-            color = cs.Red;
+            color = cs1.Red;
         }
         RectangleF rect = new(40, 60, 75, 75);
         MainGroup!.DrawRoyalSuits(rect, color);
@@ -328,11 +328,11 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         string clr_Suit;
         if (DeckObject!.Color == EnumRegularColorList.Black)
         {
-            clr_Suit = cs.Black;
+            clr_Suit = cs1.Black;
         }
         else
         {
-            clr_Suit = cs.Red;
+            clr_Suit = cs1.Red;
         }
         if (DeckObject.CardType == EnumRegularCardTypeList.Joker)
         {
@@ -347,13 +347,13 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
             string tempBorder;
             textColor = clr_Suit;
             tempSolid = clr_Suit;
-            if (clr_Suit == cs.Black)
+            if (clr_Suit == cs1.Black)
             {
-                tempBorder = cs.Aqua;
+                tempBorder = cs1.Aqua;
             }
             else
             {
-                tempBorder = cs.Black;
+                tempBorder = cs1.Black;
             }
             tempEye = tempBorder;
             MainGroup!.DrawSmiley(firstRect, tempSolid, tempBorder, tempEye, 4); //one larger smiley to stop the maui bugs for now.
@@ -364,7 +364,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         if (DeckObject.CardType == EnumRegularCardTypeList.Continue)
         {
             ellipse = new();
-            ellipse.PopulateStrokesToStyles(cs.Green.ToWebColor(), 8.25f);
+            ellipse.PopulateStrokesToStyles(cs1.Green.ToWebColor(), 8.25f);
             ellipse.CX = "82.5";
             ellipse.CY = "108";
             ellipse.RX = "41.25";
@@ -380,14 +380,14 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
             line.Y1 = "66.75";
             line.X2 = "123.75";
             line.Y2 = "149.25";
-            line.PopulateStrokesToStyles(cs.Red.ToWebColor(), 8.25f);
+            line.PopulateStrokesToStyles(cs1.Red.ToWebColor(), 8.25f);
             line = new Line();
             MainGroup.Children.Add(line);
             line.X1 = "41.25";
             line.Y1 = "149.25";
             line.X2 = "123.75";
             line.Y2 = "66.75";
-            line.PopulateStrokesToStyles(cs.Red.ToWebColor(), 8.25f);
+            line.PopulateStrokesToStyles(cs1.Red.ToWebColor(), 8.25f);
         }
     }
 }

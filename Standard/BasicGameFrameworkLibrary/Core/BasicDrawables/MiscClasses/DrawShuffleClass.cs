@@ -3,7 +3,7 @@
 /// This class is used for games that is not technically a card game but has cards like Candyland, or Sorry Board Game.
 /// Has routines for drawing, shuffling and reshuffling.
 /// </summary>
-public class DrawShuffleClass<D, P> : nm.IDrawCardNM, nm.IReshuffledCardsNM
+public class DrawShuffleClass<D, P> : IDrawCardNM, IReshuffledCardsNM
     where D : class, IDeckObject, new() where P : class, IPlayerItem, new()
 {
     public ISavedCardList<D>? SaveRoot;
@@ -57,10 +57,7 @@ public class DrawShuffleClass<D, P> : nm.IDrawCardNM, nm.IReshuffledCardsNM
     {
         _deckList.ClearObjects();
         _deckList.ShuffleObjects();
-        if (RemovePossibleReshuffledCards is not null)
-        {
-            RemovePossibleReshuffledCards.Invoke(_deckList); //to accomodate a game like risk board game
-        }
+        RemovePossibleReshuffledCards?.Invoke(_deckList); //to accomodate a game like risk board game
         if (canSend == true)
         {
             BasicList<int> newList = _deckList.ExtractIntegers(xx => xx.Deck);
@@ -79,10 +76,7 @@ public class DrawShuffleClass<D, P> : nm.IDrawCardNM, nm.IReshuffledCardsNM
     {
         _deckList.ClearObjects();
         _deckList.ShuffleObjects();
-        if (AfterFirstShuffle != null)
-        {
-            AfterFirstShuffle.Invoke(_deckList);
-        }
+        AfterFirstShuffle?.Invoke(_deckList);
         SaveRoot!.CardList = _deckList.ToRegularDeckDict();
         if (canAutoDraw == true)
         {
@@ -104,13 +98,13 @@ public class DrawShuffleClass<D, P> : nm.IDrawCardNM, nm.IReshuffledCardsNM
         _basicData = basicData;
         _toast = toast;
     }
-    async Task nm.IDrawCardNM.DrawCardReceivedAsync(string data)
+    async Task IDrawCardNM.DrawCardReceivedAsync(string data)
     {
         await DrawAsync();
     }
-    async Task nm.IReshuffledCardsNM.ReshuffledCardsReceived(string data)
+    async Task IReshuffledCardsNM.ReshuffledCardsReceived(string data)
     {
-        BasicList<int> firstList = await js.DeserializeObjectAsync<BasicList<int>>(data);
+        BasicList<int> firstList = await js1.DeserializeObjectAsync<BasicList<int>>(data);
         if (_deckList.Any() == false)
         {
             _deckList.OrderedObjects();

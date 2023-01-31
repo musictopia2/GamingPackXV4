@@ -127,7 +127,7 @@ public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
         }
         await Task.Delay(5);
         string name = GetCurrentName();
-        string content = await js.SerializeObjectAsync(thisState);
+        string content = await js1.SerializeObjectAsync(thisState);
         await _js.UpdateLocalStorageAsync(name, content);
     }
     async Task<string> IMultiplayerSaveState.TempMultiSavedAsync()

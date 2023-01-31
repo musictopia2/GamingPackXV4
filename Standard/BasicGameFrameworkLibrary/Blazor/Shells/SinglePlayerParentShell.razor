@@ -1,4 +1,4 @@
-﻿@using aa = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
+﻿@using aa1 = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
 @using BlazorMVVMHelpersLibrary;
 @using BasicGameFrameworkLibrary.Blazor.Views
 <CascadingValue Value="BasicData">
@@ -10,9 +10,9 @@
     <LeftOverLayout>
         <TopContent>
             <div style="width: 100%;  background-color: indigo; margin-bottom: 2px; margin-top: 2px; height: 8vh">
-                @if (aa.BackToMainDelegate is not null)
+                @if (aa1.BackToMainDelegate is not null)
                 {
-                    <GameButtonComponent CustomCallBack="aa.BackToMainDelegate" Display="Back To Main" />
+                    <GameButtonComponent CustomCallBack="aa1.BackToMainDelegate" Display="Back To Main" />
                 }
                 <span style="font-size: 5vh">
                     @GameInfo.GameName

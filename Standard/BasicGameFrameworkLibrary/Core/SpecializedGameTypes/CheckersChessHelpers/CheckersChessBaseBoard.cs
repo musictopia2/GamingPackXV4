@@ -19,14 +19,14 @@ public abstract class CheckersChessBaseBoard<E, S>
     {
         if (_thisGame == EnumCheckerChessGame.Checkers)
         {
-            _firstColor = cs.White;
-            _secondColor = cs.Black;
+            _firstColor = cs1.White;
+            _secondColor = cs1.Black;
             HasGreen = false;
         }
         else
         {
-            _firstColor = cs.WhiteSmoke;
-            _secondColor = cs.Tan;
+            _firstColor = cs1.WhiteSmoke;
+            _secondColor = cs1.Tan;
             HasGreen = true;
         }
     }

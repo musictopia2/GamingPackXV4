@@ -20,7 +20,7 @@ public partial class GameSpaceWithoutBorders
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     [Parameter]
-    public string FillColor { get; set; } = cs.Transparent;
+    public string FillColor { get; set; } = cs1.Transparent;
     private async Task ProcessClickAsync()
     {
         if (SpaceClicked.HasDelegate == false)

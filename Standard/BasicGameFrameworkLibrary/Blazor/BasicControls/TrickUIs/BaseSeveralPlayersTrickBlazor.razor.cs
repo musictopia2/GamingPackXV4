@@ -51,7 +51,7 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
     }
     protected override void OnInitialized()
     {
-        Aggregator = aa.Resolver!.Resolve<IEventAggregator>();
+        Aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
         Subscribe();
         base.OnInitialized();
     }

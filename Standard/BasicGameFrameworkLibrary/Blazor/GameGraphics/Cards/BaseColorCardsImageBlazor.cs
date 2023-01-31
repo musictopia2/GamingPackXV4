@@ -17,7 +17,7 @@ public abstract class BaseColorCardsImageBlazor<C> : BaseDarkCardsBlazor<C>
         }
         if (DeckObject!.Color == EnumColorTypes.ZOther || DeckObject!.Color == EnumColorTypes.None)
         {
-            return cs.White;
+            return cs1.White;
         }
         return PrivateColor();
     }
@@ -93,7 +93,7 @@ public abstract class BaseColorCardsImageBlazor<C> : BaseDarkCardsBlazor<C>
         text.CenterText(MainGroup!, rectangle);
         text.Font_Size = fontSize;
         text.Content = valueNeeded;
-        text.Fill = cs.White.ToWebColor();
+        text.Fill = cs1.White.ToWebColor();
         text.PopulateStrokesToStyles(strokeWidth: 1.4f);
     }
 }

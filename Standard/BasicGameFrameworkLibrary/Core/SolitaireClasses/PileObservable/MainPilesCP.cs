@@ -237,11 +237,11 @@ public class MainPilesCP : IMain, ISerializable
     }
     public async Task LoadGameAsync(string data)
     {
-        BasicList<BasicPileInfo<SolitaireCard>> tempList = await js.DeserializeObjectAsync<BasicList<BasicPileInfo<SolitaireCard>>>(data);
+        BasicList<BasicPileInfo<SolitaireCard>> tempList = await js1.DeserializeObjectAsync<BasicList<BasicPileInfo<SolitaireCard>>>(data);
         Piles.PileList = tempList;
     }
     public async Task<string> GetSavedPilesAsync()
     {
-        return await js.SerializeObjectAsync(Piles.PileList!);
+        return await js1.SerializeObjectAsync(Piles.PileList!);
     }
 }

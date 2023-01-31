@@ -24,7 +24,7 @@ public class ListViewPiece : ComponentBase
     [Parameter]
     public bool CanHighlight { get; set; } = true;
     [Parameter]
-    public string TextColor { get; set; } = cs.Navy;
+    public string TextColor { get; set; } = cs1.Navy;
     protected virtual void SelectProcesses() { }
     protected virtual bool CanDrawText()
     {

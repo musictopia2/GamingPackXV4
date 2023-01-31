@@ -64,7 +64,7 @@ public class BasicGameClientTCP : ISerializable //decided to have the option.  o
                     {
                         var data = NetworkStreamHelpers.ReadStream(_thisStream);
                         var thisStr = Encoding.ASCII.GetString(data);
-                        thisMessage = js.DeserializeObject<SentMessage>(thisStr);
+                        thisMessage = js1.DeserializeObject<SentMessage>(thisStr);
                         thisProgress.Report(0);
                         _thisStream.Flush();
                     }
@@ -121,7 +121,7 @@ public class BasicGameClientTCP : ISerializable //decided to have the option.  o
             throw new CustomBasicException("Somehow nick name was never entered.  Rethink");
         }
         thisMessage.YourNickName = NickName;
-        string results = await js.SerializeObjectAsync(thisMessage);
+        string results = await js1.SerializeObjectAsync(thisMessage);
         var ends = NetworkStreamHelpers.CreateDataPacket(results);
         _thisStream!.Write(ends, 0, ends.Length);
         await _thisStream.FlushAsync(); //i think this too.

@@ -2,12 +2,12 @@
 @using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels
 @using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Data
 @using BlazorMVVMHelpersLibrary;
-@using aa = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+@using aa1 = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 @using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Containers
 @typeparam D
 @inherits BasicGameView<YahtzeeMainViewModel<D>>
 @{ 
-    _scoreContainer = aa.Resolver!.Resolve<ScoreContainer>();
+    _scoreContainer = aa1.Resolver!.Resolve<ScoreContainer>();
 }
 <ParentControl VM="YahtzeeScoresheetViewModel<D>">
     <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">

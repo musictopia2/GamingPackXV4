@@ -77,7 +77,7 @@ public static class SelectEnableDeckExtensions
     }
     public static async Task<BasicList<int>> GetSavedIntegerListAsync(this string data)
     {
-        return await js.DeserializeObjectAsync<BasicList<int>>(data);
+        return await js1.DeserializeObjectAsync<BasicList<int>>(data);
     }
     public static DeckRegularDict<D> ToRegularDeckDict<D>(this IEnumerable<D> thisList) where D : IDeckObject
     {
@@ -150,7 +150,7 @@ public static class SelectEnableDeckExtensions
     public static async Task<DeckRegularDict<D>> GetObjectsFromDataAsync<D>(this string body
         , IDeckDict<D> ListToRemove) where D : IDeckObject
     {
-        var temps = await js.DeserializeObjectAsync<BasicList<int>>(body);
+        var temps = await js1.DeserializeObjectAsync<BasicList<int>>(body);
         return temps.GetObjectsFromList(ListToRemove);
     }
     public static int ObjectsLeft(this IDeckDict<IDeckObject> thisList)
@@ -214,7 +214,7 @@ public static class SelectEnableDeckExtensions
     {
         DeckRegularDict<D> output = new();
 
-        BasicList<int> thisList = await js.DeserializeObjectAsync<BasicList<int>>(data);
+        BasicList<int> thisList = await js1.DeserializeObjectAsync<BasicList<int>>(data);
         thisList.ForEach(items =>
         {
             output.Add(thisBase.GetSpecificItem(items));

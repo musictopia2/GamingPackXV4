@@ -2,8 +2,8 @@
 public class SimpleDice : IStandardDice, IGenerateDice<int>, ISimpleValueObject<int>
 {
     public int HeightWidth { get; } = 60;
-    public string DotColor { get; set; } = cs.Black; //you have to make it public.  otherwise, you can't save the color which is needed for games like kismet.
-    public string FillColor { get; set; } = cs.White;
+    public string DotColor { get; set; } = cs1.Black; //you have to make it public.  otherwise, you can't save the color which is needed for games like kismet.
+    public string FillColor { get; set; } = cs1.White;
     public int Value { get; set; }
     public int Index { get; set; }
     public EnumDiceStyle Style { get; } = EnumDiceStyle.Regular;

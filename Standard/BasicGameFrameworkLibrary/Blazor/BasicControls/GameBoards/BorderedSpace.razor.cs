@@ -19,7 +19,7 @@ public partial class BorderedSpace
     [Parameter]
     public string BorderColor { get; set; } = ""; //if no bordercolor, then don't even use this.
     [Parameter]
-    public string FillColor { get; set; } = cs.Transparent;
+    public string FillColor { get; set; } = cs1.Transparent;
     [Parameter]
     public bool Fixed { get; set; }
     private async Task ProcessClickAsync()

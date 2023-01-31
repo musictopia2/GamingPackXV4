@@ -1,7 +1,7 @@
 ﻿using BasicGameFrameworkLibrary.Core.StandardImplementations.GlobalClasses; //not common enough to have everywhere.
 using static CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
-using fs = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
-using ss = System.IO.Path;
+using ss1 = System.IO.Path;
+using fs1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
 namespace BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses;
 public class SinglePlayerReleaseNativeFileAccessAutoResume : ISaveSinglePlayerClass
 {
@@ -11,7 +11,7 @@ public class SinglePlayerReleaseNativeFileAccessAutoResume : ISaveSinglePlayerCl
     {
         _thisGame = thisGame;
         string tempPath = NativeFileAccessSetUp.GetParentDirectory();
-        _gamePath = ss.Combine(tempPath, $"{_thisGame.GameName}Release.json");
+        _gamePath = ss1.Combine(tempPath, $"{_thisGame.GameName}Release.json");
     }
     Task<bool> ISaveSinglePlayerClass.CanOpenSavedSinglePlayerGameAsync()
     {
@@ -35,7 +35,7 @@ public class SinglePlayerReleaseNativeFileAccessAutoResume : ISaveSinglePlayerCl
         {
             throw new CustomBasicException("Should not have autosaved.  Should have first called CanOpenSavedSinglePlayerGameAsync To See");
         }
-        T output = await fs.RetrieveSavedObjectAsync<T>(_gamePath);
+        T output = await fs1.RetrieveSavedObjectAsync<T>(_gamePath);
         return output;
     }
     async Task ISaveSinglePlayerClass.SaveSimpleSinglePlayerGameAsync<T>(T thisObject)
@@ -48,6 +48,6 @@ public class SinglePlayerReleaseNativeFileAccessAutoResume : ISaveSinglePlayerCl
         {
             throw new CustomBasicException("Cannot save null object.  Rethink");
         }
-        await fs.SaveObjectAsync(_gamePath, thisObject);
+        await fs1.SaveObjectAsync(_gamePath, thisObject);
     }
 }

@@ -13,7 +13,7 @@ public partial class ListChooserBlazor
     [Parameter]
     public IListViewPicker? ListPicker { get; set; }
     [Parameter]
-    public string TextColor { get; set; } = cs.Navy;
+    public string TextColor { get; set; } = cs1.Navy;
     [Parameter]
     public bool CanHighlight { get; set; } = true;
     private int DisplayColumns()

@@ -38,7 +38,7 @@ public class BasicGameServerTCP : ISerializable
         SentMessage thisSend = new();
         thisSend.Status = "Connection Error";
         thisSend.Body = errorMessage;
-        var results = js.SerializeObject(thisSend);
+        var results = js1.SerializeObject(thisSend);
         var ends = NetworkStreamHelpers.CreateDataPacket(results);
         thisStream.Write(ends, 0, ends.Length);
         thisStream.Flush();
@@ -64,7 +64,7 @@ public class BasicGameServerTCP : ISerializable
                     {
                         var data = NetworkStreamHelpers.ReadStream(thisStream);
                         var thisStr = Encoding.ASCII.GetString(data);
-                        NetworkMessage thisMessage = js.DeserializeObject<NetworkMessage>(thisStr);
+                        NetworkMessage thisMessage = js1.DeserializeObject<NetworkMessage>(thisStr);
                         errorMessage = ""; //has to be proven an error message.
                         switch (thisMessage.NetworkCategory)
                         {
@@ -106,7 +106,7 @@ public class BasicGameServerTCP : ISerializable
                                     _playerList.Add(_hostName, thisInfo);
                                     SentMessage temp1 = new();
                                     temp1.Status = "hosting";
-                                    string str1 = js.SerializeObject(temp1);
+                                    string str1 = js1.SerializeObject(temp1);
                                     ends = NetworkStreamHelpers.CreateDataPacket(str1);
                                     thisStream.Write(ends, 0, ends.Length);
                                     thisStream.Flush();
@@ -132,7 +132,7 @@ public class BasicGameServerTCP : ISerializable
                                     SentMessage temp2 = new();
                                     temp2.Status = "clienthost";
                                     temp2.Body = _hostName;
-                                    string str2 = js.SerializeObject(temp2);
+                                    string str2 = js1.SerializeObject(temp2);
                                     ends = NetworkStreamHelpers.CreateDataPacket(str2);
                                     thisStream.Write(ends, 0, ends.Length);
                                     thisStream.Flush();

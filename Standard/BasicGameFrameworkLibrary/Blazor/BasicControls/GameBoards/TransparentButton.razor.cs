@@ -8,9 +8,9 @@ public partial class TransparentButton
     [Parameter]
     public PointF ButtonLocation { get; set; }
     [Parameter]
-    public string BorderColor { get; set; } = cs.Black;
+    public string BorderColor { get; set; } = cs1.Black;
     [Parameter]
-    public string TextColor { get; set; } = cs.Black;
+    public string TextColor { get; set; } = cs1.Black;
     [Parameter]
     public int BorderWidth { get; set; } = 2;
     [Parameter]

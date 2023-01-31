@@ -103,7 +103,7 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
         {
             throw new CustomBasicException("The dice is being selected, not held");
         }
-        return DiceList.Count(Items => Items.Hold);
+        return DiceList.Count(items => items.Hold);
     }
     public bool HasSelectedDice()
         => DiceList.Exists(items => items.IsSelected == true);
@@ -117,7 +117,7 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
     }
     public async Task<BasicList<BasicList<D>>> GetDiceList(string body)
     {
-        return await js.DeserializeObjectAsync<BasicList<BasicList<D>>>(body);
+        return await js1.DeserializeObjectAsync<BasicList<BasicList<D>>>(body);
     }
     public BasicList<BasicList<D>> RollDice(int howManySections = 6)
     {

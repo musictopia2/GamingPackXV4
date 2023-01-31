@@ -135,12 +135,12 @@ public partial class SolitairePilesCP : IPlainObservable, ISerializable
     }
     public async Task<string> GetSavedGameAsync()
     {
-        string output = await js.SerializeObjectAsync(PileList);
+        string output = await js1.SerializeObjectAsync(PileList);
         return output;
     }
     public async Task LoadSavedGameAsync(string data)
     {
-        PileList = await js.DeserializeObjectAsync<BasicList<PileInfoCP>>(data);
+        PileList = await js1.DeserializeObjectAsync<BasicList<PileInfoCP>>(data);
     }
     public virtual void LoadBoard()
     {

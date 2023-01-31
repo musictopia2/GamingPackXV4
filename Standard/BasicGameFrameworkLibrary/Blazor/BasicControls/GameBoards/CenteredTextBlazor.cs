@@ -14,9 +14,9 @@ public class CenteredTextBlazor : ComponentBase
     [Parameter]
     public float BorderWidth { get; set; }
     [Parameter]
-    public string BorderColor { get; set; } = cs.Transparent;
+    public string BorderColor { get; set; } = cs1.Transparent;
     [Parameter]
-    public string TextColor { get; set; } = cs.Black;
+    public string TextColor { get; set; } = cs1.Black;
     [Parameter]
     public double FontSize { get; set; }
     [Parameter]
@@ -38,7 +38,7 @@ public class CenteredTextBlazor : ComponentBase
         render.Allow0 = true;
         Text text = new();
         text.CenterText();
-        if (BorderWidth > 0 && BorderColor != cs.Transparent)
+        if (BorderWidth > 0 && BorderColor != cs1.Transparent)
         {
             text.PopulateStrokesToStyles(BorderColor.ToWebColor(), BorderWidth, FontFamily);
         }

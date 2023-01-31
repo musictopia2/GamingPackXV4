@@ -1,6 +1,6 @@
 ﻿@using BlazorMVVMHelpersLibrary
 @using BasicGameFrameworkLibrary.Blazor.Views
-@using aa = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
+@using aa1 = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
 @using BasicGameFrameworkLibrary.Core.TestUtilities
 @using BasicBlazorLibrary.Components.MediaQueries.ParentClasses
 @if (BasicData == null || GameData == null)
@@ -34,13 +34,13 @@
                 <LeftOverLayout>
                     <TopContent>
                         <div style="width: 100%;  background-color: indigo; margin-bottom: 2px; margin-top: 2px; height: 8vh">
-                            @if (aa.BackToMainDelegate is not null)
+                            @if (aa1.BackToMainDelegate is not null)
                             {
                                 @if (Media!.DeviceCategory == EnumDeviceCategory.Phone)
                                 {
-                                    <GameButtonComponent CustomCallBack="aa.BackToMainDelegate" FontSize="2vh" Display="Back To Main" />
+                                    <GameButtonComponent CustomCallBack="aa1.BackToMainDelegate" FontSize="2vh" Display="Back To Main" />
                                 }
-                                <GameButtonComponent CustomCallBack="aa.BackToMainDelegate" Display="Back To Main" />
+                                <GameButtonComponent CustomCallBack="aa1.BackToMainDelegate" Display="Back To Main" />
                             }
                             @if (TestData!.ShowNickNameOnShell)
                             {

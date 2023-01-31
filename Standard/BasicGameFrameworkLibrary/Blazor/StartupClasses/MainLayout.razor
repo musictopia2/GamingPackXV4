@@ -5,7 +5,7 @@
 <MediaQueryListComponent>
     <MainPage>
         <BlazoredToasts Timeout="3" />
-            <StartLayout>
+            <StartLayout ExtraCssFiles="extras">
                 <div class="beginning">
                     @Body
                 </div>
@@ -13,3 +13,11 @@
     </MainPage>
 </MediaQueryListComponent>
 
+@code{
+    private BasicList<string> extras = new();
+    protected override void OnInitialized()
+    {
+        extras.Add("_content/BasicGameFrameworkLibrary/basicgaming.css");
+        base.OnInitialized();
+    }
+}

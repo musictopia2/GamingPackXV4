@@ -311,7 +311,7 @@ public abstract class WastePilesCP : IWaste, ISerializable
         }
         else
         {
-            output.PileData = await js.SerializeObjectAsync(Discards!.PileList!);
+            output.PileData = await js1.SerializeObjectAsync(Discards!.PileList!);
         }
         return output;
     }
@@ -324,7 +324,7 @@ public abstract class WastePilesCP : IWaste, ISerializable
         }
         else
         {
-            Discards!.PileList = await js.DeserializeObjectAsync<BasicList<BasicPileInfo<SolitaireCard>>>(gameData.PileData);
+            Discards!.PileList = await js1.DeserializeObjectAsync<BasicList<BasicPileInfo<SolitaireCard>>>(gameData.PileData);
         }
         GetUnknowns();
     }

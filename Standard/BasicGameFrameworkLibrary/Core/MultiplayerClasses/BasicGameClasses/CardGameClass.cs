@@ -1,4 +1,4 @@
-﻿using ps = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses; //not common enough.
+﻿using ps1 = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses; //not common enough.
 namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
 public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMainProcesses<D>,
     IBeginningCards<D, P, S>
@@ -478,11 +478,11 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
                         });
                     });
                 }
-                ps.CardProcedures.PassOutCards(PlayerList!, firstList, cardsToPassOut, testCount, Test.ComputerNoCards, ref tempList!);
+                ps1.CardProcedures.PassOutCards(PlayerList!, firstList, cardsToPassOut, testCount, Test.ComputerNoCards, ref tempList!);
             }
             else
             {
-                ps.CardProcedures.PassOutCards(PlayerList!, firstList, Test.ComputerNoCards);
+                ps1.CardProcedures.PassOutCards(PlayerList!, firstList, Test.ComputerNoCards);
             }
             if (CardInfo.NeedsDummyHand == true)
             {
@@ -671,7 +671,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
     }
     protected async Task<DeckRegularDict<D>> PopulateCardsFromTurnHandAsync(string data)
     {
-        BasicList<int> firstList = await js.DeserializeObjectAsync<BasicList<int>>(data);
+        BasicList<int> firstList = await js1.DeserializeObjectAsync<BasicList<int>>(data);
         DeckRegularDict<D> output = new();
         firstList.ForEach(index =>
         {
@@ -686,7 +686,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         {
             _toast.ShowInfoToast("Its the end of the deck; therefore; the cards are being reshuffled");
         }
-        BasicList<int> firstList = await js.DeserializeObjectAsync<BasicList<int>>(data);
+        BasicList<int> firstList = await js1.DeserializeObjectAsync<BasicList<int>>(data);
         DeckRegularDict<D> newList = new();
         firstList.ForEach(index =>
         {

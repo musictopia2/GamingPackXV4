@@ -12,7 +12,7 @@ public partial class NumberChooserBlazor
     [Parameter]
     public int Rows { get; set; } = 1;
     [Parameter]
-    public string TextColor { get; set; } = cs.Navy;
+    public string TextColor { get; set; } = cs1.Navy;
     [Parameter]
     public NumberPicker? NumberPicker { get; set; }
     private int TotalRows()

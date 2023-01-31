@@ -2,8 +2,8 @@
 public abstract class BaseDarkCardsBlazor<D> : BaseDeckGraphics<D>
     where D : class, IDeckObject, new()
 {
-    protected override string SelectFillColor => cs.Black.ToWebColor();
-    protected override string DrawFillColor => cs.White.ToWebColor();
+    protected override string SelectFillColor => cs1.Black.ToWebColor();
+    protected override string DrawFillColor => cs1.White.ToWebColor();
     protected abstract bool IsLightColored { get; }
     protected override string GetOpacity
     {

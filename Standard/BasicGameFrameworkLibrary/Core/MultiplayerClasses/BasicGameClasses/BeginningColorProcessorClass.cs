@@ -107,7 +107,7 @@ public class BeginningColorProcessorClass<E, P, S> : IBeginningColorProcesses<E>
     }
     async Task IChoosePieceNM.ChoosePieceReceivedAsync(string data)
     {
-        E thisColor = await js.DeserializeObjectAsync<E>(data);
+        E thisColor = await js1.DeserializeObjectAsync<E>(data);
         await ChoseColorAsync(thisColor);
     }
 }

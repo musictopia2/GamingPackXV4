@@ -20,7 +20,7 @@ public class CirclePiece : ComponentBase
     [CascadingParameter]
     public BasePieceGraphics? MainGraphics { get; set; }
     [Parameter]
-    public string MainColor { get; set; } = cs.Transparent;
+    public string MainColor { get; set; } = cs1.Transparent;
     [Parameter]
     public bool NeedsWhiteBorders { get; set; }
     protected override void OnInitialized()
@@ -45,7 +45,7 @@ public class CirclePiece : ComponentBase
         ISvg svg = MainGraphics!.GetMainSvg(false);
         SvgRenderClass render = new();
         Circle circle;
-        if (NeedsWhiteBorders && MainColor != cs.Transparent)
+        if (NeedsWhiteBorders && MainColor != cs1.Transparent)
         {
             circle = new()
             {
@@ -53,8 +53,8 @@ public class CirclePiece : ComponentBase
                 CY = "50",
                 R = "50"
             };
-            circle.PopulateStrokesToStyles(cs.Black.ToWebColor(), (int)MainGraphics!.BorderWidth);
-            circle.Fill = cs.White.ToWebColor();
+            circle.PopulateStrokesToStyles(cs1.Black.ToWebColor(), (int)MainGraphics!.BorderWidth);
+            circle.Fill = cs1.White.ToWebColor();
             svg.Children.Add(circle);
             circle = new()
             {
@@ -63,7 +63,7 @@ public class CirclePiece : ComponentBase
                 R = "33",
                 Fill = MainColor.ToWebColor()
             };
-            circle.PopulateStrokesToStyles(cs.Black.ToWebColor(), 4);
+            circle.PopulateStrokesToStyles(cs1.Black.ToWebColor(), 4);
             svg.Children.Add(circle);
         }
         else
@@ -74,7 +74,7 @@ public class CirclePiece : ComponentBase
                 CY = "50",
                 R = "50"
             };
-            circle.PopulateStrokesToStyles(cs.Black.ToWebColor(), (int)MainGraphics!.BorderWidth);
+            circle.PopulateStrokesToStyles(cs1.Black.ToWebColor(), (int)MainGraphics!.BorderWidth);
             circle.Fill = MainColor.ToWebColor();
             svg.Children.Add(circle);
         }

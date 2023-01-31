@@ -16,7 +16,7 @@ public partial class AnimationVectorCanvas<S> : IHandleAsync<AnimatePieceEventMo
     private partial void Unsubscribe();
     protected override void OnInitialized()
     {
-        Aggregator = aa.Resolver!.Resolve<IEventAggregator>();
+        Aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
         Subscribe();
         _animates.StateChanged = ShowChange;
         _animates.LongestTravelTime = 200;

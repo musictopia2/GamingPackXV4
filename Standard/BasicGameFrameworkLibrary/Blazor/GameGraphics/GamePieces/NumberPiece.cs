@@ -26,7 +26,7 @@ public class NumberPiece : ComponentBase
     [Parameter]
     public bool CanHighlight { get; set; } = true;
     [Parameter]
-    public string TextColor { get; set; } = cs.Navy;
+    public string TextColor { get; set; } = cs1.Navy;
     protected virtual string GetValueToPrint() // so the overrided version can display something else.
     {
         if (DataContext == null)

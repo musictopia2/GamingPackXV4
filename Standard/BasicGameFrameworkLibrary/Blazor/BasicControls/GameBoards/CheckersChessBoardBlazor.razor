@@ -1,7 +1,7 @@
 ﻿@typeparam E
 @typeparam S
 @using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.CheckersChessHelpers;
-@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 @if (GameBoard == null || MainPiece == null)
 {
     return;
@@ -18,7 +18,7 @@
             string color;
             if (CheckersChessBaseBoard<E, S>.HasGreen && space.MainIndex == CheckersChessBaseBoard<E, S>.SpaceSelected)
             {
-                color = cc.Green;
+                color = cc1.Green;
             }
             else
             {

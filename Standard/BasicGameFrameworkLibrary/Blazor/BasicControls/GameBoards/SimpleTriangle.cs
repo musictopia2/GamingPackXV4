@@ -15,9 +15,9 @@ public class SimpleTriangle : ComponentBase
     [Parameter]
     public RectangleF Bounds { get; set; }
     [Parameter]
-    public string BorderColor { get; set; } = cs.Transparent;
+    public string BorderColor { get; set; } = cs1.Transparent;
     [Parameter]
-    public string FillColor { get; set; } = cs.Transparent;
+    public string FillColor { get; set; } = cs1.Transparent;
     [Parameter]
     public int BorderWidth { get; set; } = 3;
     private float GetCenterX => (Bounds.X + Bounds.Right) / 2;
@@ -48,7 +48,7 @@ public class SimpleTriangle : ComponentBase
     }
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (BorderColor == cs.Transparent && FillColor == cs.Transparent)
+        if (BorderColor == cs1.Transparent && FillColor == cs1.Transparent)
         {
             return;
         }
@@ -57,7 +57,7 @@ public class SimpleTriangle : ComponentBase
         BasicList<PointF> points = GetTrianglePoints();
         Polygon poly = points.CreatePolygon();
         poly.Fill = FillColor.ToWebColor(); //i think.
-        if (BorderColor != cs.Transparent)
+        if (BorderColor != cs1.Transparent)
         {
             poly.PopulateStrokesToStyles(BorderColor.ToWebColor(), BorderWidth);
         }

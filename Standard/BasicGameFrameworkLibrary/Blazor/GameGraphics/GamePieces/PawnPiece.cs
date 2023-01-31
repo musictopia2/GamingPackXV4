@@ -23,7 +23,7 @@ public class PawnPiece : ComponentBase
     [CascadingParameter]
     public BasePieceGraphics? MainGraphics { get; set; }
     [Parameter]
-    public string MainColor { get; set; } = cs.Transparent;
+    public string MainColor { get; set; } = cs1.Transparent;
     protected override void OnInitialized()
     {
         MainGraphics!.OriginalSize = new SizeF(100, 100); //decided to use 150 by 150 this time.

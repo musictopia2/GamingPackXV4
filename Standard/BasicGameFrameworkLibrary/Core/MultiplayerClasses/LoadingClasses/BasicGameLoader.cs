@@ -82,7 +82,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
         SetGame();
         _basic.MultiPlayer = true;
         _basic.Client = true;
-        _gameSetUp!.SaveRoot = await js.DeserializeObjectAsync<S>(payLoad);
+        _gameSetUp!.SaveRoot = await js1.DeserializeObjectAsync<S>(payLoad);
         _gameSetUp.PlayerList = _gameSetUp.SaveRoot.PlayerList;
         _gameSetUp.PlayerList.FixNetworkedPlayers(_basic.NickName);
         await FinishGetSavedAsync();
@@ -186,7 +186,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             _gameSetUp!.SaveRoot = _resolver.Resolve<S>();
             return false;
         }
-        _gameSetUp!.SaveRoot = await js.DeserializeObjectAsync<S>(payLoad);
+        _gameSetUp!.SaveRoot = await js1.DeserializeObjectAsync<S>(payLoad);
         return true;
     }
     private async Task FinishHostSavedAsync()
@@ -226,7 +226,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
     private async Task UpdateGameAsync(string data)
     {
         SetGame();
-        _gameSetUp!.SaveRoot = await js.DeserializeObjectAsync<S>(data);
+        _gameSetUp!.SaveRoot = await js1.DeserializeObjectAsync<S>(data);
         _gameSetUp.PlayerList = _gameSetUp.SaveRoot.PlayerList;
         _gameSetUp.PlayerList.FixNetworkedPlayers(_basic.NickName);
         await FinishGetSavedAsync();

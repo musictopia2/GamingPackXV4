@@ -73,7 +73,7 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
     public async Task SendAllAsync(SentMessage tMessage)
     {
         NetworkMessage output = new();
-        output.Message = await js.SerializeObjectAsync(tMessage);
+        output.Message = await js1.SerializeObjectAsync(tMessage);
         output.YourNickName = NickName;
         await _client1!.SendMessageAsync(output);
     }
@@ -81,7 +81,7 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
         where T : IBasicList<string>
     {
         SentMessage output = StartNewMessage(finalPart);
-        output.Body = await js.SerializeObjectAsync(thisList);
+        output.Body = await js1.SerializeObjectAsync(thisList);
         await SendAllAsync(output);
     }
     public async Task SendToParticularPlayerAsync(string message, string toWho) //done.
@@ -94,7 +94,7 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
         NetworkMessage output = new();
         output.SpecificPlayer = toWho;
         output.YourNickName = NickName;
-        output.Message = await js.SerializeObjectAsync(message);
+        output.Message = await js1.SerializeObjectAsync(message);
         await _client1!.SendMessageAsync(output);
     }
     public static SentMessage StartNewMessage(string message)
@@ -142,7 +142,7 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
     public string NickName { get; set; } = "";
     public async Task SendToParticularPlayerAsync<T>(string status, T body, string toWho)
     {
-        string News = await js.SerializeObjectAsync(body);
+        string News = await js1.SerializeObjectAsync(body);
         SentMessage ThisM = StartNewMessage(status, News);
         await SendToParticularPlayerAsync(ThisM, toWho);
     }
@@ -188,7 +188,7 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
     }
     public async Task SendAllAsync<T>(string Status, T Body)
     {
-        string News = await js.SerializeObjectAsync(Body);
+        string News = await js1.SerializeObjectAsync(Body);
         SentMessage ThisM = StartNewMessage(Status, News);
         await SendAllAsync(ThisM);
     }

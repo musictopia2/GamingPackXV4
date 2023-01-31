@@ -31,13 +31,13 @@ public class CheckerPiece : ComponentBase
     [CascadingParameter]
     public BasePieceGraphics? MainGraphics { get; set; }
     [Parameter]
-    public string MainColor { get; set; } = cs.Transparent;
+    public string MainColor { get; set; } = cs1.Transparent;
     [Parameter]
     public EnumCheckerPieceCategory PieceCategory { get; set; } = EnumCheckerPieceCategory.OnlyPiece; //only game of checkers has to do with single/crowned.
     [Parameter]
     public bool HasImage { get; set; } = true;
     [Parameter]
-    public string BlankColor { get; set; } = cs.White;
+    public string BlankColor { get; set; } = cs1.White;
     protected override void OnInitialized()
     {
         MainGraphics!.OriginalSize = new SizeF(300, 300); //decided to use 300 by 300 this time.

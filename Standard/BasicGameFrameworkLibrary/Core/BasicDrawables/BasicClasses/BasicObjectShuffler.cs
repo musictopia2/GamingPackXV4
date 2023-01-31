@@ -75,7 +75,7 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
     public async Task<DeckRegularDict<D>> GetListFromJsonAsync(string jsonData)
     {
         bool doRedo = RedoList();
-        BasicList<int> thisList = await js.DeserializeObjectAsync<BasicList<int>>(jsonData);
+        BasicList<int> thisList = await js1.DeserializeObjectAsync<BasicList<int>>(jsonData);
         BasicList<D> tempList = new();
         if (doRedo == true)
         {
@@ -135,10 +135,7 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
         for (int i = 1; i <= maxs; i++)
         {
             D thisD = GetItem(i);
-            if (_beforePopulate != null)
-            {
-                _beforePopulate.Invoke(thisD);
-            }
+            _beforePopulate?.Invoke(thisD);
             thisD.Populate(i);
             _privateDict.Add(thisD);
         }

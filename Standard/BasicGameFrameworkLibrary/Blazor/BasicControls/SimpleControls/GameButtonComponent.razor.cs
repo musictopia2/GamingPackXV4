@@ -42,7 +42,7 @@ public partial class GameButtonComponent : IDisposable
     [Parameter]
     public string FontSize { get; set; } = "3vh";
     [Parameter]
-    public string BackgroundColor { get; set; } = cs.Aqua;
+    public string BackgroundColor { get; set; } = cs1.Aqua;
     [Parameter]
     public bool StartOnNewLine { get; set; } = false;
     [Parameter]
@@ -59,9 +59,9 @@ public partial class GameButtonComponent : IDisposable
     {
         if (IsDisabled())
         {
-            return cs.Gray.ToWebColor();
+            return cs1.Gray.ToWebColor();
         }
-        return cs.Navy.ToWebColor();
+        return cs1.Navy.ToWebColor();
     }
     private bool IsDisabled()
     {

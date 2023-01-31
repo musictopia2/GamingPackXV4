@@ -107,7 +107,7 @@ public abstract class SimpleBoardGameClass<P, S, E, M> : BasicGameClass<P, S>, I
         }
         else
         {
-            item = await js.DeserializeObjectAsync<M>(data);
+            item = await js1.DeserializeObjectAsync<M>(data);
         }
 
         await MakeMoveAsync(item);

@@ -69,7 +69,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
     }
     protected double GetDarkHighlighter() => .25;
     protected double GetLightHighlighter() => .1;
-    protected string FillColor { set; get; } = cs.White;
+    protected string FillColor { set; get; } = cs1.White;
     protected float RoundedRadius = 6;
     protected virtual bool ShowDisabledColors { get; } = false;
     protected virtual void DrawHighlighters()
@@ -81,7 +81,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         if (ShowDisabledColors == true && DeckObject!.IsEnabled == false)
         {
             Rect temp = StartRectangle();
-            temp.Fill = cs.Gray.ToWebColor();
+            temp.Fill = cs1.Gray.ToWebColor();
             MainGroup!.Children.Add(temp);
             return;
         }
@@ -102,8 +102,8 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         MainGroup!.Children.Add(rect);
     }
     protected virtual string GetOpacity => GetLightHighlighter().ToString();
-    protected virtual string SelectFillColor => cs.Red.ToWebColor();
-    protected virtual string DrawFillColor => cs.Lime.ToWebColor();
+    protected virtual string SelectFillColor => cs1.Red.ToWebColor();
+    protected virtual string DrawFillColor => cs1.Lime.ToWebColor();
     protected Rect StartRectangle()
     {
         Rect output = new();
@@ -307,11 +307,11 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         Rect rect = StartRectangle();
         if (DeckObject!.Deck == 0)
         {
-            rect.Fill = cs.Transparent.ToWebColor();
+            rect.Fill = cs1.Transparent.ToWebColor();
         }
         else if (DeckObject!.Deck < 0)
         {
-            rect.Fill = cs.Blue.ToWebColor();
+            rect.Fill = cs1.Blue.ToWebColor();
             rect.Fill_Opacity = "0.0";
         }
         else
@@ -334,8 +334,8 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
             }
             else if (EmptyBorders && DeckObject!.Deck == 0)
             {
-                rect.PopulateStrokesToStyles(color: cs.White.ToWebColor(), strokeWidth: (int)BorderWidth);
-                rect.Fill = cs.Navy.ToWebColor();
+                rect.PopulateStrokesToStyles(color: cs1.White.ToWebColor(), strokeWidth: (int)BorderWidth);
+                rect.Fill = cs1.Navy.ToWebColor();
             }
             else if (AlwaysUnknown && DeckObject!.Deck > 0)
             {

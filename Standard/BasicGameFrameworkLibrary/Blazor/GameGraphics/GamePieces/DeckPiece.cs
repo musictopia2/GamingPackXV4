@@ -22,13 +22,13 @@ public class DeckPiece : ComponentBase
         {
             if (Suit == EnumSuitList.Clubs || Suit == EnumSuitList.Spades)
             {
-                return cs.Black;
+                return cs1.Black;
             }
             if (Suit == EnumSuitList.Diamonds || Suit == EnumSuitList.Hearts)
             {
-                return cs.Red;
+                return cs1.Red;
             }
-            return cs.Transparent;
+            return cs1.Transparent;
         }
     }
     [CascadingParameter]

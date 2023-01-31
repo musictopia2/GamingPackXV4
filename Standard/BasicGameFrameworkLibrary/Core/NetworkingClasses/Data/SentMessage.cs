@@ -5,6 +5,6 @@ public class SentMessage
     public string Body { get; set; } = "";
     public override string ToString()
     {
-        return js.SerializeObject(this);
+        return js1.SerializeObject(this);
     }
 }

@@ -39,7 +39,7 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         _message = BlazorUIHelpers.MessageBox;
         MVVMFramework.EventAggravatorProcesses.GlobalEventAggravatorClass.ClearSubscriptions(_aggregator);
         EventAggravatorProcesses.GlobalEventAggravatorClass.ClearSubscriptions(_aggregator);
-        js.RequireCustomSerialization = true;
+        js1.RequireCustomSerialization = true;
         ResetGlobals();
         _isInitialized = true;
         await StartRuntimeAsync();

@@ -1,4 +1,21 @@
-﻿::deep fieldset {
+﻿.beginning {
+    flex: 1;
+    user-select: none;
+}
+
+button:disabled {
+    color: lightgray;
+}
+
+.layout {
+    flex: 1;
+}
+
+.horizontalDiv {
+    display: inline;
+}
+
+fieldset {
     border-color: white;
     border-width: 2px;
     border-radius: 4px;
@@ -7,7 +24,8 @@
     box-sizing: initial;
     border-image: initial;
 }
-::deep legend {
+
+legend {
     width: initial;
     max-width: initial;
     margin-bottom: initial;
@@ -15,4 +33,16 @@
     line-height: initial;
     white-space: initial;
     border-bottom: none;
+}
+
+.scrollableField {
+    overflow: auto;
+}
+
+.fullframe {
+    display: block;
+}
+
+.centerText {
+    text-align: center;
 }
