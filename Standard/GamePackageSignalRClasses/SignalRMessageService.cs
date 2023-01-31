@@ -64,7 +64,7 @@ public class SignalRMessageService : IGameNetwork //not necessarily local anymor
                 //eventually need to think about other categories to be even more flexible (?)
                 //throw new CustomBasicException("I don't think we will close all here.  If I am wrong, rethink");
             case EnumNetworkCategory.Message:
-                SentMessage data = await js.DeserializeObjectAsync<SentMessage>(e.Message);
+                SentMessage data = await js1.DeserializeObjectAsync<SentMessage>(e.Message);
                 await ProcessDataAsync(data);
                 break;
             case EnumNetworkCategory.GameState:
@@ -149,7 +149,7 @@ public class SignalRMessageService : IGameNetwork //not necessarily local anymor
     public async Task SendAllAsync(SentMessage tmessage)
     {
         NetworkMessage output = new();
-        output.Message = await js.SerializeObjectAsync(tmessage);
+        output.Message = await js1.SerializeObjectAsync(tmessage);
         output.YourNickName = NickName;
         await _client1!.SendMessageAsync(output);
     }
@@ -157,7 +157,7 @@ public class SignalRMessageService : IGameNetwork //not necessarily local anymor
         where T: IBasicList<string>
     {
         SentMessage output = StartNewMessage(finalPart);
-        output.Body = await js.SerializeObjectAsync(thisList);
+        output.Body = await js1.SerializeObjectAsync(thisList);
         await SendAllAsync(output);
     }
     public async Task SendToParticularPlayerAsync(string message, string toWho) //done.
@@ -170,7 +170,7 @@ public class SignalRMessageService : IGameNetwork //not necessarily local anymor
         NetworkMessage output = new();
         output.SpecificPlayer = toWho;
         output.YourNickName = NickName;
-        output.Message = await js.SerializeObjectAsync(message);
+        output.Message = await js1.SerializeObjectAsync(message);
         await _client1!.SendMessageAsync(output);
     }
     public static SentMessage StartNewMessage(string message)
@@ -235,13 +235,13 @@ public class SignalRMessageService : IGameNetwork //not necessarily local anymor
     }
     public async Task SendToParticularPlayerAsync<T>(string status, T data, string toWho)
     {
-        string news = await js.SerializeObjectAsync(data);
+        string news = await js1.SerializeObjectAsync(data);
         SentMessage thisM = StartNewMessage(status, news);
         await SendToParticularPlayerAsync(thisM, toWho);
     }
     public async Task SendAllAsync<T>(string status, T data)
     {
-        string news = await js.SerializeObjectAsync(data);
+        string news = await js1.SerializeObjectAsync(data);
         SentMessage thisM = StartNewMessage(status, news);
         await SendAllAsync(thisM);
     }

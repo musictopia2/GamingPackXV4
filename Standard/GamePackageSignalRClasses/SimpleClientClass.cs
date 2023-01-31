@@ -199,7 +199,7 @@ public class SimpleClientClass
     public async Task SendMessageAsync(NetworkMessage message)
     {
         await CheckHubConnectionAsync(); //for now only when sending messages.
-        string TempMessage = await js.SerializeObjectAsync(message);
+        string TempMessage = await js1.SerializeObjectAsync(message);
         await _hubConnection!.InvokeAsync("SendMessageAsync", TempMessage, _gameInfo.GameName);
     }
     public async Task DisconnectAsync()
