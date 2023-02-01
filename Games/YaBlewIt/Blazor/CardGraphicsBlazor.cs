@@ -6,24 +6,24 @@ public class CardGraphicsBlazor : BaseDeckGraphics<YaBlewItCardInformation>
     {
         if (_selfPlayer is null)
         {
-            YaBlewItGameContainer temp = aa.Resolver!.Resolve<YaBlewItGameContainer>();
+            YaBlewItGameContainer temp = aa1.Resolver!.Resolve<YaBlewItGameContainer>();
             _selfPlayer = temp.PlayerList!.GetSelf();
         }
         if (DeckObject!.IsUnknown)
         {
-            FillColor = cc.DarkGray;
+            FillColor = cc1.DarkGray;
         }
         else if (DeckObject.CardCategory == EnumCardCategory.Fire)
         {
-            FillColor = cc.Red; //a person can't select this one anyways.  besides never shows up in hand.
+            FillColor = cc1.Red; //a person can't select this one anyways.  besides never shows up in hand.
         }
         else if (DeckObject.CardColor == _selfPlayer.CursedGem)
         {
-            FillColor = cc.LightGray;
+            FillColor = cc1.LightGray;
         }
         else
         {
-            FillColor = cc.White;
+            FillColor = cc1.White;
         }
         base.BeforeFilling();
     }
@@ -95,11 +95,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<YaBlewItCardInformation>
         Text text = new();
         if (DeckObject!.CardCategory == EnumCardCategory.Fire)
         {
-            text.Fill = cc.White.ToWebColor();
+            text.Fill = cc1.White.ToWebColor();
         }
         else
         {
-            text.Fill = cc.Black.ToWebColor();
+            text.Fill = cc1.Black.ToWebColor();
         }
         text.CenterText(MainGroup!, rectangle);
         text.Content = content;
@@ -110,7 +110,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<YaBlewItCardInformation>
         Text text = new();
         if (color == EnumColors.Wild)
         {
-            text.Fill = cc.Black.ToWebColor();
+            text.Fill = cc1.Black.ToWebColor();
         }
         else
         {
@@ -178,7 +178,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<YaBlewItCardInformation>
         bounds = new(8, 18, 40, 20);
         Text text = new();
         text.CenterText(MainGroup!, bounds);
-        text.Fill = cc.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor();
         text.Content = "W";
         text.Font_Size = 12;
         DrawNumbers($"{DeckObject!.FirstNumber}/{DeckObject.SecondNumber}", DeckObject.CardColor);
@@ -188,7 +188,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<YaBlewItCardInformation>
         string color;
         if (DeckObject!.CardColor == EnumColors.Wild)
         {
-            color = cc.White;
+            color = cc1.White;
         }
         else
         {

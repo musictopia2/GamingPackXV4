@@ -13,7 +13,7 @@ public class ScoreGuideComponent : ComponentBase
         Rect rect = new();
         rect.Width = "100%";
         rect.Height = "100%";
-        rect.Fill = cc.White.ToWebColor();
+        rect.Fill = cc1.White.ToWebColor();
         _mains.Children.Add(rect);
         DrawTop();
         DrawHeaders();
@@ -25,7 +25,7 @@ public class ScoreGuideComponent : ComponentBase
         DrawRow(1000, "6X", 20);
         RectangleF bounds = new(20, 1100, 200, 80);
         Text text = new();
-        text.Fill = cc.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor();
         text.Font_Size = 40;
         text.Content = "(or more)";
         text.CenterText(_mains, bounds);
@@ -45,19 +45,19 @@ public class ScoreGuideComponent : ComponentBase
         RectangleF bounds = new(50, 120, 400, 100);
         Text text = new();
         text.Content = "Gems";
-        text.Fill = cc.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor();
         text.Font_Size = 60;
         text.CenterText(_mains!, bounds);
         bounds = new(1300, 120, 600, 100);
         text = new();
         text.Content = "Points";
         text.Font_Size = 60;
-        text.Fill = cc.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor();
         text.CenterText(_mains!, bounds);
         Rect line = new();
         bounds = new(25, 200, 1950, 25);
         line.PopulateRectangle(bounds);
-        line.Fill = cc.Black.ToWebColor();
+        line.Fill = cc1.Black.ToWebColor();
         _mains!.Children.Add(line);
     }
     private void DrawTop()
@@ -65,7 +65,7 @@ public class ScoreGuideComponent : ComponentBase
         RectangleF bounds = new(50, 10, 1900, 140);
         Text text = new();
         text.Content = "GEM SCORING";
-        text.Fill = cc.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor();
         text.Font_Size = 120;
         text.CenterText(_mains!, bounds);
     }
@@ -74,11 +74,11 @@ public class ScoreGuideComponent : ComponentBase
         RectangleF bounds = new(50, top, 100, 75);
         Text text = new();
         text.Content = firstColumn;
-        text.Fill = cc.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor();
         text.Font_Size = 80;
         text.CenterText(_mains!, bounds);
         bounds = new(250, top, 200, 75);
-        Polygon poly = bounds.PopulateTrianglePolygon(cc.Black);
+        Polygon poly = bounds.PopulateTrianglePolygon(cc1.Black);
         poly.PopulateStrokesToStyles(strokeWidth: 2);
         _mains!.Children.Add(poly);
         int others = top + 60;
@@ -87,7 +87,7 @@ public class ScoreGuideComponent : ComponentBase
         bounds = new(1550, top, 200, 75);
         //has to do centered text because i am not sure how to right align it.
         text.Content = points.ToString();
-        text.Fill = cc.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor();
         text.Font_Size = 80;
         text.CenterText(_mains, bounds);
     }

@@ -10,8 +10,8 @@ public partial class YaBlewItMainView
     private YaBlewItGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<YaBlewItVMData>();
-        _gameContainer = aa.Resolver.Resolve<YaBlewItGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<YaBlewItVMData>();
+        _gameContainer = aa1.Resolver.Resolve<YaBlewItGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Prospector", nameof(YaBlewItVMData.NormalTurn))
             .AddLabel("Other Turn", nameof(YaBlewItVMData.OtherLabel))

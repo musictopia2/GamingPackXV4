@@ -7,10 +7,7 @@ public class SafeColorListClass : IEnumListClass<EnumColors>
     }
     public static BasicList<EnumColors> GetColorChoices()
     {
-        if (_gameContainer is null)
-        {
-            _gameContainer = aa.Resolver!.Resolve<YaBlewItGameContainer>();
-        }
+        _gameContainer ??= aa1.Resolver!.Resolve<YaBlewItGameContainer>();
         if (_gameContainer.SingleInfo is null)
         {
             return new(); //hopefully will be okay (?)
