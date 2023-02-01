@@ -50,7 +50,7 @@ public class YahtzeeScoreProcesses : IYahtzeeStyle
         {
             DiceInformation dice = new();
             dice.Value = items.Value;
-            dice.Color = cc.Black;
+            dice.Color = cc1.Black;
             output.Add(dice);
         });
         return output;
