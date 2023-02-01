@@ -5,14 +5,18 @@
 @{
     SizeF size = GetViewSize();
 }
-<svg @key="DataContext" width="@TargetWidth" viewBox="0 0 @size.Width @size.Height">
+<svg  width="@TargetWidth" viewBox="0 0 @size.Width @size.Height">
     @foreach (var card in DataContext.CardList)
     {
-        <FlexibleDeckRenderComponent D="SolitaireCard" DeckObject="card">
+        <DeckOfCardsImageBlazor CommandObject="DataContext.CardCommand"
+                            R="SolitaireCard"
+                            DeckObject="card" Location="card.Location"
+                            CommandParameter="card" />
+        @*<FlexibleDeckRenderComponent D="SolitaireCard" DeckObject="card">
             <DeckOfCardsImageBlazor CommandObject="DataContext.CardCommand"
                                     R="SolitaireCard"
                                     DeckObject="card" Location="card.Location"
                                     CommandParameter="card" />
-        </FlexibleDeckRenderComponent>
+        </FlexibleDeckRenderComponent>*@
     }
 </svg>

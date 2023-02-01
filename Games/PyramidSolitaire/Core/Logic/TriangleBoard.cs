@@ -172,6 +172,13 @@ public class TriangleBoard : TriangleObservable
                 return true;
             }
         }
+        if (SecondDeck > 0)
+        {
+            if (SecondDeck == deck)
+            {
+                return true;
+            }
+        }
         return false;
     }
 }

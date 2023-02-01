@@ -25,7 +25,7 @@ public class PlayList : GameBoardObservable<SolitaireCard>
     public void RemoveCards() => ObjectList.Clear();
     protected override Task ClickProcessAsync(SolitaireCard card)
     {
-        PyramidSolitaireMainGameClass game = aa.Resolver!.Resolve<PyramidSolitaireMainGameClass>();
+        PyramidSolitaireMainGameClass game = aa1.Resolver!.Resolve<PyramidSolitaireMainGameClass>();
         game.PutBack(card);
         return Task.CompletedTask;
     }
