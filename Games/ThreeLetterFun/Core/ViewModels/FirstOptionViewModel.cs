@@ -71,7 +71,7 @@ public partial class FirstOptionViewModel : ScreenViewModel, IBlankGameVM, IHand
 
     async Task IHandleAsync<FirstOptionEventModel>.HandleAsync(FirstOptionEventModel message)
     {
-        OptionChosen = await js.DeserializeObjectAsync<EnumFirstOption>(message.Message);
+        OptionChosen = await js1.DeserializeObjectAsync<EnumFirstOption>(message.Message);
         Option1.SelectSpecificItem(OptionChosen.Value);
         await SubmitAsync(); //can just act like you are submitting.
     }

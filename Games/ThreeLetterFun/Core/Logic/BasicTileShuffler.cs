@@ -51,7 +51,7 @@ public class BasicTileShuffler : IShuffleTiles
         if (cardsToPassOut > 0)
         {
             DeckRegularDict<ThreeLetterFunCardData> temps = new();
-            ps.CardProcedures.PassOutCards(mainGame.PlayerList!, firstList, cardsToPassOut, 0, false, ref temps);
+            ps1.CardProcedures.PassOutCards(mainGame.PlayerList!, firstList, cardsToPassOut, 0, false, ref temps);
         }
         if (mainGame.SaveRoot.Level != EnumLevel.Easy)
         {

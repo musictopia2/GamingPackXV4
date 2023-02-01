@@ -352,7 +352,7 @@ public class ThreeLetterFunMainGameClass : BasicGameClass<ThreeLetterFunPlayerIt
                 {
                     throw new CustomBasicException("Did not take turn");
                 }
-                TempWord thisWord = await js.DeserializeObjectAsync<TempWord>(content);
+                TempWord thisWord = await js1.DeserializeObjectAsync<TempWord>(content);
                 SaveRoot!.PlayOrder.WhoTurn = thisWord.Player;
                 SingleInfo = PlayerList.GetWhoPlayer(); //hopefully this still works.
                 SingleInfo.TimeToGetWord = thisWord.TimeToGetWord;

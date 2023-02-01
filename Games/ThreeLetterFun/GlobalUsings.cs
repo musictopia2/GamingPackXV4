@@ -3,8 +3,8 @@ global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExte
 global using CommonBasicLibraries.BasicDataSettingsAndProcesses;
 global using static CommonBasicLibraries.BasicDataSettingsAndProcesses.BasicDataFunctions;
 global using CommonBasicLibraries.CollectionClasses;
-global using fs = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
-global using js = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
+global using fs1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
+global using js1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
 global using BasicGameFrameworkLibrary.Core.CommonInterfaces;
 global using ThreeLetterFun.Core.Data;
 global using BasicGameFrameworkLibrary.Core.BasicEventModels;
@@ -21,7 +21,7 @@ global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.MapHelper
 global using BasicGameFrameworkLibrary.Core.Attributes;
 global using BasicGameFrameworkLibrary.Blazor.Bootstrappers;
 global using ThreeLetterFun.Core.ViewModels;
-global using aa = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using aa1 = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 global using System;
 global using System.Linq;
 global using System.Threading.Tasks;
@@ -43,7 +43,7 @@ global using BasicGameFrameworkLibrary.Core.BasicDrawables.BasicClasses;
 global using BasicGameFrameworkLibrary.Core.BasicDrawables.Interfaces;
 global using BasicGameFrameworkLibrary.Core.BasicDrawables.Dictionary;
 global using BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-global using ps = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses;
+global using ps1 = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses;
 global using BasicGameFrameworkLibrary.Core.Extensions;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.Misc;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
@@ -52,10 +52,10 @@ global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
 global using ThreeLetterFun.Core.BeginningClasses;
 global using BasicGameFrameworkLibrary.Core.ChooserClasses;
 global using static BasicGameFrameworkLibrary.Core.ChooserClasses.ListViewPicker;
-global using vb = CommonBasicLibraries.BasicDataSettingsAndProcesses.VBCompat;
+global using vb1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.VBCompat;
 global using System.Drawing;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 global using SvgHelper.Blazor.Logic;
 global using SvgHelper.Blazor.Logic.Classes.SubClasses;
-global using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;

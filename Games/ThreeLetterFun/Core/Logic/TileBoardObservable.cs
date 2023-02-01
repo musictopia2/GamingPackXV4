@@ -6,7 +6,7 @@ public class TileBoardObservable : HandObservable<TileInformation>
     }
     public void UpdateBoard()
     {
-        ThreeLetterFunSaveInfo saveroot = aa.Resolver!.Resolve<ThreeLetterFunSaveInfo>();
+        ThreeLetterFunSaveInfo saveroot = aa1.Resolver!.Resolve<ThreeLetterFunSaveInfo>();
         if (saveroot.TileList.Count == 0)
         {
             HandList.Clear();
@@ -49,7 +49,7 @@ public class TileBoardObservable : HandObservable<TileInformation>
     public void Undo()
     {
         UnselectAllObjects();
-        ThreeLetterFunSaveInfo saveroot = aa.Resolver!.Resolve<ThreeLetterFunSaveInfo>(); //to stop the overflow issues by requiring reference to game class
+        ThreeLetterFunSaveInfo saveroot = aa1.Resolver!.Resolve<ThreeLetterFunSaveInfo>(); //to stop the overflow issues by requiring reference to game class
         saveroot.TileList.ForEach(x => x.Visible = true);
     }
 }

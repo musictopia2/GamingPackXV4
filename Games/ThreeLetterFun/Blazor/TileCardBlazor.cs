@@ -20,11 +20,11 @@ public class TileCardBlazor : BaseDeckGraphics<TileInformation>
     {
         if (DeckObject!.IsMoved)
         {
-            FillColor = cc.Yellow;
+            FillColor = cc1.Yellow;
         }
         else
         {
-            FillColor = cc.White;
+            FillColor = cc1.White;
         }
     }
     protected override void DrawImage()

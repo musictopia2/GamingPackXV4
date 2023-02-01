@@ -9,9 +9,9 @@ public partial class WordBlazor
     {
         if (MainGame!.SaveRoot!.Level == EnumLevel.Easy)
         {
-            return cc.LimeGreen.ToWebColor();
+            return cc1.LimeGreen.ToWebColor();
         }
-        return cc.DarkOrange.ToWebColor();
+        return cc1.DarkOrange.ToWebColor();
     }
     private readonly BasicList<int> _lefts = new() { 3, 25, 47 };
     private async Task WordClickedAsync(EnumClickPosition position)

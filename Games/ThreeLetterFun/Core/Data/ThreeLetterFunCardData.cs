@@ -26,7 +26,7 @@ public class ThreeLetterFunCardData : SimpleDeckObject, IDeckObject, IAdvancedDI
     }
     public bool CompletedWord()
     {
-        if (_completeList.Exists(x => vb.AscW(x) == 0) == true)
+        if (_completeList.Exists(x => vb1.AscW(x) == 0) == true)
         {
             return false;
         }
@@ -38,7 +38,7 @@ public class ThreeLetterFunCardData : SimpleDeckObject, IDeckObject, IAdvancedDI
         {
             return;
         }
-        aa.PopulateContainer(this);
+        aa1.PopulateContainer(this);
         _deckInfo = MainContainer!.Resolve<ThreeLetterFunDeckInfo>(); //need the full one.
         _thisGlobal = MainContainer.Resolve<GlobalHelpers>();
         _mainGame = MainContainer.Resolve<ThreeLetterFunMainGameClass>();
@@ -77,7 +77,7 @@ public class ThreeLetterFunCardData : SimpleDeckObject, IDeckObject, IAdvancedDI
         int y = default;
         foreach (var thisItem in _completeList)
         {
-            if (vb.AscW(thisItem) == 0)
+            if (vb1.AscW(thisItem) == 0)
             {
                 if (whichCategory == EnumClickPosition.Left)
                 {
@@ -99,7 +99,7 @@ public class ThreeLetterFunCardData : SimpleDeckObject, IDeckObject, IAdvancedDI
     public int LetterRemaining()
     {
         var thisItem = (from items in _completeList
-                        where vb.AscW(items) == 0
+                        where vb1.AscW(items) == 0
                         select items).Single();
         return _completeList.IndexOf(thisItem);
     }
@@ -109,7 +109,7 @@ public class ThreeLetterFunCardData : SimpleDeckObject, IDeckObject, IAdvancedDI
         {
             throw new CustomBasicException("No Complete List");
         }
-        if (vb.AscW(_completeList[index]) > 0)
+        if (vb1.AscW(_completeList[index]) > 0)
         {
             var thisChar = _completeList[index];
             Tiles.RemoveAllOnly(x => x.Letter == thisChar);

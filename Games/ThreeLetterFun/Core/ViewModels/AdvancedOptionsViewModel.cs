@@ -98,7 +98,7 @@ public partial class AdvancedOptionsViewModel : ScreenViewModel, IBlankGameVM, I
     }
     async Task IHandleAsync<AdvancedSettingsEventModel>.HandleAsync(AdvancedSettingsEventModel message)
     {
-        AdvancedSettingModel model = await js.DeserializeObjectAsync<AdvancedSettingModel>(message.Message);
+        AdvancedSettingModel model = await js1.DeserializeObjectAsync<AdvancedSettingModel>(message.Message);
         EasyWords = model.IsEasy;
         ShortGame = model.ShortGame;
         SelectSpecificOptions();

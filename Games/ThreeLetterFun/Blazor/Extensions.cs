@@ -10,8 +10,8 @@ public static class Extensions
         }
         if (_vowelList.Exists(x => x == thisLetter))
         {
-            return cc.Red;
+            return cc1.Red;
         }
-        return cc.Black;
+        return cc1.Black;
     }
 }
