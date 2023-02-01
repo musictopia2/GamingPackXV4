@@ -6,7 +6,7 @@ public partial class MainBoardView
     private GameBoardCP? Board { get; set; }
     protected override void OnInitialized()
     {
-        Board = aa.Resolver!.Resolve<GameBoardCP>(); //best way to handle this.
+        Board = aa1.Resolver!.Resolve<GameBoardCP>(); //best way to handle this.
         base.OnInitialized();
     }
 }
