@@ -7,8 +7,8 @@ public partial class Phase10MainView
     private Phase10GameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<Phase10VMData>();
-        _gameContainer = aa.Resolver.Resolve<Phase10GameContainer>();
+        _vmData = aa1.Resolver!.Resolve<Phase10VMData>();
+        _gameContainer = aa1.Resolver.Resolve<Phase10GameContainer>();
         _labels.AddLabel("Turn", nameof(Phase10VMData.NormalTurn))
             .AddLabel("Status", nameof(Phase10VMData.Status))
             .AddLabel("Phase", nameof(Phase10VMData.CurrentPhase));

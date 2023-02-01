@@ -1,8 +1,8 @@
 namespace Phase10.Blazor;
 public class CardGraphicsBlazor : BaseColorCardsImageBlazor<Phase10CardInformation>
 {
-    protected override string BackColor => cc.Aqua;
-    protected override string BackFontColor => cc.Purple;
+    protected override string BackColor => cc1.Aqua;
+    protected override string BackFontColor => cc1.Purple;
     protected override string BackText => "Phase 10";
     protected override bool CanStartDrawing()
     {

@@ -1,6 +1,4 @@
 using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
-using System.Numerics;
-
 namespace Phase10.Core.Logic;
 [SingletonGame]
 public class Phase10MainGameClass
@@ -10,7 +8,6 @@ public class Phase10MainGameClass
     private readonly Phase10VMData _model;
     private readonly CommandContainer _command;
     private readonly Phase10GameContainer _gameContainer;
-    private readonly IToast _toast;
     private readonly RummyProcesses<EnumColorTypes, EnumColorTypes, Phase10CardInformation> _rummys;
     private BasicList<PhaseList>? _phaseInfo;
     public Phase10MainGameClass(IGamePackageResolver mainContainer,
@@ -30,7 +27,6 @@ public class Phase10MainGameClass
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
-        _toast = toast;
         _rummys = new();
     }
     public override Task FinishGetSavedAsync()
@@ -232,7 +228,7 @@ public class Phase10MainGameClass
                 await SkipPlayerAsync(content); //hopefully this simple.
                 break;
             case "expandrummy":
-                SendExpandedSet Expands = await js.DeserializeObjectAsync<SendExpandedSet>(content);
+                SendExpandedSet Expands = await js1.DeserializeObjectAsync<SendExpandedSet>(content);
                 await ExpandHumanRummyAsync(Expands.Number, Expands.Deck, Expands.Position);
                 break;
             default:
@@ -305,10 +301,10 @@ public class Phase10MainGameClass
     }
     private async Task CreateSetsAsync(string message)
     {
-        var firstTemp = await js.DeserializeObjectAsync<BasicList<string>>(message);
+        var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(message);
         foreach (var thisFirst in firstTemp)
         {
-            var thisSend = await js.DeserializeObjectAsync<SendNewSet>(thisFirst);
+            var thisSend = await js1.DeserializeObjectAsync<SendNewSet>(thisFirst);
             var thisCol = await thisSend.CardListData.GetObjectsFromDataAsync(SingleInfo!.MainHandList);
             TempInfo thisTemp = new();
             thisTemp.CardList = thisCol;

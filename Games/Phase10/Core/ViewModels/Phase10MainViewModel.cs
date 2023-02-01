@@ -86,9 +86,9 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
             if (_mainGame.BasicData!.MultiPlayer == true)
             {
                 SendNewSet thisSend = new();
-                thisSend.CardListData = await js.SerializeObjectAsync(thisTemp.CardList.GetDeckListFromObjectList());
+                thisSend.CardListData = await js1.SerializeObjectAsync(thisTemp.CardList.GetDeckListFromObjectList());
                 thisSend.WhatSet = thisTemp.WhatSet;
-                string newStr = await js.SerializeObjectAsync(thisSend);
+                string newStr = await js1.SerializeObjectAsync(thisSend);
                 newList.Add(newStr);
             }
             _mainGame.CreateNewSet(thisTemp);
