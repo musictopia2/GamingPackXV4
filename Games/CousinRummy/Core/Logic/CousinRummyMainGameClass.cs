@@ -256,7 +256,7 @@ public class CousinRummyMainGameClass
                 await LayDownOtherSetsAsync();
                 return;
             case "expandrummy":
-                SendExpandedSet thiss = await js.DeserializeObjectAsync<SendExpandedSet>(content);
+                SendExpandedSet thiss = await js1.DeserializeObjectAsync<SendExpandedSet>(content);
                 await AddToSetAsync(thiss.Number, thiss.Deck);
                 return;
             default:
@@ -265,7 +265,7 @@ public class CousinRummyMainGameClass
     }
     private async Task CreateSetsAsync(string message)
     {
-        var firstTemp = await js.DeserializeObjectAsync<BasicList<string>>(message);
+        var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(message);
         foreach (var thisFirst in firstTemp)
         {
             var thisCol = await thisFirst.GetObjectsFromDataAsync<RegularRummyCard>(SingleInfo!.MainHandList);
@@ -303,7 +303,9 @@ public class CousinRummyMainGameClass
     private void UnselectCards()
     {
         if (SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+        {
             return;
+        }
         _model!.PlayerHand1!.EndTurn();
         _model!.TempSets!.EndTurn();
     }
@@ -454,7 +456,9 @@ public class CousinRummyMainGameClass
             tempCollection = WhatSet(x);
             thisCollection = new DeckRegularDict<RegularRummyCard>();
             if (tempCollection.Count > 0)
+            {
                 thisCollection.AddRange(tempCollection);
+            }
             if (thisCollection.Count(items => items.IsObjectWild == false) >= 2)
             {
                 foreach (var newSet in thisSet.PhaseSets)
