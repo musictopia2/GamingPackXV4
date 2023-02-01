@@ -7,8 +7,8 @@ public partial class DutchBlitzMainView
     private DutchBlitzGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<DutchBlitzVMData>();
-        _gameContainer = aa.Resolver.Resolve<DutchBlitzGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<DutchBlitzVMData>();
+        _gameContainer = aa1.Resolver.Resolve<DutchBlitzGameContainer>();
         _labels.AddLabel("Turn", nameof(DutchBlitzVMData.NormalTurn))
             .AddLabel("Status", nameof(DutchBlitzVMData.Status))
             .AddLabel("Error", nameof(DutchBlitzVMData.ErrorMessage));

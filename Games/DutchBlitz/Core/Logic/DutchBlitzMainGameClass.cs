@@ -248,7 +248,7 @@ public class DutchBlitzMainGameClass
                 await AddNewPublicPileAsync(newCard);
                 return;
             case "expandpile":
-                var thisSend = await js.DeserializeObjectAsync<SendExpand>(content);
+                var thisSend = await js1.DeserializeObjectAsync<SendExpand>(content);
                 var exCard = _gameContainer.DeckList!.GetSpecificItem(thisSend.Deck);
                 exCard.Player = WhoTurn;
                 await ExpandPublicPileAsync(exCard, thisSend.Pile);
