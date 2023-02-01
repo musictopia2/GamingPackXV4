@@ -12,16 +12,16 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
         var bounds = new RectangleF(5, 5, 60, 100);
         Rect rect = new()
         {
-            Fill = cc.Black.ToWebColor()
+            Fill = cc1.Black.ToWebColor()
         };
         rect.PopulateRectangle(bounds);
         if (DeckObject!.IsSelected)
         {
-            rect.PopulateStrokesToStyles(cc.Aqua.ToWebColor(), strokeWidth: 4);
+            rect.PopulateStrokesToStyles(cc1.Aqua.ToWebColor(), strokeWidth: 4);
         }
         else
         {
-            rect.PopulateStrokesToStyles(cc.Red.ToWebColor(), strokeWidth: 4);
+            rect.PopulateStrokesToStyles(cc1.Red.ToWebColor(), strokeWidth: 4);
         }
         MainGroup!.Children.Add(rect);
     }
@@ -284,21 +284,21 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
     {
         if (DeckObject == null)
         {
-            return cc.Aqua;
+            return cc1.Aqua;
         }
         return DeckObject.Deck switch
         {
-            int _ when DeckObject.Deck <= 22 => cc.Yellow,
-            int _ when DeckObject.Deck <= 40 => cc.LimeGreen,
-            int _ when DeckObject.Deck <= 63 => cc.Orchid,
-            _ => cc.Aqua,
+            int _ when DeckObject.Deck <= 22 => cc1.Yellow,
+            int _ when DeckObject.Deck <= 40 => cc1.LimeGreen,
+            int _ when DeckObject.Deck <= 63 => cc1.Orchid,
+            _ => cc1.Aqua,
         };
     }
     private void DrawSideText(int deck)
     {
         string transform = "matrix(0 -1 1 0 0 107)";
         string sideColor = SidePaint();
-        string textColor = cc.Black;
+        string textColor = cc1.Black;
         float fontSize = 11.2f;
         if (deck == 45 || deck == 51 || deck == 59 || deck == 60)
         {
@@ -343,7 +343,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
             return;
         }
         var fontSize = 15;
-        string textColor = cc.Black;
+        string textColor = cc1.Black;
         var firstList = firstText.Split("|").ToBasicList();
         int tops;
         tops = 10;

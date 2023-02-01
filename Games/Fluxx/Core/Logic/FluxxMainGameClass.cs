@@ -364,7 +364,7 @@ public class FluxxMainGameClass
                 return;
             case "trashkeeper":
             case "stealkeeper":
-                KeeperPlayer thisKeep = await js.DeserializeObjectAsync<KeeperPlayer>(content);
+                KeeperPlayer thisKeep = await js1.DeserializeObjectAsync<KeeperPlayer>(content);
                 bool isTrashed = status == "trashkeeper";
                 BasicList<KeeperPlayer> tempList1 = new() { thisKeep };
                 _keeperContainer.ShowSelectedKeepers(tempList1);
@@ -375,7 +375,7 @@ public class FluxxMainGameClass
                 await _finalKeeperProcesses.ProcessTrashStealKeeperAsync(thisKeep, isTrashed);
                 return;
             case "exchangekeepers":
-                BasicList<KeeperPlayer> thisList5 = await js.DeserializeObjectAsync<BasicList<KeeperPlayer>>(content);
+                BasicList<KeeperPlayer> thisList5 = await js1.DeserializeObjectAsync<BasicList<KeeperPlayer>>(content);
                 _keeperContainer.ShowSelectedKeepers(thisList5);
                 if (Test!.NoAnimations == false)
                 {
@@ -410,7 +410,7 @@ public class FluxxMainGameClass
                 await _playProcesses.PlayCardAsync(thisCard);
                 return;
             case "rotatehands":
-                EnumDirection direction = await js.DeserializeObjectAsync<EnumDirection>(content);
+                EnumDirection direction = await js1.DeserializeObjectAsync<EnumDirection>(content);
                 await _showActionProcesses.ShowDirectionAsync((int) direction);
                 await _rotateTradeHandProcesses.RotateHandAsync(direction);
                 return;
@@ -443,7 +443,7 @@ public class FluxxMainGameClass
                 {
                     throw new CustomBasicException("Must have at least 2 players with keepers in order to scramble keepers");
                 }
-                BasicList<BasicList<int>> finList = await js.DeserializeObjectAsync<BasicList<BasicList<int>>>(content);
+                BasicList<BasicList<int>> finList = await js1.DeserializeObjectAsync<BasicList<BasicList<int>>>(content);
                 if (finList.Count != thisList.Count)
                 {
                     throw new CustomBasicException("When other player is scrambling keepers, does not reconcile");
@@ -573,7 +573,9 @@ public class FluxxMainGameClass
             return;
         }
         if (SaveRoot!.AnotherTurn == false)
+        {
             WhoTurn = await PlayerList.CalculateWhoTurnAsync();
+        }
         await StartNewTurnAsync();
     }
     public EnumEndTurnStatus StatusEndRegularTurn()

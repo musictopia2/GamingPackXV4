@@ -7,8 +7,8 @@ public partial class FluxxMainView
     private FluxxGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<FluxxVMData>();
-        _gameContainer = aa.Resolver.Resolve<FluxxGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<FluxxVMData>();
+        _gameContainer = aa1.Resolver.Resolve<FluxxGameContainer>();
         _scores.Clear();
         _scores.AddColumn("# In Hand", false, nameof(FluxxPlayerItem.ObjectCount))
             .AddColumn("# Keepers", false, nameof(FluxxPlayerItem.NumberOfKeepers))

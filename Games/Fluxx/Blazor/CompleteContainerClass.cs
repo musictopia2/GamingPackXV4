@@ -3,10 +3,10 @@ public class CompleteContainerClass
 {
     public CompleteContainerClass()
     {
-        GameContainer = aa.Resolver!.Resolve<FluxxGameContainer>();
-        KeeperContainer = aa.Resolver.Resolve<KeeperContainer>();
-        ActionContainer = aa.Resolver.Resolve<ActionContainer>();
-        GameData = aa.Resolver.Resolve<FluxxVMData>();
+        GameContainer = aa1.Resolver!.Resolve<FluxxGameContainer>();
+        KeeperContainer = aa1.Resolver.Resolve<KeeperContainer>();
+        ActionContainer = aa1.Resolver.Resolve<ActionContainer>();
+        GameData = aa1.Resolver.Resolve<FluxxVMData>();
     }
     public FluxxGameContainer GameContainer { get; set; }
     public KeeperContainer KeeperContainer { get; set; }

@@ -66,10 +66,7 @@ public partial class FluxxPlayerItem : PlayerSingleHand<FluxxCardInformation>
     private FluxxGameContainer? _gameContainer;
     public bool ObeyedRulesWhenNotYourTurn()
     {
-        if (_gameContainer == null)
-        {
-            _gameContainer = aa.Resolver!.Resolve<FluxxGameContainer>();
-        }
+        _gameContainer ??= aa1.Resolver!.Resolve<FluxxGameContainer>();
         var tempList = _gameContainer.GetLimitList();
         if (tempList.Count > 2)
         {

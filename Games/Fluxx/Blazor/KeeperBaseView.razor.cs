@@ -10,7 +10,7 @@ public abstract partial class KeeperBaseView<K>
     {
         get
         {
-            return bb.RepeatAuto(BottomRow + 1);
+            return bb1.RepeatAuto(BottomRow + 1);
 
         }
     }
