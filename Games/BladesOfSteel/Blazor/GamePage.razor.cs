@@ -10,5 +10,5 @@ public partial class GamePage
     [CascadingParameter]
     public MultiplayerBasicParentShell? Shell { get; set; }
     private static int TargetHeight => 15;
-    private static BladesOfSteelVMData? GetData => aa.Resolver!.Resolve<BladesOfSteelVMData>();
+    private static BladesOfSteelVMData? GetData => aa1.Resolver!.Resolve<BladesOfSteelVMData>();
 }

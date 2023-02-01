@@ -8,7 +8,7 @@ public partial class BladesOfSteelMainView
     private BladesOfSteelGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _gameContainer = aa.Resolver!.Resolve<BladesOfSteelGameContainer>();
+        _gameContainer = aa1.Resolver!.Resolve<BladesOfSteelGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Main Turn", nameof(BladesOfSteelVMData.NormalTurn))
            .AddLabel("Other Turn", nameof(BladesOfSteelVMData.OtherPlayer))
@@ -20,11 +20,11 @@ public partial class BladesOfSteelMainView
     }
     private static string GetColumns()
     {
-        return $"{gg.Auto} {gg.Auto} {gg.Auto}";
+        return $"{gg1.Auto} {gg1.Auto} {gg1.Auto}";
     }
     private static string GetRows()
     {
-        return $"{gg.Auto} {gg.Auto}";
+        return $"{gg1.Auto} {gg1.Auto}";
     }
     private ICustomCommand EndCommand => DataContext?.EndTurnCommand!;
     private ICustomCommand PassCommand => DataContext?.PassCommand!;
