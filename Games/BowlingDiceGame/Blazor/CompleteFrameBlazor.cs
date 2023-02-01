@@ -25,10 +25,10 @@ public class CompleteFrameBlazor : ComponentBase
                 Height = "50",
                 X = x.ToString()
             };
-            rect.PopulateStrokesToStyles(cc.White.ToWebColor(), borderSize);
+            rect.PopulateStrokesToStyles(cc1.White.ToWebColor(), borderSize);
             svg.Children.Add(rect);
             RectangleF r = new(x, 0, 50, 50);
-            svg.DrawCenteredText(r, 20, section.Value.Score, cc.White);
+            svg.DrawCenteredText(r, 20, section.Value.Score, cc1.White);
             x += 50;
         }
         RectangleF f = new(0, 50, 150, 50);
@@ -39,7 +39,7 @@ public class CompleteFrameBlazor : ComponentBase
             X = f.X.ToString(),
             Y = f.Y.ToString()
         };
-        rect.PopulateStrokesToStyles(cc.White.ToWebColor(), borderSize);
+        rect.PopulateStrokesToStyles(cc1.White.ToWebColor(), borderSize);
         svg.Children.Add(rect);
         string score;
         if (Frame.Score == -1)
@@ -50,7 +50,7 @@ public class CompleteFrameBlazor : ComponentBase
         {
             score = Frame.Score.ToString();
         }
-        svg.DrawCenteredText(f, 20, score, cc.White);
+        svg.DrawCenteredText(f, 20, score, cc1.White);
         render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }

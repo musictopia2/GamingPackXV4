@@ -9,7 +9,7 @@ public class BowlingDiceSet : IRollMultipleDice<bool>, ISerializable
     private IAsyncDelayer? _delay;
     public async Task<BasicList<BasicList<bool>>> GetDiceList(string payLoad)
     {
-        return await js.DeserializeObjectAsync<BasicList<BasicList<bool>>>(payLoad);
+        return await js1.DeserializeObjectAsync<BasicList<BasicList<bool>>>(payLoad);
     }
     public async Task LoadGameAsync(string payLoad)
     {
@@ -17,7 +17,7 @@ public class BowlingDiceSet : IRollMultipleDice<bool>, ISerializable
         {
             throw new CustomBasicException("You have to already have 10 dice");
         }
-        BasicList<bool> list = await js.DeserializeObjectAsync<BasicList<bool>>(payLoad);
+        BasicList<bool> list = await js1.DeserializeObjectAsync<BasicList<bool>>(payLoad);
         if (list.Count != 10)
         {
             throw new CustomBasicException("You had to saved 10 items");
@@ -33,7 +33,7 @@ public class BowlingDiceSet : IRollMultipleDice<bool>, ISerializable
     public async Task<string> SaveGameAsync()
     {
         BasicList<bool> thisList = DiceList.Select(Items => Items.DidHit).ToBasicList();
-        return await js.SerializeObjectAsync(thisList);
+        return await js1.SerializeObjectAsync(thisList);
     }
     public BasicList<BasicList<bool>> RollDice(int howManySections = 7)
     {

@@ -14,7 +14,7 @@ public partial class BowlingDiceGameVMData : IViewModelData
         {
             return;
         }
-        _saves = aa.Resolver!.Resolve<BowlingDiceGameSaveInfo>();
+        _saves = aa1.Resolver!.Resolve<BowlingDiceGameSaveInfo>();
     }
     public BowlingDiceGameVMData()
     {
