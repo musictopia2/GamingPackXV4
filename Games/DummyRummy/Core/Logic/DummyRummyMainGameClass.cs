@@ -150,7 +150,7 @@ public class DummyRummyMainGameClass
     }
     private async Task CreateSetsAsync(string message)
     {
-        var firstTemp = await js.DeserializeObjectAsync<BasicList<string>>(message);
+        var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(message);
         foreach (var thisFirst in firstTemp)
         {
             var thisCol = await thisFirst.GetObjectsFromDataAsync(SingleInfo!.MainHandList);
@@ -296,7 +296,9 @@ public class DummyRummyMainGameClass
             return false; //has to have at least 3 cards for a set.
         }
         if (thisCol.DistinctCount(items => items.Value) == 1)
+        {
             return true;
+        }
         return _rummys!.IsNewRummy(thisCol, thisCol.Count, EnumRummyType.Runs);
     }
     public bool CanProcessDiscard(out bool PickUp, out int Index, out int Deck, out string Message)

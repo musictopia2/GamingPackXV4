@@ -7,8 +7,8 @@ public partial class DummyRummyMainView
     private DummyRummyGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<DummyRummyVMData>();
-        _gameContainer = aa.Resolver.Resolve<DummyRummyGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<DummyRummyVMData>();
+        _gameContainer = aa1.Resolver.Resolve<DummyRummyGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(DummyRummyVMData.NormalTurn))
            .AddLabel("Status", nameof(DummyRummyVMData.Status))
