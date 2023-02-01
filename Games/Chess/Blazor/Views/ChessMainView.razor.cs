@@ -8,8 +8,8 @@ public partial class ChessMainView
     private ChessGameContainer? GameContainer { get; set; }
     protected override void OnInitialized()
     {
-        GameBoard = aa.Resolver!.Resolve<GameBoardGraphicsCP>(); //hopefully this simple this time.
-        GameContainer = aa.Resolver.Resolve<ChessGameContainer>();
+        GameBoard = aa1.Resolver!.Resolve<GameBoardGraphicsCP>(); //hopefully this simple this time.
+        GameContainer = aa1.Resolver.Resolve<ChessGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ChessVMData.NormalTurn))
                 .AddLabel("Instructions", nameof(ChessVMData.Instructions))
