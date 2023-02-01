@@ -50,7 +50,7 @@ public class LifeCardGameMainGameClass
         CreateLifeStories(); //even for autoresume needs to be done now.  if autoresume, can later resume it.
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
-            var thisList = await js.DeserializeObjectAsync<DeckRegularDict<LifeCardGameCardInformation>>(thisPlayer.LifeString);
+            var thisList = await js1.DeserializeObjectAsync<DeckRegularDict<LifeCardGameCardInformation>>(thisPlayer.LifeString);
             thisPlayer.LifeStory!.HandList = new DeckRegularDict<LifeCardGameCardInformation>(thisList);
         });
         await PlayerList.RepositionCardsAsync(this, _gameContainer, _model); //i think.
@@ -64,7 +64,7 @@ public class LifeCardGameMainGameClass
     {
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
-            thisPlayer.LifeString = await js.SerializeObjectAsync(thisPlayer.LifeStory!.HandList);
+            thisPlayer.LifeString = await js1.SerializeObjectAsync(thisPlayer.LifeStory!.HandList);
         });
 
         await base.PopulateSaveRootAsync();
@@ -127,13 +127,13 @@ public class LifeCardGameMainGameClass
                 await ChoseSingleCardAsync(thisCard);
                 return;
             case "cardstraded":
-                var thisTrade = await js.DeserializeObjectAsync<TradeCard>(content);
+                var thisTrade = await js1.DeserializeObjectAsync<TradeCard>(content);
                 var yourCard = _gameContainer.DeckList!.GetSpecificItem(thisTrade.YourCard);
                 var opponentCard = _gameContainer.DeckList.GetSpecificItem(thisTrade.OtherCard);
                 await TradeCardsAsync(yourCard, opponentCard);
                 return;
             case "lifeswap":
-                var thisSwap = await js.DeserializeObjectAsync<Swap>(content);
+                var thisSwap = await js1.DeserializeObjectAsync<Swap>(content);
                 await FinishLifeSwapAsync(thisSwap.Player, thisSwap.YourCards, thisSwap.OtherCards);
                 return;
             default:

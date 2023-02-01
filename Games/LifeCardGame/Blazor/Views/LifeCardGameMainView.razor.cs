@@ -5,12 +5,12 @@ public partial class LifeCardGameMainView
     private readonly BasicList<ScoreColumnModel> _scores = new();
     private LifeCardGameVMData? _vmData;
     private LifeCardGameGameContainer? _gameContainer;
-    private static string GetColums => bb.RepeatAuto(2);
+    private static string GetColums => bb1.RepeatAuto(2);
     private BasicList<LifeCardGamePlayerItem> _players = new();
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<LifeCardGameVMData>();
-        _gameContainer = aa.Resolver.Resolve<LifeCardGameGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<LifeCardGameVMData>();
+        _gameContainer = aa1.Resolver.Resolve<LifeCardGameGameContainer>();
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(LifeCardGameVMData.NormalTurn))

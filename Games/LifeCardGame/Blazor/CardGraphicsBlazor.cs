@@ -57,16 +57,16 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
         RectangleF bottomRect;
         bottomRect = new RectangleF(8, 65, 84, 42);
         var fontSize = firstRect.Height * 0.6f;
-        string color = cc.White;
-        DrawRectangle(firstRect, cc.Purple, 1);
+        string color = cc1.White;
+        DrawRectangle(firstRect, cc1.Purple, 1);
         DrawText("L", firstRect, color, fontSize, 1);
-        DrawRectangle(secondRect, cc.Green, 1);
+        DrawRectangle(secondRect, cc1.Green, 1);
         DrawText("I", secondRect, color, fontSize, 1);
-        DrawRectangle(thirdRect, cc.Blue, 1);
+        DrawRectangle(thirdRect, cc1.Blue, 1);
         DrawText("F", thirdRect, color, fontSize, 1);
-        DrawRectangle(fourthRect, cc.DarkOrange, 1);
+        DrawRectangle(fourthRect, cc1.DarkOrange, 1);
         DrawText("E", fourthRect, color, fontSize, 1);
-        DrawRectangle(bottomRect, cc.LimeGreen, 0);
+        DrawRectangle(bottomRect, cc1.LimeGreen, 0);
     }
     protected override void DrawImage()
     {
@@ -492,12 +492,12 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
             return;
         }
         var bounds = new RectangleF(5, 5, 90, 20);
-        DrawRectangle(bounds, cc.DarkOrange, 1);
+        DrawRectangle(bounds, cc1.DarkOrange, 1);
         RectangleF firstRect;
         firstRect = new RectangleF(5, 5, 20, 20);
         var fontSize = 15;
-        string textColor = cc.Black;
-        DrawRectangle(firstRect, cc.LimeGreen, 2);
+        string textColor = cc1.Black;
+        DrawRectangle(firstRect, cc1.LimeGreen, 2);
         DrawText(DeckObject.Points.ToString(), firstRect, textColor, fontSize, 0);
         if (DeckObject.Requirement != EnumSpecialCardCategory.None && DeckObject.Action != EnumAction.MovingHouse)
         {
@@ -541,10 +541,10 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
         }
         var firstRect = new RectangleF(3, 15, 94, 60);
         var fontSize = 40;
-        string textColor = cc.White;
+        string textColor = cc1.White;
         DrawText("$", firstRect, textColor, fontSize, 2);
         fontSize = 12;
-        textColor = cc.Black;
+        textColor = cc1.Black;
         var firstList = DeckObject.Description.Split("|").ToBasicList();
         int tops;
         tops = 65;
@@ -684,7 +684,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
                 }
         }
         var fontSize = 9;
-        string textColor = cc.Black;
+        string textColor = cc1.Black;
         var simpleBottomRect = new RectangleF(3, 100, 94, 10);
         DrawText(firstBold, topRect, textColor, fontSize, 0, true);
         int tops;
@@ -738,7 +738,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
         var topRect = new RectangleF(30, 30, 40, 40);
         if (DeckObject.SpecialCategory == EnumSpecialCardCategory.Passport || DeckObject.SpecialCategory == EnumSpecialCardCategory.Degree)
         {
-            DrawRectangle(topRect, cc.Black, 0);
+            DrawRectangle(topRect, cc1.Black, 0);
         }
         Image image = new();
         image.PopulateImagePositionings(topRect);
@@ -759,7 +759,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
             heights = 14;
             entireText = DeckObject.Description;
         }
-        string textColor = cc.Black;
+        string textColor = cc1.Black;
         int tops;
         tops = 70;
         var thisList = entireText.Split("|").ToBasicList();
@@ -774,14 +774,14 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
     {
         if (DeckObject!.Action != EnumAction.None)
         {
-            return cc.DarkOrange;
+            return cc1.DarkOrange;
         }
         return DeckObject.Category switch
         {
-            EnumFirstCardCategory.Career => cc.LightBlue,
-            EnumFirstCardCategory.Family => cc.DeepPink,
-            EnumFirstCardCategory.Adventure => cc.Yellow,
-            EnumFirstCardCategory.Wealth => cc.LimeGreen,
+            EnumFirstCardCategory.Career => cc1.LightBlue,
+            EnumFirstCardCategory.Family => cc1.DeepPink,
+            EnumFirstCardCategory.Adventure => cc1.Yellow,
+            EnumFirstCardCategory.Wealth => cc1.LimeGreen,
             _ => "",
         };
     }

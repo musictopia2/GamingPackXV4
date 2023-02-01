@@ -18,7 +18,7 @@ public class LifeCardGameDetailClass : IGameInfo, ICardInfo<LifeCardGameCardInfo
     {
         get
         {
-            LifeCardGameGameContainer gameContainer = aa.Resolver!.Resolve<LifeCardGameGameContainer>();
+            LifeCardGameGameContainer gameContainer = aa1.Resolver!.Resolve<LifeCardGameGameContainer>();
             return gameContainer.YearCards().Select(items => items.Deck).ToBasicList();
         }
     }
