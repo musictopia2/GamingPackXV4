@@ -11,27 +11,27 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
     {
         if (DeckObject!.IsUnknown)
         {
-            FillColor = cc.Red;
+            FillColor = cc1.Red;
         }
         else if (DeckObject!.Value == 2500)
         {
-            FillColor = cc.Maroon;
+            FillColor = cc1.Maroon;
         }
         else if (DeckObject.Status == EnumCardStatusList.MustBust)
         {
-            FillColor = cc.Red;
+            FillColor = cc1.Red;
         }
         else if (DeckObject!.Value > 0)
         {
-            FillColor = cc.Aqua;
+            FillColor = cc1.Aqua;
         }
         else if (DeckObject.Status == EnumCardStatusList.DoubleTrouble)
         {
-            FillColor = cc.Aqua;
+            FillColor = cc1.Aqua;
         }
         else
         {
-            FillColor = cc.Maroon;
+            FillColor = cc1.Maroon;
         }
     }
     protected override void DrawBacks() { }
@@ -98,7 +98,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
         output.Fill = fillcolor.ToWebColor();
         if (hasBorders)
         {
-            output.PopulateStrokesToStyles(strokeWidth: 5, color: cc.Aqua.ToWebColor());
+            output.PopulateStrokesToStyles(strokeWidth: 5, color: cc1.Aqua.ToWebColor());
         }
         MainGroup!.Children.Add(output);
     }
@@ -106,13 +106,13 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
     {
         var firstRect = new RectangleF(4, 4, 95, 25);
         var secondRect = new RectangleF(4, 100, 95, 25);
-        DrawRectangle(firstRect, cc.Red);
-        DrawRectangle(secondRect, cc.Red);
+        DrawRectangle(firstRect, cc1.Red);
+        DrawRectangle(secondRect, cc1.Red);
         var firstText = new RectangleF(0, 35, 107, 35);
         var secondText = new RectangleF(0, 70, 107, 35);
         var fontSize = 33;
-        DrawText("Bonus", fontSize, cc.Maroon, firstText);
-        DrawText(DeckObject!.Value.ToString(), fontSize, cc.Maroon, secondText);
+        DrawText("Bonus", fontSize, cc1.Maroon, firstText);
+        DrawText(DeckObject!.Value.ToString(), fontSize, cc1.Maroon, secondText);
     }
     private void DrawFill()
     {
@@ -121,9 +121,9 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
         var firstFont = 40;
         var secondFont = 35;
         var tempRect = new RectangleF(15, 65, 77, 35);
-        DrawRectangle(tempRect, cc.Red);
-        DrawText("Fill", firstFont, cc.Red, firstText);
-        DrawText("1000", secondFont, cc.Aqua, tempRect);
+        DrawRectangle(tempRect, cc1.Red);
+        DrawText("Fill", firstFont, cc1.Red, firstText);
+        DrawText("1000", secondFont, cc1.Aqua, tempRect);
     }
     private void DrawDoubleTrouble()
     {
@@ -137,11 +137,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
         firstText = new RectangleF(0, 22, 107, 30);
         middleText = new RectangleF(0, 52, 107, 30);
         lastText = new RectangleF(0, 82, 107, 30);
-        string firstColor = cc.LightPink;
-        string middleColor = cc.Maroon;
+        string firstColor = cc1.LightPink;
+        string middleColor = cc1.Maroon;
         var fontSize = 25;
-        DrawRectangle(firstRect, cc.Red);
-        DrawRectangle(lastRect, cc.Red);
+        DrawRectangle(firstRect, cc1.Red);
+        DrawRectangle(lastRect, cc1.Red);
         DrawText("Double", fontSize, firstColor, firstText);
         DrawText("Trouble", fontSize, middleColor, middleText);
         DrawText("Double", fontSize, firstColor, lastText);
@@ -150,23 +150,23 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
     {
         RectangleF firstRect = new(7, 10, 90, 25);
         RectangleF lastRect = new(7, 97, 90, 25);
-        DrawRectangle(firstRect, cc.Maroon, true);
-        DrawRectangle(lastRect, cc.Maroon, true);
+        DrawRectangle(firstRect, cc1.Maroon, true);
+        DrawRectangle(lastRect, cc1.Maroon, true);
         var fontSize = 30;
         var textRect = new RectangleF(0, 35, 107, 37);
-        DrawText("Must", fontSize, cc.Aqua, textRect);
+        DrawText("Must", fontSize, cc1.Aqua, textRect);
         textRect = new RectangleF(0, 63, 107, 37); //i think.
-        DrawText("Bust!", fontSize, cc.Aqua, textRect);
+        DrawText("Bust!", fontSize, cc1.Aqua, textRect);
     }
     private void DrawRevenge()
     {
         RectangleF tempRect = new(-3, 5, 109, 27);
         var fontSize = 18;
-        DrawText("Vengeance", fontSize, cc.Aqua, tempRect, false);
+        DrawText("Vengeance", fontSize, cc1.Aqua, tempRect, false);
         tempRect = new RectangleF(-1, 27, 109, 27);
-        DrawText("2500", fontSize, cc.Aqua, tempRect, false);
+        DrawText("2500", fontSize, cc1.Aqua, tempRect, false);
         tempRect = new RectangleF(4, 55, 95, 70);
-        DrawRectangle(tempRect, cc.Red);
+        DrawRectangle(tempRect, cc1.Red);
         Image image = new();
         image.PopulateFullExternalImage(this, "revenge.png");
         image.PopulateImagePositionings(tempRect);
@@ -176,11 +176,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
     {
         var textRect = new RectangleF(0, 10, 107, 44);
         var fontSize = 27;
-        DrawText("No Dice", fontSize, cc.Aqua, textRect);
+        DrawText("No Dice", fontSize, cc1.Aqua, textRect);
         var lastRect = new RectangleF(23, 59, 60, 60);
         Circle circle = new();
         circle.PopulateCircle(lastRect, "");
-        circle.PopulateStrokesToStyles(strokeWidth: 7, color: cc.Red.ToWebColor());
+        circle.PopulateStrokesToStyles(strokeWidth: 7, color: cc1.Red.ToWebColor());
         MainGroup!.Children.Add(circle);
         PointF point = new(lastRect.Left + (lastRect.Size.Width / 4), lastRect.Top + (lastRect.Size.Height / 4));
         SizeF size = new(34, 34);
@@ -190,7 +190,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
         PointF firstPoint = new(lastRect.Left + 10, lastRect.Top + 10);
         PointF lastPoint = new(lastRect.Right - 10, lastRect.Bottom - 10);
         line.PopulateLine(firstPoint, lastPoint);
-        line.PopulateStrokesToStyles(strokeWidth: 7, color: cc.Red.ToWebColor(), opacity: .5);
+        line.PopulateStrokesToStyles(strokeWidth: 7, color: cc1.Red.ToWebColor(), opacity: .5);
         MainGroup.Children.Add(line);
     }
 }

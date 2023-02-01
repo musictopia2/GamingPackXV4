@@ -8,8 +8,8 @@ public partial class FillOrBustMainView
     private readonly BasicList<LabelGridModel> _temps = new();
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<FillOrBustVMData>();
-        _gameContainer = aa.Resolver.Resolve<FillOrBustGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<FillOrBustVMData>();
+        _gameContainer = aa1.Resolver.Resolve<FillOrBustGameContainer>();
         _labels.Clear();
         _temps.Clear();
         _labels.AddLabel("Turn", nameof(FillOrBustVMData.NormalTurn))
