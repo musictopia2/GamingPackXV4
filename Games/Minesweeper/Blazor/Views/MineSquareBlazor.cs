@@ -77,7 +77,7 @@ public class MineSquareBlazor : GraphicsCommand
                 Text text = new();
                 text.CenterText();
                 text.Font_Size = 75;
-                text.Fill = cc.Aqua.ToWebColor();
+                text.Fill = cc1.Aqua.ToWebColor();
                 text.PopulateStrokesToStyles(strokeWidth: 4, fontFamily: "Verdana");
                 text.Content = Square.NeighborMines.ToString();
                 svg.Children.Add(text);
@@ -105,13 +105,13 @@ public class MineSquareBlazor : GraphicsCommand
             {
                 firstColor = "rgb(0,0,0)";
                 secondColor = "rgb(255,255,255)";
-                currentColor = cc.DarkGray;
+                currentColor = cc1.DarkGray;
             }
             else
             {
                 firstColor = "rgb(255,255,255)";
                 secondColor = "rgb(0,0,0)";
-                currentColor = cc.SlateGray;
+                currentColor = cc1.SlateGray;
             }
             defs = new();
             svg.Children.Add(defs);

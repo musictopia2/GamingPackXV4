@@ -14,9 +14,9 @@ public partial class MinesweeperMainView
     {
         if (DataContext!.IsFlagging)
         {
-            return cc.Yellow;
+            return cc1.Yellow;
         }
-        return cc.Aqua;
+        return cc1.Aqua;
     }
     protected override void OnInitialized()
     {

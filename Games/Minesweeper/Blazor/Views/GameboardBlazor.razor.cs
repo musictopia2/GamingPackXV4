@@ -8,7 +8,7 @@ public partial class GameboardBlazor
     private MinesweeperMainGameClass MainGame { get; set; }
     public GameboardBlazor()
     {
-        MainGame = aa.Resolver!.Resolve<MinesweeperMainGameClass>();
+        MainGame = aa1.Resolver!.Resolve<MinesweeperMainGameClass>();
     }
     private BasicList<MineSquareModel> SquareList => MainGame.GetSquares();
     public string GetViewHeight()
