@@ -169,7 +169,7 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
                     CardList = tempList,
                     WhatSet = thisTemp.WhatSet
                 };
-                var thisStr = await js.SerializeObjectAsync(thisSend);
+                var thisStr = await js1.SerializeObjectAsync(thisSend);
                 newList.Add(thisStr);
             }
             VMData.TempSets.ClearBoard(thisTemp.TempSet);

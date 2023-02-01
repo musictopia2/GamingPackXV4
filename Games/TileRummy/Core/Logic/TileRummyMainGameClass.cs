@@ -151,7 +151,7 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
                 await InitialCompletedAsync();
                 return;
             case "createnewset":
-                var thisItem = await js.DeserializeObjectAsync<SendCreateSet>(content);
+                var thisItem = await js1.DeserializeObjectAsync<SendCreateSet>(content);
                 var thisCol = thisItem.CardList.GetObjectsFromList(SingleInfo!.MainHandList);
                 TempInfo thisTemp = new();
                 thisTemp.CardList = thisCol;
@@ -165,7 +165,7 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
                 await FinishedAsync(bool.Parse(content));
                 return;
             case "drewtile":
-                var thisSend1 = await js.DeserializeObjectAsync<SendDraw>(content);
+                var thisSend1 = await js1.DeserializeObjectAsync<SendDraw>(content);
                 var thisTile = PoolCP.GetTile(thisSend1.Deck);
                 await DrawTileAsync(thisTile, thisSend1.FromEnd);
                 return;
@@ -173,18 +173,18 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
                 await RemoveEntireSetAsync(int.Parse(content));
                 return;
             case "removeonefromset":
-                var thisSend2 = await js.DeserializeObjectAsync<SendSet>(content);
+                var thisSend2 = await js1.DeserializeObjectAsync<SendSet>(content);
                 await RemoveTileFromSetAsync(thisSend2.Index, thisSend2.Tile);
                 return;
             case "addtoset":
-                var thisSend3 = await js.DeserializeObjectAsync<SendSet>(content);
+                var thisSend3 = await js1.DeserializeObjectAsync<SendSet>(content);
                 var thisTile2 = PoolCP.GetTile(thisSend3.Tile);
                 thisTile2.IsUnknown = false;
                 SingleInfo!.MainHandList.RemoveObjectByDeck(thisSend3.Tile);
                 await AddToSetAsync(thisSend3.Index, thisTile2, thisSend3.Position);
                 return;
             case "endcustom":
-                var thisEnd = await js.DeserializeObjectAsync<SendCustom>(content);
+                var thisEnd = await js1.DeserializeObjectAsync<SendCustom>(content);
                 await EndTurnAsync(thisEnd.DidPlay, thisEnd.ValidSets);
                 return;
             default:
@@ -193,10 +193,10 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
     }
     private async Task CreateSetsAsync(string message)
     {
-        var firstTemp = await js.DeserializeObjectAsync<BasicList<string>>(message);
+        var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(message);
         foreach (var thisFirst in firstTemp)
         {
-            var thisSend = await js.DeserializeObjectAsync<SendCreateSet>(thisFirst);
+            var thisSend = await js1.DeserializeObjectAsync<SendCreateSet>(thisFirst);
             var thisCol = thisSend.CardList.GetObjectsFromList(SingleInfo!.MainHandList);
             TempInfo thisTemp = new();
             thisTemp.CardList = thisCol;

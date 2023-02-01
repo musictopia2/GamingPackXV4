@@ -32,7 +32,7 @@ public class MainSets : MainSetsObservable<EnumColorType, EnumColorType, TileInf
                 tempList.Add(thisTile.Deck);
             });
         });
-        TileRummySaveInfo saveRoot = aa.Resolver!.Resolve<TileRummySaveInfo>();
+        TileRummySaveInfo saveRoot = aa1.Resolver!.Resolve<TileRummySaveInfo>();
         foreach (var thisIndex in saveRoot.YourTiles)
         {
             if (tempList.Any(items => items == thisIndex))

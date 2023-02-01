@@ -92,7 +92,7 @@ public class TileSet : SetInfo<EnumColorType, EnumColorType, TileInfo, SavedSet>
     {
         _setType = whatType;
         _isNew = true;
-        TileRummySaveInfo saveRoot = aa.Resolver!.Resolve<TileRummySaveInfo>();
+        TileRummySaveInfo saveRoot = aa1.Resolver!.Resolve<TileRummySaveInfo>();
         if (thisCol.Count == 0)
         {
             throw new CustomBasicException("There must be at least one item to create a new set");
@@ -144,7 +144,7 @@ public class TileSet : SetInfo<EnumColorType, EnumColorType, TileInfo, SavedSet>
     }
     public void AddTile(TileInfo thisTile, int position)
     {
-        TileRummySaveInfo saveRoot = aa.Resolver!.Resolve<TileRummySaveInfo>();
+        TileRummySaveInfo saveRoot = aa1.Resolver!.Resolve<TileRummySaveInfo>();
         thisTile.Drew = true;
         thisTile.IsSelected = false;
         saveRoot.TilesFromField.RemoveSpecificItem(thisTile.Deck);

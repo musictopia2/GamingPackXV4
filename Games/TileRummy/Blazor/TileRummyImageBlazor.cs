@@ -17,7 +17,7 @@ public class TileRummyImageBlazor : BaseDeckGraphics<TileInfo>
         {
             if (DeckObject!.WhatDraw == EnumDrawType.FromSet)
             {
-                return cc.Purple.ToWebColor();
+                return cc1.Purple.ToWebColor();
             }
             return base.DrawFillColor;
         }
@@ -28,7 +28,7 @@ public class TileRummyImageBlazor : BaseDeckGraphics<TileInfo>
         if (DeckObject!.IsJoker)
         {
             RectangleF rect = new(16, 6, 28, 28);
-            MainGroup!.DrawSmiley(rect, "", DeckObject.Color.Color, cc.Black, 2);
+            MainGroup!.DrawSmiley(rect, "", DeckObject.Color.Color, cc1.Black, 2);
             return;
         }
         Text text = new();
