@@ -17,9 +17,9 @@ public class BingoSpaceBlazor : GraphicsCommand
         float fontSize;
         if (_space.IsEnabled == true)
         {
-            rect.Fill = cc.White.ToWebColor();
+            rect.Fill = cc1.White.ToWebColor();
             rect.PopulateStrokesToStyles(strokeWidth: 4);
-            textColor = cc.Black.ToWebColor();
+            textColor = cc1.Black.ToWebColor();
             if (_space.Text == "")
             {
 
@@ -35,9 +35,9 @@ public class BingoSpaceBlazor : GraphicsCommand
         }
         else
         {
-            rect.Fill = cc.Black.ToWebColor();
-            rect.PopulateStrokesToStyles(color: cc.White, 4);
-            textColor = cc.White.ToWebColor();
+            rect.Fill = cc1.Black.ToWebColor();
+            rect.PopulateStrokesToStyles(color: cc1.White, 4);
+            textColor = cc1.White.ToWebColor();
             fontSize = 80;
         }
         svg.Children.Add(rect);
@@ -50,7 +50,7 @@ public class BingoSpaceBlazor : GraphicsCommand
         if (_space.AlreadyMarked)
         {
             Circle circle = new();
-            circle.PopulateCircle(4, 4, 92, cc.Blue, .5); //can experiement to see how transparent we make it.
+            circle.PopulateCircle(4, 4, 92, cc1.Blue, .5); //can experiement to see how transparent we make it.
             svg.Children.Add(circle);
         }
         CreateClick(svg);

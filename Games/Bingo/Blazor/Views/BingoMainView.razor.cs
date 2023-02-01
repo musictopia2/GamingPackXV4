@@ -16,7 +16,7 @@ public partial class BingoMainView
     private MediaQueryListComponent? ParentElement { get; set; }
     protected override void OnParametersSet()
     {
-        _save = aa.Resolver!.Resolve<BingoSaveInfo>();
+        _save = aa1.Resolver!.Resolve<BingoSaveInfo>();
         base.OnParametersSet();
     }
 }
