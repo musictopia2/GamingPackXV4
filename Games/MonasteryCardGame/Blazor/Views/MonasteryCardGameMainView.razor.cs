@@ -7,8 +7,8 @@ public partial class MonasteryCardGameMainView
     private MonasteryCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<MonasteryCardGameVMData>();
-        _gameContainer = aa.Resolver.Resolve<MonasteryCardGameGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<MonasteryCardGameVMData>();
+        _gameContainer = aa1.Resolver.Resolve<MonasteryCardGameGameContainer>();
         _labels.AddLabel("Turn", nameof(MonasteryCardGameVMData.NormalTurn))
              .AddLabel("Status", nameof(MonasteryCardGameVMData.Status));
         _scores.Clear();

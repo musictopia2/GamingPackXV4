@@ -213,7 +213,7 @@ public class MonasteryCardGameMainGameClass
                 await FinishedAsync();
                 return;
             case "expandset":
-                var tempData = await js.DeserializeObjectAsync<SendExpandSet>(content);
+                var tempData = await js1.DeserializeObjectAsync<SendExpandSet>(content);
                 var tempList = await tempData.CardData.GetObjectsFromDataAsync(SingleInfo!.MainHandList);
                 await ExpandSetAsync(tempList, tempData.SetNumber, tempData.Position);
                 return;
@@ -241,12 +241,12 @@ public class MonasteryCardGameMainGameClass
     }
     private async Task CreateSetsAsync(string message)
     {
-        var firstTemp = await js.DeserializeObjectAsync<BasicList<string>>(message);
+        var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(message);
         int x = 0;
         foreach (var thisFirst in firstTemp)
         {
             x++;
-            var thisSend = await js.DeserializeObjectAsync<SendNewSet>(thisFirst);
+            var thisSend = await js1.DeserializeObjectAsync<SendNewSet>(thisFirst);
             var thisCol = await thisSend.CardData.GetObjectsFromDataAsync(SingleInfo!.MainHandList);
             if (x == 1)
             {

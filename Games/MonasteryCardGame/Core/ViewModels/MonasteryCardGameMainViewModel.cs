@@ -156,7 +156,7 @@ public partial class MonasteryCardGameMainViewModel : BasicCardGamesVM<Monastery
             SendExpandSet temps = new();
             temps.SetNumber = nums;
             temps.Position = newpos;
-            temps.CardData = await js.SerializeObjectAsync(thisCol.GetDeckListFromObjectList());
+            temps.CardData = await js1.SerializeObjectAsync(thisCol.GetDeckListFromObjectList());
             await _mainGame.Network!.SendAllAsync("expandset", temps);
         }
         await _mainGame.ExpandSetAsync(thisCol, nums, newpos);
@@ -216,9 +216,9 @@ public partial class MonasteryCardGameMainViewModel : BasicCardGamesVM<Monastery
                 SendNewSet thisSend = new();
                 thisSend.Index = thisTemp.WhichOne;
                 var newCol = thisCol.GetDeckListFromObjectList();
-                thisSend.CardData = await js.SerializeObjectAsync(newCol);
+                thisSend.CardData = await js1.SerializeObjectAsync(newCol);
                 thisSend.MissionCompleted = _model.MissionChosen;
-                string results = await js.SerializeObjectAsync(thisSend);
+                string results = await js1.SerializeObjectAsync(thisSend);
                 mList.Add(results);
             }
             _model.TempSets.ClearBoard(thisTemp.SetNumber);

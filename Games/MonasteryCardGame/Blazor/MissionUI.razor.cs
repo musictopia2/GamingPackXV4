@@ -10,13 +10,13 @@ public partial class MissionUI
     private ICustomCommand DescriptionCommand => DataContext!.MissionDetailCommand!;
     private ICustomCommand SelectCommand => DataContext!.SelectPossibleMissionCommand!;
     private ICustomCommand CompleteCommand => DataContext!.CompleteChosenMissionCommand!;
-    private static string GetRowsColumn => bb.RepeatAuto(3); //to be 3 by 3.
+    private static string GetRowsColumn => bb1.RepeatAuto(3); //to be 3 by 3.
     private string BackgroundColor(MissionList mission)
     {
         if (mission.Description == DataContext!.MissionChosen)
         {
-            return cc.LimeGreen;
+            return cc1.LimeGreen;
         }
-        return cc.Aqua;
+        return cc1.Aqua;
     }
 }
