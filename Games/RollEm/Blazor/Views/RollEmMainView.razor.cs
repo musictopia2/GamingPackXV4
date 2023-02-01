@@ -8,7 +8,7 @@ public partial class RollEmMainView
     private GameBoardGraphicsCP? _boardData;
     protected override void OnInitialized()
     {
-        _boardData = aa.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _boardData = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(RollEmVMData.NormalTurn))
                 .AddLabel("Round", nameof(RollEmVMData.Round))

@@ -1,4 +1,4 @@
-﻿@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+﻿@using c1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 @if (BoardData == null)
 {
     return;
@@ -8,13 +8,13 @@
         @foreach (var number in _numbers)
         {
             <GameSpaceWithoutBorders ShapeCategory="GameSpaceWithoutBorders.EnumShapeCategory.Oval"
-                                     FillColor="@cc.Blue"
+                                     FillColor="@c1.Blue"
                                      SpaceLocation="number.Bounds.Location"
                                      SpaceClicked="() => SpaceClickedAsync(number)"
                                      SpaceSize="number.Bounds.Size">
                 <CenteredTextBlazor FontSize="50"
                                    Text="@number.Number.ToString()"
-                                   TextColor="@cc.White"
+                                   TextColor="@c1.White"
                                    BorderWidth="3"
                                    />
                 @if (number.IsCrossed || number.Recently)
