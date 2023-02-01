@@ -8,8 +8,8 @@ public partial class ChineseCheckersMainView
     private ChineseCheckersGameContainer? _container;
     protected override void OnInitialized()
     {
-        _graphics = aa.Resolver!.Resolve<GameBoardGraphicsCP>();
-        _container = aa.Resolver.Resolve<ChineseCheckersGameContainer>();
+        _graphics = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _container = aa1.Resolver.Resolve<ChineseCheckersGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ChineseCheckersVMData.NormalTurn))
                 .AddLabel("Instructions", nameof(ChineseCheckersVMData.Instructions))
