@@ -12,8 +12,8 @@ public partial class AggravationMainView
         _labels.AddLabel("Turn", nameof(AggravationVMData.NormalTurn))
              .AddLabel("Instructions", nameof(AggravationVMData.Instructions))
              .AddLabel("Status", nameof(AggravationVMData.Status));
-        _gameContainer = aa.Resolver!.Resolve<AggravationGameContainer>();
-        _graphicsData = aa.Resolver.Resolve<GameBoardGraphicsCP>();
+        _gameContainer = aa1.Resolver!.Resolve<AggravationGameContainer>();
+        _graphicsData = aa1.Resolver.Resolve<GameBoardGraphicsCP>();
         base.OnInitialized();
     }
     private ICustomCommand RollCommand => DataContext!.RollDiceCommand!;
