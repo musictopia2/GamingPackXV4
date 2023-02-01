@@ -9,8 +9,8 @@ public partial class ConnectTheDotsMainView
     private ConnectTheDotsGameContainer? _container;
     protected override void OnInitialized()
     {
-        _graphics = aa.Resolver!.Resolve<GameBoardGraphicsCP>();
-        _container = aa.Resolver.Resolve<ConnectTheDotsGameContainer>();
+        _graphics = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _container = aa1.Resolver.Resolve<ConnectTheDotsGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ConnectTheDotsVMData.NormalTurn))
             .AddLabel("Status", nameof(ConnectTheDotsVMData.Status));
