@@ -7,7 +7,7 @@ public partial class SorryMainView
     private GameBoardGraphicsCP? _graphics;
     protected override void OnInitialized()
     {
-        _graphics = aa.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _graphics = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(SorryVMData.NormalTurn))
                 .AddLabel("Instructions", nameof(SorryVMData.Instructions))
