@@ -1,6 +1,6 @@
 ﻿@inherits KeyComponentBase
 @using BasicBlazorLibrary.Components.RenderHelpers
-@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString; 
+@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString; 
 @if (GraphicsData == null || GraphicsData.GameContainer.SingleInfo == null)
 {
     return;
@@ -80,11 +80,11 @@
         //this is for the new triangles
         var thisList = GraphicsData.GameContainer.MoveList.Where(items => items.SpaceFrom == GraphicsData.GameContainer.SaveRoot.SpaceHighlighted).ToBasicList();
         var currentSpace = GraphicsData.SpaceList[GraphicsData.GameContainer.SaveRoot.SpaceHighlighted];
-        <BackgammonHintSpaceBlazor Bounds="currentSpace" SpaceNumber="@GraphicsData.GameContainer.SaveRoot.SpaceHighlighted" BorderColor="@cc.Red" />
+        <BackgammonHintSpaceBlazor Bounds="currentSpace" SpaceNumber="@GraphicsData.GameContainer.SaveRoot.SpaceHighlighted" BorderColor="@cc1.Red" />
         @foreach (var move in thisList)
         {
             var newSpace = GraphicsData.SpaceList[move.SpaceTo];
-            <BackgammonHintSpaceBlazor Bounds="newSpace" SpaceNumber="@move.SpaceTo" BorderColor="@cc.LimeGreen" />
+            <BackgammonHintSpaceBlazor Bounds="newSpace" SpaceNumber="@move.SpaceTo" BorderColor="@cc1.LimeGreen" />
         }
         <BackgammonClickBoardBlazor />
         return;
@@ -97,7 +97,7 @@
         var triangle = GraphicsData.GameContainer.TriangleList[move.SpaceFrom];
         if (triangle.NumberOfTiles > 0)
         {
-            <BackgammonHintSpaceBlazor Bounds="currentSpace" SpaceNumber="@move.SpaceFrom" BorderColor="@cc.Violet" />
+            <BackgammonHintSpaceBlazor Bounds="currentSpace" SpaceNumber="@move.SpaceFrom" BorderColor="@cc1.Violet" />
         }
     }
     <BackgammonClickBoardBlazor />

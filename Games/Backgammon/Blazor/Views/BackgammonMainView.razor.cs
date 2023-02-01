@@ -3,10 +3,10 @@ public partial class BackgammonMainView
 {
     private readonly BasicList<LabelGridModel> _labels = new();
     private GameBoardGraphicsCP? _graphicsData;
-    private static string GetColumns => $"{bb.RepeatMinimum(1)} {bb.RepeatAuto(1)}";
+    private static string GetColumns => $"{bb1.RepeatMinimum(1)} {bb1.RepeatAuto(1)}";
     protected override void OnInitialized()
     {
-        _graphicsData = aa.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _graphicsData = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(BackgammonVMData.NormalTurn))
            .AddLabel("Game Status", nameof(BackgammonVMData.Status))
