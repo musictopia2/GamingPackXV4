@@ -254,7 +254,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
                 await ContinueRollAsync();
                 return;
             case "rolldice":
-                BasicList<BasicList<RummyDiceInfo>> thisList = await js.DeserializeObjectAsync<BasicList<BasicList<RummyDiceInfo>>>(content);
+                BasicList<BasicList<RummyDiceInfo>> thisList = await js1.DeserializeObjectAsync<BasicList<BasicList<RummyDiceInfo>>>(content);
                 await ShowRollingAsync(thisList);
                 return;
             case "diceclicked":
@@ -264,7 +264,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
                 await SetProcessAsync(int.Parse(content));
                 return;
             case "diceset":
-                SendSet thisSend = await js.DeserializeObjectAsync<SendSet>(content);
+                SendSet thisSend = await js1.DeserializeObjectAsync<SendSet>(content);
                 RummyDiceHandVM thisTemp = TempSets!.Single(xx => xx.Index == thisSend.WhichSet);
                 await thisTemp.SelectUnselectDiceAsync(thisSend.Dice);
                 return;

@@ -5,7 +5,7 @@ public class RummyDiceSaveInfo : BasicSavedGameClass<RummyDicePlayerItem>, IMapp
     private readonly RummyDiceVMData _model;
     public RummyDiceSaveInfo()
     {
-        _model = aa.Resolver!.Resolve<RummyDiceVMData>();
+        _model = aa1.Resolver!.Resolve<RummyDiceVMData>();
     }
     public BasicList<RummyDiceInfo> DiceList { get; set; } = new();
     private int _rollNumber;

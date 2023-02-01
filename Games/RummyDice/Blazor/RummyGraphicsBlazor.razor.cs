@@ -13,10 +13,10 @@ public partial class RummyGraphicsBlazor
     }
     private string WhiteString()
     {
-        return $"<text x='50%' y='55%' font-family='tahoma' font-size='70' stroke-width='2px' stroke='black' fill='white' dominant-baseline='middle' text-anchor='middle' >{DiceInfo!.Display}</text>";
+        return $"<text x='50%' y='55%' font-family='Lato' font-size='70' stroke-width='2px' stroke='black' fill='white' dominant-baseline='middle' text-anchor='middle' >{DiceInfo!.Display}</text>";
     }
     private static string GetBorderColor()
     {
-        return cc.White.ToWebColor();
+        return cc1.White.ToWebColor();
     }
 }
