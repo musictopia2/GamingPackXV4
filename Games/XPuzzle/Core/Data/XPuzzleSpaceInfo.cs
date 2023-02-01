@@ -3,10 +3,10 @@ public class XPuzzleSpaceInfo : IBasicSpace
 {
     public Vector Vector { get; set; }
     public string Text { get; set; } = "";
-    public string Color { get; set; } = cs.Transparent;
+    public string Color { get; set; } = cs1.Transparent;
     public void ClearSpace()
     {
-        Color = cs.Transparent;
+        Color = cs1.Transparent;
         Text = "";
     }
     public bool IsFilled()

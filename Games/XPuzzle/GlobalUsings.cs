@@ -3,8 +3,8 @@ global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExte
 global using CommonBasicLibraries.BasicDataSettingsAndProcesses;
 global using static CommonBasicLibraries.BasicDataSettingsAndProcesses.BasicDataFunctions;
 global using CommonBasicLibraries.CollectionClasses;
-global using fs = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
-global using js = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
+global using fs1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
+global using js1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
 global using BasicGameFrameworkLibrary.Core.CommonInterfaces;
 global using XPuzzle.Core.Data;
 global using BasicGameFrameworkLibrary.Core.BasicEventModels;
@@ -21,10 +21,10 @@ global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.MapHelper
 global using BasicGameFrameworkLibrary.Core.Attributes;
 global using BasicGameFrameworkLibrary.Blazor.Bootstrappers;
 global using XPuzzle.Core.ViewModels;
-global using cs = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using cs1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using System.Collections;
 global using BasicGameFrameworkLibrary.Core.GameBoardCollections;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.RandomGenerator;
 global using BasicGameFrameworkLibrary.Core.GeneratorHelpers;
 global using BasicGameFrameworkLibrary.Core.Extensions;
-global using aa = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using aa1 = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;

@@ -9,8 +9,8 @@ public partial class BasicMultiplayerMiscCardGamesMainView
     private BasicMultiplayerMiscCardGamesGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<BasicMultiplayerMiscCardGamesVMData>();
-        _gameContainer = aa.Resolver.Resolve<BasicMultiplayerMiscCardGamesGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<BasicMultiplayerMiscCardGamesVMData>();
+        _gameContainer = aa1.Resolver.Resolve<BasicMultiplayerMiscCardGamesGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(BasicMultiplayerMiscCardGamesVMData.NormalTurn))
             .AddLabel("Status", nameof(BasicMultiplayerMiscCardGamesVMData.Status));

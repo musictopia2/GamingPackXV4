@@ -1,4 +1,9 @@
-﻿.beginning {
+﻿@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+html, body, div {
+    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.beginning {
     flex: 1;
     user-select: none;
 }

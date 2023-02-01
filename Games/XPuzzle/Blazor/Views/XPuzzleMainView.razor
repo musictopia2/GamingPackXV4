@@ -1,5 +1,5 @@
 @inherits BasicGameView<XPuzzleMainViewModel>
-@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 <GridGameBoard S="XPuzzleSpaceInfo" SpaceList="GetSpaceList()"
                 Context="Item" GridWidth="100%" GridHeight="80vh"
                 TargetSpaceHeight="300" TargetSpaceWidth="300">
@@ -10,13 +10,13 @@
             good news is xpuzzle had no performance problems so no issue here.
         *@
         <BorderedSpace
-                       BorderColor="@cc.Black" 
+                       BorderColor="@cc1.Black" 
                        BorderWidth="3"
                        FillColor="@Item.Color"
                        SpaceClicked="() => ClickedAsync(Item)">
-            <CenteredTextBlazor TextColor="@cc.White"
+            <CenteredTextBlazor TextColor="@cc1.White"
                                 BorderWidth="3" 
-                                BorderColor="@cc.Black"
+                                BorderColor="@cc1.Black"
                                 Text="@Item.Text"
                                 FontSize="300"
                                 />

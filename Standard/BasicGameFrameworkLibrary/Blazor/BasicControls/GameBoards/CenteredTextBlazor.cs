@@ -30,7 +30,7 @@ public class CenteredTextBlazor : ComponentBase
         return _previous!.Equals(GetRecord) == false;
     }
     [Parameter]
-    public string FontFamily { get; set; } = "tahoma";
+    public string FontFamily { get; set; } = "Lato";
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         SvgRenderClass render = new();

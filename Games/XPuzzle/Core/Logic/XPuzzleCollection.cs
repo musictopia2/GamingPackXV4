@@ -35,11 +35,11 @@ public class XPuzzleCollection : IBoardCollection<XPuzzleSpaceInfo>
             thisSpace.Text = "";
             if (!(thisSpace.Vector.Column == 3 && thisSpace.Vector.Row == 3))
             {
-                thisSpace.Color = cs.Navy;
+                thisSpace.Color = cs1.Navy;
             }
             else
             {
-                thisSpace.Color = cs.Black;
+                thisSpace.Color = cs1.Black;
             }
         });
     }
@@ -69,12 +69,12 @@ public class XPuzzleCollection : IBoardCollection<XPuzzleSpaceInfo>
             {
                 thisSpace.Text = thisList.First().ToString();
                 thisList.RemoveFirstItem();
-                thisSpace.Color = cs.Navy;
+                thisSpace.Color = cs1.Navy;
             }
             else
             {
                 thisSpace.Text = "";
-                thisSpace.Color = cs.Black;
+                thisSpace.Color = cs1.Black;
             }
 
         });

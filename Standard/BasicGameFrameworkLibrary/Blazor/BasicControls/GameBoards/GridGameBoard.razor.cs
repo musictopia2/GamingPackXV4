@@ -84,7 +84,7 @@ public partial class GridGameBoard<S>
         {
             boldText = "font-weight='bold'";
         }
-        return $"<text x='50%' y='55%' font-family='tahoma' font-size='{HeaderFontSize}px' {boldText} fill='White' dominant-baseline='middle' text-anchor='middle'>{value}</text>";
+        return $"<text x='50%' y='55%' font-family='Lato' font-size='{HeaderFontSize}px' {boldText} fill='White' dominant-baseline='middle' text-anchor='middle'>{value}</text>";
     }
     public PointF GetControlLocation(int row, int column)
     {

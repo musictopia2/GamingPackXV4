@@ -69,8 +69,8 @@ public class XPuzzleGameBoardClass : IAdvancedDIContainer
         }
         XPuzzleSpaceInfo previousSpace;
         previousSpace = _games.SpaceList[PreviousOpen];
-        previousSpace.Color = cs.Navy;
-        thisSpace.Color = cs.Black;
+        previousSpace.Color = cs1.Navy;
+        thisSpace.Color = cs1.Black;
         previousSpace.Text = thisSpace.Text;
         thisSpace.Text = "";
         PreviousOpen = thisSpace.Vector;

@@ -9,8 +9,8 @@ public partial class BasicMultiplayerTrickCardGamesMainView
     private BasicMultiplayerTrickCardGamesGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<BasicMultiplayerTrickCardGamesVMData>();
-        _gameContainer = aa.Resolver.Resolve<BasicMultiplayerTrickCardGamesGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<BasicMultiplayerTrickCardGamesVMData>();
+        _gameContainer = aa1.Resolver.Resolve<BasicMultiplayerTrickCardGamesGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(BasicMultiplayerTrickCardGamesVMData.NormalTurn))
             .AddLabel("Trump", nameof(BasicMultiplayerTrickCardGamesVMData.TrumpSuit))

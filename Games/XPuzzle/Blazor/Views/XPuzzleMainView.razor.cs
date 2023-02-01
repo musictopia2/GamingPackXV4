@@ -3,7 +3,7 @@ public partial class XPuzzleMainView
 {
     private static XPuzzleCollection GetSpaceList()
     {
-        XPuzzleSaveInfo thisSave = aa.Resolver!.Resolve<XPuzzleSaveInfo>();
+        XPuzzleSaveInfo thisSave = aa1.Resolver!.Resolve<XPuzzleSaveInfo>();
         return thisSave.SpaceList;
     }
     private async Task ClickedAsync(XPuzzleSpaceInfo space)

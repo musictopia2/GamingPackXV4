@@ -33,7 +33,7 @@ public partial class StandardDiceBlazor : GraphicsCommand
     private static float DiceRadius => 10;
     private string WhiteString()
     {
-        return $"<text x='50%' y='55%' font-family='tahoma' font-size='80' stroke='black' fill='white' dominant-baseline='middle' text-anchor='middle' >{Dice!.Value}</text>";
+        return $"<text x='50%' y='55%' font-family='Lato' font-size='80' stroke='black' fill='white' dominant-baseline='middle' text-anchor='middle' >{Dice!.Value}</text>";
     }
     private string RectString()
     {
