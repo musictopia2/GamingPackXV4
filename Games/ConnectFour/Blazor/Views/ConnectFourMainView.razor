@@ -1,5 +1,5 @@
 @inherits BasicGameView<ConnectFourMainViewModel>
-@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString
+@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString
 <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
 <div>
     <GridGameBoard SpaceList="DataContext!.GetBoardList"
@@ -10,7 +10,7 @@
                    S="SpaceInfoCP">
         <ItemTemplate Context="Space">
             <BasePieceGraphics LongestSize="95" CommandObject="ColumnCommand" CommandParameter="Space" AfterChange="ShowChange">
-                <CheckerPiece BlankColor="@cc.Aqua" HasImage="@Space.HasImage" MainColor="@Space.Color" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" />
+                <CheckerPiece BlankColor="@cc1.Aqua" HasImage="@Space.HasImage" MainColor="@Space.Color" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" />
             </BasePieceGraphics>
         </ItemTemplate>
         <Canvas>
