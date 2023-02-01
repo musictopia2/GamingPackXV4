@@ -9,8 +9,8 @@ public partial class FiveCrownsMainView
     private FiveCrownsGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<FiveCrownsVMData>();
-        _gameContainer = aa.Resolver.Resolve<FiveCrownsGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<FiveCrownsVMData>();
+        _gameContainer = aa1.Resolver.Resolve<FiveCrownsGameContainer>();
         _labels.AddLabel("Turn", nameof(FiveCrownsVMData.NormalTurn))
              .AddLabel("Status", nameof(FiveCrownsVMData.Status))
              .AddLabel("Up To", nameof(FiveCrownsVMData.UpTo));

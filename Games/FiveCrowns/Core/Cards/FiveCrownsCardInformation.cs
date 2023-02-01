@@ -13,7 +13,7 @@ public class FiveCrownsCardInformation : SimpleDeckObject, IDeckObject, IRummmyO
     {
         get
         {
-            _mainGame ??= aa.Resolver!.Resolve<FiveCrownsMainGameClass>();
+            _mainGame ??= aa1.Resolver!.Resolve<FiveCrownsMainGameClass>();
             return CardType == EnumCardTypeList.Joker || _mainGame.SaveRoot!.UpTo == CardValue.Value;
         }
     }

@@ -182,13 +182,13 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
     {
         string color = GetColor;
         RectangleF rect = new(40, 60, 75, 75);
-        if (color != cc.Yellow)
+        if (color != cc1.Yellow)
         {
             MainGroup!.DrawRoyalSuits(rect, color);
         }
         else
         {
-            MainGroup!.DrawRoyalSuits(rect, color, cc.Black, 20);
+            MainGroup!.DrawRoyalSuits(rect, color, cc1.Black, 20);
         }
     }
     private void DrawCardAndStartingSuit()
@@ -215,7 +215,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
         text.Y = "43";
         string color = GetColor;
         text.Fill = color.ToWebColor(); //try this.
-        if (text.Fill == cc.Yellow.ToWebColor())
+        if (text.Fill == cc1.Yellow.ToWebColor())
         {
             text.PopulateStrokesToStyles(strokeWidth: 2); //try this way.
         }
@@ -231,7 +231,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
         text.X = x;
         text.Y = "43";
         text.Fill = color.ToWebColor();
-        if (text.Fill == cc.Yellow.ToWebColor())
+        if (text.Fill == cc1.Yellow.ToWebColor())
         {
             text.PopulateStrokesToStyles(strokeWidth: 2);
         }
@@ -263,7 +263,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
         }
         else if (DeckObject.Suit == EnumSuitList.Stars)
         {
-            group.DrawStar(bounds, color, cc.Black, 3); //i think
+            group.DrawStar(bounds, color, cc1.Black, 3); //i think
         }
     }
     private string GetColor
@@ -307,11 +307,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
         RectangleF firstRect = new(0, 5, 160, 55);
         var fontSize = firstRect.Height;
         Text text = new();
-        text.Fill = cc.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor();
         text.Content = "Joker";
         text.Font_Size = fontSize;
         text.CenterText(MainGroup, firstRect);
         RectangleF secondRect = new(30, 75, 100, 100);
-        MainGroup.DrawSmiley(secondRect, "", cc.Black, cc.Black, 2);
+        MainGroup.DrawSmiley(secondRect, "", cc1.Black, cc1.Black, 2);
     }
 }

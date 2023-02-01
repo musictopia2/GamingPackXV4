@@ -126,7 +126,7 @@ public partial class FiveCrownsMainViewModel : BasicCardGamesVM<FiveCrownsCardIn
             if (_mainGame.BasicData!.MultiPlayer == true)
             {
                 var tempList = thisTemp.CardList.GetDeckListFromObjectList();
-                var thisStr = await js.SerializeObjectAsync(tempList);
+                var thisStr = await js1.SerializeObjectAsync(tempList);
                 newList.Add(thisStr);
             }
             _model.TempSets!.ClearBoard(thisTemp.SetNumber);

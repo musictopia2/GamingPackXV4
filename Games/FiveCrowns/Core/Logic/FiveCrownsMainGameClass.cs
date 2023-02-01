@@ -150,7 +150,7 @@ public class FiveCrownsMainGameClass
     }
     private async Task CreateSetsAsync(string message)
     {
-        var firstTemp = await js.DeserializeObjectAsync<BasicList<string>>(message);
+        var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(message);
         foreach (var thisFirst in firstTemp)
         {
             var thisCol = await thisFirst.GetObjectsFromDataAsync(SingleInfo!.MainHandList);
@@ -355,7 +355,9 @@ public class FiveCrownsMainGameClass
             tempCollection = WhatSet(x);
             thisCollection = new();
             if (tempCollection.Count > 0)
+            {
                 thisCollection.AddRange(tempCollection);
+            }
             if (thisCollection.Count > 0)
             {
                 bool rets = HasSet(thisCollection);
