@@ -236,7 +236,7 @@ public class SorryCardGameMainGameClass
                 await SorryPlayerAsync(int.Parse(content));
                 return;
             case "regularplay":
-                BasicList<int> thisList = await js.DeserializeObjectAsync<BasicList<int>>(content);
+                BasicList<int> thisList = await js1.DeserializeObjectAsync<BasicList<int>>(content);
                 var newCol = thisList.GetNewObjectListFromDeckList(_gameContainer.DeckList!);
                 await PlaySeveralCards(newCol);
                 return;
@@ -412,7 +412,7 @@ public class SorryCardGameMainGameClass
     }
     private static async Task<SorryPlay> GetSentPlayAsync(string message)
     {
-        return await js.DeserializeObjectAsync<SorryPlay>(message);
+        return await js1.DeserializeObjectAsync<SorryPlay>(message);
     }
     async Task IAfterColorProcesses.AfterChoosingColorsAsync()
     {

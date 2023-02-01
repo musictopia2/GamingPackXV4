@@ -6,11 +6,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
     {
         if (DeckObject!.IsUnknown)
         {
-            FillColor = cc.LightBlue;
+            FillColor = cc1.LightBlue;
         }
         else
         {
-            FillColor = cc.White;
+            FillColor = cc1.White;
         }
         base.BeforeFilling();
     }
@@ -27,7 +27,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         }
         if (DeckObject.Sorry == EnumSorry.OnBoard)
         {
-            if (DeckObject.Color == cc.Transparent || DeckObject.Color == "")
+            if (DeckObject.Color == cc1.Transparent || DeckObject.Color == "")
             {
                 return false;
             }
@@ -63,10 +63,10 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         var secondRect = new RectangleF(3, 22, 60, 19);
         var thirdRect = new RectangleF(3, 41, 60, 19);
         var fourthRect = new RectangleF(3, 60, 60, 19);
-        DrawText("Sorry!", firstRect, cc.Black, fontSize, true);
-        DrawText("Revenge", secondRect, cc.Black, fontSize, true);
-        DrawText("Card", thirdRect, cc.Black, fontSize, true);
-        DrawText("Game", fourthRect, cc.Black, fontSize, true);
+        DrawText("Sorry!", firstRect, cc1.Black, fontSize, true);
+        DrawText("Revenge", secondRect, cc1.Black, fontSize, true);
+        DrawText("Card", thirdRect, cc1.Black, fontSize, true);
+        DrawText("Game", fourthRect, cc1.Black, fontSize, true);
     }
     protected override void DrawImage()
     {
@@ -133,7 +133,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         RectangleF secondRect;
         RectangleF thirdRect = default;
         var tempRect = new RectangleF(6, 6, 50, 63);
-        DrawRoundedRectangle(tempRect, cc.Yellow);
+        DrawRoundedRectangle(tempRect, cc1.Yellow);
         if (list.Count == 3)
         {
             if (DeckObject.Category == EnumCategory.Slide)
@@ -163,11 +163,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         {
             fontSize = firstRect.Height * 0.7f;
         }
-        string color = cc.DarkGreen;
+        string color = cc1.DarkGreen;
         if (DeckObject.Category == EnumCategory.Slide)
         {
             fontSize = firstRect.Height * 0.62f;
-            color = cc.White;
+            color = cc1.White;
             DrawText(list.First(), firstRect, color, fontSize, hasBorders: true);
             DrawText(list.Last(), secondRect, color, fontSize, hasBorders: true);
         }
@@ -202,12 +202,12 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         RectangleF thirdRect;
         if (DeckObject.Sorry == EnumSorry.Dont)
         {
-            DrawRoundedRectangle(tempRect, cc.Blue);
+            DrawRoundedRectangle(tempRect, cc1.Blue);
             firstRect = new RectangleF(3, 3, 60, 26);
             secondRect = new RectangleF(3, 24, 60, 26);
             thirdRect = new RectangleF(3, 45, 60, 26);
             var fontSize = firstRect.Height * 0.6f;
-            string color = cc.White;
+            string color = cc1.White;
             DrawText("Don't", firstRect, color, fontSize, true);
             DrawText("Be", secondRect, color, fontSize, true);
             DrawText("Sorry", thirdRect, color, fontSize, true);
@@ -216,12 +216,12 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         BasicList<string> otherList;
         if (DeckObject.Sorry == EnumSorry.At21)
         {
-            DrawRoundedRectangle(tempRect, cc.Red);
+            DrawRoundedRectangle(tempRect, cc1.Red);
             otherList = new() { "Play When", "Opponent", "Reaches 21!" };
         }
         else if (DeckObject.Sorry == EnumSorry.Regular)
         {
-            DrawRoundedRectangle(tempRect, cc.Gray);
+            DrawRoundedRectangle(tempRect, cc1.Gray);
             otherList = new() { "Flip Another", "Player Back", "To Start" };
         }
         else
@@ -235,8 +235,8 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         fourthRect = new RectangleF(1, 54, 60, 17);
         var firstFont = firstRect.Height * 0.8f;
         var secondFont = secondRect.Height * 0.5f;
-        string firstColor = cc.Black;
-        string secondColor = cc.White;
+        string firstColor = cc1.Black;
+        string secondColor = cc1.White;
         DrawText("Sorry!", firstRect, firstColor, firstFont);
         DrawText(otherList.First(), secondRect, secondColor, secondFont);
         DrawText(otherList[1], thirdRect, secondColor, secondFont);
@@ -245,7 +245,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
     private void DrawOnBoardCards()
     {
         var tempRect = new RectangleF(6, 6, 50, 63);
-        DrawRoundedRectangle(tempRect, cc.LawnGreen);
+        DrawRoundedRectangle(tempRect, cc1.LawnGreen);
 
         var pawnRect = new RectangleF(7, 7, 45, 45);
         MainGroup!.DrawPawnPiece(pawnRect, DeckObject!.Color);
@@ -265,17 +265,17 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         }
         var thisRect = new RectangleF(2, 47, 60, 28);
         var fontSize = thisRect.Height * .65f;
-        DrawText(text, thisRect, cc.Black, fontSize, true);
+        DrawText(text, thisRect, cc1.Black, fontSize, true);
     }
     private void DrawPawn()
     {
         var rect_Card = new RectangleF(0, 0, DefaultSize.Width, DefaultSize.Height);
         var tempRect = new RectangleF(6, 6, 50, 63);
-        DrawRoundedRectangle(tempRect, cc.LawnGreen);
+        DrawRoundedRectangle(tempRect, cc1.LawnGreen);
         var otherRect = new RectangleF(8, 12, 45, 45);
-        MainGroup!.DrawPawnPiece(otherRect, cc.Black);
+        MainGroup!.DrawPawnPiece(otherRect, cc1.Black);
         var fontSize = rect_Card.Height * .5f;
-        DrawText(DeckObject!.Value.ToString(), rect_Card, cc.White, fontSize, true, true);
+        DrawText(DeckObject!.Value.ToString(), rect_Card, cc1.White, fontSize, true, true);
     }
     private void DrawRoundedRectangle(RectangleF bounds, string color)
     {

@@ -4,7 +4,7 @@ public class SorryCardGameCardInformation : SimpleDeckObject, IDeckObject, IComp
     public EnumCategory Category { get; set; } = EnumCategory.Blank;
     public EnumSorry Sorry { get; set; } = EnumSorry.Blank;
     public int Value { get; set; }
-    public string Color { get; set; } = cc.Transparent;
+    public string Color { get; set; } = cc1.Transparent;
     public SorryCardGameCardInformation()
     {
         DefaultSize = new SizeF(66, 80);
