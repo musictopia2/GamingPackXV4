@@ -9,7 +9,7 @@ public class ScoreSummaryCP
     private readonly CribbagePatienceMainGameClass _mainGame;
     public ScoreSummaryCP()
     {
-        _mainGame = aa.Resolver!.Resolve<CribbagePatienceMainGameClass>();
+        _mainGame = aa1.Resolver!.Resolve<CribbagePatienceMainGameClass>();
     }
     public int TotalScore
     {
