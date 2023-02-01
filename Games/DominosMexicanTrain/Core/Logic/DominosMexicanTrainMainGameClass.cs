@@ -132,7 +132,7 @@ public class DominosMexicanTrainMainGameClass : DominosGameClass<MexicanDomino, 
         switch (status) //can't do switch because we don't know what the cases are ahead of time.
         {
             case "dominoplayed":
-                SendPlay output = await js.DeserializeObjectAsync<SendPlay>(content);
+                SendPlay output = await js1.DeserializeObjectAsync<SendPlay>(content);
                 MexicanDomino thisDomino = SingleInfo!.MainHandList.GetSpecificItem(output.Deck);
                 SingleInfo.MainHandList.RemoveObjectByDeck(output.Deck);
                 _command.UpdateAll(); //i think.

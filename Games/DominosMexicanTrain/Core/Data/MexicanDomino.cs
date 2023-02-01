@@ -17,10 +17,7 @@ public class MexicanDomino : SimpleDominoInfo
     {
         get
         {
-            if (_mainGame == null)
-            {
-                _mainGame = aa.Resolver!.Resolve<DominosMexicanTrainMainGameClass>(); //needs this
-            }
+            _mainGame ??= aa1.Resolver!.Resolve<DominosMexicanTrainMainGameClass>(); //needs this
             if (_mainGame.PlayerList.Count < 5)
             {
                 return 12;

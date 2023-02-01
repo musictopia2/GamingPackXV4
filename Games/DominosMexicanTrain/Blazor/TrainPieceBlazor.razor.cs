@@ -20,9 +20,9 @@ public partial class TrainPieceBlazor
     {
         if (TrainInfo!.IsPublic)
         {
-            return cc.Green.ToWebColor();
+            return cc1.Green.ToWebColor();
         }
-        return cc.Blue.ToWebColor();
+        return cc1.Blue.ToWebColor();
     }
     private bool CanClick()
     {

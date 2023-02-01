@@ -13,7 +13,7 @@ public partial class TrainStationBlazor : IHandle<RepaintEventModel>, IDisposabl
     private bool _disposedValue;
     protected override void OnInitialized()
     {
-        _aggregator = aa.Resolver!.Resolve<IEventAggregator>();
+        _aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
         Subscribe();
         GameBoard!.DominoLocationNeeded = GetDominoPoint;
         base.OnInitialized();
