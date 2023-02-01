@@ -80,8 +80,8 @@ public class GameBoardGraphicsCP
         // *** Create the kitchen
         obj_TempRoom = new();
         obj_TempRoom.Name = "Kitchen";
-        obj_TempRoom.FloorColor1 = cc.Black;
-        obj_TempRoom.FloorColor2 = cc.White;
+        obj_TempRoom.FloorColor1 = cc1.Black;
+        obj_TempRoom.FloorColor2 = cc1.White;
         obj_TempRoom.MiscList = new();
         obj_TempRoom.PieceArea = new(19, 19, 6, 7);
         tempRect = new(24, 18, 1, 1);
@@ -100,8 +100,8 @@ public class GameBoardGraphicsCP
         // *** Create the Ball Room
         obj_TempRoom = new();
         obj_TempRoom.Name = "Ball Room";
-        obj_TempRoom.FloorColor1 = cc.SaddleBrown;
-        obj_TempRoom.FloorColor2 = cc.SaddleBrown;
+        obj_TempRoom.FloorColor1 = cc1.SaddleBrown;
+        obj_TempRoom.FloorColor2 = cc1.SaddleBrown;
         obj_TempRoom.MiscList = new();
         obj_TempRoom.PieceArea = new RectangleF(9, 18, 8, 6);
         tempRect = new RectangleF(10, 24, 5, 2);
@@ -124,8 +124,8 @@ public class GameBoardGraphicsCP
         // *** Create the conservatory
         obj_TempRoom = new();
         obj_TempRoom.Name = "Conservatory";
-        obj_TempRoom.FloorColor1 = cc.Green;
-        obj_TempRoom.FloorColor2 = cc.White;
+        obj_TempRoom.FloorColor1 = cc1.Green;
+        obj_TempRoom.FloorColor2 = cc1.White;
         obj_TempRoom.MiscList = new();
         obj_TempRoom.PieceArea = new RectangleF(1, 20, 5, 6);
         tempRect = new RectangleF(6, 21, 1, 5);
@@ -142,8 +142,8 @@ public class GameBoardGraphicsCP
         // *** Create the billiard room
         obj_TempRoom = new();
         obj_TempRoom.Name = "Billiard Room";
-        obj_TempRoom.FloorColor1 = cc.DarkGreen;
-        obj_TempRoom.FloorColor2 = cc.DarkGreen;
+        obj_TempRoom.FloorColor1 = cc1.DarkGreen;
+        obj_TempRoom.FloorColor2 = cc1.DarkGreen;
         obj_TempRoom.MiscList = new();
         obj_TempRoom.PieceArea = new RectangleF(1, 13, 6, 5);
         tempRect = new RectangleF(1, 12, 1, 1);
@@ -162,8 +162,8 @@ public class GameBoardGraphicsCP
         // *** Create the library
         obj_TempRoom = new();
         obj_TempRoom.Name = "Library";
-        obj_TempRoom.FloorColor1 = cc.Blue;
-        obj_TempRoom.FloorColor2 = cc.Blue;
+        obj_TempRoom.FloorColor1 = cc1.Blue;
+        obj_TempRoom.FloorColor2 = cc1.Blue;
         obj_TempRoom.MiscList = new();
         obj_TempRoom.PieceArea = new RectangleF(1, 7, 6, 5);
         tempRect = new RectangleF(7, 8, 1, 3);
@@ -180,8 +180,8 @@ public class GameBoardGraphicsCP
         // *** Create the study
         obj_TempRoom = new();
         obj_TempRoom.Name = "Study";
-        obj_TempRoom.FloorColor1 = cc.Green;
-        obj_TempRoom.FloorColor2 = cc.Green;
+        obj_TempRoom.FloorColor1 = cc1.Green;
+        obj_TempRoom.FloorColor2 = cc1.Green;
         obj_TempRoom.MiscList = new();
         obj_TempRoom.PieceArea = new RectangleF(1, 1, 7, 4);
         tempRect = new RectangleF(8, 1, 1, 1);
@@ -200,8 +200,8 @@ public class GameBoardGraphicsCP
         // *** Create the hall
         obj_TempRoom = new();
         obj_TempRoom.Name = "Hall";
-        obj_TempRoom.FloorColor1 = cc.Maroon;
-        obj_TempRoom.FloorColor2 = cc.Maroon;
+        obj_TempRoom.FloorColor1 = cc1.Maroon;
+        obj_TempRoom.FloorColor2 = cc1.Maroon;
         obj_TempRoom.MiscList = new();
         obj_TempRoom.PieceArea = new RectangleF(10, 1, 6, 7);
         tempRect = new RectangleF(9, 1, 1, 1);
@@ -223,8 +223,8 @@ public class GameBoardGraphicsCP
         // *** Create the lounge
         obj_TempRoom = new();
         obj_TempRoom.Name = "Lounge";
-        obj_TempRoom.FloorColor1 = cc.SeaGreen;
-        obj_TempRoom.FloorColor2 = cc.SeaGreen;
+        obj_TempRoom.FloorColor1 = cc1.SeaGreen;
+        obj_TempRoom.FloorColor2 = cc1.SeaGreen;
         obj_TempRoom.MiscList = new();
         obj_TempRoom.PieceArea = new RectangleF(18, 1, 7, 6);
         tempRect = new RectangleF(24, 7, 1, 1);
@@ -238,8 +238,8 @@ public class GameBoardGraphicsCP
         // *** Create the dining room
         obj_TempRoom = new();
         obj_TempRoom.Name = "Dining Room";
-        obj_TempRoom.FloorColor1 = cc.Brown;
-        obj_TempRoom.FloorColor2 = cc.Brown;
+        obj_TempRoom.FloorColor1 = cc1.Brown;
+        obj_TempRoom.FloorColor2 = cc1.Brown;
         obj_TempRoom.MiscList = new();
         obj_TempRoom.PieceArea = new RectangleF(17, 10, 8, 6);
         tempRect = new RectangleF(24, 9, 1, 1);

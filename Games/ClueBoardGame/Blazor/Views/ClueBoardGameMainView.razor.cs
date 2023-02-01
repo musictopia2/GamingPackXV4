@@ -6,7 +6,7 @@ public partial class ClueBoardGameMainView
     private GameBoardGraphicsCP? _graphicsData;
     protected override void OnInitialized()
     {
-        _graphicsData = aa.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _graphicsData = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ClueBoardGameVMData.NormalTurn));
         _clues.Clear();

@@ -26,8 +26,8 @@ public partial class DetectiveGraphicsBlazor
         return category switch
         {
             EnumCardType.IsRoom => 0,
-            EnumCardType.IsWeapon => pg.RoomWidth + pg.CharacterWidth,
-            EnumCardType.IsCharacter => pg.RoomWidth,
+            EnumCardType.IsWeapon => pg1.RoomWidth + pg1.CharacterWidth,
+            EnumCardType.IsCharacter => pg1.RoomWidth,
             _ => -10,
         };
     }
@@ -35,18 +35,18 @@ public partial class DetectiveGraphicsBlazor
     {
         return category switch
         {
-            EnumCardType.IsRoom => pg.RoomWidth,
-            EnumCardType.IsWeapon => pg.RoomWidth,
-            EnumCardType.IsCharacter => pg.CharacterWidth,
+            EnumCardType.IsRoom => pg1.RoomWidth,
+            EnumCardType.IsWeapon => pg1.RoomWidth,
+            EnumCardType.IsCharacter => pg1.CharacterWidth,
             _ => 10
         };
     }
     private static RectangleF GetButtonLocation(EnumCardType category, int row) //sent 0 based.
     {
-        int startY = pg.CellHeight * row;
+        int startY = pg1.CellHeight * row;
         int startX = StartX(category);
         int width = ColumnWidth(category);
-        return new RectangleF(startX, startY, width, pg.CellHeight);
+        return new RectangleF(startX, startY, width, pg1.CellHeight);
     }
     private int GetIndex(DetectiveInfo detective)
     {

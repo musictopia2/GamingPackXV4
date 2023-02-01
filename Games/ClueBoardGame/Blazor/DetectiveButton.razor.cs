@@ -52,20 +52,20 @@ public partial class DetectiveButton : GraphicsCommand
     {
         if (_detective == null || DataContext == null)
         {
-            return cc.Transparent;
+            return cc1.Transparent;
         }
         if (DetectiveCategory != EnumDetectiveCategory.Prediction)
         {
             if (_detective.IsChecked)
             {
-                return cc.LimeGreen;
+                return cc1.LimeGreen;
             }
-            return cc.Aqua;
+            return cc1.Aqua;
         }
         if (WasSelected())
         {
-            return cc.LimeGreen;
+            return cc1.LimeGreen;
         }
-        return cc.Aqua;
+        return cc1.Aqua;
     }
 }

@@ -248,7 +248,7 @@ public class ClueBoardGameMainGameClass
         }
         thisList.ShuffleList();
         DeckRegularDict<CardInfo> output = new();
-        ps.CardProcedures.PassOutCards(PlayerList!, thisList, 3, 0, false, ref output);
+        ps1.CardProcedures.PassOutCards(PlayerList!, thisList, 3, 0, false, ref output);
         foreach (var player in PlayerList)
         {
             player.DetectiveList = GetDetectiveList();
@@ -294,7 +294,7 @@ public class ClueBoardGameMainGameClass
             case "prediction":
 
             case "accusation":
-                SaveRoot!.CurrentPrediction = await js.DeserializeObjectAsync<PredictionInfo>(content);
+                SaveRoot!.CurrentPrediction = await js1.DeserializeObjectAsync<PredictionInfo>(content);
                 _model!.CurrentCharacterName = SaveRoot.CurrentPrediction.CharacterName;
                 _model.CurrentRoomName = SaveRoot.CurrentPrediction.RoomName;
                 _model.CurrentWeaponName = SaveRoot.CurrentPrediction.WeaponName;

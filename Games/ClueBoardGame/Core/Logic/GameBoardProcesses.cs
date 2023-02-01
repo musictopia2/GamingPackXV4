@@ -98,12 +98,12 @@ public class GameBoardProcesses
             thisCharacter.Piece = newCol[x - 1];
             thisCharacter.MainColor = thisCharacter.Piece switch
             {
-                EnumNameList.Peacock => cc.Aqua,
-                EnumNameList.Green => cc.Green,
-                EnumNameList.Plum => cc.Purple,
-                EnumNameList.Scarlet => cc.Red,
-                EnumNameList.White => cc.White,
-                EnumNameList.Mustard => cc.Yellow,
+                EnumNameList.Peacock => cc1.Aqua,
+                EnumNameList.Green => cc1.Green,
+                EnumNameList.Plum => cc1.Purple,
+                EnumNameList.Scarlet => cc1.Red,
+                EnumNameList.White => cc1.White,
+                EnumNameList.Mustard => cc1.Yellow,
                 _ => throw new CustomBasicException("No color found when loading character list"),
             };
             thisCharacter.FirstSpace = newSpace;
@@ -532,7 +532,7 @@ public class GameBoardProcesses
                 try
                 {
 
-                    pp.AddRectToArea(ThisRoom.Space, ThisRect);
+                    pp1.AddRectToArea(ThisRoom.Space, ThisRect);
                 }
                 catch (Exception) //try to ignore exceptions.
                 {

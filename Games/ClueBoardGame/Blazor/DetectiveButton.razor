@@ -1,17 +1,17 @@
 ﻿@inherits GraphicsCommand
-@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 @if (_detective == null)
 {
     return;
 }
 <BorderedSpace SpaceClicked="Submit"
                FillColor="@FillColor()"
-               BorderColor="@cc.Black"
+               BorderColor="@cc1.Black"
                SpaceLocation="Bounds.Location"
                SpaceSize="Bounds.Size"
                BorderWidth="1"
                >
     <CenteredSvgText Text="@_detective.Name"
-                     FontSize="@pp.MainFontSize"
+                     FontSize="@pp1.MainFontSize"
                      TextColor="black" />
 </BorderedSpace>

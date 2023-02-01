@@ -1,23 +1,23 @@
 ﻿@using CommonBasicLibraries.CollectionClasses;
-@using gg = ClueBoardGame.Core.Logic.GameBoardGraphicsCP;
-@using p = BasicGameFrameworkLibrary.Core.GameboardPositionHelpers.PositionPieces;
+@using gg1 = ClueBoardGame.Core.Logic.GameBoardGraphicsCP;
+@using p1 = BasicGameFrameworkLibrary.Core.GameboardPositionHelpers.PositionPieces;
 @using BasicBlazorLibrary.Components.RenderHelpers;
 @if (GraphicsData == null)
 {
     return;
 }
-<RawGameBoard TargetHeight="@TargetHeight" BoardSize="gg.OriginalSize">
+<RawGameBoard TargetHeight="@TargetHeight" BoardSize="gg1.OriginalSize">
     <ResourceImage Assembly="@GetAssembly"
                    FileName="board.svg"
-                   Width="@gg.OriginalSize.Width.ToString()"
-                   Height="@gg.OriginalSize.Height.ToString()" />
+                   Width="@gg1.OriginalSize.Width.ToString()"
+                   Height="@gg1.OriginalSize.Height.ToString()" />
     @if (GraphicsData.GameContainer!.RoomList.Count != 9)
     {
         return;
     }
     @{
         BasicList<CharacterInfo> characterList;
-        SizeF spaceSize = new SizeF(gg.SpaceSize, gg.SpaceSize);
+        SizeF spaceSize = new SizeF(gg1.SpaceSize, gg1.SpaceSize);
         PointF location;
     }
     <RoomGraphics GraphicsData="GraphicsData" />
@@ -28,7 +28,7 @@
     @foreach (var character in characterList)
     {
         location = GraphicsData.PositionForStartSpace(character.FirstNumber);
-        <BasePieceGraphics @key="location" Location="@location" Fixed="true" LongestSize="@gg.SpaceSize">
+        <BasePieceGraphics @key="location" Location="@location" Fixed="true" LongestSize="@gg1.SpaceSize">
             <PawnPiece MainColor="@character.MainColor" />
         </BasePieceGraphics>
     }
@@ -38,7 +38,7 @@
     @foreach (var character in characterList)
     {
         location = GraphicsData.PositionForBoardPiece(character.Space);
-        <BasePieceGraphics @key="location" Location="@location" Fixed="true" LongestSize="@gg.SpaceSize">
+        <BasePieceGraphics @key="location" Location="@location" Fixed="true" LongestSize="@gg1.SpaceSize">
             <PawnPiece MainColor="@character.MainColor" />
         </BasePieceGraphics>
     }
