@@ -121,7 +121,7 @@ public class A8RoundRummyMainGameClass
         switch (status)
         {
             case "goout":
-                MultiplayerOut thisOut = await js.DeserializeObjectAsync<MultiplayerOut>(content);
+                MultiplayerOut thisOut = await js1.DeserializeObjectAsync<MultiplayerOut>(content);
                 WasGuarantee = thisOut.WasGuaranteed;
                 CardForDiscard = _gameContainer.DeckList!.GetSpecificItem(thisOut.Deck);
                 await GoOutAsync();
@@ -312,7 +312,9 @@ public class A8RoundRummyMainGameClass
     public override async Task DiscardAsync(A8RoundRummyCardInformation thisCard)
     {
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        {
             _model!.PlayerHand1!.EndTurn();
+        }
         if (thisCard.CardType == EnumCardType.Reverse)
         {
             thisCard.Drew = false;

@@ -13,9 +13,9 @@ public class CardGraphicsBlazor : BaseDeckGraphics<A8RoundRummyCardInformation>
         var secondRect = new RectangleF(0, 22, 54, 23);
         var thirdRect = new RectangleF(0, 43, 54, 23);
         var fontSize = firstRect.Height * .5;
-        DrawText(firstRect, "8", cc.Red, fontSize);
-        DrawText(secondRect, "Round", cc.Red, fontSize);
-        DrawText(thirdRect, "Rummy", cc.Red, fontSize);
+        DrawText(firstRect, "8", cc1.Red, fontSize);
+        DrawText(secondRect, "Round", cc1.Red, fontSize);
+        DrawText(thirdRect, "Rummy", cc1.Red, fontSize);
     }
     private void DrawText(RectangleF rectangle, string content, string color, double fontSize)
     {
@@ -29,11 +29,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<A8RoundRummyCardInformation>
     {
         if (DeckObject!.IsUnknown)
         {
-            FillColor = cc.Blue;
+            FillColor = cc1.Blue;
         }
         else
         {
-            FillColor = cc.White;
+            FillColor = cc1.White;
         }
         base.BeforeFilling();
     }
@@ -93,8 +93,8 @@ public class CardGraphicsBlazor : BaseDeckGraphics<A8RoundRummyCardInformation>
         var smileyRect = new RectangleF(8, 5, 35, 35);
         var textRect = new RectangleF(0, 40, 55, 30);
         var fontSize = textRect.Height * 0.5f;
-        MainGroup!.DrawSmiley(smileyRect, "", cc.Black, cc.Black, 2);
-        DrawText(textRect, "WILD", cc.Black, fontSize);
+        MainGroup!.DrawSmiley(smileyRect, "", cc1.Black, cc1.Black, 2);
+        DrawText(textRect, "WILD", cc1.Black, fontSize);
     }
     private void DrawReverse()
     {
@@ -102,8 +102,8 @@ public class CardGraphicsBlazor : BaseDeckGraphics<A8RoundRummyCardInformation>
         var secondRect = new RectangleF(0, 25, 54, 23);
         var thirdRect = new RectangleF(0, 49, 54, 23);
         var fontSize = firstRect.Height * .45;
-        DrawText(firstRect, "Reverse", cc.Green, fontSize);
-        DrawText(secondRect, "And New", cc.Green, fontSize);
-        DrawText(thirdRect, "Hand", cc.Green, fontSize);
+        DrawText(firstRect, "Reverse", cc1.Green, fontSize);
+        DrawText(secondRect, "And New", cc1.Green, fontSize);
+        DrawText(thirdRect, "Hand", cc1.Green, fontSize);
     }
 }

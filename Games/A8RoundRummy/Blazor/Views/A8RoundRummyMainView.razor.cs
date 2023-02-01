@@ -7,8 +7,8 @@ public partial class A8RoundRummyMainView
     private A8RoundRummyGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<A8RoundRummyVMData>();
-        _gameContainer = aa.Resolver.Resolve<A8RoundRummyGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<A8RoundRummyVMData>();
+        _gameContainer = aa1.Resolver.Resolve<A8RoundRummyGameContainer>();
         _labels.AddLabel("Turn", nameof(A8RoundRummyVMData.NormalTurn))
             .AddLabel("Status", nameof(A8RoundRummyVMData.Status))
             .AddLabel("Next", nameof(A8RoundRummyVMData.NextTurn));
@@ -18,5 +18,5 @@ public partial class A8RoundRummyMainView
         base.OnInitialized();
     }
     private ICustomCommand GoOutCommand => DataContext!.GoOutCommand!;
-    private static string GetColumns => bb.RepeatAuto(2);
+    private static string GetColumns => bb1.RepeatAuto(2);
 }
