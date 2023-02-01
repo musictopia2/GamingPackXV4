@@ -6,8 +6,8 @@ public partial class TroubleMainView
     private GameBoardGraphicsCP? _graphicsData;
     protected override void OnInitialized()
     {
-        _gameContainer = aa.Resolver!.Resolve<TroubleGameContainer>();
-        _graphicsData = aa.Resolver.Resolve<GameBoardGraphicsCP>();
+        _gameContainer = aa1.Resolver!.Resolve<TroubleGameContainer>();
+        _graphicsData = aa1.Resolver.Resolve<GameBoardGraphicsCP>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(TroubleVMData.NormalTurn))
              .AddLabel("Instructions", nameof(TroubleVMData.Instructions))
