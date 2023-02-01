@@ -7,8 +7,8 @@ public partial class GoFishMainView
     private GoFishGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<GoFishVMData>();
-        _gameContainer = aa.Resolver.Resolve<GoFishGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<GoFishVMData>();
+        _gameContainer = aa1.Resolver.Resolve<GoFishGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(GoFishVMData.NormalTurn))
             .AddLabel("Status", nameof(GoFishVMData.Status));

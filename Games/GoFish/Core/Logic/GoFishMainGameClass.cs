@@ -55,12 +55,12 @@ public class GoFishMainGameClass
         {
             if (PlayerList.Count == 2)
             {
-                await _processes.NumberToAskAsync(cc.NumberToAsk(SaveRoot));
+                await _processes.NumberToAskAsync(cc1.NumberToAsk(SaveRoot));
                 return;
             }
             throw new CustomBasicException("Only 2 players are supported now");
         }
-        var thisList = cc.PairToPlay(SaveRoot);
+        var thisList = cc1.PairToPlay(SaveRoot);
         if (thisList.Count == 0)
         {
             await EndTurnAsync();
@@ -123,11 +123,11 @@ public class GoFishMainGameClass
         switch (status)
         {
             case "numbertoask":
-                EnumRegularCardValueList thisValue = await js.DeserializeObjectAsync<EnumRegularCardValueList>(content);
+                EnumRegularCardValueList thisValue = await js1.DeserializeObjectAsync<EnumRegularCardValueList>(content);
                 await _processes.NumberToAskAsync(thisValue);
                 return;
             case "processplay":
-                SendPair thisPair = await js.DeserializeObjectAsync<SendPair>(content);
+                SendPair thisPair = await js1.DeserializeObjectAsync<SendPair>(content);
                 await ProcessPlayAsync(thisPair.Card1, thisPair.Card2);
                 return;
             default:
