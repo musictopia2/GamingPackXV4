@@ -82,11 +82,11 @@ public class Rummy500MainGameClass
                 await PickupFromDiscardAsync(int.Parse(content));
                 break;
             case "addtoset":
-                SendAddSet sendAdd = await js.DeserializeObjectAsync<SendAddSet>(content);
+                SendAddSet sendAdd = await js1.DeserializeObjectAsync<SendAddSet>(content);
                 await AddToSetAsync(sendAdd.Index, sendAdd.Deck, sendAdd.Position);
                 break;
             case "newset":
-                SendNewSet sendNew = await js.DeserializeObjectAsync<SendNewSet>(content);
+                SendNewSet sendNew = await js1.DeserializeObjectAsync<SendNewSet>(content);
                 var newList = sendNew.DeckList.GetNewObjectListFromDeckList(_gameContainer.DeckList!);
                 await CreateNewSetAsync(newList, sendNew.SetType, sendNew.UseSecond);
                 break;

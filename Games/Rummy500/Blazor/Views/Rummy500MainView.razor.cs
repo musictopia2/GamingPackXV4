@@ -7,8 +7,8 @@ public partial class Rummy500MainView
     private Rummy500GameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<Rummy500VMData>();
-        _gameContainer = aa.Resolver.Resolve<Rummy500GameContainer>();
+        _vmData = aa1.Resolver!.Resolve<Rummy500VMData>();
+        _gameContainer = aa1.Resolver.Resolve<Rummy500GameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(Rummy500VMData.NormalTurn))
            .AddLabel("Status", nameof(Rummy500VMData.Status));
