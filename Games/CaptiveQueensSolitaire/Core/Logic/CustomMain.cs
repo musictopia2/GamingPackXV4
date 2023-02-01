@@ -103,11 +103,11 @@ public class CustomMain : BasicMultiplePilesCP<SolitaireCard>, IMain, ISerializa
     }
     public async Task LoadGameAsync(string data)
     {
-        PileList = await js.DeserializeObjectAsync<BasicList<BasicPileInfo<SolitaireCard>>>(data);
+        PileList = await js1.DeserializeObjectAsync<BasicList<BasicPileInfo<SolitaireCard>>>(data);
     }
     public async Task<string> GetSavedPilesAsync()
     {
-        return await js.SerializeObjectAsync(PileList!);
+        return await js1.SerializeObjectAsync(PileList!);
     }
     public void AddCards(int Pile, IDeckDict<SolitaireCard> list)
     {

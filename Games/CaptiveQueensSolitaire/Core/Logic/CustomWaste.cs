@@ -53,7 +53,7 @@ public class CustomWaste : IWaste, ISerializable
     public async Task LoadGameAsync(SavedWaste gameData)
     {
 
-        DeckRegularDict<SolitaireCard> tempList = await js.DeserializeObjectAsync<DeckRegularDict<SolitaireCard>>(gameData.PileData);
+        DeckRegularDict<SolitaireCard> tempList = await js1.DeserializeObjectAsync<DeckRegularDict<SolitaireCard>>(gameData.PileData);
         CardList.ReplaceRange(tempList);
     }
 
@@ -122,7 +122,7 @@ public class CustomWaste : IWaste, ISerializable
     public async Task<SavedWaste> GetSavedGameAsync()
     {
         SavedWaste output = new();
-        output.PileData = await js.SerializeObjectAsync(CardList.ToRegularDeckDict());
+        output.PileData = await js1.SerializeObjectAsync(CardList.ToRegularDeckDict());
         return output;
     }
     public bool HasCard(int whichOne)
