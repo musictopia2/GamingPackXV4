@@ -124,7 +124,7 @@ public class MilkRunMainGameClass
         switch (status)
         {
             case "play":
-                SendPlay thisSend = await js.DeserializeObjectAsync<SendPlay>(content);
+                SendPlay thisSend = await js1.DeserializeObjectAsync<SendPlay>(content);
                 await ProcessPlayAsync(thisSend.Player, thisSend.Deck, thisSend.Pile, thisSend.Milk);
                 break;
             default:

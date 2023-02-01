@@ -7,8 +7,8 @@ public partial class MilkRunMainView
     private BasicList<MilkRunPlayerItem> _players = new();
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<MilkRunVMData>();
-        _gameContainer = aa.Resolver.Resolve<MilkRunGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<MilkRunVMData>();
+        _gameContainer = aa1.Resolver.Resolve<MilkRunGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(MilkRunVMData.NormalTurn));
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();

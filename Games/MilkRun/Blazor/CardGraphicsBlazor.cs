@@ -32,11 +32,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MilkRunCardInformation>
         RectangleF firstRect;
         firstRect = new RectangleF(4, 4, 42, 28);
         var secondRect = new RectangleF(4, 35, 42, 28);
-        DrawRectangle(firstRect, cc.DeepPink);
-        DrawRectangle(secondRect, cc.Chocolate);
+        DrawRectangle(firstRect, cc1.DeepPink);
+        DrawRectangle(secondRect, cc1.Chocolate);
         BasicList<RectangleF> thisList = new();
         float fontSize = DefaultSize.Height / 3.2f;
-        string color = cc.Aqua;
+        string color = cc1.Aqua;
         thisList.Add(firstRect);
         thisList.Add(secondRect);
         int x = 0;
@@ -127,18 +127,18 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MilkRunCardInformation>
                 var newRect = new RectangleF(13, 34, 29, 29);
                 if (DeckObject.MilkCategory == EnumMilkType.Chocolate)
                 {
-                    MainGroup.DrawSmiley(newRect, cc.Chocolate, cc.Black, cc.Black, 2);
+                    MainGroup.DrawSmiley(newRect, cc1.Chocolate, cc1.Black, cc1.Black, 2);
                 }
                 else if (DeckObject.MilkCategory == EnumMilkType.Strawberry)
                 {
-                    MainGroup.DrawSmiley(newRect, cc.DeepPink, cc.Black, cc.Black, 2);
+                    MainGroup.DrawSmiley(newRect, cc1.DeepPink, cc1.Black, cc1.Black, 2);
                 }
                 return;
             case EnumCardCategory.Go:
-                DrawOval(circleRect, cc.Lime);
+                DrawOval(circleRect, cc1.Lime);
                 break;
             case EnumCardCategory.Stop:
-                DrawOval(circleRect, cc.Red);
+                DrawOval(circleRect, cc1.Red);
                 break;
             default:
                 break;
@@ -152,6 +152,6 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MilkRunCardInformation>
         {
             fontSize = secondRect.Height * .65f; //otherwise parts get cut off.
         }
-        DrawText(thisText, secondRect, cc.White, fontSize);
+        DrawText(thisText, secondRect, cc1.White, fontSize);
     }
 }
