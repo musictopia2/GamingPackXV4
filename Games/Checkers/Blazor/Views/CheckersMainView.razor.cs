@@ -6,11 +6,11 @@ public partial class CheckersMainView
     private readonly BasicList<LabelGridModel> _labels = new();
     private GameBoardGraphicsCP? GameBoard { get; set; }
     private CheckersGameContainer? GameContainer { get; set; }
-    private bool CanRenderSpace => GameContainer!.PlayerList!.First().Color != EnumColorChoice.None;
+    //private bool CanRenderSpace => GameContainer!.PlayerList!.First().Color != EnumColorChoice.None;
     protected override void OnInitialized()
     {
-        GameBoard = aa.Resolver!.Resolve<GameBoardGraphicsCP>();
-        GameContainer = aa.Resolver.Resolve<CheckersGameContainer>();
+        GameBoard = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
+        GameContainer = aa1.Resolver.Resolve<CheckersGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(CheckersVMData.NormalTurn))
                 .AddLabel("Instructions", nameof(CheckersVMData.Instructions))
@@ -23,7 +23,7 @@ public partial class CheckersMainView
     {
         if (piece.Highlighted)
         {
-            return cs.Yellow;
+            return cs1.Yellow;
         }
         return piece.EnumValue.Color;
     }
