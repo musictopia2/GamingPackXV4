@@ -70,7 +70,9 @@ public class YahtzeeHandsDownMainGameClass
             ComboCardInfo thisCard = new();
             thisCard.Populate(x);
             if (Test!.DoubleCheck == false || x == 6)
+            {
                 tempList.Add(thisCard);
+            }
         });
         _model!.ComboHandList!.HandList.ReplaceRange(tempList);
         _gameContainer.AlreadyDrew = false;
@@ -116,12 +118,12 @@ public class YahtzeeHandsDownMainGameClass
         switch (status)
         {
             case "replacecards":
-                var thisList = await js.DeserializeObjectAsync<BasicList<int>>(content);
+                var thisList = await js1.DeserializeObjectAsync<BasicList<int>>(content);
                 var nextList = thisList.GetNewObjectListFromDeckList(_gameContainer.DeckList!);
                 await ReplaceCardsAsync(nextList);
                 return;
             case "wentout":
-                var thisItem = await js.DeserializeObjectAsync<YahtzeeResults>(content);
+                var thisItem = await js1.DeserializeObjectAsync<YahtzeeResults>(content);
                 await PlayerGoesOutAsync(thisItem);
                 return;
             default:

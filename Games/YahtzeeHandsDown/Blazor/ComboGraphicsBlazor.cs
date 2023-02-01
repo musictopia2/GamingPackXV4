@@ -15,17 +15,17 @@ public class ComboGraphicsBlazor : BaseDeckGraphics<ComboCardInfo>
             return;
         }
         var tempRect = new RectangleF(5, 9, 220, 113);
-        MainGroup.DrawNormalRectangle(tempRect, cc.Red);
+        MainGroup.DrawNormalRectangle(tempRect, cc1.Red);
         var firstRect = new RectangleF(4, 4, 48, 48);
-        MainGroup.DrawNormalRectangle(firstRect, cc.White);
+        MainGroup.DrawNormalRectangle(firstRect, cc1.White);
         var fontSize = 14;
-        MainGroup.DrawCustomText(firstRect, $"{DeckObject.Points} PTS.", fontSize, cc.Black);
+        MainGroup.DrawCustomText(firstRect, $"{DeckObject.Points} PTS.", fontSize, cc1.Black);
         var secondRect = new RectangleF(54, 4, 170, 50);
         var temps = 3;
-        MainGroup.DrawRoundedRectangle(secondRect, cc.Yellow, temps, 2);
+        MainGroup.DrawRoundedRectangle(secondRect, cc1.Yellow, temps, 2);
         firstRect = new RectangleF(56, 4, 170, 16);
         fontSize = 15;
-        MainGroup.DrawCustomText(firstRect, DeckObject.FirstDescription, fontSize, cc.Black, true);
+        MainGroup.DrawCustomText(firstRect, DeckObject.FirstDescription, fontSize, cc1.Black, true);
         string firstText;
         string secondText;
         var tempList = DeckObject.SecondDescription.Split("|").ToBasicList();
@@ -36,9 +36,9 @@ public class ComboGraphicsBlazor : BaseDeckGraphics<ComboCardInfo>
         firstText = tempList.First();
         secondText = tempList.Last();
         firstRect = new RectangleF(56, 20, 170, 16);
-        MainGroup.DrawCustomText(firstRect, firstText, fontSize, cc.Black);
+        MainGroup.DrawCustomText(firstRect, firstText, fontSize, cc1.Black);
         secondRect = new RectangleF(56, 36, 170, 16);
-        MainGroup.DrawCustomText(secondRect, secondText, fontSize, cc.Black);
+        MainGroup.DrawCustomText(secondRect, secondText, fontSize, cc1.Black);
         float diffs = 44;
         var finalSize = 70;
         float lefts;

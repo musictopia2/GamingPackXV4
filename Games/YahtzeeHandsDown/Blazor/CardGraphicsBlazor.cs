@@ -19,12 +19,12 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<YahtzeeHandsDownCardInform
             return;
         }
         var tempRect = new RectangleF(5, 5, DefaultSize.Width - 14, DefaultSize.Height - 14);
-        MainGroup.DrawNormalRectangle(tempRect, cc.Red);
+        MainGroup.DrawNormalRectangle(tempRect, cc1.Red);
         var firstRect = new RectangleF(tempRect.Location.X, tempRect.Location.Y, tempRect.Width, tempRect.Height / 3);
         var secondRect = new RectangleF(tempRect.Location.X, firstRect.Bottom, tempRect.Width, firstRect.Height);
         var thirdRect = new RectangleF(tempRect.Location.X, secondRect.Bottom, tempRect.Width, secondRect.Height);
         var fontSize = firstRect.Height * 0.55f; // can experiment
-        var color = cc.White;
+        var color = cc1.White;
         MainGroup.DrawCustomText(firstRect, "Yahtzee", fontSize, color);
         MainGroup.DrawCustomText(secondRect, "Hands", fontSize, color);
         MainGroup.DrawCustomText(thirdRect, "Down", fontSize, color);
@@ -39,9 +39,9 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<YahtzeeHandsDownCardInform
         {
             return;
         }
-        MainGroup.DrawNormalRectangle(firstRect, cc.Red);
-        MainGroup.DrawNormalRectangle(secondRect, cc.Blue);
-        MainGroup.DrawNormalRectangle(thirdRect, cc.Yellow);
+        MainGroup.DrawNormalRectangle(firstRect, cc1.Red);
+        MainGroup.DrawNormalRectangle(secondRect, cc1.Blue);
+        MainGroup.DrawNormalRectangle(thirdRect, cc1.Yellow);
         var finalRect = GetCenterDiceRect();
         MainGroup.DrawDice(finalRect, DeckObject.FirstValue);
     }
@@ -55,9 +55,9 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<YahtzeeHandsDownCardInform
         MainGroup.DrawNormalRectangle(tempRect, DeckObject.Color.ToColor());
         var otherRect = GetCenterDiceRect();
         var tempSize = 3;
-        MainGroup.DrawRoundedRectangle(otherRect, cc.White, tempSize, 3);
+        MainGroup.DrawRoundedRectangle(otherRect, cc1.White, tempSize, 3);
         var fontSize = otherRect.Height * 0.35f; // can adjust as needed
-        MainGroup.DrawCustomText(otherRect, "WILD", fontSize, cc.Black);
+        MainGroup.DrawCustomText(otherRect, "WILD", fontSize, cc1.Black);
     }
     private void Draw2Numbers(RectangleF rect_Card)
     {

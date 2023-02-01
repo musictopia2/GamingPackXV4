@@ -5,11 +5,11 @@ public partial class YahtzeeHandsDownMainView
     private readonly BasicList<ScoreColumnModel> _scores = new();
     private YahtzeeHandsDownVMData? _vmData;
     private YahtzeeHandsDownGameContainer? _gameContainer;
-    private static string GetColumns => bb.RepeatAuto(2);
+    private static string GetColumns => bb1.RepeatAuto(2);
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<YahtzeeHandsDownVMData>();
-        _gameContainer = aa.Resolver.Resolve<YahtzeeHandsDownGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<YahtzeeHandsDownVMData>();
+        _gameContainer = aa1.Resolver.Resolve<YahtzeeHandsDownGameContainer>();
         _labels.AddLabel("Turn", nameof(YahtzeeHandsDownVMData.NormalTurn))
              .AddLabel("Status", nameof(YahtzeeHandsDownVMData.Status));
         _scores.Clear();

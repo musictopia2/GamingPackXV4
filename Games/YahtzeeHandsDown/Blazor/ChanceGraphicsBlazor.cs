@@ -25,12 +25,12 @@ public class ChanceGraphicsBlazor : BaseDeckGraphics<ChanceCardInfo>
         var tempSize = 4;
         var rect_Card = new RectangleF(0, 0, DefaultSize.Width, DefaultSize.Height);
         var tempRect = new RectangleF(rect_Card.Location.X + tempSize, rect_Card.Location.Y + tempSize, rect_Card.Width - (tempSize * 3), rect_Card.Height - (tempSize * 3));
-        MainGroup.DrawNormalRectangle(tempRect, cc.DarkSlateBlue);
+        MainGroup.DrawNormalRectangle(tempRect, cc1.DarkSlateBlue);
         var firstRect = new RectangleF(6, 12, 40, 40);
-        MainGroup.DrawNormalRectangle(firstRect, cc.White, 2);
+        MainGroup.DrawNormalRectangle(firstRect, cc1.White, 2);
         firstRect = new RectangleF(5, 12, 40, 30);
         var fontSize = 25;
-        MainGroup.DrawCustomText(firstRect, DeckObject.Points.ToString(), fontSize, cc.Black);
+        MainGroup.DrawCustomText(firstRect, DeckObject.Points.ToString(), fontSize, cc1.Black);
         var secondRect = new RectangleF(1, 34, 50, 20);
         fontSize = 14;
         string thisText;
@@ -43,6 +43,6 @@ public class ChanceGraphicsBlazor : BaseDeckGraphics<ChanceCardInfo>
             fontSize = 12;
             thisText = "Points";
         }
-        MainGroup.DrawCustomText(secondRect, thisText, fontSize, cc.Black, true);
+        MainGroup.DrawCustomText(secondRect, thisText, fontSize, cc1.Black, true);
     }
 }
