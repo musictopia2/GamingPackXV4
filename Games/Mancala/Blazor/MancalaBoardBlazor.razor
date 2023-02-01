@@ -1,4 +1,4 @@
-﻿@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+﻿@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 @if (DataContext == null)
 {
     return;
@@ -10,7 +10,7 @@
                        BorderColor="@StrokeColor(space)"
                        ShapeCategory="BorderedSpace.EnumShapeCategory.Oval"
                        SpaceLocation="@space.Bounds.Location"
-                       FillColor="@cc.White"
+                       FillColor="@cc1.White"
                        SpaceSize="space.Bounds.Size"
                        @key="space"
                        SpaceClicked="() => DataContext.MakeMoveAsync(space)">

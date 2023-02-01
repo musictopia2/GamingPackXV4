@@ -15,7 +15,7 @@ public partial class MancalaMainView
     }
     protected override void OnParametersSet()
     {
-        OtherModel = aa.Resolver!.Resolve<GameBoardVM>();
+        OtherModel = aa1.Resolver!.Resolve<GameBoardVM>();
         base.OnParametersSet();
     }
 }

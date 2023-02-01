@@ -17,12 +17,12 @@ public partial class MancalaBoardBlazor
         int index = DataContext!.GetIndex(space);
         if (index == DataContext.GameData.SpaceSelected)
         {
-            return cc.Red;
+            return cc1.Red;
         }
         if (index == DataContext.GameData.SpaceStarted)
         {
-            return cc.Green;
+            return cc1.Green;
         }
-        return cc.Black;
+        return cc1.Black;
     }
 }
