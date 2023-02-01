@@ -1,8 +1,8 @@
 namespace Uno.Blazor;
 public class CardGraphicsBlazor : BaseColorCardsImageBlazor<UnoCardInformation>
 {
-    protected override string BackColor => cc.Red;
-    protected override string BackFontColor => cc.White;
+    protected override string BackColor => cc1.Red;
+    protected override string BackFontColor => cc1.White;
     protected override string BackText => "Uno";
     protected override bool CanStartDrawing()
     {
@@ -73,13 +73,13 @@ public class CardGraphicsBlazor : BaseColorCardsImageBlazor<UnoCardInformation>
         heights = rect_Card.Height / 2;
         RectangleF newRect;
         newRect = new RectangleF(rect_Card.Left + 2, rect_Card.Top + 2, widths - 4, heights - 4);
-        DrawSingleRectangle(newRect, cc.Red);
+        DrawSingleRectangle(newRect, cc1.Red);
         newRect = new RectangleF(rect_Card.Left + widths - 2, rect_Card.Top + 2, widths - 4, heights - 4);
-        DrawSingleRectangle(newRect, cc.Yellow);
+        DrawSingleRectangle(newRect, cc1.Yellow);
         newRect = new RectangleF(rect_Card.Left + widths - 2, rect_Card.Top + heights - 2, widths - 4, heights - 4);
-        DrawSingleRectangle(newRect, cc.Blue);
+        DrawSingleRectangle(newRect, cc1.Blue);
         newRect = new RectangleF(rect_Card.Left + 2, rect_Card.Top + heights - 2, widths - 4, heights - 4);
-        DrawSingleRectangle(newRect, cc.Green);
+        DrawSingleRectangle(newRect, cc1.Green);
     }
     private void DrawSingleRectangle(RectangleF newRect, string color)
     {

@@ -14,7 +14,7 @@ public class ChooseColorProcesses : IChooseColorProcesses, IChoosePieceNM, ISeri
     }
     async Task IChoosePieceNM.ChoosePieceReceivedAsync(string data)
     {
-        EnumColorTypes color = await js.DeserializeObjectAsync<EnumColorTypes>(data);
+        EnumColorTypes color = await js1.DeserializeObjectAsync<EnumColorTypes>(data);
         await ColorChosenAsync(color);
     }
     private async Task ColorChosenAsync(EnumColorTypes color)
@@ -22,7 +22,7 @@ public class ChooseColorProcesses : IChooseColorProcesses, IChoosePieceNM, ISeri
         _gameContainer.SaveRoot!.GameStatus = EnumGameStatus.NormalPlay;
         if (_gameContainer.SingleInfo!.CanSendMessage(_gameContainer.BasicData!) == true)
         {
-            await _gameContainer.Network!.SendAllAsync(mm.ChosenPiece, color);
+            await _gameContainer.Network!.SendAllAsync(mm1.ChosenPiece, color);
         }
         if (color == EnumColorTypes.ZOther)
         {

@@ -3,8 +3,8 @@ global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExte
 global using CommonBasicLibraries.BasicDataSettingsAndProcesses;
 global using static CommonBasicLibraries.BasicDataSettingsAndProcesses.BasicDataFunctions;
 global using CommonBasicLibraries.CollectionClasses;
-global using fs = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
-global using js = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
+global using fs1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
+global using js1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
 global using BasicGameFrameworkLibrary.Core.CommonInterfaces;
 global using Uno.Core.Data;
 global using BasicGameFrameworkLibrary.Core.BasicEventModels;
@@ -21,7 +21,7 @@ global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.MapHelper
 global using BasicGameFrameworkLibrary.Core.Attributes;
 global using BasicGameFrameworkLibrary.Blazor.Bootstrappers;
 global using Uno.Core.ViewModels;
-global using aa = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using aa1 = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 global using System;
 global using System.Linq;
 global using System.Threading.Tasks;
@@ -60,10 +60,10 @@ global using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Ha
 global using BasicGameFrameworkLibrary.Core.ColorCards;
 global using BasicGameFrameworkLibrary.Core.ChooserClasses;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.Misc;
-global using mm = BasicGameFrameworkLibrary.Core.Extensions.CommonMessageStrings;
+global using mm1 = BasicGameFrameworkLibrary.Core.Extensions.CommonMessageStrings;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainGameInterfaces;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
 global using BasicGameFrameworkLibrary.Core.GamePieceModels;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Cards;
-global using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;

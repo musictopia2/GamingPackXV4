@@ -7,8 +7,8 @@ public partial class UnoMainView
     private UnoGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<UnoVMData>();
-        _gameContainer = aa.Resolver.Resolve<UnoGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<UnoVMData>();
+        _gameContainer = aa1.Resolver.Resolve<UnoGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(UnoVMData.NormalTurn))
             .AddLabel("Next", nameof(UnoVMData.NextPlayer))
