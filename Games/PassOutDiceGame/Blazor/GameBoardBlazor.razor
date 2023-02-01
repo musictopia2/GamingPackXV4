@@ -1,11 +1,11 @@
 ﻿@using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExtensions;
-@using gg = PassOutDiceGame.Core.Logic.GameBoardGraphicsCP;
+@using gg1 = PassOutDiceGame.Core.Logic.GameBoardGraphicsCP;
 @if (GraphicsData == null || GraphicsData.GameContainer.SpaceList == null)
 {
     return;
 }
-<RawGameBoard TargetHeight="@TargetHeight" BoardSize="gg.OriginalSize">
-    <RawRectangle Rectangle="@gg.GetBounds">
+<RawGameBoard TargetHeight="@TargetHeight" BoardSize="gg1.OriginalSize">
+    <RawRectangle Rectangle="@gg1.GetBounds">
         <svg>
             <rect width="100%" height="100%" stroke="black" stroke-width="7" fill="maroon" />
         </svg>
@@ -16,17 +16,17 @@
     @foreach (var space in GraphicsData.GameContainer.SpaceList)
     {
         x++;
-        <RawRectangle Rectangle="gg.SpaceRectangle(space.Value)">
+        <RawRectangle Rectangle="gg1.SpaceRectangle(space.Value)">
             <svg>
                 <rect width="100%" height="100%" fill="none" stroke="black" stroke-width="1" />
             </svg>
         </RawRectangle>
         @if (space.Value.IsEnabled == false)
         {
-            <RawRectangle Rectangle="gg.PassRectangle(space.Value)">
+            <RawRectangle Rectangle="gg1.PassRectangle(space.Value)">
                 <CenteredSvgText Text="Pass" TextColor="white" FontSize="15" />
             </RawRectangle>
-            <RawRectangle Rectangle="gg.OutRectangle(space.Value)">
+            <RawRectangle Rectangle="gg1.OutRectangle(space.Value)">
                 <CenteredSvgText Text="Out" TextColor="white" FontSize="15" />
             </RawRectangle>
         }
@@ -40,7 +40,7 @@
                     </svg>
                 </RawRectangle>
             }
-            var item = gg.GetDiceLocation(space.Value);
+            var item = gg1.GetDiceLocation(space.Value);
             var firstDice = new SimpleDice();
             firstDice.Populate(space.Value.FirstValue);
             var secondDice = new SimpleDice();

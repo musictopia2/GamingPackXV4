@@ -5,7 +5,7 @@ public partial class PassOutDiceGameMainView
     private GameBoardGraphicsCP? _graphicsData;
     protected override void OnInitialized()
     {
-        _graphicsData = aa.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _graphicsData = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(PassOutDiceGameVMData.NormalTurn))
             .AddLabel("Status", nameof(PassOutDiceGameVMData.Status));
