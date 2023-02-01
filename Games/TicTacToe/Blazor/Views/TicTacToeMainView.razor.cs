@@ -15,7 +15,7 @@ public partial class TicTacToeMainView
     }
     private void GetWin()
     {
-        _save = aa.Resolver!.Resolve<TicTacToeSaveInfo>();
+        _save = aa1.Resolver!.Resolve<TicTacToeSaveInfo>();
         _win = _save.GameBoard.GetWin();
     }
     private static string GetText(SpaceInfoCP space)

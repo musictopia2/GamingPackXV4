@@ -1,5 +1,5 @@
 @inherits BasicGameView<TicTacToeMainViewModel>
-@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 @{
     GetWin();
 }
@@ -13,14 +13,14 @@
     <ItemTemplate Context="Space">
         <BorderedCommandSpace CommandObject="DataContext!.MakeMoveCommand"
                               CommandParameter="Space"
-                              FillColor="@cc.White"
+                              FillColor="@cc1.White"
                               BorderWidth="5"
-                              BorderColor="@cc.Black">
-            <CenteredTextBlazor TextColor="@cc.White"
+                              BorderColor="@cc1.Black">
+            <CenteredTextBlazor TextColor="@cc1.White"
                                 BorderWidth="5"
                                 FontSize="300"
                                 Text="@GetText(Space)"
-                                BorderColor="@cc.Blue" />
+                                BorderColor="@cc1.Blue" />
         </BorderedCommandSpace>
     </ItemTemplate>
     <Canvas>

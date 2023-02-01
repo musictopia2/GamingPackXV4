@@ -85,7 +85,7 @@ public class TicTacToeMainGameClass : BasicGameClass<TicTacToePlayerItem, TicTac
     }
     async Task IMoveNM.MoveReceivedAsync(string data)
     {
-        SpaceInfoCP tempMove = await js.DeserializeObjectAsync<SpaceInfoCP>(data);
+        SpaceInfoCP tempMove = await js1.DeserializeObjectAsync<SpaceInfoCP>(data);
         SpaceInfoCP realMove = SaveRoot!.GameBoard[tempMove.Vector]; //i think
         await MakeMoveAsync(realMove);
     }
