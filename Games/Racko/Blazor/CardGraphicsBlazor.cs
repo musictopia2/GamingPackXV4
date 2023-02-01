@@ -15,11 +15,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<RackoCardInformation>
     {
         if (DeckObject!.IsUnknown)
         {
-            FillColor = cc.Red;
+            FillColor = cc1.Red;
         }
         else
         {
-            FillColor = cc.White;
+            FillColor = cc1.White;
         }
         base.BeforeFilling();
     }
@@ -34,7 +34,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<RackoCardInformation>
     private int _maxs;
     protected override void OnInitialized()
     {
-        RackoDeckCount temps = aa.Resolver!.Resolve<RackoDeckCount>();
+        RackoDeckCount temps = aa1.Resolver!.Resolve<RackoDeckCount>();
         _maxs = temps.GetDeckCount();
         base.OnInitialized();
     }
@@ -54,7 +54,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<RackoCardInformation>
         text.Text_Anchor = "middle";
         MainGroup!.Children.Add(text);
         text.Font_Size = fontSize;
-        text.Fill = cc.Red.ToWebColor();
+        text.Fill = cc1.Red.ToWebColor();
         text.Content = DeckObject!.Value.ToString();
     }
 }

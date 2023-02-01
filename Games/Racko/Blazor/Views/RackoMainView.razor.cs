@@ -5,11 +5,11 @@ public partial class RackoMainView
     private readonly BasicList<ScoreColumnModel> _scores = new();
     private RackoVMData? _vmData;
     private RackoGameContainer? _gameContainer;
-    private static string GetColumns => bb.RepeatAuto(2);
+    private static string GetColumns => bb1.RepeatAuto(2);
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<RackoVMData>();
-        _gameContainer = aa.Resolver.Resolve<RackoGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<RackoVMData>();
+        _gameContainer = aa1.Resolver.Resolve<RackoGameContainer>();
         _labels.AddLabel("Turn", nameof(RackoVMData.NormalTurn))
            .AddLabel("Status", nameof(RackoVMData.Status));
         _scores.Clear();
