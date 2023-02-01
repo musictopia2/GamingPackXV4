@@ -51,22 +51,22 @@ public class CandylandCardBlazor : BaseDeckGraphics<CandylandCardData>
                     switch (DeckObject.WhichCard)
                     {
                         case EnumCandyLandType.IsBlue:
-                            color = cc.Blue;
+                            color = cc1.Blue;
                             break;
                         case EnumCandyLandType.IsOrange:
-                            color = cc.Orange;
+                            color = cc1.Orange;
                             break;
                         case EnumCandyLandType.IsGreen:
-                            color = cc.Green;
+                            color = cc1.Green;
                             break;
                         case EnumCandyLandType.IsPurple:
-                            color = cc.Purple;
+                            color = cc1.Purple;
                             break;
                         case EnumCandyLandType.IsYellow:
-                            color = cc.Yellow;
+                            color = cc1.Yellow;
                             break;
                         case EnumCandyLandType.IsRed:
-                            color = cc.Red;
+                            color = cc1.Red;
                             break;
 
                         default:

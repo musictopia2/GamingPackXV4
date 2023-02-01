@@ -29,10 +29,10 @@ public static class Extensions
     {
         return index switch
         {
-            1 => cc.Aqua,
-            2 => cc.LimeGreen,
-            3 => cc.Orange,
-            4 => cc.Gray,
+            1 => cc1.Aqua,
+            2 => cc1.LimeGreen,
+            3 => cc1.Orange,
+            4 => cc1.Gray,
             _ => throw new Exception("Only 1 to 4 are supported for piece color"),
         };
     }

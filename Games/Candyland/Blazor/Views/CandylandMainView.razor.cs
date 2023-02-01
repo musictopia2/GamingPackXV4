@@ -10,7 +10,7 @@ public partial class CandylandMainView
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(CandylandVMData.NormalTurn))
             .AddLabel("Status", nameof(CandylandVMData.Status));
-        BoardModel = aa.Resolver!.Resolve<GameBoardVM>();
+        BoardModel = aa1.Resolver!.Resolve<GameBoardVM>();
         base.OnInitialized();
     }
 }
