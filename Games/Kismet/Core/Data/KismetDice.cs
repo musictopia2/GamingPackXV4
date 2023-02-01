@@ -6,15 +6,15 @@ public class KismetDice : SimpleDice
         base.Populate(chosen);
         if (chosen == 1 || chosen == 6)
         {
-            DotColor = cs.Black;
+            DotColor = cs1.Black;
         }
         else if (chosen == 2 || chosen == 5)
         {
-            DotColor = cs.DarkOrange;
+            DotColor = cs1.DarkOrange;
         }
         else
         {
-            DotColor = cs.DarkGreen;
+            DotColor = cs1.DarkGreen;
         }
     }
 }
