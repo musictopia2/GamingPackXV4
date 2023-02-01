@@ -41,11 +41,11 @@ public static class Extensions
     {
         if (thisGender.Value == EnumGender.Boy.Value)
         {
-            return cc.Blue;
+            return cc1.Blue;
         }
         if (thisGender.Value == EnumGender.Girl.Value)
         {
-            return cc.DeepPink;
+            return cc1.DeepPink;
         }
         throw new Exception("Must be boy or girl for this");
     }

@@ -8,10 +8,10 @@ public partial class LifeBoardGameMainView
     private LifeBoardGameVMData? _vmData;
     protected override void OnInitialized()
     {
-        _boardProcesses = aa.Resolver!.Resolve<IBoardProcesses>();
-        _gameContainer = aa.Resolver.Resolve<LifeBoardGameGameContainer>();
-        _graphicsData = aa.Resolver.Resolve<GameBoardGraphicsCP>();
-        _vmData = aa.Resolver.Resolve<LifeBoardGameVMData>();
+        _boardProcesses = aa1.Resolver!.Resolve<IBoardProcesses>();
+        _gameContainer = aa1.Resolver.Resolve<LifeBoardGameGameContainer>();
+        _graphicsData = aa1.Resolver.Resolve<GameBoardGraphicsCP>();
+        _vmData = aa1.Resolver.Resolve<LifeBoardGameVMData>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(LifeBoardGameVMData.NormalTurn))
              .AddLabel("Instructions", nameof(LifeBoardGameVMData.Instructions))

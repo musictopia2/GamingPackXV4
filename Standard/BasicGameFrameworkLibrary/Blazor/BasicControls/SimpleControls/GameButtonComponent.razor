@@ -2,11 +2,11 @@
 @inherits KeyComponentBase
 @if (StartOnNewLine == false)
 {
-    <button @key="GetKey" class="basicbutton" style="font-size:@FontSize; background-color: @BackgroundColor.ToWebColor(); color: @GetTextColor(); @ExtraInfo() " disabled="@IsDisabled()" @onclick="Submit">@Display</button>
+    <button @key="GetKey" class="basicbutton" style="font-size:@FontSize; background-color: @BackgroundColor.ToWebColor(); color: @GetTextColor(); margin-left: 2px; @ExtraInfo() " disabled="@IsDisabled()" @onclick="Submit">@Display</button>
 }
 else
 {
     <div>
-        <button @key="GetKey" class="basicbutton" style="font-size:@FontSize; background-color: @BackgroundColor.ToWebColor(); color: @GetTextColor(); @ExtraInfo() " disabled="@IsDisabled()" @onclick="Submit">@Display</button>
+        <button @key="GetKey" class="basicbutton" style="font-size:@FontSize; background-color: @BackgroundColor.ToWebColor(); color: @GetTextColor(); margin-left: 2px; @ExtraInfo() " disabled="@IsDisabled()" @onclick="Submit">@Display</button>
     </div>
 }

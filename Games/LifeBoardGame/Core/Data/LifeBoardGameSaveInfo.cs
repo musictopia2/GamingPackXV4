@@ -14,10 +14,7 @@ public class LifeBoardGameSaveInfo : BasicSavedGameClass<LifeBoardGamePlayerItem
                 if (_model != null)
                 {
                     _model.GameStatus = value;
-                    if (_aggregator is null)
-                    {
-                        _aggregator = aa.Resolver!.Resolve<IEventAggregator>();
-                    }
+                    _aggregator ??= aa1.Resolver!.Resolve<IEventAggregator>();
                     _aggregator.Publish(GameStatus);
                 }
             }

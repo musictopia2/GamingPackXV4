@@ -14,8 +14,8 @@ public partial class LifeScoreboardView
             .AddColumn("Career", true, nameof(LifeBoardGamePlayerItem.Career1))
             .AddColumn("Salary", true, nameof(LifeBoardGamePlayerItem.Salary), category: EnumScoreSpecialCategory.Currency)
             .AddColumn("Tiles", false, nameof(LifeBoardGamePlayerItem.TilesCollected))
-            .AddColumn("Car I.", false, nameof(LifeBoardGamePlayerItem.CarIsInsured), category: EnumScoreSpecialCategory.TrueFalse)
-            .AddColumn("House I.", false, nameof(LifeBoardGamePlayerItem.HouseIsInsured), category: EnumScoreSpecialCategory.TrueFalse)
+            .AddColumn("Car In", false, nameof(LifeBoardGamePlayerItem.CarIsInsured), category: EnumScoreSpecialCategory.TrueFalse)
+            .AddColumn("House In", false, nameof(LifeBoardGamePlayerItem.HouseIsInsured), category: EnumScoreSpecialCategory.TrueFalse)
             .AddColumn("S Career", true, nameof(LifeBoardGamePlayerItem.Career2));
         base.OnInitialized();
     }

@@ -4,7 +4,7 @@ public partial class ShowCardView
     private LifeBoardGameVMData? DataContext { get; set; }
     protected override void OnInitialized()
     {
-        DataContext = aa.Resolver!.Resolve<LifeBoardGameVMData>();
+        DataContext = aa1.Resolver!.Resolve<LifeBoardGameVMData>();
         base.OnInitialized();
     }
 }

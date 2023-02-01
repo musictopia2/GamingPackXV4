@@ -7,10 +7,10 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
     {
         if (DeckObject!.IsUnknown)
         {
-            FillColor = cc.Green;
+            FillColor = cc1.Green;
             return;
         }
-        FillColor = cc.White;
+        FillColor = cc1.White;
     }
     protected override bool CanStartDrawing()
     {
@@ -33,13 +33,13 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         Rect bottomRect = new();
         bottomRect.PopulateRectangle(8, 50, 64, 42);
         var fontSize = 20;
-        firstRect.Fill = cc.Purple.ToWebColor();
+        firstRect.Fill = cc1.Purple.ToWebColor();
         firstRect.PopulateStrokesToStyles();
-        secondRect.Fill = cc.Blue.ToWebColor();
+        secondRect.Fill = cc1.Blue.ToWebColor();
         secondRect.PopulateStrokesToStyles();
-        thirdRect.Fill = cc.Green.ToWebColor();
+        thirdRect.Fill = cc1.Green.ToWebColor();
         thirdRect.PopulateStrokesToStyles();
-        fourthRect.Fill = cc.DarkOrange.ToWebColor();
+        fourthRect.Fill = cc1.DarkOrange.ToWebColor();
         fourthRect.PopulateStrokesToStyles();
         Text text = new();
         text.CenterText(MainGroup!, firstRect);
@@ -48,7 +48,7 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         text.Font_Size = fontSize;
         text.Content = "L";
         text.PopulateStrokesToStyles();
-        text.Fill = cc.White.ToWebColor();
+        text.Fill = cc1.White.ToWebColor();
         text = new();
         text.CenterText(MainGroup!, secondRect);
         MainGroup.Children.Add(secondRect);
@@ -56,7 +56,7 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         text.Font_Size = fontSize;
         text.Content = "I";
         text.PopulateStrokesToStyles();
-        text.Fill = cc.White.ToWebColor();
+        text.Fill = cc1.White.ToWebColor();
         text = new();
         text.CenterText(MainGroup!, thirdRect);
         MainGroup.Children.Add(thirdRect);
@@ -64,7 +64,7 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         text.Font_Size = fontSize;
         text.Content = "F";
         text.PopulateStrokesToStyles();
-        text.Fill = cc.White.ToWebColor();
+        text.Fill = cc1.White.ToWebColor();
         text = new();
         text.CenterText(MainGroup!, fourthRect);
         MainGroup.Children.Add(fourthRect);
@@ -72,25 +72,25 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         text.Font_Size = fontSize;
         text.Content = "E";
         text.PopulateStrokesToStyles();
-        text.Fill = cc.White.ToWebColor();
+        text.Fill = cc1.White.ToWebColor();
         string currentColor;
         string content = DeckObject!.CardCategory.ToString();
         switch (DeckObject!.CardCategory)
         {
             case EnumCardCategory.Career:
-                currentColor = cc.Blue.ToWebColor();
+                currentColor = cc1.Blue.ToWebColor();
                 break;
             case EnumCardCategory.House:
-                currentColor = cc.DarkOrange.ToWebColor();
+                currentColor = cc1.DarkOrange.ToWebColor();
                 break;
             case EnumCardCategory.Salary:
-                currentColor = cc.Green.ToWebColor();
+                currentColor = cc1.Green.ToWebColor();
                 break;
             case EnumCardCategory.Stock:
-                currentColor = cc.Purple.ToWebColor();
+                currentColor = cc1.Purple.ToWebColor();
                 break;
             default:
-                currentColor = cc.White.ToWebColor();
+                currentColor = cc1.White.ToWebColor();
                 content = "Unknown"; //to help with debugging since blazor does not have debugging support (does not show any errors).
                 break;
         }
@@ -99,7 +99,7 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         text = new Text();
         text.CenterText(MainGroup!, bottomRect);
         text.Font_Size = fontSize;
-        text.Fill = cc.White.ToWebColor();
+        text.Fill = cc1.White.ToWebColor();
         text.Content = content;
         text.PopulateStrokesToStyles();
     }
@@ -138,54 +138,54 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         switch (career.Career)
         {
             case EnumCareerType.Doctor:
-                firstColor = cc.DarkOrange.ToWebColor();
-                secondColor = cc.Green.ToWebColor();
+                firstColor = cc1.DarkOrange.ToWebColor();
+                secondColor = cc1.Green.ToWebColor();
                 content = "Doctor";
                 break;
             case EnumCareerType.SalesPerson:
-                firstColor = cc.Red.ToWebColor();
-                secondColor = cc.Green.ToWebColor();
+                firstColor = cc1.Red.ToWebColor();
+                secondColor = cc1.Green.ToWebColor();
                 content = "Sales Person";
                 break;
             case EnumCareerType.ComputerConsultant:
-                firstColor = cc.DarkBlue.ToWebColor();
-                secondColor = cc.Green.ToWebColor();
+                firstColor = cc1.DarkBlue.ToWebColor();
+                secondColor = cc1.Green.ToWebColor();
                 content = "Computer Consultant";
                 break;
             case EnumCareerType.Teacher:
-                firstColor = cc.Red.ToWebColor();
-                secondColor = cc.Green.ToWebColor();
+                firstColor = cc1.Red.ToWebColor();
+                secondColor = cc1.Green.ToWebColor();
                 content = "Teacher";
                 break;
             case EnumCareerType.Accountant:
-                firstColor = cc.DarkBlue.ToWebColor();
-                secondColor = cc.Red.ToWebColor();
+                firstColor = cc1.DarkBlue.ToWebColor();
+                secondColor = cc1.Red.ToWebColor();
                 content = "Accountant";
                 break;
             case EnumCareerType.Athlete:
-                firstColor = cc.DarkBlue.ToWebColor();
-                secondColor = cc.Red.ToWebColor();
+                firstColor = cc1.DarkBlue.ToWebColor();
+                secondColor = cc1.Red.ToWebColor();
                 content = "Athlete";
                 break;
             case EnumCareerType.Artist:
-                firstColor = cc.DarkBlue.ToWebColor();
-                secondColor = cc.Red.ToWebColor();
+                firstColor = cc1.DarkBlue.ToWebColor();
+                secondColor = cc1.Red.ToWebColor();
                 content = "Artist";
                 break;
             case EnumCareerType.Entertainer:
-                firstColor = cc.DarkBlue.ToWebColor();
-                secondColor = cc.Red.ToWebColor();
+                firstColor = cc1.DarkBlue.ToWebColor();
+                secondColor = cc1.Red.ToWebColor();
                 content = "Entertainer";
                 break;
             case EnumCareerType.PoliceOfficer:
-                firstColor = cc.Red.ToWebColor();
-                secondColor = cc.Green.ToWebColor();
+                firstColor = cc1.Red.ToWebColor();
+                secondColor = cc1.Green.ToWebColor();
                 content = "Police Officer";
                 break;
             default:
                 content = "Unknown";
-                firstColor = cc.White.ToWebColor();
-                secondColor = cc.White.ToWebColor();
+                firstColor = cc1.White.ToWebColor();
+                secondColor = cc1.White.ToWebColor();
                 break;
         }
         Image image = new();
@@ -197,7 +197,7 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         Rect lastRect = new();
         lastRect.PopulateRectangle(8, 65, 64, 27);
         MainGroup.Children.Add(lastRect);
-        lastRect.Fill = cc.Blue.ToWebColor();
+        lastRect.Fill = cc1.Blue.ToWebColor();
         MainGroup!.Children.Add(firstRect);
         MainGroup.Children.Add(secondRect);
         DrawCareerSymbol(career.Career);
@@ -208,19 +208,19 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
             firstText.CenterText(MainGroup, lastRect);
             firstText.Content = content;
             firstText.Font_Size = fontSize;
-            firstText.Fill = cc.White.ToWebColor();
+            firstText.Fill = cc1.White.ToWebColor();
         }
         else
         {
             Text line = new();
             line.CenterText(MainGroup, 8, 65, 64, 14);
             line.Content = "Computer";
-            line.Fill = cc.White.ToWebColor();
+            line.Fill = cc1.White.ToWebColor();
             line.Font_Size = fontSize;
             line = new Text();
             line.CenterText(MainGroup, 8, 75, 64, 14);
             line.Content = "Consultant";
-            line.Fill = cc.White.ToWebColor();
+            line.Fill = cc1.White.ToWebColor();
             line.Font_Size = fontSize;
         }
     }
@@ -234,12 +234,12 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         Rect firstRect = new();
         firstRect.PopulateRectangle(8, 65, 64, 27);
         MainGroup.Children.Add(firstRect);
-        firstRect.Fill = cc.DarkOrange.ToWebColor();
+        firstRect.Fill = cc1.DarkOrange.ToWebColor();
         string text = house.HouseCategory.ToString().GetWords();
         var firstFont = 11;
         var secondFont = 14;
-        string firstColor = cc.White.ToWebColor();
-        string secondColor = cc.Black.ToWebColor();
+        string firstColor = cc1.White.ToWebColor();
+        string secondColor = cc1.Black.ToWebColor();
         Text firsts = new();
         firsts.Fill = firstColor;
         firsts.Font_Size = firstFont;
@@ -300,33 +300,33 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         {
             case var @case when @case == 100000:
                 {
-                    output = cc.DarkOrange;
+                    output = cc1.DarkOrange;
                     break;
                 }
             case var case1 when case1 == 90000:
             case var case2 when case2 == 70000:
             case var case3 when case3 == 60000:
                 {
-                    output = cc.Green;
+                    output = cc1.Green;
                     break;
                 }
             case var case4 when case4 == 80000:
             case var case5 when case5 == 30000:
             case var case6 when case6 == 40000:
                 {
-                    output = cc.Red;
+                    output = cc1.Red;
                     break;
                 }
             case var case7 when case7 == 50000:
             case var case8 when case8 == 20000:
                 {
-                    output = cc.DarkBlue;
+                    output = cc1.DarkBlue;
                     break;
                 }
 
             default:
                 {
-                    return cc.White;
+                    return cc1.White;
                 }
         }
         return output;
@@ -344,7 +344,7 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         secondText.CenterText(MainGroup!, 3, 31, 70, 20);
         thirdText.CenterText(MainGroup!, 3, 51, 70, 20);
         fourthText.CenterText(MainGroup!, 3, 76, 70, 20);
-        string purpleText = cc.Purple.ToWebColor();
+        string purpleText = cc1.Purple.ToWebColor();
         firstText.Font_Weight = "bold";
         secondText.Font_Weight = "bold";
         thirdText.Font_Weight = "bold";
@@ -362,14 +362,14 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
     private void PopulateStrokePath(float strokeWidth, string d)
     {
         Path path = new();
-        path.PopulateStrokesToStyles(cc.White.ToWebColor(), strokeWidth);
+        path.PopulateStrokesToStyles(cc1.White.ToWebColor(), strokeWidth);
         path.D = d;
         MainGroup!.Children.Add(path);
     }
     private void FillPath(string d)
     {
         Path path = new();
-        path.Fill = cc.White.ToWebColor();
+        path.Fill = cc1.White.ToWebColor();
         path.D = d;
         MainGroup!.Children.Add(path);
     }
@@ -377,14 +377,14 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
     {
         Rect rect = new();
         rect.PopulateRectangle(30, 43, 20, 20);
-        rect.PopulateStrokesToStyles(cc.White.ToWebColor(), 1);
+        rect.PopulateStrokesToStyles(cc1.White.ToWebColor(), 1);
         MainGroup!.Children.Add(rect);
     }
     private void FillRectangle(float x, float y, float width, float height)
     {
         Rect rect = new();
         rect.PopulateRectangle(x, y, width, height);
-        rect.Fill = cc.White.ToWebColor();
+        rect.Fill = cc1.White.ToWebColor();
         MainGroup!.Children.Add(rect);
     }
     private void DrawCareerSymbol(EnumCareerType career)
@@ -411,7 +411,7 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
                 break;
             case EnumCareerType.Teacher:
                 Ellipse others = new();
-                others.Fill = cc.White.ToWebColor();
+                others.Fill = cc1.White.ToWebColor();
                 others.CX = "40";
                 others.CY = "55";
                 others.RX = "7";
@@ -422,7 +422,7 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
             case EnumCareerType.Accountant:
                 Text text = new();
                 text.CenterText(MainGroup!, 30, 43, 20, 20); //i think (?)
-                text.Fill = cc.White.ToWebColor();
+                text.Fill = cc1.White.ToWebColor();
                 text.Font_Size = 16;
                 text.Content = "$";
                 break;

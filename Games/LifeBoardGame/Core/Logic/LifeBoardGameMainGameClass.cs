@@ -246,11 +246,11 @@ public class LifeBoardGameMainGameClass
         switch (status)
         {
             case "spin":
-                SpinnerPositionData spin = await js.DeserializeObjectAsync<SpinnerPositionData>(content);
+                SpinnerPositionData spin = await js1.DeserializeObjectAsync<SpinnerPositionData>(content);
                 await _spinnerProcesses.StartSpinningAsync(spin);
                 return;
             case "gender":
-                EnumGender gender = await js.DeserializeObjectAsync<EnumGender>(content);
+                EnumGender gender = await js1.DeserializeObjectAsync<EnumGender>(content);
                 if (_gameContainer.SelectGenderAsync == null)
                 {
                     throw new CustomBasicException("Nobody is handling the selecting gender.  Rethink");
@@ -258,7 +258,7 @@ public class LifeBoardGameMainGameClass
                 await _gameContainer.SelectGenderAsync.Invoke(gender);
                 return;
             case "firstoption":
-                EnumStart firsts = await js.DeserializeObjectAsync<EnumStart>(content);
+                EnumStart firsts = await js1.DeserializeObjectAsync<EnumStart>(content);
                 await _boardProcesses.OpeningOptionAsync(firsts);
                 return;
             case "chosecareer":
@@ -286,7 +286,7 @@ public class LifeBoardGameMainGameClass
                 await _boardProcesses.AttendNightSchoolAsync();
                 return;
             case "choseretirement":
-                EnumFinal finals = await js.DeserializeObjectAsync<EnumFinal>(content);
+                EnumFinal finals = await js1.DeserializeObjectAsync<EnumFinal>(content);
                 await _boardProcesses.RetirementAsync(finals);
                 return;
             case "chosestock":
@@ -305,11 +305,11 @@ public class LifeBoardGameMainGameClass
                 await _boardProcesses.SellHouseAsync();
                 return;
             case "twins":
-                BasicList<EnumGender> gList = await js.DeserializeObjectAsync<BasicList<EnumGender>>(content);
+                BasicList<EnumGender> gList = await js1.DeserializeObjectAsync<BasicList<EnumGender>>(content);
                 await _twinProcesses.GetTwinsAsync(gList);
                 return;
             case "houselist":
-                BasicList<int> tempList = await js.DeserializeObjectAsync<BasicList<int>>(content);
+                BasicList<int> tempList = await js1.DeserializeObjectAsync<BasicList<int>>(content);
                 SaveRoot!.HouseList.Clear();
                 tempList.ForEach(thisIndex => SaveRoot.HouseList.Add(CardsModule.GetHouseCard(thisIndex)));
                 await ContinueTurnAsync();

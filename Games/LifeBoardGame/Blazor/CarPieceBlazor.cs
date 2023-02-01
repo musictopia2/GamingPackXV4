@@ -11,7 +11,7 @@ public class CarPieceBlazor : ComponentBase
     [CascadingParameter]
     public BasePieceGraphics? MainGraphics { get; set; }
     [Parameter]
-    public string MainColor { get; set; } = cc.Transparent; //has to be this way so its compatible with the processes for the color pickers
+    public string MainColor { get; set; } = cc1.Transparent; //has to be this way so its compatible with the processes for the color pickers
     [Parameter]
     public LifeBoardGamePlayerItem? Player { get; set; } //if player is used, then no need for colorused.
     protected override void OnInitialized()
@@ -41,11 +41,11 @@ public class CarPieceBlazor : ComponentBase
     private void DrawBasicCar(ISvg svg)
     {
         Rect rect = new();
-        rect.Fill = cc.Black.ToWebColor();
+        rect.Fill = cc1.Black.ToWebColor();
         rect.PopulateRectangle(0, 24.799999f, 136, 49.599995f);
         svg.Children.Add(rect);
         rect = new ();
-        rect.Fill = cc.Black.ToWebColor();
+        rect.Fill = cc1.Black.ToWebColor();
         rect.PopulateRectangle(0, 173.60001f, 136, 49.600006f);
         svg.Children.Add(rect);
         PopulatePath(svg, "M125 239.733L11 239.733L20 8.26665L116 8.26666L125 239.733Z", true);
@@ -150,7 +150,7 @@ public class CarPieceBlazor : ComponentBase
     private readonly BasicList<EnumGender> _genderList = new();
     private void DrawSinglePeg(ISvg svg, PegInfo peg, int index)
     {
-        DrawPeg(svg, peg, cc.Black.ToWebColor());
+        DrawPeg(svg, peg, cc1.Black.ToWebColor());
         if (Player == null)
         {
             return;

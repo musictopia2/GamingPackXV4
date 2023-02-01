@@ -1,6 +1,6 @@
 ﻿@inherits KeyComponentBase
 @using CommonBasicLibraries.CollectionClasses
-@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString
+@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString
 @if (GraphicsData == null || ContainerData == null || BoardProcesses == null)
 {
     return;
@@ -83,7 +83,7 @@
         {
         <TransparentButton @key="GetKey"
                            BorderWidth="4"
-                           BorderColor="@cc.Black"
+                           BorderColor="@cc1.Black"
                            ButtonLocation="first.Bounds.Location"
                            ButtonSize="first.Bounds.Size"
                            ButtonClicked="() => StartActions(first.OptionChosen)" />
@@ -93,7 +93,7 @@
         {
         <TransparentButton @key="GetKey"
                            BorderWidth="4"
-                           BorderColor="@cc.Black"
+                           BorderColor="@cc1.Black"
                            ButtonLocation="retire.Bounds.Location"
                            ButtonSize="retire.Bounds.Size"
                            ButtonClicked="() => RetirementActions(retire.OptionChosen)" />

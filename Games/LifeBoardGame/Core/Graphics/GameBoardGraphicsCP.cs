@@ -77,7 +77,7 @@ public class GameBoardGraphicsCP
         {
             return new();
         }
-        pp.ClearArea(_gameContainer.CountrySpace!);
+        pp1.ClearArea(_gameContainer.CountrySpace!);
         _gameContainer.CountrySpace!.PieceList.Clear();
         RectangleF piece;
         SizeF size;
@@ -90,14 +90,14 @@ public class GameBoardGraphicsCP
         {
             size = new SizeF(EndSize.Width, _gameContainer.CountrySpace.Area.Height);
 
-            point = pp.GetPosition(_gameContainer.CountrySpace, size);
+            point = pp1.GetPosition(_gameContainer.CountrySpace, size);
             piece = new RectangleF(point, size);
             EndPositionInfo end = new();
             end.Bounds = piece;
             end.Player = thisPlayer;
             output.Add(end);
             _gameContainer.CountrySpace.PieceList.Add(piece);
-            pp.AddPieceToArea(_gameContainer.CountrySpace, piece);
+            pp1.AddPieceToArea(_gameContainer.CountrySpace, piece);
         }
         return output;
     }
@@ -111,7 +111,7 @@ public class GameBoardGraphicsCP
         SizeF size;
         PointF point;
         BasicList<EndPositionInfo> output = new();
-        pp.ClearArea(_gameContainer.MillionSpace!);
+        pp1.ClearArea(_gameContainer.MillionSpace!);
         _gameContainer.MillionSpace!.PieceList.Clear();
         var tempList = (from xx in _gameContainer.PlayerList
                         where xx.LastMove == EnumFinal.MillionaireEstates
@@ -119,10 +119,10 @@ public class GameBoardGraphicsCP
         foreach (var thisPlayer in tempList)
         {
             size = new SizeF(EndSize.Width, _gameContainer.MillionSpace.Area.Height);
-            point = pp.GetPosition(_gameContainer.MillionSpace, size);
+            point = pp1.GetPosition(_gameContainer.MillionSpace, size);
             piece = new RectangleF(point, size);
             _gameContainer.MillionSpace.PieceList.Add(piece);
-            pp.AddPieceToArea(_gameContainer.MillionSpace, piece);
+            pp1.AddPieceToArea(_gameContainer.MillionSpace, piece);
             EndPositionInfo end = new();
             end.Bounds = piece;
             end.Player = thisPlayer;
@@ -137,8 +137,8 @@ public class GameBoardGraphicsCP
         {
             throw new CustomBasicException("Needs to already be end game to use these options");
         }
-        pp.ClearArea(_gameContainer.CountrySpace!);
-        pp.ClearArea(_gameContainer.MillionSpace!);
+        pp1.ClearArea(_gameContainer.CountrySpace!);
+        pp1.ClearArea(_gameContainer.MillionSpace!);
         _gameContainer.CountrySpace!.PieceList.Clear();
         _gameContainer.MillionSpace!.PieceList.Clear();
         RectangleF piece;
@@ -152,10 +152,10 @@ public class GameBoardGraphicsCP
         {
             size = new SizeF(main.Width, _gameContainer.CountrySpace.Area.Height);
 
-            point = pp.GetPosition(_gameContainer.CountrySpace, size);
+            point = pp1.GetPosition(_gameContainer.CountrySpace, size);
             piece = new RectangleF(point, size);
             _gameContainer.CountrySpace.PieceList.Add(piece);
-            pp.AddPieceToArea(_gameContainer.CountrySpace, piece);
+            pp1.AddPieceToArea(_gameContainer.CountrySpace, piece);
 
         }
         tempList = (from Items in _gameContainer.PlayerList
@@ -165,10 +165,10 @@ public class GameBoardGraphicsCP
         {
 
             size = new SizeF(main.Width, _gameContainer.MillionSpace.Area.Height);
-            point = pp.GetPosition(_gameContainer.MillionSpace, size);
+            point = pp1.GetPosition(_gameContainer.MillionSpace, size);
             piece = new RectangleF(point, size);
             _gameContainer.MillionSpace.PieceList.Add(piece);
-            pp.AddPieceToArea(_gameContainer.MillionSpace, piece);
+            pp1.AddPieceToArea(_gameContainer.MillionSpace, piece);
         }
     }
     public BasicList<ButtonInfo> GetMainActions()
@@ -190,10 +190,10 @@ public class GameBoardGraphicsCP
             button.Display = "Insure Car";
             button.Action = _options.PurchaseCarInsuranceAsync;
             button.Size = size;
-            point = pp.GetPosition(_gameContainer.ExtraSpace!, size);
+            point = pp1.GetPosition(_gameContainer.ExtraSpace!, size);
             button.Location = point;
             _gameContainer.ExtraSpace.PieceList.Add(new RectangleF(point, size));
-            pp.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
+            pp1.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
             output.Add(button);
         }
         if (_options.CanPurchaseHouseInsurance)
@@ -202,10 +202,10 @@ public class GameBoardGraphicsCP
             button.Display = "Insure House";
             button.Action = _options.PurchaseHouseInsuranceAsync;
             button.Size = size;
-            point = pp.GetPosition(_gameContainer.ExtraSpace, size);
+            point = pp1.GetPosition(_gameContainer.ExtraSpace, size);
             button.Location = point;
             _gameContainer.ExtraSpace.PieceList.Add(new RectangleF(point, size));
-            pp.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
+            pp1.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
             output.Add(button);
         }
         if (_options.CanPurchaseStock)
@@ -214,10 +214,10 @@ public class GameBoardGraphicsCP
             button.Display = "Buy Stock";
             button.Action = _options.PurchaseStockAsync;
             button.Size = size;
-            point = pp.GetPosition(_gameContainer.ExtraSpace, size);
+            point = pp1.GetPosition(_gameContainer.ExtraSpace, size);
             button.Location = point;
             _gameContainer.ExtraSpace.PieceList.Add(new RectangleF(point, size));
-            pp.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
+            pp1.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
             output.Add(button);
         }
         if (_options.CanSellHouse)
@@ -226,10 +226,10 @@ public class GameBoardGraphicsCP
             button.Display = "Sell House";
             button.Action = _options.SellHouseAsync;
             button.Size = size;
-            point = pp.GetPosition(_gameContainer.ExtraSpace, size);
+            point = pp1.GetPosition(_gameContainer.ExtraSpace, size);
             button.Location = point;
             _gameContainer.ExtraSpace.PieceList.Add(new RectangleF(point, size));
-            pp.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
+            pp1.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
             output.Add(button);
         }
         if (_options.CanAttendNightSchool)
@@ -238,10 +238,10 @@ public class GameBoardGraphicsCP
             button.Display = "Night School";
             button.Action = _options.AttendNightSchoolAsync;
             button.Size = size;
-            point = pp.GetPosition(_gameContainer.ExtraSpace, size);
+            point = pp1.GetPosition(_gameContainer.ExtraSpace, size);
             button.Location = point;
             _gameContainer.ExtraSpace.PieceList.Add(new RectangleF(point, size));
-            pp.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
+            pp1.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
             output.Add(button);
         }
         if (_options.CanTrade4Tiles)
@@ -250,10 +250,10 @@ public class GameBoardGraphicsCP
             button.Display = "Trade 4 Tiles";
             button.Action = _options.Trade4TilesAsync;
             button.Size = size;
-            point = pp.GetPosition(_gameContainer.ExtraSpace, size);
+            point = pp1.GetPosition(_gameContainer.ExtraSpace, size);
             button.Location = point;
             _gameContainer.ExtraSpace.PieceList.Add(new RectangleF(point, size));
-            pp.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
+            pp1.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
             output.Add(button);
         }
         if (_gameContainer.GameStatus == EnumWhatStatus.NeedToChooseSpace)
@@ -262,10 +262,10 @@ public class GameBoardGraphicsCP
             button.Display = "Submit Space";
             button.Action = _options.HumanChoseSpaceAsync;
             button.Size = size;
-            point = pp.GetPosition(_gameContainer.ExtraSpace, size);
+            point = pp1.GetPosition(_gameContainer.ExtraSpace, size);
             button.Location = point;
             _gameContainer.ExtraSpace.PieceList.Add(new RectangleF(point, size));
-            pp.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
+            pp1.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
             output.Add(button);
         }
         if (_options.CanEndTurn)
@@ -274,10 +274,10 @@ public class GameBoardGraphicsCP
             button.Display = "End Turn";
             button.Action = _gameContainer.UIEndTurnAsync;
             button.Size = size;
-            point = pp.GetPosition(_gameContainer.ExtraSpace, size);
+            point = pp1.GetPosition(_gameContainer.ExtraSpace, size);
             button.Location = point;
             _gameContainer.ExtraSpace.PieceList.Add(new RectangleF(point, size));
-            pp.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
+            pp1.AddPieceToArea(_gameContainer.ExtraSpace, new RectangleF(point, size));
             output.Add(button);
         }
         return output;
@@ -294,11 +294,11 @@ public class GameBoardGraphicsCP
         ChooseSpaceInfo space = new();
         if (firstPos == _gameContainer.CurrentSelected)
         {
-            space.Color = cc.Aqua;
+            space.Color = cc1.Aqua;
         }
         else
         {
-            space.Color = cc.Black;
+            space.Color = cc1.Black;
         }
         var thisPos = (from xx in TempData.PositionList
                        where xx.PointView == currentPoint && xx.SpaceNumber == firstPos
@@ -309,11 +309,11 @@ public class GameBoardGraphicsCP
         space = new ChooseSpaceInfo();
         if (secondPos == _gameContainer.CurrentSelected)
         {
-            space.Color = cc.Aqua;
+            space.Color = cc1.Aqua;
         }
         else
         {
-            space.Color = cc.Black;
+            space.Color = cc1.Black;
         }
         thisPos = (from xx in TempData.PositionList
                    where xx.PointView == currentPoint && xx.SpaceNumber == secondPos
