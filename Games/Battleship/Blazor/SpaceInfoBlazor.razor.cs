@@ -11,17 +11,17 @@ public partial class SpaceInfoBlazor
     {
         if (piece.DidHit)
         {
-            return cs.Red.ToWebColor();
+            return cs1.Red.ToWebColor();
         }
-        return cs.Gray.ToWebColor();
+        return cs1.Gray.ToWebColor();
     }
     private string ShipColor()
     {
         if (DataContext!.VMData.ShipSelected == Ship!.ShipCategory)
         {
-            return cs.LimeGreen.ToWebColor();
+            return cs1.LimeGreen.ToWebColor();
         }
-        return cs.Orange.ToWebColor();
+        return cs1.Orange.ToWebColor();
     }
     private void ChooseShip()
     {

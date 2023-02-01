@@ -5,10 +5,10 @@ public class FieldInfoCP : IBasicSpace
     public string Letter { get; set; } = "";
     public EnumWhatHit Hit { get; set; }
     public int ShipNumber { get; set; }
-    public string FillColor { get; set; } = cs.Blue;
+    public string FillColor { get; set; } = cs1.Blue;
     public void ClearSpace()
     {
-        FillColor = cs.Blue;
+        FillColor = cs1.Blue;
         Hit = EnumWhatHit.None;
         ShipNumber = 0; //i think this too.
     }

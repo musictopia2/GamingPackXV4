@@ -17,9 +17,9 @@ public partial class BattleshipMainView
     private BattleshipCollection? _humanList;
     protected override void OnParametersSet()
     {
-        var ship = aa.Resolver!.Resolve<ShipControlCP>(); //i think.
+        var ship = aa1.Resolver!.Resolve<ShipControlCP>(); //i think.
         _ships = ship.ShipList.Values.ToBasicList();
-        GameBoardCP gameBoard = aa.Resolver.Resolve<GameBoardCP>();
+        GameBoardCP gameBoard = aa1.Resolver.Resolve<GameBoardCP>();
         _humanList = gameBoard.HumanList!;
         _rowList = gameBoard.RowList!.Values.ToBasicList();
         _columnList = gameBoard.ColumnList!.Values.ToBasicList();
@@ -30,8 +30,8 @@ public partial class BattleshipMainView
     {
         if (DataContext!.ShipsHorizontal == horizontal)
         {
-            return cs.Yellow;
+            return cs1.Yellow;
         }
-        return cs.Aqua;
+        return cs1.Aqua;
     }
 }

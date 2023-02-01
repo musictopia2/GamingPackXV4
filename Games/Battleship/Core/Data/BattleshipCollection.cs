@@ -14,7 +14,7 @@ public class BattleshipCollection : IBoardCollection<FieldInfoCP>
     {
         foreach (var thisPlayer in _privateBoard)
         {
-            thisPlayer.FillColor = cs.Yellow; //i think
+            thisPlayer.FillColor = cs1.Yellow; //i think
         }
     }
     public FieldInfoCP this[Vector thisV] => _privateBoard[thisV];

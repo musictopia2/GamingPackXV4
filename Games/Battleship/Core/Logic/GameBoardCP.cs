@@ -14,7 +14,7 @@ public class GameBoardCP
         _isWaiting = false;
         foreach (var item in HumanList!)
         {
-            item.FillColor = cs.Blue; //i think this is all that it needs to when it starts game.
+            item.FillColor = cs1.Blue; //i think this is all that it needs to when it starts game.
         }
     }
     public void HumanWaiting()
@@ -87,14 +87,14 @@ public class GameBoardCP
         thisField.Hit = hit;
         if (hit == EnumWhatHit.Miss)
         {
-            thisField.FillColor = cs.Lime;
+            thisField.FillColor = cs1.Lime;
         }
     }
     public void PlaceShip(Vector space, int nextShip, out string label)
     {
         FieldInfoCP thisField;
         thisField = HumanList![space];
-        thisField.FillColor = cs.Gray;
+        thisField.FillColor = cs1.Gray;
         thisField.ShipNumber = nextShip;
         label = $"{thisField.Letter.ToUpper()}:{space.Column}";
     }

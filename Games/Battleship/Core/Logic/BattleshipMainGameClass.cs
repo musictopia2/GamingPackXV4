@@ -166,7 +166,7 @@ public class BattleshipMainGameClass : BasicGameClass<BattleshipPlayerItem, Batt
     }
     async Task IMoveNM.MoveReceivedAsync(string data)
     {
-        Vector space = await js.DeserializeObjectAsync<Vector>(data);
+        Vector space = await js1.DeserializeObjectAsync<Vector>(data);
         bool hasHit = Ships!.HasHit(space);
         if (hasHit == true)
         {
