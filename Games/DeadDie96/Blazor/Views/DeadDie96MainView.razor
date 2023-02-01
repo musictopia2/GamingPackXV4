@@ -1,5 +1,5 @@
 @inherits BasicGameView<DeadDie96MainViewModel>
-<div style="height: 22vh">
+<div class="@cc1.CenteredFlex" style="height: 22vh">
     <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
     <DiceListConrolBlazor D="TenSidedDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
 </div>
