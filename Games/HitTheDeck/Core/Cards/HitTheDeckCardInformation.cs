@@ -5,7 +5,7 @@ public class HitTheDeckCardInformation : SimpleDeckObject, IDeckObject, ICompara
     {
         DefaultSize = new SizeF(55, 72);
     }
-    public string Color { get; set; } = cs.Transparent;
+    public string Color { get; set; } = cs1.Transparent;
     public int FirstSort { get; set; }
     public EnumTypeList CardType { get; set; }
     public EnumInstructionList Instructions { get; set; }
@@ -16,19 +16,19 @@ public class HitTheDeckCardInformation : SimpleDeckObject, IDeckObject, ICompara
     {
         if (value == 1)
         {
-            return cs.Yellow;
+            return cs1.Yellow;
         }
         if (value == 2)
         {
-            return cs.Blue;
+            return cs1.Blue;
         }
         if (value == 3)
         {
-            return cs.Red;
+            return cs1.Red;
         }
         if (value == 4)
         {
-            return cs.Green;
+            return cs1.Green;
         }
         throw new CustomBasicException("There are only 4 colors in this game");
     }

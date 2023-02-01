@@ -15,7 +15,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<HitTheDeckCardInformation>
         }
         return DeckObject!.CardType != EnumTypeList.None;
     }
-    protected override bool IsLightColored => DeckObject!.Color == cs.Yellow;
+    protected override bool IsLightColored => DeckObject!.Color == cs1.Yellow;
     protected override void DrawBacks()
     {
         RectangleF rect_Card = new(0, 0, DefaultSize.Width, DefaultSize.Height);
@@ -51,7 +51,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<HitTheDeckCardInformation>
             text.Font_Size = fontSize;
             text.CenterText(MainGroup!, rect);
             text.PopulateStrokesToStyles(strokeWidth: .5f);
-            text.Fill = cs.Yellow.ToWebColor();
+            text.Fill = cs1.Yellow.ToWebColor();
         }
     }
     protected override void BeforeFilling()
@@ -62,11 +62,11 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<HitTheDeckCardInformation>
     {
         if (DeckObject!.IsUnknown)
         {
-            return cs.Aqua; //aqua is fine anyways.
+            return cs1.Aqua; //aqua is fine anyways.
         }
-        if (DeckObject.Color == cs.Transparent)
+        if (DeckObject.Color == cs1.Transparent)
         {
-            return cs.White;
+            return cs1.White;
         }
         return DeckObject.Color;
     }
@@ -130,13 +130,13 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<HitTheDeckCardInformation>
         heights = (int)rect_Card.Height / 2;
         RectangleF newRect;
         newRect = new RectangleF(rect_Card.Left, rect_Card.Top, widths, heights);
-        DrawSimpleRectangle(newRect, cs.Red);
+        DrawSimpleRectangle(newRect, cs1.Red);
         newRect = new RectangleF(rect_Card.Left + widths, rect_Card.Top, widths, heights);
-        DrawSimpleRectangle(newRect, cs.Yellow);
+        DrawSimpleRectangle(newRect, cs1.Yellow);
         newRect = new RectangleF(rect_Card.Left + widths, rect_Card.Top + heights, widths, heights - 3);
-        DrawSimpleRectangle(newRect, cs.Blue);
+        DrawSimpleRectangle(newRect, cs1.Blue);
         newRect = new RectangleF(rect_Card.Left, rect_Card.Top + heights, widths, heights - 3);
-        DrawSimpleRectangle(newRect, cs.Green);
+        DrawSimpleRectangle(newRect, cs1.Green);
         if ((DeckObject!.CardType == EnumTypeList.Color) | (DeckObject!.CardType == EnumTypeList.Draw4))
         {
             var newLeft = rect_Card.Left + (widths / 2);
@@ -186,7 +186,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<HitTheDeckCardInformation>
         text.Content = value;
         text.CenterText(MainGroup!, rect_Card);
         text.PopulateStrokesToStyles();
-        text.Fill = cs.White.ToWebColor();
+        text.Fill = cs1.White.ToWebColor();
     }
     private void DrawBorders()
     {

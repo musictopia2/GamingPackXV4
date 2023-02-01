@@ -7,8 +7,8 @@ public partial class HitTheDeckMainView
     private HitTheDeckGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<HitTheDeckVMData>();
-        _gameContainer = aa.Resolver.Resolve<HitTheDeckGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<HitTheDeckVMData>();
+        _gameContainer = aa1.Resolver.Resolve<HitTheDeckGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(HitTheDeckVMData.NormalTurn))
             .AddLabel("Next", nameof(HitTheDeckVMData.NextPlayer))
