@@ -8,7 +8,7 @@ public partial class GolfCardGameMainView
     private GolfCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _gameContainer = aa.Resolver!.Resolve<GolfCardGameGameContainer>();
+        _gameContainer = aa1.Resolver!.Resolve<GolfCardGameGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(GolfCardGameVMData.NormalTurn))
            .AddLabel("Status", nameof(GolfCardGameVMData.Status))

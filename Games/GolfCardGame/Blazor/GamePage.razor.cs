@@ -9,6 +9,6 @@ public partial class GamePage
     public BasicData? BasicData { get; set; }
     [CascadingParameter]
     public MultiplayerBasicParentShell? Shell { get; set; }
-    private int TargetHeight => 15;
-    private static GolfCardGameVMData? GetData => aa.Resolver!.Resolve<GolfCardGameVMData>();
+    private static int TargetHeight => 15;
+    private static GolfCardGameVMData? GetData => aa1.Resolver!.Resolve<GolfCardGameVMData>();
 }

@@ -157,7 +157,7 @@ public class GolfCardGameMainGameClass
                 await KnockAsync();
                 break;
             case "selectbeginning":
-                SendBeginning thisB = await js.DeserializeObjectAsync<SendBeginning>(content);
+                SendBeginning thisB = await js1.DeserializeObjectAsync<SendBeginning>(content);
                 await _processes.SelectBeginningAsync(thisB.Player, thisB.SelectList, thisB.UnsSelectList);
                 break;
             case "changeunknown":
