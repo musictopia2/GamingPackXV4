@@ -166,7 +166,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
                 if (_mainGame.BasicData!.MultiPlayer == true)
                 {
                     var tempList = thisTemp.CardList.GetDeckListFromObjectList();
-                    var thisStr = await js.SerializeObjectAsync(tempList);
+                    var thisStr = await js1.SerializeObjectAsync(tempList);
                     newList.Add(thisStr);
                 }
             });

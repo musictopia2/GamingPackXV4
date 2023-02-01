@@ -11,11 +11,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MonopolyCardGameCardInformati
     {
         if (DeckObject!.IsUnknown)
         {
-            FillColor = cc.Aqua;
+            FillColor = cc1.Aqua;
         }
         else
         {
-            FillColor = cc.White;
+            FillColor = cc1.White;
         }
         base.BeforeFilling();
     }
@@ -119,8 +119,8 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MonopolyCardGameCardInformati
         var fontSize = 9;
         var firstRect = new RectangleF(0, 5, 55, 15);
         var secondRect = new RectangleF(-2, 15, 55, 15);
-        DrawText("Mr.", firstRect, cc.Black, fontSize);
-        DrawText("Monopoly", secondRect, cc.Black, fontSize);
+        DrawText("Mr.", firstRect, cc1.Black, fontSize);
+        DrawText("Monopoly", secondRect, cc1.Black, fontSize);
     }
     private void DrawHouseText()
     {

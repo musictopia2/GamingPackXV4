@@ -8,8 +8,8 @@ public partial class MonopolyCardGameMainView
     private BasicList<MonopolyCardGamePlayerItem> _players = new();
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<MonopolyCardGameVMData>();
-        _gameContainer = aa.Resolver.Resolve<MonopolyCardGameGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<MonopolyCardGameVMData>();
+        _gameContainer = aa1.Resolver.Resolve<MonopolyCardGameGameContainer>();
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(MonopolyCardGameVMData.NormalTurn))

@@ -35,7 +35,7 @@ public class MonopolyCardGameMainGameClass
         _doContinue = true;
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
-            var thisList = await js.DeserializeObjectAsync<DeckRegularDict<MonopolyCardGameCardInformation>>(thisPlayer.TradeString);
+            var thisList = await js1.DeserializeObjectAsync<DeckRegularDict<MonopolyCardGameCardInformation>>(thisPlayer.TradeString);
             thisPlayer.TradePile!.HandList = new DeckRegularDict<MonopolyCardGameCardInformation>(thisList);
         });
         if (SaveRoot.GameStatus == EnumWhatStatus.ManuallyFigureOutMonopolies)
@@ -52,7 +52,7 @@ public class MonopolyCardGameMainGameClass
     {
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
-            thisPlayer.TradeString = await js.SerializeObjectAsync(thisPlayer.TradePile!.HandList);
+            thisPlayer.TradeString = await js1.SerializeObjectAsync(thisPlayer.TradePile!.HandList);
         });
         await base.PopulateSaveRootAsync();
     }
@@ -92,7 +92,7 @@ public class MonopolyCardGameMainGameClass
                 Network!.IsEnabled = true;
                 return;
             case "trade2":
-                SendTrade thisSend = await js.DeserializeObjectAsync<SendTrade>(content);
+                SendTrade thisSend = await js1.DeserializeObjectAsync<SendTrade>(content);
                 var tempPlayer = PlayerList![thisSend.Player];
                 TradePile newTrade = tempPlayer.TradePile!;
                 var tempCollection = thisSend.CardList.GetNewObjectListFromDeckList(_gameContainer.DeckList!).ToRegularDeckDict();
@@ -1432,7 +1432,7 @@ public class MonopolyCardGameMainGameClass
 
     private async Task<BasicList<DeckRegularDict<MonopolyCardGameCardInformation>>> GetSetInfoAsync(string message)
     {
-        var firstTemp = await js.DeserializeObjectAsync<BasicList<string>>(message);
+        var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(message);
         BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> output = new();
         foreach (var thisFirst in firstTemp)
         {
