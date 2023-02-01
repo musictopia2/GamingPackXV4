@@ -8,7 +8,7 @@ public class PlayerBoardCP
     {
         GameContainer = gameContainer;
     }
-    public SizeF OriginalSize = new(320, 100);
+    public SizeF OriginalSize = new(322, 100);
     public SizeF SpaceSize = new(60, 40);
     private void CreateSpaces(CountdownPlayerItem player)
     {
