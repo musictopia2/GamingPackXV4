@@ -7,8 +7,8 @@ public partial class OpetongMainView
     private OpetongGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<OpetongVMData>();
-        _gameContainer = aa.Resolver.Resolve<OpetongGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<OpetongVMData>();
+        _gameContainer = aa1.Resolver.Resolve<OpetongGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(OpetongVMData.NormalTurn))
            .AddLabel("Status", nameof(OpetongVMData.Status))
