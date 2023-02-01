@@ -9,8 +9,8 @@ public partial class CoveredUpMainView
     private CoveredUpGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<CoveredUpVMData>();
-        _gameContainer = aa.Resolver.Resolve<CoveredUpGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<CoveredUpVMData>();
+        _gameContainer = aa1.Resolver.Resolve<CoveredUpGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(CoveredUpVMData.NormalTurn))
             .AddLabel("Round", nameof(CoveredUpVMData.Round))
