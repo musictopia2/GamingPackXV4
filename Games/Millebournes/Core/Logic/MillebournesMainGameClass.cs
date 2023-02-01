@@ -276,7 +276,7 @@ public class MillebournesMainGameClass
         SendPlay? thisSend = null;
         if (status == "nocoupe" || status == "hascoupe" || status == "regularplay")
         {
-            thisSend = await js.DeserializeObjectAsync<SendPlay>(content);
+            thisSend = await js1.DeserializeObjectAsync<SendPlay>(content);
         }
         switch (status)
         {

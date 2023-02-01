@@ -9,8 +9,8 @@ public partial class MillebournesMainView
     private static string GetColumns => "1fr 1fr";
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<MillebournesVMData>();
-        _gameContainer = aa.Resolver.Resolve<MillebournesGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<MillebournesVMData>();
+        _gameContainer = aa1.Resolver.Resolve<MillebournesGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(MillebournesVMData.NormalTurn))
            .AddLabel("Status", nameof(MillebournesVMData.Status));

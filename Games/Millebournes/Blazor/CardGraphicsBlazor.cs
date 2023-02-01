@@ -5,11 +5,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MillebournesCardInformation>
     {
         if (DeckObject!.IsUnknown)
         {
-            FillColor = cc.Red;
+            FillColor = cc1.Red;
         }
         else
         {
-            FillColor = cc.White;
+            FillColor = cc1.White;
         }
         base.BeforeFilling();
     }
@@ -68,24 +68,24 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MillebournesCardInformation>
         switch (value)
         {
             case "25":
-                textColor = cc.Red;
-                borderColor = cc.Green;
+                textColor = cc1.Red;
+                borderColor = cc1.Green;
                 break;
             case "50":
-                textColor = cc.Red;
-                borderColor = cc.Blue;
+                textColor = cc1.Red;
+                borderColor = cc1.Blue;
                 break;
             case "75":
-                textColor = cc.Green;
-                borderColor = cc.Red;
+                textColor = cc1.Green;
+                borderColor = cc1.Red;
                 break;
             case "100":
-                textColor = cc.Green;
-                borderColor = cc.Blue;
+                textColor = cc1.Green;
+                borderColor = cc1.Blue;
                 break;
             case "200":
-                textColor = cc.Blue;
-                borderColor = cc.Green;
+                textColor = cc1.Blue;
+                borderColor = cc1.Green;
                 break;
             default:
                 return;
