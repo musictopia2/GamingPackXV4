@@ -87,7 +87,7 @@ public class BattleshipBoardClass : ISerializable, IMoveNM
     }
     async Task IMoveNM.MoveReceivedAsync(string data)
     {
-        ShipInfo ship = await js.DeserializeObjectAsync<ShipInfo>(data);
+        ShipInfo ship = await js1.DeserializeObjectAsync<ShipInfo>(data);
         await MakeMoveAsync(ship);
     }
     public static BasicList<string> RowList => new() { "1", "2", "3", "4", "5" };

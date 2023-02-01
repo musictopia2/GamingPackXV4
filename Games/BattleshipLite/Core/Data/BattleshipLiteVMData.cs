@@ -13,10 +13,7 @@ public partial class BattleshipLiteVMData : IViewModelData
     {
         get
         {
-            if (_gameContainer == null)
-            {
-                _gameContainer = aa.Resolver!.Resolve<BattleshipLiteGameContainer>();
-            }
+            _gameContainer ??= aa1.Resolver!.Resolve<BattleshipLiteGameContainer>();
             if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.PlacingShips)
             {
                 if (_gameContainer.SingleInfo is null)

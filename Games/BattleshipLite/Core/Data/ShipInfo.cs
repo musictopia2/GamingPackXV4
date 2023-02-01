@@ -7,36 +7,33 @@ public class ShipInfo : IBasicSpace
     private BattleshipLiteGameContainer? _gameContainer;
     public string FillColor()
     {
-        if (_gameContainer is null)
-        {
-            _gameContainer = aa.Resolver!.Resolve<BattleshipLiteGameContainer>();
-        }
+        _gameContainer ??= aa1.Resolver!.Resolve<BattleshipLiteGameContainer>();
         if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.PlacingShips)
         {
             if (_gameContainer.PlayerList is null)
             {
-                return cs.Blue;
+                return cs1.Blue;
             }
             _gameContainer.SingleInfo = _gameContainer.PlayerList.GetWhoPlayer();
             if (_gameContainer.SingleInfo!.PlayerCategory is not EnumPlayerCategory.Self)
             {
-                return cs.Blue;
+                return cs1.Blue;
             }
             if (WasShip)
             {
-                return cs.Yellow;
+                return cs1.Yellow;
             }
-            return cs.Blue;
+            return cs1.Blue;
         }
         if (ShipStatus == EnumShipStatus.None)
         {
-            return cs.Blue;
+            return cs1.Blue;
         }
         if (ShipStatus == EnumShipStatus.Miss)
         {
-            return cs.Lime;
+            return cs1.Lime;
         }
-        return cs.Blue; //for hits, will show image anyways so its fine.
+        return cs1.Blue; //for hits, will show image anyways so its fine.
     }
     public void ClearSpace()
     {
