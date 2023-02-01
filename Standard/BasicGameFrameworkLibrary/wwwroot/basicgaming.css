@@ -28,6 +28,12 @@ fieldset {
     display: inline-block;
     box-sizing: initial;
     border-image: initial;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-block-start: 0px;
+    padding-inline-start: 2px;
+    padding-inline-end: 0px;
+    padding-block-end: 0px;
 }
 
 legend {
