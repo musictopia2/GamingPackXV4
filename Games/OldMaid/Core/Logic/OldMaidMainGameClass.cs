@@ -129,7 +129,7 @@ public class OldMaidMainGameClass
         switch (status)
         {
             case "processplay":
-                SendPlay thiss = await js.DeserializeObjectAsync<SendPlay>(content);
+                SendPlay thiss = await js1.DeserializeObjectAsync<SendPlay>(content);
                 await ProcessPlayAsync(thiss.Card1, thiss.Card2);
                 break;
             case "cardselected":
@@ -159,7 +159,9 @@ public class OldMaidMainGameClass
         }
         TakeOutGame();
         if (SingleInfo.MainHandList.Count > 0)
+        {
             SaveRoot!.PlayOrder.OtherTurn = WhoTurn;
+        }
         else
         {
             SaveRoot!.PlayOrder.IsReversed = true;

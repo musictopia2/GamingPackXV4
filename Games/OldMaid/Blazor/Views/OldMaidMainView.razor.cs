@@ -6,8 +6,8 @@ public partial class OldMaidMainView
     private OldMaidGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<OldMaidVMData>();
-        _gameContainer = aa.Resolver.Resolve<OldMaidGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<OldMaidVMData>();
+        _gameContainer = aa1.Resolver.Resolve<OldMaidGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(OldMaidVMData.NormalTurn))
             .AddLabel("Status", nameof(OldMaidVMData.Status));
