@@ -28,6 +28,6 @@ public class CrazyEightsSaveInfo : BasicSavedCardClass<CrazyEightsPlayerItem, Re
     public void LoadMod(CrazyEightsVMData model)
     {
         _model = model;
-        _aggregator = aa.Resolver!.Resolve<IEventAggregator>();
+        _aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
     }
 }

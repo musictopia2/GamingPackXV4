@@ -58,12 +58,12 @@ public class CrazyEightsMainGameClass
         await Delay!.DelayMilli(200);
         if (SaveRoot!.ChooseSuit == true)
         {
-            EnumSuitList thisSuit = co.SuitToChoose(SingleInfo);
+            EnumSuitList thisSuit = co1.SuitToChoose(SingleInfo);
             await _processes.SuitChosenAsync(thisSuit);
             return;
         }
         await Delay.DelaySeconds(.5);
-        int Nums = co.CardToPlay(SaveRoot);
+        int Nums = co1.CardToPlay(SaveRoot);
         if (Nums > 0)
         {
             await PlayCardAsync(Nums);

@@ -12,7 +12,7 @@ public class SuitProcesses : ISuitProcesses, IChoosePieceNM, ISerializable
     }
     public async Task ChoosePieceReceivedAsync(string data)
     {
-        EnumSuitList Suit = await js.DeserializeObjectAsync<EnumSuitList>(data);
+        EnumSuitList Suit = await js1.DeserializeObjectAsync<EnumSuitList>(data);
         await SuitChosenAsync(Suit);
     }
     public async Task SuitChosenAsync(EnumSuitList chosen)
@@ -20,7 +20,7 @@ public class SuitProcesses : ISuitProcesses, IChoosePieceNM, ISerializable
         _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
         if (_gameContainer.SingleInfo.CanSendMessage(_gameContainer.BasicData!))
         {
-            await _gameContainer.Network!.SendAllAsync(mm.ChosenPiece, chosen);
+            await _gameContainer.Network!.SendAllAsync(mm1.ChosenPiece, chosen);
         }
         _gameContainer.SaveRoot!.CurrentSuit = chosen;
         _gameContainer.SaveRoot.ChooseSuit = false;

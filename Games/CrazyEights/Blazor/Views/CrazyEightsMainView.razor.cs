@@ -7,8 +7,8 @@ public partial class CrazyEightsMainView
     private CrazyEightsGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<CrazyEightsVMData>();
-        _gameContainer = aa.Resolver.Resolve<CrazyEightsGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<CrazyEightsVMData>();
+        _gameContainer = aa1.Resolver.Resolve<CrazyEightsGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(CrazyEightsVMData.NormalTurn))
             .AddLabel("Status", nameof(CrazyEightsVMData.Status));
