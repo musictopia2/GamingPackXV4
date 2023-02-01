@@ -69,7 +69,9 @@ public class SequenceBoardCollection : IBoardCollection<SpaceInfoCP>
                 ((thisSpace.Vector.Row == 1) & (thisSpace.Vector.Column == 4)) |
                 ((thisSpace.Vector.Row == 4) & (thisSpace.Vector.Column == 6)) |
                 ((thisSpace.Vector.Row == 6) & (thisSpace.Vector.Column == 3)))
+            {
                 thisSpace.Number = 5;
+            }
             else if (((thisSpace.Vector.Row == 2) & (thisSpace.Vector.Column == 1)) |
                 ((thisSpace.Vector.Row == 1) & (thisSpace.Vector.Column == 5)) |
                 ((thisSpace.Vector.Row == 5) & (thisSpace.Vector.Column == 6)) |
@@ -138,7 +140,7 @@ public class SequenceBoardCollection : IBoardCollection<SpaceInfoCP>
         if (_model!.Cup!.TotalDiceValue == 10)
         {
             thisSpace.Player = 0;
-            thisSpace.Color = cs.Transparent;
+            thisSpace.Color = cs1.Transparent;
             return;
         }
         thisSpace.Player = singleInfo.Id;

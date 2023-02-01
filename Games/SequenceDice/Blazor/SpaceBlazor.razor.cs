@@ -12,7 +12,7 @@ public partial class SpaceBlazor : GraphicsCommand
         base.OnInitialized();
     }
     private string GetFillRegular => _space!.WasRecent ? "Yellow" : "White";
-    private string GetFillDice => _space!.WasRecent ? cs.Yellow : cs.White;
+    private string GetFillDice => _space!.WasRecent ? cs1.Yellow : cs1.White;
     private SimpleDice GetDiceInfo()
     {
         SimpleDice output = new();

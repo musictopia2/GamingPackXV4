@@ -3,13 +3,13 @@ public class SpaceInfoCP : IBasicSpace
 {
     public Vector Vector { get; set; }
     public int Player { get; set; }
-    public string Color { get; set; } = cs.Transparent;
+    public string Color { get; set; } = cs1.Transparent;
     public bool WasRecent { get; set; }
     public int Number { get; set; }
     public void ClearSpace()
     {
         Player = 0;
-        Color = cs.Transparent;
+        Color = cs1.Transparent;
         WasRecent = false;
         if (Number == 0)
         {

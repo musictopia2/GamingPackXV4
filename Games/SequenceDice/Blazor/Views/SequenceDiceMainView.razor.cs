@@ -15,7 +15,7 @@ public partial class SequenceDiceMainView
     }
     protected override void OnParametersSet()
     {
-        _saveRoot = aa.Resolver!.Resolve<SequenceDiceSaveInfo>();
+        _saveRoot = aa1.Resolver!.Resolve<SequenceDiceSaveInfo>();
         base.OnParametersSet();
     }
     private static string ColumnText => "50vw 50vw"; //could adjust as needed.

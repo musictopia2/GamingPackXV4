@@ -1,6 +1,6 @@
 ﻿@inherits GraphicsCommand
 @using System.Drawing;
-@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 @if (_space == null || _space.Number == 0)
 {
     return;
@@ -9,8 +9,8 @@
     @if (_space.Number != 2 && _space.Number != 12)
     {
         <rect width="100%" height="100%" fill="@GetFillRegular" stroke="black" stroke-width="1" />
-        <CenteredTextBlazor TextColor="@cc.Red"
-                            BorderColor="@cc.Black"
+        <CenteredTextBlazor TextColor="@cc1.Red"
+                            BorderColor="@cc1.Black"
                             BorderWidth="1"
                             FontSize="47"
                             Text="@_space.Number.ToString()" />
@@ -34,13 +34,13 @@
                             Y="secondPoint.Y"
                             TargetHeight="@diceSize.Height.ToString()" />
     }
-    @if (_space.Color != cc.Transparent)
+    @if (_space.Color != cc1.Transparent)
     {
         <BasePieceGraphics LongestSize="50">
             <CheckerPiece MainColor="@_space.Color" />
         </BasePieceGraphics>
-        <CenteredTextBlazor TextColor="@cc.Aqua"
-                            BorderColor="@cc.Black"
+        <CenteredTextBlazor TextColor="@cc1.Aqua"
+                            BorderColor="@cc1.Black"
                             BorderWidth="1"
                             FontSize="@FontSize"
                             Text="@_space.Number.ToString()" />
