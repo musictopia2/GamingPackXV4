@@ -100,7 +100,7 @@ public class MailProcesses : IMailProcesses
                 break;
             case EnumMailType.Charity:
                 pays = Math.Abs(currentMail.AmountReceived);
-                _gameContainer.SaveRoot.Instructions = $"{currentMail.Description} for charity. {vb.VBCrLf} Please pay {pays.ToCurrency(0)}";
+                _gameContainer.SaveRoot.Instructions = $"{currentMail.Description} for charity. {vb1.VBCrLf} Please pay {pays.ToCurrency(0)}";
                 if (_gameContainer.Test!.NoAnimations == false)
                 {
                     await _gameContainer.Delay!.DelaySeconds(2);
@@ -117,12 +117,12 @@ public class MailProcesses : IMailProcesses
                 break;
             case EnumMailType.MonsterCharge:
                 pays = Math.Abs(currentMail.AmountReceived);
-                _gameContainer.SaveRoot.Instructions = $"You received a monster charge of {pays.ToCurrency(0)} {vb.VBCrLf}Pay at the end of the month.";
+                _gameContainer.SaveRoot.Instructions = $"You received a monster charge of {pays.ToCurrency(0)} {vb1.VBCrLf}Pay at the end of the month.";
                 await MailBillsAsync(currentMail);
                 break;
             case EnumMailType.Bill:
                 pays = Math.Abs(currentMail.AmountReceived);
-                _gameContainer.SaveRoot.Instructions = $"You received a bill in the amount of {pays.ToCurrency(0)}{vb.VBCrLf}Pay at the end of the month.";
+                _gameContainer.SaveRoot.Instructions = $"You received a bill in the amount of {pays.ToCurrency(0)}{vb1.VBCrLf}Pay at the end of the month.";
                 await MailBillsAsync(currentMail);
                 break;
             case EnumMailType.PayNeighbor:

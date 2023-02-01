@@ -276,7 +276,7 @@ public class PaydayMainGameClass
                 await _buyProcesses.BuyerSelectedAsync(int.Parse(content));
                 break;
             case "reshuffledeallist":
-                BasicList<int> tempList1 = await js.DeserializeObjectAsync<BasicList<int>>(content);
+                BasicList<int> tempList1 = await js1.DeserializeObjectAsync<BasicList<int>>(content);
                 DeckRegularDict<DealCard> finList1 = new();
                 tempList1.ForEach(x =>
                 {
@@ -287,7 +287,7 @@ public class PaydayMainGameClass
                 Network!.IsEnabled = true;
                 break;
             case "reshufflemaillist":
-                BasicList<int> tempList2 = await js.DeserializeObjectAsync<BasicList<int>>(content);
+                BasicList<int> tempList2 = await js1.DeserializeObjectAsync<BasicList<int>>(content);
                 DeckRegularDict<MailCard> finList2 = new();
                 tempList2.ForEach(x =>
                 {

@@ -1,20 +1,20 @@
-﻿@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString
+﻿@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString
 @using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExtensions;
-@using gg = Payday.Core.Graphics.GameBoardGraphicsCP;
+@using gg1 = Payday.Core.Graphics.GameBoardGraphicsCP;
 @if (GraphicsData == null)
 {
     return;
 }
 <RawGameBoard TargetHeight="@TargetHeight"
-              BoardSize="gg.OriginalSize"
+              BoardSize="gg1.OriginalSize"
               >
     <ResourceImage Assembly="GetAssembly"
-                   Width="@gg.OriginalSize.Width.ToString()"
+                   Width="@gg1.OriginalSize.Width.ToString()"
                    FileName="board.svg"
-                   Height="@gg.OriginalSize.Height.ToString()" />
+                   Height="@gg1.OriginalSize.Height.ToString()" />
     @foreach (var space in GraphicsData.GameContainer.PrivateSpaceList)
     {
-        var position = gg.GetPositionList(space);
+        var position = gg1.GetPositionList(space);
         foreach (var item in position)
         {
             <BasePieceGraphics
@@ -45,7 +45,7 @@
         {
             var space = GraphicsData.SpaceList[GraphicsData.GameContainer.SaveRoot.NumberHighlighted.ToString()];
             <TransparentButton
-                               BorderColor="@cc.Blue" 
+                               BorderColor="@cc1.Blue" 
                                BorderWidth="4" 
                                ButtonLocation="space.Bounds.Location"
                                ButtonSize="space.Bounds.Size"
@@ -54,6 +54,6 @@
     }
 
     <RawRectangle Rectangle="GraphicsData.LotteryRectangle">
-        <CenteredTextBlazor TextColor="@cc.Aqua" BorderWidth="2" BorderColor="@cc.Black" FontSize="45" Text="@GraphicsData.GameContainer.SaveRoot.LotteryAmount.ToCurrency(0)" />
+        <CenteredTextBlazor TextColor="@cc1.Aqua" BorderWidth="2" BorderColor="@cc1.Black" FontSize="45" Text="@GraphicsData.GameContainer.SaveRoot.LotteryAmount.ToCurrency(0)" />
     </RawRectangle>
 </RawGameBoard>

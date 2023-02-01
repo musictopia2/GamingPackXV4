@@ -104,14 +104,18 @@ public class MoveProcesses : IMoveProcesses
     {
         int x = default;
         if (amount < 1000)
+        {
             return 0;
+        }
         var NewAmount = 0;
         do
         {
             x += 1;
             NewAmount += 1000;
             if (NewAmount >= amount)
+            {
                 return x - 1;
+            }
             if (x == 5000)
             {
                 throw new CustomBasicException("Don't think it can be 5000 times.  If I am wrong; change it");
@@ -273,7 +277,7 @@ public class MoveProcesses : IMoveProcesses
     {
         _gameContainer.OtherTurn = _gameContainer.WhoTurn;
         _lotteryProcesses.LoadLotteryList();
-        _gameContainer.SaveRoot!.Instructions = $"Please choose a number between 0 and 6.  Choose 0 to not participate{vb.VBCrLf} The cost is $100.00.  If you win, then you receive $100.00 times the number of players that participate in addition to the $1,000 the bank donates";
+        _gameContainer.SaveRoot!.Instructions = $"Please choose a number between 0 and 6.  Choose 0 to not participate{vb1.VBCrLf} The cost is $100.00.  If you win, then you receive $100.00 times the number of players that participate in addition to the $1,000 the bank donates";
         _gameContainer.SaveRoot.GameStatus = EnumStatus.ChooseLottery;
         await _gameContainer.ContinueTurnAsync!.Invoke();
     }

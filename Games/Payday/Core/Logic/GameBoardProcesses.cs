@@ -88,7 +88,7 @@ public class GameBoardProcesses
         }
         _gameContainer.PrivateSpaceList.ForEach(thisSpace =>
         {
-            pp.ClearArea(thisSpace);
+            pp1.ClearArea(thisSpace);
         });
         RectangleF rectanglePiece;
         float spaceSize;
@@ -106,11 +106,11 @@ public class GameBoardProcesses
                 tempSpace = _gameContainer.PrivateSpaceList[32];
                 spaceSize = tempSpace.Area.Width / 7;
             }
-            location = pp.GetPosition(tempSpace, new SizeF(spaceSize, spaceSize));
+            location = pp1.GetPosition(tempSpace, new SizeF(spaceSize, spaceSize));
             rectanglePiece = new RectangleF(location, new SizeF(spaceSize, spaceSize));
             tempSpace.PieceList.Add(rectanglePiece);
             tempSpace.ColorList.Add(thisPlayer.Color.Color);
-            pp.AddPieceToArea(tempSpace, rectanglePiece);
+            pp1.AddPieceToArea(tempSpace, rectanglePiece);
         }
         _gameContainer.Aggregator.RepaintBoard();
     }

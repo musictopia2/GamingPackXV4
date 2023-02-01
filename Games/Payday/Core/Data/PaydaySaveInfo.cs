@@ -31,7 +31,7 @@ public class PaydaySaveInfo : BasicSavedBoardDiceGameClass<PaydayPlayerItem>, IM
                     _model.GameStatus = value;
                     if (_aggregator is null)
                     {
-                        _aggregator = aa.Resolver!.Resolve<IEventAggregator>();
+                        _aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
                     }
                     _aggregator.Publish(GameStatus);
                 }
