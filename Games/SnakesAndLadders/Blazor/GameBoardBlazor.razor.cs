@@ -31,7 +31,7 @@ public partial class GameBoardBlazor
     private IToast? _toast;
     protected override void OnInitialized()
     {
-        _toast = aa.Resolver!.Resolve<IToast>();
+        _toast = aa1.Resolver!.Resolve<IToast>();
         _spaceList.Clear();
         LoadSpaces();
         base.OnInitialized();
@@ -68,15 +68,15 @@ public partial class GameBoardBlazor
                 // *** If it's an even row, number it backwards
                 if (int_Count == 100)
                 {
-                    thisExp.Fill = cc.DarkRed;
+                    thisExp.Fill = cc1.DarkRed;
                 }
                 else if ((int_Count % 2) == 0)
                 {
-                    thisExp.Fill = cc.Gold;
+                    thisExp.Fill = cc1.Gold;
                 }
                 else
                 {
-                    thisExp.Fill = cc.DodgerBlue;
+                    thisExp.Fill = cc1.DodgerBlue;
                 }
                 thisExp.Bounds = new(bounds.Location.X + ((bounds.Width * (int_ColCount - 1)) / 10), bounds.Location.Y + ((bounds.Height * (int_RowCount - 1)) / 10), ((bounds.Width * int_ColCount) / 10) - ((bounds.Width * (int_ColCount - 1)) / 10), ((bounds.Height * int_RowCount) / 10) - ((bounds.Height * (int_RowCount - 1)) / 10));
                 _spaceList.Add(int_Count, thisExp);

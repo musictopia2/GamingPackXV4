@@ -9,10 +9,10 @@ public class PieceGraphicsBlazor : ComponentBase
     {
         return Index switch
         {
-            1 => cc.Blue,
-            2 => cc.DeepPink,
-            3 => cc.Orange,
-            4 => cc.ForestGreen,
+            1 => cc1.Blue,
+            2 => cc1.DeepPink,
+            3 => cc1.Orange,
+            4 => cc1.ForestGreen,
             _ => "",
         };
     }
@@ -37,7 +37,7 @@ public class PieceGraphicsBlazor : ComponentBase
         circle.PopulateCircle(0, 0, 50, color);
         svg.Children.Add(circle);
         Text text = new();
-        text.Fill = cc.White.ToWebColor();
+        text.Fill = cc1.White.ToWebColor();
         text.Font_Size = 40; //i think (?)
         text.PopulateStrokesToStyles(strokeWidth: 1);
         text.CenterText();

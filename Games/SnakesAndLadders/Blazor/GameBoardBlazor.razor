@@ -1,4 +1,4 @@
-﻿@using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString 
+﻿@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString 
 @if (PlayerList == null || _spaceList.Count != 100)
 {
     <p>Problem</p>
@@ -10,7 +10,7 @@
         <BorderedSpace FillColor="@space.Value.Fill"
                        SpaceLocation="space.Value.Bounds.Location"
                        SpaceSize="space.Value.Bounds.Size"
-                       BorderColor="@cc.Black"
+                       BorderColor="@cc1.Black"
                        BorderWidth="1"
                        Fixed="true"
                        ShapeCategory="BorderedSpace.EnumShapeCategory.Rectangle">
@@ -20,19 +20,19 @@
                 int fontsize;
                 if (number == 100)
                 {
-                    color = cc.Yellow;
+                    color = cc1.Yellow;
                 }
                 else if ((number % 10) == 0)
                 {
-                    color = cc.Red;
+                    color = cc1.Red;
                 }
                 else
                 {
-                    color = cc.Red;
+                    color = cc1.Red;
                 }
                 fontsize = 30;
             }
-            <CenteredTextBlazor BorderColor="@cc.Transparent"
+            <CenteredTextBlazor BorderColor="@cc1.Transparent"
                                Text="@number.ToString()"
                                FontSize="@fontsize"
                                TextColor="@color"
