@@ -7,14 +7,14 @@ public partial class ScoreView
     {
         if (DataContext!.VMData!.ItemSelected == -1)
         {
-            return cc.Aqua;
+            return cc1.Aqua;
         }
         string selected = DataContext!.VMData.TextList[DataContext!.VMData.ItemSelected];
         if (selected.Equals(text))
         {
-            return cc.LimeGreen;
+            return cc1.LimeGreen;
         }
-        return cc.Aqua;
+        return cc1.Aqua;
     }
     private ICustomCommand ChangeCommand => DataContext!.ChangeSelectionCommand!;
     private ICustomCommand ScoreCommand => DataContext!.CalculateScoreCommand!;

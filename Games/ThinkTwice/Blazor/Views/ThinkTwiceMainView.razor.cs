@@ -9,9 +9,9 @@ public partial class ThinkTwiceMainView
     private Multiplier? _multiplier;
     protected override void OnInitialized()
     {
-        _categories = aa.Resolver!.Resolve<CategoriesDice>();
-        _multiplier = aa.Resolver.Resolve<Multiplier>();
-        _gameContainer = aa.Resolver.Resolve<ThinkTwiceGameContainer>();
+        _categories = aa1.Resolver!.Resolve<CategoriesDice>();
+        _multiplier = aa1.Resolver.Resolve<Multiplier>();
+        _gameContainer = aa1.Resolver.Resolve<ThinkTwiceGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ThinkTwiceVMData.NormalTurn))
             .AddLabel("Roll", nameof(ThinkTwiceVMData.RollNumber))

@@ -146,7 +146,7 @@ public class CategoriesDice : ICompleteSingleDice<string>, IHoldDice, ISerializa
     }
     public async Task<BasicList<string>> GetDiceList(string content)
     {
-        return await js.DeserializeObjectAsync<BasicList<string>>(content);
+        return await js1.DeserializeObjectAsync<BasicList<string>>(content);
     }
     public BasicList<string> RollDice(int HowManySections = 6)
     {

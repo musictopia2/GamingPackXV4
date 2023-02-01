@@ -62,7 +62,7 @@ public class Multiplier : ICompleteSingleDice<int>, ISerializable
     }
     public async Task<BasicList<int>> GetDiceList(string content)
     {
-        return await js.DeserializeObjectAsync<BasicList<int>>(content);
+        return await js1.DeserializeObjectAsync<BasicList<int>>(content);
     }
     public BasicList<int> RollDice(int howManySections = 7)
     {
