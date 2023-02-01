@@ -9,8 +9,8 @@ public partial class ConcentrationMainView
     private ConcentrationGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<ConcentrationVMData>();
-        _gameContainer = aa.Resolver.Resolve<ConcentrationGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<ConcentrationVMData>();
+        _gameContainer = aa1.Resolver.Resolve<ConcentrationGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ConcentrationVMData.NormalTurn))
             .AddLabel("Status", nameof(ConcentrationVMData.Status));
