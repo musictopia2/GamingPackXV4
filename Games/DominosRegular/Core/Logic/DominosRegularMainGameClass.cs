@@ -135,7 +135,7 @@ public class DominosRegularMainGameClass : DominosGameClass<SimpleDominoInfo, Do
         switch (status)
         {
             case "play":
-                PlayInfo thisPlay = await js.DeserializeObjectAsync<PlayInfo>(content);
+                PlayInfo thisPlay = await js1.DeserializeObjectAsync<PlayInfo>(content);
                 await PlayDominoAsync(thisPlay.Deck, thisPlay.WhichOne);
                 return;
             default:
