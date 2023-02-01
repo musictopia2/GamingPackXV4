@@ -7,11 +7,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<TeeItUpCardInformation>
     {
         if (DeckObject!.IsUnknown)
         {
-            FillColor = cc.Green;
+            FillColor = cc1.Green;
         }
         else
         {
-            FillColor = cc.White;
+            FillColor = cc1.White;
         }
         base.BeforeFilling();
     }
@@ -50,7 +50,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<TeeItUpCardInformation>
         if (DeckObject.IsMulligan == false)
         {
             var firstFonts = topRect.Height * 0.8f;
-            DrawText(DeckObject.Points.ToString(), topRect, cc.White, firstFonts, true);
+            DrawText(DeckObject.Points.ToString(), topRect, cc1.White, firstFonts, true);
         }
         var fullBottom = new RectangleF(4, 67, 68, 35);
         var firstBottom = new RectangleF(4, 67, 68, 17);
@@ -60,11 +60,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<TeeItUpCardInformation>
         string color;
         if (DeckObject.IsMulligan)
         {
-            color = cc.Red;
+            color = cc1.Red;
         }
         else
         {
-            color = cc.Green;
+            color = cc1.Green;
         }
 
         if (thisList.Count == 1)
@@ -84,7 +84,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<TeeItUpCardInformation>
             return;
         }
         Circle circle = new();
-        circle.PopulateCircle(bounds, cc.Green);
+        circle.PopulateCircle(bounds, cc1.Green);
         MainGroup.Children.Add(circle);
     }
     private static BasicList<string> GetSingleList(string firstText)

@@ -331,11 +331,11 @@ public class TeeItUpMainGameClass
     }
     public static async Task<BasicList<SendPlay>> GetSentListAsync(string message)
     {
-        return await js.DeserializeObjectAsync<BasicList<SendPlay>>(message);
+        return await js1.DeserializeObjectAsync<BasicList<SendPlay>>(message);
     }
     public static async Task<SendPlay> GetSentPlayAsync(string message)
     {
-        return await js.DeserializeObjectAsync<SendPlay>(message);
+        return await js1.DeserializeObjectAsync<SendPlay>(message);
     }
     Task IStartNewGame.ResetAsync()
     {

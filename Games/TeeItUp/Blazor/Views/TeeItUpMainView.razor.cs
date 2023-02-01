@@ -8,8 +8,8 @@ public partial class TeeItUpMainView
     private BasicList<TeeItUpPlayerItem> _players = new();
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<TeeItUpVMData>();
-        _gameContainer = aa.Resolver.Resolve<TeeItUpGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<TeeItUpVMData>();
+        _gameContainer = aa1.Resolver.Resolve<TeeItUpGameContainer>();
         if (_gameContainer.BasicData.MultiPlayer)
         {
             _players = _gameContainer!.PlayerList!.GetAllPlayersStartingWithSelf();
