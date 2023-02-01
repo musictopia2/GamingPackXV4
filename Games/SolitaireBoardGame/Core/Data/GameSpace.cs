@@ -3,10 +3,10 @@ public class GameSpace : IBasicSpace
 {
     public Vector Vector { get; set; }
     public bool HasImage { get; set; }
-    public string Color { get; set; } = cs.Transparent;
+    public string Color { get; set; } = cs1.Transparent;
     public void ClearSpace()
     {
-        Color = cs.Blue; //was blue.  trying green for experimenting.
+        Color = cs1.Blue; //was blue.  trying green for experimenting.
     }
     public bool IsFilled()
     {

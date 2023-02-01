@@ -105,11 +105,13 @@ public class SolitaireBoardGameMainGameClass : IAggregatorContainer
             tempSpace.ClearSpace();
         }
         if (thisSpace == PreviousSpace)
+        {
             PreviousSpace = new GameSpace();
+        }
         else
         {
             PreviousSpace = thisSpace;
-            PreviousSpace.Color = cs.Yellow;
+            PreviousSpace.Color = cs1.Yellow;
         }
     }
     public async Task ProcessCommandAsync(GameSpace thisSpace)
@@ -239,7 +241,7 @@ public class SolitaireBoardGameMainGameClass : IAggregatorContainer
         var nextSpace = _saveRoot.SpaceList[PreviousPiece];
         nextSpace.HasImage = false;
         GameSpace tempPiece = new();
-        tempPiece.Color = cs.Blue;
+        tempPiece.Color = cs1.Blue;
         tempPiece.HasImage = true;
         await Aggregator.AnimateMovePiecesAsync(PreviousPiece, thisSpace.Vector, tempPiece);
         thisSpace.HasImage = true;
