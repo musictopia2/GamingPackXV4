@@ -10,7 +10,7 @@ public class ItalianDominosSaveInfo : BasicSavedDominosClass<SimpleDominoInfo, I
         {
             if (SetProperty(ref _upTo, value))
             {
-                ItalianDominosVMData model = aa.Resolver!.Resolve<ItalianDominosVMData>(); //other choice is to have the extra function there.
+                ItalianDominosVMData model = aa1.Resolver!.Resolve<ItalianDominosVMData>(); //other choice is to have the extra function there.
                 model.UpTo = value;
             }
         }
@@ -23,7 +23,7 @@ public class ItalianDominosSaveInfo : BasicSavedDominosClass<SimpleDominoInfo, I
         {
             if (SetProperty(ref _nextNumber, value))
             {
-                ItalianDominosVMData model = aa.Resolver!.Resolve<ItalianDominosVMData>();
+                ItalianDominosVMData model = aa1.Resolver!.Resolve<ItalianDominosVMData>();
                 model.NextNumber = value;
             }
         }
