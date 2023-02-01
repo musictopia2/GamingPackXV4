@@ -119,11 +119,11 @@ public class FourSuitRummyMainGameClass
     }
     private async Task CreateSetsAsync(string message)
     {
-        var firstTemp = await js.DeserializeObjectAsync<BasicList<string>>(message);
+        var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(message);
         SingleInfo = PlayerList!.GetWhoPlayer();
         foreach (var thisFirst in firstTemp)
         {
-            BasicList<int> thisCol = await js.DeserializeObjectAsync<BasicList<int>>(thisFirst);
+            BasicList<int> thisCol = await js1.DeserializeObjectAsync<BasicList<int>>(thisFirst);
             thisCol.ForEach(deck =>
             {
                 BasicList<int> otherList = SingleInfo.MainHandList.GetDeckListFromObjectList();

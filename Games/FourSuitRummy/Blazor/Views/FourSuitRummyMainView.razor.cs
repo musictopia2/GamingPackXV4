@@ -9,8 +9,8 @@ public partial class FourSuitRummyMainView
     private FourSuitRummyGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<FourSuitRummyVMData>();
-        _gameContainer = aa.Resolver.Resolve<FourSuitRummyGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<FourSuitRummyVMData>();
+        _gameContainer = aa1.Resolver.Resolve<FourSuitRummyGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(FourSuitRummyVMData.NormalTurn))
             .AddLabel("Status", nameof(FourSuitRummyVMData.Status));

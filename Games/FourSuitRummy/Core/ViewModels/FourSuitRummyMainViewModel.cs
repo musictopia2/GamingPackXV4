@@ -88,7 +88,7 @@ public partial class FourSuitRummyMainViewModel : BasicCardGamesVM<RegularRummyC
                 if (_mainGame.BasicData!.MultiPlayer == true)
                 {
                     var tempList = newCol.GetDeckListFromObjectList();
-                    var thisStr = await js.SerializeObjectAsync(tempList);
+                    var thisStr = await js1.SerializeObjectAsync(tempList);
                     textList.Add(thisStr);
                 }
                 _model.TempSets.ClearBoard(thisInt);
