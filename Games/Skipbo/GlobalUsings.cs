@@ -3,8 +3,8 @@ global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExte
 global using CommonBasicLibraries.BasicDataSettingsAndProcesses;
 global using static CommonBasicLibraries.BasicDataSettingsAndProcesses.BasicDataFunctions;
 global using CommonBasicLibraries.CollectionClasses;
-global using fs = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
-global using js = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
+global using fs1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
+global using js1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
 global using BasicGameFrameworkLibrary.Core.CommonInterfaces;
 global using Skipbo.Core.Data;
 global using BasicGameFrameworkLibrary.Core.BasicEventModels;
@@ -21,7 +21,7 @@ global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.MapHelper
 global using BasicGameFrameworkLibrary.Core.Attributes;
 global using BasicGameFrameworkLibrary.Blazor.Bootstrappers;
 global using Skipbo.Core.ViewModels;
-global using aa = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using aa1 = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 global using System;
 global using System.Linq;
 global using System.Threading.Tasks;
@@ -63,5 +63,5 @@ global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.StockClasses;
 global using BasicGameFrameworkLibrary.Core.ColorCards;
 global using Skipbo.Core.Piles;
 global using static Skipbo.Core.Data.GlobalConstants;
-global using cc = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Cards;

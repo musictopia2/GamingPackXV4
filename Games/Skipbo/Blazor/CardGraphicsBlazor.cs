@@ -1,8 +1,8 @@
 namespace Skipbo.Blazor;
 public class CardGraphicsBlazor : BaseColorCardsImageBlazor<SkipboCardInformation>
 {
-    protected override string BackColor => cc.Red;
-    protected override string BackFontColor => cc.BlanchedAlmond;
+    protected override string BackColor => cc1.Red;
+    protected override string BackFontColor => cc1.BlanchedAlmond;
     protected override string BackText => "Skip Bo";
     protected override bool CanStartDrawing()
     {

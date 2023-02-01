@@ -152,11 +152,11 @@ public class SkipboMainGameClass
         switch (status)
         {
             case "discardnew":
-                SendDiscard ThisDiscard = await js.DeserializeObjectAsync<SendDiscard>(content);
+                SendDiscard ThisDiscard = await js1.DeserializeObjectAsync<SendDiscard>(content);
                 await AddToDiscardAsync(ThisDiscard.Pile, ThisDiscard.Deck);
                 return;
             case "play":
-                SendPlay ThisPlay = await js.DeserializeObjectAsync<SendPlay>(content);
+                SendPlay ThisPlay = await js1.DeserializeObjectAsync<SendPlay>(content);
                 await PlayOnPileAsync(ThisPlay.Pile, ThisPlay.Deck, ThisPlay.WhichType, ThisPlay.Discard);
                 return;
             default:

@@ -7,8 +7,8 @@ public partial class SkipboMainView
     private SkipboGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<SkipboVMData>();
-        _gameContainer = aa.Resolver.Resolve<SkipboGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<SkipboVMData>();
+        _gameContainer = aa1.Resolver.Resolve<SkipboGameContainer>();
         _labels.AddLabel("Turn", nameof(SkipboVMData.NormalTurn))
            .AddLabel("Status", nameof(SkipboVMData.Status))
            .AddLabel("RS Cards", nameof(SkipboVMData.CardsToShuffle));
