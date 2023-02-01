@@ -73,13 +73,13 @@ public class CustomMain : ClockObservable, IMain, ISerializable
     }
     public async Task LoadGameAsync(string data)
     {
-        BasicList<ClockInfo> temps = await js.DeserializeObjectAsync<BasicList<ClockInfo>>(data);
+        BasicList<ClockInfo> temps = await js1.DeserializeObjectAsync<BasicList<ClockInfo>>(data);
         LoadSavedClocks(temps);
     }
     public async Task<string> GetSavedPilesAsync()
     {
         BasicList<ClockInfo> output = GetSavedClocks();
-        return await js.SerializeObjectAsync(output);
+        return await js1.SerializeObjectAsync(output);
     }
     public void AddCards(int Pile, IDeckDict<SolitaireCard> list)
     {
