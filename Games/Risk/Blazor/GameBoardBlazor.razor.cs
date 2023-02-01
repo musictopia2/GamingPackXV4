@@ -4,7 +4,7 @@ public partial class GameBoardBlazor
     private readonly RiskGameContainer _gameContainer;
     public GameBoardBlazor()
     {
-        _gameContainer = aa.Resolver!.Resolve<RiskGameContainer>();
+        _gameContainer = aa1.Resolver!.Resolve<RiskGameContainer>();
     }
     [Parameter]
     public BasicList<TerritoryModel> Territories { get; set; } = new();

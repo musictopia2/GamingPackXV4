@@ -131,11 +131,8 @@ public class RiskMainGameClass
         switch (status)
         {
             case nameof(IMultiplayerModel.SendAttackData):
-                if (_container.StartSentAttack is not null)
-                {
-                    _container.StartSentAttack.Invoke();
-                }
-                SendAttackResult result = await js.DeserializeObjectAsync<SendAttackResult>(content); //can be iffy.
+                _container.StartSentAttack?.Invoke();
+                SendAttackResult result = await js1.DeserializeObjectAsync<SendAttackResult>(content); //can be iffy.
                 if (_container.SentAttackProcessesAsync is null)
                 {
                     throw new CustomBasicException("Must have send attack result"); //in newer version of c#, hopefully null checks are even better

@@ -8,7 +8,7 @@ public partial class RiskMainView
     private readonly BasicList<ScoreColumnModel> _scores = new();
     public RiskMainView()
     {
-        _container = aa.Resolver!.Resolve<RiskGameContainer>();
+        _container = aa1.Resolver!.Resolve<RiskGameContainer>();
     }
     protected override void OnInitialized()
     {

@@ -22,7 +22,7 @@ public partial class RiskMainViewModel : BasicMultiplayerMainVM
     {
         _commandContainer = commandContainer;
         _mainGame = mainGame;
-        VMData = aa.Resolver!.Resolve<RiskVMData>();
+        VMData = aa1.Resolver!.Resolve<RiskVMData>();
         _gameBoardProcesses = gameBoardProcesses;
         _attackLogic = attackLogic;
         _toast = toast;

@@ -8,7 +8,7 @@ public class RiskRollingProcesses
     public RiskRollingProcesses(RiskGameContainer container)
     {
         _container = container;
-        _data = aa.Resolver!.Resolve<RiskVMData>();
+        _data = aa1.Resolver!.Resolve<RiskVMData>();
         _container.SentAttackProcessesAsync = ShowRollingAsync;
     }
     public async Task RollDiceAsync()
@@ -38,7 +38,7 @@ public class RiskRollingProcesses
     }
     private async Task ShowRollingAsync(SendAttackResult results)
     {
-        _data = aa.Resolver!.Resolve<RiskVMData>();
+        _data = aa1.Resolver!.Resolve<RiskVMData>();
         SetDice();
         await _data.AttackCup!.ShowRollingAsync(results.AttackList);
         await _data.DefenseCup!.ShowRollingAsync(results.DefenseList);

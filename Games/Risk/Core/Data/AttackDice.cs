@@ -4,7 +4,7 @@ public class AttackDice : SimpleDice
     public override void Populate(int Chosen)
     {
         base.Populate(Chosen);
-        DotColor = cc.White;
-        FillColor = cc.Red;
+        DotColor = cc1.White;
+        FillColor = cc1.Red;
     }
 }

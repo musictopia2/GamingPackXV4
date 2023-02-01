@@ -153,22 +153,22 @@ public static class TerritoryHelpers
     {
         if (territory.Id == container.SaveRoot.PreviousTerritory)
         {
-            return cc.LimeGreen.ToWebColor();
+            return cc1.LimeGreen.ToWebColor();
         }
         if (territory.Id == container.SaveRoot.CurrentTerritory)
         {
-            return cc.Purple.ToWebColor();
+            return cc1.Purple.ToWebColor();
         }
         EnumContinent continent = territory.GetContinent();
         return continent switch
         {
-            EnumContinent.SouthAmerica => cc.Tomato.ToWebColor(),
-            EnumContinent.NorthAmerica => cc.Aqua.ToWebColor(),
-            EnumContinent.Africa => cc.SaddleBrown.ToWebColor(),
-            EnumContinent.Europe => cc.DodgerBlue.ToWebColor(),
-            EnumContinent.Asia => cc.Black.ToWebColor(),
-            EnumContinent.Austrailia => cc.Indigo.ToWebColor(),
-            _ => cc.Indigo.ToWebColor()
+            EnumContinent.SouthAmerica => cc1.Tomato.ToWebColor(),
+            EnumContinent.NorthAmerica => cc1.Aqua.ToWebColor(),
+            EnumContinent.Africa => cc1.SaddleBrown.ToWebColor(),
+            EnumContinent.Europe => cc1.DodgerBlue.ToWebColor(),
+            EnumContinent.Asia => cc1.Black.ToWebColor(),
+            EnumContinent.Austrailia => cc1.Indigo.ToWebColor(),
+            _ => cc1.Indigo.ToWebColor()
         };
     }
     private static int ArmiesToBeginWith(this PlayerCollection<RiskPlayerItem> players)

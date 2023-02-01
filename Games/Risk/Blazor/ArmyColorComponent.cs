@@ -5,7 +5,7 @@ public class ArmyColorComponent : ComponentBase
     [CascadingParameter]
     public BasePieceGraphics? MainGraphics { get; set; }
     [Parameter]
-    public string MainColor { get; set; } = cc.Transparent;
+    public string MainColor { get; set; } = cc1.Transparent;
     protected override void OnInitialized()
     {
         MainGraphics!.OriginalSize = new SizeF(2000, 2000);

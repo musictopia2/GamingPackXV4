@@ -7,7 +7,7 @@ public partial class AttackViewBlazor
     private readonly string _defenseColor = "";
     public AttackViewBlazor()
     {
-        _container = aa.Resolver!.Resolve<RiskGameContainer>();
+        _container = aa1.Resolver!.Resolve<RiskGameContainer>();
         if (_container.SaveRoot.CurrentTerritory == 0 || _container.SaveRoot.PreviousTerritory == 0)
         {
             throw new CustomBasicException("Must have territory to and territory from filled out");
