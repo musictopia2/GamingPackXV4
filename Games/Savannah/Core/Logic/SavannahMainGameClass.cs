@@ -11,7 +11,7 @@ public class SavannahMainGameClass
     private bool _wasNew;
     private bool _willClearBoard;
     private bool _startTurn;
-    private DeckRegularDict<RegularSimpleCard> _pileCards = new();
+    private readonly DeckRegularDict<RegularSimpleCard> _pileCards = new();
     public SavannahMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
         BasicData basicData,
@@ -124,7 +124,7 @@ public class SavannahMainGameClass
                 await DiscardToSelfAsync(int.Parse(content));
                 break;
             case nameof(IMultiplayerModel.Play):
-                SendPlay play = await js.DeserializeObjectAsync<SendPlay>(content);
+                SendPlay play = await js1.DeserializeObjectAsync<SendPlay>(content);
                 await PlayOnPileAsync(play);
                 break;
             default:

@@ -24,7 +24,7 @@ public partial class SelfDiscardBlazor
         {
             return "";
         }
-        return $"color:{cc.LightGray.ToWebColor()}; border-color: {cc.LightGray.ToWebColor()}";
+        return $"color:{cc1.LightGray.ToWebColor()}; border-color: {cc1.LightGray.ToWebColor()}";
     }
     private void CalculateHandMax()
     {

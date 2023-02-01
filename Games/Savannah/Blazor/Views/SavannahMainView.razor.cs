@@ -11,8 +11,8 @@ public partial class SavannahMainView
     private SavannahGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<SavannahVMData>();
-        _gameContainer = aa.Resolver.Resolve<SavannahGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<SavannahVMData>();
+        _gameContainer = aa1.Resolver.Resolve<SavannahGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(SavannahVMData.NormalTurn))
             .AddLabel("Status", nameof(SavannahVMData.Status));
