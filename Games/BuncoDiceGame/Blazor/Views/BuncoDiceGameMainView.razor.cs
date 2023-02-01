@@ -36,12 +36,12 @@ public partial class BuncoDiceGameMainView
     #endregion
     private static PlayerCollection<PlayerItem> GetPlayers()
     {
-        BuncoDiceGameSaveInfo saves = aa.Resolver!.Resolve<BuncoDiceGameSaveInfo>();
+        BuncoDiceGameSaveInfo saves = aa1.Resolver!.Resolve<BuncoDiceGameSaveInfo>();
         return saves.PlayerList;
     }
     private static StatisticsInfo GetStats()
     {
-        BuncoDiceGameSaveInfo saves = aa.Resolver!.Resolve<BuncoDiceGameSaveInfo>();
+        BuncoDiceGameSaveInfo saves = aa1.Resolver!.Resolve<BuncoDiceGameSaveInfo>();
         return saves.ThisStats;
     }
 }
