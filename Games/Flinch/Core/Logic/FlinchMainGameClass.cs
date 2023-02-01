@@ -161,11 +161,11 @@ public class FlinchMainGameClass
         switch (status)
         {
             case "discardnew":
-                SendDiscard discard = await js.DeserializeObjectAsync<SendDiscard>(content);
+                SendDiscard discard = await js1.DeserializeObjectAsync<SendDiscard>(content);
                 await AddToDiscardAsync(discard.Pile, discard.Deck);
                 return;
             case "play":
-                SendPlay play = await js.DeserializeObjectAsync<SendPlay>(content);
+                SendPlay play = await js1.DeserializeObjectAsync<SendPlay>(content);
                 await PlayOnPileAsync(play.Pile, play.Deck, play.WhichType, play.Discard);
                 return;
             default:

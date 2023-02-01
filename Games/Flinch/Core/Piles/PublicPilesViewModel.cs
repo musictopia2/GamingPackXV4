@@ -30,11 +30,11 @@ public partial class PublicPilesViewModel : SimpleControlObservable, ISerializab
     }
     public async Task<string> GetSavedPilesAsync()
     {
-        return await js.SerializeObjectAsync(PileList);
+        return await js1.SerializeObjectAsync(PileList);
     }
     public async Task LoadSavedPilesAsync(string thisStr)
     {
-        PileList = await js.DeserializeObjectAsync<BasicList<BasicPileInfo<FlinchCardInformation>>>(thisStr);
+        PileList = await js1.DeserializeObjectAsync<BasicList<BasicPileInfo<FlinchCardInformation>>>(thisStr);
     }
     public void ClearBoard()
     {

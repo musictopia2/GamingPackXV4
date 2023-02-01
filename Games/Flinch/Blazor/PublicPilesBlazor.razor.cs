@@ -14,7 +14,7 @@ public partial class PublicPilesBlazor : IDisposable, IHandleAsync<AnimateCardIn
     private readonly AnimateDeckImageTimer _animates; //had to use this one instead of the new animation i tried but failed to get to work properly.
     public PublicPilesBlazor()
     {
-        Aggregator = aa.Resolver!.Resolve<IEventAggregator>();
+        Aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
         _animates = new AnimateDeckImageTimer(); //well see on desktop mode.
     }
     private partial void Subscribe(string tag);
@@ -35,7 +35,7 @@ public partial class PublicPilesBlazor : IDisposable, IHandleAsync<AnimateCardIn
         Subscribe(AnimationTag);
         _animates.StateChanged = ShowChange;
         _animates.LongestTravelTime = 200;
-        CommandContainer command = aa.Resolver!.Resolve<CommandContainer>();
+        CommandContainer command = aa1.Resolver!.Resolve<CommandContainer>();
         base.OnInitialized();
     }
     protected override void OnParametersSet()

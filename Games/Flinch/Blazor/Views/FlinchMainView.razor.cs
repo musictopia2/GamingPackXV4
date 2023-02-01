@@ -7,8 +7,8 @@ public partial class FlinchMainView
     private FlinchGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<FlinchVMData>();
-        _gameContainer = aa.Resolver.Resolve<FlinchGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<FlinchVMData>();
+        _gameContainer = aa1.Resolver.Resolve<FlinchGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(FlinchVMData.NormalTurn))
            .AddLabel("Status", nameof(FlinchVMData.Status))
