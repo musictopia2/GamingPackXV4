@@ -7,8 +7,8 @@ public partial class ChinazoMainView
     private ChinazoGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<ChinazoVMData>();
-        _gameContainer = aa.Resolver.Resolve<ChinazoGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<ChinazoVMData>();
+        _gameContainer = aa1.Resolver.Resolve<ChinazoGameContainer>();
         _labels.AddLabel("Turn", nameof(ChinazoVMData.NormalTurn))
             .AddLabel("Status", nameof(ChinazoVMData.Status))
             .AddLabel("Other Turn", nameof(ChinazoVMData.OtherLabel))

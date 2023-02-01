@@ -164,10 +164,10 @@ public partial class ChinazoMainViewModel : BasicCardGamesVM<ChinazoCard>
             if (_mainGame.BasicData!.MultiPlayer == true)
             {
                 SendNewSet thiss = new();
-                thiss.CardListData = await js.SerializeObjectAsync(thisTemp.CardList.GetDeckListFromObjectList());
+                thiss.CardListData = await js1.SerializeObjectAsync(thisTemp.CardList.GetDeckListFromObjectList());
                 thiss.UseSecond = thisTemp.UseSecond;
                 thiss.WhatSet = thisTemp.WhatSet;
-                var thisStr = await js.SerializeObjectAsync(thiss);
+                var thisStr = await js1.SerializeObjectAsync(thiss);
                 newList.Add(thisStr);
             }
             _mainGame.CreateNewSet(thisTemp);

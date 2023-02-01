@@ -238,7 +238,7 @@ public class ChinazoMainGameClass
                 await PassAsync();
                 return;
             case "expandrummy":
-                SendExpandedSet thiss = await js.DeserializeObjectAsync<SendExpandedSet>(content);
+                SendExpandedSet thiss = await js1.DeserializeObjectAsync<SendExpandedSet>(content);
                 await AddToSetAsync(thiss.Number, thiss.Deck, thiss.Position);
                 return;
             default:
@@ -371,10 +371,10 @@ public class ChinazoMainGameClass
     }
     private async Task CreateSetsAsync(string Message)
     {
-        var firstTemp = await js.DeserializeObjectAsync<BasicList<string>>(Message);
+        var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(Message);
         foreach (var thisFirst in firstTemp)
         {
-            var thisSend = await js.DeserializeObjectAsync<SendNewSet>(thisFirst);
+            var thisSend = await js1.DeserializeObjectAsync<SendNewSet>(thisFirst);
             var thisCol = await thisSend.CardListData.GetObjectsFromDataAsync(SingleInfo!.MainHandList!);
             TempInfo thisTemp = new();
             thisTemp.CardList = thisCol;
