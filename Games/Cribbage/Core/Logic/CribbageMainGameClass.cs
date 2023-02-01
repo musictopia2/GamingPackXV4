@@ -362,7 +362,7 @@ public class CribbageMainGameClass
         switch (status)
         {
             case "cardsforcrib":
-                SendCrib thiss = await js.DeserializeObjectAsync<SendCrib>(content);
+                SendCrib thiss = await js1.DeserializeObjectAsync<SendCrib>(content);
                 //WhoTurn = thiss.Player;
                 //SingleInfo = PlayerList!.GetWhoPlayer();
                 if (thiss.CardList.Count == 0)

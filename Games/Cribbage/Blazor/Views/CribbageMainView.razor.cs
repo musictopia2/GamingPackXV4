@@ -8,8 +8,8 @@ public partial class CribbageMainView
     private readonly BasicList<LabelGridModel> _counts = new();
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<CribbageVMData>();
-        _gameContainer = aa.Resolver.Resolve<CribbageGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<CribbageVMData>();
+        _gameContainer = aa1.Resolver.Resolve<CribbageGameContainer>();
         _labels.AddLabel("Turn", nameof(CribbageVMData.NormalTurn))
             .AddLabel("Status", nameof(CribbageVMData.Status))
             .AddLabel("Dealer", nameof(CribbageVMData.Dealer));
@@ -27,5 +27,5 @@ public partial class CribbageMainView
     private ICustomCommand ContinueCommand => DataContext!.ContinueCommand!;
     private ICustomCommand CribCommand => DataContext!.CribCommand!;
     private ICustomCommand PlayCommand => DataContext!.PlayCommand!;
-    private static string Columns => bb.RepeatAuto(2);
+    private static string Columns => bb1.RepeatAuto(2);
 }
