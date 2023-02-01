@@ -18,10 +18,10 @@ public class CountdownPieceBlazor : NumberPiece
         MainGraphics!.CustomCanDo = () => IsEnabled;
         if (CountdownVMData.ShowHints == false || CountdownVMData.CanChooseNumber!(Number!) == false)
         {
-            MainGraphics!.FillColor = cs.Aqua;
+            MainGraphics!.FillColor = cs1.Aqua;
             return;
         }
-        MainGraphics!.FillColor = cs.Yellow;
+        MainGraphics!.FillColor = cs1.Yellow;
     }
     protected override bool CanDrawNumber()
     {

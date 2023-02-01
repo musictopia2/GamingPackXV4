@@ -3,7 +3,8 @@
     <GameBoardBlazor GameContainer="_gameContainer"
                      TargetHeight="25vh" />
 </div>
-<div style="height: 22vh">
+
+<div class="@cc1." style="height: 22vh; display: flex; align-items: center;">
     <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
     <GameButtonComponent CommandObject="HintsCommand" Display="Show Hints" />
     <DiceListConrolBlazor D="CountdownDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />

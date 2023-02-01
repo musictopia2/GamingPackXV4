@@ -7,7 +7,7 @@ public partial class CountdownMainView
     private CountdownGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _gameContainer = aa.Resolver!.Resolve<CountdownGameContainer>();
+        _gameContainer = aa1.Resolver!.Resolve<CountdownGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(CountdownVMData.NormalTurn))
                  .AddLabel("Round", nameof(CountdownVMData.Round))

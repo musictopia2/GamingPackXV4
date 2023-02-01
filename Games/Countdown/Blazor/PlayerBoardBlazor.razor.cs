@@ -12,7 +12,7 @@ public partial class PlayerBoardBlazor
     }
     protected override void OnInitialized()
     {
-        BoardProcesses = aa.Resolver!.Resolve<PlayerBoardCP>();
+        BoardProcesses = aa1.Resolver!.Resolve<PlayerBoardCP>();
         base.OnInitialized();
     }
     private static bool CanShowClick(SimpleNumber number)

@@ -4,7 +4,7 @@ public class CountdownDice : SimpleDice
     public override void Populate(int chosen)
     {
         base.Populate(chosen);
-        DotColor = cs.Red;
-        FillColor = cs.White;
+        DotColor = cs1.Red;
+        FillColor = cs1.White;
     }
 }
