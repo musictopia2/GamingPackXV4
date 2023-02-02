@@ -14,7 +14,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<RageCardGameCardInformatio
     }
     private void DrawText(string content, float fontSize)
     {
-        string textColor = cc.White;
+        string textColor = cc1.White;
         Text text = new();
         text.Content = content;
         RectangleF bounds = new(0, -3, DefaultSize.Width, DefaultSize.Height);
@@ -49,16 +49,16 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<RageCardGameCardInformatio
         };
         var firstRect = new RectangleF(2, 2, 45, 20);
         float firstFontSize = firstRect.Height * .8f;
-        string textColor = cc.White;
+        string textColor = cc1.White;
         DrawText(firstText, firstFontSize, textColor, firstRect);
         var secondRect = new RectangleF(2, 22, 45, 20);
         float secondFontSize = secondRect.Height * .5f;
-        textColor = cc.Black;
+        textColor = cc1.Black;
         DrawWhiteRectangle(secondRect);
         DrawText(DeckObject!.SpecialType.ToString(), secondFontSize, textColor, secondRect);
         var thirdRect = new RectangleF(2, 42, 45, 28);
         float thirdFontSize = thirdRect.Height * .6f;
-        textColor = cc.Red;
+        textColor = cc1.Red;
         DrawWhiteRectangle(thirdRect);
         DrawText("Rage", thirdFontSize, textColor, thirdRect);
     }
@@ -66,7 +66,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<RageCardGameCardInformatio
     {
         Rect rect = new();
         rect.PopulateRectangle(bounds);
-        rect.Fill = cc.White.ToWebColor();
+        rect.Fill = cc1.White.ToWebColor();
         MainGroup!.Children.Add(rect);
     }
     protected override void DrawImage()
@@ -93,12 +93,12 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<RageCardGameCardInformatio
     {
         if (DeckObject!.IsUnknown)
         {
-            return cc.Red;
+            return cc1.Red;
         }
         if (DeckObject.SpecialType == EnumSpecialType.None)
         {
             return DeckObject!.Color.Color;
         }
-        return cc.Black;
+        return cc1.Black;
     }
 }

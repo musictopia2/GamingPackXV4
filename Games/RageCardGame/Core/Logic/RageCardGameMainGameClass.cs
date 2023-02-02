@@ -130,7 +130,7 @@ public class RageCardGameMainGameClass
         switch (status)
         {
             case "color":
-                _model!.ColorChosen = await js.DeserializeObjectAsync<EnumColor>(content);
+                _model!.ColorChosen = await js1.DeserializeObjectAsync<EnumColor>(content);
                 await _colorProcesses.ColorChosenAsync();
                 break;
             case "bid":

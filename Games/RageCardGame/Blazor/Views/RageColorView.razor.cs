@@ -6,7 +6,7 @@ public partial class RageColorView
     private RageCardGameVMData? _vmData;
     protected override void OnParametersSet()
     {
-        _vmData = aa.Resolver!.Resolve<RageCardGameVMData>();
+        _vmData = aa1.Resolver!.Resolve<RageCardGameVMData>();
         _scores = ScoreModule.GetScores();
         _labels.Clear();
         _labels.AddLabel("Trump", nameof(RageCardGameVMData.TrumpSuit))
