@@ -62,9 +62,9 @@ public partial class BasicLoaderPage : IDisposable
     }
     private async void BackToMain()
     {
-        if (aa.Resolver!.RegistrationExist<IGameNetwork>())
+        if (aa1.Resolver!.RegistrationExist<IGameNetwork>())
         {
-            IGameNetwork nets = aa.Resolver!.Resolve<IGameNetwork>();
+            IGameNetwork nets = aa1.Resolver!.Resolve<IGameNetwork>();
             await nets.BackToMainAsync();
         }
         DataContext!.GameName = "";

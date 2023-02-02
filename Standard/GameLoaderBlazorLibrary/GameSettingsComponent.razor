@@ -1,5 +1,5 @@
 ﻿@using BasicGameFrameworkLibrary.Core.StandardImplementations.Settings;
-@using bb = BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables;
+@using bb1 = BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables;
 @if (GlobalDataModel.DataContext == null)
 {
     return;
@@ -15,7 +15,7 @@
     </GridItem>
     <GridItem Row="1" Column="2">
         <div class="margins">
-            @if (bb.CanUseHome == false)
+            @if (bb1.CanUseHome == false)
             {
                 @GlobalDataModel.DataContext.AzureMode
             }
@@ -74,7 +74,7 @@
             For private option, only a few select people can host a game.
         </div>
     </GridItem>
-    @if (bb.CanUseHome)
+    @if (bb1.CanUseHome)
     {
         <GridItem Row="6" Column="1">
 
