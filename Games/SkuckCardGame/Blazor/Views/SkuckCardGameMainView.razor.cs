@@ -8,8 +8,8 @@ public partial class SkuckCardGameMainView
     private BasicList<SkuckCardGamePlayerItem> _players = new();
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<SkuckCardGameVMData>();
-        _gameContainer = aa.Resolver.Resolve<SkuckCardGameGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<SkuckCardGameVMData>();
+        _gameContainer = aa1.Resolver.Resolve<SkuckCardGameGameContainer>();
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();
         _labels.Clear();
         _labels.AddLabel("Round", nameof(SkuckCardGameVMData.RoundNumber))

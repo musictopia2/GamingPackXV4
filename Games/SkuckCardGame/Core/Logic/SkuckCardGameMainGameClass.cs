@@ -186,7 +186,7 @@ public class SkuckCardGameMainGameClass
                 await _choiceProcesses.ChooseToPassAsync();
                 break;
             case "trump":
-                SaveRoot!.TrumpSuit = await js.DeserializeObjectAsync<EnumSuitList>(content);
+                SaveRoot!.TrumpSuit = await js1.DeserializeObjectAsync<EnumSuitList>(content);
                 await _trumpProcesses.TrumpChosenAsync();
                 break;
             case "bid":
