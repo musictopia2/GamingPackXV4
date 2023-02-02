@@ -7,8 +7,8 @@ public partial class Spades2PlayerMainView
     private Spades2PlayerGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<Spades2PlayerVMData>();
-        _gameContainer = aa.Resolver.Resolve<Spades2PlayerGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<Spades2PlayerVMData>();
+        _gameContainer = aa1.Resolver.Resolve<Spades2PlayerGameContainer>();
         _labels.AddLabel("Turn", nameof(Spades2PlayerVMData.NormalTurn))
             .AddLabel("Status", nameof(Spades2PlayerVMData.Status))
             .AddLabel("Round", nameof(Spades2PlayerVMData.RoundNumber));
