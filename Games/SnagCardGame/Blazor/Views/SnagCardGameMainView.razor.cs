@@ -7,8 +7,8 @@ public partial class SnagCardGameMainView
     private SnagCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<SnagCardGameVMData>();
-        _gameContainer = aa.Resolver.Resolve<SnagCardGameGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<SnagCardGameVMData>();
+        _gameContainer = aa1.Resolver.Resolve<SnagCardGameGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(SnagCardGameVMData.NormalTurn))
            .AddLabel("Status", nameof(SnagCardGameVMData.Status))
