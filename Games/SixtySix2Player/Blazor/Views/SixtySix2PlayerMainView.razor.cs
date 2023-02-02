@@ -7,8 +7,8 @@ public partial class SixtySix2PlayerMainView
     private SixtySix2PlayerGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<SixtySix2PlayerVMData>();
-        _gameContainer = aa.Resolver.Resolve<SixtySix2PlayerGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<SixtySix2PlayerVMData>();
+        _gameContainer = aa1.Resolver.Resolve<SixtySix2PlayerGameContainer>();
         _labels.AddLabel("Turn", nameof(SixtySix2PlayerVMData.NormalTurn))
             .AddLabel("Trump", nameof(SixtySix2PlayerVMData.TrumpSuit))
             .AddLabel("Deck Count", nameof(SixtySix2PlayerVMData.DeckCount))

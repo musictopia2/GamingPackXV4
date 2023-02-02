@@ -91,7 +91,7 @@ public class SixtySix2PlayerMainGameClass
                 await ExchangeDiscardAsync(int.Parse(content));
                 return;
             case "announcemarriage":
-                BasicList<int> thisList = await js.DeserializeObjectAsync<BasicList<int>>(content);
+                BasicList<int> thisList = await js1.DeserializeObjectAsync<BasicList<int>>(content);
                 await AnnounceMarriageAsync(thisList);
                 return;
             case "goout":
