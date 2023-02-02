@@ -7,8 +7,8 @@ public partial class HuseHeartsMainView
     private HuseHeartsGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<HuseHeartsVMData>();
-        _gameContainer = aa.Resolver.Resolve<HuseHeartsGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<HuseHeartsVMData>();
+        _gameContainer = aa1.Resolver.Resolve<HuseHeartsGameContainer>();
         _labels.AddLabel("Turn", nameof(HuseHeartsVMData.NormalTurn))
             .AddLabel("Status", nameof(HuseHeartsVMData.Status))
             .AddLabel("Round", nameof(HuseHeartsVMData.RoundNumber));
