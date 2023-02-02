@@ -7,8 +7,8 @@ public partial class Pinochle2PlayerMainView
     private Pinochle2PlayerGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<Pinochle2PlayerVMData>();
-        _gameContainer = aa.Resolver.Resolve<Pinochle2PlayerGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<Pinochle2PlayerVMData>();
+        _gameContainer = aa1.Resolver.Resolve<Pinochle2PlayerGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(Pinochle2PlayerVMData.NormalTurn))
            .AddLabel("Deck Count", nameof(Pinochle2PlayerVMData.DeckCount))
