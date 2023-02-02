@@ -7,8 +7,8 @@ public partial class XactikaMainView
     private XactikaGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<XactikaVMData>();
-        _gameContainer = aa.Resolver.Resolve<XactikaGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<XactikaVMData>();
+        _gameContainer = aa1.Resolver.Resolve<XactikaGameContainer>();
         _labels.AddLabel("Turn", nameof(XactikaVMData.NormalTurn))
              .AddLabel("Status", nameof(XactikaVMData.Status))
              .AddLabel("Round", nameof(XactikaVMData.RoundNumber))

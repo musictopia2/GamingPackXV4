@@ -16,11 +16,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<XactikaCardInformation>
     {
         if (DeckObject!.IsUnknown)
         {
-            FillColor = cc.Red;
+            FillColor = cc1.Red;
         }
         else
         {
-            FillColor = cc.White;
+            FillColor = cc1.White;
         }
         base.BeforeFilling();
     }
@@ -36,7 +36,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<XactikaCardInformation>
         text.Content = value;
         text.CenterText(MainGroup!, bounds);
         text.Font_Size = fontSize;
-        text.Fill = cc.Aqua.ToWebColor();
+        text.Fill = cc1.Aqua.ToWebColor();
         text.PopulateStrokesToStyles();
     }
     private void DrawValue(RectangleF bounds)

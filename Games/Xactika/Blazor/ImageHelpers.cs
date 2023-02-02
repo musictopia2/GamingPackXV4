@@ -91,12 +91,12 @@ public static class ImageHelpers
     public static void DrawBall(this IParentGraphic container, RectangleF bounds)
     {
         Circle circle = new();
-        circle.PopulateCircle(bounds, cc.Red);
+        circle.PopulateCircle(bounds, cc1.Red);
         circle.PopulateStrokesToStyles();
         container.Children.Add(circle);
     }
     public static void DrawStar(this IParentContainer container, RectangleF bounds)
     {
-        container.DrawStar(bounds, cc.Yellow, cc.Black, 1);
+        container.DrawStar(bounds, cc1.Yellow, cc1.Black, 1);
     }
 }

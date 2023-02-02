@@ -151,11 +151,11 @@ public class XactikaMainGameClass
                 await _bidProcesses.ProcessBidAsync();
                 return;
             case "shapeused":
-                EnumShapes thisShape = await js.DeserializeObjectAsync<EnumShapes>(content);
+                EnumShapes thisShape = await js1.DeserializeObjectAsync<EnumShapes>(content);
                 await _shapeProcesses.ShapeChosenAsync(thisShape);
                 return;
             case "gameoptionchosen":
-                EnumGameMode thisMode = await js.DeserializeObjectAsync<EnumGameMode>(content);
+                EnumGameMode thisMode = await js1.DeserializeObjectAsync<EnumGameMode>(content);
                 await _modeProcesses.ProcessGameOptionChosenAsync(thisMode, true);
                 return;
             default:
