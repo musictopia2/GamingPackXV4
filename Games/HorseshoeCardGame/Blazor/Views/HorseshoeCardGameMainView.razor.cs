@@ -8,8 +8,8 @@ public partial class HorseshoeCardGameMainView
     private BasicList<HorseshoeCardGamePlayerItem> _players = new();
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<HorseshoeCardGameVMData>();
-        _gameContainer = aa.Resolver.Resolve<HorseshoeCardGameGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<HorseshoeCardGameVMData>();
+        _gameContainer = aa1.Resolver.Resolve<HorseshoeCardGameGameContainer>();
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(HorseshoeCardGameVMData.NormalTurn))
