@@ -7,8 +7,8 @@ public partial class CaliforniaJackMainView
     private CaliforniaJackGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<CaliforniaJackVMData>();
-        _gameContainer = aa.Resolver.Resolve<CaliforniaJackGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<CaliforniaJackVMData>();
+        _gameContainer = aa1.Resolver.Resolve<CaliforniaJackGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(CaliforniaJackVMData.NormalTurn))
              .AddLabel("Trump", nameof(CaliforniaJackVMData.TrumpSuit))
