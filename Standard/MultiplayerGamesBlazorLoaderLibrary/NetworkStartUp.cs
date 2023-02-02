@@ -4,7 +4,7 @@ public class NetworkStartUp : IRegisterNetworks
     void IRegisterNetworks.RegisterMultiplayerClasses(IGamePackageDIContainer container)
     {
         container.RegisterType<SignalRMessageService>();
-        if (vv.DoUseHome == false)
+        if (vv1.DoUseHome == false)
         {
             container.RegisterType<SignalRAzureEndPoint>();
         }

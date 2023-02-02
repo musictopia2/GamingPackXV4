@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	  <Version>1.0.4</Version>
+	  <Version>7.0.1</Version>
   </PropertyGroup>
 
 
@@ -13,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GameLoaderBlazorLibrary" Version="1.0.3" />
-    <PackageReference Include="GamePackageDIGenerator" Version="1.0.1" PrivateAssets="all" />
-    <PackageReference Include="GamePackageSignalRClasses" Version="1.0.2" />
+    <PackageReference Include="GameLoaderBlazorLibrary" Version="7.0.1" />
+    <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
+    <PackageReference Include="GamePackageSignalRClasses" Version="7.0.1" />
   </ItemGroup>
 
   

@@ -7,11 +7,11 @@ public class HomeSignalREndPoint : ISignalRInfo
     }
     Task<string> ITCPInfo.GetIPAddressAsync()
     {
-        return Task.FromResult(vv.HomeIPAddress);
+        return Task.FromResult(vv1.HomeIPAddress);
     }
     Task<int> ITCPInfo.GetPortAsync()
     {
-        return Task.FromResult(vv.HomePort);
+        return Task.FromResult(vv1.HomePort);
     }
     Task<bool> ISignalRInfo.IsAzureAsync()
     {

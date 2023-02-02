@@ -11,4 +11,4 @@ global using BasicGameFrameworkLibrary.Blazor.StartupClasses;
 global using GameLoaderBlazorLibrary;
 global using Microsoft.Extensions.DependencyInjection;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
-global using vv = BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables;
+global using vv1 = BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables;
