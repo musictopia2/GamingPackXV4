@@ -7,8 +7,8 @@ public partial class PickelCardGameMainView
     private PickelCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<PickelCardGameVMData>();
-        _gameContainer = aa.Resolver.Resolve<PickelCardGameGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<PickelCardGameVMData>();
+        _gameContainer = aa1.Resolver.Resolve<PickelCardGameGameContainer>();
         _labels.AddLabel("Turn", nameof(PickelCardGameVMData.NormalTurn))
              .AddLabel("Trump", nameof(PickelCardGameVMData.TrumpSuit))
              .AddLabel("Status", nameof(PickelCardGameVMData.Status));

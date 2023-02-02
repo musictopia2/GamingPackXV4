@@ -120,7 +120,7 @@ public class PickelCardGameMainGameClass
                 await _processes.PassBidAsync();
                 return;
             case "bid":
-                SendBid thisBid = await js.DeserializeObjectAsync<SendBid>(content);
+                SendBid thisBid = await js1.DeserializeObjectAsync<SendBid>(content);
                 _processes!.SelectBidAndSuit(thisBid.Bid, thisBid.Suit);
                 await _processes.ProcessBidAsync();
                 break;
