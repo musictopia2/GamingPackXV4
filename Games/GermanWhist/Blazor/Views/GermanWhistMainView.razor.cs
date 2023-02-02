@@ -7,8 +7,8 @@ public partial class GermanWhistMainView
     private GermanWhistGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<GermanWhistVMData>();
-        _gameContainer = aa.Resolver.Resolve<GermanWhistGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<GermanWhistVMData>();
+        _gameContainer = aa1.Resolver.Resolve<GermanWhistGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(GermanWhistVMData.NormalTurn))
             .AddLabel("Trump", nameof(GermanWhistVMData.TrumpSuit))
