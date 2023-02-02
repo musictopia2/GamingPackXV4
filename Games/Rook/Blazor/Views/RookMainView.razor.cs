@@ -7,8 +7,8 @@ public partial class RookMainView
     private RookGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<RookVMData>();
-        _gameContainer = aa.Resolver.Resolve<RookGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<RookVMData>();
+        _gameContainer = aa1.Resolver.Resolve<RookGameContainer>();
         _labels.AddLabel("Turn", nameof(RookVMData.NormalTurn))
             .AddLabel("Trump", nameof(RookVMData.TrumpSuit))
             .AddLabel("Status", nameof(RookVMData.Status));

@@ -172,11 +172,11 @@ public class RookMainGameClass
                 await _bidProcesses.ProcessBidAsync();
                 return;
             case "colorselected":
-                _model!.ColorChosen = await js.DeserializeObjectAsync<EnumColorTypes>(content);
+                _model!.ColorChosen = await js1.DeserializeObjectAsync<EnumColorTypes>(content);
                 await _trumpProcesses.ProcessTrumpAsync();
                 return;
             case "nestlist":
-                var thisList = await js.DeserializeObjectAsync<DeckRegularDict<RookCardInformation>>(content);
+                var thisList = await js1.DeserializeObjectAsync<DeckRegularDict<RookCardInformation>>(content);
                 await _nestProcesses.ProcessNestAsync(thisList);
                 return;
             default:
