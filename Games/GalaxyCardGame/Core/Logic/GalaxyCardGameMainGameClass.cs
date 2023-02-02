@@ -44,7 +44,7 @@ public class GalaxyCardGameMainGameClass
         PlayerList!.ForEach(thisPlayer => thisPlayer.LoadPiles(this, _model, _command, _toast));
         await PlayerList.ForEachAsync(async thisPlayer =>
         {
-            DeckRegularDict<GalaxyCardGameCardInformation> thisList = await js.DeserializeObjectAsync<DeckRegularDict<GalaxyCardGameCardInformation>>(thisPlayer.PlanetData);
+            DeckRegularDict<GalaxyCardGameCardInformation> thisList = await js1.DeserializeObjectAsync<DeckRegularDict<GalaxyCardGameCardInformation>>(thisPlayer.PlanetData);
             thisPlayer.PlanetHand!.HandList.ReplaceRange(thisList);
             thisPlayer.MainHandList.ForEach(thisCard =>
             {
@@ -76,7 +76,7 @@ public class GalaxyCardGameMainGameClass
     {
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
-            thisPlayer.PlanetData = await js.SerializeObjectAsync(thisPlayer.PlanetHand!.HandList.ToRegularDeckDict());
+            thisPlayer.PlanetData = await js1.SerializeObjectAsync(thisPlayer.PlanetHand!.HandList.ToRegularDeckDict());
             thisPlayer.SavedMoonList = thisPlayer.Moons!.SavedSets();
         });
         await base.PopulateSaveRootAsync();
@@ -142,17 +142,17 @@ public class GalaxyCardGameMainGameClass
         switch (status)
         {
             case "newmoon":
-                thisList = await js.DeserializeObjectAsync<BasicList<int>>(content);
+                thisList = await js1.DeserializeObjectAsync<BasicList<int>>(content);
                 thisCol = thisList.GetNewObjectListFromDeckList(_gameContainer.DeckList!);
                 await PlayNewMoonAsync(thisCol);
                 return;
             case "createplanet":
-                thisList = await js.DeserializeObjectAsync<BasicList<int>>(content);
+                thisList = await js1.DeserializeObjectAsync<BasicList<int>>(content);
                 thisCol = thisList.GetNewObjectListFromDeckList(_gameContainer.DeckList!);
                 await CreatePlanetAsync(thisCol);
                 return;
             case "expandmoon":
-                SendExpandedMoon temps = await js.DeserializeObjectAsync<SendExpandedMoon>(content);
+                SendExpandedMoon temps = await js1.DeserializeObjectAsync<SendExpandedMoon>(content);
                 await AddToMoonAsync(temps.Deck, temps.MoonID);
                 return;
             default:

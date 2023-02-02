@@ -8,8 +8,8 @@ public partial class GalaxyCardGameMainView
     private BasicList<GalaxyCardGamePlayerItem> _players = new();
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<GalaxyCardGameVMData>();
-        _gameContainer = aa.Resolver.Resolve<GalaxyCardGameGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<GalaxyCardGameVMData>();
+        _gameContainer = aa1.Resolver.Resolve<GalaxyCardGameGameContainer>();
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(GalaxyCardGameVMData.NormalTurn))
