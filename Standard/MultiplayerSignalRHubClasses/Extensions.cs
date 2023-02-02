@@ -8,7 +8,7 @@ public static class Extensions
 
     public static void AddMultiplayerSignalRServices(this IServiceCollection services)
     {
-        js.RequireCustomSerialization = true;
+        js1.RequireCustomSerialization = true;
         Core.AutoResumeContexts.GlobalRegistrations.Register();
         services.AddSignalR(options =>
         {

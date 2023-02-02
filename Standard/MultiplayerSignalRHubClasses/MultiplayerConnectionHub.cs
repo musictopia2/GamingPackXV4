@@ -357,7 +357,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         string errorMessage = "";
         //needs another parameter now.
         ConnectionInfo thisInfo;
-        NetworkMessage thisMessage = await js.DeserializeObjectAsync<NetworkMessage>(tempMessage);
+        NetworkMessage thisMessage = await js1.DeserializeObjectAsync<NetworkMessage>(tempMessage);
         //still only supports one game (to make it simplier).
         if (gameName != _hostGame && _hostGame != "")
         {

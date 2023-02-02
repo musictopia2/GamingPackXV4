@@ -6,4 +6,4 @@ global using CommonBasicLibraries.CollectionClasses;
 global using Microsoft.AspNetCore.SignalR;
 global using System.Collections.Concurrent;
 global using BasicGameFrameworkLibrary.Core.MiscProcesses;
-global using js = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
+global using js1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
