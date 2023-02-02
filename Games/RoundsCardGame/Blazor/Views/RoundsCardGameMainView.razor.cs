@@ -7,8 +7,8 @@ public partial class RoundsCardGameMainView
     private RoundsCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa.Resolver!.Resolve<RoundsCardGameVMData>();
-        _gameContainer = aa.Resolver.Resolve<RoundsCardGameGameContainer>();
+        _vmData = aa1.Resolver!.Resolve<RoundsCardGameVMData>();
+        _gameContainer = aa1.Resolver.Resolve<RoundsCardGameGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(RoundsCardGameVMData.NormalTurn))
            .AddLabel("Trump", nameof(RoundsCardGameVMData.TrumpSuit))
