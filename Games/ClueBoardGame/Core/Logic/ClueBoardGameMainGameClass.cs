@@ -594,6 +594,14 @@ public class ClueBoardGameMainGameClass
             SaveRoot.DiceNumber = 3; //this was for testing.  can be something else if needed (?)
             SaveRoot.MovesLeft = 3;
         }
+        //not always movespaces this time because may have no moves that can be made.
+        if (_gameBoard.HasValidMoves(true) == false)
+        {
+            //try to use the previous function (?)
+            SaveRoot.GameStatus = EnumClueStatusList.EndTurn; //hopefully can still make accusation (?)
+            await EndStepAsync();
+            return;
+        }
         SaveRoot.GameStatus = EnumClueStatusList.MoveSpaces;
         await EndStepAsync();
     }
@@ -710,7 +718,7 @@ public class ClueBoardGameMainGameClass
     }
     public async Task ContinueMoveAsync()
     {
-        if (_gameBoard.HasValidMoves() == false)
+        if (_gameBoard.HasValidMoves(false) == false)
         {
             SaveRoot!.GameStatus = EnumClueStatusList.EndTurn;
             await EndStepAsync();

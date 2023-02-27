@@ -293,7 +293,7 @@ public class GameBoardProcesses
         });
         return output;
     }
-    public bool HasValidMoves()
+    public bool HasValidMoves(bool afterStartRoll)
     {
         if (_gameContainer.CurrentCharacter!.Space > 0)
         {
@@ -325,14 +325,24 @@ public class GameBoardProcesses
             }
             return false;
         }
-        for (int x = 1; x <= _gameContainer.RoomList.Count; x++)
+        if (afterStartRoll == false)
         {
-            if (CanMoveToRoom(x))
+            //if you started to roll, then can't transfer rooms.
+            //for now, i assume in all other cases, its needed.
+            for (int x = 1; x <= _gameContainer.RoomList.Count; x++)
             {
-                return true;
+                if (CanMoveToRoom(x))
+                {
+                    return true;
+                }
             }
         }
-        var thisRoom = _gameContainer.RoomList[_gameContainer.CurrentCharacter.CurrentRoom];
+        return AnyMoveOutOfRoom();
+    }
+    
+    private bool AnyMoveOutOfRoom()
+    {
+        var thisRoom = _gameContainer.RoomList[_gameContainer.CurrentCharacter!.CurrentRoom];
         for (int x = 1; x <= thisRoom.DoorList.Count; x++)
         {
             if (CanMoveToSpace(thisRoom.DoorList[x - 1]))
@@ -342,6 +352,16 @@ public class GameBoardProcesses
         }
         return false;
     }
+    //public bool HasAnyValidMoves()
+    //{
+    //    //first detect if there are any open doors out of the room.
+    //    if (_gameContainer.CurrentCharacter!.CurrentRoom > 0)
+    //    {
+    //        return AnyMoveOutOfRoom();
+    //    }
+
+    //    return false; //for now, pretend like there are no valid moves.
+    //}
     public bool CanMoveToSpace(int space)
     {
         if (space == _gameContainer.CurrentCharacter!.Space)
