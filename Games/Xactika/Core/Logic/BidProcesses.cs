@@ -17,7 +17,9 @@ public class BidProcesses : IBidProcesses
         _model!.Bid1!.SelectNumberValue(bidAmount);
         _gameContainer.Command.UpdateAll();
         if (_gameContainer.Test!.NoAnimations == false)
+        {
             await _gameContainer.Delay!.DelaySeconds(1);
+        }
         _model.Bid1.UnselectAll();
         _model.BidChosen = -1;
         await ContinueBidProcessAsync();
@@ -50,6 +52,7 @@ public class BidProcesses : IBidProcesses
     public async Task BeginBiddingAsync()
     {
         await PopulateBidAmountsAsync();
+        _gameContainer.ShowTurn!.Invoke();
         await _gameContainer.StartNewTurnAsync!.Invoke();
     }
     public async Task PopulateBidAmountsAsync()

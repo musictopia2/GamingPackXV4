@@ -130,6 +130,11 @@ public class XactikaMainGameClass
             await BeginningProcessesAsync();
             return;
         }
+        if (_gameContainer.SaveRoot.GameStatus == EnumStatusList.Bidding)
+        {
+            this.ShowTurn();
+            //_command.UpdateAll();
+        }
         await base.ContinueTurnAsync();
     }
     private async Task BeginningProcessesAsync()
