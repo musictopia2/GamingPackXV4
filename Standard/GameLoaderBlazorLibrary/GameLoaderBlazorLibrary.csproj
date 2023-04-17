@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -6,15 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	<Version>7.0.1</Version>
   </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="BasicBlazorLibrary" Version="7.0.25" />
+		<PackageReference Include="BasicGameFrameworkLibrary" Version="7.0.3" />
+	</ItemGroup>
+
 
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="7.0.2" />
-  </ItemGroup>
+ 
 
   
 

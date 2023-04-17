@@ -14,3 +14,4 @@ global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
 global using gg1 = BasicBlazorLibrary.Components.CssGrids.Helpers;
 global using CommonBasicLibraries.BasicUIProcesses;
 global using BasicGameFrameworkLibrary.Blazor.Extensions;
+global using BasicBlazorLibrary.Helpers;

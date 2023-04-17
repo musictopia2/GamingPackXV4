@@ -67,8 +67,10 @@ public partial class BasicLoaderPage : IDisposable
             IGameNetwork nets = aa1.Resolver!.Resolve<IGameNetwork>();
             await nets.BackToMainAsync();
         }
-        DataContext!.GameName = "";
-        StateHasChanged();
+        await JS!.RefreshBrowser();
+        //decided to go ahead and refresh the browser.  this would make it where you can go back to the game and would be completely refreshed as intended (since i can't seem to control removing all objects to start fresh again).
+        //DataContext!.GameName = "";
+        //StateHasChanged();
     }
     private void ClosedSettings()
     {
