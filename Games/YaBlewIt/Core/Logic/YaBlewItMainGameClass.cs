@@ -617,6 +617,10 @@ public class YaBlewItMainGameClass
             SaveRoot.PreviousStatus = EnumGameStatus.None; //i think
             SingleInfo = PlayerList.GetWhoPlayer(); //i think this too.
         }
+        else if (SaveRoot.GameStatus == EnumGameStatus.EndingTurn)
+        {
+            ContinueMining(); //i think.
+        }
         await ContinueTurnAsync(); //hopefully this simple.
     }
     public async Task PlayCardAsync(int deck)
@@ -688,13 +692,16 @@ public class YaBlewItMainGameClass
     }
     private async Task StartMiningAsync()
     {
-        //ResetPlayers();
         _command.ManuelFinish = true;
         OtherTurn = await PlayerList.CalculateOtherTurnAsync(includeOutPlayers: false);
+        ContinueMining();
+        await StartNewTurnAsync(); //i think.
+    }
+    private void ContinueMining()
+    {
         SaveRoot.PreviousStatus = EnumGameStatus.None;
         SaveRoot.GameStatus = EnumGameStatus.MinerRolling;
         SaveRoot.PlayedFaulty = false;
-        await StartNewTurnAsync(); //i think.
     }
     private void ResetPlayers()
     {
