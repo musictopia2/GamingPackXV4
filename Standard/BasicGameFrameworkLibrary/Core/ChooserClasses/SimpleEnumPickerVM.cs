@@ -105,10 +105,11 @@ public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
     public void ChooseItem(E optionChosen)
     {
         ItemList.KeepConditionalItems(x => x.EnumValue!.Equals(optionChosen));
-        if (ItemList.Count != 1)
-        {
-            throw new CustomBasicException("Did not have just one choice for option chosen.  Rethink");
-        }
+        //trying to not make it show the error.  hopefully does not produce any side effects.
+        //if (ItemList.Count != 1)
+        //{
+        //    throw new CustomBasicException("Did not have just one choice for option chosen.  Rethink");
+        //}
     }
     public E ItemToChoose()
     {

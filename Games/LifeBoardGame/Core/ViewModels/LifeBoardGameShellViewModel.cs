@@ -49,11 +49,10 @@ public partial class LifeBoardGameShellViewModel : BasicBoardGamesShellViewModel
     }
     async Task IHandleAsync<StartEventModel>.HandleAsync(StartEventModel message)
     {
-        if (GenderScreen == null)
+        if (GenderScreen is not null)
         {
-            throw new CustomBasicException("Should have loaded gender first before starting this way.");
+            await CloseSpecificChildAsync(GenderScreen);
         }
-        await CloseSpecificChildAsync(GenderScreen);
         GenderScreen = null;
         LifeBoardGameMainGameClass game = MainContainer.Resolve<LifeBoardGameMainGameClass>();
         game.SaveRoot.GameStatus = EnumWhatStatus.NeedChooseFirstOption; //belongs here.
