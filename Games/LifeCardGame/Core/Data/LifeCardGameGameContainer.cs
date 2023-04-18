@@ -53,8 +53,9 @@ public class LifeCardGameGameContainer : CardGameContainer<LifeCardGameCardInfor
                 {
                     return 0;
                 }
+                decks = tempDeck; //try here instead.
             }
-            decks = tempDeck;
+            
         }
         return decks;
     }
