@@ -1,5 +1,12 @@
 ﻿@page "/"
 <MainPage>
+    @if (CanStartLoading() == false)
+    {
+        <div>
+            Sorry, native apps are no longer supported for the game package except for single player games because many issues.
+        </div>
+        return;
+    }
     @if (_loadedOnce == false)
     {
         <div>Loading Game Package Loader........</div>

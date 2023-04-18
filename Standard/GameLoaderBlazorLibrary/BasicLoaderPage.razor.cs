@@ -60,6 +60,30 @@ public partial class BasicLoaderPage : IDisposable
         }
         return string.IsNullOrWhiteSpace(GlobalDataModel.DataContext.NickName) == false;
     }
+    private bool CanStartLoading()
+    {
+        if (LoaderViewModel.IsSinglePlayerOnly)
+        {
+            return true;
+        }
+        if (bb1.OS == bb1.EnumOS.Wasm)
+        {
+            return true;
+        }
+        return false; //because if its not web assembly, then only single player games can now do loaders for quite a while.
+    }
+    private static bool CanRefreshManually()
+    {
+        if (LoaderViewModel.IsSinglePlayerOnly)
+        {
+            return false; //because those games never had issues to begin with.
+        }
+        if (bb1.OS == bb1.EnumOS.Wasm)
+        {
+            return true;
+        }
+        return false;
+    }
     private async void BackToMain()
     {
         if (aa1.Resolver!.RegistrationExist<IGameNetwork>())
@@ -67,10 +91,13 @@ public partial class BasicLoaderPage : IDisposable
             IGameNetwork nets = aa1.Resolver!.Resolve<IGameNetwork>();
             await nets.BackToMainAsync();
         }
-        await JS!.RefreshBrowser();
-        //decided to go ahead and refresh the browser.  this would make it where you can go back to the game and would be completely refreshed as intended (since i can't seem to control removing all objects to start fresh again).
-        //DataContext!.GameName = "";
-        //StateHasChanged();
+        if (CanRefreshManually())
+        {
+            await JS!.RefreshBrowser();
+            return;
+        }
+        DataContext!.GameName = "";
+        StateHasChanged();
     }
     private void ClosedSettings()
     {

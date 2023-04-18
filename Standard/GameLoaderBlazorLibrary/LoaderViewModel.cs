@@ -3,6 +3,7 @@ public abstract class LoaderViewModel : ILoaderVM
 {
     public Action? StateChanged { get; set; }
     public string GameName { get; set; } = "";
+    public static bool IsSinglePlayerOnly { get; set; } //this means if set to true, then some action can happen to the loader processes.
     public RenderFragment? GameRendered { get; private set; }
     public abstract string Title { get; }
     protected IStartUp Starts;
