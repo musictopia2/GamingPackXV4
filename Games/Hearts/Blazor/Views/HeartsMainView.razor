@@ -1,0 +1,24 @@
+@inherits BasicGameView<HeartsMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<p>Welcome to Hearts</p>
+<StackLayout>
+    <DeckOfCardsDrawPileBlazor R="HeartsCardInformation" DeckPile="_vmData.Deck1" />
+</StackLayout>
+<div>
+    <DeckOfCardsTwoPlayerTrickBlazor T="HeartsCardInformation" DataContext="_vmData.TrickArea1" />
+</div>
+<div>
+    <DeckOfCardsHandBlazor R="HeartsCardInformation" Hand="_vmData.PlayerHand1" />
+    @*<HandBlazor Hand="_vmData.PlayerHand1" />*@
+</div>
+<div>
+    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+</div>
+<div>
+    <ScoreBoardBlazor P="HeartsPlayerItem"
+                      Columns="_scores"
+                      Players="_gameContainer.SaveRoot.PlayerList" />
+</div>
