@@ -89,7 +89,7 @@ public class BidProcesses : IBidProcesses
         }
         if (_gameContainer.SaveRoot.WonSoFar > 0)
         {
-            if (_gameContainer.PlayerList!.Count(items => items.Pass == true) == 1)
+            if (_gameContainer.PlayerList!.Count(items => items.Pass == false) == 1) //maybe should have been false (?)
             {
                 await EndBiddingAsync();
                 return;
