@@ -3,22 +3,37 @@
 {
     return;
 }
-<p>Welcome to Hearts</p>
 <StackLayout>
-    <DeckOfCardsDrawPileBlazor R="HeartsCardInformation" DeckPile="_vmData.Deck1" />
+    <StackItem>
+        <ScoreBoardBlazor P="HeartsPlayerItem"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+    @if (_gameContainer.SaveRoot.GameStatus == EnumStatus.Normal)
+    {
+        <StackItem>
+            <DeckOfCardsSeveralPlayersTrickBlazor B="HeartsTrickAreaCP" P="HeartsPlayerItem" T="HeartsCardInformation" DataContext="_vmData.TrickArea1" />
+        </StackItem>
+    }
 </StackLayout>
 <div>
-    <DeckOfCardsTwoPlayerTrickBlazor T="HeartsCardInformation" DataContext="_vmData.TrickArea1" />
-</div>
-<div>
     <DeckOfCardsHandBlazor R="HeartsCardInformation" Hand="_vmData.PlayerHand1" />
-    @*<HandBlazor Hand="_vmData.PlayerHand1" />*@
 </div>
-<div>
-    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
-</div>
-<div>
-    <ScoreBoardBlazor P="HeartsPlayerItem"
-                      Columns="_scores"
-                      Players="_gameContainer.SaveRoot.PlayerList" />
-</div>
+@if (_gameContainer.SaveRoot.GameStatus == EnumStatus.Passing)
+{
+    <GameButtonComponent CommandObject="PassCommand" Display="Pass" StartOnNewLine=true />
+}
+@if (_gameContainer.SaveRoot.GameStatus == EnumStatus.ShootMoon)
+{
+    <BaseFrameBlazor Text="Shoot Moon Options">
+        <GameButtonComponent CommandObject="MoonCommand"
+                         CommandParameter="EnumMoonOptions.GiveEverybodyPlus"
+                         Display="Give Other Players 26 Points" />
+        <GameButtonComponent CommandObject="MoonCommand"
+                         CommandParameter="EnumMoonOptions.GiveSelfMinus"
+                         Display="Reduce your score by 26 points" />
+    </BaseFrameBlazor>
+}

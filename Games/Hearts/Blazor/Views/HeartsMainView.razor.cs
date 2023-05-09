@@ -13,13 +13,20 @@ public partial class HeartsMainView
         _gameContainer = aa1.Resolver.Resolve<HeartsGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(HeartsVMData.NormalTurn))
-            .AddLabel("Trump", nameof(HeartsVMData.TrumpSuit))
-            .AddLabel("Status", nameof(HeartsVMData.Status));
+            .AddLabel("Status", nameof(HeartsVMData.Status))
+            .AddLabel("Round", nameof(HeartsVMData.RoundNumber))
+            .AddLabel("Pass", nameof(HeartsVMData.PassedPlayer))
+            ;
 
         _scores.Clear();
-        _scores.AddColumn("Cards Left", true, nameof(HeartsPlayerItem.ObjectCount))
-            .AddColumn("Tricks Won", true, nameof(HeartsPlayerItem.TricksWon))
-            ; //cards left is common.  can be anything you need.
+        _scores.AddColumn("Cards Left", false, nameof(HeartsPlayerItem.ObjectCount))
+            .AddColumn("Tricks Won", false, nameof(HeartsPlayerItem.TricksWon))
+            .AddColumn("Current Score", false, nameof(HeartsPlayerItem.CurrentScore))
+            .AddColumn("Previous Score", false, nameof(HeartsPlayerItem.PreviousScore))
+            .AddColumn("Total Score", false, nameof(HeartsPlayerItem.TotalScore));
+        ; //cards left is common.  can be anything you need.
         base.OnInitialized();
     }
+    private ICustomCommand PassCommand => DataContext!.PassCommand!;
+    private ICustomCommand MoonCommand => DataContext!.MoonCommand!;
 }

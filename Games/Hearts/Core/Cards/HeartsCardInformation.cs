@@ -1,19 +1,38 @@
 namespace Hearts.Core.Cards;
 public class HeartsCardInformation : RegularTrickCard, IDeckObject
 {
-    //most of the time not needed.  but if so, uncomment and use.
-    //public HeartsCardInformation()
-    //{
-    //    DefaultSize = new SizeF(55, 72); //this is neeeded too.
-    //}
-    //public void Populate(int chosen)
-    //{
-    //    //populating the card.
-
-    //}
-
-    //public void Reset()
-    //{
-    //    //anything that is needed to reset.
-    //}
+    public int HeartPoints
+    {
+        get
+        {
+            if (Suit == EnumSuitList.Hearts)
+            {
+                return 1;
+            }
+            if (Suit == EnumSuitList.Diamonds && Value == EnumRegularCardValueList.Jack)
+            {
+                return -10;
+            }
+            if (Suit == EnumSuitList.Spades && Value == EnumRegularCardValueList.Queen)
+            {
+                return 13;
+            }
+            return 0;
+        }
+    }
+    public bool ContainPoints
+    {
+        get
+        {
+            if (Suit == EnumSuitList.Hearts)
+            {
+                return true;
+            }
+            if (Suit == EnumSuitList.Spades && Value == EnumRegularCardValueList.Queen)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
 }

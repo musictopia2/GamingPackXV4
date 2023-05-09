@@ -8,9 +8,7 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<HeartsShellViewModel>
 
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
-        //change view model for area if not using 2 player.
-        register.RegisterType<TwoPlayerTrickObservable<EnumSuitList, HeartsCardInformation, HeartsPlayerItem, HeartsSaveInfo>>();
-
+        
         //if using misc deck, use this line
         //register.RegisterSingleton<IDeckCount, HeartsDeckCount>();
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
