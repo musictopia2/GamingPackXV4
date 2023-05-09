@@ -28,7 +28,8 @@ public class RookMainGameClass
         ITrumpProcesses trumpProcesses,
         INestProcesses nestProcesses,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        RookDelegates delegates
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
     {
         _model = currentMod;
@@ -40,6 +41,14 @@ public class RookMainGameClass
         _nestProcesses = nestProcesses;
         _gameContainer.StartNewTrickAsync = StartNewTrickAsync;
         _gameContainer.StartingStatus = () => this.StartingStatus();
+        delegates.IsDummy = () =>
+        {
+            if (PlayerList.Count == 2)
+            {
+                return true;
+            }
+            return false;
+        };
     }
     public override async Task FinishGetSavedAsync()
     {

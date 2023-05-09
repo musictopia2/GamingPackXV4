@@ -2,6 +2,11 @@ namespace Rook.Core.Data;
 [SingletonGame]
 public class RookDetailClass : IGameInfo, ICardInfo<RookCardInformation>, ITrickData
 {
+    private readonly RookDelegates _delegates;
+    public RookDetailClass(RookDelegates delegates)
+    {
+        _delegates = delegates;
+    }
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
@@ -31,7 +36,7 @@ public class RookDetailClass : IGameInfo, ICardInfo<RookCardInformation>, ITrick
     bool ITrickData.HasTrump => true;
     bool ITrickData.MustPlayTrump => false;
     EnumTrickStyle ITrickData.TrickStyle => EnumTrickStyle.None;
-    bool ITrickData.HasDummy => true;
+    bool ITrickData.HasDummy => _delegates.IsDummy!.Invoke();
     BasicList<int> ICardInfo<RookCardInformation>.DiscardExcludeList(IListShuffler<RookCardInformation> deckList)
     {
         return new();
