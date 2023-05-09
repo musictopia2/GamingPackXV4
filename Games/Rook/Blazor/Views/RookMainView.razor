@@ -18,29 +18,17 @@
             <BiddingComponent DataContext="DataContext" />
        }
        @if (DataContext.GameStatus == EnumStatusList.ChooseTrump)
-        {
+       {
             <TrumpComponent DataContext="DataContext" />
-        }
-        @* <ParentControl VM="RookBiddingViewModel">
-            <RookBiddingView />
-        </ParentControl>*@
-        @*<ParentControl VM="RookColorViewModel">
-            <RookColorView />
-        </ParentControl>*@
-        <!--
-            <ParentControl VM="RookNestViewModel">
-            <RookNestView />
-        </ParentControl>
-        -->
-        @if (DataContext.GameStatus == EnumStatusList.SelectNest)
-        {
+       }
+       @if (DataContext.GameStatus == EnumStatusList.SelectNest)
+       {
             <GameButtonComponent CommandObject="ChooseNestCommand" Display="Choose Nest Cards" />
-        }
-        @if (DataContext.GameStatus == EnumStatusList.Normal)
-        {
+       }
+       @if (DataContext.GameStatus == EnumStatusList.Normal)
+       {
             <SeveralPlayersTrickBlazor DataContext="_vmData.TrickArea1" />
-        }
-        
+       }
     </StackItem>
 </StackLayout>
 <div>
