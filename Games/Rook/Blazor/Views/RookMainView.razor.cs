@@ -19,4 +19,5 @@ public partial class RookMainView
             .AddColumn("Total Score", false, nameof(RookPlayerItem.TotalScore));
         base.OnInitialized();
     }
+    private ICustomCommand ChooseNestCommand => DataContext!.ChooseNestCommand!;
 }

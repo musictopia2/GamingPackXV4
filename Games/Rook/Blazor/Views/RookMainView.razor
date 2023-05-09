@@ -12,16 +12,25 @@
     <StackItem>
         <LabelGridComponent DataContext="_vmData" Labels="_labels" />
     </StackItem>
+    
+
+
     <StackItem>
-        <ParentControl VM="RookBiddingViewModel">
+        @*<ParentControl VM="RookBiddingViewModel">
             <RookBiddingView />
-        </ParentControl>
+        </ParentControl>*@
         <ParentControl VM="RookColorViewModel">
             <RookColorView />
         </ParentControl>
-        <ParentControl VM="RookNestViewModel">
+        <!--
+            <ParentControl VM="RookNestViewModel">
             <RookNestView />
         </ParentControl>
+        -->
+        @if (DataContext.GameStatus == EnumStatusList.SelectNest)
+        {
+            <GameButtonComponent CommandObject="ChooseNestCommand" Display="Choose Nest Cards" />
+        }
         <SeveralPlayersTrickBlazor DataContext="_vmData.TrickArea1" />
     </StackItem>
 </StackLayout>

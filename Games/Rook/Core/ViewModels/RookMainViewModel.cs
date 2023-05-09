@@ -1,10 +1,12 @@
 namespace Rook.Core.ViewModels;
 [InstanceGame]
-public class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
+public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
 {
     private readonly RookMainGameClass _mainGame;
     private readonly RookVMData _model;
     private readonly IGamePackageResolver _resolver;
+    private readonly IToast _toast;
+    private readonly INestProcesses _nestProcesses;
     public RookMainViewModel(CommandContainer commandContainer,
         RookMainGameClass mainGame,
         RookVMData viewModel,
@@ -12,13 +14,16 @@ public class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
+        IToast toast,
+        INestProcesses nestProcesses
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
         _mainGame = mainGame;
         _model = viewModel;
         _resolver = resolver;
+        _toast = toast;
+        _nestProcesses = nestProcesses;
         _model.Deck1.NeverAutoDisable = true;
         _model.ChangeScreen = ScreenChangeAsync;
         _model.Dummy1.SendEnableProcesses(this, () =>
@@ -33,16 +38,18 @@ public class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
             }
             return _mainGame.SaveRoot.DummyPlay;
         });
+        CreateCommands(commandContainer);
     }
+    partial void CreateCommands(CommandContainer command);
     protected override async Task TryCloseAsync()
     {
         await CloseBiddingScreenAsync();
         await CloseColorScreenAsync();
-        await CloseNestScreenAsync();
+        //await CloseNestScreenAsync();
         await base.TryCloseAsync();
     }
     public RookBiddingViewModel? BidScreen { get; set; }
-    public RookNestViewModel? NestScreen { get; set; }
+    //public RookNestViewModel? NestScreen { get; set; }
     public RookColorViewModel? ColorScreen { get; set; }
     protected override Task ActivateAsync()
     {
@@ -57,7 +64,7 @@ public class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         }
         if (_mainGame.SaveRoot.GameStatus == EnumStatusList.Normal)
         {
-            await CloseNestScreenAsync();
+            //await CloseNestScreenAsync();
             await CloseBiddingScreenAsync();
             await CloseColorScreenAsync();
             _model.TrickArea1.Visible = true;
@@ -66,7 +73,7 @@ public class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         _model.TrickArea1.Visible = false;
         if (_mainGame.SaveRoot.GameStatus == EnumStatusList.Bidding)
         {
-            await CloseNestScreenAsync();
+            //await CloseNestScreenAsync();
             await CloseColorScreenAsync();
             await OpenBiddingAsync();
             return;
@@ -75,18 +82,19 @@ public class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         {
             await CloseBiddingScreenAsync();
             await CloseColorScreenAsync();
-            await OpenNestAsync();
+            //await OpenNestAsync();
             return;
         }
         if (_mainGame.SaveRoot.GameStatus == EnumStatusList.ChooseTrump)
         {
             await CloseBiddingScreenAsync();
-            await CloseNestScreenAsync();
+            //await CloseNestScreenAsync();
             await OpenColorAsync();
             return;
         }
         throw new CustomBasicException("Not supported.  Rethink");
     }
+    public EnumStatusList GameStatus => _mainGame.SaveRoot.GameStatus;
     private async Task CloseBiddingScreenAsync()
     {
         if (BidScreen == null)
@@ -96,15 +104,15 @@ public class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         await CloseSpecificChildAsync(BidScreen);
         BidScreen = null;
     }
-    private async Task CloseNestScreenAsync()
-    {
-        if (NestScreen == null)
-        {
-            return;
-        }
-        await CloseSpecificChildAsync(NestScreen);
-        NestScreen = null;
-    }
+    //private async Task CloseNestScreenAsync()
+    //{
+    //    if (NestScreen == null)
+    //    {
+    //        return;
+    //    }
+    //    await CloseSpecificChildAsync(NestScreen);
+    //    NestScreen = null;
+    //}
     private async Task CloseColorScreenAsync()
     {
         if (ColorScreen == null)
@@ -123,15 +131,15 @@ public class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         BidScreen = _resolver.Resolve<RookBiddingViewModel>();
         await LoadScreenAsync(BidScreen);
     }
-    private async Task OpenNestAsync()
-    {
-        if (NestScreen != null)
-        {
-            return;
-        }
-        NestScreen = _resolver.Resolve<RookNestViewModel>();
-        await LoadScreenAsync(NestScreen);
-    }
+    //private async Task OpenNestAsync()
+    //{
+    //    if (NestScreen != null)
+    //    {
+    //        return;
+    //    }
+    //    NestScreen = _resolver.Resolve<RookNestViewModel>();
+    //    await LoadScreenAsync(NestScreen);
+    //}
     private async Task OpenColorAsync()
     {
         if (ColorScreen != null)
@@ -176,5 +184,16 @@ public class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
             return !_mainGame.SaveRoot.DummyPlay;
         }
         return false;
+    }
+    [Command(EnumCommandCategory.Plain)]
+    public async Task ChooseNestAsync()
+    {
+        var thisList = _model.PlayerHand1!.ListSelectedObjects();
+        if (thisList.Count != 5)
+        {
+            _toast.ShowUserErrorToast("Sorry, you must choose 5 cards to throw away");
+            return;
+        }
+        await _nestProcesses.ProcessNestAsync(thisList);
     }
 }
