@@ -44,7 +44,7 @@ public class NestProcesses : INestProcesses
             {
                 _gameContainer.SingleInfo = _gameContainer.PlayerList![2];
             }
-            _gameContainer.SingleInfo.IsDummy = true;
+            //_gameContainer.SingleInfo.IsDummy = true;
             _gameContainer.WhoTurn = _gameContainer.SingleInfo.Id;
         }
         else if (_gameContainer.PlayerList.Count == 2)

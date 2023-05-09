@@ -138,7 +138,7 @@ public class RookMainGameClass
         PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.Pass = false;
-            thisPlayer.IsDummy = false;
+            //thisPlayer.IsDummy = false;
             thisPlayer.BidAmount = 0;
             thisPlayer.TricksWon = 0;
         });
@@ -229,7 +229,8 @@ public class RookMainGameClass
             await StartNewTurnAsync();
             return;
         }
-        SingleInfo = PlayerList.Where(items => items.IsDummy == true).Single(); //iffy (?)
+        WhoTurn = await PlayerList.CalculateWhoTurnAsync();
+        SingleInfo = PlayerList.GetWhoPlayer();
         WhoTurn = SingleInfo.Id;
         await StartNewTurnAsync();
     }
