@@ -8,10 +8,6 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
     {
         _gameContainer = gameContainer;
     }
-    private void CalculateDummy()
-    {
-        UseDummy = _gameContainer.PlayerList!.Count == 2;
-    }
     protected override bool UseDummy { get; set; }
     protected override int GetCardIndex()
     {
@@ -65,6 +61,10 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
         _gameContainer.SaveRoot!.DummyPlay = isDummy;
         WinCard = thisCard;
         await AnimateWinAsync();
+    }
+    protected override void BeforeFirstLoad()
+    {
+        UseDummy = _gameContainer.PlayerList!.Count == 2;
     }
     public void ClearBoard()
     {
