@@ -16,19 +16,8 @@ public partial class RookVMData : ITrickCardGamesData<RookCardInformation, EnumC
     public EnumColorTypes ColorChosen { get; set; }
     [LabelColumn]
     public int BidChosen { get; set; } = -1;
-    private EnumStatusList _gameStatus;
     [LabelColumn]
-    public EnumStatusList GameStatus
-    {
-        get { return _gameStatus; }
-        set
-        {
-            if (SetProperty(ref _gameStatus, value))
-            {
-                ChangeScreen?.Invoke();
-            }
-        }
-    }
+    public EnumStatusList GameStatus { get; set; }
     public RookVMData(CommandContainer command,
             RookTrickAreaCP trickArea1,
             IGamePackageResolver resolver,
@@ -47,7 +36,7 @@ public partial class RookVMData : ITrickCardGamesData<RookCardInformation, EnumC
         Color1.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
         Color1.ItemClickedAsync = Color1_ItemClickedAsync;
     }
-    public Action? ChangeScreen { get; set; }
+    //public Action? ChangeScreen { get; set; }
     private Task Bid1_ChangedNumberValueAsync(int chosen)
     {
         BidChosen = chosen;

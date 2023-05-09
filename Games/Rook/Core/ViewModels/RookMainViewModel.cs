@@ -4,10 +4,11 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
 {
     private readonly RookMainGameClass _mainGame;
     public readonly RookVMData Model;
-    private readonly IGamePackageResolver _resolver;
+    //private readonly IGamePackageResolver _resolver;
     private readonly IToast _toast;
     private readonly INestProcesses _nestProcesses;
     private readonly IBidProcesses _bidProcesses;
+    private readonly ITrumpProcesses _trumpProcesses;
     public RookMainViewModel(CommandContainer commandContainer,
         RookMainGameClass mainGame,
         RookVMData viewModel,
@@ -17,18 +18,20 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         IEventAggregator aggregator,
         IToast toast,
         INestProcesses nestProcesses,
-        IBidProcesses bidProcesses
+        IBidProcesses bidProcesses,
+        ITrumpProcesses trumpProcesses
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
         _mainGame = mainGame;
         Model = viewModel;
-        _resolver = resolver;
+        //_resolver = resolver;
         _toast = toast;
         _nestProcesses = nestProcesses;
         _bidProcesses = bidProcesses;
+        _trumpProcesses = trumpProcesses;
         Model.Deck1.NeverAutoDisable = true;
-        Model.ChangeScreen = ScreenChangeAsync;
+        //Model.ChangeScreen = ScreenChangeAsync;
         Model.Dummy1.SendEnableProcesses(this, () =>
         {
             if (_mainGame!.SaveRoot!.GameStatus != EnumStatusList.Normal)
@@ -44,59 +47,59 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override async Task TryCloseAsync()
-    {
-        //await CloseBiddingScreenAsync();
-        await CloseColorScreenAsync();
-        //await CloseNestScreenAsync();
-        await base.TryCloseAsync();
-    }
+    //protected override async Task TryCloseAsync()
+    //{
+    //    await CloseBiddingScreenAsync();
+    //    await CloseColorScreenAsync();
+    //    await CloseNestScreenAsync();
+    //    await base.TryCloseAsync();
+    //}
     //public RookBiddingViewModel? BidScreen { get; set; }
     //public RookNestViewModel? NestScreen { get; set; }
-    public RookColorViewModel? ColorScreen { get; set; }
-    protected override Task ActivateAsync()
-    {
-        ScreenChangeAsync();
-        return base.ActivateAsync();
-    }
-    private async void ScreenChangeAsync()
-    {
-        if (_mainGame == null)
-        {
-            return;
-        }
-        if (_mainGame.SaveRoot.GameStatus == EnumStatusList.Normal)
-        {
-            //await CloseNestScreenAsync();
-            //await CloseBiddingScreenAsync();
-            await CloseColorScreenAsync();
-            Model.TrickArea1.Visible = true;
-            return;
-        }
-        Model.TrickArea1.Visible = false;
-        if (_mainGame.SaveRoot.GameStatus == EnumStatusList.Bidding)
-        {
-            //await CloseNestScreenAsync();
-            await CloseColorScreenAsync();
-            //await OpenBiddingAsync();
-            return;
-        }
-        if (_mainGame.SaveRoot.GameStatus == EnumStatusList.SelectNest)
-        {
-            //await CloseBiddingScreenAsync();
-            await CloseColorScreenAsync();
-            //await OpenNestAsync();
-            return;
-        }
-        if (_mainGame.SaveRoot.GameStatus == EnumStatusList.ChooseTrump)
-        {
-            //await CloseBiddingScreenAsync();
-            //await CloseNestScreenAsync();
-            await OpenColorAsync();
-            return;
-        }
-        throw new CustomBasicException("Not supported.  Rethink");
-    }
+    //public RookColorViewModel? ColorScreen { get; set; }
+    //protected override Task ActivateAsync()
+    //{
+    //    ScreenChangeAsync();
+    //    return base.ActivateAsync();
+    //}
+    //private async void ScreenChangeAsync()
+    //{
+    //    if (_mainGame == null)
+    //    {
+    //        return;
+    //    }
+    //    if (_mainGame.SaveRoot.GameStatus == EnumStatusList.Normal)
+    //    {
+    //        await CloseNestScreenAsync();
+    //        await CloseBiddingScreenAsync();
+    //        await CloseColorScreenAsync();
+    //        Model.TrickArea1.Visible = true;
+    //        return;
+    //    }
+    //    Model.TrickArea1.Visible = false;
+    //    if (_mainGame.SaveRoot.GameStatus == EnumStatusList.Bidding)
+    //    {
+    //        await CloseNestScreenAsync();
+    //        await CloseColorScreenAsync();
+    //        await OpenBiddingAsync();
+    //        return;
+    //    }
+    //    if (_mainGame.SaveRoot.GameStatus == EnumStatusList.SelectNest)
+    //    {
+    //        await CloseBiddingScreenAsync();
+    //        await CloseColorScreenAsync();
+    //        await OpenNestAsync();
+    //        return;
+    //    }
+    //    if (_mainGame.SaveRoot.GameStatus == EnumStatusList.ChooseTrump)
+    //    {
+    //        await CloseBiddingScreenAsync();
+    //        await CloseNestScreenAsync();
+    //        await OpenColorAsync();
+    //        return;
+    //    }
+    //    throw new CustomBasicException("Not supported.  Rethink");
+    //}
     public EnumStatusList GameStatus => _mainGame.SaveRoot.GameStatus;
     //private async Task CloseBiddingScreenAsync()
     //{
@@ -116,15 +119,15 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
     //    await CloseSpecificChildAsync(NestScreen);
     //    NestScreen = null;
     //}
-    private async Task CloseColorScreenAsync()
-    {
-        if (ColorScreen == null)
-        {
-            return;
-        }
-        await CloseSpecificChildAsync(ColorScreen);
-        ColorScreen = null;
-    }
+    //private async Task CloseColorScreenAsync()
+    //{
+    //    if (ColorScreen == null)
+    //    {
+    //        return;
+    //    }
+    //    await CloseSpecificChildAsync(ColorScreen);
+    //    ColorScreen = null;
+    //}
     //private async Task OpenBiddingAsync()
     //{
     //    if (BidScreen != null)
@@ -143,15 +146,15 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
     //    NestScreen = _resolver.Resolve<RookNestViewModel>();
     //    await LoadScreenAsync(NestScreen);
     //}
-    private async Task OpenColorAsync()
-    {
-        if (ColorScreen != null)
-        {
-            return;
-        }
-        ColorScreen = _resolver.Resolve<RookColorViewModel>();
-        await LoadScreenAsync(ColorScreen);
-    }
+    //private async Task OpenColorAsync()
+    //{
+    //    if (ColorScreen != null)
+    //    {
+    //        return;
+    //    }
+    //    ColorScreen = _resolver.Resolve<RookColorViewModel>();
+    //    await LoadScreenAsync(ColorScreen);
+    //}
     public override bool CanEndTurn()
     {
         return false;
@@ -210,5 +213,11 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
     public async Task PassAsync()
     {
         await _bidProcesses.PassBidAsync();
+    }
+    public bool CanTrump => Model.ColorChosen != EnumColorTypes.None;
+    [Command(EnumCommandCategory.Plain)]
+    public async Task TrumpAsync()
+    {
+        await _trumpProcesses.ProcessTrumpAsync();
     }
 }
