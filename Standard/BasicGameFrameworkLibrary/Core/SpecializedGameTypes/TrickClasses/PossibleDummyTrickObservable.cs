@@ -120,10 +120,13 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
             output.Add(thisPlayer);
             return output;
         }
-        if (howManyPlayers == 3)
-        {
-            throw new CustomBasicException("Currently, can't support 3 players because even the old version was too buggy.  Therefore, only 2 players are supported for now");
-        }
+
+        //attempt to support 3 players.  well see what happens (refer to the severaltricks since that had no issues
+
+        //if (howManyPlayers == 3)
+        //{
+        //    throw new CustomBasicException("Currently, can't support 3 players because even the old version was too buggy.  Therefore, only 2 players are supported for now");
+        //}
         int howManyBottom;
         int howManyTop;
         if (howManyPlayers <= 4)
