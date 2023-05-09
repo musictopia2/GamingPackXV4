@@ -7,14 +7,10 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
     public RookTrickAreaCP(RookGameContainer gameContainer) : base(gameContainer)
     {
         _gameContainer = gameContainer;
-        if (_gameContainer.PlayerList!.Count == 2)
-        {
-            UseDummy = true;
-        }
-        else
-        {
-            UseDummy = false; //with 3 players, its really teams.
-        }
+    }
+    private void CalculateDummy()
+    {
+        UseDummy = _gameContainer.PlayerList!.Count == 2;
     }
     protected override bool UseDummy { get; set; }
     protected override int GetCardIndex()
@@ -105,16 +101,19 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
     }
     public void NewRound()
     {
-        int self = _gameContainer.SelfPlayer;
-        if (self == _gameContainer.SaveRoot!.WonSoFar)
+        if (_gameContainer.PlayerList!.Count == 2)
         {
-            ViewList![2].Visible = true;
-            ViewList[3].Visible = false;
-        }
-        else
-        {
-            ViewList![2].Visible = false;
-            ViewList[3].Visible = true;
+            int self = _gameContainer.SelfPlayer;
+            if (self == _gameContainer.SaveRoot!.WonSoFar)
+            {
+                ViewList![2].Visible = true;
+                ViewList[3].Visible = false;
+            }
+            else
+            {
+                ViewList![2].Visible = false;
+                ViewList[3].Visible = true;
+            }
         }
         ClearBoard();
     }

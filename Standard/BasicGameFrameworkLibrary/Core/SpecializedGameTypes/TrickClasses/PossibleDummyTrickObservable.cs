@@ -183,12 +183,14 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
         }
         return output;
     }
+    protected virtual void BeforeFirstLoad() { }
     public void FirstLoad()
     {
         if (_gameContainer.PlayerList!.Count == 0)
         {
             throw new CustomBasicException("Playerlist Has Not Been Initialized Yet");
         }
+        BeforeFirstLoad();
         ViewList = GetCoordinateList();
         if (ViewList.First().IsSelf == false)
         {
