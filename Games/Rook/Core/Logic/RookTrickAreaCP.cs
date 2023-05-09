@@ -77,6 +77,14 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
     {
         UseDummy = _gameContainer.PlayerList!.Count == 2;
     }
+    protected override int GetMaxCount()
+    {
+        if (_gameContainer.PlayerList!.Count == 2)
+        {
+            return base.GetMaxCount();
+        }
+        return _gameContainer.PlayerList.Count; //i think
+    }
     public void ClearBoard()
     {
         DeckRegularDict<RookCardInformation> tempList = new();
