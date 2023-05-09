@@ -47,7 +47,7 @@ public class NestProcesses : INestProcesses
             _gameContainer.SingleInfo.IsDummy = true;
             _gameContainer.WhoTurn = _gameContainer.SingleInfo.Id;
         }
-        else
+        else if (_gameContainer.PlayerList.Count == 2)
         {
             if (_gameContainer.SaveRoot.WonSoFar == 1)
             {
@@ -58,8 +58,15 @@ public class NestProcesses : INestProcesses
                 _gameContainer.WhoTurn = 1;
             }
         }
+        else if (_gameContainer.PlayerList.Count == 4)
+        {
+            throw new CustomBasicException("Rethink figuring out who goes first when its 4 players");
+        }
         _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-        _gameContainer.SaveRoot.DummyPlay = true;
+        if (_gameContainer.PlayerList.Count == 2)
+        {
+            _gameContainer.SaveRoot.DummyPlay = true;
+        }
         await _gameContainer.StartNewTrickAsync!.Invoke();
     }
 }

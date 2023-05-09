@@ -4,9 +4,12 @@
 public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, RookCardInformation, RookPlayerItem, RookSaveInfo>, IAdvancedTrickProcesses
 {
     private readonly RookGameContainer _gameContainer;
-    public RookTrickAreaCP(RookGameContainer gameContainer) : base(gameContainer)
+    private readonly RookDelegates _delegates;
+
+    public RookTrickAreaCP(RookGameContainer gameContainer, RookDelegates delegates) : base(gameContainer)
     {
         _gameContainer = gameContainer;
+        _delegates = delegates;
     }
     protected override bool UseDummy { get; set; }
     protected override int GetCardIndex()
@@ -16,10 +19,18 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
     }
     protected override void PopulateNewCard(RookCardInformation oldCard, ref RookCardInformation newCard)
     {
+        if (_delegates.IsDummy!() == false)
+        {
+            return;
+        }
         newCard.IsDummy = oldCard.IsDummy;
     }
     protected override void PopulateOldCard(RookCardInformation oldCard)
     {
+        if (_delegates.IsDummy!() == false)
+        {
+            return;
+        }
         oldCard.IsDummy = _gameContainer.SaveRoot!.DummyPlay;
     }
     protected override async Task ProcessCardClickAsync(RookCardInformation thisCard)
