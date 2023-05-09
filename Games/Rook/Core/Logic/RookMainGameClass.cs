@@ -223,13 +223,13 @@ public class RookMainGameClass
             await StartNewTurnAsync();
             return;
         }
-        SaveRoot.DummyPlay = true;
         if (PlayerList.Count == 2)
         {
+            SaveRoot.DummyPlay = true;
             await StartNewTurnAsync();
             return;
         }
-        SingleInfo = PlayerList.Where(items => items.IsDummy == true).Single();
+        SingleInfo = PlayerList.Where(items => items.IsDummy == true).Single(); //iffy (?)
         WhoTurn = SingleInfo.Id;
         await StartNewTurnAsync();
     }
