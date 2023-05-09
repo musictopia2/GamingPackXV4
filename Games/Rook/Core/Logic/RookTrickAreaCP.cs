@@ -7,13 +7,13 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
     public RookTrickAreaCP(RookGameContainer gameContainer) : base(gameContainer)
     {
         _gameContainer = gameContainer;
-        if (_gameContainer.PlayerList!.Count == 4)
+        if (_gameContainer.PlayerList!.Count == 2)
         {
-            UseDummy = false;
+            UseDummy = true;
         }
         else
         {
-            UseDummy = true;
+            UseDummy = false; //with 3 players, its really teams.
         }
     }
     protected override bool UseDummy { get; set; }
