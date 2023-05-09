@@ -120,6 +120,7 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
             output.Add(thisPlayer);
             return output;
         }
+        
 
         //attempt to support 3 players.  well see what happens (refer to the severaltricks since that had no issues
 

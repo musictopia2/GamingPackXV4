@@ -94,6 +94,10 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
                 thisCard.Visible = false;
             }
             tempList.Add(thisCard);
+            if (_gameContainer.PlayerList!.Count ==3 && x== 3)
+            {
+                break; //break out so it matches.
+            }
         }
         OrderList.Clear();
         CardList.ReplaceRange(tempList);
