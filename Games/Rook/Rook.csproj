@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="BasicGameFrameworkLibrary" Version="7.0.2" />
+	<PackageReference Include="BasicGameFrameworkLibrary" Version="7.0.4" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
