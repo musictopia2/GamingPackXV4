@@ -18,14 +18,8 @@ public static class ComputerAI
     public static int CardToPlay(RookMainGameClass mainGame, RookVMData model)
     {
         DeckRegularDict<RookCardInformation> newList;
-        if (mainGame.SaveRoot!.DummyPlay)
-        {
-            newList = model.Dummy1!.HandList.Where(items => mainGame.IsValidMove(items.Deck)).ToRegularDeckDict();
-        }
-        else
-        {
-            newList = mainGame.SingleInfo!.MainHandList.Where(items => mainGame.IsValidMove(items.Deck)).ToRegularDeckDict();
-        }
+        var firstList = model.GetCurrentHandList();
+        newList = firstList.Where(x => mainGame.IsValidMove(x.Deck)).ToRegularDeckDict();
         if (newList.Count == 0)
         {
             throw new CustomBasicException("There must be at least one card it can play for computer player");
