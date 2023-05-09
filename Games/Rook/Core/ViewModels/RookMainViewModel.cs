@@ -3,10 +3,11 @@ namespace Rook.Core.ViewModels;
 public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
 {
     private readonly RookMainGameClass _mainGame;
-    private readonly RookVMData _model;
+    public readonly RookVMData Model;
     private readonly IGamePackageResolver _resolver;
     private readonly IToast _toast;
     private readonly INestProcesses _nestProcesses;
+    private readonly IBidProcesses _bidProcesses;
     public RookMainViewModel(CommandContainer commandContainer,
         RookMainGameClass mainGame,
         RookVMData viewModel,
@@ -15,18 +16,20 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         IToast toast,
-        INestProcesses nestProcesses
+        INestProcesses nestProcesses,
+        IBidProcesses bidProcesses
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
         _mainGame = mainGame;
-        _model = viewModel;
+        Model = viewModel;
         _resolver = resolver;
         _toast = toast;
         _nestProcesses = nestProcesses;
-        _model.Deck1.NeverAutoDisable = true;
-        _model.ChangeScreen = ScreenChangeAsync;
-        _model.Dummy1.SendEnableProcesses(this, () =>
+        _bidProcesses = bidProcesses;
+        Model.Deck1.NeverAutoDisable = true;
+        Model.ChangeScreen = ScreenChangeAsync;
+        Model.Dummy1.SendEnableProcesses(this, () =>
         {
             if (_mainGame!.SaveRoot!.GameStatus != EnumStatusList.Normal)
             {
@@ -43,12 +46,12 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
     partial void CreateCommands(CommandContainer command);
     protected override async Task TryCloseAsync()
     {
-        await CloseBiddingScreenAsync();
+        //await CloseBiddingScreenAsync();
         await CloseColorScreenAsync();
         //await CloseNestScreenAsync();
         await base.TryCloseAsync();
     }
-    public RookBiddingViewModel? BidScreen { get; set; }
+    //public RookBiddingViewModel? BidScreen { get; set; }
     //public RookNestViewModel? NestScreen { get; set; }
     public RookColorViewModel? ColorScreen { get; set; }
     protected override Task ActivateAsync()
@@ -65,29 +68,29 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         if (_mainGame.SaveRoot.GameStatus == EnumStatusList.Normal)
         {
             //await CloseNestScreenAsync();
-            await CloseBiddingScreenAsync();
+            //await CloseBiddingScreenAsync();
             await CloseColorScreenAsync();
-            _model.TrickArea1.Visible = true;
+            Model.TrickArea1.Visible = true;
             return;
         }
-        _model.TrickArea1.Visible = false;
+        Model.TrickArea1.Visible = false;
         if (_mainGame.SaveRoot.GameStatus == EnumStatusList.Bidding)
         {
             //await CloseNestScreenAsync();
             await CloseColorScreenAsync();
-            await OpenBiddingAsync();
+            //await OpenBiddingAsync();
             return;
         }
         if (_mainGame.SaveRoot.GameStatus == EnumStatusList.SelectNest)
         {
-            await CloseBiddingScreenAsync();
+            //await CloseBiddingScreenAsync();
             await CloseColorScreenAsync();
             //await OpenNestAsync();
             return;
         }
         if (_mainGame.SaveRoot.GameStatus == EnumStatusList.ChooseTrump)
         {
-            await CloseBiddingScreenAsync();
+            //await CloseBiddingScreenAsync();
             //await CloseNestScreenAsync();
             await OpenColorAsync();
             return;
@@ -95,15 +98,15 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         throw new CustomBasicException("Not supported.  Rethink");
     }
     public EnumStatusList GameStatus => _mainGame.SaveRoot.GameStatus;
-    private async Task CloseBiddingScreenAsync()
-    {
-        if (BidScreen == null)
-        {
-            return;
-        }
-        await CloseSpecificChildAsync(BidScreen);
-        BidScreen = null;
-    }
+    //private async Task CloseBiddingScreenAsync()
+    //{
+    //    if (BidScreen == null)
+    //    {
+    //        return;
+    //    }
+    //    await CloseSpecificChildAsync(BidScreen);
+    //    BidScreen = null;
+    //}
     //private async Task CloseNestScreenAsync()
     //{
     //    if (NestScreen == null)
@@ -122,15 +125,15 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         await CloseSpecificChildAsync(ColorScreen);
         ColorScreen = null;
     }
-    private async Task OpenBiddingAsync()
-    {
-        if (BidScreen != null)
-        {
-            return;
-        }
-        BidScreen = _resolver.Resolve<RookBiddingViewModel>();
-        await LoadScreenAsync(BidScreen);
-    }
+    //private async Task OpenBiddingAsync()
+    //{
+    //    if (BidScreen != null)
+    //    {
+    //        return;
+    //    }
+    //    BidScreen = _resolver.Resolve<RookBiddingViewModel>();
+    //    await LoadScreenAsync(BidScreen);
+    //}
     //private async Task OpenNestAsync()
     //{
     //    if (NestScreen != null)
@@ -188,12 +191,24 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
     [Command(EnumCommandCategory.Plain)]
     public async Task ChooseNestAsync()
     {
-        var thisList = _model.PlayerHand1!.ListSelectedObjects();
+        var thisList = Model.PlayerHand1!.ListSelectedObjects();
         if (thisList.Count != 5)
         {
             _toast.ShowUserErrorToast("Sorry, you must choose 5 cards to throw away");
             return;
         }
         await _nestProcesses.ProcessNestAsync(thisList);
+    }
+    public bool CanBid => Model.BidChosen > -1;
+    [Command(EnumCommandCategory.Plain)]
+    public async Task BidAsync()
+    {
+        await _bidProcesses.ProcessBidAsync();
+    }
+    public bool CanPass => Model.CanPass;
+    [Command(EnumCommandCategory.Plain)]
+    public async Task PassAsync()
+    {
+        await _bidProcesses.PassBidAsync();
     }
 }
