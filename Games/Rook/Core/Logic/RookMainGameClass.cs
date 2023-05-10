@@ -268,8 +268,73 @@ public class RookMainGameClass
         WhoTurn = SingleInfo.Id;
         await StartNewTurnAsync();
     }
+    private bool HasTrumpOrBird(DeckRegularDict<RookCardInformation> hand)
+    {
+        if (hand.Any(x => x.IsBird))
+        {
+            return true;
+        }
+        if (hand.Any(x => x.GetSuit.Equals(SaveRoot.TrumpSuit)))
+        {
+            return true;
+        }
+        return false;
+    }
+    public override bool IsValidMove(int deck)
+    {
+        //may need repeating like the game for rage card game.
+        if (PlayerList.Count < 4)
+        {
+            return base.IsValidMove(deck);
+        }
+        var thisList = SaveRoot!.TrickList;
+        if (thisList.Count == 0)
+        {
+            return true;
+        }
+        var cardPlayed = _gameContainer.DeckList!.GetSpecificItem(deck);
+        if (cardPlayed.IsBird)
+        {
+            return true; //you can always play the bird no matter what.  guarantees your team will win this.
+        }
+        var leadCard = thisList.First();
+        DeckRegularDict<RookCardInformation> currentHand;
+        currentHand = SingleInfo!.MainHandList;
+        if (leadCard.IsBird)
+        {
+            if (HasTrumpOrBird(currentHand))
+            {
+                return false; //if the bird is led, then a player must play trump if they have it.
+            }
+        }
+        if (leadCard.GetSuit.Equals(leadCard.GetSuit))
+        {
+            return true;
+        }
+        if (leadCard.GetSuit == SaveRoot.TrumpSuit)
+        {
+            if (HasTrumpOrBird(currentHand) == false)
+            {
+                return false; //because if somebody led with trump and you have either trump or bird, you have to play something.
+            }
+        }
+        if (currentHand.Any(x => x.GetSuit.Equals(leadCard.GetSuit)))
+        {
+            return false; //because you have to follow suit
+        }
+        return true;
+    }
     private int WhoWonTrick(DeckRegularDict<RookCardInformation> thisCol, out bool isDummy)
     {
+        if (PlayerList.Count == 4)
+        {
+            var card = thisCol.Where(x => x.IsBird).SingleOrDefault();
+            if (card is not null)
+            {
+                isDummy = false; //i think should always be false
+                return card.Player; //the bird always wins.
+            }
+        }
         var tempCol = thisCol.Where(items => items.Color == SaveRoot!.TrumpSuit).OrderByDescending(items => items.CardValue).ToRegularDeckDict();
         if (tempCol.Count > 0)
         {
