@@ -1,25 +1,25 @@
 namespace Rook.Blazor;
-public class TestCards : ITestCardSetUp<RookCardInformation, RookPlayerItem>
-{
-    Task ITestCardSetUp<RookCardInformation, RookPlayerItem>.SetUpTestHandsAsync(PlayerCollection<RookPlayerItem> playerList, IListShuffler<RookCardInformation> deckList)
-    {
-        var self = playerList.GetSelf();
-        var card = deckList.Single(x => x.IsBird == true);
-        self.StartUpList.Add(card); //to guarantee i get a rook card so i can see how it looks
-        return Task.CompletedTask;
-    }
-}
+//public class TestCards : ITestCardSetUp<RookCardInformation, RookPlayerItem>
+//{
+//    Task ITestCardSetUp<RookCardInformation, RookPlayerItem>.SetUpTestHandsAsync(PlayerCollection<RookPlayerItem> playerList, IListShuffler<RookCardInformation> deckList)
+//    {
+//        var self = playerList.GetSelf();
+//        var card = deckList.Single(x => x.IsBird == true);
+//        self.StartUpList.Add(card); //to guarantee i get a rook card so i can see how it looks
+//        return Task.CompletedTask;
+//    }
+//}
 public class Bootstrapper : MultiplayerBasicBootstrapper<RookShellViewModel>
 {
     public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
     {
     }
 
-    protected override Task RegisterTestsAsync()
-    {
-        GetDIContainer.RegisterSingleton<ITestCardSetUp<RookCardInformation, RookPlayerItem>, TestCards>();
-        return Task.CompletedTask;
-    }
+    //protected override Task RegisterTestsAsync()
+    //{
+    //    GetDIContainer.RegisterSingleton<ITestCardSetUp<RookCardInformation, RookPlayerItem>, TestCards>();
+    //    return Task.CompletedTask;
+    //}
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         register.RegisterSingleton<IDeckCount, RookDeckCount>();

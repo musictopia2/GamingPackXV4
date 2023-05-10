@@ -16,5 +16,6 @@ public class RookGameContainer : TrickGameContainer<RookCardInformation, RookPla
     }
     internal bool ShowedOnce { get; set; } = false;
     internal Func<Task>? StartNewTrickAsync { get; set; }
+    internal Action? AfterBidding { get; set; }
     internal Action? StartingStatus { get; set; }
 }

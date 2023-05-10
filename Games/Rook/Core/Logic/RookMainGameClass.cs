@@ -41,6 +41,7 @@ public class RookMainGameClass
         _trumpProcesses = trumpProcesses;
         _nestProcesses = nestProcesses;
         _gameContainer.StartNewTrickAsync = StartNewTrickAsync;
+        _gameContainer.AfterBidding = FigureOutTemporaryTeams;
         _gameContainer.StartingStatus = () => this.StartingStatus();
         delegates.IsDummy = () =>
         {
@@ -66,6 +67,10 @@ public class RookMainGameClass
         else
         {
             _model!.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectOneOnly;
+        }
+        if (SaveRoot.GameStatus != EnumStatusList.Bidding)
+        {
+            FigureOutTemporaryTeams(); //i think.
         }
         await base.FinishGetSavedAsync();
         _aTrick!.LoadGame();
@@ -95,6 +100,27 @@ public class RookMainGameClass
             return;
         }
         await base.ContinueTurnAsync();
+    }
+    private void FigureOutTemporaryTeams()
+    {
+        if (PlayerList.Count != 3)
+        {
+            return;
+        }
+        var player = PlayerList.GetSelf();
+        if (player.Id == SaveRoot.WonSoFar)
+        {
+            _model.TeamMate = "None";
+            return; //nobody on your team.
+        }
+        foreach (var temp in PlayerList)
+        {
+            if (temp.Id != SaveRoot.WonSoFar && temp.Id != player.Id)
+            {
+                _model.TeamMate = temp.NickName;
+                return;
+            }
+        }
     }
     public override bool CanEnableTrickAreas => SaveRoot!.GameStatus == EnumStatusList.Normal;
     protected override async Task ComputerTurnAsync()

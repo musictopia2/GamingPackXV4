@@ -119,6 +119,7 @@ public class BidProcesses : IBidProcesses
         _gameContainer.WhoTurn = _gameContainer.SaveRoot!.WonSoFar;
         _model.TrickArea1!.NewRound(); //i think.
         _gameContainer.SaveRoot.GameStatus = EnumStatusList.ChooseTrump;
+        _gameContainer.AfterBidding?.Invoke();
         await _gameContainer.StartNewTurnAsync!.Invoke();
     }
     private void ResetBids()
