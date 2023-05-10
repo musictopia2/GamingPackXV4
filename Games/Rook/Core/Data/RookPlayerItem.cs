@@ -13,4 +13,5 @@ public partial class RookPlayerItem : PlayerTrick<EnumColorTypes, RookCardInform
     public int CurrentScore { get; set; }
     [ScoreColumn]
     public int TotalScore { get; set; }
+    public int Team { get; set; } //this is only useful for 4 player.  always somehow works for 3 player.
 }
