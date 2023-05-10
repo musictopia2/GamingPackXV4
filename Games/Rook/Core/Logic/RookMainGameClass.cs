@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace Rook.Core.Logic;
 [SingletonGame]
 public class RookMainGameClass
@@ -56,6 +58,7 @@ public class RookMainGameClass
     {
         LoadControls();
         LoadVM();
+        Show4PlayerMates();
         _gameContainer.ShowedOnce = SaveRoot!.GameStatus != EnumStatusList.Bidding;
         SaveRoot.LoadMod(_model!);
         _model!.Dummy1!.HandList.ReplaceRange(SaveRoot.DummyList);
@@ -153,11 +156,49 @@ public class RookMainGameClass
         }
         await PlayCardAsync(ComputerAI.CardToPlay(this, _model));
     }
+    private void AssignTeams()
+    {
+        if (PlayerList.Count < 4)
+        {
+            return;
+        }
+        if (PlayerList.All(items => items.Team > 0))
+        {
+            return;
+        }
+        RookPlayerItem player;
+        player = PlayerList![1];
+        player.Team = 1;
+        player = PlayerList[2];
+        player.Team = 2;
+        player = PlayerList[3];
+        player.Team = 1;
+        player = PlayerList[4];
+        player.Team = 2;
+        Show4PlayerMates();
+    }
+    private void Show4PlayerMates()
+    {
+        if (PlayerList.Count < 4)
+        {
+            return; //only 4 player has this
+        }
+        var player = PlayerList.GetSelf(); //for each person's ui.
+        foreach (var item in PlayerList)
+        {
+            if (item.Team == player.Id && item.Id !=  player.Id)
+            {
+                _model.TeamMate = item.NickName;
+                return;
+            }
+        }
+    }
     protected override Task StartSetUpAsync(bool isBeginning)
     {
         _gameContainer.ShowedOnce = false;
         LoadControls();
         LoadVM();
+        AssignTeams();
         if (isBeginning)
         {
             SaveRoot!.LoadMod(_model!);
@@ -394,7 +435,11 @@ public class RookMainGameClass
     }
     private int CalculatePoints(int player)
     {
-        return SaveRoot!.CardList.Where(items => items.Player == SaveRoot.WonSoFar & player == SaveRoot.WonSoFar | items.Player != SaveRoot.WonSoFar & player != SaveRoot.WonSoFar).Sum(items => items.Points);
+        if (PlayerList.Count < 4)
+        {
+            return SaveRoot!.CardList.Where(items => items.Player == SaveRoot.WonSoFar & player == SaveRoot.WonSoFar | items.Player != SaveRoot.WonSoFar & player != SaveRoot.WonSoFar).Sum(items => items.Points);
+        }
+        return 0; //for now, nobody gets any points.  has to figure out teams first.
     }
     private void Scoring()
     {
