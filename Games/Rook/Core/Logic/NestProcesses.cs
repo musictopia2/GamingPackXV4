@@ -67,10 +67,11 @@ public class NestProcesses : INestProcesses
                 _gameContainer.WhoTurn = 1;
             }
         }
-        else if (_gameContainer.PlayerList.Count == 4)
-        {
-            throw new CustomBasicException("Rethink figuring out who goes first when its 4 players");
-        }
+        //else if (_gameContainer.PlayerList.Count == 4)
+        //{
+        //    _gameContainer.WhoTurn = _gameContainer.WhoStarts; //(?) well see if this is correct or not
+        //    //throw new CustomBasicException("Rethink figuring out who goes first when its 4 players");
+        //}
         _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
         if (_gameContainer.PlayerList.Count == 2)
         {
@@ -82,7 +83,8 @@ public class NestProcesses : INestProcesses
         }
         else
         {
-            await _gameContainer.StartNewTurnAsync!.Invoke(); //i think.
+            await _gameContainer.ContinueTurnAsync!.Invoke();
+            //await _gameContainer.StartNewTurnAsync!.Invoke(); //i think.
         }
     }
 }

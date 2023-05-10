@@ -26,19 +26,33 @@ public class TrumpProcesses : ITrumpProcesses
             await _gameContainer.Delay!.DelaySeconds(1);
         }
         ResetTrumps();
-        _gameContainer.SaveRoot.GameStatus = EnumStatusList.SelectNest;
-        _gameContainer.SingleInfo.MainHandList.AddRange(_gameContainer.SaveRoot.NestList);
-        if (_gameContainer.SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+        if (_gameContainer.PlayerList!.Count < 4)
         {
-            _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectAsMany;
-            _gameContainer.SortCards!.Invoke();
+            _gameContainer.SaveRoot.GameStatus = EnumStatusList.SelectNest;
+            _gameContainer.SingleInfo.MainHandList.AddRange(_gameContainer.SaveRoot.NestList);
+            if (_gameContainer.SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+            {
+                _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectAsMany;
+                _gameContainer.SortCards!.Invoke();
+            }
+        }
+        else
+        {
+            _gameContainer.SaveRoot.GameStatus = EnumStatusList.Normal;
         }
         if (_gameContainer.PlayerList!.Count == 2)
         {
             _model.Dummy1!.MakeAllKnown();
             _model.Dummy1.HandList.Sort();
         }
-        _model.Status = "Choose the 5 cards to get rid of";
+        if (_gameContainer.PlayerList.Count < 4)
+        {
+            _model.Status = "Choose the 5 cards to get rid of";
+        }
+        else
+        {
+            _gameContainer.WhoTurn = _gameContainer.WhoStarts; //iffy.
+        }
         await _gameContainer.StartNewTurnAsync!.Invoke();
     }
     public void ResetTrumps()
