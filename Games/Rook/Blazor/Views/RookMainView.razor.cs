@@ -11,7 +11,8 @@ public partial class RookMainView
         _gameContainer = aa1.Resolver.Resolve<RookGameContainer>();
         _labels.AddLabel("Turn", nameof(RookVMData.NormalTurn))
             .AddLabel("Trump", nameof(RookVMData.TrumpSuit))
-            .AddLabel("Status", nameof(RookVMData.Status));
+            .AddLabel("Status", nameof(RookVMData.Status))
+            .AddLabel("Team", nameof(RookVMData.TeamMate));
         _scores.Clear();
         _scores.AddColumn("Bid Amount", true, nameof(RookPlayerItem.BidAmount))
             .AddColumn("Tricks Won", false, nameof(RookPlayerItem.TricksWon))

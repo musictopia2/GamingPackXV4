@@ -10,6 +10,18 @@ public class CardGraphicsBlazor : BaseColorCardsImageBlazor<RookCardInformation>
     }
     protected override void DrawImage()
     {
-        DrawValueCard(DefaultRectangle, DeckObject!.Display);
+        if (DeckObject!.IsBird == false)
+        {
+            DrawValueCard(DefaultRectangle, DeckObject!.Display);
+        }
+        else
+        {
+            //rethink the bird.  its a black bird (the background would be white.
+            Image image = new();
+            image.PopulateFullExternalImage(this, "RookBird.svg");
+            RectangleF bounds = new(5, 5, 40, 62);
+            image.PopulateImagePositionings(bounds);
+            MainGroup!.Children.Add(image);
+        }
     }
 }

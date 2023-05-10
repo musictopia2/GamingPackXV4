@@ -18,6 +18,8 @@ public partial class RookVMData : ITrickCardGamesData<RookCardInformation, EnumC
     public int BidChosen { get; set; } = -1;
     [LabelColumn]
     public EnumStatusList GameStatus { get; set; }
+    [LabelColumn]
+    public string TeamMate { get; set; } = "None"; //the players name.  only for ui.
     public RookVMData(CommandContainer command,
             RookTrickAreaCP trickArea1,
             IGamePackageResolver resolver,

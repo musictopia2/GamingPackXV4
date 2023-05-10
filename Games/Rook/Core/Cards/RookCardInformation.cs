@@ -7,6 +7,7 @@ public class RookCardInformation : SimpleDeckObject, IDeckObject, ITrickCard<Enu
     public string Display { get; set; } = "";
     public EnumColorTypes Color { get; set; }
     public bool IsDummy { get; set; }
+    public bool IsBird { get; set; }
     public RookCardInformation()
     {
         DefaultSize = new SizeF(55, 72);
@@ -27,7 +28,7 @@ public class RookCardInformation : SimpleDeckObject, IDeckObject, ITrickCard<Enu
     public EnumColorTypes GetColor => Color;
     public EnumColorTypes GetSuit => Color;
     public int GetPoints => Points;
-    public bool IsObjectWild => false; //this has no wilds.
+    public bool IsObjectWild => false; //this has no wilds. hopefully does not even matter (?)
     public object CloneCard()
     {
         return MemberwiseClone();
@@ -38,9 +39,18 @@ public class RookCardInformation : SimpleDeckObject, IDeckObject, ITrickCard<Enu
         int x;
         int y;
         int z = 0;
+        int startAt;
+        if (GlobalClass.Container!.PlayerList!.Count == 4)
+        {
+            startAt = 5;
+        }
+        else
+        {
+            startAt = 4;
+        }
         for (x = 1; x <= 4; x++)
         {
-            for (y = 4; y <= 14; y++)
+            for (y = startAt; y <= 14; y++)
             {
                 z += 1;
                 if (z == Deck)
@@ -62,6 +72,14 @@ public class RookCardInformation : SimpleDeckObject, IDeckObject, ITrickCard<Enu
                     return;
                 }
             }
+        }
+        if (chosen == 41)
+        {
+            Color = EnumColorTypes.ZOther;
+            CardValue = 15;
+            Points = 20;
+            IsBird = true;
+            return;
         }
         throw new Exception("Sorry; cannot find the deck " + Deck);
     }

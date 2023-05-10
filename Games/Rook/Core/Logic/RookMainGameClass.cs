@@ -36,6 +36,7 @@ public class RookMainGameClass
         _command = command;
         _gameContainer = gameContainer;
         _aTrick = aTrick;
+        GlobalClass.Container = _gameContainer;
         _bidProcesses = bidProcesses;
         _trumpProcesses = trumpProcesses;
         _nestProcesses = nestProcesses;

@@ -14,11 +14,21 @@ public class RookDetailClass : IGameInfo, ICardInfo<RookCardInformation>, ITrick
     string IGameInfo.GameName => "Rook";
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
-    int IGameInfo.MaxPlayers => 3;
+    int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
-    int ICardInfo<RookCardInformation>.CardsToPassOut => 12;
+    int ICardInfo<RookCardInformation>.CardsToPassOut
+    {
+        get
+        {
+            if (GlobalClass.Container!.PlayerList!.Count == 4)
+            {
+                return 9;
+            }
+            return 12;
+        }
+    }
     BasicList<int> ICardInfo<RookCardInformation>.PlayerExcludeList => new();
     bool ICardInfo<RookCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<RookCardInformation>.ReshuffleAllCardsFromDiscard => false;
