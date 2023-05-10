@@ -308,7 +308,9 @@ public class RookMainGameClass
         {
             int points = CalculatePoints(thisPlayer.Id);
             if (thisPlayer.Id == SaveRoot!.WonSoFar && points < SaveRoot.HighestBidder)
+            {
                 points = SaveRoot.HighestBidder * -1;
+            }
             thisPlayer.CurrentScore = points;
             thisPlayer.TotalScore += points;
         });
