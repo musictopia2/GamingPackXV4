@@ -169,7 +169,14 @@ public class RookMainGameClass
             thisPlayer.BidAmount = 0;
             thisPlayer.TricksWon = 0;
         });
-        SaveRoot!.HighestBidder = 35;
+        if (PlayerList.Count == 4)
+        {
+            SaveRoot!.HighestBidder = 65; //has to start with 70 unless we decide to change it.
+        }
+        else
+        {
+            SaveRoot!.HighestBidder = 35;
+        }
         SaveRoot.WonSoFar = 0;
         SaveRoot.TrumpSuit = EnumColorTypes.None;
         _model!.ColorChosen = EnumColorTypes.None;

@@ -28,7 +28,14 @@ public class BidProcesses : IBidProcesses
         {
             throw new CustomBasicException("The highest bid cannot be 0");
         }
-        _model.Bid1!.LoadNormalNumberRangeValues(_gameContainer.SaveRoot.HighestBidder + 5, 100, 5);
+        if (_gameContainer.PlayerList!.Count < 4)
+        {
+            _model.Bid1!.LoadNormalNumberRangeValues(_gameContainer.SaveRoot.HighestBidder + 5, 100, 5);
+        }
+        else
+        {
+            _model.Bid1!.LoadNormalNumberRangeValues(_gameContainer.SaveRoot.HighestBidder + 5, 120, 5);
+        }
     }
     public async Task<bool> CanPassAsync()
     {
@@ -82,7 +89,12 @@ public class BidProcesses : IBidProcesses
     }
     private async Task ContinueBidProcessAsync()
     {
-        if (_gameContainer.SaveRoot!.HighestBidder == 100)
+        if (_gameContainer.SaveRoot!.HighestBidder == 100 && _gameContainer.PlayerList!.Count < 4)
+        {
+            await EndBiddingAsync();
+            return;
+        }
+        if (_gameContainer.SaveRoot!.HighestBidder == 120)
         {
             await EndBiddingAsync();
             return;
