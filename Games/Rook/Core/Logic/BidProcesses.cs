@@ -130,7 +130,21 @@ public class BidProcesses : IBidProcesses
         _model!.CanPass = false;
         _gameContainer.WhoTurn = _gameContainer.SaveRoot!.WonSoFar;
         _model.TrickArea1!.NewRound(); //i think.
-        _gameContainer.SaveRoot.GameStatus = EnumStatusList.ChooseTrump;
+        if (_gameContainer.PlayerList!.Count < 3)
+        {
+            _gameContainer.SaveRoot.GameStatus = EnumStatusList.ChooseTrump;
+        }
+        else
+        {
+            _gameContainer.SaveRoot.GameStatus = EnumStatusList.SelectNest;
+            _gameContainer.SingleInfo = _gameContainer.PlayerList.GetWhoPlayer();
+            _gameContainer.SingleInfo!.MainHandList.AddRange(_gameContainer.SaveRoot.NestList);
+            if (_gameContainer.SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+            {
+                _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectAsMany;
+                _gameContainer.SortCards!.Invoke();
+            }
+        }
         _gameContainer.AfterBidding?.Invoke();
         await _gameContainer.StartNewTurnAsync!.Invoke();
     }

@@ -297,12 +297,8 @@ public class RookMainGameClass
             newCard.IsDummy = thisCard.IsDummy;
             SaveRoot.CardList.Add(newCard);
         });
-        if (SingleInfo!.MainHandList.Count == 0)
+        if (SingleInfo!.MainHandList.Count == 0) //no longer do we have validation for nest cards.
         {
-            if (SaveRoot.NestList.Count != 8)
-            {
-                throw new CustomBasicException("Must have 8 cards for the nest list");
-            }
             SaveRoot.NestList.ForEach(thisCard =>
             {
                 thisCard.Player = wins;

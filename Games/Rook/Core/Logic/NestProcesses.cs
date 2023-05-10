@@ -23,12 +23,22 @@ public class NestProcesses : INestProcesses
             await _gameContainer.Network!.SendAllAsync("nestlist", list);
         }
         _gameContainer.SaveRoot!.NestList.ReplaceRange(list);
-        var newCol = _model!.Deck1!.DrawSeveralCards(3);
-        _gameContainer.SaveRoot.NestList.AddRange(newCol);
+        if (_gameContainer.PlayerList!.Count < 4)
+        {
+            var newCol = _model!.Deck1!.DrawSeveralCards(3);
+            _gameContainer.SaveRoot.NestList.AddRange(newCol);
+        }
         _gameContainer.SingleInfo!.MainHandList.RemoveSelectedItems(list);
         _gameContainer.SingleInfo.MainHandList.UnhighlightObjects();
         _gameContainer.StartingStatus!.Invoke();
-        _gameContainer.SaveRoot.GameStatus = EnumStatusList.Normal;
+        if (_gameContainer.PlayerList!.Count < 4)
+        {
+            _gameContainer.SaveRoot.GameStatus = EnumStatusList.Normal;
+        }
+        else
+        {
+            _gameContainer.SaveRoot.GameStatus = EnumStatusList.ChooseTrump;
+        }
         _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectOneOnly;
         if (_gameContainer.PlayerList!.Count == 3)
         {
@@ -44,7 +54,6 @@ public class NestProcesses : INestProcesses
             {
                 _gameContainer.SingleInfo = _gameContainer.PlayerList![2];
             }
-            //_gameContainer.SingleInfo.IsDummy = true;
             _gameContainer.WhoTurn = _gameContainer.SingleInfo.Id;
         }
         else if (_gameContainer.PlayerList.Count == 2)
@@ -67,6 +76,13 @@ public class NestProcesses : INestProcesses
         {
             _gameContainer.SaveRoot.DummyPlay = true;
         }
-        await _gameContainer.StartNewTrickAsync!.Invoke();
+        if (_gameContainer.PlayerList.Count < 4)
+        {
+            await _gameContainer.StartNewTrickAsync!.Invoke();
+        }
+        else
+        {
+            await _gameContainer.StartNewTurnAsync!.Invoke(); //i think.
+        }
     }
 }
