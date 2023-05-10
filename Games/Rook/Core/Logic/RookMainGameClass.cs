@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.Misc;
 
 namespace Rook.Core.Logic;
 [SingletonGame]
@@ -186,7 +186,7 @@ public class RookMainGameClass
         var player = PlayerList.GetSelf(); //for each person's ui.
         foreach (var item in PlayerList)
         {
-            if (item.Team == player.Id && item.Id !=  player.Id)
+            if (item.Team == player.Id && item.Id != player.Id)
             {
                 _model.TeamMate = item.NickName;
                 return;
@@ -333,12 +333,21 @@ public class RookMainGameClass
         {
             return true;
         }
+
         var cardPlayed = _gameContainer.DeckList!.GetSpecificItem(deck);
         if (cardPlayed.IsBird)
         {
             return true; //you can always play the bird no matter what.  guarantees your team will win this.
         }
         var leadCard = thisList.First();
+        if (leadCard.GetSuit.Equals(cardPlayed.GetSuit))
+        {
+            return true;
+        }
+        if (leadCard.IsBird && cardPlayed.GetSuit == SaveRoot.TrumpSuit)
+        {
+            return true; //because if you played trump but the bird was led, then its okay.
+        }
         DeckRegularDict<RookCardInformation> currentHand;
         currentHand = SingleInfo!.MainHandList;
         if (leadCard.IsBird)
@@ -348,13 +357,9 @@ public class RookMainGameClass
                 return false; //if the bird is led, then a player must play trump if they have it.
             }
         }
-        if (leadCard.GetSuit.Equals(leadCard.GetSuit))
-        {
-            return true;
-        }
         if (leadCard.GetSuit == SaveRoot.TrumpSuit)
         {
-            if (HasTrumpOrBird(currentHand) == false)
+            if (HasTrumpOrBird(currentHand))
             {
                 return false; //because if somebody led with trump and you have either trump or bird, you have to play something.
             }
@@ -433,22 +438,43 @@ public class RookMainGameClass
         });
         return Task.CompletedTask;
     }
-    private int CalculatePoints(int player)
+    private int CalculatePoints(RookPlayerItem player)
     {
         if (PlayerList.Count < 4)
         {
-            return SaveRoot!.CardList.Where(items => items.Player == SaveRoot.WonSoFar & player == SaveRoot.WonSoFar | items.Player != SaveRoot.WonSoFar & player != SaveRoot.WonSoFar).Sum(items => items.Points);
+            return SaveRoot!.CardList.Where(items => items.Player == SaveRoot.WonSoFar & player.Id == SaveRoot.WonSoFar | items.Player != SaveRoot.WonSoFar & player.Id != SaveRoot.WonSoFar).Sum(items => items.Points);
         }
-        return 0; //for now, nobody gets any points.  has to figure out teams first.
+        int output = 0;
+        foreach (var card in SaveRoot.CardList)
+        {
+            var won = PlayerList[card.Player]; //i think
+            if (won.Team == player.Team)
+            {
+                output += card.Points;
+            }
+        }
+        return output;
+        //return 0; //for now, nobody gets any points.  has to figure out teams first.
     }
     private void Scoring()
     {
+        RookPlayerItem winBid = PlayerList[SaveRoot.WonSoFar];
         PlayerList!.ForEach(thisPlayer =>
         {
-            int points = CalculatePoints(thisPlayer.Id);
-            if (thisPlayer.Id == SaveRoot!.WonSoFar && points < SaveRoot.HighestBidder)
+            int points = CalculatePoints(thisPlayer);
+            if (PlayerList.Count < 4)
             {
-                points = SaveRoot.HighestBidder * -1;
+                if (thisPlayer.Id == SaveRoot!.WonSoFar && points < SaveRoot.HighestBidder)
+                {
+                    points = SaveRoot.HighestBidder * -1;
+                }
+            }
+            else
+            {
+                if (thisPlayer.Team == winBid.Team)
+                {
+                    points = SaveRoot.HighestBidder * -1;
+                }
             }
             thisPlayer.CurrentScore = points;
             thisPlayer.TotalScore += points;
@@ -469,7 +495,22 @@ public class RookMainGameClass
         Scoring();
         if (CanEndGame())
         {
-            await ShowWinAsync();
+            if (PlayerList.Count < 4)
+            {
+                await ShowWinAsync();
+            }
+            else
+            {
+                //4 player win info. we do know the team number though who won.
+                int teamWon = SingleInfo!.Team;
+                StrCat cats = new();
+                PlayerList!.ForConditionalItems(thisplayer => thisplayer.Team == teamWon, thisPlayer =>
+                {
+                    cats.AddToString(thisPlayer.NickName, ",");
+                });
+                await ShowWinAsync(cats.GetInfo());
+                _command.UpdateAll(); //may fix the problem with not showing the ui for the win.
+            }
             return;
         }
         await this.RoundOverNextAsync();
