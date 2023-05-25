@@ -471,7 +471,7 @@ public class RookMainGameClass
             }
             else
             {
-                if (thisPlayer.Team == winBid.Team)
+                if (thisPlayer.Team == winBid.Team && points < SaveRoot.HighestBidder)
                 {
                     points = SaveRoot.HighestBidder * -1;
                 }
