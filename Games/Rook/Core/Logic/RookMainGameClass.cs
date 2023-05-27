@@ -186,7 +186,7 @@ public class RookMainGameClass
         var player = PlayerList.GetSelf(); //for each person's ui.
         foreach (var item in PlayerList)
         {
-            if (item.Team == player.Id && item.Id != player.Id)
+            if (item.Team == player.Team && item.Id != player.Id)
             {
                 _model.TeamMate = item.NickName;
                 return;

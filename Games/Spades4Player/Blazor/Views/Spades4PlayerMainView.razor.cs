@@ -13,13 +13,15 @@ public partial class Spades4PlayerMainView
         _gameContainer = aa1.Resolver.Resolve<Spades4PlayerGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(Spades4PlayerVMData.NormalTurn))
-            .AddLabel("Trump", nameof(Spades4PlayerVMData.TrumpSuit))
-            .AddLabel("Status", nameof(Spades4PlayerVMData.Status));
-
-        _scores.Clear();
-        _scores.AddColumn("Cards Left", true, nameof(Spades4PlayerPlayerItem.ObjectCount))
-            .AddColumn("Tricks Won", true, nameof(Spades4PlayerPlayerItem.TricksWon))
-            ; //cards left is common.  can be anything you need.
+            .AddLabel("Status", nameof(Spades4PlayerVMData.Status))
+            .AddLabel("Team", nameof(Spades4PlayerVMData.TeamMate));
+        //since trump is obviously always spades.
+        _scores.AddColumn("Cards", false, nameof(Spades4PlayerPlayerItem.ObjectCount))
+             .AddColumn("Bidded", false, nameof(Spades4PlayerPlayerItem.HowManyBids))
+             .AddColumn("Won", false, nameof(Spades4PlayerPlayerItem.TricksWon))
+             .AddColumn("Bags", false, nameof(Spades4PlayerPlayerItem.Bags))
+             .AddColumn("C Score", false, nameof(Spades4PlayerPlayerItem.CurrentScore))
+             .AddColumn("T Score", false, nameof(Spades4PlayerPlayerItem.TotalScore));
         base.OnInitialized();
     }
 }

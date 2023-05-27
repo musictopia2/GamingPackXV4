@@ -1,0 +1,17 @@
+﻿@if (DataContext is null)
+{
+    <div>
+        Must have data context
+    </div>
+    return;
+}
+<BaseFrameBlazor Text="Bid Info">
+    <div>
+        <NumberChooserBlazor TextHeight="12vh" Columns="6" NumberPicker="DataContext.Model.Bid1" />
+    </div>
+    <div>
+        <GameButtonComponent CommandObject="BidCommand"
+                             Display="Place Bid" />
+        
+    </div>
+</BaseFrameBlazor>

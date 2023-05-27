@@ -3,22 +3,30 @@
 {
     return;
 }
-<p>Welcome to Spades4Player</p>
 <StackLayout>
-    <DeckOfCardsDrawPileBlazor R="Spades4PlayerCardInformation" DeckPile="_vmData.Deck1" />
+    <StackItem>
+        <ScoreBoardBlazor P="Spades4PlayerPlayerItem"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+    <StackItem>
+        @if (DataContext.GameStatus == EnumGameStatus.Bidding)
+        {
+            <BiddingComponent DataContext="DataContext" />
+        }
+        else
+        {
+            <DeckOfCardsSeveralPlayersTrickBlazor P="Spades4PlayerPlayerItem"
+                                                  B="SpadesTrickAreaCP"
+                                                  T="Spades4PlayerCardInformation"
+                                                  DataContext="_vmData.TrickArea1"
+                                                  />
+        }
+    </StackItem>
 </StackLayout>
 <div>
-    <DeckOfCardsTwoPlayerTrickBlazor T="Spades4PlayerCardInformation" DataContext="_vmData.TrickArea1" />
-</div>
-<div>
     <DeckOfCardsHandBlazor R="Spades4PlayerCardInformation" Hand="_vmData.PlayerHand1" />
-    @*<HandBlazor Hand="_vmData.PlayerHand1" />*@
-</div>
-<div>
-    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
-</div>
-<div>
-    <ScoreBoardBlazor P="Spades4PlayerPlayerItem"
-                      Columns="_scores"
-                      Players="_gameContainer.SaveRoot.PlayerList" />
 </div>

@@ -60,3 +60,5 @@ global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 global using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Hands;
 global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
+global using BasicGameFrameworkLibrary.Core.ChooserClasses;
+global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.Misc;

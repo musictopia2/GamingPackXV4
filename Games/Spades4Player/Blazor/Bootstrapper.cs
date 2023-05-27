@@ -9,7 +9,7 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<Spades4PlayerShellViewM
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         //change view model for area if not using 2 player.
-        register.RegisterType<TwoPlayerTrickObservable<EnumSuitList, Spades4PlayerCardInformation, Spades4PlayerPlayerItem, Spades4PlayerSaveInfo>>();
+        //register.RegisterType<TwoPlayerTrickObservable<EnumSuitList, Spades4PlayerCardInformation, Spades4PlayerPlayerItem, Spades4PlayerSaveInfo>>();
 
         //if using misc deck, use this line
         //register.RegisterSingleton<IDeckCount, Spades4PlayerDeckCount>();
