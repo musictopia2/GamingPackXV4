@@ -319,7 +319,7 @@ public class GameBoardProcesses
         }
         if (_gameContainer.CurrentCharacter.CurrentRoom == 0 && _gameContainer.CurrentCharacter.Space == 0)
         {
-            if (CanMoveToRoom(_gameContainer.CurrentCharacter.FirstSpace))
+            if (CanMoveToSpace(_gameContainer.CurrentCharacter.FirstSpace))
             {
                 return true;
             }

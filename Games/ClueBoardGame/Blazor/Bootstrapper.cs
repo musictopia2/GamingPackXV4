@@ -4,11 +4,11 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<ClueBoardGameShellViewM
     public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
     {
     }
-    protected override Task RegisterTestsAsync()
-    {
-        TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
-        return base.RegisterTestsAsync();
-    }
+    //protected override Task RegisterTestsAsync()
+    //{
+    //    TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
+    //    return base.RegisterTestsAsync();
+    //}
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

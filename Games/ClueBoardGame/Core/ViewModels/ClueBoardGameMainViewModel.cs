@@ -1,6 +1,6 @@
 namespace ClueBoardGame.Core.ViewModels;
 [InstanceGame]
-public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
+public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<SelectionChosenEventModel>
 {
     private readonly ClueBoardGameMainGameClass _mainGame; //if we don't need, delete.
     public ClueBoardGameVMData VMData { get; set; }
@@ -222,17 +222,29 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
     [Command(EnumCommandCategory.Game)]
     public void CurrentRoomClick(DetectiveInfo room)
     {
+        if (_mainGame.OtherTurn > 0)
+        {
+            return; //because you have to just give a clue alone.
+        }
         VMData.CurrentRoomName = room.Name;
     }
     [Command(EnumCommandCategory.Game)]
     public void CurrentCharacterClick(DetectiveInfo character)
     {
+        if (_mainGame.OtherTurn > 0)
+        {
+            return; //because you have to just give a clue alone.
+        }
         VMData.CurrentCharacterName = character.Name;
     }
 
     [Command(EnumCommandCategory.Game)]
     public void CurrentWeaponClick(DetectiveInfo weapon) //had to try to change to detectiveinfo to support blazor.
     {
+        if (_mainGame.OtherTurn > 0)
+        {
+            return; //because you have to just give a clue alone.
+        }
         VMData.CurrentWeaponName = weapon.Name;
     }
     public bool CanStartOver()
@@ -338,9 +350,15 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
     {
         if (AlreadyHasCardForAccusation())
         {
-
+            WarningEventModel warn = new();
+            warn.Message = "Are you sure you want to make an accusation because you have one of the cards used for the clue";
+            await Aggregator.PublishAsync(warn);
+            return;
         }
-
+        await FinishAccusationAsync();
+    }
+    private async Task FinishAccusationAsync()
+    {
 
         _gameContainer!.SaveRoot!.CurrentPrediction!.CharacterName = VMData.CurrentCharacterName;
         _gameContainer.SaveRoot.CurrentPrediction.WeaponName = VMData.CurrentWeaponName;
@@ -366,6 +384,32 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
         {
             throw new CustomBasicException("Must have container");
         }
+        if (_mainGame.OtherTurn > 0)
+        {
+            return; //because you have to just give a clue alone.
+        }
         detective.IsChecked = !detective.IsChecked;
+    }
+    async Task IHandleAsync<SelectionChosenEventModel>.HandleAsync(SelectionChosenEventModel message)
+    {
+        switch (message.OptionChosen)
+        {
+            case EnumOptionChosen.Yes:
+                await FinishAccusationAsync();
+                break;
+            case EnumOptionChosen.No:
+                VMData.CurrentCharacterName = "";
+                VMData.CurrentWeaponName = "";
+                VMData.CurrentRoomName = "";
+                _gameContainer!.SaveRoot!.CurrentPrediction!.CharacterName = "";
+                _gameContainer.SaveRoot.CurrentPrediction.WeaponName = "";
+                _gameContainer.SaveRoot.CurrentPrediction.RoomName = "";
+                _gameContainer.Command.ManuelFinish = false;
+                _gameContainer.Command.IsExecuting = false;
+                _gameContainer.Command.UpdateAll();
+                break;
+            default:
+                throw new CustomBasicException("Should have chosen yes or no");
+        }
     }
 }
