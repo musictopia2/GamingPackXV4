@@ -1,5 +1,5 @@
 namespace Fluxx.Blazor;
-public abstract partial class KeeperBaseView<K>
+public partial class KeeperBaseView<K>
     where K : class
 {
     [CascadingParameter]
@@ -50,10 +50,16 @@ public abstract partial class KeeperBaseView<K>
     }
 
     //this means overrided versions can do command
-    protected virtual ICustomCommand? Command { get; private set; }
+    //protected virtual ICustomCommand? Command { get; private set; }
 
     //private ICustomCommand CloseCommand => DataContext.
     //private static string CloseMethod => nameof(KeeperShowViewModel.CloseKeeperAsync);
     //protected virtual string CommandText => "";
-    protected abstract EnumKeeperCategory KeeperCategory { get; }
+    //protected abstract EnumKeeperCategory KeeperCategory { get; }
+
+    [Parameter]
+    public EnumKeeperCategory KeeperCategory { get; set; }
+    [Parameter]
+    public ICustomCommand? Command { get; set; }
+
 }
