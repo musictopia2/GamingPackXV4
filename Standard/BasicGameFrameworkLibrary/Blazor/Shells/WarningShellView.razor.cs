@@ -1,5 +1,5 @@
 namespace BasicGameFrameworkLibrary.Blazor.Shells;
-public partial class YahtzeeShellView : IHandleAsync<WarningEventModel>, IDisposable
+public partial class WarningShellView : IHandleAsync<WarningEventModel>, IDisposable
 {
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

@@ -50,9 +50,13 @@
     </GridItem>
     <GridItem Column="4">
         <div style="margin-top: 30vh">
+            <GameButtonComponent CommandObject="AccusationCommand" StartOnNewLine="true" Display="Accusation" />
+            <div style="margin-top: 30px;">
+
+            </div>
             <GameButtonComponent CommandObject="StartOverCommand" StartOnNewLine="true" Display="Start Over" />
             <GameButtonComponent CommandObject="PredictCommand" StartOnNewLine="true" Display="Predict" />
-            <GameButtonComponent CommandObject="AccusationCommand" StartOnNewLine="true" Display="Accusation" />
+            
             <GameButtonComponent CommandObject="EndCommand" StartOnNewLine="true" Display="End Turn" />
             <LabelGridComponent DataContext="DataContext!.VMData" Labels="_clues" />
         </div>

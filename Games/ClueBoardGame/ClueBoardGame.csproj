@@ -52,4 +52,5 @@
 		<EmbeddedResource Include="Resources\Rope.svg" />
 		<EmbeddedResource Include="Resources\Wrench.svg" />
 	</ItemGroup>
+	
 </Project>

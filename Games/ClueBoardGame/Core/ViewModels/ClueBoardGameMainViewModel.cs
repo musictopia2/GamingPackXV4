@@ -313,9 +313,35 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM
             return true;
         }
     }
+    private bool AlreadyHasCardForAccusation()
+    {
+        var list = GetHand;
+        foreach (var item in list.HandList)
+        {
+            if (item.Name == VMData.CurrentCharacterName)
+            {
+                return true;
+            }
+            if (item.Name == VMData.CurrentWeaponName)
+            {
+                return true;
+            }
+            if (item.Name == VMData.CurrentRoomName)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     [Command(EnumCommandCategory.Game)]
     public async Task MakeAccusationAsync()
     {
+        if (AlreadyHasCardForAccusation())
+        {
+
+        }
+
+
         _gameContainer!.SaveRoot!.CurrentPrediction!.CharacterName = VMData.CurrentCharacterName;
         _gameContainer.SaveRoot.CurrentPrediction.WeaponName = VMData.CurrentWeaponName;
         _gameContainer.SaveRoot.CurrentPrediction.RoomName = VMData.CurrentRoomName;
