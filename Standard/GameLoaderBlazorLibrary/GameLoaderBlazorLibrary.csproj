@@ -10,6 +10,9 @@
 		<PackageReference Include="BasicBlazorLibrary" Version="7.0.25" />
 		<PackageReference Include="BasicGameFrameworkLibrary" Version="7.0.6" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
+	</ItemGroup>
 
 
 

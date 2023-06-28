@@ -1,3 +1,4 @@
+
 namespace BasicGameFrameworkLibrary.Blazor.Views;
 public partial class MultiplayerOpeningView<P>
      where P : class, IPlayerItem, new()
@@ -25,5 +26,13 @@ public partial class MultiplayerOpeningView<P>
         _canHuman = OpenPlayersHelper.CanHuman(GameData);
         _canComputer = OpenPlayersHelper.CanComputer(GameData);
         base.OnParametersSet();
+    }
+    private static EnumPlayerMode GetPlayerMode()
+    {
+        if (GlobalDataModel.DataContext is null)
+        {
+            return EnumPlayerMode.Any;
+        }
+        return GlobalDataModel.DataContext.PlayerMode;
     }
 }

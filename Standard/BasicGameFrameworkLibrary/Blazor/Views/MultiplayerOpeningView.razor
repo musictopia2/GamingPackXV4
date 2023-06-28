@@ -11,24 +11,38 @@
     }
     else
     {
+        EnumPlayerMode mode = GetPlayerMode();
         @if (GameData.CanAutoSave)
         {
             @if (DataContext.HostCanStart)
             {
                 <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeMultiplayerGameCommand" Display="Auto Resume Networked Game"  />
             }
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.RejoinMultiplayerGameCommand" Display="Host rejoin Multiplayer Game" />
+            @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.HostOnly)
+            {
+                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.RejoinMultiplayerGameCommand" Display="Host rejoin Multiplayer Game" />
+            }
             @if (DataContext.CanShowTransferToDesktop())
             {
                 <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.TransferToDesktopCommand" Display="Transfer To Desktop" />
             }
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeSinglePlayerCommand" Display="Auto Resume Local Game" />
+            @if (mode == EnumPlayerMode.Any)
+            {
+                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeSinglePlayerCommand" Display="Auto Resume Local Game" />
+            }
         }
         @if (DataContext.HasServer)
         {
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.HostCommand" Display="Start Network Game (Host)"  />
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ConnectCommand" Display="Join Network Game" />
+            @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.HostOnly)
+            {
+                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.HostCommand" Display="Start Network Game (Host)"  />
+            }
+            @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.JoinOnly)
+            {
+                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ConnectCommand" Display="Join Network Game" />
+            }
         }
+        
         @if (GameData.MinPlayers == 2 && DataContext.HostCanStart)
         {
             <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game With No Extra Players" />
@@ -52,30 +66,33 @@
         {
             <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerExtra" />
         }
-        @if (DataContext.CanShowSingleOptions)
+        @if (mode == EnumPlayerMode.Any)
         {
-            @if (_canComputer && _canHuman)
+            @if (DataContext.CanShowSingleOptions)
             {
-                <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="10px">
-                    <StackItem>
-                        <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerLocal" />
-                    </StackItem>
-                    <StackItem>
-                        <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.HumanLocal" />
-                    </StackItem>
-                </StackLayout>
-            }
-            else if (_canHuman)
-            {
-                <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.HumanLocal" />
-            }
-            else if (_canComputer)
-            {
-                <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerLocal" />
-            }
-            else if (GameData.SinglePlayerChoice == EnumPlayerChoices.Solitaire)
-            {
-                <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.Solitaire" />
+                @if (_canComputer && _canHuman)
+                {
+                    <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="10px">
+                        <StackItem>
+                            <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerLocal" />
+                        </StackItem>
+                        <StackItem>
+                            <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.HumanLocal" />
+                        </StackItem>
+                    </StackLayout>
+                }
+                else if (_canHuman)
+                {
+                    <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.HumanLocal" />
+                }
+                else if (_canComputer)
+                {
+                    <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerLocal" />
+                }
+                else if (GameData.SinglePlayerChoice == EnumPlayerChoices.Solitaire)
+                {
+                    <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.Solitaire" />
+                }
             }
         }
     }
