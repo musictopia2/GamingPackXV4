@@ -90,6 +90,27 @@
 
     </GridItem>
     <GridItem Row="7" Column="2">
+        <GameButtonComponent CustomCallBack="() => UpdatePlayerOptions(EnumPlayerMode.Any)" Display="Use Any Player Option" />
+    </GridItem>
+    <GridItem Row="8" Column="1">
+
+    </GridItem>
+    <GridItem Row="8" Column="2">
+        <GameButtonComponent CustomCallBack="() => UpdatePlayerOptions(EnumPlayerMode.HostOnly)" Display="Host Game Only" />
+    </GridItem>
+    <GridItem Row="9" Column="1">
+
+    </GridItem>
+    <GridItem Row="9" Column="2">
+        <GameButtonComponent CustomCallBack="() => UpdatePlayerOptions(EnumPlayerMode.JoinOnly)" Display="Join Game Only" />
+    </GridItem>
+    <GridItem Row="10" Column="1">
+        Player Mode
+    </GridItem>
+    <GridItem Row="11" Column="1">
+        @GlobalDataModel.DataContext!.PlayerMode
+    </GridItem>
+    <GridItem Row="11" Column="2">
         <GameButtonComponent CustomCallBack="SaveChangesAsync" Display="Save Changes" />
         @if (_beginaccept)
         {

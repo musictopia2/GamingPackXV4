@@ -7,7 +7,7 @@ public partial class GameSettingsComponent
     IJSRuntime? JS { get; set; } //this should have its own js.
     [Inject]
     private IToast? Toast { get; set; }
-    private static string GetRows => gg1.RepeatAuto(7); //for now, 6 instead of 7 (?)
+    private static string GetRows => gg1.RepeatAuto(11); //for now, 6 instead of 7 (?)
     private static string GetColumns => gg1.RepeatMaximum(2); //may eventually do a special grid control that specialize in adding in data and it would just work.
     private bool _beginaccept;
     protected override void OnInitialized()
@@ -51,6 +51,10 @@ public partial class GameSettingsComponent
         {
             BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = false;
         }
+    }
+    private static void UpdatePlayerOptions(EnumPlayerMode mode)
+    {
+        GlobalDataModel.DataContext!.PlayerMode = mode;
     }
     private async Task SaveChangesAsync()
     {
