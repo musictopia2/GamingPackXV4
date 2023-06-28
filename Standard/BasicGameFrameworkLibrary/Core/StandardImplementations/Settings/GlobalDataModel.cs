@@ -4,6 +4,7 @@ public class GlobalDataModel
     public string NickName { get; set; } = "";
     public string CustomAzureEndPoint { get; set; } = "";
     public string HostIPAddress { get; set; } = "";
+    public EnumPlayerMode PlayerMode { get; set; } = EnumPlayerMode.Any;
     public EnumServerMode ServerMode { get; set; } = EnumServerMode.AzureHosting; //default to azure hosting.
     public EnumAzureMode AzureMode = EnumAzureMode.PrivateAzure; //decided to change default to private since most people who would know about this would connect only to ones allowed to host.
     private const string _defaultPrivateEndPoint = "https://onlinegameserver.azurewebsites.net/"; //has to keep 
