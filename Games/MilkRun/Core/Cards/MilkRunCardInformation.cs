@@ -10,7 +10,7 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
     public EnumCardCategory CardCategory { get; set; }
     public void Populate(int chosen)
     {
-        if (chosen <= 61)
+        if (chosen <= 64)
         {
             ModifyData(chosen, EnumMilkType.Strawberry);
         }
@@ -24,13 +24,13 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
         MilkCategory = tempMilk;
         Deck = chosen;
         int tempDeck;
-        if (Deck <= 61)
+        if (Deck <= 64)
         {
             tempDeck = chosen;
         }
         else
         {
-            tempDeck = chosen - 61;
+            tempDeck = chosen - 64;
         }
         int c;
         int z = 0;
@@ -48,6 +48,9 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
                 }
             }
         }
+        //7 to 20
+        //starts at 49
+
         for (int x = 1; x <= 7; x++)
         {
             z++;
@@ -57,7 +60,9 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
                 return;
             }
         }
-        for (int x = 1; x <= 3; x++)
+        //after 55
+        //3 to 6
+        for (int x = 1; x <= 6; x++)
         {
             z++;
             if (z == tempDeck)

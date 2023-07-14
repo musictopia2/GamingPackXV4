@@ -27,6 +27,10 @@ public class MilkRunMainViewModel : BasicCardGamesVM<MilkRunCardInformation>
     }
     protected override bool CanEnableDeck()
     {
+        if (_model.Deck1.IsEndOfDeck())
+        {
+            return false; //because its the end of the deck period now.
+        }
         return _mainGame!.SaveRoot!.CardsDrawn != 2;
     }
     protected override bool CanEnablePile1()
@@ -38,7 +42,7 @@ public class MilkRunMainViewModel : BasicCardGamesVM<MilkRunCardInformation>
         int newDeck = _model.PlayerHand1!.ObjectSelected();
         if (newDeck > 0)
         {
-            if (_mainGame!.SaveRoot!.CardsDrawn < 2)
+            if (_mainGame!.SaveRoot!.CardsDrawn < 2 && _model.Deck1.IsEndOfDeck() == false)
             {
                 _toast.ShowUserErrorToast("Sorry, must draw the 2 cards first before discarding");
                 return;

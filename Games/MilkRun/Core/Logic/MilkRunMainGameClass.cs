@@ -1,3 +1,5 @@
+using BasicGameFrameworkLibrary.Core.NetworkingClasses.Data;
+
 namespace MilkRun.Core.Logic;
 [SingletonGame]
 public class MilkRunMainGameClass
@@ -155,11 +157,68 @@ public class MilkRunMainGameClass
     }
     private int WhoWins()
     {
-        foreach (var thisPlayer in PlayerList!)
+        if (_model.Deck1.IsEndOfDeck() == false)
         {
-            if (thisPlayer.ReachedChocolateGoal == true && thisPlayer.ReachedStrawberryGoal == true)
+            foreach (var thisPlayer in PlayerList!)
             {
-                return thisPlayer.Id;
+                if (thisPlayer.ReachedChocolateGoal == true && thisPlayer.ReachedStrawberryGoal == true)
+                {
+                    return thisPlayer.Id;
+                }
+            }
+            return 0;
+        }
+        //end of the deck processes.
+        //there are 2 possibilities for winning.
+        int goal = WhoReachedGoal();
+        if (goal > 0)
+        {
+            return goal;
+        }
+        //this means they both reached a goal.
+        MilkRunPlayerItem firstPlayer = PlayerList.First();
+        MilkRunPlayerItem lastPlayer = PlayerList.Last();
+        int firstScore;
+        int secondScore;
+        if (firstPlayer.ReachedChocolateGoal)
+        {
+            firstScore = firstPlayer.StrawberryDeliveries;
+        }
+        else
+        {
+            firstScore = firstPlayer.ChocolateDeliveries;
+        }
+        if (lastPlayer.ReachedChocolateGoal)
+        {
+            secondScore = lastPlayer.StrawberryDeliveries;
+        }
+        else
+        {
+            secondScore = lastPlayer.ChocolateDeliveries;
+        }
+        if (firstScore >= secondScore)
+        {
+            return 1;
+        }
+        return 2;
+    }
+    private int WhoReachedGoal()
+    {
+        //only applies if one player reached goal.
+        MilkRunPlayerItem firstPlayer = PlayerList.First();
+        MilkRunPlayerItem secondPlayer = PlayerList.Last();
+        if (firstPlayer.ReachedChocolateGoal || firstPlayer.ReachedStrawberryGoal)
+        {
+            if (secondPlayer.ReachedChocolateGoal == false && secondPlayer.ReachedStrawberryGoal == false)
+            {
+                return 1;
+            }
+        }
+        if (secondPlayer.ReachedChocolateGoal || secondPlayer.ReachedStrawberryGoal)
+        {
+            if (firstPlayer.ReachedChocolateGoal == false && firstPlayer.ReachedStrawberryGoal == false)
+            {
+                return 2;
             }
         }
         return 0;
@@ -207,15 +266,17 @@ public class MilkRunMainGameClass
     }
     private bool CanEndTurn()
     {
-        if (SaveRoot!.CardsDrawn < 2)
+        //this would not change.
+        //because by this time, its too late to draw more cards anyways.
+        if (SaveRoot!.CardsDrawn < 2 && _model.Deck1.IsEndOfDeck() == false)
         {
             return false;
-        }
+        } 
         if (SingleInfo!.MainHandList.Count > 8)
         {
             throw new CustomBasicException("Can't have more than 8 cards");
         }
-        return (SingleInfo.MainHandList.Count == 6);
+        return SingleInfo.MainHandList.Count == 6;
     }
     protected override DeckRegularDict<MilkRunCardInformation> GetReshuffleList()
     {
