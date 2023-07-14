@@ -31,7 +31,7 @@ public class NestProcesses : INestProcesses
         _gameContainer.SingleInfo!.MainHandList.RemoveSelectedItems(list);
         _gameContainer.SingleInfo.MainHandList.UnhighlightObjects();
         _gameContainer.StartingStatus!.Invoke();
-        if (_gameContainer.PlayerList!.Count < 4)
+        if (_gameContainer.PlayerList!.Count < 3)
         {
             _gameContainer.SaveRoot.GameStatus = EnumStatusList.Normal;
         }
@@ -40,23 +40,23 @@ public class NestProcesses : INestProcesses
             _gameContainer.SaveRoot.GameStatus = EnumStatusList.ChooseTrump;
         }
         _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectOneOnly;
-        if (_gameContainer.PlayerList!.Count == 3)
-        {
-            if (_gameContainer.SaveRoot.WonSoFar == 1)
-            {
-                _gameContainer.SingleInfo = _gameContainer.PlayerList![3];
-            }
-            else if (_gameContainer.SaveRoot.WonSoFar == 2)
-            {
-                _gameContainer.SingleInfo = _gameContainer.PlayerList![1];
-            }
-            else
-            {
-                _gameContainer.SingleInfo = _gameContainer.PlayerList![2];
-            }
-            _gameContainer.WhoTurn = _gameContainer.SingleInfo.Id;
-        }
-        else if (_gameContainer.PlayerList.Count == 2)
+        //if (_gameContainer.PlayerList!.Count == 3)
+        //{
+        //    if (_gameContainer.SaveRoot.WonSoFar == 1)
+        //    {
+        //        _gameContainer.SingleInfo = _gameContainer.PlayerList![3];
+        //    }
+        //    else if (_gameContainer.SaveRoot.WonSoFar == 2)
+        //    {
+        //        _gameContainer.SingleInfo = _gameContainer.PlayerList![1];
+        //    }
+        //    else
+        //    {
+        //        _gameContainer.SingleInfo = _gameContainer.PlayerList![2];
+        //    }
+        //    _gameContainer.WhoTurn = _gameContainer.SingleInfo.Id;
+        //}
+        if (_gameContainer.PlayerList.Count == 2)
         {
             if (_gameContainer.SaveRoot.WonSoFar == 1)
             {

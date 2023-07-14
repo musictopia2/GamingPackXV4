@@ -26,7 +26,7 @@ public class TrumpProcesses : ITrumpProcesses
             await _gameContainer.Delay!.DelaySeconds(1);
         }
         ResetTrumps();
-        if (_gameContainer.PlayerList!.Count < 4)
+        if (_gameContainer.PlayerList!.Count < 3)
         {
             _gameContainer.SaveRoot.GameStatus = EnumStatusList.SelectNest;
             _gameContainer.SingleInfo.MainHandList.AddRange(_gameContainer.SaveRoot.NestList);
@@ -45,10 +45,10 @@ public class TrumpProcesses : ITrumpProcesses
             _model.Dummy1!.MakeAllKnown();
             _model.Dummy1.HandList.Sort();
         }
-        if (_gameContainer.PlayerList.Count < 4)
-        {
-            _model.Status = "Choose the 5 cards to get rid of";
-        }
+        //if (_gameContainer.PlayerList.Count < 3)
+        //{
+        //    _model.Status = "Choose the 5 cards to get rid of";
+        //}
         else
         {
             _gameContainer.WhoTurn = _gameContainer.WhoStarts; //iffy.
