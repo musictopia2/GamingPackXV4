@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <Version>7.0.1</Version>
   </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="BasicGameFrameworkLibrary" Version="7.0.2" />
+		<PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.1" />
 		<PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-		<PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.0" />
+		<PackageReference Include="Microsoft.Azure.SignalR" Version="1.22.0" />
 	</ItemGroup>
 
 </Project>

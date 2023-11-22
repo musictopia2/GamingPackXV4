@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	<Version>7.0.3</Version>
   </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="BasicBlazorLibrary" Version="7.0.25" />
-		<PackageReference Include="BasicGameFrameworkLibrary" Version="7.0.6" />
+		<PackageReference Include="BasicBlazorLibrary" Version="8.0.1" />
+		<PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.1" />
 	</ItemGroup>
 	
 
