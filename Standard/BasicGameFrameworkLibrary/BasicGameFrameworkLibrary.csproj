@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
 	  <Version>7.0.7</Version>
   </PropertyGroup>
@@ -18,21 +18,21 @@
 		<EmbeddedResource Include="Resources\Dice6.svg" />
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BasicBlazorLibrary" Version="7.0.18" />
+    <PackageReference Include="BasicBlazorLibrary" Version="8.0.1" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
-    <PackageReference Include="CommonBasicLibraries" Version="7.0.10" />
+    <PackageReference Include="CommonBasicLibraries" Version="8.0.1" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
 	  <PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
 	  <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
-	  <PackageReference Include="BlazorMVVMHelpersLibrary" Version="7.0.1" />
+	  <PackageReference Include="BlazorMVVMHelpersLibrary" Version="8.0.1" />
 	  <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
-	  <PackageReference Include="SvgHelper.Blazor" Version="7.0.2" />
+	  <PackageReference Include="SvgHelper.Blazor" Version="8.0.1" />
 	  <PackageReference Include="MappingCloningExtensions" Version="2.0.4" PrivateAssets="all" />
-	  <PackageReference Include="MessengingHelpers" Version="7.0.1" />
-	  <PackageReference Include="MVVMFramework" Version="7.0.1" />
+	  <PackageReference Include="MessengingHelpers" Version="8.0.1" />
+	  <PackageReference Include="MVVMFramework" Version="8.0.1" />
   </ItemGroup>
 
  
