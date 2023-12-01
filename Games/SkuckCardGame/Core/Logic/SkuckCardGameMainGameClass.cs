@@ -163,8 +163,15 @@ public class SkuckCardGameMainGameClass
         SaveRoot.RoundNumber++;
         PlayerList.ForEach(thisPlayer =>
         {
-            thisPlayer.BidAmount = 0;
-            thisPlayer.BidVisible = false;
+            thisPlayer.BidAmount = 0; //i don't think somebody can bid 0.
+            if (thisPlayer.PlayerCategory == EnumPlayerCategory.Self)
+            {
+                thisPlayer.BidVisible = true;
+            }
+            else
+            {
+                thisPlayer.BidVisible = false;
+            }
             thisPlayer.TricksWon = 0;
             thisPlayer.StrengthHand = 0;
             thisPlayer.TieBreaker = "0";

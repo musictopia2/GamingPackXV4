@@ -36,9 +36,10 @@ public class BidProcesses : IBidProcesses
         int whoStarts = _gameContainer.WhoStarts;
         player.MainHandList.UnhighlightObjects();
         _gameContainer.WhoTurn = await _gameContainer.PlayerList.CalculateWhoTurnAsync();
-        if (_gameContainer.WhoTurn != whoStarts)
+        _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
+        if (_gameContainer.SingleInfo.BidAmount == 0)
         {
-            _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
+            
             await _gameContainer.ContinueTurnAsync!.Invoke();
             return;
         }
@@ -84,7 +85,13 @@ public class BidProcesses : IBidProcesses
         {
             _gameContainer.WhoTurn = 1;
         }
-        _gameContainer.SingleInfo = _gameContainer.PlayerList.GetWhoPlayer();
+        //_gameContainer.SingleInfo = _gameContainer.PlayerList.GetWhoPlayer();
+        //if (_gameContainer.SingleInfo.BidAmount == 0)
+        //{
+        //    _gameContainer.SaveRoot!.WhatStatus = EnumStatusList.ChooseBid;
+        //    await _gameContainer.StartNewTurnAsync!.Invoke();
+        //    return;
+        //}
         await _gameContainer.StartNewTrickAsync!.Invoke();
     }
 }
