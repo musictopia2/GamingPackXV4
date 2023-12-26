@@ -7,7 +7,7 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
     }
     public EnumMilkType MilkCategory { get; set; }
     public int Points { get; set; }
-    public static int HowManyKinds => 71;
+    public static int HowManyKinds => 72;
     public EnumCardCategory CardCategory { get; set; }
     public void Populate(int chosen)
     {
@@ -64,7 +64,7 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
         }
         //starts at 64
         //3 to 6
-        for (int x = 1; x <= 5; x++)
+        for (int x = 1; x <= 6; x++)
         {
             z++;
             if (z == tempDeck)
@@ -73,7 +73,7 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
                 return;
             }
         }
-        //starts at 69
+        //starts at 70
         for (int x = 1; x <= 3; x++)
         {
             z++;
