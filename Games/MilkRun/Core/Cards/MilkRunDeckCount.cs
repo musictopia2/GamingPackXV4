@@ -3,6 +3,6 @@ public class MilkRunDeckCount : IDeckCount
 {
     public int GetDeckCount()
     {
-        return 128;
+        return MilkRunCardInformation.HowManyKinds * 2;
     }
 }

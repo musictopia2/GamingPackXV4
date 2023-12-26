@@ -7,10 +7,11 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
     }
     public EnumMilkType MilkCategory { get; set; }
     public int Points { get; set; }
+    public static int HowManyKinds => 71;
     public EnumCardCategory CardCategory { get; set; }
     public void Populate(int chosen)
     {
-        if (chosen <= 64)
+        if (chosen <= HowManyKinds)
         {
             ModifyData(chosen, EnumMilkType.Strawberry);
         }
@@ -24,13 +25,14 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
         MilkCategory = tempMilk;
         Deck = chosen;
         int tempDeck;
-        if (Deck <= 64)
+        //66
+        if (Deck <= HowManyKinds)
         {
             tempDeck = chosen;
         }
         else
         {
-            tempDeck = chosen - 64;
+            tempDeck = chosen - HowManyKinds;
         }
         int c;
         int z = 0;
@@ -49,9 +51,9 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
             }
         }
         //7 to 20
-        //starts at 49
+        //starts at 50
 
-        for (int x = 1; x <= 7; x++)
+        for (int x = 1; x <= 14; x++)
         {
             z++;
             if (z == tempDeck)
@@ -60,9 +62,9 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
                 return;
             }
         }
-        //after 55
+        //starts at 64
         //3 to 6
-        for (int x = 1; x <= 6; x++)
+        for (int x = 1; x <= 5; x++)
         {
             z++;
             if (z == tempDeck)
@@ -71,6 +73,7 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
                 return;
             }
         }
+        //starts at 69
         for (int x = 1; x <= 3; x++)
         {
             z++;
@@ -86,19 +89,19 @@ public class MilkRunCardInformation : SimpleDeckObject, IDeckObject, IComparable
     {
         if (upTo <= 3)
         {
-            return 3;
+            return 3; //9
         }
         if (upTo <= 8)
         {
-            return 6;
+            return 6; //30
         }
         if (upTo <= 10)
         {
-            return 3;
+            return 3; //6
         }
         if (upTo == 11 || upTo == 12)
         {
-            return 2;
+            return 2; //4
         }
         return 0;
     }
