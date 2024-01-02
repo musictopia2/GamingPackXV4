@@ -65,7 +65,7 @@ public class MailProcesses : IMailProcesses
     {
         _toast.ShowInfoToast("Mail is being reshuffled");
         _gameContainer.SaveRoot!.MailListLeft = list;
-        _gameContainer.SaveRoot.OutCards.RemoveAllOnly(items => items.Deck <= 24);
+        _gameContainer.SaveRoot.OutCards.RemoveAllOnly(items => items.Deck > 24);
         return Task.CompletedTask;
     }
     async Task IMailProcesses.ReshuffleMailAsync(DeckRegularDict<MailCard> list)
@@ -80,6 +80,10 @@ public class MailProcesses : IMailProcesses
             throw new CustomBasicException($"Must have 47 mail cards, not {list.Count} cards");
         }
         _gameContainer.SaveRoot!.MailListLeft.Clear();
+        if (_gameContainer.Test.AutoNearEndOfDeckBeginning)
+        {
+            list = list.Take(4).ToBasicList(); //only 10 cards in mail because near end of deck.
+        }
         list.ForEach(index =>
         {
             MailCard thisCard = (MailCard)PaydayGameContainer.GetCard(index);

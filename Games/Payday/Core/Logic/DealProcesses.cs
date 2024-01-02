@@ -126,7 +126,7 @@ public class DealProcesses : IDealProcesses
     {
         _toast.ShowInfoToast("Deal is being reshuffled");
         _gameContainer.SaveRoot!.DealListLeft = list;
-        _gameContainer.SaveRoot.OutCards.RemoveAllOnly(items => items.Deck > 24);
+        _gameContainer.SaveRoot.OutCards.RemoveAllOnly(items => items.Deck <= 24);
     }
     void IDealProcesses.ReshuffleDeals(DeckRegularDict<DealCard> list)
     {
@@ -138,6 +138,10 @@ public class DealProcesses : IDealProcesses
         if (list.Count != 24)
         {
             throw new CustomBasicException($"Must have 24 deal cards, not {list.Count} cards");
+        }
+        if (_gameContainer.Test.AutoNearEndOfDeckBeginning)
+        {
+            list = list.Take(4).ToBasicList();
         }
         _gameContainer.SaveRoot!.DealListLeft.Clear();
         list.ForEach(index =>
