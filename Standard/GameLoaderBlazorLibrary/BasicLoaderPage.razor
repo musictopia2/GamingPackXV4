@@ -31,12 +31,18 @@
                         <StackItem>
                             <GameButtonComponent CustomCallBack="OpenSettings" Display="Show Settings" />
                         </StackItem>
+                        <StackItem>
+                            <GameButtonComponent CustomCallBack="RefreshAsync" Display="Refresh" />
+                        </StackItem>
                         @if (_previousGame != "")
                         {
                             <StackItem>
                                 <GameButtonComponent CustomCallBack="OpenPreviousGame" Display="@_previousGame" />
                             </StackItem>
                         }
+                        <StackItem>
+                            Version @GlobalClass.Version
+                        </StackItem>
                     </StackLayout>  
                 }
             </TopContent>

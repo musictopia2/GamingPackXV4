@@ -8,6 +8,10 @@ public partial class BasicLoaderPage : IDisposable
     private bool _loadedOnce;
     private bool _showSettings;
     private string _previousGame = "";
+    private async Task RefreshAsync()
+    {
+        await JS!.Update(); //i think.
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (GlobalClass.Multiplayer == false)
@@ -60,7 +64,7 @@ public partial class BasicLoaderPage : IDisposable
         }
         return string.IsNullOrWhiteSpace(GlobalDataModel.DataContext.NickName) == false;
     }
-    private bool CanStartLoading()
+    private static bool CanStartLoading()
     {
         if (LoaderViewModel.IsSinglePlayerOnly)
         {
