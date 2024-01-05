@@ -2,27 +2,11 @@ namespace ClueBoardGame.Core.Data;
 [SingletonGame]
 public class ClueBoardGameSaveInfo : BasicSavedBoardDiceGameClass<ClueBoardGamePlayerItem>, IMappable, ISaveInfo
 {
-    private string _instructions = "";
-    public string Instructions
-    {
-        get { return _instructions; }
-        set
-        {
-            if (SetProperty(ref _instructions, value))
-            {
-                //can decide what to do when property changes
-                if (_model != null)
-                {
-                    _model.Instructions = value;
-                }
-            }
-        }
-    }
+    
     private ClueBoardGameVMData? _model;
     internal void LoadMod(ClueBoardGameVMData model)
     {
         _model = model;
-        _model.Instructions = Instructions;
         _model.LeftToMove = MovesLeft;
         if (CurrentPrediction is not null)
         {
@@ -50,10 +34,10 @@ public class ClueBoardGameSaveInfo : BasicSavedBoardDiceGameClass<ClueBoardGameP
     }
     public bool AccusationMade { get; set; }
     //public bool ShowedMessage { get; set; }
-    public Dictionary<int, CharacterInfo> CharacterList { get; set; } = new();
+    public Dictionary<int, CharacterInfo> CharacterList { get; set; } = [];
     public PredictionInfo Solution { get; set; } = new();
-    public Dictionary<int, MoveInfo> PreviousMoves { get; set; } = new();
-    public Dictionary<int, WeaponInfo> WeaponList { get; set; } = new();
+    public Dictionary<int, MoveInfo> PreviousMoves { get; set; } = [];
+    public Dictionary<int, WeaponInfo> WeaponList { get; set; } = [];
     public EnumClueStatusList GameStatus { get; set; }
     public int PreviousClue { get; set; } //this means if given, then whoevers turn it is can show that clue.
 

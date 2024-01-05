@@ -64,7 +64,6 @@ public class ClueBoardGameMainGameClass
             _command.UpdateAll();
             _gameBoard.LoadSavedGame();
             _model.Cup!.CanShowDice = SaveRoot.MovesLeft > 0;
-            SaveRoot.Instructions = "None";
             if (WhoTurn == MyID && SaveRoot.PreviousClue > 0)
             {
                 var card = _gameContainer.ClueInfo(SaveRoot.PreviousClue);
@@ -229,7 +228,7 @@ public class ClueBoardGameMainGameClass
     }
     private async Task ShufflePassCardsAsync()
     {
-        DeckRegularDict<CardInfo> thisList = new();
+        DeckRegularDict<CardInfo> thisList = [];
         21.Times(x =>
         {
             var thisCard = _gameContainer!.ClueInfo(x);
@@ -247,7 +246,7 @@ public class ClueBoardGameMainGameClass
             throw new CustomBasicException("There must be 6 players total");
         }
         thisList.ShuffleList();
-        DeckRegularDict<CardInfo> output = new();
+        DeckRegularDict<CardInfo> output = [];
         ps1.CardProcedures.PassOutCards(PlayerList!, thisList, 3, 0, false, ref output);
         foreach (var player in PlayerList)
         {
@@ -309,13 +308,20 @@ public class ClueBoardGameMainGameClass
                 }
                 return;
             case "cluegiven":
-                var thisCard = _gameContainer!.ClueInfo(int.Parse(content));
+                //needs a new model for cluegiven.
+
+                HintInfo hint = await js1.DeserializeObjectAsync<HintInfo>(content);
+
+                var thisCard = _gameContainer!.ClueInfo(hint.Deck);
                 SingleInfo = PlayerList.GetWhoPlayer();
                 SaveRoot!.GameStatus = EnumClueStatusList.EndTurn;
                 MarkCard(SingleInfo, thisCard, false);
                 if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
                 {
                     _model!.Pile!.AddCard(thisCard);
+                    _command.UpdateAll();
+                    //for  now, show a messagebox with the information unless i find another way.
+                    await _message!.ShowMessageAsync($"Clue given by {hint.NickName}"); //hopefully this is okay.
                 }
                 await ContinueTurnAsync(); //try this (?)
                 return;
@@ -336,7 +342,6 @@ public class ClueBoardGameMainGameClass
             PrepStartTurn();
             _command.UpdateAll();
             _gameBoard.NewTurn();
-            SaveRoot!.Instructions = "None";
             SaveRoot.AccusationMade = false;
             SaveRoot.PreviousClue = 0;
             SaveRoot.CurrentPrediction = new PredictionInfo();
@@ -372,7 +377,7 @@ public class ClueBoardGameMainGameClass
         if (PlayerList.DidChooseColors())
         {
             _model.Pile.ClearCards();
-            SaveRoot!.PreviousMoves = new Dictionary<int, MoveInfo>(); //i think.
+            SaveRoot!.PreviousMoves = [];
         }
         await StartNewTurnAsync();
     }
@@ -504,7 +509,7 @@ public class ClueBoardGameMainGameClass
     }
     private string CardToGive()
     {
-        BasicList<GivenInfo> thisList = new();
+        BasicList<GivenInfo> thisList = [];
         foreach (var thisGiven in _gameContainer!.CurrentCharacter!.ComputerData.CluesGiven)
         {
             if (thisGiven.Player == WhoTurn)
@@ -564,9 +569,15 @@ public class ClueBoardGameMainGameClass
             ClueBoardGamePlayerItem newPlayer = PlayerList!.GetOtherPlayer();
             CardInfo thisCard = newPlayer.MainHandList.Single(items => items.Name == thisInfo);
             SingleInfo = PlayerList.GetWhoPlayer();
+           
             if (newPlayer.CanSendMessage(BasicData!) && WhoTurn != MyID)
             {
-                await Network!.SendAllAsync("cluegiven", thisCard.Deck); //has to send to all so i can eventually have autoresume.
+                HintInfo hint = new()
+                {
+                    Deck = thisCard.Deck,
+                    NickName = newPlayer.NickName
+                };
+                await Network!.SendAllAsync("cluegiven", hint); //has to send to all so i can eventually have autoresume.
                 //await Network!.SendToParticularPlayerAsync("cluegiven", thisCard.Deck, SingleInfo.NickName);
             }
             SaveRoot.GameStatus = EnumClueStatusList.EndTurn;
@@ -575,6 +586,11 @@ public class ClueBoardGameMainGameClass
                 _model.Pile.AddCard(thisCard);
             }
             MarkCard(SingleInfo, thisCard, false);
+            if (WhoTurn == MyID)
+            {
+                _command.UpdateAll();
+                await _message.ShowMessageAsync($"Clue given by {newPlayer.NickName}");
+            }
             await EndStepAsync();
             return;
         }
@@ -630,7 +646,7 @@ public class ClueBoardGameMainGameClass
     }
     private Dictionary<int, DetectiveInfo> GetDetectiveList()
     {
-        Dictionary<int, DetectiveInfo> output = new();
+        Dictionary<int, DetectiveInfo> output = [];
         DetectiveInfo thisD;
         if (_gameContainer!.RoomList.Count != 9)
         {
@@ -644,15 +660,15 @@ public class ClueBoardGameMainGameClass
             thisD.Name = thisRoom.Name;
             output.Add(thisD);
         }
-        BasicList<string> originalList = new()
-        {
+        BasicList<string> originalList =
+        [
             "Mr. Green",
             "Colonel Mustard",
             "Mrs. Peacock",
             "Professor Plum",
             "Miss Scarlet",
             "Mrs. White"
-        };
+        ];
         originalList.ForEach(thisItem =>
         {
             thisD = new();
@@ -801,7 +817,7 @@ public class ClueBoardGameMainGameClass
             {
                 ComputerNoCluesFound();
             }
-            SaveRoot.GameStatus = EnumClueStatusList.EndTurn;
+            SaveRoot.GameStatus = EnumClueStatusList.EndTurn; //very annoying to show no clues given each time.
             await EndStepAsync();
             return;
         }

@@ -7,7 +7,9 @@
 
     </GridItem>
     <GridItem Column="2">
+        
         <ClueHandBlazor Hand="DataContext!.GetHand" />
+        
         <div>
             <CascadingValue Value="EnumDetectiveCategory.Prediction">
                 <DetectiveGraphicsBlazor DetectiveList="_graphicsData!.GameContainer!.DetectiveList" />
@@ -26,26 +28,33 @@
         </GridContainer>
     </GridItem>
     <GridItem Column="3">
-
         <CluePileBlazor SinglePile="DataContext!.GetPile" />
-        <div>
-            Instructions: @DataContext!.VMData.Instructions
-        </div>
+
         <GameButtonComponent CommandObject="RollCommand" StartOnNewLine="true" Display="Roll Dice" />
         <div style="margin-left: -10px;">
-            <ArrowCompleteComponent 
-                ArrowCategory="EnumArrowCategory.All" 
-                DownClicked="DataContext.DownArrowAsync"
-                UpClicked="DataContext.UpArrowAsync"
-                LeftClicked="DataContext.LeftArrowAsync"
-                RightClicked="DataContext.RightArrowAsync"
-                BackgroundColor="aqua"
-                TargetHeight="6vh" />
+            <ArrowCompleteComponent ArrowCategory="EnumArrowCategory.All"
+                                    DownClicked="DataContext.DownArrowAsync"
+                                    UpClicked="DataContext.UpArrowAsync"
+                                    LeftClicked="DataContext.LeftArrowAsync"
+                                    RightClicked="DataContext.RightArrowAsync"
+                                    BackgroundColor="aqua"
+                                    TargetHeight="6vh" />
         </div>
         <div class="@css1.CenteredFlex" style="font-size: 8vh; color: white">
             @DataContext!.VMData.LeftToMove
             <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="8vh" />
         </div>
+        
+        <div style="font-weight: bold;">
+            Play Order
+        </div>
+        @foreach (var item in _players)
+        {
+            <div>
+                @item.NickName
+            </div>
+        }
+        
         
     </GridItem>
     <GridItem Column="4">

@@ -202,10 +202,18 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
         {
             await _gameContainer.Delay.DelaySeconds(.25);
         }
+        var player = _gameContainer.PlayerList!.GetSelf();
+       
         var tempPlayer = _gameContainer!.PlayerList!.GetWhoPlayer();
         if (_gameContainer.BasicData!.MultiPlayer)
         {
-            await _gameContainer.Network!.SendAllAsync("cluegiven", payLoad.Deck);
+            HintInfo hint = new()
+            {
+                Deck = payLoad.Deck,
+                NickName = player.NickName
+            };
+            await _gameContainer.Network!.SendAllAsync("cluegiven", hint);
+            //only whoever turn it is needs to show who gave it.
             //has to send to everybody.  that way the host can record (since recording must be done).
             //await _gameContainer.Network!.SendToParticularPlayerAsync("cluegiven", payLoad.Deck, tempPlayer.NickName);
         }

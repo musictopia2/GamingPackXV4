@@ -8,8 +8,6 @@ public partial class ClueBoardGameVMData : IDiceBoardGamesData
     [LabelColumn]
     public string Status { get; set; } = "";
     [LabelColumn]
-    public string Instructions { get; set; } = "";
-    [LabelColumn]
     public int LeftToMove { get; set; }
     [LabelColumn]
     public string CurrentRoomName { get; set; } = "";
@@ -18,11 +16,13 @@ public partial class ClueBoardGameVMData : IDiceBoardGamesData
     [LabelColumn]
     public string CurrentWeaponName { get; set; } = "";
     public DiceCup<SimpleDice>? Cup { get; set; }
+    public string Instructions { get; set; } = ""; //has to be here in order to implement the interface for idiceboarddata
+
     private readonly CommandContainer _command;
     private readonly IGamePackageResolver _resolver;
     public HandObservable<CardInfo> HandList;
     public SingleObservablePile<CardInfo> Pile;
-    public ClueBoardGameVMData(CommandContainer command, IGamePackageResolver resolver, IEventAggregator aggregator)
+    public ClueBoardGameVMData(CommandContainer command, IGamePackageResolver resolver)
     {
         _command = command;
         _resolver = resolver;

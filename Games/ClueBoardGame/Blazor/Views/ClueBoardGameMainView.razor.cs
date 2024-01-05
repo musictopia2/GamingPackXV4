@@ -1,9 +1,10 @@
 namespace ClueBoardGame.Blazor.Views;
 public partial class ClueBoardGameMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<LabelGridModel> _clues = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<LabelGridModel> _clues = [];
     private GameBoardGraphicsCP? _graphicsData;
+    private PlayerCollection<ClueBoardGamePlayerItem> _players = [];
     protected override void OnInitialized()
     {
         _graphicsData = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
@@ -14,6 +15,7 @@ public partial class ClueBoardGameMainView
             .AddLabel("Character", nameof(ClueBoardGameVMData.CurrentCharacterName))
             .AddLabel("Weapon", nameof(ClueBoardGameVMData.CurrentWeaponName));
         DataContext!.PopulateDetectiveNoteBook();
+        _players = _graphicsData.GameContainer!.PlayerList!;
         base.OnInitialized();
     }
     private ICustomCommand EndCommand => DataContext!.EndTurnCommand!;
