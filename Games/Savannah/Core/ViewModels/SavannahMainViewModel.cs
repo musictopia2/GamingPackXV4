@@ -97,9 +97,13 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
         {
             throw new CustomBasicException("There was no player");
         }
-        if (CanEnablePlayer == false)
+        if (_mainGame.SaveRoot.ChoseOtherPlayer)
         {
-            return; //try this way.
+            return;
+        }
+        if (player.DiscardList.Count == 0)
+        {
+            return; //because they have no cards left.  just in case.
         }
         if (player.DiscardList.Last().IsSelected)
         {
