@@ -30,7 +30,6 @@
         @foreach (var player in list)
         {
             <OpponentDiscardBlazor Player="player" IsEnabled="DataContext.CanEnablePlayer" Context="DeckObject">
-
                 <DeckOfCardsImageBlazor CommandParameter="player" DeckObject="DeckObject" TargetHeight="@HeightString" CommandObject="PlayerCommand" R="RegularSimpleCard" />
             </OpponentDiscardBlazor>
         }

@@ -51,6 +51,7 @@ public abstract class StockPileVM<D>
         StockFrame.Columns = 1;
         StockFrame.HasText = true;
         StockFrame.HasFrame = true;
+        StockFrame.DisableWhenNoneLeft = true; //this means once no more left, then can't even enable it.
         StockFrame.LoadBoard();
         StockFrame.PileList!.Single().Text = TextToAppear;
         StockFrame.PileClickedAsync = StockFrame_PileClickedAsync;

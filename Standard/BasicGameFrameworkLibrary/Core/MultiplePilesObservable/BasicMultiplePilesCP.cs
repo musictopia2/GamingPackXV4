@@ -6,6 +6,27 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
     public int Columns { get; set; }
     public bool HasFrame { get; set; }
     public bool HasText { get; set; } = true;
+    public bool DisableWhenNoneLeft { get; set; }
+    protected override bool CanEnableFirst()
+    {
+        if (DisableWhenNoneLeft == false)
+        {
+            return base.CanEnableFirst();
+        }
+        if (PileList is null)
+        {
+            return false;
+        }
+        if (PileList.Count == 0)
+        {
+            return false;
+        }
+        if (PileList.First().ObjectList.Count == 0)
+        {
+            return false;
+        }
+        return base.CanEnableFirst();
+    }
     private int _discardsRemoved;
     private void CheckErrors(string section)
     {
