@@ -90,15 +90,15 @@ public partial class BasicLoaderPage : IDisposable
     }
     private async void BackToMain()
     {
-        if (aa1.Resolver!.RegistrationExist<IGameNetwork>())
-        {
-            IGameNetwork nets = aa1.Resolver!.Resolve<IGameNetwork>();
-            await nets.BackToMainAsync();
-        }
         if (CanRefreshManually())
         {
             await JS!.RefreshBrowser();
             return;
+        } //if its refreshing, then no need to communicate anymore because old would have been disposed (i think).
+        if (aa1.Resolver!.RegistrationExist<IGameNetwork>())
+        {
+            IGameNetwork nets = aa1.Resolver!.Resolve<IGameNetwork>();
+            await nets.BackToMainAsync();
         }
         DataContext!.GameName = "";
         StateHasChanged();
