@@ -97,3 +97,4 @@ global using ab1 = BasicBlazorLibrary.Components.CssGrids.Helpers;
 global using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
 global using BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses; //looks like became common enough because transfer to desktop.
 global using BasicGameFrameworkLibrary.Core.StandardImplementations.Settings;
+global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.NewGameClasses;

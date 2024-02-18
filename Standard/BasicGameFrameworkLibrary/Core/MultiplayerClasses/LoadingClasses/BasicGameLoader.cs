@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.LoadingClasses;
+﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.LoadingClasses;
 public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpdateGame, ILoadClientGame,
     IRequestNewGameRound, IRestoreMultiPlayerGame, IReconnectClientClass
 
@@ -218,7 +216,42 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             _command.Processing = false;
             return;
         }
-        _toast.ShowUserErrorToast("So far, trying new game.  This requires rethinking now");
+        //foreach (var item in _gameSetUp!.PlayerList)
+        //{
+        //    _toast.ShowInfoToast(item.NickName);
+        //}
+        _gameSetUp!.SaveRoot.PlayOrder.IsReversed = false; //can be marked to false now because its a brand new game.
+        _gameSetUp.SaveRoot.PlayOrder.WhoTurn = _gameSetUp.SaveRoot.PlayOrder.WhoStarts; //this is like before for who starts again for new game
+        _gameSetUp.SaveRoot.PlayOrder.WhoTurn = await _gameSetUp.SaveRoot.PlayerList.CalculateWhoTurnAsync();
+        _gameSetUp.SaveRoot.PlayOrder.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoTurn;
+
+        RawGameHost data = new();
+        data.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoStarts;
+        data.GameName = _gameInfo.GameName;
+        data.Multiplayer = _basic.MultiPlayer; //i think
+        foreach (var item in _gameSetUp.PlayerList)
+        {
+            RawPlayer player = new()
+            {
+                Id = item.Id,
+                NickName = item.NickName,
+                PlayerCategory = item.PlayerCategory
+            };
+            data.Players.Add(player);
+        }
+        if (NewGameDelegates.NewGameHostStep1 is null)
+        {
+            _toast.ShowInfoToast("So far, nobody is handling new game.  Means its stuck for now");
+            return;
+        }
+        //if there is nothing here, then will be stuck
+        await NewGameDelegates.NewGameHostStep1?.Invoke(data)!;
+        //var player = _gameSetUp.SaveRoot.PlayerList.GetWhoPlayer();
+        //_toast.ShowInfoToast($"The player who goes starts first for next game is {player.NickName}");
+
+        //_toast.ShowInfoToast(_gameSetUp.SaveRoot.PlayOrder.WhoStarts.ToString());
+        //_toast.ShowInfoToast(_gameInfo.GameName);
+        //_toast.ShowUserErrorToast("So far, trying new game.  This requires rethinking now");
     }
     async Task IRequestNewGameRound.RequestNewRoundAsync()
     {
@@ -290,7 +323,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             _error.ShowSystemError("Clients cannot reconnect anybody");
             return;
         }
-        await Task.Delay(500); 
+        await Task.Delay(500);
         bool busy = false;
         int x = 0;
         bool sentMessage = false;

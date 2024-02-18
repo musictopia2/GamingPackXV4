@@ -26,6 +26,7 @@ public partial class MultiplayerBasicParentShell
     }
     protected override void OnInitialized()
     {
+        NewGameDelegates.NewGameHostStep1 = NewGameHostStep1Async;
         BasicData = Resolver!.Resolve<BasicData>();
         BasicData.DoFullScreen = async () =>
         {
@@ -50,6 +51,11 @@ public partial class MultiplayerBasicParentShell
             _loading = false;
         }
         base.OnInitialized();
+    }
+    private async Task NewGameHostStep1Async(RawGameHost game)
+    {
+        await Task.Delay(0);
+        Toast!.ShowInfoToast("Parent Shell Is Starting To Handle New Game");
     }
     private async Task ManuallyOpenCloseFullScreenAsync()
     {
