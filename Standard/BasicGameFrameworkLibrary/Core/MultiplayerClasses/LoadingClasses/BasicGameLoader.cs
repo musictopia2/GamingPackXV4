@@ -1,4 +1,6 @@
-﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.LoadingClasses;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.LoadingClasses;
 public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpdateGame, ILoadClientGame,
     IRequestNewGameRound, IRestoreMultiPlayerGame, IReconnectClientClass
 
@@ -210,8 +212,13 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             IStartNewGame temps = _resolver.Resolve<IStartNewGame>();
             await temps.ResetAsync();
         }
-        await FinishLoadingAsync(false);
-        _command.Processing = false;
+        if (_gameInfo.SinglePlayerChoice == EnumPlayerChoices.Solitaire)
+        {
+            await FinishLoadingAsync(false);
+            _command.Processing = false;
+            return;
+        }
+        _toast.ShowUserErrorToast("So far, trying new game.  This requires rethinking now");
     }
     async Task IRequestNewGameRound.RequestNewRoundAsync()
     {
