@@ -29,8 +29,12 @@ public static class GlobalSettingsExtensions
         }
         await js.StorageSetItemAsync(GlobalDataModel.LocalStorageKey, GlobalDataModel.DataContext);
     }
-    public static async Task SaveLatestGameAsync(this IJSRuntime js, string gameName)
+    public static async Task SaveLatestGameAsync(this IJSRuntime js, string gameName, IToast toast)
     {
+        if (gameName == "")
+        {
+            toast.ShowUserErrorToast("Seems to be an error because there was no game name.  If that is not correct. rethink");
+        }
         await js.StorageSetStringAsync("latestgame", gameName);
     }
     public static async Task<string> GetLatestGameAsync(this IJSRuntime js)

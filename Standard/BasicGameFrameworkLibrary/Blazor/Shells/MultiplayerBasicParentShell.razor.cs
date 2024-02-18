@@ -8,6 +8,7 @@ public partial class MultiplayerBasicParentShell
     public BasicData? BasicData { get; set; }
     public IGameInfo? GameData { get; set; }
     public TestOptions? TestData { get; set; }
+    private IToast? Toast { get; set; }
     [Inject]
     private IJSRuntime? JS { get; set; }
     private bool _loading = true;
@@ -38,6 +39,7 @@ public partial class MultiplayerBasicParentShell
         };
         TestData = Resolver!.Resolve<TestOptions>();
         GameData = Resolver!.Resolve<IGameInfo>();
+        Toast = Resolver!.Resolve<IToast>();
         CommandContainer command = Resolver!.Resolve<CommandContainer>();
         command.ParentAction = StateHasChanged;
         IStartUp starts = Resolver!.Resolve<IStartUp>();
@@ -78,12 +80,14 @@ public partial class MultiplayerBasicParentShell
         }
         return false;
     }
+    private bool _loadedGame;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (_loadedGame == false && GameData!.GameName != "")
         {
-            await JS!.SaveLatestGameAsync(GameData!.GameName);
-            LoaderGlobalClass.ChangeLatestGame?.Invoke(GameData!.GameName);
+            await JS!.SaveLatestGameAsync(GameData!.GameName, Toast!);
+            _loadedGame = true;
+            //LoaderGlobalClass.ChangeLatestGame?.Invoke(GameData!.GameName);
         }
         if (BasicData == null || JS == null || _hadNickName)
         {

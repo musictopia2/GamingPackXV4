@@ -8,7 +8,7 @@ public abstract class LoaderViewModel : ILoaderVM
     public abstract string Title { get; }
     protected IStartUp Starts;
     protected EnumGamePackageMode Mode;
-    public BasicList<string> GameList { get; protected set; } = new();
+    public BasicList<string> GameList { get; protected set; } = [];
     public LoaderViewModel(IStartUp starts)
     {
         Starts = starts;

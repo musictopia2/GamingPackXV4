@@ -115,11 +115,12 @@ public partial class BasicLoaderPage : IDisposable
 
     protected override void OnInitialized()
     {
+        //no longer a need to change latest game.  because it usually refreshes anyways.
         LoaderGlobalClass.BackToMainDelegate = BackToMain;
-        LoaderGlobalClass.ChangeLatestGame = (string game) =>
-        {
-            _previousGame = game;
-        };
+        //LoaderGlobalClass.ChangeLatestGame = (string game) =>
+        //{
+        //    _previousGame = game;
+        //};
         DataContext!.StateChanged = () => InvokeAsync(StateHasChanged);
         
         if (GlobalClass.Multiplayer == false)
