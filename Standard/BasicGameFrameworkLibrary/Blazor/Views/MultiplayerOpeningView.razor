@@ -5,6 +5,10 @@
     <div>Help</div>
     return;
 }
+@if (_realLoad == false)
+{
+    return; //because has to wait to decide what to do next.
+}
 @if (_hostNewGameInfo is not null)
 {
     <div>

@@ -14,6 +14,7 @@ public partial class MultiplayerOpeningView<P>
 
     private RawGameHost? _hostNewGameInfo;
     private RawGameClient? _clientNewGameInfo;
+    private bool _realLoad;
 
     protected override void OnInitialized()
     {
@@ -51,6 +52,8 @@ public partial class MultiplayerOpeningView<P>
                 throw new CustomBasicException("Cannot have both client and host.  Something is wrong now");
             }
             await JS!.DeleteNewGameDataAsync(); //go ahead and delete.  so if i start over again, has to do over again.
+            _realLoad = true;
+            StateHasChanged(); //has to reload the state now.
         }
     }
     private string GetTestPlayerInformation(RawPlayer player)
