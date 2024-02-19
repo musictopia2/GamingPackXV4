@@ -54,7 +54,7 @@ public static class GlobalSettingsExtensions
         {
             return null;
         }
-        return await js.StorageGetItemAsync<RawGameHost>(HostKey);
+        return await js.StorageGetItemAsync<RawGameHost>(HostKey); //well see if this works.
     }
     public static async Task<RawGameClient?> GetClientNewGameAsync(this IJSRuntime js)
     {
@@ -62,7 +62,7 @@ public static class GlobalSettingsExtensions
         {
             return null;
         }
-        return await js.StorageGetItemAsync<RawGameClient>(ClientKey);
+        return await js.StorageGetItemAsync<RawGameClient>(ClientKey); //well see if this works (?)
     }
     public static async Task DeleteNewGameDataAsync(this IJSRuntime js)
     {
@@ -71,10 +71,12 @@ public static class GlobalSettingsExtensions
     }
     public static async Task SaveHostNewGameAsync(this IJSRuntime js, RawGameHost game)
     {
-        await js.StorageSetItemAsync(HostKey, game);
+        string content = await js1.SerializeObjectAsync(game); //if this still requires custom serialization, then figure out how to make it for that.
+        await js.StorageSetStringAsync(HostKey, content);
     }
     public static async Task SaveClientNewGameAsync(this IJSRuntime js, RawGameClient game)
     {
-        await js.StorageSetItemAsync(ClientKey, game);
+        string content = await js1.SerializeObjectAsync(game);
+        await js.StorageSetStringAsync(ClientKey, content);
     }
 }
