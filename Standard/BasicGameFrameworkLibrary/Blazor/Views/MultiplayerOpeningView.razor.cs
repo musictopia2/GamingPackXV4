@@ -1,4 +1,5 @@
 
+
 namespace BasicGameFrameworkLibrary.Blazor.Views;
 public partial class MultiplayerOpeningView<P>
      where P : class, IPlayerItem, new()
@@ -9,7 +10,11 @@ public partial class MultiplayerOpeningView<P>
     public IGameInfo? GameData { get; set; }
     private bool _canHuman;
     private bool _canComputer;
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+
+    private RawGameHost? _hostNewGameInfo;
+    private RawGameClient? _clientNewGameInfo;
+
     protected override void OnInitialized()
     {
         _labels.Clear();
@@ -34,5 +39,22 @@ public partial class MultiplayerOpeningView<P>
             return EnumPlayerMode.Any;
         }
         return GlobalDataModel.DataContext.PlayerMode;
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _hostNewGameInfo = await JS!.GetHostNewGameAsync();
+            _clientNewGameInfo = await JS!.GetClientNewGameAsync();
+            if (_hostNewGameInfo is not null && _clientNewGameInfo is not null)
+            {
+                throw new CustomBasicException("Cannot have both client and host.  Something is wrong now");
+            }
+            await JS!.DeleteNewGameDataAsync(); //go ahead and delete.  so if i start over again, has to do over again.
+        }
+    }
+    private string GetTestPlayerInformation(RawPlayer player)
+    {
+        return $"The name is {player.NickName}.  The player category is {player.PlayerCategory}  The Id is {player.Id}";
     }
 }

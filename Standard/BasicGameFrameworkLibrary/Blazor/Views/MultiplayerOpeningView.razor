@@ -1,8 +1,38 @@
 ﻿@typeparam P
+@inherits JavascriptComponentBase
 @if (DataContext == null || GameData == null)
 {
     <div>Help</div>
     return;
+}
+@if (_hostNewGameInfo is not null)
+{
+    <div>
+        @_hostNewGameInfo.GameName was chosen
+    </div>
+    <div>
+        @_hostNewGameInfo.WhoStarts for who goes first this time
+    </div>
+    <div>
+        Multiplayer was @_hostNewGameInfo.Multiplayer
+    </div>
+    <div>
+        Here is a list of players
+    </div>
+    @foreach (var item in _hostNewGameInfo.Players)
+    {
+        <div>
+            @GetTestPlayerInformation(item);
+        </div>
+    }
+    return;
+}
+@if (_clientNewGameInfo is not null)
+{
+    <div>
+        @_clientNewGameInfo.GameName was chosen for client
+    </div>
+    return; //for now.
 }
 <div>
     @if (DataContext.OpeningStatus == EnumOpeningStatus.WaitingForHost)
