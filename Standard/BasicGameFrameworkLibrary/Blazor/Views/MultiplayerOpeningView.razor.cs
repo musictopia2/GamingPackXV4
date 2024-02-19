@@ -66,8 +66,8 @@ public partial class MultiplayerOpeningView<P>
             StateHasChanged(); //has to reload the state now.
         }
     }
-    private string GetTestPlayerInformation(RawPlayer player)
+    private static string GetTestPlayerInformation(RawPlayer player)
     {
-        return $"The name is {player.NickName}.  The player category is {player.PlayerCategory}  The Id is {player.Id}";
+        return $"The name is {player.NickName}.  The player category is {player.PlayerCategory}.  The Id is {player.Id}.  IsHost is {player.IsHost}";
     }
 }
