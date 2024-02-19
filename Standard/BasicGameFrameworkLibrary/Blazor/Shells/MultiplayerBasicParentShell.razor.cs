@@ -54,8 +54,9 @@ public partial class MultiplayerBasicParentShell
     }
     private async Task NewGameHostStep1Async(RawGameHost game)
     {
-        await Task.Delay(0);
-        Toast!.ShowInfoToast("Parent Shell Is Starting To Handle New Game");
+        await JS!.SaveHostNewGameAsync(game);
+        await JS!.RefreshBrowser(); //this cannot care what happens next.
+        //Toast!.ShowInfoToast("Parent Shell Is Starting To Handle New Game");
     }
     private async Task ManuallyOpenCloseFullScreenAsync()
     {
@@ -99,7 +100,6 @@ public partial class MultiplayerBasicParentShell
         {
             return;
         }
-        
         if (firstRender && BasicData.NickName == "")
         {
             string item = await JS.StorageGetStringAsync("nickname");

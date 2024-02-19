@@ -46,4 +46,35 @@ public static class GlobalSettingsExtensions
         }
         return await js.StorageGetStringAsync("latestgame");
     }
+    private static string HostKey => "HostNewGame";
+    private static string ClientKey => "ClientNewGame";
+    public static async Task<RawGameHost?> GetHostNewGameAsync(this IJSRuntime js)
+    {
+        if (await js.ContainsKeyAsync(HostKey) == false)
+        {
+            return null;
+        }
+        return await js.StorageGetItemAsync<RawGameHost>(HostKey);
+    }
+    public static async Task<RawGameClient?> GetClientNewGameAsync(this IJSRuntime js)
+    {
+        if (await js.ContainsKeyAsync(ClientKey) == false)
+        {
+            return null;
+        }
+        return await js.StorageGetItemAsync<RawGameClient>(ClientKey);
+    }
+    public static async Task DeleteNewGameDataAsync(this IJSRuntime js)
+    {
+        await js.StorageRemoveItemAsync(HostKey);
+        await js.StorageRemoveItemAsync(ClientKey); //delete both.
+    }
+    public static async Task SaveHostNewGameAsync(this IJSRuntime js, RawGameHost game)
+    {
+        await js.StorageSetItemAsync(HostKey, game);
+    }
+    public static async Task SaveClientNewGameAsync(this IJSRuntime js, RawGameClient game)
+    {
+        await js.StorageSetItemAsync(ClientKey, game);
+    }
 }
