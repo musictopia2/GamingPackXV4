@@ -21,8 +21,10 @@ public class ClueBoardGameShellViewModel : BasicBoardGamesShellViewModel<ClueBoa
         var model = MainContainer.Resolve<ClueBoardGameMainViewModel>();
         return model;
     }
-    protected override async Task ShowNewGameAsync()
-    {
-        await _message.ShowMessageAsync("Game is over.  However, unable to allow for new game.  If you want new game, close out and reconnect again.");
-    }
+    //try to allow new game for clue board game now.
+
+    //protected override async Task ShowNewGameAsync()
+    //{
+    //    await _message.ShowMessageAsync("Game is over.  However, unable to allow for new game.  If you want new game, close out and reconnect again.");
+    //}
 }

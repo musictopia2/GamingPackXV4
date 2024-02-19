@@ -353,6 +353,10 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
                 IsReady = true,
                 InGame = true
             };
+            if (player.CanStartInGame == false)
+            {
+                player.InGame = false;
+            }
             _playerList.AddPlayer(player);
         }
     }
