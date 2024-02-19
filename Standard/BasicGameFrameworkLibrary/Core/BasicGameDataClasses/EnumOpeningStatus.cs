@@ -6,5 +6,6 @@ public enum EnumOpeningStatus
     HostingReadyToStart,
     ConnectingWaitingToConnect,
     ConnectedToHost,
-    WaitingForHost
+    WaitingForHost,
+    WaitingForOtherPlayersForNewGame
 }

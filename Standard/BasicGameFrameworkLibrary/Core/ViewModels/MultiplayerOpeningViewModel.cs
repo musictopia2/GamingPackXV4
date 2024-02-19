@@ -293,12 +293,10 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         CommandContainer.OpenBusy = false;
         return Task.CompletedTask;
     }
-
     private async void PrivateClose()
     {
         await _nets.CloseConnectionAsync();
     }
-
     #endregion
     private void ShowOtherChangesBecauseOfNetworkChange()
     {
@@ -342,18 +340,21 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     [LabelColumn]
     public int PreviousNonComputerNetworkedPlayers { get; set; }
     #endregion
-    public async Task StartAnotherMultiplayerGameAsync()
+    private void LoadNewGamePlayers()
     {
-        if (NewGameContainer.NewGameHost is null)
+        foreach (var item in NewGameContainer.NewGameHost!.Players)
         {
-            throw new CustomBasicException("Cannot start another game because has no information to load another game based on information from previous game");
+            P player = new()
+            {
+                Id = item.Id,
+                NickName = item.NickName,
+                IsHost = item.IsHost,
+                PlayerCategory = item.PlayerCategory,
+                IsReady = true,
+                InGame = true
+            };
+            _playerList.AddPlayer(player);
         }
-        if (NewGameContainer.NewGameHost.Multiplayer == false)
-        {
-            throw new CustomBasicException("Only multplayer games should call this method");
-        }
-        //this is like join.
-        await HostAsync(); //this means try to host automatically now.
     }
     public async Task StartAnotherSinglePlayerGameAsync()
     {
@@ -367,19 +368,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
             throw new CustomBasicException("Only single player games should call this method");
         }
         StartSingle();
-        foreach (var item in NewGameContainer.NewGameHost.Players)
-        {
-            P player = new()
-            {
-                Id = item.Id,
-                NickName = item.NickName,
-                IsHost = item.IsHost,
-                PlayerCategory = item.PlayerCategory,
-                IsReady = true,
-                InGame = true
-            };
-            _playerList.AddPlayer(player);
-        }
+        LoadNewGamePlayers();
         await StartNewGameAsync();
         return; //this is the easist
     }
@@ -421,6 +410,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
             await ResumeMultiplayerGameAsync();
             return;
         }
+
         network.IsEnabled = true;
         _playerList = new();
         P thisPlayer = new();
@@ -447,7 +437,24 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         thisPlayer.InGame = true;
         thisPlayer.PlayerCategory = EnumPlayerCategory.OtherHuman;
         _playerList.AddPlayer(thisPlayer);
-        OpeningStatus = EnumOpeningStatus.HostingReadyToStart;
+        if (NewGameContainer.NewGameHost is not null)
+        {
+            var computers = NewGameContainer.NewGameHost.Players.Count(x => x.PlayerCategory == EnumPlayerCategory.Computer);
+            var count = _playerList.GetTemporaryCount + computers;
+            if (count == NewGameContainer.NewGameHost.Players.Count)
+            {
+                _data.MultiPlayer = true; //try this too.
+                _playerList.ClearTempPlayers(); //i think.  so this can reload in the proper order.
+                LoadNewGamePlayers();
+                await StartNewGameAsync();
+                return;
+            }
+            OpeningStatus = EnumOpeningStatus.WaitingForOtherPlayersForNewGame;
+        }
+        else
+        {
+            OpeningStatus = EnumOpeningStatus.HostingReadyToStart;
+        }
         ShowOtherChangesBecauseOfNetworkChange();
         _nets.IsEnabled = true; //try this.
         CommandContainer.OpenBusy = false;

@@ -17,9 +17,19 @@
     return; //for now.
 }
 <div>
+    
     @if (DataContext.OpeningStatus == EnumOpeningStatus.WaitingForHost)
     {
         <div>Either wait for host to start or cancel</div>
+    }
+    else if (DataContext.OpeningStatus == EnumOpeningStatus.WaitingForOtherPlayersForNewGame)
+    {
+        <div>
+            Waiting for others players to join for new game.
+        </div>
+        <div>
+            <LabelGridComponent DataContext="DataContext" Labels="_labels" />
+        </div>
     }
     else
     {
