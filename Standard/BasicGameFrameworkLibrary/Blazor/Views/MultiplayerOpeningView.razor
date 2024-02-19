@@ -26,7 +26,7 @@
     @foreach (var item in _hostNewGameInfo.Players)
     {
         <div>
-            @MultiplayerOpeningView<P>.GetTestPlayerInformation(item);
+            @GetTestPlayerInformation(item);
         </div>
     }
     return;
