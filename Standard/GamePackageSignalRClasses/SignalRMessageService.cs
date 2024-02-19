@@ -51,7 +51,7 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
 
             case EnumNetworkCategory.NewGame:
                 IsEnabled = false;
-                await aggregator.PublishAsync(new NewGameEventModel());
+                await aggregator.PublishAsync(new ClientNewGameEventModel());
                 break;
             case EnumNetworkCategory.Message:
                 SentMessage data = await js1.DeserializeObjectAsync<SentMessage>(e.Message);

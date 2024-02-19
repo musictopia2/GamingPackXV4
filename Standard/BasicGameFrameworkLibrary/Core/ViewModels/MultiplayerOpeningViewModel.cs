@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace BasicGameFrameworkLibrary.Core.ViewModels;
+﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
 [UseLabelGrid]
 public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGameVM, IOpeningMessenger, IReadyNM, IMultiplayerOpeningViewModel where P : class, IPlayerItem, new()
 {
@@ -14,6 +12,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     private EnumRestoreCategory _multiRestore;
     private PlayerCollection<P> _playerList = new();
     private PlayerCollection<P>? _saveList;
+    private bool _disconnectedClients;
     private bool _rejoin;
     public MultiplayerOpeningViewModel(CommandContainer commandContainer,
         IMultiplayerSaveState thisState,
@@ -84,7 +83,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     }
     public bool CanDisconnectEverybody()
     {
-        return ClientsConnected > 0; 
+        return ClientsConnected > 0;
     }
     [Command(EnumCommandCategory.Open)]
     public async Task DisconnectEverybodyAsync()
@@ -447,6 +446,16 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
             var count = _playerList.GetTemporaryCount + computers;
             if (count == NewGameContainer.NewGameHost.Players.Count)
             {
+                if (_disconnectedClients == false)
+                {
+                    await _nets.NewGameAsync();
+                    _disconnectedClients = true;
+                    OpeningStatus = EnumOpeningStatus.WaitingForOtherPlayersForNewGame; //try this way.
+                    ShowOtherChangesBecauseOfNetworkChange();
+                    _nets.IsEnabled = true;
+                    CommandContainer.OpenBusy = false;
+                    return; //well see.
+                }
                 _data.MultiPlayer = true; //try this too.
                 _playerList.ClearTempPlayers(); //i think.  so this can reload in the proper order.
                 LoadNewGamePlayers();
@@ -462,7 +471,6 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         ShowOtherChangesBecauseOfNetworkChange();
         _nets.IsEnabled = true; //try this.
         CommandContainer.OpenBusy = false;
-        await Task.CompletedTask;
     }
     Task IOpeningMessenger.WaitingForHostAsync(IGameNetwork network)
     {
