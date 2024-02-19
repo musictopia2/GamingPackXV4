@@ -65,6 +65,10 @@ public class SimpleClientClass
             //maybe still okay.  because the category is none.  hopefully means will be smart enough to figure out what to do next.
             _thisProgress.Report(new CustomEventHandler(EnumNetworkCategory.WaitingForHost)); //this means nobody is hosting.
         });
+        _hubConnection.On("NewGame", () =>
+        {
+
+        });
         _hubConnection.On("WaitForGame", () =>
         {
             //well see if the client needs to know host name in this case (?)
@@ -187,6 +191,10 @@ public class SimpleClientClass
     public async Task DisconnectEverybodyAsync()
     {
         await _hubConnection!.InvokeAsync("DisconnectEverybodyAsync");
+    }
+    public async Task NewGameAsync()
+    {
+        await _hubConnection!.InvokeAsync("NewGameAsync");
     }
     public async Task EndGameEarlyAsync(string nickName)
     {

@@ -277,9 +277,12 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
         }
         await _client1.BackToMainAsync();
     }
-
     async Task IGameNetwork.DisconnectEverybodyAsync()
     {
         await _client1!.DisconnectEverybodyAsync();
+    }
+    public async Task NewGameAsync()
+    {
+        await _client1!.NewGameAsync();
     }
 }

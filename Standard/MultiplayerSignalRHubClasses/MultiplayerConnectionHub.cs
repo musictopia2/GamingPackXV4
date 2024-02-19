@@ -25,7 +25,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         await Clients.Caller.SendAsync("ConnectionError", errorMessage);
     }
 
-    private readonly static BasicList<string> _excludeList = new();
+    private readonly static BasicList<string> _excludeList = [];
     public static BasicList<string> ExcludedList => _excludeList; //if there is any on the list, then only those can host.  this would stop the problems where 2 people are hosting the same time.
     public void BackToMain(string nickName)
     {
@@ -82,7 +82,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         }
         if (ExcludedList.Count > 0)
         {
-            if (ExcludedList.Any(xx => xx.ToLower() == nickName.ToLower()) == false)
+            if (ExcludedList.Any(xx => xx.Equals(nickName, StringComparison.CurrentCultureIgnoreCase)) == false)
             {
                 await SendErrorAsync("You do not have permission to host game");
                 return;
@@ -211,7 +211,16 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         }
         _gameStarted = true;
     }
+    public async Task NewGameAsync()
+    {
+        await DisconnectEverybodyAsync("NewGame");
+    }
     public async Task DisconnectEverybodyAsync()
+    {
+        await DisconnectEverybodyAsync("Close");
+        
+    }
+    private async Task DisconnectEverybodyAsync(string message)
     {
         if (_hostName == "")
         {
@@ -229,7 +238,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             if (item.Value.IsConnected && item.Key != _hostName)
             {
                 //await Clients.Client(thisInfo.ConnectionID).SendAsync("ReceiveMessage", thisMessage.Message);
-                await Clients.Client(item.Value.ConnectionID).SendAsync("Close");
+                await Clients.Client(item.Value.ConnectionID).SendAsync(message);
                 //await Clients.Caller.SendAsync("ConnectionError", errorMessage);
             }
         }
@@ -239,6 +248,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             return connect;
         });
     }
+
     public async Task ReconnectionAsync(string nickName)
     {
         if (_playerList.ContainsKey(nickName) == true)
