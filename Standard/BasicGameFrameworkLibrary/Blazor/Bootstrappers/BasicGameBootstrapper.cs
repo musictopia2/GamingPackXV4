@@ -1,7 +1,7 @@
 ﻿using BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc; //not common enough at this point.
 namespace BasicGameFrameworkLibrary.Blazor.Bootstrappers;
 public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrapper, IHandleAsync<SocketErrorEventModel>,
-    IHandleAsync<ClientNewGameEventModel>
+    IHandleAsync<ClientNewGameEventModel>,
     IHandleAsync<DisconnectEventModel>, IDisposable
     where TViewModel : IMainGPXShellVM //needs generic so its able to do the part to active a screen if any.
 {

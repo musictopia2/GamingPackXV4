@@ -1,45 +1,25 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.LoadingClasses;
-public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpdateGame, ILoadClientGame,
+public sealed class BasicGameLoader<P, S>(BasicData basic,
+    IGameInfo gameInfo,
+    IMultiplayerSaveState state,
+    TestOptions test,
+    IGamePackageResolver resolver,
+    CommandContainer command,
+    IEventAggregator aggregator,
+    IToast toast,
+    ISystemError error
+        ) : IStartMultiPlayerGame<P>, IClientUpdateGame, ILoadClientGame,
     IRequestNewGameRound, IRestoreMultiPlayerGame, IReconnectClientClass
 
     where P : class, IPlayerItem, new()
     where S : BasicSavedGameClass<P>, new() //i think the new one was needed after all.
 {
-    private readonly BasicData _basic;
-    private readonly IGameInfo _gameInfo;
-    private readonly IMultiplayerSaveState _state;
-    private readonly TestOptions _test;
     private IGameSetUp<P, S>? _gameSetUp;
-    private readonly IGamePackageResolver _resolver;
-    private readonly CommandContainer _command;
-    private readonly IEventAggregator _aggregator;
-    private readonly IToast _toast;
-    private readonly ISystemError _error;
-    public BasicGameLoader(BasicData basic,
-        IGameInfo gameInfo,
-        IMultiplayerSaveState state,
-        TestOptions test,
-        IGamePackageResolver resolver,
-        CommandContainer command,
-        IEventAggregator aggregator,
-        IToast toast,
-        ISystemError error
-        )
-    {
-        _basic = basic;
-        _gameInfo = gameInfo;
-        _state = state;
-        _test = test;
-        _resolver = resolver;
-        _command = command;
-        _aggregator = aggregator;
-        _toast = toast;
-        _error = error;
-    }
+
     private void SetGame()
     {
-        _gameSetUp = _resolver.Resolve<IGameSetUp<P, S>>();
-        _gameSetUp.ComputerEndsTurn = _test.ComputerEndsTurn || _gameInfo.PlayerType == EnumPlayerType.NetworkOnly;
+        _gameSetUp = resolver.Resolve<IGameSetUp<P, S>>();
+        _gameSetUp.ComputerEndsTurn = test.ComputerEndsTurn || gameInfo.PlayerType == EnumPlayerType.NetworkOnly;
         _gameSetUp.FinishUpAsync = FinishUpAsync;
     }
     private async Task FinishUpAsync(bool isBeginning)
@@ -50,12 +30,12 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
         }
         await GlobalHelpers.LoadGameScreenAsync.Invoke();
         await Step1FinishAsync(isBeginning);
-        _command.UpdateAll();
+        command.UpdateAll();
         await FinishStartAsync();
     }
     private async Task Step1FinishAsync(bool isBeginning)
     {
-        if (_basic.MultiPlayer == true && _basic.Client == false) //i think this has to be here.
+        if (basic.MultiPlayer == true && basic.Client == false) //i think this has to be here.
         {
             await _gameSetUp!.PopulateSaveRootAsync(); //has to be right before sending it.
             if (isBeginning == true)
@@ -70,7 +50,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
     }
     private async Task StartServerGameAsync()
     {
-        if (_basic.MultiPlayer == false || _basic.Client == true)
+        if (basic.MultiPlayer == false || basic.Client == true)
         {
             return;
         }
@@ -80,22 +60,22 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
     async Task ILoadClientGame.LoadGameAsync(string payLoad)
     {
         SetGame();
-        _basic.MultiPlayer = true;
-        _basic.Client = true;
+        basic.MultiPlayer = true;
+        basic.Client = true;
         _gameSetUp!.SaveRoot = await js1.DeserializeObjectAsync<S>(payLoad);
         _gameSetUp.PlayerList = _gameSetUp.SaveRoot.PlayerList;
-        _gameSetUp.PlayerList.FixNetworkedPlayers(_basic.NickName);
+        _gameSetUp.PlayerList.FixNetworkedPlayers(basic.NickName);
         await FinishGetSavedAsync();
-        _command.UpdateAll();
+        command.UpdateAll();
         await FinishStartAsync();
-        _command.Processing = false;
+        command.Processing = false;
     }
     private async Task FinishGetSavedAsync()
     {
-        _resolver.ReplaceObject(_gameSetUp!.SaveRoot);
+        resolver.ReplaceObject(_gameSetUp!.SaveRoot);
         if (_gameSetUp.SaveRoot!.PlayerList != null)
         {
-            _gameSetUp.SaveRoot.PlayerList.MainContainer = _resolver;
+            _gameSetUp.SaveRoot.PlayerList.MainContainer = resolver;
             _gameSetUp.SaveRoot.PlayerList.AutoSaved(_gameSetUp.SaveRoot.PlayOrder);
             _gameSetUp.PlayerList = _gameSetUp.SaveRoot.PlayerList;
         }
@@ -109,10 +89,10 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
     private async Task FinishStartAsync()
     {
         bool rets;
-        rets = _resolver.RegistrationExist<IFinishStart>();
+        rets = resolver.RegistrationExist<IFinishStart>();
         if (rets == true)
         {
-            IFinishStart thisFinish = _resolver.Resolve<IFinishStart>();
+            IFinishStart thisFinish = resolver.Resolve<IFinishStart>();
             await thisFinish.FinishStartAsync();
         }
         _gameSetUp!.StartingStatus();
@@ -134,20 +114,20 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
     {
         SetGame();
         await StartServerGameAsync();
-        _gameSetUp!.SaveRoot!.PlayOrder = (PlayOrderClass)_resolver.Resolve<IPlayOrder>();
-        if (_resolver.RegistrationExist<ISetObjects>())
+        _gameSetUp!.SaveRoot!.PlayOrder = (PlayOrderClass)resolver.Resolve<IPlayOrder>();
+        if (resolver.RegistrationExist<ISetObjects>())
         {
-            ISetObjects up = _resolver.Resolve<ISetObjects>();
+            ISetObjects up = resolver.Resolve<ISetObjects>();
             await up.SetSaveRootObjectsAsync();
         }
         if (startList.GetTemporaryCount == 0)
         {
             await FinishLoadingAsync(true);
-            _command.Processing = false;
+            command.Processing = false;
             return;
         }
         bool rets;
-        if (_test.PlayCategory == EnumTestPlayCategory.Normal)
+        if (test.PlayCategory == EnumTestPlayCategory.Normal)
         {
             rets = true;
         }
@@ -160,9 +140,9 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             rets = false; //can't shuffle because new game.
         }
         startList.FinishLoading(rets);
-        if (_basic.MultiPlayer == true)
+        if (basic.MultiPlayer == true)
         {
-            startList.FixNetworkedPlayers(_basic.NickName);
+            startList.FixNetworkedPlayers(basic.NickName);
         }
         if (NewGameContainer.NewGameHost is not null)
         {
@@ -171,12 +151,12 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
         }
         else
         {
-            _gameSetUp.SaveRoot.PlayOrder.WhoTurn = _test.WhoStarts;
+            _gameSetUp.SaveRoot.PlayOrder.WhoTurn = test.WhoStarts;
         }
         _gameSetUp.SaveRoot.PlayerList = startList;
         _gameSetUp.PlayerList = startList;
         await FinishLoadingAsync(true);
-        _command.Processing = false;
+        command.Processing = false;
     }
     async Task IStartMultiPlayerGame<P>.LoadSavedGameAsync()
     {
@@ -192,10 +172,10 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
     }
     private async Task<bool> GetSavedRootAsync()
     {
-        string payLoad = await _state.SavedDataAsync<S>();
+        string payLoad = await state.SavedDataAsync<S>();
         if (payLoad == "")
         {
-            _gameSetUp!.SaveRoot = _resolver.Resolve<S>();
+            _gameSetUp!.SaveRoot = resolver.Resolve<S>();
             return false;
         }
         _gameSetUp!.SaveRoot = await js1.DeserializeObjectAsync<S>(payLoad);
@@ -204,28 +184,28 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
     private async Task FinishHostSavedAsync()
     {
         await FinishGetSavedAsync();
-        if (_basic.MultiPlayer == true)
+        if (basic.MultiPlayer == true)
         {
             await _gameSetUp!.Network!.SendLoadGameMessageAsync(_gameSetUp.SaveRoot!);
         }
-        _command.UpdateAll();
+        command.UpdateAll();
         await FinishStartAsync();
-        _command.Processing = false;
+        command.Processing = false;
     }
     async Task IRequestNewGameRound.RequestNewGameAsync()
     {
         SetGame();
-        _command.ManuelFinish = true;
-        _command.Processing = true;
-        if (_gameInfo.GameType == EnumGameType.Rounds)
+        command.ManuelFinish = true;
+        command.Processing = true;
+        if (gameInfo.GameType == EnumGameType.Rounds)
         {
-            IStartNewGame temps = _resolver.Resolve<IStartNewGame>();
+            IStartNewGame temps = resolver.Resolve<IStartNewGame>();
             await temps.ResetAsync();
         }
-        if (_gameInfo.SinglePlayerChoice == EnumPlayerChoices.Solitaire)
+        if (gameInfo.SinglePlayerChoice == EnumPlayerChoices.Solitaire)
         {
             await FinishLoadingAsync(false);
-            _command.Processing = false;
+            command.Processing = false;
             return;
         }
         //foreach (var item in _gameSetUp!.PlayerList)
@@ -239,8 +219,8 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
 
         RawGameHost data = new();
         data.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoStarts;
-        data.GameName = _gameInfo.GameName;
-        data.Multiplayer = _basic.MultiPlayer; //i think
+        data.GameName = gameInfo.GameName;
+        data.Multiplayer = basic.MultiPlayer; //i think
         foreach (var item in _gameSetUp.PlayerList)
         {
             RawPlayer player = new()
@@ -254,7 +234,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
         }
         if (NewGameDelegates.NewGameHostStep1 is null)
         {
-            _toast.ShowInfoToast("So far, nobody is handling new game.  Means its stuck for now");
+            toast.ShowInfoToast("So far, nobody is handling new game.  Means its stuck for now");
             return;
         }
         //if there is nothing here, then will be stuck
@@ -268,35 +248,35 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
     }
     async Task IRequestNewGameRound.RequestNewRoundAsync()
     {
-        if (_gameInfo.GameType == EnumGameType.NewGame)
+        if (gameInfo.GameType == EnumGameType.NewGame)
         {
             throw new CustomBasicException("Rounds was never supported for this game.  Therefore, should have never been allowed");
         }
-        _command.ManuelFinish = true;
+        command.ManuelFinish = true;
         await FinishLoadingAsync(false);
-        _command.Processing = false;
+        command.Processing = false;
     }
     private async Task UpdateGameAsync(string data)
     {
         SetGame();
         _gameSetUp!.SaveRoot = await js1.DeserializeObjectAsync<S>(data);
         _gameSetUp.PlayerList = _gameSetUp.SaveRoot.PlayerList;
-        _gameSetUp.PlayerList.FixNetworkedPlayers(_basic.NickName);
+        _gameSetUp.PlayerList.FixNetworkedPlayers(basic.NickName);
         await FinishGetSavedAsync();
-        _command.UpdateAll();
+        command.UpdateAll();
         await FinishStartAsync();
-        _command.Processing = false;
+        command.Processing = false;
     }
     async Task IRestoreMultiPlayerGame.RestoreGameAsync()
     {
         SetGame();
         await GetSavedRootAsync();
         await FinishGetSavedAsync();
-        if (_basic.MultiPlayer == true)
+        if (basic.MultiPlayer == true)
         {
             await _gameSetUp!.Network!.SendRestoreGameAsync(_gameSetUp.SaveRoot!);
         }
-        _command.UpdateAll();
+        command.UpdateAll();
         await FinishStartAsync();
     }
     async Task IClientUpdateGame.UpdateGameAsync(string payload)
@@ -311,7 +291,7 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             await _gameSetUp.SetUpGameAsync(isBeginning);
             return;
         }
-        if (_gameSetUp.SaveRoot.PlayerList.Count == 0 && _gameInfo.SinglePlayerChoice != EnumPlayerChoices.Solitaire)
+        if (_gameSetUp.SaveRoot.PlayerList.Count == 0 && gameInfo.SinglePlayerChoice != EnumPlayerChoices.Solitaire)
         {
             throw new CustomBasicException("There was no players.  Rethink");
         }
@@ -326,14 +306,14 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
     }
     async Task IReconnectClientClass.ReconnectClientAsync(string nickName)
     {
-        if (_basic.MultiPlayer == false)
+        if (basic.MultiPlayer == false)
         {
-            _error.ShowSystemError("Only multiplayer games can be reconnected");
+            error.ShowSystemError("Only multiplayer games can be reconnected");
             return;
         }
-        if (_basic.Client == true)
+        if (basic.Client == true)
         {
-            _error.ShowSystemError("Clients cannot reconnect anybody");
+            error.ShowSystemError("Clients cannot reconnect anybody");
             return;
         }
         await Task.Delay(500);
@@ -352,24 +332,24 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             if (x >= 30000 && sentMessage == false)
             {
                 sentMessage = true;
-                _toast.ShowWarningToast("The Move Is Taking Too Long.  Could be major issue");
+                toast.ShowWarningToast("The Move Is Taking Too Long.  Could be major issue");
             }
         } while (true);
         if (busy)
         {
-            _toast.ShowInfoToast("Has to wait 2 seconds to attempt to finish process");
+            toast.ShowInfoToast("Has to wait 2 seconds to attempt to finish process");
             await Task.Delay(2000);
         }
         _gameSetUp!.Network!.ClearMessages();
-        if (_gameInfo.CanAutoSave == false)
+        if (gameInfo.CanAutoSave == false)
         {
-            _toast.ShowInfoToast($"Has to start new game because {nickName} was reconnected but the game does not support autoresume");
-            await _aggregator.PublishAsync(new EndGameEarlyEventModel());
+            toast.ShowInfoToast($"Has to start new game because {nickName} was reconnected but the game does not support autoresume");
+            await aggregator.PublishAsync(new EndGameEarlyEventModel());
             await _gameSetUp!.Network!.EndGameEarlyAsync(nickName);
-            await _aggregator.PublishAsync(new NewGameEventModel());
+            await aggregator.PublishAsync(new NewGameEventModel());
             return;
         }
-        _toast.ShowInfoToast($"{nickName} was reconnected");
-        await _aggregator.PublishAsync(new RestoreEventModel());
+        toast.ShowInfoToast($"{nickName} was reconnected");
+        await aggregator.PublishAsync(new RestoreEventModel());
     }
 }
