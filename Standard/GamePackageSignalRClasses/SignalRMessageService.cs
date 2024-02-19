@@ -1,39 +1,24 @@
 ﻿namespace GamePackageSignalRClasses;
-public class SignalRMessageService : IGameNetwork //not necessarily local anymore.
+public class SignalRMessageService(ISignalRInfo thisTCP,
+    IMessageProcessor thisMessage,
+    IGamePackageResolver resolver,
+    IGameInfo gameInfo,
+    IEventAggregator aggregator,
+    IToast toast
+        ) : IGameNetwork //not necessarily local anymore.
 {
-    private readonly ISignalRInfo _thisTCP;
-    private readonly IMessageProcessor _thisMessage;
-    private readonly IGamePackageResolver _resolver;
-    private readonly IGameInfo _gameInfo;
-    private readonly IEventAggregator _aggregator;
-    private readonly IToast _toast;
     private readonly Queue<SentMessage> _messages = new();
     private readonly object _synLock = new();
     private SimpleClientClass? _client1;
     private IOpeningMessenger? _thisOpen;
     public string NickName { get; set; } = "";
     public bool HasServer => true;
-    public SignalRMessageService(ISignalRInfo thisTCP,
-        IMessageProcessor thisMessage, 
-        IGamePackageResolver resolver, 
-        IGameInfo gameInfo, 
-        IEventAggregator aggregator, 
-        IToast toast
-        )
-    {
-        _thisTCP = thisTCP;
-        _thisMessage = thisMessage;
-        _resolver = resolver;
-        _gameInfo = gameInfo;
-        _aggregator = aggregator;
-        _toast = toast;
-    }
     public Task InitAsync()
     {
-        _client1 = new SimpleClientClass(_thisTCP, _gameInfo, _toast);
+        _client1 = new SimpleClientClass(thisTCP, gameInfo, toast);
         _client1.OnReceivedMessage += Client1_OnReceivedMessage!;
         _client1.NickName = NickName;
-        _thisOpen = _resolver.Resolve<IOpeningMessenger>();
+        _thisOpen = resolver.Resolve<IOpeningMessenger>();
         return Task.CompletedTask;
     }
     private async void Client1_OnReceivedMessage(object sender, CustomEventHandler e)
@@ -59,7 +44,7 @@ public class SignalRMessageService : IGameNetwork //not necessarily local anymor
                 break;
             case EnumNetworkCategory.CloseAll:
                 IsEnabled = false; //make false
-                await _aggregator.PublishAsync(new DisconnectEventModel());
+                await aggregator.PublishAsync(new DisconnectEventModel());
                 break;
                 //eventually need to think about other categories to be even more flexible (?)
                 //throw new CustomBasicException("I don't think we will close all here.  If I am wrong, rethink");
@@ -70,24 +55,24 @@ public class SignalRMessageService : IGameNetwork //not necessarily local anymor
             case EnumNetworkCategory.GameState:
                 //no open this time.
                 //i propose sending an event model message.
-                await _aggregator.PublishAsync(new ReconnectEventModel(e.Message));
+                await aggregator.PublishAsync(new ReconnectEventModel(e.Message));
                 break;
             case EnumNetworkCategory.Error:
                 IsEnabled = false;
-                await _thisMessage.ProcessErrorAsync(e.Message);
+                await thisMessage.ProcessErrorAsync(e.Message);
                 break;
             case EnumNetworkCategory.EndGameEarly:
                 ClearMessages();
                 IsEnabled = true; //has to be enabled.
                 InProgressHelpers.Reconnecting = true;
-                _toast.ShowInfoToast("Game is ending early because the game does not support autoresume and somebody got disconnected then reconnected again");
-                await _aggregator.PublishAsync(new EndGameEarlyEventModel()); //so can do any remaining cleanup.  anybody who needs to listen and do something can do.
+                toast.ShowInfoToast("Game is ending early because the game does not support autoresume and somebody got disconnected then reconnected again");
+                await aggregator.PublishAsync(new EndGameEarlyEventModel()); //so can do any remaining cleanup.  anybody who needs to listen and do something can do.
                 break;
             case EnumNetworkCategory.RestoreForReconnection:
                 ClearMessages();
                 IsEnabled = true; //needs to be true so can receive the next message which needs to be to reconnect.
                 InProgressHelpers.Reconnecting = true;
-                _toast.ShowInfoToast("Game is being restored which means redoing turns in progress since body got disconnected then reconnected again");
+                toast.ShowInfoToast("Game is being restored which means redoing turns in progress since body got disconnected then reconnected again");
                 //hopefully nothing else is needed (?)
                 break;
             default:
@@ -105,7 +90,7 @@ public class SignalRMessageService : IGameNetwork //not necessarily local anymor
             return;
         }
         IsEnabled = false;
-        await _thisMessage.ProcessMessageAsync(thisData);
+        await thisMessage.ProcessMessageAsync(thisData);
     }
     public async Task<bool> InitNetworkMessagesAsync(string nickName, bool client) //i think done for now for the sample.
     {
