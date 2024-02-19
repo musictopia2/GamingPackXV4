@@ -55,7 +55,28 @@ public partial class MultiplayerBasicParentShell
     private async Task NewGameHostStep1Async(RawGameHost game)
     {
         await JS!.SaveHostNewGameAsync(game);
-        await JS!.RefreshBrowser(); //this cannot care what happens next.
+        var item = OS;
+        if (item == EnumOS.Wasm)
+        {
+            await JS!.RefreshBrowser(); //this cannot care what happens next.
+            return;
+        }
+        if (item == EnumOS.WindowsDT)
+        {
+            if (NewGameDelegates.ReloadOnWPF is null)
+            {
+                Toast!.ShowUserErrorToast("Nobody is reloading on WPF.  Rethink");
+                return;
+            }
+            NewGameDelegates.ReloadOnWPF.Invoke();
+            return;
+        }
+        throw new CustomBasicException("Only wasm and windows desktop is supported");
+        //there is a good chance i cannot even support maui anymore.
+        //maui cannot even go back to main either.
+
+
+
         //Toast!.ShowInfoToast("Parent Shell Is Starting To Handle New Game");
     }
     private async Task ManuallyOpenCloseFullScreenAsync()
