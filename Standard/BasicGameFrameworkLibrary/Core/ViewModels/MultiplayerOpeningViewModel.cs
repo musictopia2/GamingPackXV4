@@ -342,33 +342,46 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     [LabelColumn]
     public int PreviousNonComputerNetworkedPlayers { get; set; }
     #endregion
-    public async Task StartAnotherGameAsync()
+    public async Task StartAnotherMultiplayerGameAsync()
     {
-        //this means starting another game.
         if (NewGameContainer.NewGameHost is null)
         {
             throw new CustomBasicException("Cannot start another game because has no information to load another game based on information from previous game");
         }
         if (NewGameContainer.NewGameHost.Multiplayer == false)
         {
-            StartSingle();
-            foreach (var item in NewGameContainer.NewGameHost.Players)
-            {
-                P player = new()
-                {
-                    Id = item.Id,
-                    NickName = item.NickName,
-                    IsHost = item.IsHost,
-                    PlayerCategory = item.PlayerCategory,
-                    IsReady = true,
-                    InGame = true
-                };
-                _playerList.AddPlayer(player);
-            }
-            await StartNewGameAsync();
-            return; //this is the easist
+            throw new CustomBasicException("Only multplayer games should call this method");
         }
-        //for now, will be stuck because not sure what to do.
+        //this is like join.
+        await HostAsync(); //this means try to host automatically now.
+    }
+    public async Task StartAnotherSinglePlayerGameAsync()
+    {
+        //this means starting another game.
+        if (NewGameContainer.NewGameHost is null)
+        {
+            throw new CustomBasicException("Cannot start another game because has no information to load another game based on information from previous game");
+        }
+        if (NewGameContainer.NewGameHost.Multiplayer)
+        {
+            throw new CustomBasicException("Only single player games should call this method");
+        }
+        StartSingle();
+        foreach (var item in NewGameContainer.NewGameHost.Players)
+        {
+            P player = new()
+            {
+                Id = item.Id,
+                NickName = item.NickName,
+                IsHost = item.IsHost,
+                PlayerCategory = item.PlayerCategory,
+                IsReady = true,
+                InGame = true
+            };
+            _playerList.AddPlayer(player);
+        }
+        await StartNewGameAsync();
+        return; //this is the easist
     }
     private void StartSingle()
     {
