@@ -56,9 +56,12 @@ public partial class MultiplayerOpeningView<P>
             if (_hostNewGameInfo is not null)
             {
                 NewGameContainer.NewGameHost = _hostNewGameInfo;
-                await DataContext!.StartAnotherGameAsync();
-                return; //hopefully does not need to do statehaschanged because its automatically loading another game.
-                //do something here.
+                if (_hostNewGameInfo.Multiplayer == false)
+                {
+                    await DataContext!.StartAnotherGameAsync();
+                    return; //hopefully does not need to do statehaschanged because its automatically loading another game.
+                }
+                //for now, if its multiplayer, has to show the details.
             }
             StateHasChanged(); //has to reload the state now.
         }
