@@ -67,7 +67,7 @@ public class SimpleClientClass
         });
         _hubConnection.On("NewGame", () =>
         {
-
+            _thisProgress.Report(new CustomEventHandler(EnumNetworkCategory.NewGame));
         });
         _hubConnection.On("WaitForGame", () =>
         {

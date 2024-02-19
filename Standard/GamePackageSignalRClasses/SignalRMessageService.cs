@@ -46,8 +46,13 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
                 IsEnabled = false; //make false
                 await aggregator.PublishAsync(new DisconnectEventModel());
                 break;
-                //eventually need to think about other categories to be even more flexible (?)
-                //throw new CustomBasicException("I don't think we will close all here.  If I am wrong, rethink");
+            //eventually need to think about other categories to be even more flexible (?)
+            //throw new CustomBasicException("I don't think we will close all here.  If I am wrong, rethink");
+
+            case EnumNetworkCategory.NewGame:
+                IsEnabled = false;
+                await aggregator.PublishAsync(new NewGameEventModel());
+                break;
             case EnumNetworkCategory.Message:
                 SentMessage data = await js1.DeserializeObjectAsync<SentMessage>(e.Message);
                 await ProcessDataAsync(data);
