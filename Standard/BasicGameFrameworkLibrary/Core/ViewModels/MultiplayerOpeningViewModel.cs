@@ -1,4 +1,6 @@
-﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
+﻿using System.Runtime.CompilerServices;
+
+namespace BasicGameFrameworkLibrary.Core.ViewModels;
 [UseLabelGrid]
 public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGameVM, IOpeningMessenger, IReadyNM, IMultiplayerOpeningViewModel where P : class, IPlayerItem, new()
 {
@@ -340,6 +342,34 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     [LabelColumn]
     public int PreviousNonComputerNetworkedPlayers { get; set; }
     #endregion
+    public async Task StartAnotherGameAsync()
+    {
+        //this means starting another game.
+        if (NewGameContainer.NewGameHost is null)
+        {
+            throw new CustomBasicException("Cannot start another game because has no information to load another game based on information from previous game");
+        }
+        if (NewGameContainer.NewGameHost.Multiplayer == false)
+        {
+            StartSingle();
+            foreach (var item in NewGameContainer.NewGameHost.Players)
+            {
+                P player = new()
+                {
+                    Id = item.Id,
+                    NickName = item.NickName,
+                    IsHost = item.IsHost,
+                    PlayerCategory = item.PlayerCategory,
+                    IsReady = true,
+                    InGame = true
+                };
+                _playerList.AddPlayer(player);
+            }
+            await StartNewGameAsync();
+            return; //this is the easist
+        }
+        //for now, will be stuck because not sure what to do.
+    }
     private void StartSingle()
     {
         _data.MultiPlayer = false;

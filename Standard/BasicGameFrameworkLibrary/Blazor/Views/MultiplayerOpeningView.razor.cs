@@ -53,6 +53,13 @@ public partial class MultiplayerOpeningView<P>
             }
             await JS!.DeleteNewGameDataAsync(); //go ahead and delete.  so if i start over again, has to do over again.
             _realLoad = true;
+            if (_hostNewGameInfo is not null)
+            {
+                NewGameContainer.NewGameHost = _hostNewGameInfo;
+                await DataContext!.StartAnotherGameAsync();
+                return; //hopefully does not need to do statehaschanged because its automatically loading another game.
+                //do something here.
+            }
             StateHasChanged(); //has to reload the state now.
         }
     }

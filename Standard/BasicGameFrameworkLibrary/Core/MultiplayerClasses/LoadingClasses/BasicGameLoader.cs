@@ -155,12 +155,24 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
         {
             rets = false;
         }
+        if (NewGameContainer.NewGameHost is not null)
+        {
+            rets = false; //can't shuffle because new game.
+        }
         startList.FinishLoading(rets);
         if (_basic.MultiPlayer == true)
         {
             startList.FixNetworkedPlayers(_basic.NickName);
         }
-        _gameSetUp.SaveRoot.PlayOrder.WhoTurn = _test.WhoStarts;
+        if (NewGameContainer.NewGameHost is not null)
+        {
+            _gameSetUp.SaveRoot.PlayOrder.WhoStarts = NewGameContainer.NewGameHost.WhoStarts;
+            _gameSetUp.SaveRoot.PlayOrder.WhoTurn = NewGameContainer.NewGameHost.WhoStarts;
+        }
+        else
+        {
+            _gameSetUp.SaveRoot.PlayOrder.WhoTurn = _test.WhoStarts;
+        }
         _gameSetUp.SaveRoot.PlayerList = startList;
         _gameSetUp.PlayerList = startList;
         await FinishLoadingAsync(true);
@@ -235,7 +247,8 @@ public sealed class BasicGameLoader<P, S> : IStartMultiPlayerGame<P>, IClientUpd
             {
                 Id = item.Id,
                 NickName = item.NickName,
-                PlayerCategory = item.PlayerCategory
+                PlayerCategory = item.PlayerCategory,
+                IsHost = item.IsHost,
             };
             data.Players.Add(player);
         }
