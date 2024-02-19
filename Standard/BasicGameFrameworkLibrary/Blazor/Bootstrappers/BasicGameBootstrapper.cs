@@ -1,6 +1,7 @@
 ﻿using BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc; //not common enough at this point.
 namespace BasicGameFrameworkLibrary.Blazor.Bootstrappers;
 public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrapper, IHandleAsync<SocketErrorEventModel>,
+    IHandleAsync<ClientNewGameEventModel>
     IHandleAsync<DisconnectEventModel>, IDisposable
     where TViewModel : IMainGPXShellVM //needs generic so its able to do the part to active a screen if any.
 {
@@ -154,14 +155,36 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     }
     async Task IHandleAsync<DisconnectEventModel>.HandleAsync(DisconnectEventModel message)
     {
-
-        await _message!.ShowMessageAsync("Disconnected.  May have to refresh which starts all over again");
+        await _message!.ShowMessageAsync("Disconnected.  Trying to reconnect to the host again");
+        await ReconnectToHostAsync();
     }
-
+    async Task IHandleAsync<ClientNewGameEventModel>.HandleAsync(ClientNewGameEventModel message)
+    {
+        await ReconnectToHostAsync();
+    }
+    private async Task ReconnectToHostAsync()
+    {
+        if (GlobalStartUp.JsRuntime is null)
+        {
+            throw new CustomBasicException("There is no javascript runtime.");
+        }
+        if (_container is null)
+        {
+            throw new CustomBasicException("No container");
+        }
+        IJSRuntime js = GlobalStartUp.JsRuntime;
+        RawGameClient client = new();
+        IGameInfo game = _container.Resolve<IGameInfo>();
+        client.GameName = game.GameName;
+        await js.SaveClientNewGameAsync(client);
+        await js.RefreshBrowser(); //i think.
+    }
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
     public void Dispose()
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
     {
         Unsubscribe();
     }
+
+    
 }
