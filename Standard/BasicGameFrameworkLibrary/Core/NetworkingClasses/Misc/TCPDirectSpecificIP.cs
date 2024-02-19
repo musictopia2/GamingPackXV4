@@ -1,32 +1,19 @@
 ﻿using BasicGameFrameworkLibrary.Core.NetworkingClasses.SocketClasses; //not common enough.
 namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc;
-public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
+public class TCPDirectSpecificIP(ITCPInfo thisTCP,
+    IMessageProcessor thisMessage,
+    IGamePackageResolver resolver,
+    IExit exit,
+    IToast toast
+        ) : IGameNetwork, IServerMessage
 {
-    private readonly ITCPInfo _thisTCP;
-    private readonly IMessageProcessor _thisMessage;
-    private readonly IGamePackageResolver _resolver;
-    private readonly IExit _exit;
-    private readonly IToast _toast;
     private readonly Queue<SentMessage> _messages = new();
     private readonly object _synLock = new();
     private BasicGameClientTCP? _client1;
-    public TCPDirectSpecificIP(ITCPInfo thisTCP,
-        IMessageProcessor thisMessage, 
-        IGamePackageResolver resolver,
-        IExit exit,
-        IToast toast
-        )
-    {
-        _thisTCP = thisTCP;
-        _thisMessage = thisMessage;
-        _resolver = resolver;
-        _exit = exit;
-        _toast = toast;
-    }
     public bool HasServer => true;
     public Task InitAsync()
     {
-        _client1 = new(this, _thisTCP);
+        _client1 = new(this, thisTCP);
         _client1.NickName = NickName;
         return Task.CompletedTask;
     }
@@ -206,28 +193,28 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
         IsEnabled = false;
         if (thisData.Status == "Connection Error")
         {
-            await _thisMessage.ProcessErrorAsync(thisData.Body);
+            await thisMessage.ProcessErrorAsync(thisData.Body);
             return;
         }
         if (thisData.Status == "hosting")
         {
-            var open = _resolver.Resolve<IOpeningMessenger>();
+            var open = resolver.Resolve<IOpeningMessenger>();
             await open.HostConnectedAsync(this);
             return;
         }
         if (thisData.Status == "clienthost")
         {
-            var open = _resolver.Resolve<IOpeningMessenger>();
+            var open = resolver.Resolve<IOpeningMessenger>();
             if (thisData.Body != "")
             {
                 await open.ConnectedToHostAsync(this, thisData.Body);
                 return;
             }
-            _toast.ShowWarningToast("Unable to connect to host.  This is TCP.  Therefore, can't keep trying");
-            _exit.ExitApp();
+            toast.ShowWarningToast("Unable to connect to host.  This is TCP.  Therefore, can't keep trying");
+            exit.ExitApp();
             return;
         }
-        await _thisMessage.ProcessMessageAsync(thisData);
+        await thisMessage.ProcessMessageAsync(thisData);
     }
 
     public Task StartGameAsync()
@@ -259,5 +246,10 @@ public class TCPDirectSpecificIP : IGameNetwork, IServerMessage
     Task IGameNetwork.DisconnectEverybodyAsync()
     {
         return Task.CompletedTask; //not sure how tcp will disconnect everybody.
+    }
+
+    public Task NewGameAsync()
+    {
+        return Task.CompletedTask; //still not sure how tcp will  let everybody know about new game either.
     }
 }

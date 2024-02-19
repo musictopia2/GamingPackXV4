@@ -2,7 +2,8 @@
 public interface IGameNetwork
 {
     Task DisconnectEverybodyAsync();
-    Task BackToMainAsync();
+    Task NewGameAsync(); //this is like disconnect everybody.  except when clients receive the message, they will save to local storage the game name and reload.
+    Task BackToMainAsync(); //for now, keep the back to main.
     Task<bool> InitNetworkMessagesAsync(string nickName, bool client);
     /// <summary>
     /// This will connect to host.
