@@ -208,17 +208,21 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
             command.Processing = false;
             return;
         }
-        //foreach (var item in _gameSetUp!.PlayerList)
-        //{
-        //    _toast.ShowInfoToast(item.NickName);
-        //}
+        foreach (var item in _gameSetUp!.PlayerList)
+        {
+            item.InGame = true;
+        }
         _gameSetUp!.SaveRoot.PlayOrder.IsReversed = false; //can be marked to false now because its a brand new game.
         _gameSetUp.SaveRoot.PlayOrder.WhoTurn = _gameSetUp.SaveRoot.PlayOrder.WhoStarts; //this is like before for who starts again for new game
         _gameSetUp.SaveRoot.PlayOrder.WhoTurn = await _gameSetUp.SaveRoot.PlayerList.CalculateWhoTurnAsync();
         _gameSetUp.SaveRoot.PlayOrder.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoTurn;
-
         RawGameHost data = new();
         data.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoStarts;
+        if (data.WhoStarts == 0)
+        {
+            toast!.ShowUserErrorToast("WhoStarts cannot be 0.  This means new game will not work");
+            return;
+        }
         data.GameName = gameInfo.GameName;
         data.Multiplayer = basic.MultiPlayer; //i think
         foreach (var item in _gameSetUp.PlayerList)
