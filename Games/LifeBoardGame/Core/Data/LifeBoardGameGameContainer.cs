@@ -257,6 +257,11 @@ public class LifeBoardGameGameContainer : BasicGameContainer<LifeBoardGamePlayer
         }
         if (isAthlete)
         {
+            if (SaveRoot.GameStatus != EnumWhatStatus.NeedToSpin && SaveRoot.GameStatus != EnumWhatStatus.NeedToEndTurn)
+            {
+                //you can only do at the beginning of your turn or when you are about to end your turn.
+                return false;
+            }
             return SingleInfo!.TilesCollected > 3;
         }
         if (SaveRoot!.SpinList.Count < 2)
