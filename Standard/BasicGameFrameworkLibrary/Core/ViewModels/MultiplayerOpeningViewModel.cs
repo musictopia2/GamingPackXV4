@@ -426,7 +426,6 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     }
     private void AddHostPlayer()
     {
-        AddHostPlayer();
         P thisPlayer = new();
         thisPlayer.NickName = _data.NickName;
         thisPlayer.IsHost = true;
