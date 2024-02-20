@@ -255,7 +255,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         MainVM = GetMainViewModel();
         await LoadScreenAsync(MainVM);
     }
-    protected virtual async Task ShowNewGameAsync()
+    protected async Task ShowNewGameAsync() //will try to force new game.  since it can close out and go back in again.
     {
         NewGameScreen = MainContainer.Resolve<INewGameVM>();
         await LoadScreenAsync(NewGameScreen);
