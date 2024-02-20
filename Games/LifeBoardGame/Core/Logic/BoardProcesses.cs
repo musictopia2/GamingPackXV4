@@ -1,72 +1,67 @@
-﻿namespace LifeBoardGame.Core.Logic;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace LifeBoardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class BoardProcesses : IBoardProcesses
+public class BoardProcesses(LifeBoardGameVMData model, LifeBoardGameGameContainer gameContainer, IToast toast) : IBoardProcesses
 {
-    private readonly LifeBoardGameVMData _model;
-    private readonly LifeBoardGameGameContainer _gameContainer;
-    public BoardProcesses(LifeBoardGameVMData model, LifeBoardGameGameContainer gameContainer)
-    {
-        _model = model;
-        _gameContainer = gameContainer;
-    }
-    public bool CanTrade4Tiles => _gameContainer.CanTradeForBig(true);
-    public bool CanPurchaseCarInsurance => _gameContainer.GameStatus == EnumWhatStatus.NeedToSpin && _gameContainer.SingleInfo!.CarIsInsured == false;
-    public bool CanAttendNightSchool => _gameContainer.GameStatus == EnumWhatStatus.NeedNight;
-    public bool CanPurchaseHouseInsurance => _gameContainer.SingleInfo!.HouseIsInsured == false
-        && _gameContainer.GameStatus == EnumWhatStatus.NeedToSpin
-        && _gameContainer.SingleInfo.HouseName != "";
+    public bool CanTrade4Tiles => gameContainer.CanTradeForBig(true);
+    public bool CanPurchaseCarInsurance => gameContainer.GameStatus == EnumWhatStatus.NeedToSpin && gameContainer.SingleInfo!.CarIsInsured == false;
+    public bool CanAttendNightSchool => gameContainer.GameStatus == EnumWhatStatus.NeedNight;
+    public bool CanPurchaseHouseInsurance => gameContainer.SingleInfo!.HouseIsInsured == false
+        && gameContainer.GameStatus == EnumWhatStatus.NeedToSpin
+        && gameContainer.SingleInfo.HouseName != "";
     public bool CanPurchaseStock
     {
         get
         {
-            if (_gameContainer.GameStatus != EnumWhatStatus.NeedToSpin)
+            if (gameContainer.GameStatus != EnumWhatStatus.NeedToSpin)
             {
                 return false;
             }
-            if (_gameContainer.SingleInfo!.FirstStock > 0 || _gameContainer.SingleInfo.SecondStock > 0)
+            if (gameContainer.SingleInfo!.FirstStock > 0 || gameContainer.SingleInfo.SecondStock > 0)
             {
                 return false;
             }
             return true;
         }
     }
-    public bool CanSellHouse => _gameContainer.GameStatus == EnumWhatStatus.NeedSellBuyHouse; //possibly used wrong status here.
+    public bool CanSellHouse => gameContainer.GameStatus == EnumWhatStatus.NeedSellBuyHouse; //possibly used wrong status here.
     public bool CanEndTurn
     {
         get
         {
-            if (_model.Instructions == "Choose one career or end turn and keep your current career")
+            if (model.Instructions == "Choose one career or end turn and keep your current career")
             {
                 return true;
             }
-            return _gameContainer!.GameStatus == EnumWhatStatus.NeedToEndTurn || _gameContainer.GameStatus == EnumWhatStatus.NeedTradeSalary || _gameContainer.GameStatus == EnumWhatStatus.NeedNight;
+            return gameContainer!.GameStatus == EnumWhatStatus.NeedToEndTurn || gameContainer.GameStatus == EnumWhatStatus.NeedTradeSalary || gameContainer.GameStatus == EnumWhatStatus.NeedNight;
         }
     }
     public async Task AttendNightSchoolAsync()
     {
-        if (_gameContainer.CanSendMessage())
+        if (gameContainer.CanSendMessage())
         {
-            await _gameContainer.Network!.SendAllAsync("attendednightschool");
+            await gameContainer.Network!.SendAllAsync("attendednightschool");
         }
-        _gameContainer.SaveRoot!.WasNight = true;
-        _model.GameDetails = "Paid $20,000 to attend night school to possibly get a better career";
-        _gameContainer.TakeOutExpense(20000);
-        _gameContainer.GameStatus = EnumWhatStatus.NeedNewCareer;
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.SaveRoot!.WasNight = true;
+        model.GameDetails = "Paid $20,000 to attend night school to possibly get a better career";
+        gameContainer.TakeOutExpense(20000);
+        gameContainer.GameStatus = EnumWhatStatus.NeedNewCareer;
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     public async Task ComputerChoseSpaceAsync(int space)
     {
-        if (_gameContainer.CanSendMessage())
+        if (gameContainer.CanSendMessage())
         {
-            await _gameContainer.Network!.SendMoveAsync(space);
+            await gameContainer.Network!.SendMoveAsync(space);
         }
-        IMoveProcesses move = _gameContainer.Resolver.Resolve<IMoveProcesses>();
+        IMoveProcesses move = gameContainer.Resolver.Resolve<IMoveProcesses>();
         await move.DoAutomateMoveAsync(space); //hopefully this simple.
     }
     public string GetSpaceDetails(int space)
     {
-        var thisSpace = _gameContainer!.SpaceList![space - 1];
+        var thisSpace = gameContainer!.SpaceList![space - 1];
         decimal newAmount;
         string output;
         switch (thisSpace.ActionInfo)
@@ -125,105 +120,110 @@ public class BoardProcesses : IBoardProcesses
     }
     public async Task HumanChoseSpaceAsync()
     {
-        IMoveProcesses move = _gameContainer.Resolver.Resolve<IMoveProcesses>();
-        if (_gameContainer.CanSendMessage())
+        if (gameContainer.CurrentSelected == 0)
         {
-            await _gameContainer.Network!.SendMoveAsync(_gameContainer.CurrentSelected);
+            toast.ShowUserErrorToast("Must choose space to move to");
+            return;
         }
-        await move.DoAutomateMoveAsync(_gameContainer.CurrentSelected);
+        IMoveProcesses move = gameContainer.Resolver.Resolve<IMoveProcesses>();
+        if (gameContainer.CanSendMessage())
+        {
+            await gameContainer.Network!.SendMoveAsync(gameContainer.CurrentSelected);
+        }
+        await move.DoAutomateMoveAsync(gameContainer.CurrentSelected);
     }
     public async Task OpeningOptionAsync(EnumStart start)
     {
-        if (_gameContainer.CanSendMessage() == true)
+        if (gameContainer.CanSendMessage() == true)
         {
-            await _gameContainer.Network!.SendAllAsync("firstoption", start);
+            await gameContainer.Network!.SendAllAsync("firstoption", start);
         }
-        _gameContainer.SingleInfo!.OptionChosen = start;
-        _gameContainer.RepaintBoard();
+        gameContainer.SingleInfo!.OptionChosen = start;
+        gameContainer.RepaintBoard();
         if (start == EnumStart.College)
         {
-            _gameContainer.SingleInfo.Loans = 100000;
-            _gameContainer.GameStatus = EnumWhatStatus.NeedToSpin;
+            gameContainer.SingleInfo.Loans = 100000;
+            gameContainer.GameStatus = EnumWhatStatus.NeedToSpin;
         }
         else
         {
-            _gameContainer.GameStatus = EnumWhatStatus.NeedChooseFirstCareer;
+            gameContainer.GameStatus = EnumWhatStatus.NeedChooseFirstCareer;
         }
 
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     public async Task PurchaseCarInsuranceAsync()
     {
-        if (_gameContainer.CanSendMessage() == true)
+        if (gameContainer.CanSendMessage() == true)
         {
-            await _gameContainer.Network!.SendAllAsync("purchasecarinsurance");
+            await gameContainer.Network!.SendAllAsync("purchasecarinsurance");
         }
-        _gameContainer.SingleInfo!.CarIsInsured = true;
-        _gameContainer.TakeOutExpense(5000);
-        _model.GameDetails = "Paid $5,000 for car insurance.  Now you owe nothing for car damages or car accidents";
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.SingleInfo!.CarIsInsured = true;
+        gameContainer.TakeOutExpense(5000);
+        model.GameDetails = "Paid $5,000 for car insurance.  Now you owe nothing for car damages or car accidents";
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     public async Task PurchaseHouseInsuranceAsync()
     {
-        if (_gameContainer.CanSendMessage() == true)
+        if (gameContainer.CanSendMessage() == true)
         {
-            await _gameContainer.Network!.SendAllAsync("purchasedhouseinsurance");
+            await gameContainer.Network!.SendAllAsync("purchasedhouseinsurance");
         }
-        decimal amountToPay = _gameContainer.SingleInfo!.InsuranceCost();
-        _gameContainer.TakeOutExpense(amountToPay);
-        _model.GameDetails = "Paid $5,000 for car insurance.  Now you owe nothing for car damages or car accidents";
-        _gameContainer.SingleInfo!.HouseIsInsured = true;
-        _gameContainer.ProcessCommission();
-        _model!.GameDetails = $"Paid {amountToPay.ToCurrency(0)}.  Now you owe nothing for damages for the house";
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        decimal amountToPay = gameContainer.SingleInfo!.InsuranceCost();
+        gameContainer.TakeOutExpense(amountToPay);
+        model.GameDetails = "Paid $5,000 for car insurance.  Now you owe nothing for car damages or car accidents";
+        gameContainer.SingleInfo!.HouseIsInsured = true;
+        gameContainer.ProcessCommission();
+        model!.GameDetails = $"Paid {amountToPay.ToCurrency(0)}.  Now you owe nothing for damages for the house";
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     public async Task PurchaseStockAsync()
     {
-        if (_gameContainer.CanSendMessage() == true)
+        if (gameContainer.CanSendMessage() == true)
         {
-            await _gameContainer.Network!.SendAllAsync("purchasedstock");
+            await gameContainer.Network!.SendAllAsync("purchasedstock");
         }
-        _gameContainer.SaveRoot!.EndAfterStock = false;
-        _gameContainer.TakeOutExpense(50000);
-        _gameContainer.ProcessCommission();
-        _model.GameDetails = "Paid $50,000 for stock";
-        _gameContainer.GameStatus = EnumWhatStatus.NeedChooseStock;
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.SaveRoot!.EndAfterStock = false;
+        gameContainer.TakeOutExpense(50000);
+        gameContainer.ProcessCommission();
+        model.GameDetails = "Paid $50,000 for stock";
+        gameContainer.GameStatus = EnumWhatStatus.NeedChooseStock;
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     public async Task RetirementAsync(EnumFinal final)
     {
-        if (_gameContainer.CanSendMessage() == true)
+        if (gameContainer.CanSendMessage() == true)
         {
-            await _gameContainer.Network!.SendAllAsync("choseretirement", final);
+            await gameContainer.Network!.SendAllAsync("choseretirement", final);
         }
-        _gameContainer.SingleInfo!.LastMove = final;
-        _gameContainer.RepaintBoard();
-        _gameContainer.SingleInfo.InGame = false;
-        await _gameContainer.EndTurnAsync!.Invoke();
+        gameContainer.SingleInfo!.LastMove = final;
+        gameContainer.RepaintBoard();
+        gameContainer.SingleInfo.InGame = false;
+        await gameContainer.EndTurnAsync!.Invoke();
     }
     public async Task SellHouseAsync()
     {
-        if (_gameContainer.CanSendMessage() == true)
+        if (gameContainer.CanSendMessage() == true)
         {
-            await _gameContainer.Network!.SendAllAsync("willsellhouse");
+            await gameContainer.Network!.SendAllAsync("willsellhouse");
         }
-        _gameContainer.GameStatus = EnumWhatStatus.NeedFindSellPrice;
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.GameStatus = EnumWhatStatus.NeedFindSellPrice;
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     public void SpaceDescription(int space)
     {
-        _gameContainer.CurrentSelected = space;
-        _model.GameDetails = GetSpaceDetails(space);
-        _gameContainer.RepaintBoard();
-        _gameContainer.Command.ReportAll();
+        gameContainer.CurrentSelected = space;
+        model.GameDetails = GetSpaceDetails(space);
+        gameContainer.RepaintBoard();
+        gameContainer.Command.ReportAll();
     }
     public async Task Trade4TilesAsync()
     {
-        if (_gameContainer.CanSendMessage())
+        if (gameContainer.CanSendMessage())
         {
-            await _gameContainer.Network!.SendAllAsync("tradedlifeforsalary");
+            await gameContainer.Network!.SendAllAsync("tradedlifeforsalary");
         }
-        _gameContainer.SingleInfo!.TilesCollected -= 4;
-        await _gameContainer.TradeForBigAsync(); //i think.
+        gameContainer.SingleInfo!.TilesCollected -= 4;
+        await gameContainer.TradeForBigAsync(); //i think.
     }
 }
