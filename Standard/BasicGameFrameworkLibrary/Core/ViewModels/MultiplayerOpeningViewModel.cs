@@ -416,6 +416,17 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
 
         network.IsEnabled = true;
         _playerList = new();
+        AddHostPlayer();
+        if (_saveList != null)
+        {
+            PreviousNonComputerNetworkedPlayers = _saveList.Count - 1;
+        }
+        OpeningStatus = EnumOpeningStatus.HostingWaitingForAtLeastOnePlayer;
+        CommandContainer.OpenBusy = false;
+    }
+    private void AddHostPlayer()
+    {
+        AddHostPlayer();
         P thisPlayer = new();
         thisPlayer.NickName = _data.NickName;
         thisPlayer.IsHost = true;
@@ -423,12 +434,6 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         thisPlayer.InGame = true;
         thisPlayer.PlayerCategory = EnumPlayerCategory.OtherHuman;
         _playerList.AddPlayer(thisPlayer);
-        if (_saveList != null)
-        {
-            PreviousNonComputerNetworkedPlayers = _saveList.Count - 1;
-        }
-        OpeningStatus = EnumOpeningStatus.HostingWaitingForAtLeastOnePlayer;
-        CommandContainer.OpenBusy = false;
     }
     async Task IReadyNM.ProcessReadyAsync(string nickName)
     {
@@ -450,6 +455,8 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
                 {
                     await _nets.NewGameAsync();
                     _disconnectedClients = true;
+                    _playerList.ClearTempPlayers();
+                    AddHostPlayer();
                     OpeningStatus = EnumOpeningStatus.WaitingForOtherPlayersForNewGame; //try this way.
                     ShowOtherChangesBecauseOfNetworkChange();
                     _nets.IsEnabled = true;
