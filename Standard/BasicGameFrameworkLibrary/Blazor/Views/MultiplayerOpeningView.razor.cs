@@ -74,7 +74,7 @@ public partial class MultiplayerOpeningView<P>
             //{
 
             //}
-            //StateHasChanged(); //has to reload the state now.
+            StateHasChanged(); //has to reload the state now.
         }
     }
     private static string GetTestPlayerInformation(RawPlayer player)
