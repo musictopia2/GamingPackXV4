@@ -12,6 +12,21 @@ public partial class BasicLoaderPage : IDisposable
     {
         await JS!.Update(); //i think.
     }
+    private async Task<string> GetAutomatedGameToLoadAsync()
+    {
+        //if blank, then means nothing.
+        RawGameClient? client = await JS!.GetClientNewGameAsync();
+        if (client is not null)
+        {
+            return client.GameName;
+        }
+        RawGameHost? host = await JS!.GetHostNewGameAsync();
+        if (host is not null)
+        {
+            return host.GameName;
+        }
+        return "";
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (GlobalClass.Multiplayer == false)
@@ -37,6 +52,15 @@ public partial class BasicLoaderPage : IDisposable
             else
             {
                 BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = false;
+            }
+            if (_showSettings == false)
+            {
+                _previousGame = await GetAutomatedGameToLoadAsync();
+                if (_previousGame != "")
+                {
+                    OpenPreviousGame();
+                    StateHasChanged(); //i think.
+                }
             }
             _previousGame = await JS!.GetLatestGameAsync();
             StateHasChanged();

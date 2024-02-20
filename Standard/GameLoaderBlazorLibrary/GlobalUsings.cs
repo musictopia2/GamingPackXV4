@@ -16,3 +16,4 @@ global using CommonBasicLibraries.BasicUIProcesses;
 global using BasicGameFrameworkLibrary.Blazor.Extensions;
 global using BasicBlazorLibrary.Helpers;
 global using bb1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.BasicDataFunctions;
+global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.NewGameClasses;

@@ -8,7 +8,7 @@
   </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="BasicBlazorLibrary" Version="8.0.4" />
-		<PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.1" />
+		<PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.4" />
 	</ItemGroup>
 	
 
