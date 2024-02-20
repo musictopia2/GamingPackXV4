@@ -65,11 +65,16 @@ public partial class MultiplayerOpeningView<P>
                 return;
                 //for now, if its multiplayer, has to show the details.
             }
+            if (_clientNewGameInfo is not null)
+            {
+                await DataContext!.ConnectAsync(); //try this way (?)
+                return;
+            }
             //if (_clientNewGameInfo is not null)
             //{
 
             //}
-            StateHasChanged(); //has to reload the state now.
+            //StateHasChanged(); //has to reload the state now.
         }
     }
     private static string GetTestPlayerInformation(RawPlayer player)
