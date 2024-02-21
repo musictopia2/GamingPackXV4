@@ -1,3 +1,5 @@
+using CommonBasicLibraries.BasicDataSettingsAndProcesses;
+
 namespace MonopolyCardGame.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
@@ -17,14 +19,37 @@ public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGa
         {
             AutoSelect = EnumHandAutoType.SelectAsMany
         };
+        TempHand1.ManualSelectUnselect = AfterSelectOne;
         AdditionalInfo1 = new();
         TempSets1 = new(command, resolver)
         {
             HowManySets = 5
         };
-
     }
-    public DetailCardViewModel AdditionalInfo1;
+    private void AfterSelectOne(MonopolyCardGameCardInformation payLoad)
+    {
+        if (payLoad.WhatCard != EnumCardType.IsRailRoad
+            && payLoad.WhatCard != EnumCardType.IsUtilities
+            && payLoad.WhatCard != EnumCardType.IsProperty)
+        {
+            AdditionalInfo1.Clear();
+            return; //certain cards don't need more information for this stage.
+        }
+        if (payLoad.IsSelected == false)
+        {
+            AdditionalInfo1.Clear();
+            return;
+        }
+        if (payLoad.Deck == AdditionalInfo1!.CurrentCard.Deck)
+        {
+            AdditionalInfo1.Clear();
+        }
+        else
+        {
+            AdditionalInfo1.AdditionalInfo(payLoad.Deck);
+        }
+    }
+    public DetailCardViewModel AdditionalInfo1 { get; set; }
     public DeckObservablePile<MonopolyCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<MonopolyCardGameCardInformation> Pile1 { get; set; }
     public HandObservable<MonopolyCardGameCardInformation> PlayerHand1 { get; set; }

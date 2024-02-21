@@ -11,7 +11,11 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<MonopolyCardGameShellVi
     //    container.RegisterSingleton<ITestCardSetUp<MonopolyCardGameCardInformation, MonopolyCardGamePlayerItem>, TestCards>();
     //    return base.RegisterTestsAsync();
     //}
-
+    protected override Task RegisterTestsAsync()
+    {
+        TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
+        return base.RegisterTestsAsync();
+    }
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

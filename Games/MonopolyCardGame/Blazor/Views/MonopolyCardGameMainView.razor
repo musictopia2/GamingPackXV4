@@ -7,6 +7,9 @@
     @if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.ManuallyFigureOutMonopolies && IsSelf)
     {
         <div>
+            <ShowCardBlazor />
+        </div>
+        <div>
             <HandBlazor Hand="_vmData.TempHand1" TargetContainerSize="80vw" />
         </div>
         
