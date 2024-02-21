@@ -1,11 +1,14 @@
 ﻿namespace MonopolyCardGame.Core.TempHandClasses;
 public class TempHand : HandObservable<MonopolyCardGameCardInformation>
 {
+    private readonly IGamePackageResolver _resolver;
+    private readonly MonopolyCardGameGameContainer _container;
     public Func<TempHand, Task>? SetClickedAsync { get; set; }
     public static Action<MonopolyCardGameCardInformation>? AfterSelectUnselectCard { get; set; }
-    public TempHand(CommandContainer command, IGamePackageResolver resolver) : base(command)
+    public TempHand(CommandContainer command, IGamePackageResolver resolver, MonopolyCardGameGameContainer container) : base(command)
     {
         _resolver = resolver;
+        _container = container;
         PrepSort();
     }
     public bool DidClickObject { get; set; } = false; //sometimes this is needed for mobile.
@@ -15,7 +18,7 @@ public class TempHand : HandObservable<MonopolyCardGameCardInformation>
     }
     protected override Task ProcessObjectClickedAsync(MonopolyCardGameCardInformation thisObject, int index)
     {
-        if (thisObject.WasAutomated == false)
+        if (thisObject.WasAutomated == false || _container.SaveRoot.ManuelStatus == EnumManuelStatus.OrganizingCards)
         {
             DidClickObject = true; //this is needed too.  so if other gets raised, will be ignored because already handled.
             thisObject.IsSelected = !thisObject.IsSelected; //try here.  hopefully works well.
@@ -32,7 +35,8 @@ public class TempHand : HandObservable<MonopolyCardGameCardInformation>
         await SetClickedAsync.Invoke(this);
     }
     private ISortObjects<MonopolyCardGameCardInformation>? _thisSort;
-    private readonly IGamePackageResolver _resolver;
+    
+
     private void PrepSort()
     {
         bool rets;

@@ -10,6 +10,7 @@ public class MonopolyCardGameMainGameClass
     private readonly CommandContainer _command;
     private readonly MonopolyCardGameGameContainer _gameContainer;
     private readonly IToast _toast;
+    //private bool _organizedAtLeastOnce;
     public MonopolyCardGameMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
         BasicData basicData,
@@ -31,6 +32,7 @@ public class MonopolyCardGameMainGameClass
         _gameContainer.ProcessTrade = ProcessTrade;
     }
     private bool _doContinue;
+    internal bool OrganizedAtLeastsOnce { get; private set; }
     public override async Task FinishGetSavedAsync()
     {
         LoadTradePiles();
@@ -41,7 +43,7 @@ public class MonopolyCardGameMainGameClass
             thisPlayer.TradePile!.HandList = new DeckRegularDict<MonopolyCardGameCardInformation>(thisList);
         });
 
-        if (SaveRoot.GameStatus == EnumWhatStatus.Other && SaveRoot.ManuelStatus == EnumManuelStatus.WentOutAfterDrawing5Cards)
+        if (SaveRoot.GameStatus == EnumWhatStatus.Other && SaveRoot.ManuelStatus == EnumManuelStatus.Final)
         {
             StartProcessAfterDrawing5Cards();
         }
@@ -74,6 +76,7 @@ public class MonopolyCardGameMainGameClass
         {
             LoadTradePiles();
         }
+        OrganizedAtLeastsOnce = false;
         SaveRoot!.ImmediatelyStartTurn = true;
         SaveRoot.GameStatus = EnumWhatStatus.DrawOrTrade;
         _doContinue = true;
@@ -244,7 +247,7 @@ public class MonopolyCardGameMainGameClass
         //    return;
         //}
         SaveRoot.GameStatus = EnumWhatStatus.Other;
-        SaveRoot.ManuelStatus = EnumManuelStatus.WentOutAfterDrawing5Cards;
+        SaveRoot.ManuelStatus = EnumManuelStatus.Final;
         //_model!.Status
         //SaveRoot.GameStatus = EnumWhatStatus.ManuallyFigureOutMonopolies;
         StartProcessAfterDrawing5Cards();
@@ -253,6 +256,10 @@ public class MonopolyCardGameMainGameClass
     }
     public void PopulateManuelCards()
     {
+        if (SaveRoot.ManuelStatus == EnumManuelStatus.OrganizingCards)
+        {
+            OrganizedAtLeastsOnce = true;
+        }
         //SingleInfo!.TempHands = SingleInfo.MainHandList.Where(x => x.WhatCard != EnumCardType.IsMr && x.WhatCard != EnumCardType.IsGo).ToRegularDeckDict();
         //_model.TempHand1.HandList = SingleInfo.TempHands;
         SingleInfo!.TempSets.Clear();
@@ -346,7 +353,7 @@ public class MonopolyCardGameMainGameClass
     private void LoadTradePiles()
     {
         var tempList = PlayerList!.GetAllPlayersStartingWithSelf();
-        tempList.ForEach(thisPlayer => CreateTradePile(thisPlayer));
+        tempList.ForEach(CreateTradePile);
     }
     private async Task ProcessEndAsync()
     {

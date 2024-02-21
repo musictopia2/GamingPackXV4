@@ -1,5 +1,3 @@
-using CommonBasicLibraries.BasicDataSettingsAndProcesses;
-
 namespace MonopolyCardGame.Blazor;
 public partial class MonopolyFinderComponent
 {
@@ -9,7 +7,7 @@ public partial class MonopolyFinderComponent
     private IToast? Toast { get; set; }
 
     [Parameter]
-    public EventCallback OnGoBack { get; set; } //if you thought you can go out but can't, then this will happen.
+    public EventCallback OnOrganizedCards { get; set; }
 
     private MonopolyCardGameVMData? _vmData;
     private ICustomCommand PutBackCommand => DataContext!.PutBackCommand!;

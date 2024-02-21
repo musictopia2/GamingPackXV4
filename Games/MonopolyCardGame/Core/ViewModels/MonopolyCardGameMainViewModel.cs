@@ -114,6 +114,21 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     {
         await _mainGame!.EndTurnAsync();
     }
+    public void OrganizeCards()
+    {
+        if (_mainGame!.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+        {
+            throw new CustomBasicException("Not Self.  Rethink");
+        }
+        PreviousStatus = _mainGame.SaveRoot.GameStatus;
+        _mainGame.SaveRoot.GameStatus = EnumWhatStatus.Other;
+        _mainGame.SaveRoot.ManuelStatus = EnumManuelStatus.OrganizingCards;
+        if (_mainGame.OrganizedAtLeastsOnce == false)
+        {
+            _mainGame.PopulateManuelCards();
+        }
+        //if (_model.TempHand1.)
+    }
     public bool CanGoOut => CanEnableDeck();
 
     [Command(EnumCommandCategory.Game)]
@@ -123,10 +138,13 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         {
             throw new CustomBasicException("Not Self.  Rethink");
         }
-        PreviousStatus = _mainGame.SaveRoot.GameStatus;
-        _mainGame.SaveRoot.GameStatus = EnumWhatStatus.Other;
-        _mainGame.SaveRoot.ManuelStatus = EnumManuelStatus.InitiallyGoingOut;
-        _mainGame.PopulateManuelCards();
+        _toast.ShowUserErrorToast("Has to rethink the processes for going out now");
+
+
+        //PreviousStatus = _mainGame.SaveRoot.GameStatus;
+        //_mainGame.SaveRoot.GameStatus = EnumWhatStatus.Other;
+        //_mainGame.SaveRoot.ManuelStatus = EnumManuelStatus.InitiallyGoingOut;
+        //_mainGame.PopulateManuelCards();
         //if i go out and go back again, choose again.
         //var newList = _mainGame.SingleInfo.MainHandList.ToRegularDeckDict();
         //if (_mainGame.CanGoOut(newList) == false)
@@ -149,6 +167,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
             thisCard.IsSelected = false;
             _model.TempSets1.RemoveObject(thisCard.Deck);
         });
+        _model.AdditionalInfo1.Clear(); //i think
         _mainGame.SortTempHand(thisList);
     }
     [Command(EnumCommandCategory.Game)]

@@ -8,7 +8,7 @@ public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGa
     public string NormalTurn { get; set; } = "";
     [LabelColumn]
     public string Status { get; set; } = "";
-    public MonopolyCardGameVMData(CommandContainer command, IGamePackageResolver resolver)
+    public MonopolyCardGameVMData(CommandContainer command, IGamePackageResolver resolver, MonopolyCardGameGameContainer container)
     {
         Deck1 = new(command);
         Pile1 = new(command);
@@ -19,7 +19,7 @@ public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGa
         };
         TempHand1.ManualSelectUnselect = AfterSelectOne;
         AdditionalInfo1 = new();
-        TempSets1 = new(command, resolver)
+        TempSets1 = new(command, resolver, container)
         {
             HowManySets = 5
         };
@@ -29,7 +29,9 @@ public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGa
     {
         if (payLoad.WhatCard != EnumCardType.IsRailRoad
             && payLoad.WhatCard != EnumCardType.IsUtilities
-            && payLoad.WhatCard != EnumCardType.IsProperty)
+            && payLoad.WhatCard != EnumCardType.IsProperty
+            && payLoad.WhatCard != EnumCardType.IsHotel
+            )
         {
             AdditionalInfo1.Clear();
             return; //certain cards don't need more information for this stage.

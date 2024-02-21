@@ -1,4 +1,9 @@
 ﻿@inherits BasicGameView<MonopolyCardGameMainViewModel>
+@if (Status == EnumManuelStatus.None)
+{
+    <div>Cannot use monopoly finder because the manuel status is none.  Rethink</div>
+    return;
+}
 <div>
     <ShowCardBlazor />
 </div>
@@ -11,10 +16,9 @@
 <div>
     <GameButtonComponent Display="Put Back"
                          CommandObject="PutBackCommand" />
-    @if (Status == EnumManuelStatus.InitiallyGoingOut)
+    @if (Status == EnumManuelStatus.OrganizingCards)
     {
-        <GameButtonComponent Display="Failed To Go Out" CustomCallBack="OnGoBack" />
-        <GameButtonComponent Display="Confirm Going Out" CustomCallBack="FirstGoOutAsync" />
+        <GameButtonComponent Display="Finish Organizing Cards" CustomCallBack="OnOrganizedCards" />
     }
 </div>
-<TempSetsBlazor TargetContainerSize="60vh" Divider="1.5" TempPiles="_vmData.TempSets1" />
+<TempSetsBlazor TargetContainerSize="40vh" Divider="1.5" TempPiles="_vmData.TempSets1" />

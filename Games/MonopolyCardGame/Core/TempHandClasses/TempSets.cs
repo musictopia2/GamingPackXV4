@@ -1,5 +1,5 @@
 ﻿namespace MonopolyCardGame.Core.TempHandClasses;
-public class TempSets(CommandContainer command, IGamePackageResolver resolver)
+public class TempSets(CommandContainer command, IGamePackageResolver resolver, MonopolyCardGameGameContainer container)
 {
     public Func<int, Task>? SetClickedAsync { get; set; }
     public int Spacing { get; set; }
@@ -28,7 +28,7 @@ public class TempSets(CommandContainer command, IGamePackageResolver resolver)
         TempHand thisSet;
         for (x = 1; x <= loopTo; x++)
         {
-            thisSet = new(command, resolver);
+            thisSet = new(command, resolver, container);
             thisSet.AutoSelect = EnumHandAutoType.None;
             thisSet.SendAlwaysEnable(enables);
             thisSet.Text = "Set";

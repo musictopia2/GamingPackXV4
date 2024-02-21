@@ -25,14 +25,25 @@ public partial class MonopolyCardGameMainView
     private ICustomCommand GoOutCommand => DataContext!.GoOutCommand!;
     //private ICustomCommand ManuallyPlaySetsCommand => DataContext!.ManuallyPlaySetsCommand!;
     //private ICustomCommand BackCommand => DataContext!.PutBackCommand!;
-    private void ChangeMind()
+    //private void ChangeMind()
+    //{
+    //    if (DataContext!.PreviousStatus == EnumWhatStatus.None)
+    //    {
+    //        throw new CustomBasicException("The previous state cannot be none");
+    //    }
+    //    _gameContainer!.SaveRoot.GameStatus = DataContext!.PreviousStatus;
+    //    DataContext!.PreviousStatus = EnumWhatStatus.None; //this is now none.
+    //    //hopefully good enough.
+    //}
+
+    private void FinishedOrganizingCards()
     {
         if (DataContext!.PreviousStatus == EnumWhatStatus.None)
         {
             throw new CustomBasicException("The previous state cannot be none");
         }
-        _gameContainer!.SaveRoot.GameStatus = DataContext!.PreviousStatus;
-        DataContext!.PreviousStatus = EnumWhatStatus.None; //this is now none.
-        //hopefully good enough.
+        _gameContainer!.SaveRoot.GameStatus = DataContext.PreviousStatus;
+        DataContext.PreviousStatus = EnumWhatStatus.None;
     }
+
 }

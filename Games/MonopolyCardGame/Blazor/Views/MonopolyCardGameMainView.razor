@@ -6,7 +6,9 @@
 <CascadingValue Value="_vmData">
     @if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Other)
     {
-        <MonopolyFinderComponent OnGoBack="ChangeMind" Status="_gameContainer.SaveRoot.ManuelStatus" />
+        <MonopolyFinderComponent
+            OnOrganizedCards=FinishedOrganizingCards
+            Status="_gameContainer.SaveRoot.ManuelStatus" />
         return;
     }
     <GridContainer Inline="true" Columns="75vw 25vw">
@@ -19,6 +21,7 @@
                     <DrawPileBlazor DeckPile="_vmData.Deck1" />
                 </StackItem>
                 <StackItem>
+                    <GameButtonComponent Display="Organize Cards" CustomCallBack="DataContext.OrganizeCards" />
                     <GameButtonComponent Display="Resume"
                                          CommandObject="ResumeCommand"
                                          StartOnNewLine="true" />
