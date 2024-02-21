@@ -23,6 +23,7 @@ public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGa
         {
             HowManySets = 5
         };
+        TempHand.AfterSelectUnselectCard = AfterSelectOne;
     }
     private void AfterSelectOne(MonopolyCardGameCardInformation payLoad)
     {

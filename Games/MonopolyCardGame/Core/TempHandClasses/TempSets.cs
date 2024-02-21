@@ -1,22 +1,17 @@
 ﻿namespace MonopolyCardGame.Core.TempHandClasses;
-public class TempSets
+public class TempSets(CommandContainer command, IGamePackageResolver resolver)
 {
     public Func<int, Task>? SetClickedAsync { get; set; }
     public int Spacing { get; set; }
     public int HowManySets { get; set; } = 5; // defaults at 5
-    public BasicList<TempHand> SetList = new(); //has to be public because of data binding
+    public BasicList<TempHand> SetList = []; //has to be public because of data binding
     public DeckRegularDict<MonopolyCardGameCardInformation> ObjectList(int index)
     {
         return SetList[index - 1].HandList; //i send in one based.
     }
-    public TempSets(CommandContainer command, IGamePackageResolver resolver)
-    {
-        _command = command;
-        _resolver = resolver;
-    }
+
     private IEventAggregator? _thisE;
-    private readonly CommandContainer _command;
-    private readonly IGamePackageResolver _resolver;
+
     public void ReportCanExecuteChange()
     {
         SetList.ForEach(x => x.ReportCanExecuteChange());
@@ -27,13 +22,13 @@ public class TempSets
         {
             return;
         }
-        _thisE = _resolver.Resolve<IEventAggregator>();
+        _thisE = resolver.Resolve<IEventAggregator>();
         int x;
         var loopTo = HowManySets;
         TempHand thisSet;
         for (x = 1; x <= loopTo; x++)
         {
-            thisSet = new(_command, _resolver);
+            thisSet = new(command, resolver);
             thisSet.AutoSelect = EnumHandAutoType.None;
             thisSet.SendAlwaysEnable(enables);
             thisSet.Text = "Set";

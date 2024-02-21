@@ -2,6 +2,7 @@
 public class TempHand : HandObservable<MonopolyCardGameCardInformation>
 {
     public Func<TempHand, Task>? SetClickedAsync { get; set; }
+    public static Action<MonopolyCardGameCardInformation>? AfterSelectUnselectCard { get; set; }
     public TempHand(CommandContainer command, IGamePackageResolver resolver) : base(command)
     {
         _resolver = resolver;
@@ -16,6 +17,7 @@ public class TempHand : HandObservable<MonopolyCardGameCardInformation>
     {
         DidClickObject = true; //this is needed too.  so if other gets raised, will be ignored because already handled.
         thisObject.IsSelected = !thisObject.IsSelected; //try here.  hopefully works well.
+        AfterSelectUnselectCard?.Invoke(thisObject);
         return Task.CompletedTask;
     }
     protected override async Task PrivateBoardSingleClickedAsync()

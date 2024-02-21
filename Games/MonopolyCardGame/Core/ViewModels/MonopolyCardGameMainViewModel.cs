@@ -22,6 +22,8 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         _model.Deck1.NeverAutoDisable = true;
         CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         _model.TempSets1.SetClickedAsync = TempSets1_SetClickedAsync;
+        //may need code for after choosing card for tempsets.
+        //_model.TempSets1.
         _model.TempSets1.Init(this);
         CreateCommands(commandContainer);
     }
@@ -43,6 +45,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
             return Task.CompletedTask;
         }
         _model.TempSets1!.AddCards(index, tempList);
+        _model.AdditionalInfo1.Clear(); //i think.
         _isProcessing = false;
         return Task.CompletedTask;
     }

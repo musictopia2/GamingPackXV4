@@ -242,7 +242,7 @@ public class MonopolyCardGameMainGameClass
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             _model.Status = "Needs to manually figure out the monopolies.";
-            SingleInfo.TempHands = SingleInfo.MainHandList.ToRegularDeckDict();
+            SingleInfo.TempHands = SingleInfo.MainHandList.Where(x => x.WhatCard != EnumCardType.IsMr && x.WhatCard != EnumCardType.IsGo).ToRegularDeckDict();
             _model.TempHand1.HandList = SingleInfo.TempHands;
             SingleInfo.TempSets.Clear();
         }
