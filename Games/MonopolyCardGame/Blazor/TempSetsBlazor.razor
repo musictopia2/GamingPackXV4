@@ -3,23 +3,46 @@
 {
     return;
 }
-<StackLayout ItemSpacing="10px" Orientation="EnumOrientation.Horizontal">
+@if (Mode == EnumMode.Frame)
+{
+    <StackLayout ItemSpacing="10px" Orientation="EnumOrientation.Horizontal">
+        @foreach (var pile in TempPiles.SetList)
+        {
+            <StackItem>
+                <BaseHandBlazor D="MonopolyCardGameCardInformation" Hand="pile"
+                                HandType="EnumHandList.Vertical"
+                                AdditionalSpacing="@AdditionalSpacing"
+                                Divider="@Divider"
+                                TargetContainerSize="@TargetContainerSize"
+                                PaddingRight="40"
+                                Context="item">
+                    <CardGraphicsBlazor CommandObject="pile.ObjectSingleClickCommand"
+                                        CommandParameter="item"
+                                        DeckObject="item" />
+
+                    />
+                </BaseHandBlazor>
+            </StackItem>
+        }
+    </StackLayout>
+    return;
+}
+<StackLayout Orientation="EnumOrientation.Horizontal">
     @foreach (var pile in TempPiles.SetList)
     {
-        <StackItem>
-            <BaseHandBlazor D="MonopolyCardGameCardInformation" Hand="pile"
-                        HandType="EnumHandList.Vertical"
-                        AdditionalSpacing="@AdditionalSpacing"
-                        Divider="@Divider"
-                        TargetContainerSize="@TargetContainerSize"
-                        PaddingRight="40"
-                        Context="item">
-                        <CardGraphicsBlazor CommandObject="pile.ObjectSingleClickCommand"
-                                CommandParameter="item"
-                                DeckObject="item"/>
-                 
-                 />
-            </BaseHandBlazor>
-        </StackItem>
+        @if (pile.HandList.Count > 0)
+        {
+            <StackItem>
+                <TemporaryCardsBlazor Hand="pile"
+                                      AdditionalSpacing="@AdditionalSpacing"
+                                      Divider="@Divider"
+                                      TargetContainerSize="@TargetContainerSize"
+                                      Context="item">
+                    <CardGraphicsBlazor CommandObject="pile.ObjectSingleClickCommand"
+                                        CommandParameter="item"
+                                        DeckObject="item" />
+                </TemporaryCardsBlazor>
+            </StackItem>
+        }   
     }
 </StackLayout>

@@ -9,4 +9,6 @@ public partial class TempSetsBlazor
     public double AdditionalSpacing { get; set; } = -5;
     [Parameter]
     public string TargetContainerSize { get; set; } = ""; //if not set, will keep going forever.
+    [Parameter]
+    public EnumMode Mode { get; set; }
 }

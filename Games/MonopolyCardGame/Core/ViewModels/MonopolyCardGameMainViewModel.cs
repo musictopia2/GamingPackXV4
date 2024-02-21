@@ -2,7 +2,7 @@ namespace MonopolyCardGame.Core.ViewModels;
 [InstanceGame]
 public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCardGameCardInformation>
 {
-    private readonly MonopolyCardGameMainGameClass _mainGame;
+    public readonly MonopolyCardGameMainGameClass MainGame;
     private readonly MonopolyCardGameVMData _model;
     private readonly IToast _toast;
     public EnumWhatStatus PreviousStatus { get; set; }
@@ -17,10 +17,12 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
-        _mainGame = mainGame;
+        MainGame = mainGame;
         _model = viewModel;
         _toast = toast;
         _model.Deck1.NeverAutoDisable = true;
+        var player = MainGame.PlayerList.GetSelf();
+        player.DoInit();
         CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         _model.TempSets1.SetClickedAsync = TempSets1_SetClickedAsync;
         //may need code for after choosing card for tempsets.
@@ -41,11 +43,16 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         {
             _toast.ShowUserErrorToast("You cannot place gos or mr monopolies into the tempsets to make a monopoly");
             //_model.TempHand1.HandList.AddRange(tempList);
-            _mainGame.SortTempHand(tempList);
+            MainGame.SortTempHand(tempList);
             _isProcessing = false;
             return Task.CompletedTask;
         }
         _model.TempSets1!.AddCards(index, tempList);
+        foreach (var item in tempList)
+        {
+            MainGame.SingleInfo!.MainHandList.RemoveSpecificItem(item);
+            //not sure about if additional cards are being account for this time (?)
+        }
         _model.AdditionalInfo1.Clear(); //i think.
         _isProcessing = false;
         return Task.CompletedTask;
@@ -60,7 +67,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     }
     protected override bool CanEnableDeck()
     {
-        return _mainGame!.SaveRoot!.GameStatus == EnumWhatStatus.DrawOrTrade || _mainGame.SaveRoot.GameStatus == EnumWhatStatus.Either;
+        return MainGame!.SaveRoot!.GameStatus == EnumWhatStatus.DrawOrTrade || MainGame.SaveRoot.GameStatus == EnumWhatStatus.Either;
     }
     protected override bool CanEnablePile1()
     {
@@ -92,9 +99,9 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         {
             return;
         }
-        _mainGame!.PlayerList!.ForEach(thisPlayer =>
+        MainGame!.PlayerList!.ForEach(thisPlayer =>
         {
-            if (_mainGame.SaveRoot!.GameStatus == EnumWhatStatus.LookOnly)
+            if (MainGame.SaveRoot!.GameStatus == EnumWhatStatus.LookOnly)
             {
                 thisPlayer!.TradePile!.IsEnabled = false;
             }
@@ -104,28 +111,33 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
             }
             else
             {
-                thisPlayer.TradePile!.IsEnabled = _mainGame.SaveRoot.GameStatus == EnumWhatStatus.Discard || _mainGame.SingleInfo!.MainHandList.Count == 9;
+                thisPlayer.TradePile!.IsEnabled = MainGame.SaveRoot.GameStatus == EnumWhatStatus.Discard || MainGame.SingleInfo!.MainHandList.Count == 9;
             }
         });
     }
-    public bool CanResume => _mainGame!.SaveRoot!.GameStatus == EnumWhatStatus.LookOnly;
+    public bool CanResume => MainGame!.SaveRoot!.GameStatus == EnumWhatStatus.LookOnly;
     [Command(EnumCommandCategory.Game)]
     public async Task ResumeAsync()
     {
-        await _mainGame!.EndTurnAsync();
+        await MainGame!.EndTurnAsync();
     }
     public void OrganizeCards()
     {
-        if (_mainGame!.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+        if (MainGame!.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
             throw new CustomBasicException("Not Self.  Rethink");
         }
-        PreviousStatus = _mainGame.SaveRoot.GameStatus;
-        _mainGame.SaveRoot.GameStatus = EnumWhatStatus.Other;
-        _mainGame.SaveRoot.ManuelStatus = EnumManuelStatus.OrganizingCards;
-        if (_mainGame.OrganizedAtLeastsOnce == false)
+        PreviousStatus = MainGame.SaveRoot.GameStatus;
+        MainGame.SaveRoot.GameStatus = EnumWhatStatus.Other;
+        MainGame.SaveRoot.ManuelStatus = EnumManuelStatus.OrganizingCards;
+        if (MainGame.OrganizedAtLeastsOnce == false)
         {
-            _mainGame.PopulateManuelCards();
+            MainGame.PopulateManuelCards();
+        }
+        else
+        {
+            MainGame.SingleInfo.TempHands.Clear();
+            MainGame.SingleInfo.TempHands.AddRange(MainGame.SingleInfo.MainHandList); //hopefully this simple
         }
         //if (_model.TempHand1.)
     }
@@ -134,29 +146,29 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     [Command(EnumCommandCategory.Game)]
     public void GoOut()
     {
-        if (_mainGame!.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+        if (MainGame!.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
             throw new CustomBasicException("Not Self.  Rethink");
         }
         _toast.ShowUserErrorToast("Has to rethink the processes for going out now");
 
 
-        //PreviousStatus = _mainGame.SaveRoot.GameStatus;
-        //_mainGame.SaveRoot.GameStatus = EnumWhatStatus.Other;
-        //_mainGame.SaveRoot.ManuelStatus = EnumManuelStatus.InitiallyGoingOut;
-        //_mainGame.PopulateManuelCards();
+        //PreviousStatus = MainGame.SaveRoot.GameStatus;
+        //MainGame.SaveRoot.GameStatus = EnumWhatStatus.Other;
+        //MainGame.SaveRoot.ManuelStatus = EnumManuelStatus.InitiallyGoingOut;
+        //MainGame.PopulateManuelCards();
         //if i go out and go back again, choose again.
-        //var newList = _mainGame.SingleInfo.MainHandList.ToRegularDeckDict();
-        //if (_mainGame.CanGoOut(newList) == false)
+        //var newList = MainGame.SingleInfo.MainHandList.ToRegularDeckDict();
+        //if (MainGame.CanGoOut(newList) == false)
         //{
         //    _toast.ShowUserErrorToast("Sorry, you cannot go out");
         //    return;
         //}
-        //if (_mainGame.BasicData!.MultiPlayer)
+        //if (MainGame.BasicData!.MultiPlayer)
         //{
-        //    await _mainGame.Network!.SendAllAsync("goout");
+        //    await MainGame.Network!.SendAllAsync("goout");
         //}
-        //await _mainGame.ProcessGoingOutAsync();
+        //await MainGame.ProcessGoingOutAsync();
     }
     [Command(EnumCommandCategory.Game)]
     public void PutBack()
@@ -166,14 +178,18 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         {
             thisCard.IsSelected = false;
             _model.TempSets1.RemoveObject(thisCard.Deck);
+            MainGame.SingleInfo!.AdditionalCards.RemoveSpecificItem(thisCard); //this may be needed (?)
+            MainGame.SingleInfo.MainHandList.Add(thisCard);
+
+            //not sure about cards going into your hand though (?)
         });
         _model.AdditionalInfo1.Clear(); //i think
-        _mainGame.SortTempHand(thisList);
+        MainGame.SortTempHand(thisList);
     }
     [Command(EnumCommandCategory.Game)]
     public async Task ManuallyPlaySetsAsync()
     {
-        bool rets = _mainGame.HasAllValidMonopolies();
+        bool rets = MainGame.HasAllValidMonopolies();
         if (rets == false)
         {
             _toast.ShowUserErrorToast("You do not have valid monopolies");
@@ -184,22 +200,22 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
             _toast.ShowUserErrorToast("You have to use up all the chances");
             return;
         }
-        var firsts = _mainGame.ListValidSets();
+        var firsts = MainGame.ListValidSets();
         var list = MonopolyCardGameMainGameClass.GetSetInfo(firsts);
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        if (MainGame.BasicData!.MultiPlayer == true)
         {
             BasicList<string> newList = [];
             await firsts.ForEachAsync(async thisTemp =>
             {
-                if (_mainGame.BasicData!.MultiPlayer == true)
+                if (MainGame.BasicData!.MultiPlayer == true)
                 {
                     var tempList = thisTemp.CardList.GetDeckListFromObjectList();
                     var thisStr = await js1.SerializeObjectAsync(tempList);
                     newList.Add(thisStr);
                 }
             });
-            await _mainGame.Network!.SendSeveralSetsAsync(newList, "finishedsets");
+            await MainGame.Network!.SendSeveralSetsAsync(newList, "finishedsets");
         }
-        await _mainGame.FinishManualProcessingAsync(list);
+        await MainGame.FinishManualProcessingAsync(list);
     }
 }

@@ -7,7 +7,8 @@
     @if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Other)
     {
         <MonopolyFinderComponent
-            OnOrganizedCards=FinishedOrganizingCards
+            Player="GetPlayer"
+            OnOrganizedCards=FinishedOrganizingCardsAsync
             Status="_gameContainer.SaveRoot.ManuelStatus" />
         return;
     }
@@ -33,14 +34,24 @@
             <div>
                 <HandBlazor TargetContainerSize="70vw"  Hand="_vmData.PlayerHand1" />
             </div>
-            <div>
-                <LabelGridComponent DataContext="_vmData" Labels="_labels" />
-            </div>
-            <div>
-                <ScoreBoardBlazor P="MonopolyCardGamePlayerItem"
-                                  Columns="_scores"
-                                  Players="_gameContainer.SaveRoot.PlayerList" />
-            </div>
+            <StackLayout>
+                <StackItem>
+                    <div>
+                        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+                    </div>
+                    <div>
+                        <ScoreBoardBlazor P="MonopolyCardGamePlayerItem"
+                                          Columns="_scores"
+                                          Players="_gameContainer.SaveRoot.PlayerList" />
+                    </div>
+                </StackItem>
+                <StackItem>
+                    <TempSetsBlazor TargetContainerSize="35vh"
+                                    Mode="EnumMode.Plain"
+                                    Divider="1.5"
+                                    TempPiles="_vmData.TempSets1" />
+                </StackItem>
+            </StackLayout>
         </GridItem>
         <GridItem Column="2">
             <StackLayout>

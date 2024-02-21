@@ -168,6 +168,11 @@ public class MonopolyCardGameMainGameClass
         }
         await this.RoundOverNextAsync();
     }
+    public async Task ForceAllowPlayAsync()
+    {
+        await ShowHumanCanPlayAsync();
+        _command.UpdateAll();
+    }
     public override async Task EndTurnAsync()
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
@@ -259,65 +264,15 @@ public class MonopolyCardGameMainGameClass
         if (SaveRoot.ManuelStatus == EnumManuelStatus.OrganizingCards)
         {
             OrganizedAtLeastsOnce = true;
+            SingleInfo!.PopulateManuelCards(_model, true);
+            return;
         }
+        SingleInfo!.PopulateManuelCards(_model, false);
         //SingleInfo!.TempHands = SingleInfo.MainHandList.Where(x => x.WhatCard != EnumCardType.IsMr && x.WhatCard != EnumCardType.IsGo).ToRegularDeckDict();
         //_model.TempHand1.HandList = SingleInfo.TempHands;
-        SingleInfo!.TempSets.Clear();
+        //SingleInfo!.TempSets.Clear();
 
-        var firstList = SingleInfo!.MainHandList.Where(x => x.WhatCard != EnumCardType.IsMr && x.WhatCard != EnumCardType.IsGo).ToRegularDeckDict();
-        firstList.ForEach(x => x.WasAutomated = false);
-
-        var tempList = firstList.Where(x => x.WhatCard != EnumCardType.IsChance && x.WhatCard != EnumCardType.IsHouse && x.WhatCard != EnumCardType.IsHotel);
-
-        var groups = tempList.GroupBy(x => x.WhatCard);
-
-        BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> fins = [];
-        //BasicList<MonopolyCardGameCardInformation> others = [];
-        //BasicList<MonopolyCardGameCardInformation> fins;
-        foreach (var item in groups)
-        {
-            if (item.Key == EnumCardType.IsRailRoad && item.Count() > 1)
-            {
-                fins.Add(item.ToRegularDeckDict());
-                continue;
-            }
-            if (item.Key == EnumCardType.IsUtilities && item.Count()  == 2)
-            {
-                fins.Add(item.ToRegularDeckDict());
-                continue;
-            }
-            var card = item.First();
-            if (card.Money == 50 || card.Money == 400)
-            {
-                if (item.Count() == 2)
-                {
-                    fins.Add(item.ToRegularDeckDict());
-                    continue;
-                }
-            }
-            if (item.Count() == 3)
-            {
-                fins.Add(item.ToRegularDeckDict());
-            }
-        }
-        foreach (var firsts in fins)
-        {
-            foreach (var item in firsts)
-            {
-                firstList.RemoveSpecificItem(item); //because should be added to tempsets.
-                item.WasAutomated = true; //this means cannot be selected.  but can still show the values though.
-                SingleInfo.TempSets.Add(item);
-            }
-        }
-        SingleInfo.TempHands = firstList;
-        _model.TempHand1.HandList = SingleInfo.TempHands;
-        _model.TempSets1.ClearBoard();
-        int x = 0;
-        foreach (var firsts in fins)
-        {
-            x++;
-            _model.TempSets1.AddCards(x, firsts);
-        }
+        
     }
 
     private void StartProcessAfterDrawing5Cards()
@@ -336,7 +291,11 @@ public class MonopolyCardGameMainGameClass
     public void SortTempHand(DeckRegularDict<MonopolyCardGameCardInformation> list)
     {
         SingleInfo!.TempHands.AddRange(list);
-        SortCards(SingleInfo.TempHands);
+        SortTempHand();
+    }
+    public void SortTempHand()
+    {
+        SortCards(SingleInfo!.TempHands);
     }
     public void ProcessTrade(TradePile newTrade, DeckRegularDict<MonopolyCardGameCardInformation> oldCollection, TradePile yourTrade)
     {

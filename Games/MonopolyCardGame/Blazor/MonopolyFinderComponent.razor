@@ -8,7 +8,7 @@
     <ShowCardBlazor />
 </div>
 <div>
-    <HandBlazor Hand="_vmData!.TempHand1" TargetContainerSize="80vw" />
+    <HandBlazor Hand="_vmData!.TempHand1" TargetContainerSize="95vw" />
 </div>
 <div>
 
@@ -19,6 +19,7 @@
     @if (Status == EnumManuelStatus.OrganizingCards)
     {
         <GameButtonComponent Display="Finish Organizing Cards" CustomCallBack="OnOrganizedCards" />
+        <GameButtonComponent Display="Start Automate Populate Cards" CustomCallBack="PopulateManuelCards" />
     }
 </div>
 <TempSetsBlazor TargetContainerSize="40vh" Divider="1.5" TempPiles="_vmData.TempSets1" />

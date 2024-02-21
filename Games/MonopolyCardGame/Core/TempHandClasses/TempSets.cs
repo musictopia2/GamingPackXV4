@@ -94,9 +94,16 @@ public class TempSets(CommandContainer command, IGamePackageResolver resolver, M
         }
         _thisE!.Publish(thisU);
     }
-    public int TotalObjects => SetList.Sum(Items => Items.HandList.Count);
-    public int HowManySelectedObjects => SetList.Sum(Items => Items.HowManySelectedObjects);
-    public bool HasSelectedObject => SetList.Any(Items => Items.HowManySelectedObjects > 0);
+    public bool HasAnyInSet(int x) => SetList[x - 1].HandList.Count > 0;
+    public MonopolyCardGameCardInformation GetFirstCardInSet(int x)
+    {
+        var set = SetList[x - 1];
+        return set.HandList.First();
+    }
+    public int TotalObjects => SetList.Sum(x => x.HandList.Count);
+    public int HowManySelectedObjects => SetList.Sum(x => x.HowManySelectedObjects);
+    public int HowManyUnselectedObjects => SetList.Sum(x => x.HowManyUnselectedObjects);
+    public bool HasSelectedObject => SetList.Any(x => x.HowManySelectedObjects > 0);
     public int PileForSelectedObject
     {
         get

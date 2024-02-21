@@ -3,6 +3,9 @@ public partial class MonopolyFinderComponent
 {
     [Parameter]
     public EnumManuelStatus Status { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public MonopolyCardGamePlayerItem? Player { get; set; }
     [Inject]
     private IToast? Toast { get; set; }
 
@@ -14,6 +17,11 @@ public partial class MonopolyFinderComponent
     protected override void OnInitialized()
     {
         _vmData = aa1.Resolver!.Resolve<MonopolyCardGameVMData>();
+    }
+    private void PopulateManuelCards()
+    {
+        Player!.PopulateManuelCards(_vmData!, false);
+        DataContext!.MainGame.SortTempHand();
     }
     private async Task FirstGoOutAsync()
     {

@@ -88,8 +88,14 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
     {
         int numselected;
         int numunselected;
+        //int tempSelected;
+        //int tempUnselected;
         numselected = _model.PlayerHand1!.HowManySelectedObjects;
+        numselected += _model.TempSets1.HowManySelectedObjects;
+        //tempSelected = _model.TempSets1.HowManySelectedObjects;
+        
         numunselected = _model.PlayerHand1.HowManyUnselectedObjects;
+        numunselected += _model.TempSets1.HowManyUnselectedObjects;
         if (numselected == 0)
         {
             _toast.ShowUserErrorToast("Sorry, you must select a card from your had to put to the trade pile");
@@ -122,6 +128,7 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
             thisTrade.EndTurn();
         }
         DeckRegularDict<MonopolyCardGameCardInformation> thisCol = _model.PlayerHand1.ListSelectedObjects(true);
+        thisCol.AddRange(_model.TempSets1.ListSelectedObjects(true));
         if (_gameContainer.BasicData!.MultiPlayer)
         {
             var newCol = thisCol.GetDeckListFromObjectList();
@@ -136,7 +143,7 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
             thisTrade.UnselectAllObjects();
             _model.PlayerHand1.UnselectAllObjects();
         }
-        if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Discard && _gameContainer.SingleInfo!.MainHandList.Count == 10)
+        if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Discard && _gameContainer.SingleInfo!.ObjectCount == 10)
         {
             await _gameContainer.EndTurnAsync!.Invoke();
             return;
@@ -154,7 +161,7 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
         {
             _gameContainer.SaveRoot.GameStatus = EnumWhatStatus.TradeOnly;
         }
-        if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Either && _gameContainer.SingleInfo.MainHandList.Count < 10)
+        if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Either && _gameContainer.SingleInfo.ObjectCount < 10)
         {
             _gameContainer.SaveRoot.GameStatus = EnumWhatStatus.TradeOnly;
         }

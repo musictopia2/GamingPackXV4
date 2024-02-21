@@ -18,10 +18,11 @@ public class TempHand : HandObservable<MonopolyCardGameCardInformation>
     }
     protected override Task ProcessObjectClickedAsync(MonopolyCardGameCardInformation thisObject, int index)
     {
-        if (thisObject.WasAutomated == false || _container.SaveRoot.ManuelStatus == EnumManuelStatus.OrganizingCards)
+        if (thisObject.WasAutomated == false || _container.SaveRoot.ManuelStatus == EnumManuelStatus.OrganizingCards || _container.SaveRoot.ManuelStatus == EnumManuelStatus.None)
         {
             DidClickObject = true; //this is needed too.  so if other gets raised, will be ignored because already handled.
             thisObject.IsSelected = !thisObject.IsSelected; //try here.  hopefully works well.
+            thisObject.WasAutomated = false; //try to make it false because you changed it.
         }
         AfterSelectUnselectCard?.Invoke(thisObject);
         return Task.CompletedTask;
@@ -35,8 +36,6 @@ public class TempHand : HandObservable<MonopolyCardGameCardInformation>
         await SetClickedAsync.Invoke(this);
     }
     private ISortObjects<MonopolyCardGameCardInformation>? _thisSort;
-    
-
     private void PrepSort()
     {
         bool rets;
@@ -48,7 +47,14 @@ public class TempHand : HandObservable<MonopolyCardGameCardInformation>
     }
     public void AddCards(IDeckDict<MonopolyCardGameCardInformation> thisList)
     {
-        HandList.AddRange(thisList);
+        foreach (var item in thisList)
+        {
+            if (HandList.ObjectExist(item.Deck) == false)
+            {
+                HandList.Add(item);
+            }
+        }
+        //HandList.AddRange(thisList);
         SortCards();
         HandList.UnselectAllObjects();
     }

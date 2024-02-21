@@ -36,14 +36,17 @@ public partial class MonopolyCardGameMainView
     //    //hopefully good enough.
     //}
 
-    private void FinishedOrganizingCards()
+    private async Task FinishedOrganizingCardsAsync()
     {
         if (DataContext!.PreviousStatus == EnumWhatStatus.None)
         {
             throw new CustomBasicException("The previous state cannot be none");
         }
         _gameContainer!.SaveRoot.GameStatus = DataContext.PreviousStatus;
+        _gameContainer.SaveRoot.ManuelStatus = EnumManuelStatus.None;
         DataContext.PreviousStatus = EnumWhatStatus.None;
+        DataContext.MainGame.SortCards();
+        await DataContext.MainGame.ForceAllowPlayAsync();
     }
-
+    private MonopolyCardGamePlayerItem GetPlayer => _gameContainer!.SaveRoot.PlayerList.GetWhoPlayer();
 }
