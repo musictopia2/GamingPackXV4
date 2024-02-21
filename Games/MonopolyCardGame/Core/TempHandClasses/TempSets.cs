@@ -55,7 +55,7 @@ public class TempSets(CommandContainer command, IGamePackageResolver resolver)
     }
     public DeckRegularDict<MonopolyCardGameCardInformation> ListAllObjects()
     {
-        DeckRegularDict<MonopolyCardGameCardInformation> output = new();
+        DeckRegularDict<MonopolyCardGameCardInformation> output = [];
         SetList.ForEach(thisTemp =>
         {
             output.AddRange(thisTemp.HandList);
@@ -101,11 +101,7 @@ public class TempSets(CommandContainer command, IGamePackageResolver resolver)
     {
         get
         {
-            TempHand thisVM = SetList.FirstOrDefault(Items => Items.HowManySelectedObjects > 0)!;
-            if (thisVM == null)
-            {
-                throw new CustomBasicException("There was no pile with only one selected card.  Find out what happened");
-            }
+            TempHand thisVM = SetList.FirstOrDefault(Items => Items.HowManySelectedObjects > 0)! ?? throw new CustomBasicException("There was no pile with only one selected card.  Find out what happened");
             return SetList.IndexOf(thisVM) + 1; //returning 1 based.
         }
     }
@@ -139,7 +135,7 @@ public class TempSets(CommandContainer command, IGamePackageResolver resolver)
     }
     public DeckRegularDict<MonopolyCardGameCardInformation> ListSelectedObjects(bool alsoRemove = false)
     {
-        DeckRegularDict<MonopolyCardGameCardInformation> output = new();
+        DeckRegularDict<MonopolyCardGameCardInformation> output = [];
         SetList.ForEach(thisTemp =>
         {
             output.AddRange(thisTemp.ListSelectedObjects(alsoRemove));

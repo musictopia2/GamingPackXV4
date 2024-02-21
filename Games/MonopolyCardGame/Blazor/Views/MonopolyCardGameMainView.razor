@@ -4,22 +4,9 @@
     return;
 }
 <CascadingValue Value="_vmData">
-    @if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.ManuallyFigureOutMonopolies && IsSelf)
+    @if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Other)
     {
-        <div>
-            <ShowCardBlazor />
-        </div>
-        <div>
-            <HandBlazor Hand="_vmData.TempHand1" TargetContainerSize="80vw" />
-        </div>
-        
-        <div>
-            <GameButtonComponent Display="Put Back"
-                             CommandObject="BackCommand" />
-            <GameButtonComponent Display="Play Monopolies"
-                             CommandObject="ManuallyPlaySetsCommand" />
-        </div>
-        <TempSetsBlazor TargetContainerSize="60vh" Divider="1.5" TempPiles="_vmData.TempSets1" />
+        <MonopolyFinderComponent OnGoBack="ChangeMind" Status="_gameContainer.SaveRoot.ManuelStatus" />
         return;
     }
     <GridContainer Inline="true" Columns="75vw 25vw">
@@ -35,7 +22,7 @@
                     <GameButtonComponent Display="Resume"
                                          CommandObject="ResumeCommand"
                                          StartOnNewLine="true" />
-                    <GameButtonComponent Display="Go Out"
+                    <GameButtonComponent Display="Attempt To Go Out"
                                          CommandObject="GoOutCommand"
                                          StartOnNewLine="true" />
                 </StackItem>

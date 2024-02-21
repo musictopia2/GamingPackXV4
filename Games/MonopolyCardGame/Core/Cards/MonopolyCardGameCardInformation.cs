@@ -12,6 +12,7 @@ public class MonopolyCardGameCardInformation : SimpleDeckObject, IDeckObject, IC
     public decimal Money { get; set; }
     public string Description { get; set; } = "";
     public int HouseNum { get; set; }
+    public bool WasAutomated { get; set; } //if this was automated, then cannot even click on it when its in the tempsets.
     private static int FindIndex(int chosen)
     {
         if (chosen <= 0)

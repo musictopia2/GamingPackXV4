@@ -1,3 +1,20 @@
-﻿<h3>MonopolyFinderComponent</h3>
+﻿@inherits BasicGameView<MonopolyCardGameMainViewModel>
+<div>
+    <ShowCardBlazor />
+</div>
+<div>
+    <HandBlazor Hand="_vmData!.TempHand1" TargetContainerSize="80vw" />
+</div>
+<div>
 
-
+</div>
+<div>
+    <GameButtonComponent Display="Put Back"
+                         CommandObject="PutBackCommand" />
+    @if (Status == EnumManuelStatus.InitiallyGoingOut)
+    {
+        <GameButtonComponent Display="Failed To Go Out" CustomCallBack="OnGoBack" />
+        <GameButtonComponent Display="Confirm Going Out" CustomCallBack="FirstGoOutAsync" />
+    }
+</div>
+<TempSetsBlazor TargetContainerSize="60vh" Divider="1.5" TempPiles="_vmData.TempSets1" />

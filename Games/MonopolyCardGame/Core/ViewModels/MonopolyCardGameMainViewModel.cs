@@ -5,6 +5,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     private readonly MonopolyCardGameMainGameClass _mainGame;
     private readonly MonopolyCardGameVMData _model;
     private readonly IToast _toast;
+    public EnumWhatStatus PreviousStatus { get; set; }
     public MonopolyCardGameMainViewModel(CommandContainer commandContainer,
         MonopolyCardGameMainGameClass mainGame,
         MonopolyCardGameVMData viewModel,
@@ -116,23 +117,28 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     public bool CanGoOut => CanEnableDeck();
 
     [Command(EnumCommandCategory.Game)]
-    public async Task GoOutAsync()
+    public void GoOut()
     {
         if (_mainGame!.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
             throw new CustomBasicException("Not Self.  Rethink");
         }
-        var newList = _mainGame.SingleInfo.MainHandList.ToRegularDeckDict();
-        if (_mainGame.CanGoOut(newList) == false)
-        {
-            _toast.ShowUserErrorToast("Sorry, you cannot go out");
-            return;
-        }
-        if (_mainGame.BasicData!.MultiPlayer)
-        {
-            await _mainGame.Network!.SendAllAsync("goout");
-        }
-        await _mainGame.ProcessGoingOutAsync();
+        PreviousStatus = _mainGame.SaveRoot.GameStatus;
+        _mainGame.SaveRoot.GameStatus = EnumWhatStatus.Other;
+        _mainGame.SaveRoot.ManuelStatus = EnumManuelStatus.InitiallyGoingOut;
+        _mainGame.PopulateManuelCards();
+        //if i go out and go back again, choose again.
+        //var newList = _mainGame.SingleInfo.MainHandList.ToRegularDeckDict();
+        //if (_mainGame.CanGoOut(newList) == false)
+        //{
+        //    _toast.ShowUserErrorToast("Sorry, you cannot go out");
+        //    return;
+        //}
+        //if (_mainGame.BasicData!.MultiPlayer)
+        //{
+        //    await _mainGame.Network!.SendAllAsync("goout");
+        //}
+        //await _mainGame.ProcessGoingOutAsync();
     }
     [Command(EnumCommandCategory.Game)]
     public void PutBack()
@@ -163,7 +169,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         var list = MonopolyCardGameMainGameClass.GetSetInfo(firsts);
         if (_mainGame.BasicData!.MultiPlayer == true)
         {
-            BasicList<string> newList = new();
+            BasicList<string> newList = [];
             await firsts.ForEachAsync(async thisTemp =>
             {
                 if (_mainGame.BasicData!.MultiPlayer == true)

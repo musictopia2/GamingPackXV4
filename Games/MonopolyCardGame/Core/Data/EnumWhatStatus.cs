@@ -7,5 +7,6 @@ public enum EnumWhatStatus
     TradeOnly,
     Either,
     LookOnly,
-    ManuallyFigureOutMonopolies
+    Other
+    //ManuallyFigureOutMonopolies
 }

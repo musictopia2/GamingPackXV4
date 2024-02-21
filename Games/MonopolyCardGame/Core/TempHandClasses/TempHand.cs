@@ -15,8 +15,11 @@ public class TempHand : HandObservable<MonopolyCardGameCardInformation>
     }
     protected override Task ProcessObjectClickedAsync(MonopolyCardGameCardInformation thisObject, int index)
     {
-        DidClickObject = true; //this is needed too.  so if other gets raised, will be ignored because already handled.
-        thisObject.IsSelected = !thisObject.IsSelected; //try here.  hopefully works well.
+        if (thisObject.WasAutomated == false)
+        {
+            DidClickObject = true; //this is needed too.  so if other gets raised, will be ignored because already handled.
+            thisObject.IsSelected = !thisObject.IsSelected; //try here.  hopefully works well.
+        }
         AfterSelectUnselectCard?.Invoke(thisObject);
         return Task.CompletedTask;
     }

@@ -1,9 +1,6 @@
 namespace MonopolyCardGame.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<MonopolyCardGameShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<MonopolyCardGameShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
     protected override Task RegisterTestsAsync()
     {
         TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly; //so i can test going out with wilds everytime.

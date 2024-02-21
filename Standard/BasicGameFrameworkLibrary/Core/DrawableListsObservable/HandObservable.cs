@@ -21,8 +21,8 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
     public virtual bool HasSections => false;
     public bool IgnoreMaxRules { get; set; }
 
-    public DeckRegularDict<D> HandList = new();
-    private readonly DeckRegularDict<D> _orderOfObjectsSelectedList = new();
+    public DeckRegularDict<D> HandList = [];
+    private readonly DeckRegularDict<D> _orderOfObjectsSelectedList = [];
     public DeckRegularDict<D> GetObjectsInOrderSelected(bool alsoRemove)
     {
         if (alsoRemove == true)
@@ -36,7 +36,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
     }
     public void PopulateSavedCards(BasicList<int> list)
     {
-        DeckRegularDict<D> temp = new();
+        DeckRegularDict<D> temp = [];
         foreach (var deck in list)
         {
             D card = new();
@@ -49,7 +49,7 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
     {
         if (HandList.Count == 0)
         {
-            return new();
+            return [];
         }
         return HandList.GetDeckListFromObjectList();
     }

@@ -1,11 +1,11 @@
 namespace MonopolyCardGame.Blazor.Views;
 public partial class MonopolyCardGameMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private MonopolyCardGameVMData? _vmData;
     private MonopolyCardGameGameContainer? _gameContainer;
-    private BasicList<MonopolyCardGamePlayerItem> _players = new();
+    private BasicList<MonopolyCardGamePlayerItem> _players = [];
     protected override void OnInitialized()
     {
         _vmData = aa1.Resolver!.Resolve<MonopolyCardGameVMData>();
@@ -20,9 +20,19 @@ public partial class MonopolyCardGameMainView
             .AddColumn("Total Money", true, nameof(MonopolyCardGamePlayerItem.TotalMoney), category: EnumScoreSpecialCategory.Currency);
         base.OnInitialized();
     }
-    private bool IsSelf => _gameContainer!.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
+    //private bool IsSelf => _gameContainer!.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
     private ICustomCommand ResumeCommand => DataContext!.ResumeCommand!;
     private ICustomCommand GoOutCommand => DataContext!.GoOutCommand!;
-    private ICustomCommand ManuallyPlaySetsCommand => DataContext!.ManuallyPlaySetsCommand!;
-    private ICustomCommand BackCommand => DataContext!.PutBackCommand!;
+    //private ICustomCommand ManuallyPlaySetsCommand => DataContext!.ManuallyPlaySetsCommand!;
+    //private ICustomCommand BackCommand => DataContext!.PutBackCommand!;
+    private void ChangeMind()
+    {
+        if (DataContext!.PreviousStatus == EnumWhatStatus.None)
+        {
+            throw new CustomBasicException("The previous state cannot be none");
+        }
+        _gameContainer!.SaveRoot.GameStatus = DataContext!.PreviousStatus;
+        DataContext!.PreviousStatus = EnumWhatStatus.None; //this is now none.
+        //hopefully good enough.
+    }
 }

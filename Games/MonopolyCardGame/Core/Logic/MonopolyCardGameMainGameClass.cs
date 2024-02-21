@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace MonopolyCardGame.Core.Logic;
 [SingletonGame]
 public class MonopolyCardGameMainGameClass
@@ -38,10 +40,20 @@ public class MonopolyCardGameMainGameClass
             var thisList = await js1.DeserializeObjectAsync<DeckRegularDict<MonopolyCardGameCardInformation>>(thisPlayer.TradeString);
             thisPlayer.TradePile!.HandList = new DeckRegularDict<MonopolyCardGameCardInformation>(thisList);
         });
-        if (SaveRoot.GameStatus == EnumWhatStatus.ManuallyFigureOutMonopolies)
+
+        if (SaveRoot.GameStatus == EnumWhatStatus.Other && SaveRoot.ManuelStatus == EnumManuelStatus.WentOutAfterDrawing5Cards)
         {
-            StartFiguringOutChance();
+            StartProcessAfterDrawing5Cards();
         }
+
+        //lots of rethinking is required here now.
+
+
+
+        //if (SaveRoot.GameStatus == EnumWhatStatus.ManuallyFigureOutMonopolies)
+        //{
+        //    StartFiguringOutChance();
+        //}
         await base.FinishGetSavedAsync();
     }
     protected override async Task ComputerTurnAsync()
@@ -224,31 +236,93 @@ public class MonopolyCardGameMainGameClass
             await base.AfterDrawingAsync();
             return;
         }
-        if (SingleInfo!.MainHandList.Any(x => x.WhatCard == EnumCardType.IsChance) == false)
-        {
-            var newScore = CalculateScore(WhoTurn, true, out DeckRegularDict<MonopolyCardGameCardInformation> newGroup);
-            SaveRoot!.GameStatus = EnumWhatStatus.LookOnly;
-            await FinalProcessAsync(newGroup, newScore);
-            return;
-        }
+        //if (SingleInfo!.MainHandList.Any(x => x.WhatCard == EnumCardType.IsChance) == false)
+        //{
+        //    var newScore = CalculateScore(WhoTurn, true, out DeckRegularDict<MonopolyCardGameCardInformation> newGroup);
+        //    SaveRoot!.GameStatus = EnumWhatStatus.LookOnly;
+        //    await FinalProcessAsync(newGroup, newScore);
+        //    return;
+        //}
+        SaveRoot.GameStatus = EnumWhatStatus.Other;
+        SaveRoot.ManuelStatus = EnumManuelStatus.WentOutAfterDrawing5Cards;
         //_model!.Status
-        SaveRoot.GameStatus = EnumWhatStatus.ManuallyFigureOutMonopolies;
-        StartFiguringOutChance();
+        //SaveRoot.GameStatus = EnumWhatStatus.ManuallyFigureOutMonopolies;
+        StartProcessAfterDrawing5Cards();
         await ComputerTurnAsync();
         //rethinking is now required.
     }
-    private void StartFiguringOutChance()
+    public void PopulateManuelCards()
+    {
+        //SingleInfo!.TempHands = SingleInfo.MainHandList.Where(x => x.WhatCard != EnumCardType.IsMr && x.WhatCard != EnumCardType.IsGo).ToRegularDeckDict();
+        //_model.TempHand1.HandList = SingleInfo.TempHands;
+        SingleInfo!.TempSets.Clear();
+
+        var firstList = SingleInfo!.MainHandList.Where(x => x.WhatCard != EnumCardType.IsMr && x.WhatCard != EnumCardType.IsGo).ToRegularDeckDict();
+        firstList.ForEach(x => x.WasAutomated = false);
+
+        var tempList = firstList.Where(x => x.WhatCard != EnumCardType.IsChance && x.WhatCard != EnumCardType.IsHouse && x.WhatCard != EnumCardType.IsHotel);
+
+        var groups = tempList.GroupBy(x => x.WhatCard);
+
+        BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> fins = [];
+        //BasicList<MonopolyCardGameCardInformation> others = [];
+        //BasicList<MonopolyCardGameCardInformation> fins;
+        foreach (var item in groups)
+        {
+            if (item.Key == EnumCardType.IsRailRoad && item.Count() > 1)
+            {
+                fins.Add(item.ToRegularDeckDict());
+                continue;
+            }
+            if (item.Key == EnumCardType.IsUtilities && item.Count()  == 2)
+            {
+                fins.Add(item.ToRegularDeckDict());
+                continue;
+            }
+            var card = item.First();
+            if (card.Money == 50 || card.Money == 400)
+            {
+                if (item.Count() == 2)
+                {
+                    fins.Add(item.ToRegularDeckDict());
+                    continue;
+                }
+            }
+            if (item.Count() == 3)
+            {
+                fins.Add(item.ToRegularDeckDict());
+            }
+        }
+        foreach (var firsts in fins)
+        {
+            foreach (var item in firsts)
+            {
+                firstList.RemoveSpecificItem(item); //because should be added to tempsets.
+                item.WasAutomated = true; //this means cannot be selected.  but can still show the values though.
+                SingleInfo.TempSets.Add(item);
+            }
+        }
+        SingleInfo.TempHands = firstList;
+        _model.TempHand1.HandList = SingleInfo.TempHands;
+        _model.TempSets1.ClearBoard();
+        int x = 0;
+        foreach (var firsts in fins)
+        {
+            x++;
+            _model.TempSets1.AddCards(x, firsts);
+        }
+    }
+
+    private void StartProcessAfterDrawing5Cards()
     {
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
-            _model.Status = "Needs to manually figure out the monopolies.";
-            SingleInfo.TempHands = SingleInfo.MainHandList.Where(x => x.WhatCard != EnumCardType.IsMr && x.WhatCard != EnumCardType.IsGo).ToRegularDeckDict();
-            _model.TempHand1.HandList = SingleInfo.TempHands;
-            SingleInfo.TempSets.Clear();
+            _model.Status = "Needs to manually figure out the monopolies for going out.";
+            PopulateManuelCards();   
         }
         else
         {
-            _model.Status = $"Waiting for {SingleInfo.NickName} to manually figure out the monopolies.";
+            _model.Status = $"Waiting for {SingleInfo.NickName} to manually figure out the monopolies for going out.";
         }
         _model.TempSets1.ClearBoard(); //i think we need to clear out the board at this point.
     }
@@ -319,7 +393,7 @@ public class MonopolyCardGameMainGameClass
         }
         var temps = tempCol.Where(items => (int)items.WhatCard > 3 && (int)items.WhatCard < 7).ToRegularDeckDict();
         tempCol.RemoveGivenList(temps);
-        BasicList<int> setList = new();
+        BasicList<int> setList = [];
         DeckRegularDict<MonopolyCardGameCardInformation> monCol;
         foreach (var thisGroup in groupList)
         {
@@ -360,9 +434,9 @@ public class MonopolyCardGameMainGameClass
         tempCol.RemoveAllOnly(items => items.WhatCard == EnumCardType.IsChance);
         return tempCol.Count == 0;
     }
-    private static DeckRegularDict<MonopolyCardGameCardInformation> HouseCollection(DeckRegularDict<MonopolyCardGameCardInformation> whatCol)
+    internal static DeckRegularDict<MonopolyCardGameCardInformation> HouseCollection(DeckRegularDict<MonopolyCardGameCardInformation> whatCol)
     {
-        DeckRegularDict<MonopolyCardGameCardInformation> output = new();
+        DeckRegularDict<MonopolyCardGameCardInformation> output = [];
         if (whatCol.Any(items => items.WhatCard == EnumCardType.IsChance || items.WhatCard == EnumCardType.IsHouse) == false)
         {
             return output; //because there are no houses or chance which is wild.
@@ -401,9 +475,9 @@ public class MonopolyCardGameMainGameClass
         output.Add(thisCard);
         return output;
     }
-    private static DeckRegularDict<MonopolyCardGameCardInformation> MonopolyCol(DeckRegularDict<MonopolyCardGameCardInformation> whatCol, int whatGroup, EnumCardType whatType)
+    internal static DeckRegularDict<MonopolyCardGameCardInformation> MonopolyCol(DeckRegularDict<MonopolyCardGameCardInformation> whatCol, int whatGroup, EnumCardType whatType)
     {
-        DeckRegularDict<MonopolyCardGameCardInformation> output = new();
+        DeckRegularDict<MonopolyCardGameCardInformation> output = [];
         int numWilds = whatCol.Count(items => items.WhatCard == EnumCardType.IsChance);
         int howMany = whatCol.Count(items => items.WhatCard == whatType);
         if (howMany == 0 && whatGroup == 0)
@@ -495,9 +569,9 @@ public class MonopolyCardGameMainGameClass
         whatCol.RemoveGivenList(temps);
         return output;
     }
-    private static DeckRegularDict<MonopolyCardGameCardInformation> MonopolyColWild(DeckRegularDict<MonopolyCardGameCardInformation> whatCol, int whatGroup, EnumCardType whatType, bool useWild)
+    internal static DeckRegularDict<MonopolyCardGameCardInformation> MonopolyColWild(DeckRegularDict<MonopolyCardGameCardInformation> whatCol, int whatGroup, EnumCardType whatType, bool useWild)
     {
-        DeckRegularDict<MonopolyCardGameCardInformation> output = new();
+        DeckRegularDict<MonopolyCardGameCardInformation> output = [];
         int numWilds = whatCol.Count(items => items.WhatCard == EnumCardType.IsChance);
         int howMany = whatCol.Count(items => items.WhatCard == whatType);
         if (howMany == 0 && whatGroup == 0)
@@ -589,9 +663,9 @@ public class MonopolyCardGameMainGameClass
         whatCol.RemoveGivenList(temps);
         return output;
     }
-    private static DeckRegularDict<MonopolyCardGameCardInformation> HouseCollectionWild(DeckRegularDict<MonopolyCardGameCardInformation> whatCol, bool makeWildHotel, bool useWildHouse)
+    internal static DeckRegularDict<MonopolyCardGameCardInformation> HouseCollectionWild(DeckRegularDict<MonopolyCardGameCardInformation> whatCol, bool makeWildHotel, bool useWildHouse)
     {
-        DeckRegularDict<MonopolyCardGameCardInformation> output = new();
+        DeckRegularDict<MonopolyCardGameCardInformation> output = [];
         if (whatCol.Any(items => items.WhatCard == EnumCardType.IsChance || items.WhatCard == EnumCardType.IsHouse) == false)
         {
             return output; //because there are no houses or chance which is wild.
@@ -751,7 +825,7 @@ public class MonopolyCardGameMainGameClass
     
     private decimal CalculateScore(int player, bool wentOut, out DeckRegularDict<MonopolyCardGameCardInformation> newGroup)
     {
-        newGroup = new DeckRegularDict<MonopolyCardGameCardInformation>();
+        newGroup = [];
         SingleInfo = PlayerList![player];
         var tempCol = SingleInfo.MainHandList.ToRegularDeckDict();
         if (wentOut == false && tempCol.Any(items => items.WhatCard == EnumCardType.IsChance))
@@ -765,7 +839,7 @@ public class MonopolyCardGameMainGameClass
             tempScore += 1000;
             newGroup.AddRange(tempCol.Where(items => items.WhatCard == EnumCardType.IsMr));
         }
-        DeckRegularDict<MonopolyCardGameCardInformation> thisCol = new();
+        DeckRegularDict<MonopolyCardGameCardInformation> thisCol = [];
         thisCol = tempCol.Where(items => items.WhatCard == EnumCardType.IsGo).ToRegularDeckDict();
         tempScore += (thisCol.Count * 200);
         newGroup.AddRange(thisCol);
@@ -774,7 +848,7 @@ public class MonopolyCardGameMainGameClass
         int tokens = thisCol.Count;
         ListInfo thisList;
         ListInfo places;
-        BasicList<ListInfo> listMons = new();
+        BasicList<ListInfo> listMons = [];
         DeckRegularDict<MonopolyCardGameCardInformation> mons;
         DeckRegularDict<MonopolyCardGameCardInformation> hou;
         var possList = tempCol.Where(items => items.Group > 0).GroupOrderDescending(items => items.Group).ToBasicList();
@@ -801,7 +875,7 @@ public class MonopolyCardGameMainGameClass
                 thisList.ID = listMons.Count + 1;
                 listMons.Add(thisList);
             }
-            DeckRegularDict<MonopolyCardGameCardInformation> prList = new();
+            DeckRegularDict<MonopolyCardGameCardInformation> prList = [];
             possList.ForConditionalItems(items => items.Key > 0, thisPoss =>
             {
                 mons = MonopolyCol(tempCol, thisPoss.Key, EnumCardType.IsProperty);
@@ -894,11 +968,11 @@ public class MonopolyCardGameMainGameClass
         // First, we need to know how many of everything we have.  Not all these values a used, but they are taken
         // in case we discover a case where we need to use them
         int monoCount, monoWildCount, rrCount, utilCount, houseCount, hotelCount, wildCount, tokenCount, houseWildCount;
-        DeckRegularDict<MonopolyCardGameCardInformation> propList = new();
+        DeckRegularDict<MonopolyCardGameCardInformation> propList = [];
         DeckRegularDict<MonopolyCardGameCardInformation> propCheckList;
         DeckRegularDict<MonopolyCardGameCardInformation> houseList;
         DeckRegularDict<MonopolyCardGameCardInformation> houseCheckList;
-        BasicList<int> searchPos = new();
+        BasicList<int> searchPos = [];
         rrCount = 0;
         utilCount = 0;
         houseCount = 0;
@@ -954,8 +1028,7 @@ public class MonopolyCardGameMainGameClass
         hotelCount = tempCol.Count(items => items.WhatCard == EnumCardType.IsHotel);
         wildCount = tempCol.Count(items => items.WhatCard == EnumCardType.IsChance);
         thisCol = tempCol.Where(items => items.WhatCard == EnumCardType.IsHouse).ToRegularDeckDict();
-        houseList = new DeckRegularDict<MonopolyCardGameCardInformation>();
-        houseList.AddRange(thisCol);
+        houseList = [.. thisCol];
         houseCheckList = HouseCollection(houseList);
         thisCol = tempCol.Where(items => items.WhatCard == EnumCardType.IsHouse || items.WhatCard == EnumCardType.IsChance).ToRegularDeckDict();
         houseList.ReplaceRange(thisCol);
@@ -1310,7 +1383,7 @@ public class MonopolyCardGameMainGameClass
     //}
     public BasicList<TempInfo> ListValidSets()
     {
-        BasicList<TempInfo> output = new();
+        BasicList<TempInfo> output = [];
         for (int x = 1; x <= _model.TempSets1.HowManySets; x++)
         {
             var list = WhatSet(x);
@@ -1334,7 +1407,7 @@ public class MonopolyCardGameMainGameClass
         int tokens = tokenList.Count;
 
 
-        BasicList<ListInfo> listMons = new();
+        BasicList<ListInfo> listMons = [];
         //DeckRegularDict<MonopolyCardGameCardInformation> hou;
         var possList = list.Where(items => items.Group > 0).GroupOrderDescending(items => items.Group).ToBasicList();
 
@@ -1433,7 +1506,7 @@ public class MonopolyCardGameMainGameClass
     private async Task<BasicList<DeckRegularDict<MonopolyCardGameCardInformation>>> GetSetInfoAsync(string message)
     {
         var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(message);
-        BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> output = new();
+        BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> output = [];
         foreach (var thisFirst in firstTemp)
         {
             var thisCol = await thisFirst.GetObjectsFromDataAsync(SingleInfo!.MainHandList);
@@ -1443,7 +1516,7 @@ public class MonopolyCardGameMainGameClass
     }
     public static BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> GetSetInfo(BasicList<TempInfo> payLoad)
     {
-        BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> output = new();
+        BasicList<DeckRegularDict<MonopolyCardGameCardInformation>> output = [];
         foreach (var item in payLoad)
         {
             output.Add(item.CardList);
@@ -1456,7 +1529,7 @@ public class MonopolyCardGameMainGameClass
         this.StartingStatus();
         decimal score = 0;
         SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-        DeckRegularDict<MonopolyCardGameCardInformation> mans = new();
+        DeckRegularDict<MonopolyCardGameCardInformation> mans = [];
         foreach (var item in payLoad)
         {
             score += CalculateScore(item);
