@@ -121,6 +121,17 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     {
         await MainGame!.EndTurnAsync();
     }
+    public bool CanOrganizeCards
+    {
+        get
+        {
+            if (MainGame.SaveRoot.GameStatus == EnumWhatStatus.LookOnly)
+            {
+                return false;
+            }
+            return true; //i think the only case you cannot organize cards from that screen is if its look only.
+        }
+    }
     [Command(EnumCommandCategory.Game)]
     public void OrganizeCards()
     {
@@ -143,34 +154,38 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         //if (_model.TempHand1.)
     }
     public bool CanGoOut => CanEnableDeck();
-
     [Command(EnumCommandCategory.Game)]
-    public void GoOut()
+    public async Task GoOutAsync()
     {
         if (MainGame!.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
             throw new CustomBasicException("Not Self.  Rethink");
         }
-        _toast.ShowUserErrorToast("Has to rethink the processes for going out now");
+        //_toast.ShowUserErrorToast("Has to rethink the processes for going out now");
 
-
-        //PreviousStatus = MainGame.SaveRoot.GameStatus;
-        //MainGame.SaveRoot.GameStatus = EnumWhatStatus.Other;
-        //MainGame.SaveRoot.ManuelStatus = EnumManuelStatus.InitiallyGoingOut;
-        //MainGame.PopulateManuelCards();
-        //if i go out and go back again, choose again.
-        //var newList = MainGame.SingleInfo.MainHandList.ToRegularDeckDict();
-        //if (MainGame.CanGoOut(newList) == false)
-        //{
-        //    _toast.ShowUserErrorToast("Sorry, you cannot go out");
-        //    return;
-        //}
-        //if (MainGame.BasicData!.MultiPlayer)
-        //{
-        //    await MainGame.Network!.SendAllAsync("goout");
-        //}
-        //await MainGame.ProcessGoingOutAsync();
+        int left = MainGame.SingleInfo.MainHandList.Count(x => x.WhatCard != EnumCardType.IsGo && x.WhatCard != EnumCardType.IsMr);
+        if (left > 0)
+        {
+            _toast.ShowUserErrorToast("You cannot go out because you have cards left in your hand that is not a go or mr. monopoly");
+            return;
+        }
+        if (_model.HasAllValidMonopolies() == false)
+        {
+            _toast.ShowUserErrorToast("You cannot go out one of the sets was either not a valid monopoly or improperly placed houses or hotels");
+            return;
+        }
+        //at this stage, can't calculate scores because you get 5 more cards.
+        if (MainGame.BasicData!.MultiPlayer)
+        {
+            await MainGame.Network!.SendAllAsync("goout");
+        }
+        await MainGame.ProcessGoingOutAsync();
     }
+    //[Command(EnumCommandCategory.Game)]
+    //public void OrganizeCards()
+    //{
+
+    //}
     [Command(EnumCommandCategory.Game)]
     public void PutBack()
     {
@@ -190,33 +205,48 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     [Command(EnumCommandCategory.Game)]
     public async Task ManuallyPlaySetsAsync()
     {
-        bool rets = MainGame.HasAllValidMonopolies();
-        if (rets == false)
+        if (MainGame.SaveRoot.ManuelStatus == EnumManuelStatus.Final)
         {
-            _toast.ShowUserErrorToast("You do not have valid monopolies");
-            return;
-        }
-        if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsChance))
-        {
-            _toast.ShowUserErrorToast("You have to use up all the chances");
-            return;
-        }
-        var firsts = MainGame.ListValidSets();
-        var list = MonopolyCardGameMainGameClass.GetSetInfo(firsts);
-        if (MainGame.BasicData!.MultiPlayer == true)
-        {
-            BasicList<string> newList = [];
-            await firsts.ForEachAsync(async thisTemp =>
+            bool rets = MainGame.HasAllValidMonopolies();
+            if (rets == false)
             {
-                if (MainGame.BasicData!.MultiPlayer == true)
+                _toast.ShowUserErrorToast("You do not have valid monopolies");
+                return;
+            }
+            if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsChance))
+            {
+                _toast.ShowUserErrorToast("You have to use up all the chances");
+                return;
+            }
+            if (MainGame.SingleInfo!.HasMonopolyInHand())
+            {
+                _toast.ShowUserErrorToast("You have at least one monopoly in hand to play.  You must play them manually");
+                return;
+            }
+            if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsToken))
+            {
+                _toast.ShowUserErrorToast("You have to use up all your tokens");
+                return;
+            }
+            var firsts = MainGame.ListValidSets();
+            var list = MonopolyCardGameMainGameClass.GetSetInfo(firsts);
+            if (MainGame.BasicData!.MultiPlayer == true)
+            {
+                BasicList<string> newList = [];
+                await firsts.ForEachAsync(async thisTemp =>
                 {
-                    var tempList = thisTemp.CardList.GetDeckListFromObjectList();
-                    var thisStr = await js1.SerializeObjectAsync(tempList);
-                    newList.Add(thisStr);
-                }
-            });
-            await MainGame.Network!.SendSeveralSetsAsync(newList, "finishedsets");
+                    if (MainGame.BasicData!.MultiPlayer == true)
+                    {
+                        var tempList = thisTemp.CardList.GetDeckListFromObjectList();
+                        var thisStr = await js1.SerializeObjectAsync(tempList);
+                        newList.Add(thisStr);
+                    }
+                });
+                await MainGame.Network!.SendSeveralSetsAsync(newList, "finishedsets");
+            }
+            await MainGame.FinishManualProcessingAsync(list);
+            return;
         }
-        await MainGame.FinishManualProcessingAsync(list);
+        
     }
 }

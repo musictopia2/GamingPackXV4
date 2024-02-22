@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace MonopolyCardGame.Core.Logic;
 [SingletonGame]
 public class MonopolyCardGameMainGameClass
@@ -42,15 +40,20 @@ public class MonopolyCardGameMainGameClass
             var thisList = await js1.DeserializeObjectAsync<DeckRegularDict<MonopolyCardGameCardInformation>>(thisPlayer.TradeString);
             thisPlayer.TradePile!.HandList = new DeckRegularDict<MonopolyCardGameCardInformation>(thisList);
         });
+        PlayerList!.ForEach(player =>
+        {
+            if (player.AdditionalCards.Count > 0)
+            {
+                player.MainHandList.AddRange(player.AdditionalCards);
+                player.AdditionalCards.Clear();
+            }
+        });
+        //lots of rethinking is required here now.
 
         if (SaveRoot.GameStatus == EnumWhatStatus.Other && SaveRoot.ManuelStatus == EnumManuelStatus.Final)
         {
             StartProcessAfterDrawing5Cards();
         }
-
-        //lots of rethinking is required here now.
-
-
 
         //if (SaveRoot.GameStatus == EnumWhatStatus.ManuallyFigureOutMonopolies)
         //{
@@ -68,6 +71,8 @@ public class MonopolyCardGameMainGameClass
         {
             thisPlayer.TradeString = await js1.SerializeObjectAsync(thisPlayer.TradePile!.HandList);
         });
+        MonopolyCardGamePlayerItem Self = PlayerList!.GetSelf();
+        Self.AdditionalCards = _model.TempSets1!.ListAllObjects(); //try this way (?)
         await base.PopulateSaveRootAsync();
     }
     protected override Task StartSetUpAsync(bool isBeginning)
@@ -75,6 +80,10 @@ public class MonopolyCardGameMainGameClass
         if (isBeginning)
         {
             LoadTradePiles();
+        }
+        else
+        {
+            _model.TempSets1.ClearBoard(); //i think.
         }
         OrganizedAtLeastsOnce = false;
         SaveRoot!.ImmediatelyStartTurn = true;
@@ -116,9 +125,14 @@ public class MonopolyCardGameMainGameClass
                 return;
             case "finishedsets":
                 SingleInfo = PlayerList.GetWhoPlayer();
-                var list = await GetSetInfoAsync(content);
-                await FinishManualProcessingAsync(list);
-                await ContinueTurnAsync(); //try this
+                var list2 = await GetSetInfoAsync(content);
+                if (SaveRoot.ManuelStatus == EnumManuelStatus.Final)
+                {
+                    await FinishManualProcessingAsync(list2);
+                    await ContinueTurnAsync(); //try this
+                    return;
+                }
+
                 return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
@@ -256,7 +270,7 @@ public class MonopolyCardGameMainGameClass
         //_model!.Status
         //SaveRoot.GameStatus = EnumWhatStatus.ManuallyFigureOutMonopolies;
         StartProcessAfterDrawing5Cards();
-        await ComputerTurnAsync();
+        //await ComputerTurnAsync();
         //rethinking is now required.
     }
     public void PopulateManuelCards()
@@ -272,21 +286,22 @@ public class MonopolyCardGameMainGameClass
         //_model.TempHand1.HandList = SingleInfo.TempHands;
         //SingleInfo!.TempSets.Clear();
 
-        
-    }
 
+    }
     private void StartProcessAfterDrawing5Cards()
     {
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             _model.Status = "Needs to manually figure out the monopolies for going out.";
-            PopulateManuelCards();   
+            PopulateManuelCards();
         }
         else
         {
             _model.Status = $"Waiting for {SingleInfo.NickName} to manually figure out the monopolies for going out.";
         }
-        _model.TempSets1.ClearBoard(); //i think we need to clear out the board at this point.
+        //we may not need to clear the tempsets though (?)
+
+        //_model.TempSets1.ClearBoard(); //i think we need to clear out the board at this point.
     }
     public void SortTempHand(DeckRegularDict<MonopolyCardGameCardInformation> list)
     {
@@ -317,6 +332,7 @@ public class MonopolyCardGameMainGameClass
     private async Task ProcessEndAsync()
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
+        //rethink later.
         var newScore = CalculateScore(WhoTurn, false, out DeckRegularDict<MonopolyCardGameCardInformation> newGroup);
         await FinalProcessAsync(newGroup, newScore);
     }
@@ -329,7 +345,7 @@ public class MonopolyCardGameMainGameClass
             if (SingleInfo.MainHandList.ObjectExist(thisCard.Deck))
             {
                 SingleInfo.MainHandList.RemoveObjectByDeck(thisCard.Deck);
-                
+
             }
             thisTrade.AddCard(thisCard.Deck); //still needs this because may have already been removed now.
         });
@@ -788,8 +804,31 @@ public class MonopolyCardGameMainGameClass
         });
         return output;
     }
-    
+
     private decimal CalculateScore(int player, bool wentOut, out DeckRegularDict<MonopolyCardGameCardInformation> newGroup)
+    {
+        newGroup = [];
+        SingleInfo = PlayerList![player];
+        var tempCol = SingleInfo.MainHandList.ToRegularDeckDict();
+        if (wentOut == false && tempCol.Any(items => items.WhatCard == EnumCardType.IsChance))
+        {
+            return 0;//if you did not go out, you get 0 for having a chance in your hand.
+        }
+        int hadMostMrs = MostMrs(); //i think even if a player did not go out, they could get the points for the most mr monopolies.
+        decimal tempScore = 0;
+        if (hadMostMrs == player)
+        {
+            tempScore += 1000;
+            newGroup.AddRange(tempCol.Where(items => items.WhatCard == EnumCardType.IsMr));
+        }
+        DeckRegularDict<MonopolyCardGameCardInformation> thisCol = [];
+        thisCol = tempCol.Where(items => items.WhatCard == EnumCardType.IsGo).ToRegularDeckDict();
+        tempScore += thisCol.Count * 200;
+        newGroup.AddRange(thisCol);
+        return tempScore;
+    }
+
+    private decimal OldCalculateScore(int player, bool wentOut, out DeckRegularDict<MonopolyCardGameCardInformation> newGroup)
     {
         newGroup = [];
         SingleInfo = PlayerList![player];
@@ -1306,14 +1345,14 @@ public class MonopolyCardGameMainGameClass
     #region "ManuelSetProcesses"
     public bool HasAllValidMonopolies()
     {
-        bool usedChance = false;
+        //bool usedChance = false;
         for (int x = 1; x <= _model.TempSets1.HowManySets; x++)
         {
             var list = WhatSet(x);
-            if (list.Any(x => x.WhatCard == EnumCardType.IsChance))
-            {
-                usedChance = true;
-            }
+            //if (list.Any(x => x.WhatCard == EnumCardType.IsChance))
+            //{
+            //    usedChance = true;
+            //}
             if (list.Count > 0)
             {
                 if (CanGoOut(list, true) == false)
@@ -1322,10 +1361,10 @@ public class MonopolyCardGameMainGameClass
                 }
             }
         }
-        if (usedChance == false)
-        {
-            return false; //because you have to use at least one chance card.
-        }
+        //if (usedChance == false)
+        //{
+        //    return false; //because you have to use at least one chance card.
+        //}
         return true;
     }
     public IDeckDict<MonopolyCardGameCardInformation> WhatSet(int whichOne)
@@ -1357,7 +1396,7 @@ public class MonopolyCardGameMainGameClass
             {
                 output.Add(new TempInfo()
                 {
-                    CardList= list.ToRegularDeckDict(),
+                    CardList = list.ToRegularDeckDict(),
                     SetNumber = x
                 });
             }
@@ -1438,7 +1477,7 @@ public class MonopolyCardGameMainGameClass
             bool hasHotel = list.Any(x => x.WhatCard == EnumCardType.IsHotel);
             if (houses == 4 && hasHotel == false && chances >= 1)
             {
-                chances --;
+                chances--;
                 hasHotel = true;
             }
             else if (houses == 3 && chances == 2)
@@ -1456,7 +1495,6 @@ public class MonopolyCardGameMainGameClass
             item.HasHotel = hasHotel;
         }
         tokens += chances;
-        //temps = CalculateMoneyFromGroup(thisItem, tokens);
         decimal output = CalculateMoneyFromGroup(item, tokens);
         return output;
     }
@@ -1468,7 +1506,6 @@ public class MonopolyCardGameMainGameClass
         }
         return 3;
     }
-
     private async Task<BasicList<DeckRegularDict<MonopolyCardGameCardInformation>>> GetSetInfoAsync(string message)
     {
         var firstTemp = await js1.DeserializeObjectAsync<BasicList<string>>(message);
@@ -1511,6 +1548,10 @@ public class MonopolyCardGameMainGameClass
         decimal finalScore = CalculateScore(WhoTurn, true, out DeckRegularDict<MonopolyCardGameCardInformation> lasts);
         decimal totalScore = score + finalScore;
         mans.AddRange(lasts);
+        if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            _model.TempSets1.ClearBoard(); //i think
+        }
         await FinalProcessAsync(mans, totalScore);
     }
     #endregion

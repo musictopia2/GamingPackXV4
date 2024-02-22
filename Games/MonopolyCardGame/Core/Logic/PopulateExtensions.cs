@@ -1,9 +1,11 @@
 ﻿namespace MonopolyCardGame.Core.Logic;
-internal static class Extensions
+internal static class PopulateExtensions
 {
+    
+
     public static void PopulateManuelCards(this MonopolyCardGamePlayerItem player, MonopolyCardGameVMData model, bool start)
     {
-        var firstList = player.MainHandList.Where(x => x.WhatCard != EnumCardType.IsMr && x.WhatCard != EnumCardType.IsGo).ToRegularDeckDict();   
+        var firstList = player.MainHandList.Where(x => x.WhatCard != EnumCardType.IsMr && x.WhatCard != EnumCardType.IsGo).ToRegularDeckDict();
         if (start)
         {
             player.AdditionalCards.Clear();

@@ -21,5 +21,9 @@
         <GameButtonComponent Display="Finish Organizing Cards" CustomCallBack="OnOrganizedCards" />
         <GameButtonComponent Display="Start Automate Populate Cards" CustomCallBack="PopulateManuelCards" />
     }
+    else if (Status == EnumManuelStatus.Final)
+    {
+        <GameButtonComponent CommandObject="ManuelCommand" Display="Play Monopolies" />
+    }
 </div>
 <TempSetsBlazor TargetContainerSize="40vh" Divider="1.5" TempPiles="_vmData.TempSets1" />
