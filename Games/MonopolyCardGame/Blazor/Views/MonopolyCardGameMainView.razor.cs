@@ -23,6 +23,7 @@ public partial class MonopolyCardGameMainView
     //private bool IsSelf => _gameContainer!.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
     private ICustomCommand ResumeCommand => DataContext!.ResumeCommand!;
     private ICustomCommand GoOutCommand => DataContext!.GoOutCommand!;
+    private ICustomCommand OrganizeCardsCommand => DataContext?.OrganizeCardsCommand!;
     //private ICustomCommand ManuallyPlaySetsCommand => DataContext!.ManuallyPlaySetsCommand!;
     //private ICustomCommand BackCommand => DataContext!.PutBackCommand!;
     //private void ChangeMind()

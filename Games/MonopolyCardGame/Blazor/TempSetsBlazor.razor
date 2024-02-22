@@ -27,22 +27,29 @@
     </StackLayout>
     return;
 }
-<StackLayout Orientation="EnumOrientation.Horizontal">
-    @foreach (var pile in TempPiles.SetList)
-    {
-        @if (pile.HandList.Count > 0)
-        {
-            <StackItem>
-                <TemporaryCardsBlazor Hand="pile"
-                                      AdditionalSpacing="@AdditionalSpacing"
-                                      Divider="@Divider"
-                                      TargetContainerSize="@TargetContainerSize"
-                                      Context="item">
-                    <CardGraphicsBlazor CommandObject="pile.ObjectSingleClickCommand"
-                                        CommandParameter="item"
-                                        DeckObject="item" />
-                </TemporaryCardsBlazor>
-            </StackItem>
-        }   
-    }
-</StackLayout>
+<div style="height: 40vh">
+    <LeftOverLayout>
+        <MainContent>
+            @foreach (var pile in TempPiles.SetList)
+            {
+                @if (pile.HandList.Count > 0)
+                {
+                    <div style="margin-bottom: -10px;">
+                        <TemporaryCardsBlazor Hand="pile"
+                                              AdditionalSpacing="-4"
+                                              HandType="EnumHandList.Horizontal"
+                                              TargetImageSize="10vh"
+                                              Divider="1.4"
+                                              TargetContainerSize="45vw"
+                                              Context="item">
+                            <CardGraphicsBlazor CommandObject="pile.ObjectSingleClickCommand"
+                                                CommandParameter="item"
+                                                DeckObject="item" />
+                        </TemporaryCardsBlazor>
+                    </div>
+                }
+            }
+        </MainContent>
+    </LeftOverLayout>
+    
+</div>

@@ -121,6 +121,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     {
         await MainGame!.EndTurnAsync();
     }
+    [Command(EnumCommandCategory.Game)]
     public void OrganizeCards()
     {
         if (MainGame!.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
