@@ -29,13 +29,13 @@ public class TestCards : ITestCardSetUp<MonopolyCardGameCardInformation, Monopol
         });
         cards = deckList.Where(x => x.WhatCard == EnumCardType.IsToken).Take(1);
         player.StartUpList.AddRange(cards);
-        //cards = deckList.Where(x => x.WhatCard == EnumCardType.IsRailRoad).Take(2);
-        //player.StartUpList.AddRange(cards);
-        cards = deckList.Where(x => x.Money == 300 && x.WhatCard == EnumCardType.IsProperty).Take(1);
+        cards = deckList.Where(x => x.WhatCard == EnumCardType.IsRailRoad).Take(2);
         player.StartUpList.AddRange(cards);
-        cards = deckList.Where(x => x.Money == 250 && x.WhatCard == EnumCardType.IsProperty).Take(1);
+        cards = deckList.Where(x => x.Money == 300 && x.WhatCard == EnumCardType.IsProperty).Take(3);
         player.StartUpList.AddRange(cards);
-        cards = deckList.Where(x => x.Money == 200 && x.WhatCard == EnumCardType.IsProperty).Take(1);
+        cards = deckList.Where(x => x.Money == 250 && x.WhatCard == EnumCardType.IsProperty).Take(3);
+        player.StartUpList.AddRange(cards);
+        cards = deckList.Where(x => x.Money == 200 && x.WhatCard == EnumCardType.IsProperty).Take(2);
         player.StartUpList.AddRange(cards);
         return Task.CompletedTask;
     }

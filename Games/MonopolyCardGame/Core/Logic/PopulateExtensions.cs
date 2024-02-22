@@ -1,4 +1,6 @@
-﻿namespace MonopolyCardGame.Core.Logic;
+﻿using System.Runtime.InteropServices;
+
+namespace MonopolyCardGame.Core.Logic;
 internal static class PopulateExtensions
 {
     
@@ -38,19 +40,39 @@ internal static class PopulateExtensions
                 fins.Add(item.ToRegularDeckDict());
                 continue;
             }
-            var card = item.First();
-            if (card.Money == 50 || card.Money == 400)
+            var other = item.GroupBy(x => x.Money);
+            foreach (var lasts in other)
             {
-                if (item.Count() == 2)
+                //var card = lasts.First();
+                int count = lasts.Count();
+                if (lasts.Key == 50 || lasts.Key == 400)
                 {
-                    fins.Add(item.ToRegularDeckDict());
-                    continue;
+                    if (count == 2)
+                    {
+                        fins.Add(lasts.ToRegularDeckDict());
+                    }
+                    
+                }
+                else if (count == 3)
+                {
+                    fins.Add(lasts.ToRegularDeckDict());
                 }
             }
-            if (item.Count() == 3)
-            {
-                fins.Add(item.ToRegularDeckDict());
-            }
+
+            //var card = item.First();
+            //var card = other.First().First();
+            //if (card.Money == 50 || card.Money == 400)
+            //{
+            //    if (other.Count() == 2)
+            //    {
+            //        fins.Add(item.ToRegularDeckDict());
+            //        continue;
+            //    }
+            //}
+            //if (other.Count() == 3)
+            //{
+            //    fins.Add(item.ToRegularDeckDict());
+            //}
         }
         BasicList<MonopolyCardGameCardInformation> temp = [];
         foreach (var firsts in fins)
