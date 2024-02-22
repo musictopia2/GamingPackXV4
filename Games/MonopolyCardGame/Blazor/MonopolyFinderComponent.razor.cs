@@ -6,9 +6,6 @@ public partial class MonopolyFinderComponent
     [Parameter]
     [EditorRequired]
     public MonopolyCardGamePlayerItem? Player { get; set; }
-    [Inject]
-    private IToast? Toast { get; set; }
-
     [Parameter]
     public EventCallback OnOrganizedCards { get; set; }
 
@@ -24,47 +21,20 @@ public partial class MonopolyFinderComponent
         Player!.PopulateManuelCards(_vmData!, false);
         DataContext!.MainGame.SortTempHand();
     }
-    //private async Task FirstGoOutAsync()
-    //{
-    //    if (_vmData!.TempHand1.HandList.Count > 0)
-    //    {
-    //        Toast!.ShowUserErrorToast("You cannot initially go out because there are cards left");
-    //        return;
-    //    }
-    //    if (HasAllValidMonopolies() == false)
-    //    {
-    //        Toast!.ShowUserErrorToast("You do not have all valid monopolies");
-    //        return;
-    //    }
-    //    await Task.Delay(0);
-    //    Toast!.ShowSuccessToast("You did go out part 1");
-    //}
-    //private DeckRegularDict<MonopolyCardGameCardInformation> WhatSet(int whichOne)
-    //{
-    //    return _vmData!.TempSets1!.ObjectList(whichOne);
-    //}
-
-    
-
-
-    //private bool HasAllValidMonopolies()
-    //{
-    //    for (int x = 1; x <= _vmData!.TempSets1.HowManySets; x++)
-    //    {
-    //        var list = WhatSet(x);
-    //        //if (list.Any(x => x.WhatCard == EnumCardType.IsChance))
-    //        //{
-    //        //    usedChance = true;
-    //        //}
-    //        if (list.Count > 0)
-    //        {
-    //            if (CanGoOut(list, true) == false)
-    //            {
-    //                return false;
-    //            }
-    //        }
-    //    }
-    //    return true;
-    //}
-
+    private string GetInstructions()
+    {
+        if (Status == EnumManuelStatus.OrganizingCards)
+        {
+            return "Organize your cards to help you go out";
+        }
+        if (Status == EnumManuelStatus.Final)
+        {
+            return "Put down your monopolies including houses, hotels, and tokens since you went you.  You must use up all tokens and put down all obvious monopolies";
+        }
+        if (Status == EnumManuelStatus.OthersLayingDown)
+        {
+            return "Put down any monopolies you may have.   You must put down all obvious monopolies.  If you have at least one monopoly, you must use up all tokens";
+        }
+        return "Unknown";
+    }
 }

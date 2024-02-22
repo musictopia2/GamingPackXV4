@@ -11,7 +11,7 @@
     <HandBlazor Hand="_vmData!.TempHand1" TargetContainerSize="95vw" />
 </div>
 <div>
-
+    @GetInstructions()
 </div>
 <div>
     <GameButtonComponent Display="Put Back"
@@ -21,7 +21,7 @@
         <GameButtonComponent Display="Finish Organizing Cards" CustomCallBack="OnOrganizedCards" />
         <GameButtonComponent Display="Start Automate Populate Cards" CustomCallBack="PopulateManuelCards" />
     }
-    else if (Status == EnumManuelStatus.Final)
+    else if (Status == EnumManuelStatus.Final || Status == EnumManuelStatus.OthersLayingDown)
     {
         <GameButtonComponent CommandObject="ManuelCommand" Display="Play Monopolies" />
     }

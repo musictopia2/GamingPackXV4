@@ -1,13 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MonopolyCardGame.Core.Logic;
+﻿namespace MonopolyCardGame.Core.Logic;
 internal static class EndingExtensions
 {
+    public static bool HasAnyMonopolyPlayed(this MonopolyCardGameVMData model)
+    {
+        for (int x = 1; x <= model.TempSets1.HowManySets; x++)
+        {
+            var list = model.WhatSet(x);
+            if (list.Count > 0)
+            {
+                if (list.CanGoOut(true) == true)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public static bool HasMonopolyInHand(this MonopolyCardGamePlayerItem player)
     {
         var firstList = player.MainHandList.Where(x => x.WhatCard == EnumCardType.IsProperty || x.WhatCard == EnumCardType.IsRailRoad || x.WhatCard == EnumCardType.IsUtilities).ToRegularDeckDict();

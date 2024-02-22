@@ -1,7 +1,7 @@
 ﻿namespace MonopolyCardGame.Core.Logic;
 internal static class GoOutExtensions
 {
-    public static bool CanGoOut(IDeckDict<MonopolyCardGameCardInformation> whatGroup, bool onlyOne = false)
+    public static bool CanGoOut(this IDeckDict<MonopolyCardGameCardInformation> whatGroup, bool onlyOne = false)
     {
         //SingleInfo = PlayerList!.GetWhoPlayer();
         var tempCol = whatGroup.ToRegularDeckDict();
@@ -60,22 +60,14 @@ internal static class GoOutExtensions
         tempCol.RemoveAllOnly(items => items.WhatCard == EnumCardType.IsChance);
         return tempCol.Count == 0;
     }
-    private static DeckRegularDict<MonopolyCardGameCardInformation> WhatSet(this MonopolyCardGameVMData model, int whichOne)
-    {
-        return model.TempSets1!.ObjectList(whichOne);
-    }
     public static bool HasAllValidMonopolies(this MonopolyCardGameVMData model)
     {
         for (int x = 1; x <= model!.TempSets1.HowManySets; x++)
         {
             var list = model.WhatSet(x);
-            //if (list.Any(x => x.WhatCard == EnumCardType.IsChance))
-            //{
-            //    usedChance = true;
-            //}
             if (list.Count > 0)
             {
-                if (CanGoOut(list, true) == false)
+                if (list.CanGoOut(true) == false)
                 {
                     return false;
                 }

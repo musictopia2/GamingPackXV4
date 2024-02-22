@@ -205,22 +205,24 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     [Command(EnumCommandCategory.Game)]
     public async Task ManuallyPlaySetsAsync()
     {
+        
+        if (MainGame.SingleInfo!.HasMonopolyInHand())
+        {
+            _toast.ShowUserErrorToast("You have at least one monopoly in hand to play.  You must play them manually");
+            return;
+        }
+        bool rets = MainGame.HasAllValidMonopolies();
+        if (rets == false)
+        {
+            //even if you are not the player going out, if there is something not valid, you must put back to the hand first.
+            _toast.ShowUserErrorToast("You do not have valid monopolies");
+            return;
+        }
         if (MainGame.SaveRoot.ManuelStatus == EnumManuelStatus.Final)
         {
-            bool rets = MainGame.HasAllValidMonopolies();
-            if (rets == false)
-            {
-                _toast.ShowUserErrorToast("You do not have valid monopolies");
-                return;
-            }
             if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsChance))
             {
                 _toast.ShowUserErrorToast("You have to use up all the chances");
-                return;
-            }
-            if (MainGame.SingleInfo!.HasMonopolyInHand())
-            {
-                _toast.ShowUserErrorToast("You have at least one monopoly in hand to play.  You must play them manually");
                 return;
             }
             if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsToken))
@@ -228,25 +230,38 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
                 _toast.ShowUserErrorToast("You have to use up all your tokens");
                 return;
             }
-            var firsts = MainGame.ListValidSets();
-            var list = MonopolyCardGameMainGameClass.GetSetInfo(firsts);
-            if (MainGame.BasicData!.MultiPlayer == true)
-            {
-                BasicList<string> newList = [];
-                await firsts.ForEachAsync(async thisTemp =>
-                {
-                    if (MainGame.BasicData!.MultiPlayer == true)
-                    {
-                        var tempList = thisTemp.CardList.GetDeckListFromObjectList();
-                        var thisStr = await js1.SerializeObjectAsync(tempList);
-                        newList.Add(thisStr);
-                    }
-                });
-                await MainGame.Network!.SendSeveralSetsAsync(newList, "finishedsets");
-            }
-            await MainGame.FinishManualProcessingAsync(list);
+            await FinishManuelSetsAsync();
             return;
         }
-        
+        rets = _model.HasAnyMonopolyPlayed();
+        if (rets)
+        {
+            if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsToken))
+            {
+                _toast.ShowUserErrorToast("You have to use up all your tokens because you played at least one monopoly");
+                return;
+            }
+        }
+        await FinishManuelSetsAsync();
+    }
+    private async Task FinishManuelSetsAsync()
+    {
+        var firsts = MainGame.ListValidSets();
+        var list = MonopolyCardGameMainGameClass.GetSetInfo(firsts);
+        if (MainGame.BasicData!.MultiPlayer == true)
+        {
+            BasicList<string> newList = [];
+            await firsts.ForEachAsync(async thisTemp =>
+            {
+                if (MainGame.BasicData!.MultiPlayer == true)
+                {
+                    var tempList = thisTemp.CardList.GetDeckListFromObjectList();
+                    var thisStr = await js1.SerializeObjectAsync(tempList);
+                    newList.Add(thisStr);
+                }
+            });
+            await MainGame.Network!.SendSeveralSetsAsync(newList, "finishedsets");
+        }
+        await MainGame.FinishManualProcessingAsync(list);
     }
 }

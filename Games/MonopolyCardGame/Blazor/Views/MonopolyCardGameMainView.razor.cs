@@ -20,23 +20,9 @@ public partial class MonopolyCardGameMainView
             .AddColumn("Total Money", true, nameof(MonopolyCardGamePlayerItem.TotalMoney), category: EnumScoreSpecialCategory.Currency);
         base.OnInitialized();
     }
-    //private bool IsSelf => _gameContainer!.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
     private ICustomCommand ResumeCommand => DataContext!.ResumeCommand!;
     private ICustomCommand GoOutCommand => DataContext!.GoOutCommand!;
     private ICustomCommand OrganizeCardsCommand => DataContext?.OrganizeCardsCommand!;
-    //private ICustomCommand ManuallyPlaySetsCommand => DataContext!.ManuallyPlaySetsCommand!;
-    //private ICustomCommand BackCommand => DataContext!.PutBackCommand!;
-    //private void ChangeMind()
-    //{
-    //    if (DataContext!.PreviousStatus == EnumWhatStatus.None)
-    //    {
-    //        throw new CustomBasicException("The previous state cannot be none");
-    //    }
-    //    _gameContainer!.SaveRoot.GameStatus = DataContext!.PreviousStatus;
-    //    DataContext!.PreviousStatus = EnumWhatStatus.None; //this is now none.
-    //    //hopefully good enough.
-    //}
-
     private async Task FinishedOrganizingCardsAsync()
     {
         if (DataContext!.PreviousStatus == EnumWhatStatus.None)

@@ -101,7 +101,7 @@ public partial class TemporaryCardsBlazor
     }
     protected override void OnParametersSet()
     {
-        _points = new();
+        _points = [];
         if (Hand!.HandList.Count == 0)
         {
             MonopolyCardGameCardInformation image = new();
