@@ -214,7 +214,7 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
         }
         _gameContainer.ProcessTrade(thisTrade, oldCol, selfTrade);
         _gameContainer.SortCards();
-        if (_gameContainer.SingleInfo!.MainHandList.Count == 10)
+        if (_gameContainer.SingleInfo!.ObjectCount == 10)
         {
             await _gameContainer.EndTurnAsync!.Invoke();
             return;

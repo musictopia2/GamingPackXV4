@@ -34,6 +34,7 @@ public partial class MonopolyCardGameMainView
         DataContext.PreviousStatus = EnumWhatStatus.None;
         DataContext.MainGame.SortCards();
         await DataContext.MainGame.ForceAllowPlayAsync();
+        DataContext.CheckTradePileStatus();
     }
     private MonopolyCardGamePlayerItem GetPlayer => _gameContainer!.SaveRoot.PlayerList.GetWhoPlayer();
 }

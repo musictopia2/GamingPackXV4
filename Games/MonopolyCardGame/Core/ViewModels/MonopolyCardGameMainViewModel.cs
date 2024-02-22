@@ -99,6 +99,10 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         {
             return;
         }
+        CheckTradePileStatus();
+    }
+    public void CheckTradePileStatus()
+    {
         MainGame!.PlayerList!.ForEach(thisPlayer =>
         {
             if (MainGame.SaveRoot!.GameStatus == EnumWhatStatus.LookOnly)
@@ -111,7 +115,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
             }
             else
             {
-                thisPlayer.TradePile!.IsEnabled = MainGame.SaveRoot.GameStatus == EnumWhatStatus.Discard || MainGame.SingleInfo!.MainHandList.Count == 9;
+                thisPlayer.TradePile!.IsEnabled = MainGame.SingleInfo!.ObjectCount == 9;
             }
         });
     }
