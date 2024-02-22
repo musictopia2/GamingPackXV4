@@ -34,6 +34,8 @@ public class MonopolyCardGameMainGameClass
     {
         LoadTradePiles();
         _doContinue = true;
+        OrganizedAtLeastsOnce = false;
+        _model.TempSets1.ClearBoard();
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
             var thisList = await js1.DeserializeObjectAsync<DeckRegularDict<MonopolyCardGameCardInformation>>(thisPlayer.TradeString);
