@@ -19,7 +19,7 @@
     @if (Status == EnumManuelStatus.OrganizingCards)
     {
         <GameButtonComponent Display="Finish Organizing Cards" CustomCallBack="OnOrganizedCards" />
-        <GameButtonComponent Display="Start Automate Populate Cards" CustomCallBack="PopulateManuelCards" />
+        @* <GameButtonComponent Display="Start Automate Populate Cards" CustomCallBack="PopulateManuelCards" /> *@
     }
     else if (Status == EnumManuelStatus.Final || Status == EnumManuelStatus.OthersLayingDown)
     {

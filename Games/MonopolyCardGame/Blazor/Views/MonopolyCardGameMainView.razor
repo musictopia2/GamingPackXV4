@@ -6,11 +6,13 @@
 <CascadingValue Value="_vmData">
     @if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Other)
     {
-        <MonopolyFinderComponent
-            Player="GetPlayer"
-            OnOrganizedCards=FinishedOrganizingCardsAsync
-            Status="_gameContainer.SaveRoot.ManuelStatus" />
-        return;
+        if (GetPlayer.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            <MonopolyFinderComponent Player="GetPlayer"
+                                     OnOrganizedCards=FinishedOrganizingCardsAsync
+                                     Status="_gameContainer.SaveRoot.ManuelStatus" />
+            return;
+        }
     }
     <GridContainer Inline="true" Columns="75vw 25vw">
         <GridItem>

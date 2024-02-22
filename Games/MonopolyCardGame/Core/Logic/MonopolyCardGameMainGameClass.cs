@@ -53,6 +53,14 @@ public class MonopolyCardGameMainGameClass
         {
             StartProcessAfterDrawing5Cards();
         }
+        var player = PlayerList.GetSelf();
+        _model.TempHand1.HandList = player.MainHandList; //trying to hook up.
+        //if (SaveRoot.GameStatus == EnumWhatStatus.Other && SaveRoot.ManuelStatus == EnumManuelStatus.OthersLayingDown)
+        //{
+        //    SingleInfo = PlayerList.GetWhoPlayer();
+        //    SingleInfo.TempHands = SingleInfo.MainHandList.Where(x => x.WhatCard != EnumCardType.IsGo && x.WhatCard != EnumCardType.IsMr).ToRegularDeckDict();
+        //}
+        //for the case where i go out and go back in again, i have to redo it (however, i have the button to help me).
         await base.FinishGetSavedAsync();
     }
     protected override async Task ComputerTurnAsync()
@@ -92,6 +100,8 @@ public class MonopolyCardGameMainGameClass
         {
             thisPlayer.TradePile!.ClearBoard(_model!.Deck1!.DrawCard());
         });
+        var player = PlayerList.GetSelf();
+        _model.TempHand1.HandList = player.MainHandList;
         await base.LastPartOfSetUpBeforeBindingsAsync();
     }
     async Task IMiscDataNM.MiscDataReceived(string status, string content)
@@ -156,6 +166,11 @@ public class MonopolyCardGameMainGameClass
             {
                 await ProcessEndAsync(); //the computer will calculate the score this way.
                 await EndTurnAsync();
+                return;
+            }
+            if (SingleInfo.HasChance(_model))
+            {
+                await ContinueTurnAsync(); //hopefully simple enough because they got 0 points.
                 return;
             }
             SaveRoot.GameStatus = EnumWhatStatus.Other;
@@ -253,37 +268,37 @@ public class MonopolyCardGameMainGameClass
         SaveRoot.ManuelStatus = EnumManuelStatus.Final;
         StartProcessAfterDrawing5Cards();
     }
-    public void PopulateManuelCards()
-    {
-        if (SaveRoot.ManuelStatus == EnumManuelStatus.OrganizingCards)
-        {
-            OrganizedAtLeastsOnce = true;
-            SingleInfo!.PopulateManuelCards(_model, true);
-            return;
-        }
-        SingleInfo!.PopulateManuelCards(_model, false);
-    }
+    //public void PopulateManuelCards()
+    //{
+    //    if (SaveRoot.ManuelStatus == EnumManuelStatus.OrganizingCards)
+    //    {
+    //        OrganizedAtLeastsOnce = true;
+    //        SingleInfo!.PopulateManuelCards(_model, true);
+    //        return;
+    //    }
+    //    SingleInfo!.PopulateManuelCards(_model, false);
+    //}
     private void StartProcessAfterDrawing5Cards()
     {
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             _model.Status = "Needs to manually figure out the monopolies for going out.";
-            PopulateManuelCards();
+            //PopulateManuelCards();
         }
         else
         {
             _model.Status = $"Waiting for {SingleInfo.NickName} to manually figure out the monopolies for going out.";
         }
     }
-    public void SortTempHand(DeckRegularDict<MonopolyCardGameCardInformation> list)
-    {
-        SingleInfo!.TempHands.AddRange(list);
-        SortTempHand();
-    }
-    public void SortTempHand()
-    {
-        SortCards(SingleInfo!.TempHands);
-    }
+    //public void SortHand(DeckRegularDict<MonopolyCardGameCardInformation> list)
+    //{
+    //    SingleInfo!.TempHands.AddRange(list);
+    //    SortTempHand();
+    //}
+    //public void SortTempHand()
+    //{
+    //    SortCards(SingleInfo!.TempHands);
+    //}
     public void ProcessTrade(TradePile newTrade, DeckRegularDict<MonopolyCardGameCardInformation> oldCollection, TradePile yourTrade)
     {
         newTrade.GetNumberOfItems(oldCollection.Count);

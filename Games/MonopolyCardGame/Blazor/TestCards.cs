@@ -14,28 +14,37 @@ public class TestCards : ITestCardSetUp<MonopolyCardGameCardInformation, Monopol
 
 
 
-        var cards = deckList.Where(x => x.WhatCard == EnumCardType.IsChance).Take(2);
-        player.StartUpList.AddRange(cards);
+        //var cards = deckList.Where(x => x.WhatCard == EnumCardType.IsChance).Take(1);
+        //player.StartUpList.AddRange(cards);
 
-        cards = deckList.Where(x => x.WhatCard == EnumCardType.IsHotel).Take(1);
-        player.StartUpList.AddRange(cards);
-        4.Times(y =>
-        {
-            if (y != 3)
-            {
-                cards = deckList.Where(x => x.WhatCard == EnumCardType.IsHouse && x.HouseNum == y).Take(1);
-                player.StartUpList.AddRange(cards);
-            }
-        });
-        cards = deckList.Where(x => x.WhatCard == EnumCardType.IsToken).Take(1);
-        player.StartUpList.AddRange(cards);
-        cards = deckList.Where(x => x.WhatCard == EnumCardType.IsRailRoad).Take(2);
-        player.StartUpList.AddRange(cards);
-        cards = deckList.Where(x => x.Money == 300 && x.WhatCard == EnumCardType.IsProperty).Take(3);
-        player.StartUpList.AddRange(cards);
-        cards = deckList.Where(x => x.Money == 250 && x.WhatCard == EnumCardType.IsProperty).Take(3);
-        player.StartUpList.AddRange(cards);
-        cards = deckList.Where(x => x.Money == 200 && x.WhatCard == EnumCardType.IsProperty).Take(2);
+
+
+        //player = playerList.GetOnlyOpponent();
+
+
+        //cards = deckList.Where(x => x.WhatCard == EnumCardType.IsHotel).Take(1);
+        //player.StartUpList.AddRange(cards);
+        //4.Times(y =>
+        //{
+        //    if (y != 3)
+        //    {
+        //        cards = deckList.Where(x => x.WhatCard == EnumCardType.IsHouse && x.HouseNum == y).Take(1);
+        //        player.StartUpList.AddRange(cards);
+        //    }
+        //});
+        //cards = deckList.Where(x => x.WhatCard == EnumCardType.IsToken).Take(1);
+        //player.StartUpList.AddRange(cards);
+        //cards = deckList.Where(x => x.WhatCard == EnumCardType.IsToken).Take(2);
+        //player.StartUpList.AddRange(cards);
+        //var cards = deckList.Where(x => x.Money == 300 && x.WhatCard == EnumCardType.IsProperty).Take(3);
+        //player.StartUpList.AddRange(cards);
+        //cards = deckList.Where(x => x.Money == 250 && x.WhatCard == EnumCardType.IsProperty).Take(3);
+        //player.StartUpList.AddRange(cards);
+        //cards = deckList.Where(x => x.Money == 400 && x.WhatCard == EnumCardType.IsProperty).Take(2);
+        //player.StartUpList.AddRange(cards);
+        //cards = deckList.Where(x => x.Money == 50 && x.WhatCard == EnumCardType.IsProperty).Take(2);
+        //player.StartUpList.AddRange(cards);
+        var cards = deckList.Where(x => x.WhatCard == EnumCardType.IsGo).Take(2);
         player.StartUpList.AddRange(cards);
         return Task.CompletedTask;
     }

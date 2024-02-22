@@ -16,11 +16,11 @@ public partial class MonopolyFinderComponent
     {
         _vmData = aa1.Resolver!.Resolve<MonopolyCardGameVMData>();
     }
-    private void PopulateManuelCards()
-    {
-        Player!.PopulateManuelCards(_vmData!, false);
-        DataContext!.MainGame.SortTempHand();
-    }
+    //private void PopulateManuelCards()
+    //{
+    //    Player!.PopulateManuelCards(_vmData!, false);
+    //    DataContext!.MainGame.SortTempHand();
+    //}
     private string GetInstructions()
     {
         if (Status == EnumManuelStatus.OrganizingCards)

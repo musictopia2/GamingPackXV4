@@ -25,6 +25,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         player.DoInit();
         CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         _model.TempSets1.SetClickedAsync = TempSets1_SetClickedAsync;
+        //_toast.ShowInfoToast("Initializing");
         //may need code for after choosing card for tempsets.
         //_model.TempSets1.
         _model.TempSets1.Init(this);
@@ -38,12 +39,14 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
             return Task.CompletedTask;
         }
         _isProcessing = true;
-        var tempList = _model.TempHand1!.ListSelectedObjects(true);
+        var tempList = _model.TempHand1!.ListSelectedObjects(false);
         if (tempList.Any(x => x.WhatCard == EnumCardType.IsGo || x.WhatCard == EnumCardType.IsMr))
         {
             _toast.ShowUserErrorToast("You cannot place gos or mr monopolies into the tempsets to make a monopoly");
-            //_model.TempHand1.HandList.AddRange(tempList);
-            MainGame.SortTempHand(tempList);
+            foreach (var item in tempList)
+            {
+                item.IsSelected = false; //unselect them automatically in this case.
+            }
             _isProcessing = false;
             return Task.CompletedTask;
         }
@@ -146,15 +149,15 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         PreviousStatus = MainGame.SaveRoot.GameStatus;
         MainGame.SaveRoot.GameStatus = EnumWhatStatus.Other;
         MainGame.SaveRoot.ManuelStatus = EnumManuelStatus.OrganizingCards;
-        if (MainGame.OrganizedAtLeastsOnce == false)
-        {
-            MainGame.PopulateManuelCards();
-        }
-        else
-        {
-            MainGame.SingleInfo.TempHands.Clear();
-            MainGame.SingleInfo.TempHands.AddRange(MainGame.SingleInfo.MainHandList); //hopefully this simple
-        }
+        //if (MainGame.OrganizedAtLeastsOnce == false)
+        //{
+        //    MainGame.PopulateManuelCards();
+        //}
+        //else
+        //{
+        //    MainGame.SingleInfo.TempHands.Clear();
+        //    MainGame.SingleInfo.TempHands.AddRange(MainGame.SingleInfo.MainHandList); //hopefully this simple
+        //}
         //if (_model.TempHand1.)
     }
     public bool CanGoOut => CanEnableDeck();
@@ -204,7 +207,8 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
             //not sure about cards going into your hand though (?)
         });
         _model.AdditionalInfo1.Clear(); //i think
-        MainGame.SortTempHand(thisList);
+        MainGame.SortCards();
+        //MainGame.SortTempHand(thisList);
     }
     [Command(EnumCommandCategory.Game)]
     public async Task ManuallyPlaySetsAsync()

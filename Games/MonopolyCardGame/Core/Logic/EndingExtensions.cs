@@ -31,17 +31,23 @@ internal static class EndingExtensions
             {
                 return true;
             }
-            var card = item.First();
-            if (card.Money == 50 || card.Money == 400)
+            var other = item.GroupBy(x => x.Money);
+            foreach (var lasts in other)
             {
-                if (item.Count() == 2)
+                //var card = lasts.First();
+                int count = lasts.Count();
+                if (lasts.Key == 50 || lasts.Key == 400)
+                {
+                    if (count == 2)
+                    {
+                        return true;
+                    }
+
+                }
+                else if (count == 3)
                 {
                     return true;
                 }
-            }
-            if (item.Count() == 3)
-            {
-                return true;
             }
         }
         return false;
