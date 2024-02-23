@@ -15,6 +15,7 @@ public partial class MonopolyFinderComponent
     protected override void OnInitialized()
     {
         _vmData = aa1.Resolver!.Resolve<MonopolyCardGameVMData>();
+        _vmData.TempHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
     }
     //private void PopulateManuelCards()
     //{

@@ -23,14 +23,40 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         _model.Deck1.NeverAutoDisable = true;
         var player = MainGame.PlayerList.GetSelf();
         player.DoInit();
-        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
+        //CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         _model.TempSets1.SetClickedAsync = TempSets1_SetClickedAsync;
+        HookUpEnableTradeProcesses();
+        
         //_toast.ShowInfoToast("Initializing");
         //may need code for after choosing card for tempsets.
         //_model.TempSets1.
         _model.TempSets1.Init(this);
         CreateCommands(commandContainer);
     }
+
+    private void HookUpEnableTradeProcesses()
+    {
+        foreach (var player in MainGame.PlayerList)
+        {
+            if (player.TradePile is not null)
+            {
+                player.TradePile!.SendEnableProcesses(this, () =>
+                {
+                    if (MainGame.SaveRoot!.GameStatus == EnumWhatStatus.LookOnly)
+                    {
+                        return false;
+                    }
+                    if (player.PlayerCategory == EnumPlayerCategory.Self)
+                    {
+                        return true;
+                    }
+                    return player.TradePile!.IsEnabled = MainGame.SingleInfo!.ObjectCount == 9;
+                    //return false;
+                });
+            }
+        }
+    }
+
     private bool _isProcessing;
     private Task TempSets1_SetClickedAsync(int index)
     {
@@ -64,7 +90,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     partial void CreateCommands(CommandContainer command);
     protected override Task TryCloseAsync()
     {
-        CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
+        //CommandContainer.ExecutingChanged -= CommandContainer_ExecutingChanged;
         _model.TempSets1.SetClickedAsync -= TempSets1_SetClickedAsync;
         return base.TryCloseAsync();
     }
@@ -96,32 +122,32 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         }
         return Task.CompletedTask;
     }
-    private void CommandContainer_ExecutingChanged()
-    {
-        if (CommandContainer!.IsExecuting)
-        {
-            return;
-        }
-        CheckTradePileStatus();
-    }
-    public void CheckTradePileStatus()
-    {
-        MainGame!.PlayerList!.ForEach(thisPlayer =>
-        {
-            if (MainGame.SaveRoot!.GameStatus == EnumWhatStatus.LookOnly)
-            {
-                thisPlayer!.TradePile!.IsEnabled = false;
-            }
-            else if (thisPlayer.PlayerCategory == EnumPlayerCategory.Self)
-            {
-                thisPlayer.TradePile!.IsEnabled = true;
-            }
-            else
-            {
-                thisPlayer.TradePile!.IsEnabled = MainGame.SingleInfo!.ObjectCount == 9;
-            }
-        });
-    }
+    //private void CommandContainer_ExecutingChanged()
+    //{
+    //    if (CommandContainer!.IsExecuting)
+    //    {
+    //        return;
+    //    }
+    //    CheckTradePileStatus();
+    //}
+    //public void CheckTradePileStatus()
+    //{
+    //    MainGame!.PlayerList!.ForEach(thisPlayer =>
+    //    {
+    //        if (MainGame.SaveRoot!.GameStatus == EnumWhatStatus.LookOnly)
+    //        {
+    //            thisPlayer!.TradePile!.IsEnabled = false;
+    //        }
+    //        else if (thisPlayer.PlayerCategory == EnumPlayerCategory.Self)
+    //        {
+    //            thisPlayer.TradePile!.IsEnabled = true;
+    //        }
+    //        else
+    //        {
+    //            thisPlayer.TradePile!.IsEnabled = MainGame.SingleInfo!.ObjectCount == 9;
+    //        }
+    //    });
+    //}
     public bool CanResume => MainGame!.SaveRoot!.GameStatus == EnumWhatStatus.LookOnly;
     [Command(EnumCommandCategory.Game)]
     public async Task ResumeAsync()

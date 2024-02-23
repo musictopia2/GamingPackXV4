@@ -14,6 +14,13 @@
             return;
         }
     }
+    @if (_tradeOpponent is not null)
+    {
+        <TradeBlazor OppenentUsed="_tradeOpponent"
+            SelfPlayer="GetPlayer"
+            OnCancelled="CancelTradeAsync" />
+        return;
+    }
     <GridContainer Inline="true" Columns="75vw 25vw">
         <GridItem>
             <div>
@@ -50,7 +57,7 @@
                     </div>
                 </StackItem>
                 <StackItem>
-                    <TempSetsBlazor TargetContainerSize="35vh"
+                    <TempSetsBlazor TargetHeight="35vh"
                                     Mode="EnumMode.Plain"
                                     Divider="1.5"
                                     TempPiles="_vmData.TempSets1" />

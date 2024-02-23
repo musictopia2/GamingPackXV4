@@ -12,4 +12,5 @@ public class MonopolyCardGameGameContainer(BasicData basicData,
     IRandomGenerator random) : CardGameContainer<MonopolyCardGameCardInformation, MonopolyCardGamePlayerItem, MonopolyCardGameSaveInfo>(basicData, test, gameInfo, delay, aggregator, command, resolver, deckList, random)
 {
     internal Action<TradePile, DeckRegularDict<MonopolyCardGameCardInformation>, TradePile>? ProcessTrade { get; set; }
+    public Action<MonopolyCardGamePlayerItem>? StartCustomTrade { get; set; }
 }

@@ -6,11 +6,15 @@ public partial class MonopolyCardGameMainView
     private MonopolyCardGameVMData? _vmData;
     private MonopolyCardGameGameContainer? _gameContainer;
     private BasicList<MonopolyCardGamePlayerItem> _players = [];
+    private MonopolyCardGamePlayerItem? _tradeOpponent;
+    [Inject]
+    private IToast? Toast { get; set; }
     protected override void OnInitialized()
     {
         _vmData = aa1.Resolver!.Resolve<MonopolyCardGameVMData>();
         _gameContainer = aa1.Resolver.Resolve<MonopolyCardGameGameContainer>();
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();
+        _gameContainer.StartCustomTrade = StartTrade;
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(MonopolyCardGameVMData.NormalTurn))
            .AddLabel("Status", nameof(MonopolyCardGameVMData.Status));
@@ -19,6 +23,20 @@ public partial class MonopolyCardGameMainView
             .AddColumn("Previous Money", true, nameof(MonopolyCardGamePlayerItem.PreviousMoney), category: EnumScoreSpecialCategory.Currency)
             .AddColumn("Total Money", true, nameof(MonopolyCardGamePlayerItem.TotalMoney), category: EnumScoreSpecialCategory.Currency);
         base.OnInitialized();
+    }
+    private void StartTrade(MonopolyCardGamePlayerItem player)
+    {
+        _tradeOpponent = player;
+        //StateHasChanged(); //i think this is needed too (?)
+        //i think the view should handle because its view specific.
+        //Toast!.ShowSuccessToast($"You have successfully started to open trade for {player.Id} with nick name of {player.NickName}");
+    }
+    private async Task CancelTradeAsync()
+    {
+        var player = _gameContainer!.PlayerList!.GetSelf();
+        await player.TradePile!.PutBackAsync();
+        //await _tradeOpponent!.TradePile!.PutBackAsync();
+        _tradeOpponent = null;
     }
     private ICustomCommand ResumeCommand => DataContext!.ResumeCommand!;
     private ICustomCommand GoOutCommand => DataContext!.GoOutCommand!;
@@ -34,7 +52,7 @@ public partial class MonopolyCardGameMainView
         DataContext.PreviousStatus = EnumWhatStatus.None;
         DataContext.MainGame.SortCards();
         await DataContext.MainGame.ForceAllowPlayAsync();
-        DataContext.CheckTradePileStatus();
+        //DataContext.CheckTradePileStatus();
     }
     private MonopolyCardGamePlayerItem GetPlayer => _gameContainer!.SaveRoot.PlayerList.GetWhoPlayer();
 }

@@ -12,12 +12,16 @@ public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGa
     {
         Deck1 = new(command);
         Pile1 = new(command);
-        PlayerHand1 = new(command);
+        PlayerHand1 = new(command)
+        {
+            AutoSelect = EnumHandAutoType.SelectAsMany
+        };
         TempHand1 = new(command)
         {
             AutoSelect = EnumHandAutoType.SelectAsMany
         };
         TempHand1.ManualSelectUnselect = AfterSelectOne;
+        TempHand1.Text = "Your Cards";
         AdditionalInfo1 = new();
         TempSets1 = new(command, resolver, container)
         {
