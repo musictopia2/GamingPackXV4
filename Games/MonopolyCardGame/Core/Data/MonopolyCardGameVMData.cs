@@ -36,7 +36,7 @@ public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGa
             AdditionalInfo1.Clear();
             return; //certain cards don't need more information for this stage.
         }
-        if (payLoad.IsSelected == false && payLoad.WasAutomated == false)
+        if (payLoad.IsSelected == false)
         {
             AdditionalInfo1.Clear();
             return;

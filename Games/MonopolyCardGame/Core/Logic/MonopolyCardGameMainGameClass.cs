@@ -268,37 +268,17 @@ public class MonopolyCardGameMainGameClass
         SaveRoot.ManuelStatus = EnumManuelStatus.Final;
         StartProcessAfterDrawing5Cards();
     }
-    //public void PopulateManuelCards()
-    //{
-    //    if (SaveRoot.ManuelStatus == EnumManuelStatus.OrganizingCards)
-    //    {
-    //        OrganizedAtLeastsOnce = true;
-    //        SingleInfo!.PopulateManuelCards(_model, true);
-    //        return;
-    //    }
-    //    SingleInfo!.PopulateManuelCards(_model, false);
-    //}
     private void StartProcessAfterDrawing5Cards()
     {
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             _model.Status = "Needs to manually figure out the monopolies for going out.";
-            //PopulateManuelCards();
         }
         else
         {
             _model.Status = $"Waiting for {SingleInfo.NickName} to manually figure out the monopolies for going out.";
         }
     }
-    //public void SortHand(DeckRegularDict<MonopolyCardGameCardInformation> list)
-    //{
-    //    SingleInfo!.TempHands.AddRange(list);
-    //    SortTempHand();
-    //}
-    //public void SortTempHand()
-    //{
-    //    SortCards(SingleInfo!.TempHands);
-    //}
     public void ProcessTrade(TradePile newTrade, DeckRegularDict<MonopolyCardGameCardInformation> oldCollection, TradePile yourTrade)
     {
         newTrade.GetNumberOfItems(oldCollection.Count);

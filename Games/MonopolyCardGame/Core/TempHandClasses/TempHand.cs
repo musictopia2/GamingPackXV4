@@ -18,12 +18,8 @@ public class TempHand : HandObservable<MonopolyCardGameCardInformation>
     }
     protected override Task ProcessObjectClickedAsync(MonopolyCardGameCardInformation thisObject, int index)
     {
-        if (thisObject.WasAutomated == false || _container.SaveRoot.ManuelStatus == EnumManuelStatus.OrganizingCards || _container.SaveRoot.ManuelStatus == EnumManuelStatus.None)
-        {
-            DidClickObject = true; //this is needed too.  so if other gets raised, will be ignored because already handled.
-            thisObject.IsSelected = !thisObject.IsSelected; //try here.  hopefully works well.
-            thisObject.WasAutomated = false; //try to make it false because you changed it.
-        }
+        DidClickObject = true; //this is needed too.  so if other gets raised, will be ignored because already handled.
+        thisObject.IsSelected = !thisObject.IsSelected; //try here.  hopefully works well.
         AfterSelectUnselectCard?.Invoke(thisObject);
         return Task.CompletedTask;
     }
