@@ -3,13 +3,13 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
 {
     //protected override Task RegisterTestsAsync()
     //{
-    //    //TestData!.WhoStarts = 1;
-    //    //TestData.PlayCategory = EnumTestPlayCategory.NoShuffle;
+        //TestData!.WhoStarts = 2;
+        //TestData.PlayCategory = EnumTestPlayCategory.NoShuffle;
 
-    //    //TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly; //so i can test going out with wilds everytime.
-    //    var container = GetDIContainer;
-    //    container.RegisterSingleton<ITestCardSetUp<MonopolyCardGameCardInformation, MonopolyCardGamePlayerItem>, TestCards>();
-    //    return base.RegisterTestsAsync();
+        //TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly; //so i can test going out with wilds everytime.
+        //var container = GetDIContainer;
+        //container.RegisterSingleton<ITestCardSetUp<MonopolyCardGameCardInformation, MonopolyCardGamePlayerItem>, TestCards>();
+        //return base.RegisterTestsAsync();
     //}
     //protected override Task RegisterTestsAsync()
     //{

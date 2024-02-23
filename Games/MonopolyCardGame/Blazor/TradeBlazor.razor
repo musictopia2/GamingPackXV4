@@ -36,7 +36,10 @@
                             <MainContent>
                                 @foreach (var item in _proposedOpponent)
                                 {
-                                    <CardGraphicsBlazor DeckObject="item" TargetHeight="12vh" />
+                                    <div>
+                                        <CardGraphicsBlazor DeckObject="item" TargetHeight="12vh" />
+                                    </div>
+                                    
                                 }
                             </MainContent>
                         </LeftOverLayout>
@@ -49,7 +52,10 @@
                             <MainContent>
                                 @foreach (var item in _proposedYours)
                                 {
-                                    <CardGraphicsBlazor DeckObject="item" TargetHeight="12vh" />
+                                    <div>
+                                        <CardGraphicsBlazor DeckObject="item" TargetHeight="12vh" />
+                                    </div>
+                                    
                                 }
                             </MainContent>
                         </LeftOverLayout>
@@ -64,7 +70,7 @@
             <div style="width: 60vw; height: 40vh;">
                 <LeftOverLayout>
                     <MainContent>
-                        <WrapLayout ColumnWidth="20vw" RenderList="OppenentUsed.TradePile!.HandList" Context="Card">
+                        <WrapLayout ColumnWidth="6vw" RenderList="_opponentCards" Context="Card">
                             <div @onclick="() => ClickCard(Card)">
                                 <CardGraphicsBlazor DeckObject="Card" TargetHeight="14vh" />
                             </div>

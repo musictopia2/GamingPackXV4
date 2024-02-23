@@ -7,8 +7,6 @@ public partial class MonopolyCardGameMainView
     private MonopolyCardGameGameContainer? _gameContainer;
     private BasicList<MonopolyCardGamePlayerItem> _players = [];
     private MonopolyCardGamePlayerItem? _tradeOpponent;
-    [Inject]
-    private IToast? Toast { get; set; }
     protected override void OnInitialized()
     {
         _vmData = aa1.Resolver!.Resolve<MonopolyCardGameVMData>();

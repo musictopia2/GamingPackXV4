@@ -86,7 +86,7 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
     }
     public async Task PutBackAsync()
     {
-        if (_myID != GetPlayerIndex && _gameContainer.BasicData.MultiPlayer)
+        if (_gameContainer.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self && _gameContainer.BasicData.MultiPlayer)
         {
             await _gameContainer.Network!.SendAllAsync("putback");
         }
@@ -102,6 +102,7 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
             throw new CustomBasicException("The previous status cannot be none");
         }
         _gameContainer.SaveRoot.GameStatus = _previousStatus;
+        _previousStatus = EnumWhatStatus.None;
     }
     private EnumWhatStatus _previousStatus;
     private async Task ProcessSelfPileAsync()
@@ -110,8 +111,6 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
         int numunselected;
         numselected = _model.PlayerHand1!.HowManySelectedObjects;
         numselected += _model.TempSets1.HowManySelectedObjects;
-        //tempSelected = _model.TempSets1.HowManySelectedObjects;
-        
         numunselected = _model.PlayerHand1.HowManyUnselectedObjects;
         numunselected += _model.TempSets1.HowManyUnselectedObjects;
         if (numselected == 0)
@@ -156,26 +155,27 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
         {
             thisTrade.AddCard(thisCard.Deck, true);
         }
-        //if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Either)
-        //{
-        //    thisTrade.UnselectAllObjects();
-        //    _model.PlayerHand1.UnselectAllObjects();
-        //}
         if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Discard && _gameContainer.SingleInfo!.ObjectCount == 10)
         {
             await _gameContainer.EndTurnAsync!.Invoke();
             return;
         }
+        SetPreviousStatus();
+    }
+    public void SetPreviousStatus()
+    {
         if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.Discard)
         {
+            _previousStatus = EnumWhatStatus.None;
             return;
         }
-        _previousStatus = _gameContainer.SaveRoot.GameStatus;
         if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.DrawOrTrade)
         {
+            _previousStatus = _gameContainer.SaveRoot.GameStatus;
             _gameContainer.SaveRoot.GameStatus = EnumWhatStatus.TradeOnly;
             return;
         }
+        _previousStatus = _gameContainer.SaveRoot.GameStatus;
         if (_gameContainer.SingleInfo!.MainHandList.Count == 9)
         {
             _gameContainer.SaveRoot.GameStatus = EnumWhatStatus.TradeOnly;
@@ -196,64 +196,11 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
     }
     private async Task ProcessOtherPilesAsync()
     {
-        
-        //int numselected;
         MonopolyCardGamePlayerItem tempPlayer;
         tempPlayer = _gameContainer!.PlayerList![GetPlayerIndex];
         await Task.Delay(0);
         _gameContainer.StartCustomTrade?.Invoke(tempPlayer);
         return;
-
-        //tempPlayer = _gameContainer.PlayerList!.GetSelf();
-        //TradePile thisTrade;
-        //TradePile selfTrade;
-        //selfTrade = tempPlayer.TradePile!;
-        //numselected = selfTrade!.HowManyCardsSelected();
-        //if (numselected == 0)
-        //{
-        //    _toast.ShowUserErrorToast("Sorry, you must select a card to trade here");
-        //    return;
-        //}
-        //if (_gameContainer.SaveRoot!.GameStatus == EnumWhatStatus.Discard)
-        //{
-        //    _toast.ShowUserErrorToast("Sorry, you must now discard to add to your trade pile");
-        //    return;
-        //}
-        //tempPlayer = _gameContainer.PlayerList[GetPlayerIndex];
-        //thisTrade = tempPlayer.TradePile!;
-        //if (thisTrade.HandList.Count == 0)
-        //{
-        //    _toast.ShowUserErrorToast("Sorry, there is no cards in the trade pile to trade for");
-        //    return;
-        //}
-        //if (numselected > thisTrade.HandList.Count)
-        //{
-        //    _toast.ShowUserErrorToast("Sorry, you cannot trade for more than what the other player has");
-        //    return;
-        //}
-        //DeckRegularDict<MonopolyCardGameCardInformation> oldCol = selfTrade.GetSelectedItems;
-        //if (_gameContainer.BasicData!.MultiPlayer)
-        //{
-        //    var send = new SendTrade() { Player = thisTrade.GetPlayerIndex };
-        //    send.CardList = oldCol.GetDeckListFromObjectList();
-        //    await _gameContainer.Network!.SendAllAsync("trade2", send);
-        //}
-        //if (_gameContainer.ProcessTrade == null)
-        //{
-        //    throw new CustomBasicException("Nobody is processing trade.  Rethink");
-        //}
-        //if (_gameContainer.SortCards == null)
-        //{
-        //    throw new CustomBasicException("Nobody is sorting cards.  Rethink");
-        //}
-        //_gameContainer.ProcessTrade(thisTrade, oldCol, selfTrade);
-        //_gameContainer.SortCards();
-        //if (_gameContainer.SingleInfo!.ObjectCount == 10)
-        //{
-        //    await _gameContainer.EndTurnAsync!.Invoke();
-        //    return;
-        //}
-        //await _gameContainer.ContinueTurnAsync!.Invoke();
     }
     private async Task PlayerClickedAsync()
     {
@@ -273,34 +220,4 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
         }
         await PlayerClickedAsync();
     }
-    //protected override async Task ProcessObjectClickedAsync(MonopolyCardGameCardInformation card, int Index)
-    //{
-    //    _didProcess = true;
-    //    if (_model.PlayerHand1!.HasSelectedObject() == false)
-    //    {
-    //        if (card.Deck != _model.AdditionalInfo1!.CurrentCard.Deck)
-    //        {
-    //            _model.AdditionalInfo1.AdditionalInfo(card.Deck);
-    //            return;
-    //        }
-    //    }
-    //    if (_myID != GetPlayerIndex)
-    //    {
-    //        await PlayerClickedAsync();
-    //        return;
-    //    }
-    //    int deck = card.Deck;
-    //    int nums = _model.PlayerHand1.HowManySelectedObjects;
-    //    if (nums > 0)
-    //    {
-    //        await PlayerClickedAsync();
-    //        return;
-    //    }
-    //    if (IsCardSelected(deck))
-    //    {
-    //        EndTurn();
-    //        return;
-    //    }
-    //    SelectPastPoint(deck);
-    //}
 }

@@ -116,6 +116,7 @@ public class MonopolyCardGameMainGameClass
             case "trade1":
                 var thisCol = await content.GetObjectsFromDataAsync(SingleInfo!.MainHandList);
                 thisCol.ForEach(thisCard => SingleInfo.TradePile!.AddCard(thisCard.Deck));
+                SingleInfo.TradePile!.SetPreviousStatus();
                 _command.UpdateAll();
                 Network!.IsEnabled = true;
                 return;
@@ -136,6 +137,8 @@ public class MonopolyCardGameMainGameClass
             case "putback":
                 SingleInfo = PlayerList.GetWhoPlayer();
                 await SingleInfo.TradePile!.PutBackAsync();
+                _command.UpdateAll();
+                Network!.IsEnabled = true;
                 return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");

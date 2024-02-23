@@ -45,7 +45,9 @@ public partial class TradeBlazor
             return;
         }
         _proposedOpponent = _opponentCards.Take(_used).ToBasicList();
+        //_proposedOpponent.Reverse();
         _proposedYours = _yourCards.Take(_used).ToBasicList();
+        //_proposedYours.Reverse(); //try this way (?)
     }
     private string StartText => $"Trade With {OppenentUsed!.NickName}";
     private async Task ConfirmTrade()

@@ -316,7 +316,8 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         MainGame.ProcessTrade(opponent.TradePile!, yourList, MainGame.SingleInfo!.TradePile!);
         if (MainGame.SingleInfo.ObjectCount == 10)
         {
-            await EndTurnAsync();
+            await MainGame.EndTurnAsync(); //try this way (?)
+            //await EndTurnAsync();
             return;
         }
         await MainGame.ContinueTurnAsync();
