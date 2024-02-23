@@ -298,4 +298,27 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         }
         await MainGame.FinishManualProcessingAsync(list);
     }
+    public async Task TradeAsync(TradeModel trade)
+    {
+        if (MainGame.BasicData!.MultiPlayer)
+        {
+            SendTrade sent = new()
+            {
+                Player = trade.OpponentPlayer,
+                CardList = trade.OpponentReceive.ToRegularDeckDict().GetDeckListFromObjectList()
+                //WhoTurnReceive = trade.YouReceive.ToRegularDeckDict().GetDeckListFromObjectList(),
+                //OtherReceive = trade.OpponentReceive.ToRegularDeckDict().GetDeckListFromObjectList()
+            };
+            await MainGame.Network!.SendAllAsync("trade2", sent);
+        }
+        var yourList = trade.OpponentReceive.ToRegularDeckDict();
+        MonopolyCardGamePlayerItem opponent = MainGame.PlayerList[trade.OpponentPlayer];
+        MainGame.ProcessTrade(opponent.TradePile!, yourList, MainGame.SingleInfo!.TradePile!);
+        if (MainGame.SingleInfo.ObjectCount == 10)
+        {
+            await EndTurnAsync();
+            return;
+        }
+        await MainGame.ContinueTurnAsync();
+    }
 }

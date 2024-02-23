@@ -17,6 +17,7 @@
     @if (_tradeOpponent is not null)
     {
         <TradeBlazor OppenentUsed="_tradeOpponent"
+            OnTraded="FinishTradeAsync"
             SelfPlayer="GetPlayer"
             OnCancelled="CancelTradeAsync" />
         return;

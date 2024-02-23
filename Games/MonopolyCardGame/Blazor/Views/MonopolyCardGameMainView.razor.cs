@@ -27,16 +27,19 @@ public partial class MonopolyCardGameMainView
     private void StartTrade(MonopolyCardGamePlayerItem player)
     {
         _tradeOpponent = player;
-        //StateHasChanged(); //i think this is needed too (?)
-        //i think the view should handle because its view specific.
-        //Toast!.ShowSuccessToast($"You have successfully started to open trade for {player.Id} with nick name of {player.NickName}");
     }
     private async Task CancelTradeAsync()
     {
         var player = _gameContainer!.PlayerList!.GetSelf();
         await player.TradePile!.PutBackAsync();
-        //await _tradeOpponent!.TradePile!.PutBackAsync();
         _tradeOpponent = null;
+        await DataContext!.MainGame.ForceAllowPlayAsync();
+    }
+    private async Task FinishTradeAsync(TradeModel trade)
+    {
+        await Task.Delay(0);
+        _tradeOpponent = null;
+        await DataContext!.TradeAsync(trade);
     }
     private ICustomCommand ResumeCommand => DataContext!.ResumeCommand!;
     private ICustomCommand GoOutCommand => DataContext!.GoOutCommand!;

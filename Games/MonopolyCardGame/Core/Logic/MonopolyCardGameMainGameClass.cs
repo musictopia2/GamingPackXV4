@@ -133,6 +133,10 @@ public class MonopolyCardGameMainGameClass
                 await FinishManualProcessingAsync(list2);
                 await ContinueTurnAsync(); //try this
                 return;
+            case "putback":
+                SingleInfo = PlayerList.GetWhoPlayer();
+                await SingleInfo.TradePile!.PutBackAsync();
+                return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }

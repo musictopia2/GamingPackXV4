@@ -8,6 +8,8 @@ public partial class TradeBlazor
     public MonopolyCardGamePlayerItem? SelfPlayer { get; set; }
     [Parameter]
     public EventCallback OnCancelled { get; set; }
+    [Parameter]
+    public EventCallback<TradeModel> OnTraded { get; set; }
     [Inject]
     private IToast? Toast { get;set; }
     private MonopolyCardGameVMData? _vmData;
@@ -46,7 +48,9 @@ public partial class TradeBlazor
         _proposedYours = _yourCards.Take(_used).ToBasicList();
     }
     private string StartText => $"Trade With {OppenentUsed!.NickName}";
-    private string ProposedYours => SelfPlayer!.NickName;
-    private string ProposedOpponent => OppenentUsed!.NickName;
-    //private string GetStartText => $"Good job in enabling {OppenentUsed!.NickName}";
+    private async Task ConfirmTrade()
+    {
+        TradeModel trade = new(_proposedOpponent, _proposedYours, OppenentUsed!.Id);
+        await OnTraded.InvokeAsync(trade);
+    }
 }
