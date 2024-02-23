@@ -10,9 +10,10 @@ public partial class TradeBlazor
     public EventCallback OnCancelled { get; set; }
     [Parameter]
     public EventCallback<TradeModel> OnTraded { get; set; }
+    [CascadingParameter]
+    public MonopolyCardGameVMData? Model { get; set; }
     [Inject]
     private IToast? Toast { get;set; }
-    private MonopolyCardGameVMData? _vmData;
     private BasicList<MonopolyCardGameCardInformation> _opponentCards = [];
     private BasicList<MonopolyCardGameCardInformation> _yourCards = [];
     private int _used;
@@ -20,8 +21,7 @@ public partial class TradeBlazor
     private BasicList<MonopolyCardGameCardInformation> _proposedOpponent = [];
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<MonopolyCardGameVMData>();
-        _vmData.TempHand1.AutoSelect = EnumHandAutoType.None; //cannot autoselect anymore.
+        Model!.TempHand1.AutoSelect = EnumHandAutoType.None; //cannot autoselect anymore.
         _opponentCards = OppenentUsed!.TradePile!.HandList.ToBasicList();
         _opponentCards.Reverse();
         _yourCards = SelfPlayer!.TradePile!.HandList.ToBasicList();

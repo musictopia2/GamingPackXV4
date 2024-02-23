@@ -8,7 +8,7 @@
     <ShowCardBlazor />
 </div>
 <div>
-    <HandBlazor Hand="_vmData!.TempHand1" TargetContainerSize="95vw" />
+    <HandBlazor Hand="Model!.TempHand1" TargetContainerSize="95vw" />
 </div>
 <div>
     @GetInstructions()
@@ -19,11 +19,10 @@
     @if (Status == EnumManuelStatus.OrganizingCards)
     {
         <GameButtonComponent Display="Finish Organizing Cards" CustomCallBack="OnOrganizedCards" />
-        @* <GameButtonComponent Display="Start Automate Populate Cards" CustomCallBack="PopulateManuelCards" /> *@
     }
     else if (Status == EnumManuelStatus.Final || Status == EnumManuelStatus.OthersLayingDown)
     {
         <GameButtonComponent CommandObject="ManuelCommand" Display="Play Monopolies" />
     }
 </div>
-<TempSetsBlazor TargetContainerSize="40vh" Divider="1.5" TempPiles="_vmData.TempSets1" />
+<TempSetsBlazor TargetContainerSize="40vh" Divider="1.5" TempPiles="Model.TempSets1" />

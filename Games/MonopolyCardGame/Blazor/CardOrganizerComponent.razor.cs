@@ -8,14 +8,15 @@ public partial class CardOrganizerComponent
     public MonopolyCardGamePlayerItem? Player { get; set; }
     [Parameter]
     public EventCallback OnOrganizedCards { get; set; }
+    [CascadingParameter]
+    public MonopolyCardGameVMData? Model { get; set; }
 
-    private MonopolyCardGameVMData? _vmData;
+    //private MonopolyCardGameVMData? _vmData;
     private ICustomCommand PutBackCommand => DataContext!.PutBackCommand!;
     private ICustomCommand ManuelCommand => DataContext!.ManuallyPlaySetsCommand!;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<MonopolyCardGameVMData>();
-        _vmData.TempHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
+        Model!.TempHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
     }
     //private void PopulateManuelCards()
     //{

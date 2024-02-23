@@ -11,7 +11,7 @@
     <GridItem Column="1">
         <StackLayout ItemSpacing="10px">
             <StackItem>
-                <HandBlazor Hand="_vmData!.TempHand1" Divider=1.5 HandType="EnumHandList.Vertical" TargetContainerSize="85vh" />
+                <HandBlazor Hand="Model!.TempHand1" Divider=1.5 HandType="EnumHandList.Vertical" TargetContainerSize="85vh" />
             </StackItem>
             <StackItem>
                 <div>
@@ -65,7 +65,6 @@
         }
     </GridItem>
     <GridItem Column="3">
-        
         <BaseFrameBlazor Text="@StartText">
             <div style="width: 60vw; height: 40vh;">
                 <LeftOverLayout>
@@ -74,23 +73,18 @@
                             <div @onclick="() => ClickCard(Card)">
                                 <CardGraphicsBlazor DeckObject="Card" TargetHeight="14vh" />
                             </div>
-
-
-                            @* <CardGraphicsBlazor DeckObject="DeckObject" @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" /> *@
                         </WrapLayout>
                     </MainContent>
                 </LeftOverLayout>
             </div>
-            
         </BaseFrameBlazor>
         <TempSetsBlazor TargetHeight="40vh"
                         TargetImageSize="8vh"
                         TargetContainerSize="60vw"
                         Mode="EnumMode.Plain"
                         Divider="1.1"
-                        TempPiles="_vmData!.TempSets1" />
+                        TempPiles="Model!.TempSets1" />
 
         
     </GridItem>
 </GridContainer>
-
