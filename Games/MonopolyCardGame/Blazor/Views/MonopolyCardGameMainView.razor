@@ -8,9 +8,9 @@
     {
         if (GetPlayer.PlayerCategory == EnumPlayerCategory.Self)
         {
-            <MonopolyFinderComponent Player="GetPlayer"
-                                     OnOrganizedCards=FinishedOrganizingCardsAsync
-                                     Status="_gameContainer.SaveRoot.ManuelStatus" />
+            <CardOrganizerComponent Player="GetPlayer"
+                                    OnOrganizedCards=FinishedOrganizingCardsAsync
+                                    Status="_gameContainer.SaveRoot.ManuelStatus" />
             return;
         }
     }

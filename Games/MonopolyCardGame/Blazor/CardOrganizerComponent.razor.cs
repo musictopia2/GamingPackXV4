@@ -1,5 +1,5 @@
 namespace MonopolyCardGame.Blazor;
-public partial class MonopolyFinderComponent
+public partial class CardOrganizerComponent
 {
     [Parameter]
     public EnumManuelStatus Status { get; set; }
