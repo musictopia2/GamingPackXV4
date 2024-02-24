@@ -9,5 +9,6 @@ public static class Extensions
         GlobalStartUp.KeysToSave.Clear(); //go ahead and clear just in case.
         GlobalClass.Multiplayer = true;//this is multiplayer.
         GlobalStartUp.KeysToSave.Add(GlobalDataModel.LocalStorageKey); //if i change it, will change everywhere.
+        GlobalStartUp.KeysToSave.Add("latestgame"); //needs this so can always know the last game saved.
     }
 }
