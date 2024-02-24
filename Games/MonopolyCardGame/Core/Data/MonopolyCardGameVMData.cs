@@ -53,7 +53,7 @@ public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGa
         }
     }
     public DetailCardViewModel AdditionalInfo1 { get; set; }
-    public CalculatorModel Calculator1 { get; set; }
+    public CalculatorViewModel Calculator1 { get; set; }
     public DeckObservablePile<MonopolyCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<MonopolyCardGameCardInformation> Pile1 { get; set; }
     public HandObservable<MonopolyCardGameCardInformation> PlayerHand1 { get; set; }
