@@ -20,6 +20,7 @@ public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGa
         TempHand1.ManualSelectUnselect = AfterSelectOne;
         TempHand1.Text = "Your Cards";
         AdditionalInfo1 = new();
+        Calculator1 = new();
         TempSets1 = new(command, resolver, container)
         {
             HowManySets = 5
@@ -52,6 +53,7 @@ public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGa
         }
     }
     public DetailCardViewModel AdditionalInfo1 { get; set; }
+    public CalculatorModel Calculator1 { get; set; }
     public DeckObservablePile<MonopolyCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<MonopolyCardGameCardInformation> Pile1 { get; set; }
     public HandObservable<MonopolyCardGameCardInformation> PlayerHand1 { get; set; }
