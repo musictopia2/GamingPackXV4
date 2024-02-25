@@ -157,29 +157,6 @@ public class CalculatorViewModel
             throw new CustomBasicException("Must have between 2 and 4 railroads");
         }
     }
-    public void EditRailroads(int howMany)
-    {
-        if (Status != EnumCalculatorStatus.EditRailroads)
-        {
-            throw new CustomBasicException("The status must be editing railroads");
-        }
-        CheckRailroads(howMany);
-        CalculatorModel item = _list.Single(x => x.Card == EnumCardType.IsRailRoad);
-        item.HowMany = howMany;
-        Cancel(); //i think.
-    }
-    public void EditPropertyAlone()
-    {
-        PrivateEditProperty(0, false);
-    }
-    public void EditPropertyWithHotel()
-    {
-        PrivateEditProperty(0, true);
-    }
-    public void EditPropertyWithHouses(int howMany)
-    {
-        PrivateEditProperty(howMany, false);
-    }
     public void EnterPropertyAlone()
     {
         PrivateEnterProperty(0, false);
@@ -191,18 +168,6 @@ public class CalculatorViewModel
     public void EnterPropertyWithHouses(int howMany)
     {
         PrivateEnterProperty(howMany, false);
-    }
-    private void PrivateEditProperty(int houses, bool hasHotel)
-    {
-        if (Status != EnumCalculatorStatus.EditProperty)
-        {
-            throw new CustomBasicException("Must be edit property information");
-        }
-        CheckProperties(houses, hasHotel);
-        CalculatorModel calculator = _list.Single(x => x.Group == PropertyGroupChosen);
-        calculator.HasHotel = hasHotel;
-        calculator.HowMany = houses;
-        Cancel();
     }
     private void PrivateEnterProperty(int houses, bool hasHotel)
     {
@@ -236,25 +201,6 @@ public class CalculatorViewModel
             throw new CustomBasicException("Cannot have both houses and hotels");
         }
     }
-    public void StartEditing(CalculatorModel calculator) //the calculator has the function needed to get the proper list.
-    {
-        if (calculator.Card == EnumCardType.IsUtilities)
-        {
-            throw new CustomBasicException("Cannot edit utilities because only one choice");
-        }
-        if (calculator.Card == EnumCardType.IsRailRoad)
-        {
-            Status = EnumCalculatorStatus.EditRailroads;
-            return;
-        }
-        if (calculator.Card == EnumCardType.IsProperty)
-        {
-            PropertyGroupChosen = calculator.Group;
-            Status = EnumCalculatorStatus.EditProperty;
-            return;
-        }
-        throw new CustomBasicException("Can only edit railroads and properties");
-    }
     public void DeleteEntry(CalculatorModel calculator)
     {
         _list.RemoveSpecificItem(calculator);
@@ -264,8 +210,4 @@ public class CalculatorViewModel
     //i do give the list back.
     //however, i do like the idea of the other 2 methods if i ever need autoresume for this.
     //on the other hand, maybe the viewmodel can figure out how to save if necessary (?)
-
-
-
-
 }
