@@ -10,19 +10,36 @@ public partial class CardOrganizerComponent
     public EventCallback OnOrganizedCards { get; set; }
     [CascadingParameter]
     public MonopolyCardGameVMData? Model { get; set; }
-
-    //private MonopolyCardGameVMData? _vmData;
+    private BasicList<MonopolyCardGameCardInformation> _calculatorStart = [];
+    private BasicList<MonopolyCardGameCardInformation> _allOwned = [];
     private ICustomCommand PutBackCommand => DataContext!.PutBackCommand!;
     private ICustomCommand ManuelCommand => DataContext!.ManuallyPlaySetsCommand!;
+    private MonopolyCardGameGameContainer? _container;
     protected override void OnInitialized()
     {
         Model!.TempHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
+        _container = aa1.Resolver!.Resolve<MonopolyCardGameGameContainer>();
     }
-    //private void PopulateManuelCards()
-    //{
-    //    Player!.PopulateManuelCards(_vmData!, false);
-    //    DataContext!.MainGame.SortTempHand();
-    //}
+    private void CancelCalculator()
+    {
+        Model!.Calculator1.Cancel();
+    }
+    private void CreateNewCalculator()
+    {
+        _allOwned = GetYourCards();
+        _calculatorStart = Model!.Calculator1.StartNewEntry(_allOwned, _container!.DeckList);
+    }
+    private void ClearCalculator()
+    {
+        Model!.Calculator1.ClearCalculator();
+    }
+    private BasicList<MonopolyCardGameCardInformation> GetYourCards()
+    {
+        //maybe don't need to clone this time though.
+        var output = Player!.MainHandList.ToBasicList();
+        output.AddRange(Model!.TempSets1.ListAllObjects());
+        return output;
+    }
     private string GetInstructions()
     {
         if (Status == EnumManuelStatus.OrganizingCards)

@@ -4,6 +4,16 @@
     <div>Cannot use monopoly finder because the manuel status is none.  Rethink</div>
     return;
 }
+@if (Model!.Calculator1.Status != EnumCalculatorStatus.None)
+{
+    var list = GetYourCards();
+    <CalculatorCreaterComponent 
+        StartCards="_calculatorStart"
+        OnCancelled="CancelCalculator"
+        Calculator1="Model.Calculator1"
+        YourCards=_allOwned />
+    return;
+}
 <div>
     <ShowCardBlazor />
 </div>
@@ -24,12 +34,14 @@
     {
         <GameButtonComponent CommandObject="ManuelCommand" Display="Play Monopolies" />
     }
+    <GameButtonComponent Display="Add To Calculator" CustomCallBack="CreateNewCalculator" />
+    <GameButtonComponent Display="Clear Calculator" CustomCallBack="ClearCalculator" />
 </div>
 <StackLayout>
     <StackItem>
         <TempSetsBlazor TargetContainerSize="50vh" Divider="1.5" TempPiles="Model.TempSets1" />
     </StackItem>
     <StackItem>
-        <CalculatorResultsComponent IsTesting=true />
+        <CalculatorResultsComponent />
     </StackItem>
 </StackLayout>

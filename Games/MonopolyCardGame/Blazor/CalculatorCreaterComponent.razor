@@ -1,0 +1,36 @@
+﻿<div class="scrollable">
+    @foreach (var item in YourCards)
+    {
+        <CardGraphicsBlazor DeckObject="item" TargetHeight="14vh" />
+    }
+</div>
+<div>
+    <GameButtonComponent CustomCallBack="OnCancelled" Display="Cancel" />
+</div>
+@if (Calculator1!.Status == EnumCalculatorStatus.ChooseCardCategory)
+{
+    <div>
+        Choose Card Type To Continue
+    </div>
+    @foreach (var item in StartCards)
+    {
+        <div class="horizontal-div" @onclick="() => ChoseCard(item)">
+            <CardGraphicsBlazor DeckObject="item" TargetHeight="30vh" />
+        </div>
+    }
+    return;
+}
+@if (Calculator1.Status == EnumCalculatorStatus.ChooseNumberOfRailroads)
+{
+    <div>
+        Choose Number Of Railroads
+    </div>
+    return;
+}
+@if (Calculator1.Status == EnumCalculatorStatus.ChoosePropertyInformation)
+{
+    <div>
+        Choose Information For Property
+    </div>
+    return;
+}

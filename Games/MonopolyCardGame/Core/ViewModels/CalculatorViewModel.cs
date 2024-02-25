@@ -74,6 +74,7 @@ public class CalculatorViewModel
         foreach (var item in first)
         {
             var card = deck.First(x => x.Group == item.Key);
+            output.Add(card.GetClonedCard());
         }
         return output;
     }
@@ -91,7 +92,7 @@ public class CalculatorViewModel
                 continue;
             }
             var card = deck.First(x => x.WhatCard == item);
-            output.Add(card);
+            output.Add(card.GetClonedCard());
         }
         return output;
     }
