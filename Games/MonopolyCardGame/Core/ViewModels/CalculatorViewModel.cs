@@ -66,22 +66,18 @@ public class CalculatorViewModel
         }
         return output;
     }
-    private BasicList<MonopolyCardGameCardInformation> GetPropertyCards(BasicList<MonopolyCardGameCardInformation> cardsOwned,
+    private static BasicList<MonopolyCardGameCardInformation> GetPropertyCards(BasicList<MonopolyCardGameCardInformation> cardsOwned,
         IListShuffler<MonopolyCardGameCardInformation> deck)
     {
         BasicList<MonopolyCardGameCardInformation> output = [];
         var first = cardsOwned.Where(x => x.Group > 0).GroupBy(x => x.Group);
         foreach (var item in first)
         {
-            if (_list.Any(x => x.Group == item.Key) == false)
-            {
-                var card = deck.First(x => x.Group == item.Key);
-                output.Add(card.GetClonedCard());
-            }
+            var card = deck.First(x => x.Group == item.Key);
         }
         return output;
     }
-    private BasicList<MonopolyCardGameCardInformation> GetSpecialCards(BasicList<MonopolyCardGameCardInformation> cardsOwned,
+    private static BasicList<MonopolyCardGameCardInformation> GetSpecialCards(BasicList<MonopolyCardGameCardInformation> cardsOwned,
         IListShuffler<MonopolyCardGameCardInformation> deck)
     {
         BasicList<MonopolyCardGameCardInformation> output = [];
@@ -91,10 +87,6 @@ public class CalculatorViewModel
             bool rets;
             rets = cardsOwned.Any(x => x.WhatCard == item);
             if (rets == false)
-            {
-                continue;
-            }
-            if (_list.Any(x => x.Card == item))
             {
                 continue;
             }
