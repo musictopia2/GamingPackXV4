@@ -53,20 +53,42 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MonopolyCardGameCardInformati
                 }
             case object _ when DeckObject.CardValue < 17:
                 {
-                    DrawRailRoadText();
+                    if (DeckObject.PlainCategory == EnumPlainCategory.None)
+                    {
+                        DrawRailRoadText();
+                    }
                     DrawRailroadImage();
                     break;
                 }
             case 17:
                 {
-                    DrawUtilityText();
-                    DrawElectricImage();
+                    if (DeckObject.PlainCategory == EnumPlainCategory.None)
+                    {
+                        DrawUtilityText();
+                        DrawElectricImage();
+                    }
+                    else if (DeckObject.PlainCategory == EnumPlainCategory.Chooser)
+                    {
+                        DrawWaterworksImage(); //i think should lean towrds waterworks.
+                    }
+                    else
+                    {
+                        DrawElectricImage();
+                    }
                     break;
                 }
             case 18:
                 {
-                    DrawUtilityText();
+                    if (DeckObject.PlainCategory == EnumPlainCategory.None)
+                    {
+                        DrawUtilityText();
+                    }
                     DrawWaterworksImage();
+                    //if (DeckObject.Plain == false)
+                    //{
+                    //    DrawUtilityText();
+                    //}
+
                     break;
                 }
             case int _ when DeckObject.CardValue < 41:
@@ -97,7 +119,59 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MonopolyCardGameCardInformati
         {
             return;
         }
-        DrawPiece($"{DeckObject.CardValue}.svg", new(0, 0, 55, 72));
+        if (DeckObject.PlainCategory == EnumPlainCategory.None)
+        {
+            DrawPiece($"{DeckObject.CardValue}.svg", new(0, 0, 55, 72));
+            return;
+        }
+        DrawPiece($"group{DeckObject.Group}.svg", new(0, 0, 55, 72));
+        //string fillColor;
+        //Rect thisRect = new();
+        //thisRect.X = "8";
+        //thisRect.Y = "8";
+        //thisRect.Width = "35";
+        //thisRect.Height = "46";
+        ////hopefully this is fine for now.  i probably have tools but can't remember what they are for now.
+        //if (DeckObject.Group == 1)
+        //{
+        //    fillColor = "#800080";
+        //}
+        //else if (DeckObject.Group == 2)
+        //{
+        //    fillColor = "#00FFFF";
+        //}
+        //else if (DeckObject.Group == 3)
+        //{
+        //    fillColor = "#FF00FF";
+        //}
+        //else if (DeckObject.Group == 4)
+        //{
+        //    fillColor = "#FF8C00";
+        //}
+        //else if (DeckObject.Group == 5)
+        //{
+        //    fillColor = "#FF0000";
+        //}
+        //else if (DeckObject.Group == 6)
+        //{
+        //    fillColor = "#FFFF00";
+        //}
+        //else if (DeckObject.Group == 7)
+        //{
+        //    fillColor = "#008000";
+        //}
+        //else if (DeckObject.Group == 8)
+        //{
+        //    fillColor = "#00008B";
+        //}
+        //else
+        //{
+        //    throw new CustomBasicException("Wrong group");
+        //}
+        //fillColor = $"FF{fillColor}";
+        ////thisRect.Fill = cc1.Pink.ToWebColor();
+        //thisRect.Fill = fillColor;
+        //MainGroup!.Children.Add(thisRect);
     }
     private void DrawTokenText()
     {
@@ -192,17 +266,41 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MonopolyCardGameCardInformati
     }
     private void DrawRailroadImage()
     {
-        var thisRect = new RectangleF(2, 30, 45, 30);
+        RectangleF thisRect;
+        if (DeckObject!.PlainCategory == EnumPlainCategory.None)
+        {
+            thisRect = new(2, 30, 45, 30);
+        }
+        else
+        {
+            thisRect = new(2, 10, 45, 30); //not sure.
+        }
         DrawPiece("RailRoad.png", thisRect);
     }
     private void DrawElectricImage()
     {
-        var thisRect = new RectangleF(7, 25, 40, 40);
+        RectangleF thisRect;
+        if (DeckObject!.PlainCategory == EnumPlainCategory.None)
+        {
+            thisRect = new (7, 25, 40, 40);
+        }
+        else
+        {
+            thisRect = new(7, 15, 40, 40);
+        }
         DrawPiece("Electric.png", thisRect);
     }
     private void DrawWaterworksImage()
     {
-        var thisRect = new RectangleF(7, 25, 40, 40);
+        RectangleF thisRect;
+        if (DeckObject!.PlainCategory == EnumPlainCategory.None)
+        {
+            thisRect = new(7, 25, 40, 40);
+        }
+        else
+        {
+            thisRect = new(2, 15, 40, 40);
+        }
         DrawPiece("Waterworks.png", thisRect);
     }
     private void DrawPiece(string fileName, RectangleF bounds)

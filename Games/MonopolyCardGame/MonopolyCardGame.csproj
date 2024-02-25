@@ -7,6 +7,17 @@
     
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\group1.svg" />
+    <None Remove="Resources\group2.svg" />
+    <None Remove="Resources\group3.svg" />
+    <None Remove="Resources\group4.svg" />
+    <None Remove="Resources\group5.svg" />
+    <None Remove="Resources\group6.svg" />
+    <None Remove="Resources\group7.svg" />
+    <None Remove="Resources\group8.svg" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
@@ -60,6 +71,14 @@
 		<EmbeddedResource Include="Resources\Car.png" />
 		<EmbeddedResource Include="Resources\Dog.png" />
 		<EmbeddedResource Include="Resources\Electric.png" />
+		<EmbeddedResource Include="Resources\group1.svg" />
+		<EmbeddedResource Include="Resources\group2.svg" />
+		<EmbeddedResource Include="Resources\group3.svg" />
+		<EmbeddedResource Include="Resources\group4.svg" />
+		<EmbeddedResource Include="Resources\group5.svg" />
+		<EmbeddedResource Include="Resources\group6.svg" />
+		<EmbeddedResource Include="Resources\group7.svg" />
+		<EmbeddedResource Include="Resources\group8.svg" />
 		<EmbeddedResource Include="Resources\Hat.png" />
 		<EmbeddedResource Include="Resources\Horse.png" />
 		<EmbeddedResource Include="Resources\House.png" />

@@ -40,7 +40,11 @@ public class CalculatorModel
         {
             throw new CustomBasicException("The last possibility in order to calculate the score is property");
         }
-        var card = deckList.FirstOrDefault(x => x.Group == Group) ?? throw new CustomBasicException("Group not found when trying to calculate the property value");
+        if (Group == 0)
+        {
+            throw new CustomBasicException("Must have a group in order to calculate the money earned");
+        }
+        var card = deckList.FirstOrDefault(x => x.Group == Group && x.WhatCard == EnumCardType.IsProperty) ?? throw new CustomBasicException("Group not found when trying to calculate the property value");
         decimal moneyEarned = card.Money;
         if (Houses == 0 && HasHotel == false)
         {

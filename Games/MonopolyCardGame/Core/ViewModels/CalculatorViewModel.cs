@@ -21,7 +21,7 @@ public class CalculatorViewModel
                 _list.Add(model);
             }
         });
-        int group = 6;
+        int group = 8;
         model = new();
         model.Card = EnumCardType.IsProperty;
         model.Group = group;
@@ -36,8 +36,16 @@ public class CalculatorViewModel
         });
         model = new();
         model.Card = EnumCardType.IsProperty;
+        model.Group = group;
         model.HasHotel = true;
         _list.Add(model);
+        7.Times(x =>
+        {
+            model = new();
+            model.Card = EnumCardType.IsProperty;
+            model.Group = x;
+            _list.Add(model);
+        });
     }
     public void ClearCalculator()
     {
@@ -52,6 +60,10 @@ public class CalculatorViewModel
         Status = EnumCalculatorStatus.ChooseCardCategory;
         output.AddRange(GetPropertyCards(cardsOwned, deck));
         output.AddRange(GetSpecialCards(cardsOwned, deck));
+        foreach (var item in output)
+        {
+            item.PlainCategory = EnumPlainCategory.Chooser;
+        }
         return output;
     }
     private BasicList<MonopolyCardGameCardInformation> GetPropertyCards(BasicList<MonopolyCardGameCardInformation> cardsOwned,

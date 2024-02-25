@@ -6,6 +6,8 @@ public class MonopolyCardGameCardInformation : SimpleDeckObject, IDeckObject, IC
         DefaultSize = new SizeF(55, 72);
     }
     public int CardValue { get; set; }
+    [JsonIgnore]
+    public EnumPlainCategory PlainCategory { get; set; } = EnumPlainCategory.None;
     public EnumCardType WhatCard { get; set; }
     public string Title { get; set; } = "";
     public int Group { get; set; }

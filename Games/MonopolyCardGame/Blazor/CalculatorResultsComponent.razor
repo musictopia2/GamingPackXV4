@@ -1,7 +1,32 @@
 ﻿<div style="height: 50vh;">
     <LeftOverLayout>
         <MainContent>
-
+            @foreach (var item in _list)
+            {
+                <GridContainer  Columns="15vw auto">
+                    <GridItem Column="1">
+                        <StackLayout>
+                            @{
+                                var cards = GetCards(item);
+                            }
+                            @foreach (var item in cards)
+                            {
+                                <StackItem>
+                                    <CardGraphicsBlazor DeckObject="item" TargetHeight="8vh" />
+                                </StackItem>
+                            }
+                            
+                        </StackLayout>
+                        
+                    </GridItem>
+                    <GridItem Column="2">
+                        <div style="font-size: 8vh; margin-right: 2vw; margin-top: -1.5vh;">
+                            @GetTotal(item)
+                        </div>
+                        
+                    </GridItem>
+                </GridContainer>
+            }
         </MainContent>
     </LeftOverLayout>
 </div>
