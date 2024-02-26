@@ -46,7 +46,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
                     {
                         return false;
                     }
-                    if (player.PlayerCategory == EnumPlayerCategory.Self)
+                    if (player.PlayerCategory == EnumPlayerCategory.Self && MainGame.SaveRoot.GameStatus != EnumWhatStatus.EndTurn)
                     {
                         return true;
                     }
@@ -121,6 +121,11 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
             _model.AdditionalInfo1.AdditionalInfo(payLoad.Deck);
         }
         return Task.CompletedTask;
+    }
+    public override bool CanEndTurn() => MainGame.SaveRoot.GameStatus == EnumWhatStatus.EndTurn;
+    public override async Task EndTurnAsync()
+    {
+        await MainGame.EndTurnAsync();
     }
     //private void CommandContainer_ExecutingChanged()
     //{
@@ -316,9 +321,10 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         MainGame.ProcessTrade(opponent.TradePile!, yourList, MainGame.SingleInfo!.TradePile!);
         if (MainGame.SingleInfo.ObjectCount == 10)
         {
-            await MainGame.EndTurnAsync(); //try this way (?)
+            MainGame.SaveRoot.GameStatus = EnumWhatStatus.EndTurn;
+            //await MainGame.EndTurnAsync(); //try this way (?)
             //await EndTurnAsync();
-            return;
+            //return;
         }
         await MainGame.ContinueTurnAsync();
     }

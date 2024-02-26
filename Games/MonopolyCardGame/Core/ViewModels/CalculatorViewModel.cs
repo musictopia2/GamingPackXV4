@@ -51,46 +51,54 @@ public class CalculatorViewModel
     {
         _list.Clear();
     }
-    public BasicList<MonopolyCardGameCardInformation> StartNewEntry(BasicList<MonopolyCardGameCardInformation> cardsOwned,
+    private IListShuffler<MonopolyCardGameCardInformation>? _deck;
+    public BasicList<MonopolyCardGameCardInformation> StartNewEntry(
         IListShuffler<MonopolyCardGameCardInformation> deck
         )
     {
         BasicList<MonopolyCardGameCardInformation> output = [];
         PropertyGroupChosen = 0;
         Status = EnumCalculatorStatus.ChooseCardCategory;
-        output.AddRange(GetPropertyCards(cardsOwned, deck));
-        output.AddRange(GetSpecialCards(cardsOwned, deck));
+        output.AddRange(GetPropertyCards(deck));
+        output.AddRange(GetSpecialCards(deck));
         foreach (var item in output)
         {
             item.PlainCategory = EnumPlainCategory.Chooser;
         }
+        _deck = deck;
         return output;
     }
-    private static BasicList<MonopolyCardGameCardInformation> GetPropertyCards(BasicList<MonopolyCardGameCardInformation> cardsOwned,
+    private static BasicList<MonopolyCardGameCardInformation> GetPropertyCards(
         IListShuffler<MonopolyCardGameCardInformation> deck)
     {
         BasicList<MonopolyCardGameCardInformation> output = [];
-        var first = cardsOwned.Where(x => x.Group > 0).GroupBy(x => x.Group);
+        var first = deck.Where(x => x.Group > 0).GroupBy(x => x.Group);
         foreach (var item in first)
         {
-            var card = deck.First(x => x.Group == item.Key);
+            var card = item.First();
             output.Add(card.GetClonedCard());
         }
+        //var first = cardsOwned.Where(x => x.Group > 0).GroupBy(x => x.Group);
+        //foreach (var item in first)
+        //{
+        //    var card = deck.First(x => x.Group == item.Key);
+        //    output.Add(card.GetClonedCard());
+        //}
         return output;
     }
-    private static BasicList<MonopolyCardGameCardInformation> GetSpecialCards(BasicList<MonopolyCardGameCardInformation> cardsOwned,
+    private static BasicList<MonopolyCardGameCardInformation> GetSpecialCards(
         IListShuffler<MonopolyCardGameCardInformation> deck)
     {
         BasicList<MonopolyCardGameCardInformation> output = [];
         BasicList<EnumCardType> categories = [EnumCardType.IsRailRoad, EnumCardType.IsUtilities];
         foreach (var item in categories)
         {
-            bool rets;
-            rets = cardsOwned.Any(x => x.WhatCard == item);
-            if (rets == false)
-            {
-                continue;
-            }
+            //bool rets;
+            //rets = cardsOwned.Any(x => x.WhatCard == item);
+            //if (rets == false)
+            //{
+            //    continue;
+            //}
             var card = deck.First(x => x.WhatCard == item);
             output.Add(card.GetClonedCard());
         }
@@ -100,6 +108,7 @@ public class CalculatorViewModel
     {
         PropertyGroupChosen = 0;
         Status = EnumCalculatorStatus.None; //not doing anything anymore.  means if you are in the middle and decide to cancel, start over again i think
+        StateHasChanged?.Invoke();
     }
     public void ChooseUtilities()
     {
@@ -120,14 +129,52 @@ public class CalculatorViewModel
         Cancel();
         Status = EnumCalculatorStatus.ChooseCardCategory;
     }
-    public void ChooseRailroads()
+    public Action? StateHasChanged { get; set; }
+    private MonopolyCardGameCardInformation? _railroad;
+    public MonopolyCardGameCardInformation ChooseRailroads()
     {
         Status = EnumCalculatorStatus.ChooseNumberOfRailroads;
+        if (_deck is null)
+        {
+            throw new CustomBasicException("Did not initialize the deck");
+        }
+        if (_railroad is not null)
+        {
+            return _railroad;
+        }
+        MonopolyCardGameCardInformation card = _deck.First(x => x.WhatCard == EnumCardType.IsRailRoad);
+        _railroad = card.GetClonedCard();
+        _railroad.PlainCategory = EnumPlainCategory.Chooser;
+        return _railroad;
     }
-    public void ChooseProperties(int group)
+    public BasicList<MonopolyCardGameCardInformation> ChooseProperties(int group)
     {
+        if (group == 0)
+        {
+            throw new CustomBasicException("Must specify a group");
+        }
+        BasicList<MonopolyCardGameCardInformation> output = [];
         PropertyGroupChosen = group;
         Status = EnumCalculatorStatus.ChoosePropertyInformation;
+        if (_deck is null)
+        {
+            throw new CustomBasicException("Did not initialize the deck");
+        }
+        MonopolyCardGameCardInformation card;
+        card = _deck.First(x => x.Group == group);
+        output.Add(card.GetClonedCard());
+        4.Times(y =>
+        {
+            card = _deck.First(x => x.WhatCard == EnumCardType.IsHouse && x.HouseNum == y);
+            output.Add(card.GetClonedCard());
+        });
+        card = _deck.First(x => x.WhatCard == EnumCardType.IsHotel);
+        output.Add(card.GetClonedCard());
+        foreach (var item in output)
+        {
+            item.PlainCategory = EnumPlainCategory.Chooser;
+        }
+        return output;
     }
     public void EnterRailroads(int howMany)
     {
@@ -142,6 +189,7 @@ public class CalculatorViewModel
             HowMany = howMany
         };
         _list.Add(calculator);
+        Cancel();
     }
     private static void CheckRailroads(int howMany)
     {
@@ -150,15 +198,34 @@ public class CalculatorViewModel
             throw new CustomBasicException("Must have between 2 and 4 railroads");
         }
     }
-    public void EnterPropertyAlone()
+    public void EnterPropertyFromCard(MonopolyCardGameCardInformation card)
+    {
+        if (card.WhatCard == EnumCardType.IsHotel)
+        {
+            EnterPropertyWithHotel();
+            return;
+        }
+        if (card.WhatCard == EnumCardType.IsProperty)
+        {
+            EnterPropertyAlone();
+            return;
+        }
+        if (card.WhatCard == EnumCardType.IsHouse)
+        {
+            EnterPropertyWithHouses(card.HouseNum);
+            return;
+        }
+        throw new CustomBasicException("Failed to enter property from card");
+    }
+    private void EnterPropertyAlone()
     {
         PrivateEnterProperty(0, false);
     }
-    public void EnterPropertyWithHotel()
+    private void EnterPropertyWithHotel()
     {
         PrivateEnterProperty(0, true);
     }
-    public void EnterPropertyWithHouses(int howMany)
+    private void EnterPropertyWithHouses(int howMany)
     {
         PrivateEnterProperty(howMany, false);
     }
@@ -169,13 +236,13 @@ public class CalculatorViewModel
             throw new CustomBasicException("Must be choose property information");
         }
         CheckProperties(houses, hasHotel);
-
         CalculatorModel calculator = new()
         {
             Card = EnumCardType.IsProperty
         };
         calculator.HasHotel = hasHotel;
         calculator.Houses = houses;
+        calculator.Group = PropertyGroupChosen;
         _list.Add(calculator);
         Cancel();
     }

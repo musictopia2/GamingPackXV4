@@ -7,6 +7,7 @@ public enum EnumWhatStatus
     TradeOnly,
     Either,
     LookOnly,
+    EndTurn, //this means the player making trade can organize before ending turn.
     Other
     //ManuallyFigureOutMonopolies
 }

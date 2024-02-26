@@ -9,7 +9,6 @@
     var list = GetYourCards();
     <CalculatorCreaterComponent 
         StartCards="_calculatorStart"
-        OnCancelled="CancelCalculator"
         Calculator1="Model.Calculator1"
         YourCards=_allOwned />
     return;
@@ -42,6 +41,6 @@
         <TempSetsBlazor TargetContainerSize="50vh" Divider="1.5" TempPiles="Model.TempSets1" />
     </StackItem>
     <StackItem>
-        <CalculatorResultsComponent />
+        <CalculatorResultsComponent Calculations="GetCalculations" />
     </StackItem>
 </StackLayout>

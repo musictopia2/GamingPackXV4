@@ -42,6 +42,7 @@ public partial class MonopolyCardGameMainView
     private ICustomCommand ResumeCommand => DataContext!.ResumeCommand!;
     private ICustomCommand GoOutCommand => DataContext!.GoOutCommand!;
     private ICustomCommand OrganizeCardsCommand => DataContext?.OrganizeCardsCommand!;
+    private ICustomCommand EndTurnCommand => DataContext?.EndTurnCommand!;
     private async Task FinishedOrganizingCardsAsync()
     {
         if (DataContext!.PreviousStatus == EnumWhatStatus.None)

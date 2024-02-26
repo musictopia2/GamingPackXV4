@@ -126,6 +126,7 @@ public class MonopolyCardGameMainGameClass
                 TradePile newTrade = tempPlayer.TradePile!;
                 var tempCollection = thisSend.CardList.GetNewObjectListFromDeckList(_gameContainer.DeckList!).ToRegularDeckDict();
                 ProcessTrade(newTrade, tempCollection, SingleInfo!.TradePile!);
+                //the client does not need to know about ending turn.
                 await ContinueTurnAsync();
                 return;
             case "finishedsets":
@@ -202,6 +203,7 @@ public class MonopolyCardGameMainGameClass
     }
     public override async Task EndTurnAsync()
     {
+
         SingleInfo = PlayerList!.GetWhoPlayer();
         if (SingleInfo.CanSendMessage(BasicData!))
         {

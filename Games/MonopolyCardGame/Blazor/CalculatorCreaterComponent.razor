@@ -1,36 +1,63 @@
-﻿<div class="scrollable">
+﻿<div style="overflow: auto; width: 95vw;">
     @foreach (var item in YourCards)
     {
-        <CardGraphicsBlazor DeckObject="item" TargetHeight="14vh" />
+        <CardGraphicsBlazor DeckObject="item" TargetHeight="15vh" />
     }
 </div>
 <div>
-    <GameButtonComponent CustomCallBack="OnCancelled" Display="Cancel" />
+    <GameButtonComponent CustomCallBack="Cancel" Display="Cancel" />
 </div>
 @if (Calculator1!.Status == EnumCalculatorStatus.ChooseCardCategory)
 {
-    <div>
+    <div style="font-size: @TextDivSize">
         Choose Card Type To Continue
     </div>
-    @foreach (var item in StartCards)
-    {
-        <div class="horizontal-div" @onclick="() => ChoseCard(item)">
-            <CardGraphicsBlazor DeckObject="item" TargetHeight="30vh" />
-        </div>
-    }
+    <div style="width: 70vw;">
+        @foreach (var item in StartCards)
+        {
+            <div style="display: inline-block;" @onclick="() => ChoseCard(item)">
+                <CardGraphicsBlazor DeckObject="item" TargetHeight="25vh" />
+            </div>
+        }
+    </div>
+    
     return;
 }
 @if (Calculator1.Status == EnumCalculatorStatus.ChooseNumberOfRailroads)
 {
-    <div>
+    <div style="font-size: @TextDivSize">
         Choose Number Of Railroads
     </div>
+    <StackLayout>
+        <StackItem>
+            <RailRoadChooserComponent
+                HowMany="2" 
+                OnChose="ChoseRailroad"
+                RailRoad="_railroad" />
+        </StackItem>
+        <StackItem>
+            <RailRoadChooserComponent HowMany="3"
+                                      OnChose="ChoseRailroad"
+                                      RailRoad="_railroad" />
+        </StackItem>
+        <StackItem>
+            <RailRoadChooserComponent HowMany="4"
+                                      OnChose="ChoseRailroad"
+                                      RailRoad="_railroad" />
+        </StackItem>
+    </StackLayout>
     return;
 }
 @if (Calculator1.Status == EnumCalculatorStatus.ChoosePropertyInformation)
 {
-    <div>
+    <div style="font-size: @TextDivSize">
         Choose Information For Property
     </div>
+    @foreach (var item in _properties)
+    {
+        <div @onclick="() => ChoseProperty(item)" style="display: inline-block;">
+            <CardGraphicsBlazor DeckObject="item" TargetHeight="30vh" />
+        </div>
+    }
     return;
 }

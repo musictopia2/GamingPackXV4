@@ -113,6 +113,11 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
         numselected += _model.TempSets1.HowManySelectedObjects;
         numunselected = _model.PlayerHand1.HowManyUnselectedObjects;
         numunselected += _model.TempSets1.HowManyUnselectedObjects;
+        if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.EndTurn)
+        {
+            _toast.ShowUserErrorToast("You can only end turn now");
+            return;
+        }
         if (numselected == 0)
         {
             _toast.ShowUserErrorToast("Sorry, you must select a card from your had to put to the trade pile");
@@ -123,7 +128,7 @@ public class TradePile : HandObservable<MonopolyCardGameCardInformation>
             _toast.ShowUserErrorToast("Sorry, only one card can be put from your hand to the trade pile because noone traded with you in the last turn");
             return;
         }
-        if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.TradeOnly)
+        if (_gameContainer.SaveRoot.GameStatus == EnumWhatStatus.TradeOnly && _gameContainer.SingleInfo!.ObjectCount < 10)
         {
             _toast.ShowUserErrorToast("Sorry, you already selected a card.  Therefore, you have to choose who to trade with");
             return;

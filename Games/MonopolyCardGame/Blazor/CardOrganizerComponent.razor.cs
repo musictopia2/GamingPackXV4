@@ -15,20 +15,19 @@ public partial class CardOrganizerComponent
     private ICustomCommand PutBackCommand => DataContext!.PutBackCommand!;
     private ICustomCommand ManuelCommand => DataContext!.ManuallyPlaySetsCommand!;
     private MonopolyCardGameGameContainer? _container;
+    //private BasicList<CalculatorModel> _calculations = [];
     protected override void OnInitialized()
     {
         Model!.TempHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
         _container = aa1.Resolver!.Resolve<MonopolyCardGameGameContainer>();
-    }
-    private void CancelCalculator()
-    {
-        Model!.Calculator1.Cancel();
+        Model.Calculator1.StateHasChanged = StateHasChanged;
     }
     private void CreateNewCalculator()
     {
         _allOwned = GetYourCards();
-        _calculatorStart = Model!.Calculator1.StartNewEntry(_allOwned, _container!.DeckList);
+        _calculatorStart = Model!.Calculator1.StartNewEntry(_container!.DeckList);
     }
+    private BasicList<CalculatorModel> GetCalculations => Model!.Calculator1.GetTotalCalculations;
     private void ClearCalculator()
     {
         Model!.Calculator1.ClearCalculator();
