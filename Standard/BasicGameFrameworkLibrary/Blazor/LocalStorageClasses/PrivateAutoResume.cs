@@ -1,5 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Blazor.LocalStorageClasses;
-public class PrivateAutoResume<P, S> : IPrivateSaveGame
+public class PrivateAutoResume : IPrivateSaveGame
 {
     private readonly IJSRuntime _js;
     private readonly IGameId _gameId;
