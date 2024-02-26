@@ -1,55 +1,17 @@
 ﻿namespace MonopolyCardGame.Core.ViewModels;
 public class CalculatorViewModel
 {
-    private BasicList<CalculatorModel> _list { get; set; } = [];
+    private readonly BasicList<CalculatorModel> _list = [];
     public EnumCalculatorStatus Status { get; private set; }
     public int PropertyGroupChosen { get; private set; }
-    public void GenerateTestCalculatorResults()
-    {
-        //this will show different ones.  this allows to see how the main page would look before creating the calculator page.
-        CalculatorModel model;
-        model = new();
-        model.Card = EnumCardType.IsUtilities;
-        _list.Add(model);
-        4.Times(x =>
-        {
-            if (x > 1)
-            {
-                model = new();
-                model.Card = EnumCardType.IsRailRoad;
-                model.HowMany = x;
-                _list.Add(model);
-            }
-        });
-        int group = 8;
-        model = new();
-        model.Card = EnumCardType.IsProperty;
-        model.Group = group;
-        _list.Add(model);
-        4.Times(x =>
-        {
-            model = new();
-            model.Card = EnumCardType.IsProperty;
-            model.Group = group;
-            model.Houses = x;
-            _list.Add(model);
-        });
-        model = new();
-        model.Card = EnumCardType.IsProperty;
-        model.Group = group;
-        model.HasHotel = true;
-        _list.Add(model);
-        7.Times(x =>
-        {
-            model = new();
-            model.Card = EnumCardType.IsProperty;
-            model.Group = x;
-            _list.Add(model);
-        });
-    }
     public void ClearCalculator()
     {
         _list.Clear();
+    }
+    public void RestoreCalculator(PrivateModel model)
+    {
+        _list.Clear();
+        _list.AddRange(model.Calculations);
     }
     private IListShuffler<MonopolyCardGameCardInformation>? _deck;
     public BasicList<MonopolyCardGameCardInformation> StartNewEntry(

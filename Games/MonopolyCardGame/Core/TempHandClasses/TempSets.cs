@@ -9,12 +9,24 @@ public class TempSets(CommandContainer command, IGamePackageResolver resolver, M
     {
         return SetList[index - 1].HandList; //i send in one based.
     }
-
     private IEventAggregator? _thisE;
-
     public void ReportCanExecuteChange()
     {
         SetList.ForEach(x => x.ReportCanExecuteChange());
+    }
+    public BasicList<OrganizeModel> SaveTempSets()
+    {
+        BasicList<OrganizeModel> output = [];
+        int x = 0;
+        foreach (var item in SetList)
+        {
+            x++;
+            OrganizeModel model = new();
+            model.SetNumber = x;
+            model.Cards = item.HandList.GetDeckListFromObjectList();
+            output.Add(model);
+        }
+        return output;
     }
     public void Init(IEnableAlways enables)
     {
@@ -35,6 +47,34 @@ public class TempSets(CommandContainer command, IGamePackageResolver resolver, M
             thisSet.SetClickedAsync = ThisSet_SetClickedAsync;
             SetList.Add(thisSet);
         }
+        if (container.TempSets.Count > 0)
+        {
+            var player = container.PlayerList!.GetSelf();
+            bool hadAny = false;
+            foreach (var item in container.TempSets)
+            {
+                //var tempCollection = thisSend.CardList.GetNewObjectListFromDeckList(_gameContainer.DeckList!).ToRegularDeckDict();
+                var current = SetList[item.SetNumber - 1];
+                var cards = item.Cards.GetNewObjectListFromDeckList(container.DeckList);
+                DeckRegularDict<MonopolyCardGameCardInformation> toAdd = [];
+                foreach (var card in cards)
+                {
+                    if (player.MainHandList.ObjectExist(card.Deck))
+                    {
+                        //this means i can go ahead and add to set and remove from hand.
+                        player.MainHandList.RemoveObjectByDeck(card.Deck);
+                        hadAny = true;
+                        toAdd.Add(card);
+                    }
+                }
+                current.AddCards(toAdd);
+            }
+            if (hadAny)
+            {
+                PublicCount();
+            }
+        }
+        
     }
     private async Task ThisSet_SetClickedAsync(TempHand thisSet)
     {

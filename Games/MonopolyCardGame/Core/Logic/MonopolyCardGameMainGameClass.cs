@@ -8,6 +8,7 @@ public class MonopolyCardGameMainGameClass
     private readonly CommandContainer _command;
     private readonly MonopolyCardGameGameContainer _gameContainer;
     private readonly IToast _toast;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     public MonopolyCardGameMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
         BasicData basicData,
@@ -19,22 +20,22 @@ public class MonopolyCardGameMainGameClass
         CommandContainer command,
         MonopolyCardGameGameContainer gameContainer,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
         _toast = toast;
+        _privateAutoResume = privateAutoResume;
         _gameContainer.ProcessTrade = ProcessTrade;
     }
     private bool _doContinue;
-    internal bool OrganizedAtLeastsOnce { get; private set; }
     public override async Task FinishGetSavedAsync()
     {
         LoadTradePiles();
         _doContinue = true;
-        OrganizedAtLeastsOnce = false;
         _model.TempSets1.ClearBoard();
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
@@ -55,12 +56,12 @@ public class MonopolyCardGameMainGameClass
         }
         var player = PlayerList.GetSelf();
         _model.TempHand1.HandList = player.MainHandList; //trying to hook up.
-        //if (SaveRoot.GameStatus == EnumWhatStatus.Other && SaveRoot.ManuelStatus == EnumManuelStatus.OthersLayingDown)
-        //{
-        //    SingleInfo = PlayerList.GetWhoPlayer();
-        //    SingleInfo.TempHands = SingleInfo.MainHandList.Where(x => x.WhatCard != EnumCardType.IsGo && x.WhatCard != EnumCardType.IsMr).ToRegularDeckDict();
-        //}
-        //for the case where i go out and go back in again, i have to redo it (however, i have the button to help me).
+        bool rets;
+        rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer, _model);
+        if (rets)
+        {
+            await _privateAutoResume.RestoreStateAsync(_gameContainer, _model);
+        }
         await base.FinishGetSavedAsync();
     }
     protected override async Task ComputerTurnAsync()
@@ -87,7 +88,6 @@ public class MonopolyCardGameMainGameClass
         {
             _model.TempSets1.ClearBoard(); //i think.
         }
-        OrganizedAtLeastsOnce = false;
         SaveRoot!.ImmediatelyStartTurn = true;
         SaveRoot.GameStatus = EnumWhatStatus.DrawOrTrade;
         _doContinue = true;

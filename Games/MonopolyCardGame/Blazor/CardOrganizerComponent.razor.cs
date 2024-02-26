@@ -15,11 +15,12 @@ public partial class CardOrganizerComponent
     private ICustomCommand PutBackCommand => DataContext!.PutBackCommand!;
     private ICustomCommand ManuelCommand => DataContext!.ManuallyPlaySetsCommand!;
     private MonopolyCardGameGameContainer? _container;
-    //private BasicList<CalculatorModel> _calculations = [];
+    private PrivateAutoResumeProcesses? _autoResumeProcesses;
     protected override void OnInitialized()
     {
         Model!.TempHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
         _container = aa1.Resolver!.Resolve<MonopolyCardGameGameContainer>();
+        _autoResumeProcesses = aa1.Resolver!.Resolve<PrivateAutoResumeProcesses>();
         Model.Calculator1.StateHasChanged = StateHasChanged;
     }
     private void CreateNewCalculator()
@@ -54,5 +55,10 @@ public partial class CardOrganizerComponent
             return "Put down any monopolies you may have.   You must put down all obvious monopolies.  If you have at least one monopoly, you must use up all tokens";
         }
         return "Unknown";
+    }
+    private async Task FinishedOrganizingAsync()
+    {
+        await _autoResumeProcesses!.SaveStateAsync(Model!);
+        await OnOrganizedCards.InvokeAsync();
     }
 }

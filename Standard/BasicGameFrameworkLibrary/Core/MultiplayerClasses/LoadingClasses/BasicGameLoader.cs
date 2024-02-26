@@ -314,6 +314,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         else
         {
             _gameSetUp.SaveRoot.GetNewID();
+
         }
         _gameSetUp.SaveRoot.PlayOrder.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoTurn;
         await _gameSetUp.SetUpGameAsync(isBeginning);

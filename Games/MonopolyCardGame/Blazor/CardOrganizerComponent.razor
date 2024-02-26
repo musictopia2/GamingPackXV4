@@ -27,7 +27,7 @@
                          CommandObject="PutBackCommand" />
     @if (Status == EnumManuelStatus.OrganizingCards)
     {
-        <GameButtonComponent Display="Finish Organizing Cards" CustomCallBack="OnOrganizedCards" />
+        <GameButtonComponent Display="Finish Organizing Cards" CustomCallBack="FinishedOrganizingAsync" />
     }
     else if (Status == EnumManuelStatus.Final || Status == EnumManuelStatus.OthersLayingDown)
     {

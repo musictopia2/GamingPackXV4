@@ -7,11 +7,17 @@ public static class SaveRoutines
     }
     public static async Task<string> GetPrivateGameAsync(this IJSRuntime js, string id)
     {
-        if (js.ContainsKey(id) == false)
+        var item = await js.StorageGetStringAsync(id);
+        if (item is null)
         {
             return "";
         }
-        return await js.StorageGetStringAsync(id);
+        return item; //try this way.
+        //if (js.ContainsKey(id) == false)
+        //{
+        //    return "";
+        //}
+        //return await js.StorageGetStringAsync(id);
     }
     public static async Task UpdateLocalStorageAsync(this IJSRuntime js, string key, string value)
     {
