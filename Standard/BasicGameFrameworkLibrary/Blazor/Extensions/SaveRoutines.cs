@@ -1,6 +1,20 @@
 ﻿namespace BasicGameFrameworkLibrary.Blazor.Extensions;
 public static class SaveRoutines
 {
+    public static async Task UpdatePrivateGameAsync<T>(this IJSRuntime js, T saveRoot, string value)
+        where T: SimpleSave
+    {
+        await js.StorageSetStringAsync(saveRoot.GameID, value);
+    }
+    public static async Task<string> GetPrivateGameAsync<T>(this IJSRuntime js, T saveRoot)
+        where T: SimpleSave
+    {
+        if (js.ContainsKey(saveRoot.GameID) == false)
+        {
+            return "";
+        }
+        return await js.StorageGetStringAsync(saveRoot.GameID);
+    }
     public static async Task UpdateLocalStorageAsync(this IJSRuntime js, string key, string value)
     {
         BasicList<string> saveList = GlobalStartUp.KeysToSave;
@@ -12,7 +26,18 @@ public static class SaveRoutines
                 await js.StorageRemoveItemAsync(key);
             }
         });
-        await js.StorageSetStringAsync(key, value);
+        await js.StorageSetStringAsync(key, value); //the private autoresume can just use this one.
+    }
+    public static async Task DeletePrivateGameAsync(this IJSRuntime js, string key)
+    {
+        BasicList<string> keyList = await js.GetKeyListAsync();
+        await keyList.ForEachAsync(async item =>
+        {
+            if (item.Contains(key))
+            {
+                await js.StorageRemoveItemAsync(key);
+            }
+        });
     }
     private static async Task<BasicList<string>> GetKeyListAsync(this IJSRuntime js)
     {
@@ -33,7 +58,6 @@ public static class SaveRoutines
     }
     private static async Task<int> GetLengthAsync(this IJSRuntime js)
     {
-
         int output = await js.InvokeAsync<int>("eval", "localStorage.length");
         return output;
     }
