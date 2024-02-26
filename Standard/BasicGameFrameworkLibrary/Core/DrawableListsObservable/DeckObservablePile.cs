@@ -10,7 +10,9 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
     }
     public ControlCommand? DeckObjectClickedCommand { get; set; }
     [Command(EnumCommandCategory.Control)]
+#pragma warning disable IDE0051 // Remove unused private members cannot remove because part of source generators
     private async Task PrivateDeckClickedAsync()
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (DeckClickedAsync == null)
         {

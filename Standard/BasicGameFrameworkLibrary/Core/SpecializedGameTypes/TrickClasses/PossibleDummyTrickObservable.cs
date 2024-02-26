@@ -1,20 +1,15 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
-public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<SU, T>, IMultiplayerTrick<SU, T, P>
+public abstract class PossibleDummyTrickObservable<SU, T, P, SA>(TrickGameContainer<T, P, SA, SU> gameContainer) : BasicTrickAreaObservable<SU, T>(gameContainer.Command, gameContainer.Aggregator), IMultiplayerTrick<SU, T, P>
     , ITrickPlay
     where SU : IFastEnumSimple
     where T : class, ITrickCard<SU>, new()
     where P : class, IPlayerTrick<SU, T>, new()
     where SA : BasicSavedTrickGamesClass<SU, T, P>, new()
 {
-    private readonly TrickGameContainer<T, P, SA, SU> _gameContainer;
-    public PossibleDummyTrickObservable(TrickGameContainer<T, P, SA, SU> gameContainer) : base(gameContainer.Command, gameContainer.Aggregator)
-    {
-        _gameContainer = gameContainer;
-    }
     protected abstract bool UseDummy { get; set; }
     public BasicList<TrickCoordinate>? ViewList { get; set; }
     protected abstract int GetCardIndex(); // this is different too.
-    protected DeckRegularDict<T> OrderList => _gameContainer.SaveRoot!.TrickList;
+    protected DeckRegularDict<T> OrderList => gameContainer.SaveRoot!.TrickList;
     protected abstract void PopulateNewCard(T oldCard, ref T newCard);
     protected abstract void PopulateOldCard(T oldCard);
     protected virtual int GetMaxCount()
@@ -27,8 +22,8 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
     }
     public async Task PlayCardAsync(int deck)
     {
-        T thisCard = _gameContainer.GetSpecificCardFromDeck(deck);
-        thisCard.Player = _gameContainer.WhoTurn;
+        T thisCard = gameContainer.GetSpecificCardFromDeck(deck);
+        thisCard.Player = gameContainer.WhoTurn;
         PopulateOldCard(thisCard);
         int index;
         index = GetCardIndex();
@@ -37,22 +32,22 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
             throw new CustomBasicException("Index cannot be -1");
         }
         T newCard;
-        newCard = _gameContainer.GetBrandNewCard(deck);
-        newCard.Player = _gameContainer.WhoTurn;
+        newCard = gameContainer.GetBrandNewCard(deck);
+        newCard.Player = gameContainer.WhoTurn;
         newCard.Visible = true;
         PopulateOldCard(newCard);
         OrderList.Add(newCard);
         TradeCard(index, newCard);
         int nums;
         nums = GetMaxCount();
-        _gameContainer.Command.UpdateAll();
+        gameContainer.Command.UpdateAll();
         if (OrderList.Count == nums)
         {
-            await _gameContainer.EndTrickAsync!.Invoke();
+            await gameContainer.EndTrickAsync!.Invoke();
         }
         else
         {
-            await _gameContainer.ContinueTrickAsync!.Invoke();
+            await gameContainer.ContinueTrickAsync!.Invoke();
         }
     }
     protected virtual string FirstHumanText()
@@ -74,7 +69,7 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
     protected BasicList<TrickCoordinate> GetCoordinateList()
     {
         BasicList<TrickCoordinate> output = new();
-        int howManyPlayers = _gameContainer.PlayerList!.Count;
+        int howManyPlayers = gameContainer.PlayerList!.Count;
         TrickCoordinate thisPlayer;
         if (howManyPlayers == 2)
         {
@@ -86,14 +81,14 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
             thisPlayer.IsSelf = true;
             thisPlayer.Row = 2;
             thisPlayer.Column = 1;
-            thisPlayer.Player = _gameContainer.SelfPlayer;
+            thisPlayer.Player = gameContainer.SelfPlayer;
             thisPlayer.Text = FirstHumanText();
             output.Add(thisPlayer);
             thisPlayer = new();
             thisPlayer.Column = 1;
             thisPlayer.Row = 1;
             thisPlayer.Text = FirstOpponentText();
-            if (_gameContainer.SelfPlayer == 1)
+            if (gameContainer.SelfPlayer == 1)
             {
                 thisPlayer.Player = 2;
             }
@@ -112,7 +107,7 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
             thisPlayer.Text = DummyOpponentText();
             output.Add(thisPlayer);
             thisPlayer = new();
-            thisPlayer.Player = _gameContainer.SelfPlayer;
+            thisPlayer.Player = gameContainer.SelfPlayer;
             thisPlayer.PossibleDummy = true;
             thisPlayer.Column = 2;
             thisPlayer.Row = 2;
@@ -149,7 +144,7 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
         }
         int x;
         int y;
-        y = _gameContainer.SelfPlayer;
+        y = gameContainer.SelfPlayer;
         var loopTo = howManyBottom;
         for (x = 1; x <= loopTo; x++)
         {
@@ -187,7 +182,7 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
     protected virtual void BeforeFirstLoad() { }
     public void FirstLoad()
     {
-        if (_gameContainer.PlayerList!.Count == 0)
+        if (gameContainer.PlayerList!.Count == 0)
         {
             throw new CustomBasicException("Playerlist Has Not Been Initialized Yet");
         }
@@ -211,6 +206,6 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA> : BasicTrickAre
     }
     public P GetSpecificPlayer(int id)
     {
-        return _gameContainer.PlayerList![id];
+        return gameContainer.PlayerList![id];
     }
 }

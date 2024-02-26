@@ -19,7 +19,9 @@ public partial class SolitairePilesCP : IPlainObservable, ISerializable
     public PlainCommand? ColumnCommand { get; set; }
     public PlainCommand? DoubleCommand { get; set; }
     [Command(EnumCommandCategory.Plain, Name = nameof(ColumnCommand))]
+#pragma warning disable IDE0051 // Remove unused private members
     private async Task PrivateColumnAsync(PileInfoCP pile)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (ColumnClickedAsync == null)
         {
@@ -28,7 +30,9 @@ public partial class SolitairePilesCP : IPlainObservable, ISerializable
         await ColumnClickedAsync.Invoke(PileList.IndexOf(pile));
     }
     [Command(EnumCommandCategory.Plain, Name = nameof(DoubleCommand))]
+#pragma warning disable IDE0051 // Remove unused private members
     private async Task PrivateDoubleAsync(PileInfoCP pile)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (DoubleClickedAsync == null)
         {

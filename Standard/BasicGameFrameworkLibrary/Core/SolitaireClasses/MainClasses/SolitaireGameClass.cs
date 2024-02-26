@@ -1,33 +1,36 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.MainClasses;
-public abstract class SolitaireGameClass<S> : IAggregatorContainer where S : SolitaireSavedClass, new()
+public abstract class SolitaireGameClass<S>(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : IAggregatorContainer where S : SolitaireSavedClass, new()
 {
     protected IBasicSolitaireVM? _thisMod;
-    public GenericCardShuffler<SolitaireCard> DeckList;
-    private readonly ISaveSinglePlayerClass _thisState;
-    private readonly IScoreData _score;
-    private readonly IToast _toast;
-    private readonly ISystemError _error;
+    public GenericCardShuffler<SolitaireCard> DeckList = new();
     private bool _didAutoPlay;
     public int AutoMoveToMainPiles { get; set; }
-    public S SaveRoot;
+    public S SaveRoot = new();
     protected DeckRegularDict<SolitaireCard>? CardList;
     public bool HadOneDeal { get; set; }
     protected int HowManyCards;
     public int DealsRemaining { get; set; }
     public bool NoCardsToShuffle { get; set; }
-    public IEventAggregator Aggregator { get; }
-    public CommandContainer Command { get; }
+    public IEventAggregator Aggregator { get; } = aggregator;
+    public CommandContainer Command { get; } = command;
     protected bool HadWaste;
-    protected ISolitaireData SolitaireData1;
+    protected ISolitaireData SolitaireData1 = solitaireData1;
     internal bool GameGoing { get; set; }
     protected abstract S CloneSavedGame();
     public async Task OpenSavedGameAsync()
     {
         _opened = true;
         DeckList.OrderedObjects();
-        SaveRoot = await _thisState.RetrieveSinglePlayerGameAsync<S>();
+        SaveRoot = await thisState.RetrieveSinglePlayerGameAsync<S>();
         S tempRoot = CloneSavedGame();
-        _score.Score = SaveRoot.Score;
+        score.Score = SaveRoot.Score;
         SaveRoot = tempRoot;
         await _thisMod!.MainPiles1!.LoadGameAsync(SaveRoot.MainPileData);
         _thisMod.MainDiscardPile!.SavedDiscardPiles(SaveRoot.Discard);
@@ -58,39 +61,21 @@ public abstract class SolitaireGameClass<S> : IAggregatorContainer where S : Sol
         SaveRoot.Discard = _thisMod.MainDiscardPile!.GetSavedPile();
         SaveRoot.IntDeckList = _thisMod.DeckPile!.GetCardIntegers();
         await FinishSaveAsync();
-        await _thisState.SaveSimpleSinglePlayerGameAsync(SaveRoot);
+        await thisState.SaveSimpleSinglePlayerGameAsync(SaveRoot);
         _saving = false;
     }
     protected virtual Task FinishSaveAsync() { return Task.CompletedTask; }
     private bool _opened = false;
     public virtual async Task NewGameAsync() //so for eight off, can do other things like clear cards.
     {
-        if (await _thisState.CanOpenSavedSinglePlayerGameAsync() && _opened == false)
+        if (await thisState.CanOpenSavedSinglePlayerGameAsync() && _opened == false)
         {
             await OpenSavedGameAsync();
             return;
         }
         ShuffleCards();
     }
-    public SolitaireGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        ) //you need the main view model loaded first or will have overflow errors.
-    {
-        DeckList = new ();
-        _thisState = thisState;
-        Aggregator = aggregator;
-        _score = score;
-        Command = command;
-        _toast = toast;
-        _error = error;
-        SaveRoot = new S(); //i think.
-        SolitaireData1 = solitaireData1;
-    }
+
     internal void LinkData(SolitaireMainViewModel<S> model)
     {
         if (SolitaireData1.MainRound == true && SolitaireData1.CardsNeededMainBegin != 1)
@@ -241,7 +226,7 @@ public abstract class SolitaireGameClass<S> : IAggregatorContainer where S : Sol
     protected async Task FinishAddingToMainPileAsync() => await FinishAddingToMainPileAsync(0, new SolitaireCard());
     private async Task FinishedAsync()
     {
-        int scores = _score!.Score;
+        int scores = score!.Score;
         if (HasWon(scores))
         {
             await ShowWinAsync();
@@ -251,10 +236,10 @@ public abstract class SolitaireGameClass<S> : IAggregatorContainer where S : Sol
     protected async Task ShowWinAsync()
     {
         Command.UpdateAll();
-        _toast.ShowSuccessToast("Congratulations, you won");
+        toast.ShowSuccessToast("Congratulations, you won");
         await Task.Delay(2000);
         GameGoing = false;
-        await this.SendGameOverAsync(_error);
+        await this.SendGameOverAsync(error);
     }
     protected int ValidMainColumn(SolitaireCard thisCard)
     {

@@ -6,7 +6,9 @@ public partial class NumberPicker : SimpleControlObservable
     public ControlCommand? NumberPickedCommand { get; set; }
     public Func<int, Task>? ChangedNumberValueAsync { get; set; }
     [Command(EnumCommandCategory.Control)]
+#pragma warning disable IDE0051 // Remove unused private members cannot remove because part of source generators
     private async Task ChooseNumberAsync(NumberModel piece)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         SelectNumberValue(piece.NumberValue);
         await ChangedNumberValueAsync!.Invoke(piece.NumberValue);

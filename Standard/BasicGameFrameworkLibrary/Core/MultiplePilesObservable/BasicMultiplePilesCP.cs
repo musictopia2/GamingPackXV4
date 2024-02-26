@@ -87,7 +87,9 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
         await PileClickedAsync.Invoke(index, thisPile);
     }
     [Command(EnumCommandCategory.Control)]
+#pragma warning disable IDE0051 // Remove unused private members
     private async Task PrivatePileClickedAsync(BasicPileInfo<D> pile)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         await OnPileClickedAsync(PileList!.IndexOf(pile), pile);
     }
@@ -377,10 +379,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
     protected override void EnableChange()
     {
         PileCommand!.ReportCanExecuteChange(); //you do need this though.
-        if (ExtraCommand != null)
-        {
-            ExtraCommand.ReportCanExecuteChange(); //this is used for games like millebournes where you don't inherit from this.
-        }
+        ExtraCommand?.ReportCanExecuteChange(); //this is used for games like millebournes where you don't inherit from this.
     }
     protected override void PrivateEnableAlways() { }
 }

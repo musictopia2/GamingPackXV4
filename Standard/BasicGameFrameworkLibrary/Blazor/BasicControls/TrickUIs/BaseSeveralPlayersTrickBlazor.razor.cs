@@ -14,7 +14,9 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
     [Parameter]
     public bool ExtraLongSecondColumn { get; set; } = false;
     private readonly AnimateTrickClass<S, T> _animates;
+#pragma warning disable IDE0052 // Remove unread private members
     private IEventAggregator? Aggregator { get; set; }
+#pragma warning restore IDE0052 // Remove unread private members
     private SizeF _tempSize;
     private bool _disposedValue;
     public BaseSeveralPlayersTrickBlazor()

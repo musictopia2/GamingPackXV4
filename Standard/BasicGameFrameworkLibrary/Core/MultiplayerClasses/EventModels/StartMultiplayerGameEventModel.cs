@@ -4,12 +4,8 @@
 /// if its a brand new game, something else gets triggered.
 /// </summary>
 /// <typeparam name="P"></typeparam>
-public class StartMultiplayerGameEventModel<P>
+public class StartMultiplayerGameEventModel<P>(PlayerCollection<P> playerList)
     where P : class, IPlayerItem, new()
 {
-    public PlayerCollection<P> PlayerList;
-    public StartMultiplayerGameEventModel(PlayerCollection<P> playerList)
-    {
-        PlayerList = playerList;
-    }
+    public PlayerCollection<P> PlayerList = playerList;
 }

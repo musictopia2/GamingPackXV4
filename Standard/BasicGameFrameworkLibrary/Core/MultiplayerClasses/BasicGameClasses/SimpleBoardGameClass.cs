@@ -1,5 +1,28 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
-public abstract class SimpleBoardGameClass<P, S, E, M> : BasicGameClass<P, S>, IMoveProcesses<M>,
+public abstract class SimpleBoardGameClass<P, S, E, M>(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    ISimpleBoardGamesData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    BasicGameContainer<P, S> gameContainer,
+    ISystemError error,
+    IToast toast
+        ) : BasicGameClass<P, S>(
+        mainContainer,
+        aggregator,
+        basicData,
+        test,
+        currentMod,
+        state,
+        delay,
+        command,
+        gameContainer,
+        error,
+        toast
+            ), IMoveProcesses<M>,
     IBeginningColors<E, P, S>
     , IMoveNM, IAfterColorProcesses
 
@@ -8,34 +31,6 @@ public abstract class SimpleBoardGameClass<P, S, E, M> : BasicGameClass<P, S>, I
 
     where S : BasicSavedGameClass<P>, new()
 {
-    private readonly ISimpleBoardGamesData _currentMod;
-    public SimpleBoardGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        ISimpleBoardGamesData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        BasicGameContainer<P, S> gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(
-            mainContainer,
-            aggregator,
-            basicData,
-            test,
-            currentMod,
-            state,
-            delay,
-            command,
-            gameContainer,
-            error,
-            toast
-            )
-    {
-        _currentMod = currentMod;
-    }
     public abstract Task MakeMoveAsync(M space);
     protected override async Task ComputerTurnAsync()
     {
@@ -50,13 +45,13 @@ public abstract class SimpleBoardGameClass<P, S, E, M> : BasicGameClass<P, S>, I
     }
     public override async Task ShowWinAsync()
     {
-        _currentMod.Instructions = "None";
+        currentMod.Instructions = "None";
         await base.ShowWinAsync();
         EraseColors();
     }
     public override async Task ShowTieAsync()
     {
-        _currentMod.Instructions = "None";
+        currentMod.Instructions = "None";
         await base.ShowTieAsync();
         EraseColors();
     }

@@ -115,7 +115,6 @@ public partial class MultiplayerBasicParentShell
         {
             await JS!.SaveLatestGameAsync(GameData!.GameName, Toast!);
             _loadedGame = true;
-            //LoaderGlobalClass.ChangeLatestGame?.Invoke(GameData!.GameName);
         }
         if (BasicData == null || JS == null || _hadNickName)
         {

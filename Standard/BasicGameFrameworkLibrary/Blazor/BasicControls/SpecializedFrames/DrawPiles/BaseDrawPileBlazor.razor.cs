@@ -28,7 +28,9 @@ public partial class BaseDrawPileBlazor<D> : IDisposable, IHandleAsync<AnimateCa
     public RenderFragment<D>? CanvasTemplate { get; set; }
     [Parameter]
     public RenderFragment<D>? MainTemplate { get; set; }
+#pragma warning disable IDE0052 // Remove unread private members
     private IEventAggregator? Aggregator { get; set; }
+#pragma warning restore IDE0052 // Remove unread private members
     private float GetHalfTop()
     {
         var firsts = _defaultSize.Width * TargetHeight;

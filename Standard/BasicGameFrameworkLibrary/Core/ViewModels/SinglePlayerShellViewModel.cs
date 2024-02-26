@@ -1,21 +1,13 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, IHandleAsync<NewGameEventModel>,
+public abstract partial class SinglePlayerShellViewModel(IGamePackageResolver mainContainer,
+    CommandContainer container,
+    IGameInfo gameData,
+    ISaveSinglePlayerClass saves,
+    IEventAggregator aggregator
+        ) : ConductorViewModel(aggregator), IHandleAsync<NewGameEventModel>,
     IHandleAsync<GameOverEventModel>,
     IMainGPXShellVM
 {
-    private readonly ISaveSinglePlayerClass _saves;
-    public SinglePlayerShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        ISaveSinglePlayerClass saves,
-        IEventAggregator aggregator
-        ) : base(aggregator)
-    {
-        MainContainer = mainContainer; 
-        CommandContainer = container;
-        GameData = gameData;
-        _saves = saves;
-    }
     protected override async Task ActivateAsync()
     {
         await base.ActivateAsync();
@@ -60,9 +52,9 @@ public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, I
     /// <summary>
     /// this is needed because it may need to resolve other things to load other things but not at the beginning.
     /// </summary>
-    public IGamePackageResolver MainContainer { get; }
-    protected CommandContainer CommandContainer { get; }
-    protected IGameInfo GameData { get; }
+    public IGamePackageResolver MainContainer { get; } = mainContainer;
+    protected CommandContainer CommandContainer { get; } = container;
+    protected IGameInfo GameData { get; } = gameData;
     public INewGameVM? NewGameVM { get; set; }
     public IMainScreen? MainVM { get; set; } 
 
@@ -94,7 +86,7 @@ public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, I
             await CloseSpecificChildAsync(MainVM);
         }
         MainVM = null;
-        await _saves.DeleteSinglePlayerGameAsync();
+        await saves.DeleteSinglePlayerGameAsync();
         await Task.Delay(50);
         await NewGameRequestedAsync();
         await StartNewGameAsync();
@@ -117,7 +109,7 @@ public abstract partial class SinglePlayerShellViewModel : ConductorViewModel, I
         {
             throw new CustomBasicException("The main view model was not even available.  Rethink");
         }
-        await _saves.DeleteSinglePlayerGameAsync();
+        await saves.DeleteSinglePlayerGameAsync();
         await CloseSpecificChildAsync(MainVM);
         MainVM = null;
         if (NewGameVM != null)

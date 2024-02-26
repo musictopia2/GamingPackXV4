@@ -20,7 +20,6 @@ public class BasicSavedDiceClass<D, P> : BasicSavedGameClass<P>, ISavedDiceList<
             }
         }
     }
-
     private IBasicDiceGamesData<D>? _model;
     internal void LoadMod(IBasicDiceGamesData<D> model)
     {

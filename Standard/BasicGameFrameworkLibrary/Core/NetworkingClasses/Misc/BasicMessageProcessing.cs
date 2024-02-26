@@ -12,6 +12,16 @@ public class BasicMessageProcessing(IGamePackageResolver thisContainer,
     }
     public async Task ProcessMessageAsync(SentMessage thisMessage)
     {
+        if (thisMessage.Status == "newround")
+        {
+            if (GlobalDelegates.DeletePrivateGameNewRound is not null)
+            {
+                await GlobalDelegates.DeletePrivateGameNewRound.Invoke(thisMessage.Body);
+            }
+            IGameNetwork network = thisContainer.Resolve<IGameNetwork>();
+            network.IsEnabled = true; //should be okay because am expecting more messages
+            return;
+        }
         if (thisMessage.Status != "newgame" && thisMessage.Status != "restoregame" && InProgressHelpers.Reconnecting)
         {
             IGameNetwork network = thisContainer.Resolve<IGameNetwork>();

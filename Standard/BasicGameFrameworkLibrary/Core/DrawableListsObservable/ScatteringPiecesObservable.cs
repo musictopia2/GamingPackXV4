@@ -21,13 +21,17 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
     private readonly IRandomGenerator _rs;
     private readonly IEventAggregator _thisE;
     [Command(EnumCommandCategory.Control, Name = nameof(ObjectCommand))]
+#pragma warning disable IDE0051 // Remove unused private members
     private async Task PrivateClickItemAsync(D card)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         _privateObjectClicked = true;
         await ClickedPieceAsync(card.Deck);
     }
     [Command(EnumCommandCategory.Control, Name = nameof(BoardCommand))]
+#pragma warning disable IDE0051 // Remove unused private members
     private async Task PrivateBoardClickAsync()
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (_privateObjectClicked == true)
         {

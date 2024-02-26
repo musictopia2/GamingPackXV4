@@ -6,7 +6,9 @@ public partial class SingleObservablePile<D> : SimpleControlObservable where D :
     public ControlCommand? PileObjectClickedCommand { get; set; }
     public bool Visible { get; set; } = true;
     [Command(EnumCommandCategory.Control)]
+#pragma warning disable IDE0051 // Remove unused private members
     private async Task PrivatePileClickedAsync()
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (PileClickedAsync == null)
         {

@@ -3,11 +3,11 @@ public static class SaveRoutines
 {
     public static async Task UpdateLocalStorageAsync(this IJSRuntime js, string key, string value)
     {
-        BasicList<string> saveList = StartupClasses.GlobalStartUp.KeysToSave;
+        BasicList<string> saveList = GlobalStartUp.KeysToSave;
         BasicList<string> keyList = await js.GetKeyListAsync();
         await keyList.ForEachAsync(async key =>
         {
-            if (saveList.Contains(key) == false)
+            if (saveList.Any(x => x.Contains(key)) == false)
             {
                 await js.StorageRemoveItemAsync(key);
             }

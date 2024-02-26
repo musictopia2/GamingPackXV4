@@ -15,7 +15,6 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
     where S : BasicSavedGameClass<P>, new() //i think the new one was needed after all.
 {
     private IGameSetUp<P, S>? _gameSetUp;
-
     private void SetGame()
     {
         _gameSetUp = resolver.Resolve<IGameSetUp<P, S>>();
@@ -56,7 +55,6 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         }
         await _gameSetUp!.Network!.StartGameAsync();
     }
-
     async Task ILoadClientGame.LoadGameAsync(string payLoad)
     {
         SetGame();
@@ -241,14 +239,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
             toast.ShowInfoToast("So far, nobody is handling new game.  Means its stuck for now");
             return;
         }
-        //if there is nothing here, then will be stuck
         await NewGameDelegates.NewGameHostStep1?.Invoke(data)!;
-        //var player = _gameSetUp.SaveRoot.PlayerList.GetWhoPlayer();
-        //_toast.ShowInfoToast($"The player who goes starts first for next game is {player.NickName}");
-
-        //_toast.ShowInfoToast(_gameSetUp.SaveRoot.PlayOrder.WhoStarts.ToString());
-        //_toast.ShowInfoToast(_gameInfo.GameName);
-        //_toast.ShowUserErrorToast("So far, trying new game.  This requires rethinking now");
     }
     async Task IRequestNewGameRound.RequestNewRoundAsync()
     {
@@ -266,6 +257,13 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         _gameSetUp!.SaveRoot = await js1.DeserializeObjectAsync<S>(data);
         _gameSetUp.PlayerList = _gameSetUp.SaveRoot.PlayerList;
         _gameSetUp.PlayerList.FixNetworkedPlayers(basic.NickName);
+        //this means needs to remove all the private stuff except for the key used.
+        //the host will never do anything here.
+        if (GlobalDelegates.DeleteOldPrivateGames is not null)
+        {
+            //this means if something sets it, then use it.
+            await GlobalDelegates.DeleteOldPrivateGames(_gameSetUp.SaveRoot.GameID); //delete anything that is not the key.
+        }
         await FinishGetSavedAsync();
         command.UpdateAll();
         await FinishStartAsync();
@@ -301,9 +299,21 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         }
         if (isBeginning == false)
         {
+            if (basic.MultiPlayer)
+            {
+                await _gameSetUp.Network!.SendAllAsync("newround", _gameSetUp.SaveRoot.GameID);
+            }
+            if (GlobalDelegates.DeleteOldPrivateGames is not null)
+            {
+                await GlobalDelegates.DeleteOldPrivateGames.Invoke(_gameSetUp.SaveRoot.GameID);
+            }
             _gameSetUp.SaveRoot.PlayerList.ForEach(items => items.InGame = items.CanStartInGame);
             _gameSetUp.SaveRoot.PlayOrder.WhoTurn = _gameSetUp.SaveRoot.PlayOrder.WhoStarts;
             _gameSetUp.SaveRoot.PlayOrder.WhoTurn = await _gameSetUp.SaveRoot.PlayerList.CalculateWhoTurnAsync();
+        }
+        else
+        {
+            _gameSetUp.SaveRoot.GetNewID();
         }
         _gameSetUp.SaveRoot.PlayOrder.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoTurn;
         await _gameSetUp.SetUpGameAsync(isBeginning);

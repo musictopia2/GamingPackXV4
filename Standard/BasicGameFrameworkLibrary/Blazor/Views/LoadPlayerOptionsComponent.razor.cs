@@ -1,5 +1,3 @@
-using System.Runtime.Intrinsics.Arm;
-
 namespace BasicGameFrameworkLibrary.Blazor.Views;
 public partial class LoadPlayerOptionsComponent<P>
     where P : class, IPlayerItem, new()

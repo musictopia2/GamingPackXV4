@@ -1,5 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
-public class BoardGamesColorPicker<E, P> : SimpleEnumPickerVM<E>
+public class BoardGamesColorPicker<E, P>(CommandContainer command, IEnumListClass<E> choice) : SimpleEnumPickerVM<E>(command, choice)
     where E : struct, IFastEnumColorSimple
     where P : class, IPlayerBoardGame<E>, new()
 {
@@ -47,5 +47,4 @@ public class BoardGamesColorPicker<E, P> : SimpleEnumPickerVM<E>
         }
         UnselectAll();
     }
-    public BoardGamesColorPicker(CommandContainer command, IEnumListClass<E> choice) : base(command, choice) { }
 }

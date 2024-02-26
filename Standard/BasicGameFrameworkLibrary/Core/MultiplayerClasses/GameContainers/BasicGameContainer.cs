@@ -6,12 +6,20 @@
 /// for other cases, intended to be used as helpers to the main game class.
 /// allows the possibility for more specialized game classes even like gameboard classes.
 /// </summary>
-public class BasicGameContainer<P, S>
+public class BasicGameContainer<P, S>(BasicData basicData,
+    TestOptions test,
+    IGameInfo gameInfo,
+    IAsyncDelayer delay,
+    IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver,
+    IRandomGenerator random
+        )
     : ISaveContainer<P, S>,
     IBasicGameContainer where P : class, IPlayerItem, new()
     where S : BasicSavedGameClass<P>, new()
 {
-    public S SaveRoot { get; set; }
+    public S SaveRoot { get; set; } = new S();
     public P? SingleInfo { get; set; } //this is whose turn it is.
     public int WhoTurn
     {
@@ -24,15 +32,15 @@ public class BasicGameContainer<P, S>
         set => SaveRoot.PlayOrder.WhoStarts = value;
     }
     public PlayerCollection<P>? PlayerList => SaveRoot!.PlayerList;
-    public IGameNetwork? Network { get; }
-    public BasicData BasicData { get; }
-    public TestOptions Test { get; }
-    public IGameInfo GameInfo { get; }
-    public IAsyncDelayer Delay { get; }
-    public IEventAggregator Aggregator { get; }
-    public CommandContainer Command { get; }
-    public IGamePackageResolver Resolver { get; }
-    public IRandomGenerator Random { get; }
+    public IGameNetwork? Network { get; } = basicData.GetNetwork();
+    public BasicData BasicData { get; } = basicData;
+    public TestOptions Test { get; } = test;
+    public IGameInfo GameInfo { get; } = gameInfo;
+    public IAsyncDelayer Delay { get; } = delay;
+    public IEventAggregator Aggregator { get; } = aggregator;
+    public CommandContainer Command { get; } = command;
+    public IGamePackageResolver Resolver { get; } = resolver;
+    public IRandomGenerator Random { get; } = random;
     public async Task ProcessCustomCommandAsync<T>(Func<T, Task> action, T argument)
     {
         Command.StartExecuting();
@@ -53,25 +61,4 @@ public class BasicGameContainer<P, S>
     public Func<Task>? ShowWinAsync { get; set; }
     public Func<Task>? StartNewTurnAsync { get; set; }
     public Func<Task>? SaveStateAsync { get; set; } //games like fluxx requires this.
-    public BasicGameContainer(BasicData basicData,
-        TestOptions test,
-        IGameInfo gameInfo,
-        IAsyncDelayer delay,
-        IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver,
-        IRandomGenerator random
-        )
-    {
-        SaveRoot = new S();
-        Network = basicData.GetNetwork();
-        BasicData = basicData;
-        Test = test;
-        GameInfo = gameInfo;
-        Delay = delay;
-        Aggregator = aggregator;
-        Command = command;
-        Resolver = resolver;
-        Random = random;
-    }
 }

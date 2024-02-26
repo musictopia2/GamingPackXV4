@@ -2,16 +2,11 @@
 using System.Net.Sockets;
 using System.Text;
 namespace BasicGameFrameworkLibrary.Core.NetworkingClasses.SocketClasses;
-public class BasicGameClientTCP : ISerializable //decided to have the option.  obviously won't work from webassembly though.
+public class BasicGameClientTCP(IServerMessage processor, ITCPInfo connectInfo) : ISerializable //decided to have the option.  obviously won't work from webassembly though.
 {
     private TcpClient? _client;
-    private readonly IServerMessage? _processor;
-    private readonly ITCPInfo? _connectInfo;
-    public BasicGameClientTCP(IServerMessage processor, ITCPInfo connectInfo)
-    {
-        _processor = processor;
-        _connectInfo = connectInfo;
-    }
+    private readonly IServerMessage? _processor = processor;
+    private readonly ITCPInfo? _connectInfo = connectInfo;
     public string NickName { get; set; } = "";
     public async Task<bool> ConnectToServerAsync()
     {

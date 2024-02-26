@@ -34,7 +34,9 @@ public partial class PlayerBoardObservable<TR> : SimpleControlObservable
     public Action? SelectedCard { get; set; }
     public ControlCommand? CardCommand { get; set; }
     [Command(EnumCommandCategory.Control)]
+#pragma warning disable IDE0051 // Remove unused private members cannot remove because part of source generators
     private void CardClick(TR card)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (IsSelf == false || card.IsEnabled == false || card.Visible == false)
         {

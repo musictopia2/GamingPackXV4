@@ -8,7 +8,9 @@ public partial class IndividualClockBlazor : IDisposable, IHandle<CurrentCardEve
     [CascadingParameter]
     public int TargetHeight { get; set; }
     private SolitaireCard? _currentCard;
+#pragma warning disable IDE0052 // Remove unread private members
     private IEventAggregator? _aggregator;
+#pragma warning restore IDE0052 // Remove unread private members
     protected override void OnInitialized()
     {
         _aggregator = Resolver!.Resolve<IEventAggregator>();

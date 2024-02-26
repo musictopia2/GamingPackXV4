@@ -1,8 +1,8 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
-public class ItemChooserClass<O>
+public class ItemChooserClass<O>(IGamePackageResolver resolver)
      where O : ISimpleValueObject<int>
 {
-    private readonly IRandomGenerator _rs;
+    private readonly IRandomGenerator _rs = resolver.Resolve<IRandomGenerator>();
     public BasicList<O>? ValueList;
     public int ItemToChoose(bool requiredToChoose = true, bool useHalf = true)
     {
@@ -27,9 +27,5 @@ public class ItemChooserClass<O>
             }
         }
         return ValueList!.GetRandomItem().ReadMainValue;
-    }
-    public ItemChooserClass(IGamePackageResolver resolver)
-    {
-        _rs = resolver.Resolve<IRandomGenerator>();
     }
 }

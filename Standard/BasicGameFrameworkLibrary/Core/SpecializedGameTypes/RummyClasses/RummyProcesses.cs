@@ -505,9 +505,9 @@ public class RummyProcesses<S, C, R>
         }
         return output;
     }
-    private IBasicList<R> StraightSet(IBasicList<R> objectList, int howMany, bool minOnly, IBasicList<R> wildList, bool noWilds = false)
+    private BasicList<R> StraightSet(IBasicList<R> objectList, int howMany, bool minOnly, IBasicList<R> wildList, bool noWilds = false)
     {
-        IBasicList<R> output = new BasicList<R>();
+        BasicList<R> output = new ();
         bool tempwilds = HasWild;
         if (noWilds == true)
         {

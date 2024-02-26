@@ -10,7 +10,9 @@ public partial class BaseTwoPlayerTrickBlazor<S, T> : IHandleAsync<AnimateTrickE
     [Parameter]
     public BasicTrickAreaObservable<S, T>? DataContext { get; set; }
     private readonly AnimateTrickClass<S, T> _animates;
+#pragma warning disable IDE0052 // Remove unread private members
     private IEventAggregator? Aggregator { get; set; }
+#pragma warning restore IDE0052 // Remove unread private members
     private SizeF _tempSize;
     private bool _disposedValue;
     public BaseTwoPlayerTrickBlazor()

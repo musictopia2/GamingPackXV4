@@ -14,7 +14,9 @@ public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
         MultipleItems = 2
     }
     [Command(EnumCommandCategory.Control)]
+#pragma warning disable IDE0051 // Remove unused private members  cannot remove because part of source generators.
     private async Task ProcessClickAsync(ListPieceModel piece)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (SelectionMode == EnumSelectionMode.SingleItem)
         {

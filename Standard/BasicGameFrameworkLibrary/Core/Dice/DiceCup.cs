@@ -8,7 +8,9 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
     public string CommandActionString { get; set; } = "dicecup";
     public bool Visible { get; set; }
     [Command(EnumCommandCategory.Control)]
+#pragma warning disable IDE0051 // Remove unused private members must use because its part of source generators
     private async Task PrivateDiceClickAsync(D dice)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (DiceClickedAsync == null)
         {

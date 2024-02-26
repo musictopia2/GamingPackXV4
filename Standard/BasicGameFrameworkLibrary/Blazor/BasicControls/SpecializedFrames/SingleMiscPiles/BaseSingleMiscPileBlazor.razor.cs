@@ -42,7 +42,9 @@ public partial class BaseSingleMiscPileBlazor<D> : IDisposable, IHandleAsync<Ani
     public RenderFragment<D>? CanvasTemplate { get; set; }
     [Parameter]
     public RenderFragment<D>? MainTemplate { get; set; }
+#pragma warning disable IDE0052 // Remove unread private members
     private IEventAggregator? Aggregator { get; set; }
+#pragma warning restore IDE0052 // Remove unread private members
     protected override void OnInitialized()
     {
         _animates = new();

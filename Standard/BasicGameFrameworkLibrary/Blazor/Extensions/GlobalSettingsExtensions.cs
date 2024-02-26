@@ -1,5 +1,4 @@
-﻿using BasicGameFrameworkLibrary.Core.StandardImplementations.Settings; //not common enough to put to global.
-namespace BasicGameFrameworkLibrary.Blazor.Extensions;
+﻿namespace BasicGameFrameworkLibrary.Blazor.Extensions;
 public static class GlobalSettingsExtensions
 {
     public static async Task LoadGlobalDataAsync(this IJSRuntime js)

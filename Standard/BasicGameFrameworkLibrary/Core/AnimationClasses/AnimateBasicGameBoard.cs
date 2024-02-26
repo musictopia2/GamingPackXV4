@@ -1,7 +1,6 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.AnimationClasses;
-public class AnimateBasicGameBoard
+public class AnimateBasicGameBoard(IEventAggregator thisE)
 {
-    readonly IEventAggregator _thisE;
     public PointF LocationFrom { get; set; }
     public PointF LocationTo { get; set; }
     public PointF CurrentLocation { get; set; }
@@ -14,10 +13,6 @@ public class AnimateBasicGameBoard
     private int _totalSteps;
     public int LongestTravelTime { get; set; }
     private const int _interval = 20;
-    public AnimateBasicGameBoard(IEventAggregator thisE)
-    {
-        _thisE = thisE;
-    }
     private bool _xup = false;
     private bool _yup = false;
     public async Task DoAnimateAsync()
@@ -31,7 +26,7 @@ public class AnimateBasicGameBoard
         _xup = LocationTo.X > LocationFrom.X;
         _yup = LocationTo.Y > LocationFrom.Y;
         AnimationGoing = true; // so when they access the information, they will do something different.
-        _thisE.RepaintMessage(EnumRepaintCategories.Main);
+        thisE.RepaintMessage(EnumRepaintCategories.Main);
         float totalXDistance;
         float totalYDistance;
         float eachx = 0;
@@ -78,7 +73,7 @@ public class AnimateBasicGameBoard
                 upToy = LocationTo.Y;
             }
             CurrentLocation = new PointF(upTox, upToy);
-            _thisE.RepaintMessage(EnumRepaintCategories.Main);
+            thisE.RepaintMessage(EnumRepaintCategories.Main);
             if (FastAnimation)
             {
                 await Task.Delay(5);
@@ -91,7 +86,7 @@ public class AnimateBasicGameBoard
         if (FastAnimation)
         {
             CurrentLocation = LocationTo;
-            _thisE.RepaintMessage(EnumRepaintCategories.Main);
+            thisE.RepaintMessage(EnumRepaintCategories.Main);
             await Task.Delay(5);
         }
         AnimationGoing = false;

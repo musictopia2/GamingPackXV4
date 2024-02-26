@@ -1,9 +1,8 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.PileObservable;
-public class CustomMultiplePile : BasicMultiplePilesCP<SolitaireCard>
+public class CustomMultiplePile(CommandContainer command) : BasicMultiplePilesCP<SolitaireCard>(command)
 {
     protected override bool CanAutoUnselect()
     {
         return false;
     }
-    public CustomMultiplePile(CommandContainer command) : base(command) { }
 }

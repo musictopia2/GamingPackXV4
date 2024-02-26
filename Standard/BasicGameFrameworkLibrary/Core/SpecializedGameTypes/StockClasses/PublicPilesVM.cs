@@ -77,7 +77,9 @@ public abstract partial class PublicPilesVM<D> : SimpleControlObservable
     public ControlCommand? NewCommand { get; set; }
     public ControlCommand? PileCommand { get; set; }
     [Command(EnumCommandCategory.Control, Name = nameof(NewCommand))]
+#pragma warning disable IDE0051 // Remove unused private members
     private async Task PrivateNewAsync()
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (NewPileClickedAsync == null)
         {
@@ -86,7 +88,9 @@ public abstract partial class PublicPilesVM<D> : SimpleControlObservable
         await NewPileClickedAsync.Invoke();
     }
     [Command(EnumCommandCategory.Control, Name = nameof(PileCommand))]
+#pragma warning disable IDE0051 // Remove unused private members
     private async Task PrivateClickAsync(BasicPileInfo<D> pile)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (PileClickedAsync == null)
         {

@@ -1,11 +1,6 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MiscProcesses;
-public struct Vector
+public struct Vector(int row, int column) //has to do structs the old fashioned way because the values can change (i think)
 {
-    public int Column { get; set; }
-    public int Row { get; set; }
-    public Vector(int row, int column)
-    {
-        Row = row;
-        Column = column;
-    }
+    public int Column { get; set; } = column;
+    public int Row { get; set; } = row;
 }

@@ -1,30 +1,33 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.BasicClasses;
-public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, ISerializable where D : IDeckObject, new()
+/// <summary>
+/// 
+/// </summary>
+/// <param name="privateDict"></param>
+/// <param name="beforePopulate">This is extra stuff that has to happen before populating item if any</param>
+public class BasicObjectShuffler<D>(IDeckDict<D> privateDict, Action<D>? beforePopulate = null) : IDeckShuffler<D>, IAdvancedDIContainer, ISerializable where D : IDeckObject, new()
 {
-    private readonly IDeckDict<D> _privateDict;
     private IDeckCount? _deckCount; //maybe needed. to stop overflow exceptions.
-    private readonly IRandomGenerator _rs;
+    private readonly IRandomGenerator _rs = RandomHelpers.GetRandomGenerator();
     public IGamePackageResolver? MainContainer { get; set; }
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
-    private readonly Action<D>? _beforePopulate;
     public bool NeedsToRedo { get; set; }
     public void RelinkObject(int oldDeck, D newObject)
     {
-        _privateDict.RemoveObjectByDeck(oldDeck);
-        _privateDict.Add(newObject);
+        privateDict.RemoveObjectByDeck(oldDeck);
+        privateDict.Add(newObject);
     }
     public void UnlinkObjects()
     {
-        _privateDict.ForEach(items => items.Reset());
+        privateDict.ForEach(items => items.Reset());
     }
     private void EnableObjects()
     {
-        _privateDict.ForEach(items => items.IsEnabled = true);
+        privateDict.ForEach(items => items.IsEnabled = true);
     }
     private void FixObjects()
     {
         EnableObjects();
-        _privateDict.ForEach(items =>
+        privateDict.ForEach(items =>
         {
             items.Drew = false;
             items.IsSelected = false;
@@ -36,28 +39,17 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
     }
     private bool RedoList()
     {
-        if (_privateDict.Count == 0)
+        if (privateDict.Count == 0)
         {
             return true;
         }
         return NeedsToRedo;
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="privateDict"></param>
-    /// <param name="beforePopulate">This is extra stuff that has to happen before populating item if any</param>
-    public BasicObjectShuffler(IDeckDict<D> privateDict, Action<D>? beforePopulate = null)
-    {
-        _privateDict = privateDict;
-        _beforePopulate = beforePopulate;
-        _rs = RandomHelpers.GetRandomGenerator();
-    }
 
     private INewCard<D>? _newCard;
     public void ClearObjects()
     {
-        _privateDict.Clear();
+        privateDict.Clear();
     }
     public int GetDeckCount()
     {
@@ -82,28 +74,28 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
             thisList.ForEach(Items =>
             {
                 D thisD = new();
-                _beforePopulate!.Invoke(thisD); //sometimes something has to be done before the card can be populated.
+                beforePopulate!.Invoke(thisD); //sometimes something has to be done before the card can be populated.
                 thisD.Populate(Items);
                 tempList.Add(thisD);
             });
-            _privateDict.AddRange(tempList);
+            privateDict.AddRange(tempList);
             return new(tempList);
         }
-        if (_privateDict.Count == thisList.Count)
+        if (privateDict.Count == thisList.Count)
         {
             FixObjects();
-            DeckRegularDict<D> newTemp = new(_privateDict);
+            DeckRegularDict<D> newTemp = new(privateDict);
             thisList.ForEach(Items =>
             {
                 tempList.Add(newTemp.GetSpecificItem(Items));
             });
-            _privateDict.ReplaceRange(tempList);
+            privateDict.ReplaceRange(tempList);
             return new DeckRegularDict<D>(tempList);
         }
         UnlinkObjects();
         thisList.ForEach(items =>
         {
-            D thisD = _privateDict.GetSpecificItem(items);
+            D thisD = privateDict.GetSpecificItem(items);
             thisD.Visible = true;
             thisD.IsEnabled = true;
             thisD.IsUnknown = false;
@@ -115,7 +107,7 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
     }
     public D GetSpecificItem(int deck)
     {
-        return _privateDict.GetSpecificItem(deck);
+        return privateDict.GetSpecificItem(deck);
     }
     public void OrderedObjects()
     {
@@ -135,9 +127,9 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
         for (int i = 1; i <= maxs; i++)
         {
             D thisD = GetItem(i);
-            _beforePopulate?.Invoke(thisD);
+            beforePopulate?.Invoke(thisD);
             thisD.Populate(i);
-            _privateDict.Add(thisD);
+            privateDict.Add(thisD);
         }
     }
     public void ShuffleObjects()
@@ -146,11 +138,11 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
         if (redo == false)
         {
             FixObjects();
-            _privateDict.ShuffleList();
+            privateDict.ShuffleList();
             return;
         }
         PrivatePopulate();
-        _privateDict.ShuffleList();
+        privateDict.ShuffleList();
     }
     public void ReshuffleFirstObjects(IDeckDict<D> thisList, int startAt, int endAt)
     {
@@ -161,7 +153,7 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
         int increasedEnd = 0;
         thisList.ForEach(items =>
         {
-            index = _privateDict.IndexOf(items);
+            index = privateDict.IndexOf(items);
             if (index <= endAt)
             {
                 increasedEnd++;
@@ -170,7 +162,7 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
         endAt += increasedEnd;
         thisList.ForEach(items =>
         {
-            index = _privateDict.IndexOf(items);
+            index = privateDict.IndexOf(items);
             if (index == -1)
             {
                 throw new CustomBasicException("Item not found to reshuffle the card");
@@ -178,7 +170,7 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
             if (index < startAt || index > endAt)
             {
                 ask1 = _rs!.GetRandomNumber(endAt, startAt);
-                _privateDict.MoveItem(items, ask1);
+                privateDict.MoveItem(items, ask1);
             }
             x++;
             endAt--;
@@ -186,12 +178,12 @@ public class BasicObjectShuffler<D> : IDeckShuffler<D>, IAdvancedDIContainer, IS
     }
     public bool ObjectExist(int deck)
     {
-        return _privateDict.ObjectExist(deck);
+        return privateDict.ObjectExist(deck);
     }
     public void PutCardOnTop(int deck)
     {
-        var card = _privateDict.GetSpecificItem(deck);
-        _privateDict.RemoveObjectByDeck(deck);
-        _privateDict.InsertBeginning(card);
+        var card = privateDict.GetSpecificItem(deck);
+        privateDict.RemoveObjectByDeck(deck);
+        privateDict.InsertBeginning(card);
     }
 }

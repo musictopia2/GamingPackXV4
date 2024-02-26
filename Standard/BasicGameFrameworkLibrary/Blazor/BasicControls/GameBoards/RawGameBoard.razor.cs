@@ -2,7 +2,9 @@ namespace BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
 [CustomTag("Main")] //later can rethink how to make it easier for strongly typed names.
 public partial class RawGameBoard : IDisposable, IHandle<RepaintEventModel>
 {
+#pragma warning disable IDE0052 // Remove unread private members
     private IEventAggregator? _aggregator;
+#pragma warning restore IDE0052 // Remove unread private members
     private bool _disposedValue;
     protected override void OnInitialized()
     {

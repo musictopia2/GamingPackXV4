@@ -7,7 +7,9 @@ public partial class AnimationVectorCanvas<S> : IHandleAsync<AnimatePieceEventMo
     public GridGameBoard<S>? MainBoard { get; set; }
     [Parameter]
     public RenderFragment<S>? ChildContent { get; set; }
+#pragma warning disable IDE0052 // Remove unread private members  this is used by source generation.
     private IEventAggregator? Aggregator { get; set; }
+#pragma warning restore IDE0052 // Remove unread private members
     public AnimationVectorCanvas()
     {
         _animates = new AnimateGrid();
@@ -16,7 +18,7 @@ public partial class AnimationVectorCanvas<S> : IHandleAsync<AnimatePieceEventMo
     private partial void Unsubscribe();
     protected override void OnInitialized()
     {
-        Aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
+        Aggregator = Resolver!.Resolve<IEventAggregator>();
         Subscribe();
         _animates.StateChanged = ShowChange;
         _animates.LongestTravelTime = 200;
@@ -24,10 +26,7 @@ public partial class AnimationVectorCanvas<S> : IHandleAsync<AnimatePieceEventMo
     }
     private void ShowChange()
     {
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
+        InvokeAsync(StateHasChanged);
     }
     private S? AnimatePiece { get; set; }
     private AnimateGrid _animates;

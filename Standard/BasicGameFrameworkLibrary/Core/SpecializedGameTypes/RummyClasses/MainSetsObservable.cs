@@ -1,5 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
-public class MainSetsObservable<SU, CO, RU, SE, T> : SimpleControlObservable
+public class MainSetsObservable<SU, CO, RU, SE, T>(CommandContainer command) : SimpleControlObservable(command)
     where SU : IFastEnumSimple
     where CO : IFastEnumColorSimple
     where RU : IRummmyObject<SU, CO>, IDeckObject, new()
@@ -8,7 +8,6 @@ public class MainSetsObservable<SU, CO, RU, SE, T> : SimpleControlObservable
     public bool HasFrame { get; set; } = false; 
     public string Text { get; set; } = "Main Sets";
     public BasicList<SE> SetList = new();
-    public MainSetsObservable(CommandContainer command) : base(command) { }
     public Func<int, int, int, Task>? SetClickedAsync { get; set; }
     public virtual BasicList<T> SavedSets()
     {

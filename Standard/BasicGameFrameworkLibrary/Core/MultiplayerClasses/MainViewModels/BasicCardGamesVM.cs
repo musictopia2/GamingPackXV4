@@ -22,14 +22,11 @@ public abstract class BasicCardGamesVM<D> : BasicMultiplayerMainVM
         _toast = toast;
         _model.Deck1.DeckClickedAsync = Deck1_DeckClickedAsync;
         _model.Pile1.PileClickedAsync = ProcessDiscardClickedAsync;
-        _model.Deck1.SendEnableProcesses(this, () => CanEnableDeck());
-        _model.Pile1.SendEnableProcesses(this, () => CanEnablePile1());
+        _model.Deck1.SendEnableProcesses(this, CanEnableDeck);
+        _model.Pile1.SendEnableProcesses(this, CanEnablePile1);
         if (AlwaysEnableHand() == false)
         {
-            _model.PlayerHand1.SendEnableProcesses(this, () =>
-            {
-                return CanEnableHand();
-            });
+            _model.PlayerHand1.SendEnableProcesses(this, CanEnableHand);
             _model.PlayerHand1.IsEnabled = false;
         }
         else

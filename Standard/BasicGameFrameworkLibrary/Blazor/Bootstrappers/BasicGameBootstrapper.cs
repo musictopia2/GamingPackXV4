@@ -184,7 +184,5 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
     {
         Unsubscribe();
-    }
-
-    
+    }   
 }

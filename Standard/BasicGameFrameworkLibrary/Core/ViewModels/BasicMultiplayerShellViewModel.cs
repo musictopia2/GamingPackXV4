@@ -1,5 +1,13 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewModel,
+public abstract partial class BasicMultiplayerShellViewModel<P>(IGamePackageResolver mainContainer,
+    CommandContainer container,
+    IGameInfo gameData,
+    BasicData basicData,
+    IMultiplayerSaveState save,
+    TestOptions test,
+    IEventAggregator aggregator,
+    IToast toast
+        ) : ConductorViewModel(aggregator),
     IHandleAsync<NewGameEventModel>,
     IHandleAsync<GameOverEventModel>,
     IHandleAsync<NewRoundEventModel>,
@@ -17,29 +25,11 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
     IBasicMultiplayerShellViewModel
     where P : class, IPlayerItem, new()
 {
-    public BasicMultiplayerShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        BasicData basicData,
-        IMultiplayerSaveState save,
-        TestOptions test,
-        IEventAggregator aggregator,
-        IToast toast
-        ) : base(aggregator)
-    {
-        MainContainer = mainContainer;
-        CommandContainer = container;
-        GameData = gameData;
-        BasicData = basicData;
-        _save = save;
-        _test = test;
-        _toast = toast;
-    }
     public string NickName { get; set; } = "";
-    public IGamePackageResolver MainContainer { get; }
-    protected CommandContainer CommandContainer { get; }
-    protected IGameInfo GameData { get; }
-    protected BasicData BasicData { get; }
+    public IGamePackageResolver MainContainer { get; } = mainContainer;
+    protected CommandContainer CommandContainer { get; } = container;
+    protected IGameInfo GameData { get; } = gameData;
+    protected BasicData BasicData { get; } = basicData;
     protected override async Task ActivateAsync()
     {
         try
@@ -52,79 +42,79 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
             }
             if (BasicData.GamePackageMode == EnumGamePackageMode.Production)
             {
-                if (_test.AllowAnyMove)
+                if (test.AllowAnyMove)
                 {
                     throw new CustomBasicException("Can't allow any move because its production");
                 }
-                if (_test.SlowerMoves)
+                if (test.SlowerMoves)
                 {
                     throw new CustomBasicException("Cannot have much slower moves because its in production");
                 }
-                if (_test.ShowExtraToastsForDebugging)
+                if (test.ShowExtraToastsForDebugging)
                 {
                     throw new CustomBasicException("Cannot show extra toasts for debugging because its in production");
                 }
-                if (_test.AutoNearEndOfDeckBeginning)
+                if (test.AutoNearEndOfDeckBeginning)
                 {
                     throw new CustomBasicException("Can't be near the end of deck at beginning because its production");
                 }
-                if (_test.CardsToPass != 0)
+                if (test.CardsToPass != 0)
                 {
                     throw new CustomBasicException("Cannot pass a special number of cards becuase its production");
                 }
-                if (_test.ComputerEndsTurn)
+                if (test.ComputerEndsTurn)
                 {
                     throw new CustomBasicException("The computer cannot just end turn because its production.  Try setting another property");
                 }
-                if (_test.ComputerNoCards)
+                if (test.ComputerNoCards)
                 {
                     throw new CustomBasicException("The computer has to have cards because its production");
                 }
-                if (_test.DoubleCheck)
+                if (test.DoubleCheck)
                 {
                     throw new CustomBasicException("No double checking anything because its production");
                 }
-                if (_test.ImmediatelyEndGame)
+                if (test.ImmediatelyEndGame)
                 {
                     throw new CustomBasicException("Cannot immediately end game because its production");
                 }
-                if (_test.NoAnimations)
+                if (test.NoAnimations)
                 {
                     throw new CustomBasicException("Animations are required in production.");
                 }
-                if (_test.NoCommonMessages)
+                if (test.NoCommonMessages)
                 {
                     throw new CustomBasicException("Must have common messages because its production");
                 }
-                if (_test.PlayCategory != EnumTestPlayCategory.Normal)
+                if (test.PlayCategory != EnumTestPlayCategory.Normal)
                 {
                     throw new CustomBasicException("The play category must be none because its production");
                 }
-                if (_test.SaveOption != EnumTestSaveCategory.Normal)
+                if (test.SaveOption != EnumTestSaveCategory.Normal)
                 {
                     throw new CustomBasicException("The save mode must be normal because its production");
                 }
-                if (_test.StatePosition != 0)
+                if (test.StatePosition != 0)
                 {
                     throw new CustomBasicException("Must show most recent state because its in production");
                 }
-                if (_test.ShowErrorMessageBoxes == false)
+                if (test.ShowErrorMessageBoxes == false)
                 {
                     throw new CustomBasicException("Must show error message boxes because its in production");
                 }
-                if (_test.WhoStarts != 1)
+                if (test.WhoStarts != 1)
                 {
                     throw new CustomBasicException("WhoStarts must start with 1 because its in production");
                 }
-                if (_test.ShowNickNameOnShell)
+                if (test.ShowNickNameOnShell)
                 {
                     throw new CustomBasicException("Cannot show nick name on shell because its in production");
                 }
-                if (_test.AlwaysNewGame)
+                if (test.AlwaysNewGame)
                 {
                     throw new CustomBasicException("Can't always show new game because its in production");
                 }
-                if (_test.EndRoundEarly)
+                if (test.EndRoundEarly)
                 {
                     throw new CustomBasicException("Can't end round early because its in production");
                 }
@@ -139,7 +129,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         }
         catch (Exception ex)
         {
-            _toast.ShowInfoToast(ex.Message);
+            toast.ShowInfoToast(ex.Message);
         }
 
     }
@@ -148,9 +138,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
     public IMultiplayerOpeningViewModel? OpeningScreen { get; set; }
     public INewRoundVM? NewRoundScreen { get; set; }
     public INewGameVM? NewGameScreen { get; set; }
-    private readonly IMultiplayerSaveState _save;
-    private readonly TestOptions _test;
-    private readonly IToast _toast;
+
     private IBasicGameProcesses<P>? _mainGame;
     public IMainScreen? MainVM { get; set; }
     protected virtual Task NewGameOrRoundRequestedAsync() => Task.CompletedTask;
@@ -161,10 +149,10 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
     /// <returns></returns>
     async Task IHandleAsync<NewGameEventModel>.HandleAsync(NewGameEventModel message)
     {
-        if (_test.AlwaysNewGame)
+        if (test.AlwaysNewGame)
         {
             CommandContainer.ClearLists();
-            await _save.DeleteGameAsync();
+            await save.DeleteGameAsync();
             ReplaceGame();
         }
         IRequestNewGameRound gameRound;
@@ -187,7 +175,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
             throw new CustomBasicException("New game was not even active.  Therefore, I should not have received message for requesting new game");
         }
         await CloseMainAsync("Should have shown main game when showing new game.");
-        await _save.DeleteGameAsync();
+        await save.DeleteGameAsync();
         await CloseSpecificChildAsync(NewGameScreen);
         NewGameScreen = null;
         await NewGameOrRoundRequestedAsync();
@@ -214,14 +202,11 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
     }
     private async Task LoadGameScreenAsync()
     {
-        if (_mainGame == null)
-        {
-            _mainGame = MainContainer.Resolve<IBasicGameProcesses<P>>();
-        }
+        _mainGame ??= MainContainer.Resolve<IBasicGameProcesses<P>>();
         if (_mainGame.CanMakeMainOptionsVisibleAtBeginning)
         {
             await StartNewGameAsync();
-            if (_test.AlwaysNewGame)
+            if (test.AlwaysNewGame)
             {
                 NewGameScreen = MainContainer.Resolve<INewGameVM>();
                 await LoadScreenAsync(NewGameScreen);
@@ -229,7 +214,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
             return;
         }
         await GetStartingScreenAsync();
-        if (_test.AlwaysNewGame)
+        if (test.AlwaysNewGame)
         {
             NewGameScreen = MainContainer.Resolve<INewGameVM>();
             await LoadScreenAsync(NewGameScreen);
@@ -275,12 +260,12 @@ public abstract partial class BasicMultiplayerShellViewModel<P> : ConductorViewM
         {
             return;
         }
-        await _save.DeleteGameAsync();
+        await save.DeleteGameAsync();
         if (MainVM == null)
         {
             throw new CustomBasicException("The main view model was not even available.  Rethink");
         }
-        if (_test.AlwaysNewGame)
+        if (test.AlwaysNewGame)
         {
             await CloseSpecificChildAsync(NewGameScreen!);
             NewGameScreen = null;

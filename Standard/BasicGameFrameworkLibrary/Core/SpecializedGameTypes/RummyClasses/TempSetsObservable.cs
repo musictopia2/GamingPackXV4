@@ -1,5 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
-public class TempSetsObservable<S, C, R>
+public class TempSetsObservable<S, C, R>(CommandContainer command, IGamePackageResolver resolver)
     where S : IFastEnumSimple
     where C : IFastEnumColorSimple
     where R : IDeckObject, IRummmyObject<S, C>, new()
@@ -12,14 +12,9 @@ public class TempSetsObservable<S, C, R>
     {
         return SetList[index - 1].HandList;
     }
-    public TempSetsObservable(CommandContainer command, IGamePackageResolver resolver)
-    {
-        _command = command;
-        _resolver = resolver;
-    }
+
     private IEventAggregator? _thisE;
-    private readonly CommandContainer _command;
-    private readonly IGamePackageResolver _resolver;
+
     public void ReportCanExecuteChange()
     {
         SetList.ForEach(x => x.ReportCanExecuteChange());
@@ -30,13 +25,13 @@ public class TempSetsObservable<S, C, R>
         {
             return;
         }
-        _thisE = _resolver.Resolve<IEventAggregator>();
+        _thisE = resolver.Resolve<IEventAggregator>();
         int x;
         var loopTo = HowManySets;
         RummyHandObservable<S, C, R> thisSet;
         for (x = 1; x <= loopTo; x++)
         {
-            thisSet = new(_command, _resolver);
+            thisSet = new(command, resolver);
             thisSet.AutoSelect = EnumHandAutoType.None;
             thisSet.SendAlwaysEnable(enables);
             thisSet.Text = "Set";
@@ -109,11 +104,7 @@ public class TempSetsObservable<S, C, R>
     {
         get
         {
-            RummyHandObservable<S, C, R> thisVM = SetList.FirstOrDefault(xx => xx.HowManySelectedObjects > 0)!;
-            if (thisVM == null)
-            {
-                throw new CustomBasicException("There was no pile with only one selected card.  Find out what happened");
-            }
+            RummyHandObservable<S, C, R> thisVM = SetList.FirstOrDefault(xx => xx.HowManySelectedObjects > 0)! ?? throw new CustomBasicException("There was no pile with only one selected card.  Find out what happened");
             return SetList.IndexOf(thisVM) + 1;
         }
     }

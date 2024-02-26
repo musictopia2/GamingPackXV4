@@ -1,18 +1,15 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
-public class YahtzeeShellViewModel<D> : BasicMultiplayerShellViewModel<YahtzeePlayerItem<D>>
+public class YahtzeeShellViewModel<D>(IGamePackageResolver mainContainer,
+    CommandContainer container,
+    IGameInfo gameData,
+    BasicData basicData,
+    IMultiplayerSaveState save,
+    TestOptions test,
+    IEventAggregator aggregator,
+    IToast toast
+        ) : BasicMultiplayerShellViewModel<YahtzeePlayerItem<D>>(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
     where D : SimpleDice, new()
 {
-    public YahtzeeShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        BasicData basicData,
-        IMultiplayerSaveState save,
-        TestOptions test,
-        IEventAggregator aggregator,
-        IToast toast
-        ) : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
-    {
-    }
     protected override BasicList<Type> GetAdditionalObjectsToReset()
     {
         BasicList<Type> output = new()

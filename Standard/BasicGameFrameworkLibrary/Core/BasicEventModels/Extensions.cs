@@ -89,10 +89,7 @@ public static class EventExtensions
             await thisE.PublishAsync(thisA, tag);
             await CompleteAnimationAsync();
         }
-        if (finalAction != null)
-        {
-            finalAction.Invoke();
-        }
+        finalAction?.Invoke();
         thisE.ResetDiscard();
     }
     #endregion

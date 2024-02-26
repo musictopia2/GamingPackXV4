@@ -1,5 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
-public abstract class SetInfo<S, C, R, T> : HandObservable<R>
+public abstract class SetInfo<S, C, R, T>(CommandContainer command) : HandObservable<R>(command)
     where S : IFastEnumSimple
     where C : IFastEnumColorSimple
     where R : IDeckObject, IRummmyObject<S, C>, new()
@@ -92,5 +92,4 @@ public abstract class SetInfo<S, C, R, T> : HandObservable<R>
         SectionClicked = 0;
         await SetClickedAsync.Invoke(this, thisSection);
     }
-    public SetInfo(CommandContainer command) : base(command) { }
 }

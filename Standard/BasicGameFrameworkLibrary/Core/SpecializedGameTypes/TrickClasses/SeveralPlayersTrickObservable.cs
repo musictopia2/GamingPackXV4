@@ -1,22 +1,17 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
-public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<SU, T>, IMultiplayerTrick<SU, T, P>
+public class SeveralPlayersTrickObservable<SU, T, P, SA>(TrickGameContainer<T, P, SA, SU> gameContainer) : BasicTrickAreaObservable<SU, T>(gameContainer.Command, gameContainer.Aggregator), IMultiplayerTrick<SU, T, P>
     , ITrickPlay, IAdvancedTrickProcesses
     where SU : IFastEnumSimple
     where T : class, ITrickCard<SU>, new()
     where P : class, IPlayerTrick<SU, T>, new()
     where SA : BasicSavedTrickGamesClass<SU, T, P>, new()
 {
-    private readonly TrickGameContainer<T, P, SA, SU> _gameContainer;
-    public SeveralPlayersTrickObservable(TrickGameContainer<T, P, SA, SU> gameContainer) : base(gameContainer.Command, gameContainer.Aggregator)
-    {
-        _gameContainer = gameContainer;
-    }
     public BasicList<TrickCoordinate>? ViewList { get; set; }
-    public DeckRegularDict<T> OrderList => _gameContainer.SaveRoot!.TrickList;
+    public DeckRegularDict<T> OrderList => gameContainer.SaveRoot!.TrickList;
     private BasicList<TrickCoordinate> GetCoordinateList()
     {
         BasicList<TrickCoordinate> output = new();
-        int howManyPlayers = _gameContainer.PlayerList!.Count;
+        int howManyPlayers = gameContainer.PlayerList!.Count;
         TrickCoordinate thisPlayer;
         if (howManyPlayers == 2)
         {
@@ -24,12 +19,12 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
             thisPlayer.IsSelf = true;
             thisPlayer.Row = 1;
             thisPlayer.Column = 1;
-            thisPlayer.Player = _gameContainer.SelfPlayer;
+            thisPlayer.Player = gameContainer.SelfPlayer;
             output.Add(thisPlayer);
             thisPlayer = new();
             thisPlayer.Column = 2;
             thisPlayer.Row = 1;
-            if (_gameContainer.SelfPlayer == 1)
+            if (gameContainer.SelfPlayer == 1)
             {
                 thisPlayer.Player = 2;
             }
@@ -61,7 +56,7 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
         }
         int x;
         int y;
-        y = _gameContainer.SelfPlayer;
+        y = gameContainer.SelfPlayer;
         var loopTo = howManyBottom;
         for (x = 1; x <= loopTo; x++)
         {
@@ -98,7 +93,7 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
     }
     public void FirstLoad()
     {
-        if (_gameContainer.PlayerList!.Count == 0)
+        if (gameContainer.PlayerList!.Count == 0)
         {
             throw new CustomBasicException("Playerlist Has Not Been Initialized Yet");
         }
@@ -108,7 +103,7 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
             throw new CustomBasicException("First must be self");
         }
         int x;
-        MaxPlayers = _gameContainer.PlayerList.Count;
+        MaxPlayers = gameContainer.PlayerList.Count;
         CardList.Clear();
         for (x = 1; x <= MaxPlayers; x++)
         {
@@ -140,7 +135,7 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
     private int GetCardIndex()
     {
         var thisC = (from xx in ViewList
-                     where xx.Player == _gameContainer.WhoTurn
+                     where xx.Player == gameContainer.WhoTurn
                      select xx).Single();
         return ViewList!.IndexOf(thisC);
     }
@@ -157,7 +152,7 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
         int index;
         int tempTurn;
         T lastCard;
-        tempTurn = _gameContainer.WhoTurn;
+        tempTurn = gameContainer.WhoTurn;
         DeckRegularDict<T> otherList = new();
         tempList.ForEach(thisCard =>
         {
@@ -165,16 +160,16 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
             {
                 throw new CustomBasicException("The Player Cannot Be 0");
             }
-            _gameContainer.WhoTurn = thisCard.Player;
-            _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
+            gameContainer.WhoTurn = thisCard.Player;
+            gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
             index = GetCardIndex();
-            lastCard = _gameContainer.GetBrandNewCard(thisCard.Deck);
+            lastCard = gameContainer.GetBrandNewCard(thisCard.Deck);
             lastCard.Player = thisCard.Player;
             TradeCard(index, lastCard);
             otherList.Add(lastCard);
         });
         OrderList.ReplaceRange(otherList);
-        _gameContainer.WhoTurn = tempTurn;
+        gameContainer.WhoTurn = tempTurn;
     }
     protected T GetWinningCard(int wins)
     {
@@ -188,37 +183,37 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA> : BasicTrickAreaObserva
     }
     public async Task PlayCardAsync(int deck)
     {
-        T thisCard = _gameContainer.GetSpecificCardFromDeck(deck);
-        thisCard.Player = _gameContainer.WhoTurn;
+        T thisCard = gameContainer.GetSpecificCardFromDeck(deck);
+        thisCard.Player = gameContainer.WhoTurn;
         int index = GetCardIndex();
-        T newCard = _gameContainer.GetBrandNewCard(deck);
-        newCard.Player = _gameContainer.WhoTurn;
+        T newCard = gameContainer.GetBrandNewCard(deck);
+        newCard.Player = gameContainer.WhoTurn;
         newCard.Visible = true;
         OrderList.Add(newCard);
         TradeCard(index, newCard);
-        _gameContainer.Command.UpdateAll();
+        gameContainer.Command.UpdateAll();
         await AfterPlayCardAsync(thisCard);
     }
     protected virtual async Task AfterPlayCardAsync(T thisCard)
     {
-        if (OrderList.Count == _gameContainer.PlayerList!.Count)
+        if (OrderList.Count == gameContainer.PlayerList!.Count)
         {
-            await _gameContainer.EndTrickAsync!.Invoke();
+            await gameContainer.EndTrickAsync!.Invoke();
         }
         else
         {
-            await _gameContainer.ContinueTrickAsync!.Invoke();
+            await gameContainer.ContinueTrickAsync!.Invoke();
         }
     }
     protected override async Task ProcessCardClickAsync(T thisCard)
     {
         if (CardList.IndexOf(thisCard) == 0)
         {
-            await _gameContainer.CardClickedAsync!.Invoke();
+            await gameContainer.CardClickedAsync!.Invoke();
         }
     }
     public P GetSpecificPlayer(int id)
     {
-        return _gameContainer.PlayerList![id];
+        return gameContainer.PlayerList![id];
     }
 }

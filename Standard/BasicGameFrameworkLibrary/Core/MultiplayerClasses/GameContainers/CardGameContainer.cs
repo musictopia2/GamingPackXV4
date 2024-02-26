@@ -1,22 +1,17 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.GameContainers;
-public class CardGameContainer<D, P, S> : BasicGameContainer<P, S>
+public class CardGameContainer<D, P, S>(BasicData basicData,
+    TestOptions test,
+    IGameInfo gameInfo,
+    IAsyncDelayer delay,
+    IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver,
+    IListShuffler<D> deckList,
+    IRandomGenerator random) : BasicGameContainer<P, S>(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
     where D : class, IDeckObject, new()
     where P : class, IPlayerSingleHand<D>, new()
     where S : BasicSavedCardClass<P, D>, new()
 {
-    public CardGameContainer(BasicData basicData,
-        TestOptions test,
-        IGameInfo gameInfo,
-        IAsyncDelayer delay,
-        IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver,
-        IListShuffler<D> deckList,
-        IRandomGenerator random)
-        : base(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
-    {
-        DeckList = deckList;
-    }
     public int PreviousCard
     {
         get
@@ -41,7 +36,7 @@ public class CardGameContainer<D, P, S> : BasicGameContainer<P, S>
     }
     public int PlayerDraws { get; set; }
     public int LeftToDraw { get; set; }
-    public IListShuffler<D> DeckList;
+    public IListShuffler<D> DeckList = deckList;
     public int PlayerWentOut()
     {
         P player = PlayerList!.Where(x => x.MainHandList.Count == 0).SingleOrDefault()!;

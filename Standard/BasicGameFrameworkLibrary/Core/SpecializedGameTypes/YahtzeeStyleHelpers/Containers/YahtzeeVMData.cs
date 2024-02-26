@@ -1,15 +1,8 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Containers;
 [UseLabelGrid]
-public sealed partial class YahtzeeVMData<D> : IBasicDiceGamesData<D>
+public sealed partial class YahtzeeVMData<D>(CommandContainer command, IGamePackageResolver resolver) : IBasicDiceGamesData<D>
     where D : SimpleDice, new()
 {
-    private readonly CommandContainer _command;
-    private readonly IGamePackageResolver _resolver;
-    public YahtzeeVMData(CommandContainer command, IGamePackageResolver resolver)
-    {
-        _command = command;
-        _resolver = resolver;
-    }
     [LabelColumn]
     public string NormalTurn { get; set; } = "";
     [LabelColumn]
@@ -29,7 +22,7 @@ public sealed partial class YahtzeeVMData<D> : IBasicDiceGamesData<D>
         {
             return;
         }
-        Cup = new DiceCup<D>(saveRoot.DiceList, _resolver, _command);
+        Cup = new DiceCup<D>(saveRoot.DiceList, resolver, command);
         if (autoResume == true)
         {
             Cup.CanShowDice = true;

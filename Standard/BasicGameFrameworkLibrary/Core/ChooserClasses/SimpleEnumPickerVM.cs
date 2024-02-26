@@ -46,7 +46,9 @@ public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
     private readonly IEnumListClass<E> _thisChoice;
     public ControlCommand? EnumChosenCommand { get; set; }
     [Command(EnumCommandCategory.Control)]
+#pragma warning disable IDE0051 // Remove unused private members cannot remove because part of source generators.
     private async Task ProcessClickAsync(BasicPickerData<E> chosen)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         if (AutoSelectCategory == EnumAutoSelectCategory.AutoEvent)
         {

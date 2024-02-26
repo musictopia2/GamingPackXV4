@@ -1,19 +1,14 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.TrickClasses;
-public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<SU, T>,
+public class TwoPlayerTrickObservable<SU, T, P, SA>(TrickGameContainer<T, P, SA, SU> gameContainer) : BasicTrickAreaObservable<SU, T>(gameContainer.Command, gameContainer.Aggregator),
     ITrickPlay, IAdvancedTrickProcesses
     where SU : IFastEnumSimple
     where T : class, ITrickCard<SU>, new()
     where P : class, IPlayerTrick<SU, T>, new()
     where SA : BasicSavedTrickGamesClass<SU, T, P>, new()
 {
-    private readonly TrickGameContainer<T, P, SA, SU> _gameContainer;
-    public TwoPlayerTrickObservable(TrickGameContainer<T, P, SA, SU> gameContainer) : base(gameContainer.Command, gameContainer.Aggregator)
-    {
-        _gameContainer = gameContainer;
-    }
     public void FirstLoad()
     {
-        if (_gameContainer.PlayerList!.Count != 2)
+        if (gameContainer.PlayerList!.Count != 2)
         {
             throw new CustomBasicException("Must have 2 players in order to load");
         }
@@ -30,7 +25,7 @@ public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<S
     }
     protected int GetCardIndex()
     {
-        if (_gameContainer.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        if (gameContainer.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             return 0;
         }
@@ -66,7 +61,7 @@ public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<S
         int index;
         int tempTurn;
         T lastCard;
-        tempTurn = _gameContainer.WhoTurn;
+        tempTurn = gameContainer.WhoTurn;
         DeckRegularDict<T> otherList = new();
         tempList.ForEach(thisCard =>
         {
@@ -74,16 +69,16 @@ public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<S
             {
                 throw new CustomBasicException("The Player Cannot Be 0");
             }
-            _gameContainer.WhoTurn = thisCard.Player;
-            _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
+            gameContainer.WhoTurn = thisCard.Player;
+            gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
             index = GetCardIndex();
-            lastCard = _gameContainer.GetBrandNewCard(thisCard.Deck);
+            lastCard = gameContainer.GetBrandNewCard(thisCard.Deck);
             lastCard.Player = thisCard.Player;
             TradeCard(index, lastCard);
             otherList.Add(lastCard);
         });
         OrderList.ReplaceRange(otherList);
-        _gameContainer.WhoTurn = tempTurn;
+        gameContainer.WhoTurn = tempTurn;
     }
     protected T GetWinningCard(int wins)
     {
@@ -97,34 +92,34 @@ public class TwoPlayerTrickObservable<SU, T, P, SA> : BasicTrickAreaObservable<S
     }
     public async Task PlayCardAsync(int deck)
     {
-        T thisCard = _gameContainer.GetSpecificCardFromDeck(deck);
-        thisCard.Player = _gameContainer.WhoTurn;
+        T thisCard = gameContainer.GetSpecificCardFromDeck(deck);
+        thisCard.Player = gameContainer.WhoTurn;
         int index = GetCardIndex();
-        T newCard = _gameContainer.GetBrandNewCard(deck);
-        newCard.Player = _gameContainer.WhoTurn;
+        T newCard = gameContainer.GetBrandNewCard(deck);
+        newCard.Player = gameContainer.WhoTurn;
         newCard.Visible = true;
         OrderList.Add(newCard);
         TradeCard(index, newCard);
-        _gameContainer.Command.UpdateAll();
+        gameContainer.Command.UpdateAll();
         await AfterPlayCardAsync(thisCard);
     }
     protected virtual async Task AfterPlayCardAsync(T thisCard) 
     {
-        if (OrderList.Count == _gameContainer.PlayerList!.Count)
+        if (OrderList.Count == gameContainer.PlayerList!.Count)
         {
-            await _gameContainer.EndTrickAsync!.Invoke();
+            await gameContainer.EndTrickAsync!.Invoke();
         }
         else
         {
-            await _gameContainer.ContinueTrickAsync!.Invoke();
+            await gameContainer.ContinueTrickAsync!.Invoke();
         }
     }
-    protected DeckRegularDict<T> OrderList => _gameContainer.SaveRoot!.TrickList;
+    protected DeckRegularDict<T> OrderList => gameContainer.SaveRoot!.TrickList;
     protected override async Task ProcessCardClickAsync(T thisCard)
     {
         if (CardList.IndexOf(thisCard) == 0)
         {
-            await _gameContainer.CardClickedAsync!.Invoke();
+            await gameContainer.CardClickedAsync!.Invoke();
         }
     }
 }

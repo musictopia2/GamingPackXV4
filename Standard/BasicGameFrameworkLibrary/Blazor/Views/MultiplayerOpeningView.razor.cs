@@ -1,5 +1,3 @@
-
-
 namespace BasicGameFrameworkLibrary.Blazor.Views;
 public partial class MultiplayerOpeningView<P>
      where P : class, IPlayerItem, new()
@@ -11,11 +9,9 @@ public partial class MultiplayerOpeningView<P>
     private bool _canHuman;
     private bool _canComputer;
     private readonly BasicList<LabelGridModel> _labels = [];
-
     private RawGameHost? _hostNewGameInfo;
     private RawGameClient? _clientNewGameInfo;
     private bool _realLoad;
-
     protected override void OnInitialized()
     {
         _labels.Clear();
@@ -63,22 +59,13 @@ public partial class MultiplayerOpeningView<P>
                 }
                 await DataContext!.HostAsync();
                 return;
-                //for now, if its multiplayer, has to show the details.
             }
             if (_clientNewGameInfo is not null)
             {
                 await DataContext!.ConnectAsync(); //try this way (?)
                 return;
             }
-            //if (_clientNewGameInfo is not null)
-            //{
-
-            //}
             StateHasChanged(); //has to reload the state now.
         }
-    }
-    private static string GetTestPlayerInformation(RawPlayer player)
-    {
-        return $"The name is {player.NickName}.  The player category is {player.PlayerCategory}.  The Id is {player.Id}.  IsHost is {player.IsHost}";
     }
 }

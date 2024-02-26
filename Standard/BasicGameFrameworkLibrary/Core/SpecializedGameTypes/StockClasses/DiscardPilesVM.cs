@@ -1,8 +1,8 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.StockClasses;
-public class DiscardPilesVM<D> : BasicMultiplePilesCP<D>
+public class DiscardPilesVM<D>(CommandContainer command) : BasicMultiplePilesCP<D>(command)
     where D : IDeckObject, new()
 {
-    private readonly CommandContainer _command;
+    private readonly CommandContainer _command = command;
     public void AddToEmptyDiscard(D thisCard)
     {
         foreach (var thisPile in PileList!)
@@ -128,9 +128,5 @@ public class DiscardPilesVM<D> : BasicMultiplePilesCP<D>
             x += 1;
             UnselectPile(x - 1);
         }
-    }
-    public DiscardPilesVM(CommandContainer command) : base(command)
-    {
-        _command = command;
     }
 }
