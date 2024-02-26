@@ -16,6 +16,7 @@ public class BasicGameContainer<P, S>(BasicData basicData,
     IRandomGenerator random
         )
     : ISaveContainer<P, S>,
+    IGameId,
     IBasicGameContainer where P : class, IPlayerItem, new()
     where S : BasicSavedGameClass<P>, new()
 {
@@ -61,4 +62,5 @@ public class BasicGameContainer<P, S>(BasicData basicData,
     public Func<Task>? ShowWinAsync { get; set; }
     public Func<Task>? StartNewTurnAsync { get; set; }
     public Func<Task>? SaveStateAsync { get; set; } //games like fluxx requires this.
+    string IGameId.GameId => SaveRoot.GameID;
 }

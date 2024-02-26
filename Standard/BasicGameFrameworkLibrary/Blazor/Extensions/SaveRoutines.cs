@@ -1,19 +1,17 @@
 ﻿namespace BasicGameFrameworkLibrary.Blazor.Extensions;
 public static class SaveRoutines
 {
-    public static async Task UpdatePrivateGameAsync<T>(this IJSRuntime js, T saveRoot, string value)
-        where T: SimpleSave
+    public static async Task UpdatePrivateGameAsync<T>(this IJSRuntime js, string id, string value)
     {
-        await js.StorageSetStringAsync(saveRoot.GameID, value);
+        await js.StorageSetStringAsync(id, value);
     }
-    public static async Task<string> GetPrivateGameAsync<T>(this IJSRuntime js, T saveRoot)
-        where T: SimpleSave
+    public static async Task<string> GetPrivateGameAsync(this IJSRuntime js, string id)
     {
-        if (js.ContainsKey(saveRoot.GameID) == false)
+        if (js.ContainsKey(id) == false)
         {
             return "";
         }
-        return await js.StorageGetStringAsync(saveRoot.GameID);
+        return await js.StorageGetStringAsync(id);
     }
     public static async Task UpdateLocalStorageAsync(this IJSRuntime js, string key, string value)
     {
