@@ -36,8 +36,7 @@ public class MonopolyCardGameMainGameClass
     {
         LoadTradePiles();
         _doContinue = true;
-        _gameContainer.TempSets.Clear();//i think this is necessary too though.
-        _model.TempSets1.ClearBoard(); 
+        _model.TempSets1.ClearBoard();
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
             var thisList = await js1.DeserializeObjectAsync<DeckRegularDict<MonopolyCardGameCardInformation>>(thisPlayer.TradeString);
@@ -89,6 +88,7 @@ public class MonopolyCardGameMainGameClass
         {
             _model.TempSets1.ClearBoard(); //i think.
             _gameContainer.TempSets.Clear();
+            _model.Calculator1.ClearCalculator();
         }
         SaveRoot!.ImmediatelyStartTurn = true;
         SaveRoot.GameStatus = EnumWhatStatus.DrawOrTrade;
