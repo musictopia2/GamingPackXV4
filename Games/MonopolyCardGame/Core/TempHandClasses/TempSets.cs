@@ -28,10 +28,41 @@ public class TempSets(CommandContainer command, IGamePackageResolver resolver, M
         }
         return output;
     }
+    private void PossibleAutoResume()
+    {
+        if (container.TempSets.Count > 0)
+        {
+            var player = container.PlayerList!.GetSelf();
+            bool hadAny = false;
+            foreach (var item in container.TempSets)
+            {
+                var current = SetList[item.SetNumber - 1];
+                var cards = item.Cards.GetNewObjectListFromDeckList(container.DeckList);
+                DeckRegularDict<MonopolyCardGameCardInformation> toAdd = [];
+                foreach (var card in cards)
+                {
+                    if (player.MainHandList.ObjectExist(card.Deck))
+                    {
+
+                        player.MainHandList.RemoveObjectByDeck(card.Deck);
+                        player.AdditionalCards.Add(card); //if i remove from hand, must add to additional cards so sends to other players properly.
+                        hadAny = true;
+                        toAdd.Add(card);
+                    }
+                }
+                current.AddCards(toAdd);
+            }
+            if (hadAny)
+            {
+                PublicCount();
+            }
+        }
+    }
     public void Init(IEnableAlways enables)
     {
         if (SetList.Count > 0)
         {
+            PossibleAutoResume();
             return;
         }
         _thisE = resolver.Resolve<IEventAggregator>();
@@ -47,34 +78,7 @@ public class TempSets(CommandContainer command, IGamePackageResolver resolver, M
             thisSet.SetClickedAsync = ThisSet_SetClickedAsync;
             SetList.Add(thisSet);
         }
-        if (container.TempSets.Count > 0)
-        {
-            var player = container.PlayerList!.GetSelf();
-            bool hadAny = false;
-            foreach (var item in container.TempSets)
-            {
-                //var tempCollection = thisSend.CardList.GetNewObjectListFromDeckList(_gameContainer.DeckList!).ToRegularDeckDict();
-                var current = SetList[item.SetNumber - 1];
-                var cards = item.Cards.GetNewObjectListFromDeckList(container.DeckList);
-                DeckRegularDict<MonopolyCardGameCardInformation> toAdd = [];
-                foreach (var card in cards)
-                {
-                    if (player.MainHandList.ObjectExist(card.Deck))
-                    {
-                        //this means i can go ahead and add to set and remove from hand.
-                        player.MainHandList.RemoveObjectByDeck(card.Deck);
-                        hadAny = true;
-                        toAdd.Add(card);
-                    }
-                }
-                current.AddCards(toAdd);
-            }
-            if (hadAny)
-            {
-                PublicCount();
-            }
-        }
-        
+        PossibleAutoResume();
     }
     private async Task ThisSet_SetClickedAsync(TempHand thisSet)
     {

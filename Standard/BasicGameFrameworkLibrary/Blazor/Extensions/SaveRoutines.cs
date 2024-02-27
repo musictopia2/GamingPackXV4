@@ -3,6 +3,10 @@ public static class SaveRoutines
 {
     public static async Task UpdatePrivateGameAsync<T>(this IJSRuntime js, string id, string value)
     {
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            throw new CustomBasicException("Cannot be blank for gameid");
+        }
         await js.StorageSetStringAsync(id, value);
     }
     public static async Task<string> GetPrivateGameAsync(this IJSRuntime js, string id)
@@ -16,6 +20,11 @@ public static class SaveRoutines
     }
     public static async Task UpdateLocalStorageAsync(this IJSRuntime js, string key, string value)
     {
+        await js.ClearExceptForCurrentGameAsync(key);
+        await js.StorageSetStringAsync(key, value); //the private autoresume can just use this one.
+    }
+    public static async Task ClearExceptForCurrentGameAsync(this IJSRuntime js, string key)
+    {
         BasicList<string> saveList = GlobalStartUp.KeysToSave;
         BasicList<string> keyList = await js.GetKeyListAsync();
         await keyList.ForEachAsync(async item =>
@@ -25,7 +34,6 @@ public static class SaveRoutines
                 await js.StorageRemoveItemAsync(item);
             }
         });
-        await js.StorageSetStringAsync(key, value); //the private autoresume can just use this one.
     }
     public static async Task DeletePrivateGameAsync(this IJSRuntime js, string key)
     {

@@ -7,6 +7,11 @@ public static class PrivateAutoResumeLocalStorageHelpers
         IJSRuntime js = GetJavascript();
         await js.DeletePrivateGameAsync(gameId); //hopefully this simple.
     }
+    private static async Task ClearExceptForCurrentGameAsync(string gameId)
+    {
+        IJSRuntime js = GetJavascript();
+        await js.ClearExceptForCurrentGameAsync(gameId); //may not had added yet.
+    }
     private static IJSRuntime GetJavascript()
     {
         if (GlobalStartUp.JsRuntime is null)
@@ -23,5 +28,6 @@ public static class PrivateAutoResumeLocalStorageHelpers
     {
         GlobalDelegates.DeleteOldPrivateGames = DeleteOldPrivateGamesAsync;
         GlobalDelegates.AddNewGame = AddNewGame;
+        GlobalDelegates.ClearExceptForCurrentGame = ClearExceptForCurrentGameAsync;
     }
 }
