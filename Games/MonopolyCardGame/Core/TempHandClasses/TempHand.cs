@@ -2,13 +2,11 @@
 public class TempHand : HandObservable<MonopolyCardGameCardInformation>
 {
     private readonly IGamePackageResolver _resolver;
-    private readonly MonopolyCardGameGameContainer _container;
     public Func<TempHand, Task>? SetClickedAsync { get; set; }
     public static Action<MonopolyCardGameCardInformation>? AfterSelectUnselectCard { get; set; }
-    public TempHand(CommandContainer command, IGamePackageResolver resolver, MonopolyCardGameGameContainer container) : base(command)
+    public TempHand(CommandContainer command, IGamePackageResolver resolver) : base(command)
     {
         _resolver = resolver;
-        _container = container;
         PrepSort();
     }
     public bool DidClickObject { get; set; } = false; //sometimes this is needed for mobile.
@@ -50,7 +48,6 @@ public class TempHand : HandObservable<MonopolyCardGameCardInformation>
                 HandList.Add(item);
             }
         }
-        //HandList.AddRange(thisList);
         SortCards();
         HandList.UnselectAllObjects();
     }

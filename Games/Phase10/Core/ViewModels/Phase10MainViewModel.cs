@@ -28,6 +28,8 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
         player.DoInit();
         _model.TempSets.Init(this);
         _model.TempSets.ClearBoard();
+        //if i want tempsets to do autoresume, attempt here
+
         _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
         _model.MainSets.SetClickedAsync = MainSets_SetClickedAsync;
         _model.MainSets.SendEnableProcesses(this, () => _gameContainer!.AlreadyDrew);
