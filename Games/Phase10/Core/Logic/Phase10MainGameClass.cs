@@ -1,3 +1,4 @@
+using BasicGameFrameworkLibrary.Blazor.LocalStorageClasses;
 using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
 namespace Phase10.Core.Logic;
 [SingletonGame]
@@ -8,9 +9,12 @@ public class Phase10MainGameClass
     private readonly Phase10VMData _model;
     private readonly CommandContainer _command;
     private readonly Phase10GameContainer _gameContainer;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     private readonly RummyProcesses<EnumColorTypes, EnumColorTypes, Phase10CardInformation> _rummys;
     private BasicList<PhaseList>? _phaseInfo;
+#pragma warning disable IDE0290 // Use primary constructor cannot this time because it removes the intellisense this time.
     public Phase10MainGameClass(IGamePackageResolver mainContainer,
+#pragma warning restore IDE0290 // Use primary constructor
         IEventAggregator aggregator,
         BasicData basicData,
         TestOptions test,
@@ -21,15 +25,17 @@ public class Phase10MainGameClass
         CommandContainer command,
         Phase10GameContainer gameContainer,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
+        _privateAutoResume = privateAutoResume;
         _rummys = new();
     }
-    public override Task FinishGetSavedAsync()
+    public override async Task FinishGetSavedAsync()
     {
         _model!.MainSets!.ClearBoard();
         LoadControls();
@@ -50,11 +56,17 @@ public class Phase10MainGameClass
         SingleInfo = PlayerList.GetSelf();
         SingleInfo.MainHandList.Sort();
         _model.MainSets.LoadSets(SaveRoot.SetList);
+        bool rets;
+        rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer);
+        if (rets)
+        {
+            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+        }
         if (SaveRoot.ImmediatelyStartTurn == false)
         {
             PrepStartTurn();
         }
-        return base.FinishGetSavedAsync();
+        await base.FinishGetSavedAsync();
     }
     protected override void PrepStartTurn()
     {
@@ -87,7 +99,7 @@ public class Phase10MainGameClass
         PhaseList thisPhase = new();
         thisPhase.Description = "2 Sets of 3";
         SetInfo newSets;
-        _phaseInfo = new();
+        _phaseInfo = [];
         2.Times(x =>
         {
             newSets = new();
@@ -483,7 +495,7 @@ public class Phase10MainGameClass
         for (int x = 1; x <= _model!.TempSets!.HowManySets; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new DeckRegularDict<Phase10CardInformation>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);
@@ -522,7 +534,7 @@ public class Phase10MainGameClass
     }
     public BasicList<TempInfo> ListValidSets()
     {
-        BasicList<TempInfo> output = new();
+        BasicList<TempInfo> output = [];
         int phase = SingleInfo!.Phase;
         PhaseList thisPhase = _phaseInfo![phase - 1]; //because 0 based.
         DeckRegularDict<Phase10CardInformation> thisCollection;
@@ -531,7 +543,7 @@ public class Phase10MainGameClass
         for (int x = 1; x <= _model!.TempSets!.HowManySets; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new DeckRegularDict<Phase10CardInformation>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);

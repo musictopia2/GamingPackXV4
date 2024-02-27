@@ -6,6 +6,7 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
     private readonly Phase10VMData _model;
     private readonly Phase10GameContainer _gameContainer;
     private readonly IToast _toast;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     public Phase10MainViewModel(CommandContainer commandContainer,
         Phase10MainGameClass mainGame,
         Phase10VMData viewModel,
@@ -14,7 +15,8 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
         IGamePackageResolver resolver,
         Phase10GameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
@@ -22,20 +24,49 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
         _model = viewModel;
         _gameContainer = gameContainer;
         _toast = toast;
+        _privateAutoResume = privateAutoResume;
         _model.Deck1.NeverAutoDisable = true;
         _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
         var player = _mainGame.PlayerList.GetSelf();
         player.DoInit();
         _model.TempSets.Init(this);
         _model.TempSets.ClearBoard();
-        //if i want tempsets to do autoresume, attempt here
-
+        PossibleAutoResume();
         _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
         _model.MainSets.SetClickedAsync = MainSets_SetClickedAsync;
         _model.MainSets.SendEnableProcesses(this, () => _gameContainer!.AlreadyDrew);
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
+    private void PossibleAutoResume()
+    {
+        if (_gameContainer.TempSets.Count > 0)
+        {
+            var player = _gameContainer.PlayerList!.GetSelf();
+            bool hadAny = false;
+            foreach (var item in _gameContainer.TempSets)
+            {
+                var current = _model.TempSets.SetList[item.SetNumber - 1];
+                var cards = item.Cards.GetNewObjectListFromDeckList(_gameContainer.DeckList);
+                DeckRegularDict<Phase10CardInformation> toAdd = [];
+                foreach (var card in cards)
+                {
+                    if (player.MainHandList.ObjectExist(card.Deck))
+                    {
+                        player.MainHandList.RemoveObjectByDeck(card.Deck);
+                        player.AdditionalCards.Add(card); //if i remove from hand, must add to additional cards so sends to other players properly.
+                        hadAny = true;
+                        toAdd.Add(card);
+                    }
+                }
+                current.AddCards(toAdd);
+            }
+            if (hadAny)
+            {
+                _model.TempSets.PublicCount();
+            }
+        }
+    }
     protected override bool CanEnableDeck()
     {
         return !_gameContainer!.AlreadyDrew;
@@ -82,7 +113,7 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
         {
             throw new CustomBasicException("Can not have more than 2 sets");
         }
-        BasicList<string> newList = new();
+        BasicList<string> newList = [];
         await thisCol.ForEachAsync(async thisTemp =>
         {
             if (_mainGame.BasicData!.MultiPlayer == true)
@@ -127,17 +158,17 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
         return true;
     }
     private bool _isProcessing;
-    private Task TempSets_SetClickedAsync(int index)
+    private async Task TempSets_SetClickedAsync(int index)
     {
         if (_isProcessing == true)
         {
-            return Task.CompletedTask;
+            return;
         }
         _isProcessing = true;
         var tempList = _model.PlayerHand1!.ListSelectedObjects(true);
         _model.TempSets!.AddCards(index, tempList);
+        await _privateAutoResume.SaveStateAsync(_model);
         _isProcessing = false;
-        return Task.CompletedTask;
     }
     private async Task MainSets_SetClickedAsync(int setNumber, int section, int deck)
     {

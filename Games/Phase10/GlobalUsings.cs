@@ -64,3 +64,4 @@ global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorStri
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Cards;
 global using BasicGameFrameworkLibrary.Core.ChooserClasses;
 global using static BasicGameFrameworkLibrary.Core.ChooserClasses.ListViewPicker;
+global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
