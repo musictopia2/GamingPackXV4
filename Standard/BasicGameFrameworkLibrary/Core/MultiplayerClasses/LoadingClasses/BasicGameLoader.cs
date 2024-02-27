@@ -260,10 +260,10 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         _gameSetUp.PlayerList.FixNetworkedPlayers(basic.NickName);
         //this means needs to remove all the private stuff except for the key used.
         //the host will never do anything here.
-        if (GlobalDelegates.DeleteOldPrivateGames is not null)
+        if (GlobalDelegates.ClearExceptForCurrentGame is not null)
         {
             //this means if something sets it, then use it.
-            await GlobalDelegates.DeleteOldPrivateGames(_gameSetUp.SaveRoot.GameID); //delete anything that is not the key.
+            await GlobalDelegates.ClearExceptForCurrentGame(_gameSetUp.SaveRoot.GameID); //delete anything that is not the key.
         }
         await FinishGetSavedAsync();
         command.UpdateAll();
@@ -317,7 +317,6 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         {
             _gameSetUp.SaveRoot.GetNewID();
             GlobalDelegates.AddNewGame?.Invoke(_gameSetUp.SaveRoot.GameID);
-
         }
         _gameSetUp.SaveRoot.PlayOrder.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoTurn;
         await _gameSetUp.SetUpGameAsync(isBeginning);

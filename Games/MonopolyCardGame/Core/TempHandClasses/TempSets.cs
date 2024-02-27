@@ -1,4 +1,6 @@
-﻿namespace MonopolyCardGame.Core.TempHandClasses;
+﻿using BasicBlazorLibrary.Helpers;
+
+namespace MonopolyCardGame.Core.TempHandClasses;
 public class TempSets(CommandContainer command, IGamePackageResolver resolver, MonopolyCardGameGameContainer container)
 {
     public Func<int, Task>? SetClickedAsync { get; set; }

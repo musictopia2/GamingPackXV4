@@ -4,6 +4,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
 {
     public readonly MonopolyCardGameMainGameClass MainGame;
     private readonly MonopolyCardGameVMData _model;
+    private readonly TestOptions _test;
     private readonly IToast _toast;
     public EnumWhatStatus PreviousStatus { get; set; }
     public MonopolyCardGameMainViewModel(CommandContainer commandContainer,
@@ -19,6 +20,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     {
         MainGame = mainGame;
         _model = viewModel;
+        _test = test;
         _toast = toast;
         _model.Deck1.NeverAutoDisable = true;
         var player = MainGame.PlayerList.GetSelf();
@@ -200,18 +202,21 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
             throw new CustomBasicException("Not Self.  Rethink");
         }
         //_toast.ShowUserErrorToast("Has to rethink the processes for going out now");
-
-        int left = MainGame.SingleInfo.MainHandList.Count(x => x.WhatCard != EnumCardType.IsGo && x.WhatCard != EnumCardType.IsMr);
-        if (left > 0)
+        if (_test.EndRoundEarly == false)
         {
-            _toast.ShowUserErrorToast("You cannot go out because you have cards left in your hand that is not a go or mr. monopoly");
-            return;
+            int left = MainGame.SingleInfo.MainHandList.Count(x => x.WhatCard != EnumCardType.IsGo && x.WhatCard != EnumCardType.IsMr);
+            if (left > 0)
+            {
+                _toast.ShowUserErrorToast("You cannot go out because you have cards left in your hand that is not a go or mr. monopoly");
+                return;
+            }
+            if (_model.HasAllValidMonopolies() == false)
+            {
+                _toast.ShowUserErrorToast("You cannot go out one of the sets was either not a valid monopoly or improperly placed houses or hotels");
+                return;
+            }
         }
-        if (_model.HasAllValidMonopolies() == false)
-        {
-            _toast.ShowUserErrorToast("You cannot go out one of the sets was either not a valid monopoly or improperly placed houses or hotels");
-            return;
-        }
+        
         //at this stage, can't calculate scores because you get 5 more cards.
         if (MainGame.BasicData!.MultiPlayer)
         {
@@ -244,41 +249,50 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
     [Command(EnumCommandCategory.Game)]
     public async Task ManuallyPlaySetsAsync()
     {
-        
-        if (MainGame.SingleInfo!.HasMonopolyInHand())
+        bool rets;
+        if (_test.EndRoundEarly == false)
         {
-            _toast.ShowUserErrorToast("You have at least one monopoly in hand to play.  You must play them manually");
-            return;
-        }
-        bool rets = MainGame.HasAllValidMonopolies();
-        if (rets == false)
-        {
-            //even if you are not the player going out, if there is something not valid, you must put back to the hand first.
-            _toast.ShowUserErrorToast("You do not have valid monopolies");
-            return;
+            if (MainGame.SingleInfo!.HasMonopolyInHand())
+            {
+                _toast.ShowUserErrorToast("You have at least one monopoly in hand to play.  You must play them manually");
+                return;
+            }
+            rets = MainGame.HasAllValidMonopolies();
+            if (rets == false)
+            {
+                //even if you are not the player going out, if there is something not valid, you must put back to the hand first.
+                _toast.ShowUserErrorToast("You do not have valid monopolies");
+                return;
+            }
         }
         if (MainGame.SaveRoot.ManuelStatus == EnumManuelStatus.Final)
         {
-            if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsChance))
+            if (_test.EndRoundEarly == false)
             {
-                _toast.ShowUserErrorToast("You have to use up all the chances");
-                return;
-            }
-            if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsToken))
-            {
-                _toast.ShowUserErrorToast("You have to use up all your tokens");
-                return;
+                if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsChance))
+                {
+                    _toast.ShowUserErrorToast("You have to use up all the chances");
+                    return;
+                }
+                if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsToken))
+                {
+                    _toast.ShowUserErrorToast("You have to use up all your tokens");
+                    return;
+                }
             }
             await FinishManuelSetsAsync();
             return;
         }
-        rets = _model.HasAnyMonopolyPlayed();
-        if (rets)
+        if (_test.EndRoundEarly == false)
         {
-            if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsToken))
+            rets = _model.HasAnyMonopolyPlayed();
+            if (rets)
             {
-                _toast.ShowUserErrorToast("You have to use up all your tokens because you played at least one monopoly");
-                return;
+                if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsToken))
+                {
+                    _toast.ShowUserErrorToast("You have to use up all your tokens because you played at least one monopoly");
+                    return;
+                }
             }
         }
         await FinishManuelSetsAsync();

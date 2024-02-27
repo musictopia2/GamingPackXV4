@@ -92,13 +92,14 @@ public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
     }
     async Task<string> IMultiplayerSaveState.SavedDataAsync<T>()
     {
-        if (CanChange() == false)
+        if (_game.CanAutoSave == false || _test.SaveOption == EnumTestSaveCategory.NoSave)
         {
             return "";
         }
         string name = GetCurrentName();
         if (_js.ContainsKey(name) == false)
         {
+            await BlazorUIHelpers.MessageBox!.ShowMessageAsync($"Did not contain key {name}");
             return "";
         }
         try
@@ -106,8 +107,9 @@ public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
             string output = await _js.StorageGetStringAsync(name);
             return output;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            await BlazorUIHelpers.MessageBox!.ShowMessageAsync(ex.Message);
             return "";
         }
     }
