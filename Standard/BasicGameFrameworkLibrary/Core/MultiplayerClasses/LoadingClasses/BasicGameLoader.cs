@@ -166,6 +166,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         {
             throw new CustomBasicException("You should have loaded new game now");
         }
+        GlobalDelegates.AddNewGame?.Invoke(_gameSetUp!.SaveRoot.GameID); //i think here needs to be done.
         await FinishHostSavedAsync();
     }
     private async Task<bool> GetSavedRootAsync()
@@ -272,6 +273,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
     async Task IRestoreMultiPlayerGame.RestoreGameAsync()
     {
         SetGame();
+
         await GetSavedRootAsync();
         await FinishGetSavedAsync();
         if (basic.MultiPlayer == true)
@@ -314,6 +316,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         else
         {
             _gameSetUp.SaveRoot.GetNewID();
+            GlobalDelegates.AddNewGame?.Invoke(_gameSetUp.SaveRoot.GameID);
 
         }
         _gameSetUp.SaveRoot.PlayOrder.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoTurn;

@@ -14,9 +14,9 @@ public class BasicMessageProcessing(IGamePackageResolver thisContainer,
     {
         if (thisMessage.Status == "newround")
         {
-            if (GlobalDelegates.DeletePrivateGameNewRound is not null)
+            if (GlobalDelegates.DeleteOldPrivateGames is not null)
             {
-                await GlobalDelegates.DeletePrivateGameNewRound.Invoke(thisMessage.Body);
+                await GlobalDelegates.DeleteOldPrivateGames.Invoke(thisMessage.Body);
             }
             IGameNetwork network = thisContainer.Resolve<IGameNetwork>();
             network.IsEnabled = true; //should be okay because am expecting more messages

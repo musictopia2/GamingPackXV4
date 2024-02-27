@@ -12,22 +12,17 @@ public static class SaveRoutines
         {
             return "";
         }
-        return item; //try this way.
-        //if (js.ContainsKey(id) == false)
-        //{
-        //    return "";
-        //}
-        //return await js.StorageGetStringAsync(id);
+        return item;
     }
     public static async Task UpdateLocalStorageAsync(this IJSRuntime js, string key, string value)
     {
         BasicList<string> saveList = GlobalStartUp.KeysToSave;
         BasicList<string> keyList = await js.GetKeyListAsync();
-        await keyList.ForEachAsync(async key =>
+        await keyList.ForEachAsync(async item =>
         {
-            if (saveList.Any(x => x.Contains(key)) == false)
+            if (saveList.Any(x => x.Contains(item)) == false && item != key) //does not make sense to delete and add again.
             {
-                await js.StorageRemoveItemAsync(key);
+                await js.StorageRemoveItemAsync(item);
             }
         });
         await js.StorageSetStringAsync(key, value); //the private autoresume can just use this one.
