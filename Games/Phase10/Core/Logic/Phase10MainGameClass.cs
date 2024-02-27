@@ -38,6 +38,7 @@ public class Phase10MainGameClass
     public override async Task FinishGetSavedAsync()
     {
         _model!.MainSets!.ClearBoard();
+        _gameContainer.TempSets.Clear();
         LoadControls();
         int x = SaveRoot!.SetList.Count;
         x.Times(Items =>
@@ -213,6 +214,7 @@ public class Phase10MainGameClass
             LoadControls();
         }
         _model!.MainSets!.ClearBoard();
+        _gameContainer.TempSets.Clear(); //i think.
         SaveRoot!.IsTie = false;
         SaveRoot.Skips = false;
         SaveRoot.SetList.Clear();
