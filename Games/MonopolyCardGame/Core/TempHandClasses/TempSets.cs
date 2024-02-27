@@ -71,7 +71,7 @@ public class TempSets(CommandContainer command, IGamePackageResolver resolver, M
         TempHand thisSet;
         for (x = 1; x <= loopTo; x++)
         {
-            thisSet = new(command, resolver, container);
+            thisSet = new(command, resolver);
             thisSet.AutoSelect = EnumHandAutoType.None;
             thisSet.SendAlwaysEnable(enables);
             thisSet.Text = "Set";
