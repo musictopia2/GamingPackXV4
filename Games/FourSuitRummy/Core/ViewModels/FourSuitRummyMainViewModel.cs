@@ -6,6 +6,7 @@ public partial class FourSuitRummyMainViewModel : BasicCardGamesVM<RegularRummyC
     private readonly FourSuitRummyVMData _model;
     private readonly IGamePackageResolver _resolver;
     private readonly IToast _toast;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     private readonly FourSuitRummyGameContainer _gameContainer;
     public FourSuitRummyMainViewModel(CommandContainer commandContainer,
         FourSuitRummyMainGameClass mainGame,
@@ -15,7 +16,8 @@ public partial class FourSuitRummyMainViewModel : BasicCardGamesVM<RegularRummyC
         IGamePackageResolver resolver,
         FourSuitRummyGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
@@ -23,17 +25,48 @@ public partial class FourSuitRummyMainViewModel : BasicCardGamesVM<RegularRummyC
         _model = viewModel;
         _resolver = resolver;
         _toast = toast;
+        _privateAutoResume = privateAutoResume;
         _gameContainer = gameContainer;
         _model.Deck1.NeverAutoDisable = true;
         var player = _mainGame.PlayerList.GetSelf();
         player.DoInit();
         _model.TempSets.Init(this);
         _model.TempSets.ClearBoard();
+        PossibleAutoResume();
         _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
         _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
+    private void PossibleAutoResume()
+    {
+        if (_gameContainer.TempSets.Count > 0)
+        {
+            var player = _gameContainer.PlayerList!.GetSelf();
+            bool hadAny = false;
+            foreach (var item in _gameContainer.TempSets)
+            {
+                var current = _model.TempSets.SetList[item.SetNumber - 1];
+                var cards = item.Cards.GetNewObjectListFromDeckList(_gameContainer.DeckList);
+                DeckRegularDict<RegularRummyCard> toAdd = [];
+                foreach (var card in cards)
+                {
+                    if (player.MainHandList.ObjectExist(card.Deck))
+                    {
+                        player.MainHandList.RemoveObjectByDeck(card.Deck);
+                        player.AdditionalCards.Add(card); //if i remove from hand, must add to additional cards so sends to other players properly.
+                        hadAny = true;
+                        toAdd.Add(card);
+                    }
+                }
+                current.AddCards(toAdd);
+            }
+            if (hadAny)
+            {
+                _model.TempSets.PublicCount();
+            }
+        }
+    }
     protected override async Task ActivateAsync()
     {
         await base.ActivateAsync();
@@ -51,24 +84,25 @@ public partial class FourSuitRummyMainViewModel : BasicCardGamesVM<RegularRummyC
         await base.TryCloseAsync();
     }
     private bool _isProcessing;
-    private Task TempSets_SetClickedAsync(int index)
+    private async Task TempSets_SetClickedAsync(int index)
     {
         if (_isProcessing == true)
         {
-            return Task.CompletedTask;
+            return;
         }
         _isProcessing = true;
         var tempList = _model.PlayerHand1!.ListSelectedObjects(true);
         _model.TempSets!.AddCards(index, tempList);
+        await _privateAutoResume.SaveStateAsync(_model);
         _isProcessing = false;
-        return Task.CompletedTask;
+        return;
     }
     public bool CanPlaySets => _gameContainer.AlreadyDrew;
 
     [Command(EnumCommandCategory.Game)]
     public async Task PlaySetsAsync()
     {
-        BasicList<string> textList = new();
+        BasicList<string> textList = [];
         var thisCol = _mainGame!.SetList();
         _mainGame.SingleInfo = _mainGame.PlayerList!.GetWhoPlayer();
         if (thisCol.Count == 0)

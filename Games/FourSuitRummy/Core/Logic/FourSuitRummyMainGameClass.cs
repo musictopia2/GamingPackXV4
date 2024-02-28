@@ -7,7 +7,10 @@ public class FourSuitRummyMainGameClass
     private readonly FourSuitRummyVMData _model;
     private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
     private readonly FourSuitRummyGameContainer _gameContainer; //if we don't need it, take it out.
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
+#pragma warning disable IDE0290 // Use primary constructor
     public FourSuitRummyMainGameClass(IGamePackageResolver mainContainer,
+#pragma warning restore IDE0290 // Use primary constructor
         IEventAggregator aggregator,
         BasicData basicData,
         TestOptions test,
@@ -18,12 +21,14 @@ public class FourSuitRummyMainGameClass
         CommandContainer command,
         FourSuitRummyGameContainer gameContainer,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
+        _privateAutoResume = privateAutoResume;
     }
     public override Task PopulateSaveRootAsync()
     {
@@ -35,8 +40,9 @@ public class FourSuitRummyMainGameClass
         });
         return base.PopulateSaveRootAsync();
     }
-    public override Task FinishGetSavedAsync()
+    public override async Task FinishGetSavedAsync()
     {
+        _gameContainer.TempSets.Clear();
         PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.MainSets = new MainSets(thisPlayer, _gameContainer);
@@ -53,11 +59,17 @@ public class FourSuitRummyMainGameClass
                 thisPlayer.AdditionalCards.Clear();
             }
         });
+        bool rets;
+        rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer);
+        if (rets)
+        {
+            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+        }
         SingleInfo = PlayerList.GetSelf();
         SortCards();
         SingleInfo.DoInit();
         IsLoaded = true;
-        return base.FinishGetSavedAsync();
+        await base.FinishGetSavedAsync();
     }
     protected override async Task ComputerTurnAsync()
     {
@@ -77,6 +89,7 @@ public class FourSuitRummyMainGameClass
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
     {
+        _gameContainer.TempSets.Clear();
         SingleInfo = PlayerList!.GetSelf();
         SingleInfo.DoInit();
         PlayerList!.ForEach(thisPlayer =>
@@ -395,13 +408,13 @@ public class FourSuitRummyMainGameClass
     }
     public BasicList<int> SetList()
     {
-        BasicList<int> output = new();
+        BasicList<int> output = [];
         DeckRegularDict<RegularRummyCard> thisCollection;
         IDeckDict<RegularRummyCard> tempCollection;
         for (int x = 1; x <= _model!.TempSets!.HowManySets; x++)
         {
             tempCollection = _model.TempSets.ObjectList(x);
-            thisCollection = new DeckRegularDict<RegularRummyCard>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);
