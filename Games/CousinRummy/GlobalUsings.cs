@@ -56,3 +56,4 @@ global using BasicGameFrameworkLibrary.Core.DrawableListsObservable;
 global using BasicGameFrameworkLibrary.Core.Extensions;
 global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
 global using bb1 = BasicBlazorLibrary.Components.CssGrids.Helpers;
+global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;

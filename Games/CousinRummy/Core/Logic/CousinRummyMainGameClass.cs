@@ -1,5 +1,3 @@
-using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
-
 namespace CousinRummy.Core.Logic;
 [SingletonGame]
 public class CousinRummyMainGameClass
@@ -9,6 +7,7 @@ public class CousinRummyMainGameClass
     private readonly CousinRummyVMData _model;
     private readonly CommandContainer _command;
     private readonly CousinRummyGameContainer _gameContainer;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     internal BasicList<SetList>? SetsList { get; set; }
     private readonly RummyProcesses<EnumSuitList, EnumRegularColorList, RegularRummyCard> _rummys;
     public CousinRummyMainGameClass(IGamePackageResolver mainContainer,
@@ -22,12 +21,14 @@ public class CousinRummyMainGameClass
         CommandContainer command,
         CousinRummyGameContainer gameContainer,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
+        _privateAutoResume = privateAutoResume;
         _gameContainer.ModifyCards = ModifyCards;
         _rummys = new RummyProcesses<EnumSuitList, EnumRegularColorList, RegularRummyCard>();
     }
@@ -41,7 +42,6 @@ public class CousinRummyMainGameClass
         {
             SaveRoot!.PlayOrder.OtherTurn = value;
         }
-
     }
     public static void ModifyCards(BasicList<RegularRummyCard> thisList)
     {
@@ -65,9 +65,10 @@ public class CousinRummyMainGameClass
             }
         });
     }
-    public override Task FinishGetSavedAsync()
+    public override async Task FinishGetSavedAsync()
     {
         _model!.MainSets!.ClearBoard();
+        _gameContainer.TempSets.Clear();
         LoadControls();
         int x = SaveRoot!.SetList.Count;
         x.Times(items =>
@@ -86,7 +87,13 @@ public class CousinRummyMainGameClass
         SingleInfo = PlayerList.GetSelf();
         SortCards();
         _model.MainSets.LoadSets(SaveRoot.SetList);
-        return base.FinishGetSavedAsync();
+        bool rets;
+        rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer);
+        if (rets)
+        {
+            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+        }
+        await base.FinishGetSavedAsync();
     }
     private void LoadControls()
     {
@@ -103,7 +110,7 @@ public class CousinRummyMainGameClass
         _rummys.HasWild = true;
         _rummys.LowNumber = 3;
         _rummys.HighNumber = 14;
-        SetsList = new();
+        SetsList = [];
         SetList firstSet = new();
         firstSet.Description = "1 Set Of 3";
         AddSets(firstSet, true, 3);
@@ -160,6 +167,7 @@ public class CousinRummyMainGameClass
             LoadControls();
         }
         _model!.MainSets!.ClearBoard();
+        _gameContainer.TempSets.Clear(); //i think.
         SaveRoot!.SetList.Clear();
         return base.LastPartOfSetUpBeforeBindingsAsync();
     }
@@ -395,7 +403,7 @@ public class CousinRummyMainGameClass
     }
     public BasicList<TempInfo> ListValidSets(bool needsInitial)
     {
-        BasicList<TempInfo> output = new();
+        BasicList<TempInfo> output = [];
         SetList thisSet = SetsList![SaveRoot!.Round - 1];
         DeckRegularDict<RegularRummyCard> thisCollection;
         IDeckDict<RegularRummyCard> tempCollection;
@@ -403,7 +411,7 @@ public class CousinRummyMainGameClass
         for (int x = 1; x <= _model!.TempSets!.HowManySets; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new DeckRegularDict<RegularRummyCard>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);
@@ -454,7 +462,7 @@ public class CousinRummyMainGameClass
         for (int x = 1; x <= _model!.TempSets!.HowManySets; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new DeckRegularDict<RegularRummyCard>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);

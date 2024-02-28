@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace CousinRummy.Core.ViewModels;
 [InstanceGame]
 public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCard>
@@ -6,6 +8,7 @@ public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCar
     private readonly CousinRummyVMData _model;
     private readonly CousinRummyGameContainer _gameContainer;
     private readonly IToast _toast;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     public CousinRummyMainViewModel(CommandContainer commandContainer,
         CousinRummyMainGameClass mainGame,
         CousinRummyVMData viewModel,
@@ -14,7 +17,8 @@ public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCar
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         CousinRummyGameContainer gameContainer,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
@@ -22,12 +26,14 @@ public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCar
         _model = viewModel;
         _gameContainer = gameContainer;
         _toast = toast;
+        _privateAutoResume = privateAutoResume;
         _model.Deck1.NeverAutoDisable = false;
         _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
         var player = _mainGame.PlayerList.GetSelf();
         player.DoInit();
         _model.TempSets.Init(this);
         _model.TempSets.ClearBoard(); //try this too.
+        PossibleAutoResume();
         _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
         _model.MainSets.SetClickedAsync = MainSets_SetClickedAsync;
         _model.MainSets.SendEnableProcesses(this, () =>
@@ -41,6 +47,35 @@ public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCar
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
+    private void PossibleAutoResume()
+    {
+        if (_gameContainer.TempSets.Count > 0)
+        {
+            var player = _gameContainer.PlayerList!.GetSelf();
+            bool hadAny = false;
+            foreach (var item in _gameContainer.TempSets)
+            {
+                var current = _model.TempSets.SetList[item.SetNumber - 1];
+                var cards = item.Cards.GetNewObjectListFromDeckList(_gameContainer.DeckList);
+                DeckRegularDict<RegularRummyCard> toAdd = [];
+                foreach (var card in cards)
+                {
+                    if (player.MainHandList.ObjectExist(card.Deck))
+                    {
+                        player.MainHandList.RemoveObjectByDeck(card.Deck);
+                        player.AdditionalCards.Add(card); //if i remove from hand, must add to additional cards so sends to other players properly.
+                        hadAny = true;
+                        toAdd.Add(card);
+                    }
+                }
+                current.AddCards(toAdd);
+            }
+            if (hadAny)
+            {
+                _model.TempSets.PublicCount();
+            }
+        }
+    }
     protected override bool CanEnableDeck()
     {
         return false;
@@ -82,17 +117,18 @@ public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCar
         return true;
     }
     private bool _isProcessing;
-    private Task TempSets_SetClickedAsync(int index)
+    private async Task TempSets_SetClickedAsync(int index)
     {
         if (_isProcessing == true)
         {
-            return Task.CompletedTask;
+            return;
         }
         _isProcessing = true;
         var tempList = _model.PlayerHand1!.ListSelectedObjects(true);
         _model.TempSets!.AddCards(index, tempList);
+        await _privateAutoResume.SaveStateAsync(_model);
         _isProcessing = false;
-        return Task.CompletedTask;
+        return;
     }
     private async Task MainSets_SetClickedAsync(int setNumber, int section, int deck)
     {
@@ -157,7 +193,7 @@ public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCar
             return;
         }
         var thisCol = _mainGame.ListValidSets(true);
-        BasicList<string> newList = new();
+        BasicList<string> newList = [];
         await thisCol.ForEachAsync(async thisTemp =>
         {
             if (_mainGame.BasicData!.MultiPlayer == true)
@@ -194,7 +230,7 @@ public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCar
             _toast.ShowUserErrorToast("Sorry; you do not have any more sets to put down");
             return;
         }
-        BasicList<string> newList = new();
+        BasicList<string> newList = [];
         await thisCol.ForEachAsync(async thisTemp =>
         {
             if (_mainGame.BasicData!.MultiPlayer == true)
