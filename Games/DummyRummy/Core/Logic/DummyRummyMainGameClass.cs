@@ -8,6 +8,7 @@ public class DummyRummyMainGameClass
     private readonly CommandContainer _command;
     private readonly DummyRummyGameContainer _gameContainer;
     private readonly IToast _toast;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     private readonly RummyProcesses<EnumSuitList, EnumRegularColorList, RegularRummyCard> _rummys;
     public DummyRummyMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
@@ -21,13 +22,15 @@ public class DummyRummyMainGameClass
         DummyRummyGameContainer gameContainer,
         DummyRummyDelegates delegates,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
         _toast = toast;
+        _privateAutoResume = privateAutoResume;
         _rummys = new RummyProcesses<EnumSuitList, EnumRegularColorList, RegularRummyCard>();
         delegates.CardsToPassOut = () => CardsToPassOut;
     }
@@ -38,9 +41,10 @@ public class DummyRummyMainGameClass
         self.AdditionalCards = _model.TempSets!.ListAllObjects();
         return base.PopulateSaveRootAsync();
     }
-    public override Task FinishGetSavedAsync()
+    public override async Task FinishGetSavedAsync()
     {
         _model!.MainSets!.ClearBoard();
+        _gameContainer.TempSets.Clear();
         LoadControls();
         int x = SaveRoot!.SetList.Count;
         x.Times(items =>
@@ -59,8 +63,14 @@ public class DummyRummyMainGameClass
         SingleInfo = PlayerList.GetSelf();
         SortCards();
         _model.MainSets.LoadSets(SaveRoot.SetList);
+        bool rets;
+        rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer);
+        if (rets)
+        {
+            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+        }
         SaveRoot.LoadMod(_model);
-        return base.FinishGetSavedAsync();
+        await base.FinishGetSavedAsync();
     }
     private void LoadControls()
     {
@@ -107,6 +117,7 @@ public class DummyRummyMainGameClass
             LoadControls();
         }
         _model!.MainSets!.ClearBoard();
+        _gameContainer.TempSets.Clear(); //i think.
         SaveRoot!.SetList.Clear();
         return base.LastPartOfSetUpBeforeBindingsAsync();
     }
@@ -184,7 +195,7 @@ public class DummyRummyMainGameClass
         await StartNewTurnAsync();
     }
 
-    private void CalculatePoints(IDeckDict<RegularRummyCard> thisCol)
+    private void CalculatePoints(DeckRegularDict<RegularRummyCard> thisCol)
     {
         thisCol.ForEach(thisCard =>
         {
@@ -356,14 +367,14 @@ public class DummyRummyMainGameClass
     }
     public BasicList<TempInfo> ListValidSets()
     {
-        BasicList<TempInfo> output = new();
+        BasicList<TempInfo> output = [];
         DeckRegularDict<RegularRummyCard> thisCollection;
         IDeckDict<RegularRummyCard> tempCollection;
         TempInfo thisTemp;
         for (int x = 1; x <= 6; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new DeckRegularDict<RegularRummyCard>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);
@@ -402,7 +413,7 @@ public class DummyRummyMainGameClass
         for (int x = 1; x <= 6; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new DeckRegularDict<RegularRummyCard>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);
