@@ -7,6 +7,7 @@ public partial class MonasteryCardGameMainViewModel : BasicCardGamesVM<Monastery
     private readonly MonasteryCardGameGameContainer _gameContainer;
     private readonly IToast _toast;
     private readonly IMessageBox _message;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     public MonasteryCardGameMainViewModel(CommandContainer commandContainer,
         MonasteryCardGameMainGameClass mainGame,
         MonasteryCardGameVMData viewModel,
@@ -16,7 +17,8 @@ public partial class MonasteryCardGameMainViewModel : BasicCardGamesVM<Monastery
         IEventAggregator aggregator,
         MonasteryCardGameGameContainer gameContainer,
         IToast toast,
-        IMessageBox message
+        IMessageBox message,
+        PrivateAutoResumeProcesses privateAutoResume
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
@@ -25,11 +27,13 @@ public partial class MonasteryCardGameMainViewModel : BasicCardGamesVM<Monastery
         _gameContainer = gameContainer;
         _toast = toast;
         _message = message;
+        _privateAutoResume = privateAutoResume;
         _model.Deck1.NeverAutoDisable = true;
         var player = _mainGame.PlayerList.GetSelf();
         player.DoInit();
         _model.TempSets.Init(this);
         _model.TempSets.ClearBoard();
+        PossibleAutoResume();
         _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
         _model.MainSets.SetClickedAsync = MainSets_SetClickedAsync;
         _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectAsMany;
@@ -46,24 +50,53 @@ public partial class MonasteryCardGameMainViewModel : BasicCardGamesVM<Monastery
     }
     partial void CreateCommands();
     partial void CreateCommands(CommandContainer command);
+    private void PossibleAutoResume()
+    {
+        if (_gameContainer.TempSets.Count > 0)
+        {
+            var player = _gameContainer.PlayerList!.GetSelf();
+            bool hadAny = false;
+            foreach (var item in _gameContainer.TempSets)
+            {
+                var current = _model.TempSets.SetList[item.SetNumber - 1];
+                var cards = item.Cards.GetNewObjectListFromDeckList(_gameContainer.DeckList);
+                DeckRegularDict<MonasteryCardInfo> toAdd = [];
+                foreach (var card in cards)
+                {
+                    if (player.MainHandList.ObjectExist(card.Deck))
+                    {
+                        player.MainHandList.RemoveObjectByDeck(card.Deck);
+                        player.AdditionalCards.Add(card); //if i remove from hand, must add to additional cards so sends to other players properly.
+                        hadAny = true;
+                        toAdd.Add(card);
+                    }
+                }
+                current.AddCards(toAdd);
+            }
+            if (hadAny)
+            {
+                _model.TempSets.PublicCount();
+            }
+        }
+    }
     private bool _isProcessing;
-    private Task TempSets_SetClickedAsync(int index)
+    private async Task TempSets_SetClickedAsync(int index)
     {
         if (_isProcessing == true)
         {
-            return Task.CompletedTask;
+            return;
         }
         _isProcessing = true;
         var tempList = _model.PlayerHand1!.ListSelectedObjects(true);
         _model.TempSets!.AddCards(index, tempList);
+        await _privateAutoResume.SaveStateAsync(_model);
         _isProcessing = false;
-        return Task.CompletedTask;
     }
     private DeckRegularDict<MonasteryCardInfo> GetSelectCards()
     {
         var firstList = _model.PlayerHand1!.ListSelectedObjects();
         var newCol = _model.TempSets!.ListSelectedObjects();
-        DeckRegularDict<MonasteryCardInfo> output = new();
+        DeckRegularDict<MonasteryCardInfo> output = [];
         output.AddRange(firstList);
         output.AddRange(newCol);
         return output;
@@ -203,7 +236,7 @@ public partial class MonasteryCardGameMainViewModel : BasicCardGamesVM<Monastery
             return;
         }
         _mainGame.ProcessCurrentMission();
-        BasicList<string> mList = new();
+        BasicList<string> mList = [];
         await tempList.ForEachAsync(async thisTemp =>
         {
             var thisCol = _model.TempSets.ObjectList(thisTemp.SetNumber).ToRegularDeckDict();

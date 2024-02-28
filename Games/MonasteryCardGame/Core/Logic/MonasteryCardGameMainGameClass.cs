@@ -7,9 +7,12 @@ public class MonasteryCardGameMainGameClass
     private readonly MonasteryCardGameVMData _model;
     private readonly CommandContainer _command;
     private readonly MonasteryCardGameGameContainer _gameContainer;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     internal MissionList? CurrentMission { get; set; }
     internal BasicList<MissionList>? MissionInfo { get; set; }
+#pragma warning disable IDE0290 // Use primary constructor
     public MonasteryCardGameMainGameClass(IGamePackageResolver mainContainer,
+#pragma warning restore IDE0290 // Use primary constructor
         IEventAggregator aggregator,
         BasicData basicData,
         TestOptions test,
@@ -20,16 +23,19 @@ public class MonasteryCardGameMainGameClass
         CommandContainer command,
         MonasteryCardGameGameContainer gameContainer,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
+        _privateAutoResume = privateAutoResume;
     }
     public override async Task FinishGetSavedAsync()
     {
         _model!.MainSets!.ClearBoard();
+        _gameContainer.TempSets.Clear();
         LoadControls();
         int x = SaveRoot!.SetList.Count;
         x.Times(items =>
@@ -58,6 +64,12 @@ public class MonasteryCardGameMainGameClass
             CurrentMission = MissionInfo![SaveRoot.Mission - 1];
         }
         PopulateMissions();
+        bool rets;
+        rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer);
+        if (rets)
+        {
+            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+        }
         await base.FinishGetSavedAsync();
         CreateRummys();
     }
@@ -80,7 +92,7 @@ public class MonasteryCardGameMainGameClass
     }
     private void CreateSets()
     {
-        MissionInfo = new();
+        MissionInfo = [];
         MissionList thisMission;
         thisMission = new();
         thisMission.Description = "2 sets of 3 in color";
@@ -188,6 +200,7 @@ public class MonasteryCardGameMainGameClass
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
     {
+        _gameContainer.TempSets.Clear();
         if (IsLoaded == false)
         {
             LoadControls();
@@ -329,7 +342,7 @@ public class MonasteryCardGameMainGameClass
         {
             return;
         }
-        DeckRegularDict<MonasteryCardInfo> output = new();
+        DeckRegularDict<MonasteryCardInfo> output = [];
         thisCol.ForEach(thisCard =>
         {
             if (_model!.TempSets!.HasObject(thisCard.Deck))
@@ -451,7 +464,7 @@ public class MonasteryCardGameMainGameClass
     private void PopulateMissions()
     {
         var tempList = SingleInfo!.IndexList.ToBasicList();
-        BasicList<MissionList> otherList = new();
+        BasicList<MissionList> otherList = [];
         tempList.ForEach(thisIndex =>
         {
             otherList.Add(MissionInfo![thisIndex]);
@@ -460,14 +473,16 @@ public class MonasteryCardGameMainGameClass
     }
     public bool DidCompleteMission(out BasicList<InstructionInfo> tempList)
     {
-        tempList = new();
+        tempList = [];
         var thisMission = GetMission;
         DeckRegularDict<MonasteryCardInfo> thisCollection;
         IDeckDict<MonasteryCardInfo> tempCollection;
         for (int x = 1; x <= _model!.TempSets!.HowManySets; x++)
         {
             tempCollection = _model.TempSets.ObjectList(x);
+#pragma warning disable IDE0028 // Simplify collection initialization  too difficult to read though.
             thisCollection = new DeckRegularDict<MonasteryCardInfo>();
+#pragma warning restore IDE0028 // Simplify collection initialization
             thisCollection.AddRange(tempCollection);
             for (int y = 1; y <= thisMission.MissionSets.Count; y++)
             {
