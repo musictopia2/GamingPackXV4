@@ -1,96 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Version>8.0.1</Version>
-    
   </PropertyGroup>
-
-
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.1" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.13" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
-	<PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
-	<PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
-	<PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
+    <PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
+    <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
+    <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
   </ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="Resources\1-VegasWedding.png" />
-		<EmbeddedResource Include="Resources\10-RideTheTallestRollerCoaster.png" />
-		<EmbeddedResource Include="Resources\11-PopStar.png" />
-		<EmbeddedResource Include="Resources\12-PictureOfPeopleCarryingLuggage.png" />
-		<EmbeddedResource Include="Resources\13-Treehouse.png" />
-		<EmbeddedResource Include="Resources\14-PinkCadillac.png" />
-		<EmbeddedResource Include="Resources\15-Lion.png" />
-		<EmbeddedResource Include="Resources\16-BabyPolarBear.png" />
-		<EmbeddedResource Include="Resources\17-EcoBubbleCar.png" />
-		<EmbeddedResource Include="Resources\18-BabyGirl.png" />
-		<EmbeddedResource Include="Resources\19-TwinBoys.png" />
-		<EmbeddedResource Include="Resources\2-CelebrityWedding.png" />
-		<EmbeddedResource Include="Resources\20-Giraffe.png" />
-		<EmbeddedResource Include="Resources\21-FindBigFoot.png" />
-		<EmbeddedResource Include="Resources\22-ExploreLiveVolcano.png" />
-		<EmbeddedResource Include="Resources\23-FindMessageInABottle.png" />
-		<EmbeddedResource Include="Resources\24-Castle.png" />
-		<EmbeddedResource Include="Resources\25-WinACharitySkateboardContest.png" />
-		<EmbeddedResource Include="Resources\26-TravelToMoonInRocket.png" />
-		<EmbeddedResource Include="Resources\27-JetPilot.png" />
-		<EmbeddedResource Include="Resources\28-EcoHouse.png" />
-		<EmbeddedResource Include="Resources\29-RanchHouse.png" />
-		<EmbeddedResource Include="Resources\3-UnderwaterWedding.png" />
-		<EmbeddedResource Include="Resources\30-Lighthouse.png" />
-		<EmbeddedResource Include="Resources\31-BeachHouse.png" />
-		<EmbeddedResource Include="Resources\32-ViewSolarEclipse.png" />
-		<EmbeddedResource Include="Resources\33-BuildASwimmingPool.png" />
-		<EmbeddedResource Include="Resources\34-BathtubBoat.png" />
-		<EmbeddedResource Include="Resources\35-DiamondAnniversary.png" />
-		<EmbeddedResource Include="Resources\36-RacingYacht.png" />
-		<EmbeddedResource Include="Resources\37-GoSkydiving.png" />
-		<EmbeddedResource Include="Resources\38-HeadlineAtRockConcert.png" />
-		<EmbeddedResource Include="Resources\39-GoDivingInNiagraFalls.png" />
-		<EmbeddedResource Include="Resources\4-ParachuteWedding.png" />
-		<EmbeddedResource Include="Resources\40-StuntDouble.png" />
-		<EmbeddedResource Include="Resources\41-BabyTriplets.png" />
-		<EmbeddedResource Include="Resources\41-BuildMultiScreenCinema.png" />
-		<EmbeddedResource Include="Resources\43-Monkey.png" />
-		<EmbeddedResource Include="Resources\44-SwimWithDolphins.png" />
-		<EmbeddedResource Include="Resources\45-Igloo.png" />
-		<EmbeddedResource Include="Resources\46-WinTheJackpot.png" />
-		<EmbeddedResource Include="Resources\47-PrivateJet.png" />
-		<EmbeddedResource Include="Resources\48-DigUpDinosaurFossil.png" />
-		<EmbeddedResource Include="Resources\49-RocketScientist.png" />
-		<EmbeddedResource Include="Resources\5-BeachWedding.png" />
-		<EmbeddedResource Include="Resources\50-Shark.png" />
-		<EmbeddedResource Include="Resources\51-Teacher.png" />
-		<EmbeddedResource Include="Resources\52-ExoticPetVet.png" />
-		<EmbeddedResource Include="Resources\53-SwitchToNaturalPower.png" />
-		<EmbeddedResource Include="Resources\54-BabyGirlTwins.png" />
-		<EmbeddedResource Include="Resources\55-LearnTheLoopTheLoop.png" />
-		<EmbeddedResource Include="Resources\56-WinJungleSafariRaffle.png" />
-		<EmbeddedResource Include="Resources\57-SailAroundWorld.png" />
-		<EmbeddedResource Include="Resources\58-DanceAtRioCarnival.png" />
-		<EmbeddedResource Include="Resources\59-Politician.png" />
-		<EmbeddedResource Include="Resources\6-FairytaleWedding.png" />
-		<EmbeddedResource Include="Resources\60-BabyBoy.png" />
-		<EmbeddedResource Include="Resources\7-University.png" />
-		<EmbeddedResource Include="Resources\8-FlyHighInHotAirBalloon.png" />
-		<EmbeddedResource Include="Resources\9-LearnToPlayTheBongos.png" />
-		<EmbeddedResource Include="Resources\Airplane.svg" />
-		<EmbeddedResource Include="Resources\Boat.svg" />
-		<EmbeddedResource Include="Resources\Car.svg" />
-		<EmbeddedResource Include="Resources\Degree.svg" />
-		<EmbeddedResource Include="Resources\House.svg" />
-		<EmbeddedResource Include="Resources\Marriage.svg" />
-		<EmbeddedResource Include="Resources\Passport.svg" />
-		<EmbeddedResource Include="Resources\Switch.svg" />
-	</ItemGroup>
-
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\1-VegasWedding.png" />
+    <EmbeddedResource Include="Resources\10-RideTheTallestRollerCoaster.png" />
+    <EmbeddedResource Include="Resources\11-PopStar.png" />
+    <EmbeddedResource Include="Resources\12-PictureOfPeopleCarryingLuggage.png" />
+    <EmbeddedResource Include="Resources\13-Treehouse.png" />
+    <EmbeddedResource Include="Resources\14-PinkCadillac.png" />
+    <EmbeddedResource Include="Resources\15-Lion.png" />
+    <EmbeddedResource Include="Resources\16-BabyPolarBear.png" />
+    <EmbeddedResource Include="Resources\17-EcoBubbleCar.png" />
+    <EmbeddedResource Include="Resources\18-BabyGirl.png" />
+    <EmbeddedResource Include="Resources\19-TwinBoys.png" />
+    <EmbeddedResource Include="Resources\2-CelebrityWedding.png" />
+    <EmbeddedResource Include="Resources\20-Giraffe.png" />
+    <EmbeddedResource Include="Resources\21-FindBigFoot.png" />
+    <EmbeddedResource Include="Resources\22-ExploreLiveVolcano.png" />
+    <EmbeddedResource Include="Resources\23-FindMessageInABottle.png" />
+    <EmbeddedResource Include="Resources\24-Castle.png" />
+    <EmbeddedResource Include="Resources\25-WinACharitySkateboardContest.png" />
+    <EmbeddedResource Include="Resources\26-TravelToMoonInRocket.png" />
+    <EmbeddedResource Include="Resources\27-JetPilot.png" />
+    <EmbeddedResource Include="Resources\28-EcoHouse.png" />
+    <EmbeddedResource Include="Resources\29-RanchHouse.png" />
+    <EmbeddedResource Include="Resources\3-UnderwaterWedding.png" />
+    <EmbeddedResource Include="Resources\30-Lighthouse.png" />
+    <EmbeddedResource Include="Resources\31-BeachHouse.png" />
+    <EmbeddedResource Include="Resources\32-ViewSolarEclipse.png" />
+    <EmbeddedResource Include="Resources\33-BuildASwimmingPool.png" />
+    <EmbeddedResource Include="Resources\34-BathtubBoat.png" />
+    <EmbeddedResource Include="Resources\35-DiamondAnniversary.png" />
+    <EmbeddedResource Include="Resources\36-RacingYacht.png" />
+    <EmbeddedResource Include="Resources\37-GoSkydiving.png" />
+    <EmbeddedResource Include="Resources\38-HeadlineAtRockConcert.png" />
+    <EmbeddedResource Include="Resources\39-GoDivingInNiagraFalls.png" />
+    <EmbeddedResource Include="Resources\4-ParachuteWedding.png" />
+    <EmbeddedResource Include="Resources\40-StuntDouble.png" />
+    <EmbeddedResource Include="Resources\41-BabyTriplets.png" />
+    <EmbeddedResource Include="Resources\41-BuildMultiScreenCinema.png" />
+    <EmbeddedResource Include="Resources\43-Monkey.png" />
+    <EmbeddedResource Include="Resources\44-SwimWithDolphins.png" />
+    <EmbeddedResource Include="Resources\45-Igloo.png" />
+    <EmbeddedResource Include="Resources\46-WinTheJackpot.png" />
+    <EmbeddedResource Include="Resources\47-PrivateJet.png" />
+    <EmbeddedResource Include="Resources\48-DigUpDinosaurFossil.png" />
+    <EmbeddedResource Include="Resources\49-RocketScientist.png" />
+    <EmbeddedResource Include="Resources\5-BeachWedding.png" />
+    <EmbeddedResource Include="Resources\50-Shark.png" />
+    <EmbeddedResource Include="Resources\51-Teacher.png" />
+    <EmbeddedResource Include="Resources\52-ExoticPetVet.png" />
+    <EmbeddedResource Include="Resources\53-SwitchToNaturalPower.png" />
+    <EmbeddedResource Include="Resources\54-BabyGirlTwins.png" />
+    <EmbeddedResource Include="Resources\55-LearnTheLoopTheLoop.png" />
+    <EmbeddedResource Include="Resources\56-WinJungleSafariRaffle.png" />
+    <EmbeddedResource Include="Resources\57-SailAroundWorld.png" />
+    <EmbeddedResource Include="Resources\58-DanceAtRioCarnival.png" />
+    <EmbeddedResource Include="Resources\59-Politician.png" />
+    <EmbeddedResource Include="Resources\6-FairytaleWedding.png" />
+    <EmbeddedResource Include="Resources\60-BabyBoy.png" />
+    <EmbeddedResource Include="Resources\7-University.png" />
+    <EmbeddedResource Include="Resources\8-FlyHighInHotAirBalloon.png" />
+    <EmbeddedResource Include="Resources\9-LearnToPlayTheBongos.png" />
+    <EmbeddedResource Include="Resources\Airplane.svg" />
+    <EmbeddedResource Include="Resources\Boat.svg" />
+    <EmbeddedResource Include="Resources\Car.svg" />
+    <EmbeddedResource Include="Resources\Degree.svg" />
+    <EmbeddedResource Include="Resources\House.svg" />
+    <EmbeddedResource Include="Resources\Marriage.svg" />
+    <EmbeddedResource Include="Resources\Passport.svg" />
+    <EmbeddedResource Include="Resources\Switch.svg" />
+  </ItemGroup>
 </Project>

@@ -1,51 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Version>8.0.1</Version>
-    
   </PropertyGroup>
-
-
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.1" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.13" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
-	<PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
-	<PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
-	<PackageReference Include="JsonDeserializeResourceSourceGenerator" Version="1.0.3" PrivateAssets="all" />
-	<PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
+    <PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
+    <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
+    <PackageReference Include="JsonDeserializeResourceSourceGenerator" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
   </ItemGroup>
-<ItemGroup>
+  <ItemGroup>
     <AdditionalFiles Include="Resources\FluxxDescriptions.json" />
-	<EmbeddedResource Include="Resources\Brain.png" />
-	<EmbeddedResource Include="Resources\Bread.png" />
-	<EmbeddedResource Include="Resources\Chocolate.png" />
-	<EmbeddedResource Include="Resources\Cookies.png" />
-	<EmbeddedResource Include="Resources\Death.png" />
-	<EmbeddedResource Include="Resources\Dreams.png" />
-	<EmbeddedResource Include="Resources\Love.png" />
-	<EmbeddedResource Include="Resources\Milk.png" />
-	<EmbeddedResource Include="Resources\Money.png" />
-	<EmbeddedResource Include="Resources\Moon.png" />
-	<EmbeddedResource Include="Resources\NoTV.png" />
-	<EmbeddedResource Include="Resources\NoWar.png" />
-	<EmbeddedResource Include="Resources\Peace.png" />
-	<EmbeddedResource Include="Resources\Rocket.png" />
-	<AdditionalFiles Include="Resources\SidePoints.json" />
-	<EmbeddedResource Include="Resources\Sleep.png" />
-	<EmbeddedResource Include="Resources\Sun.png" />
-	<EmbeddedResource Include="Resources\Tank.png" />
-	<EmbeddedResource Include="Resources\Time.png" />
-	<EmbeddedResource Include="Resources\Toaster.png" />
-	<EmbeddedResource Include="Resources\TV.png" />
+    <EmbeddedResource Include="Resources\Brain.png" />
+    <EmbeddedResource Include="Resources\Bread.png" />
+    <EmbeddedResource Include="Resources\Chocolate.png" />
+    <EmbeddedResource Include="Resources\Cookies.png" />
+    <EmbeddedResource Include="Resources\Death.png" />
+    <EmbeddedResource Include="Resources\Dreams.png" />
+    <EmbeddedResource Include="Resources\Love.png" />
+    <EmbeddedResource Include="Resources\Milk.png" />
+    <EmbeddedResource Include="Resources\Money.png" />
+    <EmbeddedResource Include="Resources\Moon.png" />
+    <EmbeddedResource Include="Resources\NoTV.png" />
+    <EmbeddedResource Include="Resources\NoWar.png" />
+    <EmbeddedResource Include="Resources\Peace.png" />
+    <EmbeddedResource Include="Resources\Rocket.png" />
+    <AdditionalFiles Include="Resources\SidePoints.json" />
+    <EmbeddedResource Include="Resources\Sleep.png" />
+    <EmbeddedResource Include="Resources\Sun.png" />
+    <EmbeddedResource Include="Resources\Tank.png" />
+    <EmbeddedResource Include="Resources\Time.png" />
+    <EmbeddedResource Include="Resources\Toaster.png" />
+    <EmbeddedResource Include="Resources\TV.png" />
   </ItemGroup>
-
 </Project>
