@@ -8,6 +8,7 @@ public class ChinazoMainGameClass
     private readonly CommandContainer _command;
     private readonly ChinazoGameContainer _gameContainer;
     private readonly IToast _toast;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     private readonly RummyProcesses<EnumSuitList, EnumRegularColorList, ChinazoCard> _rummys;
     internal BasicList<SetList>? SetsList { get; set; }
     public ChinazoMainGameClass(IGamePackageResolver mainContainer,
@@ -22,13 +23,15 @@ public class ChinazoMainGameClass
         ChinazoGameContainer gameContainer,
         ChinazoDelegates delegates,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
         _toast = toast;
+        _privateAutoResume = privateAutoResume;
         _rummys = new RummyProcesses<EnumSuitList, EnumRegularColorList, ChinazoCard>();
         delegates.CardsToPassOut = (() => CardsToPassOut);
         _gameContainer.ModifyCards = ModifyCards;
@@ -82,9 +85,10 @@ public class ChinazoMainGameClass
             }
         });
     }
-    public override Task FinishGetSavedAsync()
+    public override async Task FinishGetSavedAsync()
     {
         LoadControls();
+        _gameContainer.TempSets.Clear();
         int x = SaveRoot!.SetList.Count;
         x.Times(items =>
         {
@@ -99,10 +103,16 @@ public class ChinazoMainGameClass
                 thisPlayer.AdditionalCards.Clear();
             }
         });
+        bool rets;
+        rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer);
+        if (rets)
+        {
+            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+        }
         SingleInfo = PlayerList.GetSelf();
         SortCards();
         _model!.MainSets.LoadSets(SaveRoot.SetList);
-        return base.FinishGetSavedAsync();
+        await base.FinishGetSavedAsync();
     }
     private void LoadControls()
     {
@@ -119,7 +129,7 @@ public class ChinazoMainGameClass
         _rummys.HasWild = true;
         _rummys.LowNumber = 1;
         _rummys.HighNumber = 14;
-        SetsList = new();
+        SetsList = [];
         SetList FirstSet = new(); //for now, just keep the names since i copied/pasted.
         FirstSet.Description = "1 Set of 3, 1 Run of 3";
         FillInSets(FirstSet, 1, EnumRummyType.Sets);
@@ -223,6 +233,7 @@ public class ChinazoMainGameClass
         }
         SingleInfo = PlayerList!.GetSelf();
         _model!.MainSets!.ClearBoard();
+        _gameContainer.TempSets.Clear(); //i think.
         SaveRoot!.SetList.Clear();
         return base.LastPartOfSetUpBeforeBindingsAsync();
     }
@@ -500,7 +511,7 @@ public class ChinazoMainGameClass
     }
     public BasicList<TempInfo> ListValidSets()
     {
-        BasicList<TempInfo> output = new();
+        BasicList<TempInfo> output = [];
         SetList thisSet = SetsList![SaveRoot!.Round - 1];
         DeckRegularDict<ChinazoCard> thisCollection;
         IDeckDict<ChinazoCard> tempCollection;
@@ -508,7 +519,7 @@ public class ChinazoMainGameClass
         for (int x = 1; x <= _model!.TempSets!.HowManySets; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new DeckRegularDict<ChinazoCard>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);
@@ -549,7 +560,7 @@ public class ChinazoMainGameClass
         for (int x = 1; x <= _model!.TempSets!.HowManySets; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new DeckRegularDict<ChinazoCard>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);
