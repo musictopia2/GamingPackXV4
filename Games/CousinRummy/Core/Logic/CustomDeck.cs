@@ -11,7 +11,7 @@ public class CustomDeck : IRegularDeckInfo
 
     int IRegularDeckInfo.HighestNumber => 14;
 
-    BasicList<ExcludeRCard> IRegularDeckInfo.ExcludeList => new();
+    BasicList<ExcludeRCard> IRegularDeckInfo.ExcludeList => [];
 
     BasicList<EnumSuitList> IRegularDeckInfo.SuitList => EnumSuitList.CompleteList;
     int IDeckCount.GetDeckCount()
