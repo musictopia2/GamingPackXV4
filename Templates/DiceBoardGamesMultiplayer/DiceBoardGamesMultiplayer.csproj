@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     
   </PropertyGroup>
@@ -11,19 +11,18 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
-  <ItemGroup>
-    
-	  <PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
-	  <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
-  </ItemGroup>
+	<ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Generators\CommandsGenerator\CommandsGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\Generators\GamePackageDIGenerator\GamePackageDIGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\Generators\GamePackageSerializeGenerator\GamePackageSerializeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-	  <ProjectReference Include="..\..\Generators\LabelGridGenerator\LabelGridGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-	  <ProjectReference Include="..\..\Generators\ScoreBoardGenerator\ScoreBoardGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
-  </ItemGroup>
+		<PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
+		<PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
+		<PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
+
+		<PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.13" />
+		<PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
+		<PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
+		<PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
+	</ItemGroup>
+
+  
 
 </Project>
