@@ -1,4 +1,6 @@
-﻿namespace MultiplayerGamesBlazorLoaderLibrary;
+﻿using BasicGameFrameworkLibrary.Core.MultiplayerClasses.SavedGameClasses;
+
+namespace MultiplayerGamesBlazorLoaderLibrary;
 public class MainStartUp : IStartUp
 {
     public static bool? IsWasm { get; set; }
@@ -17,10 +19,12 @@ public class MainStartUp : IStartUp
             if (IsWasm.Value == true)
             {
                 container.RegisterType<MultiplayerReleaseAutoResume>();
+                container.RegisterType<PrivateAutoResume>(); //hopefully this still work (?)
             }
             else
             {
                 container.RegisterType<MultiPlayerReleaseNativeFileAccessAutoResume>();
+                container.RegisterType<NoPrivateSave>();
             }
             container.RegisterType<NetworkStartUp>(); //i think i need this here too (?)
         }
