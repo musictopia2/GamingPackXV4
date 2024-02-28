@@ -7,6 +7,7 @@ public class OpetongMainGameClass
     private readonly OpetongVMData _model;
     private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
     private readonly OpetongGameContainer _gameContainer; //if we don't need it, take it out.
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     public OpetongMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
         BasicData basicData,
@@ -18,16 +19,19 @@ public class OpetongMainGameClass
         CommandContainer command,
         OpetongGameContainer gameContainer,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
+        _privateAutoResume = privateAutoResume;
         _gameContainer.DrawFromPoolAsync = DrawFromPoolAsync;
     }
-    public override Task FinishGetSavedAsync()
+    public override async Task FinishGetSavedAsync()
     {
+        _gameContainer.TempSets.Clear();
         LoadControls();
         _model.MainSets!.ClearBoard();
         _model.Pool1!.LoadSavedGame(SaveRoot!.PoolList);
@@ -48,8 +52,14 @@ public class OpetongMainGameClass
         SingleInfo = PlayerList.GetSelf();
         SortCards();
         SingleInfo.DoInit();
+        bool rets;
+        rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer);
+        if (rets)
+        {
+            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+        }
         _model.MainSets.LoadSets(SaveRoot.SetList);
-        return base.FinishGetSavedAsync();
+        await base.FinishGetSavedAsync();
     }
     public override async Task PopulateSaveRootAsync()
     {
@@ -73,6 +83,7 @@ public class OpetongMainGameClass
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
     {
+        _gameContainer.TempSets.Clear();
         _model!.Deck1!.OriginalList(_gameContainer.DeckList!);
         if (IsLoaded == false)
         {

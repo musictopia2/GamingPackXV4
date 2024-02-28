@@ -24,4 +24,5 @@ public class OpetongGameContainer : CardGameContainer<RegularRummyCard, OpetongP
     }
     internal RummyProcesses<EnumSuitList, EnumRegularColorList, RegularRummyCard> Rummys { get; set; }
     internal Func<int, Task>? DrawFromPoolAsync { get; set; }
+    public BasicList<OrganizeModel> TempSets { get; set; } = [];
 }
