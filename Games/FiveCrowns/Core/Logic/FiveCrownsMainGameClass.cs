@@ -8,6 +8,7 @@ public class FiveCrownsMainGameClass
     private readonly CommandContainer _command;
     private readonly FiveCrownsGameContainer _gameContainer;
     private readonly IToast _toast;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     private readonly RummyProcesses<EnumSuitList, EnumColorList, FiveCrownsCardInformation> _rummys;
     public FiveCrownsMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
@@ -21,13 +22,15 @@ public class FiveCrownsMainGameClass
         FiveCrownsGameContainer gameContainer,
         FiveCrownsDelegates delegates,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
         _toast = toast;
+        _privateAutoResume = privateAutoResume;
         _rummys = new RummyProcesses<EnumSuitList, EnumColorList, FiveCrownsCardInformation>();
         delegates.CardsToPassOut = () => CardsToPassOut;
     }
@@ -45,9 +48,10 @@ public class FiveCrownsMainGameClass
         self.AdditionalCards = _model.TempSets!.ListAllObjects();
         return base.PopulateSaveRootAsync();
     }
-    public override Task FinishGetSavedAsync()
+    public override async Task FinishGetSavedAsync()
     {
         _model!.MainSets!.ClearBoard();
+        _gameContainer.TempSets.Clear();
         LoadControls();
         int x = SaveRoot!.SetList.Count;
         x.Times(items =>
@@ -66,8 +70,14 @@ public class FiveCrownsMainGameClass
         SingleInfo = PlayerList.GetSelf();
         SortCards();
         _model.MainSets.LoadSets(SaveRoot.SetList);
+        bool rets;
+        rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer);
+        if (rets)
+        {
+            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+        }
         SaveRoot.LoadMod(_model);
-        return base.FinishGetSavedAsync();
+        await base.FinishGetSavedAsync();
     }
     private void LoadControls()
     {
@@ -101,6 +111,7 @@ public class FiveCrownsMainGameClass
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
     {
+        _gameContainer.TempSets.Clear();
         if (IsLoaded == false)
         {
             LoadControls();
@@ -346,14 +357,14 @@ public class FiveCrownsMainGameClass
     }
     public BasicList<TempInfo> ListValidSets()
     {
-        BasicList<TempInfo> output = new();
+        BasicList<TempInfo> output = [];
         DeckRegularDict<FiveCrownsCardInformation> thisCollection;
         IDeckDict<FiveCrownsCardInformation> tempCollection;
         TempInfo thisTemp;
         for (int x = 1; x <= 6; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);
@@ -392,7 +403,7 @@ public class FiveCrownsMainGameClass
         for (int x = 1; x <= 6; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new DeckRegularDict<FiveCrownsCardInformation>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);
