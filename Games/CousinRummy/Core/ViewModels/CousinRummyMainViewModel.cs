@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace CousinRummy.Core.ViewModels;
 [InstanceGame]
 public partial class CousinRummyMainViewModel : BasicCardGamesVM<RegularRummyCard>
