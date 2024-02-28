@@ -44,3 +44,6 @@ global using SvgHelper.Blazor.Logic;
 global using System.Drawing;
 global using System.Reflection;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using BasicGameFrameworkLibrary.Core.Dice;
+global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
+global using Microsoft.AspNetCore.Components.Rendering;
