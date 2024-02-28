@@ -45,5 +45,9 @@ public class MainStartUp : IStartUp
         }
         //can still be iffy for now though (?)
         data.NickName = GlobalDataModel.DataContext.NickName; //looks like needs this.
+        if (OS == EnumOS.Wasm)
+        {
+            PrivateAutoResumeLocalStorageHelpers.RegisterPrivateAutoResumeLocalStorage(); //only wasm will have this now.
+        }
     }
 }
