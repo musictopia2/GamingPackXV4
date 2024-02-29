@@ -1,16 +1,24 @@
 @inherits BasicGameView<MonopolyDicedGameMainViewModel>
-<GameBoardBlazor 
-    NumberOfCops="_container!.SaveRoot.NumberOfCops"
-    TargetHeight="75vh"
-    MiscList="_others"
-    ImageHeight="9vh" />
-<LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
-@if (CanTestRoll())
-{
-    <GameButtonComponent Display="Test Roll Misc" CustomCallBack="TestRollMisc" />
+<StackLayout>
+    <StackItem>
+        <GameBoardBlazor NumberOfCops="_container!.SaveRoot.NumberOfCops"
+                         TargetHeight="75vh"
+                         HouseValue="_house!.Value"
+                         HousesOwned="_container.SaveRoot.NumberOfHouses"
+                         HasHotel=_container.SaveRoot.HasHotel
+                         MiscList="_others"
+                         ImageHeight="9vh" />
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+    </StackItem>
+    <StackItem>
+        @if (CanTestRoll())
+        {
+            <GameButtonComponent Display="Test Roll Misc" CustomCallBack="TestRollMisc" />
 
-}
-@* 
-<MiscDiceBlazor Category="EnumMiscType.Go" TargetHeight="9vh" />
-
-  *@
+        }
+        else
+        {
+            <GameButtonComponent Display="Clear Test Roll" CustomCallBack="ClearTestRoll" />
+        }
+    </StackItem>
+</StackLayout>

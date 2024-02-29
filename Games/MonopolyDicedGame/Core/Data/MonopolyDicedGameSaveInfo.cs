@@ -2,12 +2,26 @@ namespace MonopolyDicedGame.Core.Data;
 [SingletonGame]
 public class MonopolyDicedGameSaveInfo : BasicSavedGameClass<MonopolyDicedGamePlayerItem>, IMappable, ISaveInfo
 {
-    MonopolyDicedGameVMData _model;
+    readonly MonopolyDicedGameVMData _model;
     public MonopolyDicedGameSaveInfo()
     {
         _model = aa1.Resolver!.Resolve<MonopolyDicedGameVMData>();
     }
+    public int NumberOfHouses { get; set; }
+    public bool HasHotel { get; set; } //if you have all 4 houses, then will be hotel.
     public int NumberOfCops { get; set; }
+    private int _currentScore;
+    public int CurrentScore
+    {
+        get => _currentScore;
+        set
+        {
+            if (SetProperty(ref _currentScore, value))
+            {
+                _model.CurrentScore = value;
+            }
+        }
+    }
     private int _rollNumber = 1;
     public int RollNumber
     {

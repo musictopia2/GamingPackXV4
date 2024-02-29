@@ -103,9 +103,13 @@ public static class GraphicsExtensions
     {
         container.DrawImageDice(assembly, "brokenhouse.svg");
     }
-    public static void DrawHouse(this IParentGraphic container, object assembly)
+    public static void DrawHouse(this IParentGraphic container, object assembly, int howMany)
     {
         container.DrawImageDice(assembly, "house.svg");
+        if (howMany > 0)
+        {
+            container.DrawText(new(), howMany.ToString(), 40, "", true);
+        }
     }
     public static void DrawHotel(this IParentGraphic container, object assembly)
     {

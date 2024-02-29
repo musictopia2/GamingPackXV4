@@ -6,19 +6,19 @@ public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>
     public int Value { get; set; }
     public int Index { get; set; }
     public bool Visible { get; set; } = true;
-    public EnumBasicType WhatCard { get; set; }
+    public EnumBasicType WhatDice { get; set; }
     public int Group { get; set; }
     public int GetMonopolyValue()
     {
-        if (WhatCard == EnumBasicType.Railroad || WhatCard == EnumBasicType.Utility)
+        if (WhatDice == EnumBasicType.Railroad || WhatDice == EnumBasicType.Utility)
         {
-            return WhatCard.GetMonopolyValue();
+            return WhatDice.GetMonopolyValue();
         }
-        if (WhatCard == EnumBasicType.Chance)
+        if (WhatDice == EnumBasicType.Chance)
         {
             throw new CustomBasicException("Should never have to get value for monopoly");
         }
-        if (WhatCard != EnumBasicType.Property)
+        if (WhatDice != EnumBasicType.Property)
         {
             throw new CustomBasicException("Unable to get the monopoly value");
         }
@@ -26,19 +26,19 @@ public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>
     }
     public int GetRegularValue()
     {
-        if (WhatCard == EnumBasicType.Railroad)
+        if (WhatDice == EnumBasicType.Railroad)
         {
             return 200;
         }
-        if (WhatCard == EnumBasicType.Utility)
+        if (WhatDice == EnumBasicType.Utility)
         {
             return 100;
         }
-        if (WhatCard == EnumBasicType.Chance)
+        if (WhatDice == EnumBasicType.Chance)
         {
             return 0;
         }
-        if (WhatCard == EnumBasicType.Property)
+        if (WhatDice == EnumBasicType.Property)
         {
             if (Group == 8)
             {
@@ -87,23 +87,23 @@ public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>
         Index = chosen;
         if (chosen <= 8)
         {
-            WhatCard = EnumBasicType.Property;
+            WhatDice = EnumBasicType.Property;
             Group = chosen;
             return;
         }
         if (chosen == 9 || chosen == 10)
         {
-            WhatCard = EnumBasicType.Utility;
+            WhatDice = EnumBasicType.Utility;
             return;
         }
         if (chosen == 11)
         {
-            WhatCard = EnumBasicType.Railroad;
+            WhatDice = EnumBasicType.Railroad;
             return;
         }
         if (chosen == 12)
         {
-            WhatCard = EnumBasicType.Chance;
+            WhatDice = EnumBasicType.Chance;
             return;
         }
         throw new CustomBasicException("Must be between 1 and 12 for basic dice");

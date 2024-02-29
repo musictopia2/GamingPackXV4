@@ -47,3 +47,4 @@ global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorStri
 global using BasicGameFrameworkLibrary.Core.Dice;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 global using Microsoft.AspNetCore.Components.Rendering;
+global using static BasicGameFrameworkLibrary.Core.Dice.SharedDiceRoutines;

@@ -34,17 +34,17 @@ public class BasicDiceBlazor : GraphicsCommand
                 rect.Fill_Opacity = ".1";
                 container.Children.Add(rect);
             }
-            if (Dice.WhatCard == EnumBasicType.Property)
+            if (Dice.WhatDice == EnumBasicType.Property)
             {
                 container.DrawPropertyValue(Dice.GetColor(), Dice.GetRegularValue().ToString());
                 return;
             }
-            if (Dice.WhatCard == EnumBasicType.Chance)
+            if (Dice.WhatDice == EnumBasicType.Chance)
             {
                 container.DrawChanceDice(this);
                 return;
             }
-            if (Dice.WhatCard == EnumBasicType.Utility)
+            if (Dice.WhatDice == EnumBasicType.Utility)
             {
                 if (Dice.Index == 9)
                 {
@@ -58,7 +58,7 @@ public class BasicDiceBlazor : GraphicsCommand
                 }
                 throw new CustomBasicException("Utilities is only 9 or 10");
             }
-            if (Dice.WhatCard == EnumBasicType.Railroad)
+            if (Dice.WhatDice == EnumBasicType.Railroad)
             {
                 container.DrawTrainDice(this);
                 return;
@@ -66,12 +66,12 @@ public class BasicDiceBlazor : GraphicsCommand
             throw new CustomBasicException("Unable to draw");
         }
         //this means be a little different.
-        if (Dice.WhatCard == EnumBasicType.Railroad)
+        if (Dice.WhatDice == EnumBasicType.Railroad)
         {
             container.DrawTrainBoard(Dice.GetMonopolyValue().ToString(), this);
             return;
         }
-        if (Dice.WhatCard == EnumBasicType.Utility)
+        if (Dice.WhatDice == EnumBasicType.Utility)
         {
             if (Dice.Index == 9)
             {

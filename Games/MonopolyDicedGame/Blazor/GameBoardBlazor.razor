@@ -31,24 +31,17 @@ ViewPort="@_size"
 
     <MiscSpaceComponent TargetImageHeight="@ImageHeight" MiscList="MiscList" />
 
-    @* <SpaceBlazor MarginTop="5" MarginLeft=4 Row="5" Column="3">
-        <ColorSpaceComponent Color="@GetActionColor" TargetImageHeight="@ImageHeight">
-
-        </ColorSpaceComponent>
-    </SpaceBlazor>
-    <SpaceBlazor MarginTop="5" MarginLeft="4" Row="5" Column="4">
-        <ColorSpaceComponent Color="@GetActionColor" TargetImageHeight="@ImageHeight">
-
-        </ColorSpaceComponent>
-    </SpaceBlazor>
-    <SpaceBlazor MarginTop="5" MarginLeft="4" Row="5" Column="5">
-        <ColorSpaceComponent Color="@GetActionColor" TargetImageHeight="@ImageHeight">
-
-        </ColorSpaceComponent>
-    </SpaceBlazor> *@
+    <HouseSpaceComponent ImageHeight="@ImageHeight" HasHotel=HasHotel HousesOwned="HousesOwned" />
 
     <SpaceBlazor MarginTop="5" MarginLeft="25" Row="5" Column="6">
-        <ColorSpaceComponent TargetImageHeight="@ImageHeight" />
+        @if (HouseValue == EnumMiscType.None)
+        {
+            <ColorSpaceComponent TargetImageHeight="@ImageHeight" />
+        }
+        else
+        {
+            <MiscDiceBlazor TargetHeight="@ImageHeight" Category="@HouseValue" />
+        }
     </SpaceBlazor>
 
 </CanvasLayout>

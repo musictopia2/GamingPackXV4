@@ -5,7 +5,8 @@ public class MiscDiceBlazor : ComponentBase
     public EnumMiscType Category { get; set; }
     [Parameter]
     public string TargetHeight { get; set; } = "4vh";
-
+    [Parameter]
+    public int NumberOfHouses { get; set; }
     private static Rect StartRect()
     {
         Rect output = new();
@@ -33,7 +34,7 @@ public class MiscDiceBlazor : ComponentBase
         }
         if (Category == EnumMiscType.RegularHouse)
         {
-            container.DrawHouse(this);
+            container.DrawHouse(this, NumberOfHouses);
             return;
         }
         if (Category == EnumMiscType.BrokenHouse)

@@ -9,6 +9,12 @@ public partial class GameBoardBlazor : ComponentBase
     public BasicList<EnumMiscType> MiscList { get; set; } = [];
     [Parameter]
     public int NumberOfCops { get; set; }
+    [Parameter]
+    public EnumMiscType HouseValue { get; set; }
+    [Parameter]
+    public bool HasHotel { get; set; }
+    [Parameter]
+    public int HousesOwned { get; set; }
     //next version may do some rethinking.
 
     private SizeF _size = new(400, 400);
@@ -26,5 +32,4 @@ public partial class GameBoardBlazor : ComponentBase
     }
     private static string GetUtilityColor => cc1.Black.ToWebColor();
     private static string GetUtilityBorder => cc1.White.ToWebColor();
-    private static string GetActionColor => cc1.Yellow.ToWebColor();
 }

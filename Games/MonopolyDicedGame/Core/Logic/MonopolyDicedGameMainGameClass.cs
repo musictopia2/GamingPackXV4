@@ -4,7 +4,9 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
     , ICommonMultiplayer<MonopolyDicedGamePlayerItem, MonopolyDicedGameSaveInfo>
     , IMiscDataNM
 {
+#pragma warning disable IDE0290 // Use primary constructor causes too many issues for now.
     public MonopolyDicedGameMainGameClass(IGamePackageResolver resolver,
+#pragma warning restore IDE0290 // Use primary constructor
         IEventAggregator aggregator,
         BasicData basic,
         TestOptions test,
