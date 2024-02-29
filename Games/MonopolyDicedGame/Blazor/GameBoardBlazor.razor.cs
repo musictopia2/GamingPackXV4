@@ -15,21 +15,49 @@ public partial class GameBoardBlazor : ComponentBase
     public bool HasHotel { get; set; }
     [Parameter]
     public int HousesOwned { get; set; }
+    [Parameter]
+    public BasicList<OwnedModel> OwnList { get; set; } = [];
+
+    //[Parameter]
+    //public int TrainsOwned { get; set; }
+    //[Parameter]
+    //public int UtilitiesOwned { get; set; }
+    [Parameter]
+    public bool IsEnabled { get; set; }
+    [Parameter]
+    public EventCallback<EnumUtilityType> UtilityClicked { get; set; }
+    [Parameter]
+    public EventCallback TrainClicked { get; set; }
+    [Parameter]
+    public EventCallback<int> PropertyClicked { get; set; }
+
     //next version may do some rethinking.
 
     private SizeF _size = new(400, 400);
-    private static BasicDiceModel GetWaterDice()
+    private void PossibleUtilityClick(EnumUtilityType utility)
     {
-        BasicDiceModel output = new();
-        output.Populate(9);
-        return output;
+        if (IsEnabled == false)
+        {
+            return;
+        }
+        UtilityClicked.InvokeAsync(utility);
     }
-    private static BasicDiceModel GetElectricDice()
+    private void PossibleTrainClick()
     {
-        BasicDiceModel output = new();
-        output.Populate(10);
-        return output;
+        if (IsEnabled == false)
+        {
+            return;
+        }
+        TrainClicked.InvokeAsync();
     }
-    private static string GetUtilityColor => cc1.Black.ToWebColor();
-    private static string GetUtilityBorder => cc1.White.ToWebColor();
+    private void PossiblePropertyClick(int group)
+    {
+        if (IsEnabled == false)
+        {
+            return;
+        }
+        PropertyClicked.InvokeAsync(group);
+    }
+
+
 }

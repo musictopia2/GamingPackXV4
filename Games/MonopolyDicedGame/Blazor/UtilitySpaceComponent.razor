@@ -1,0 +1,26 @@
+﻿<SpaceBlazor OnClicked="() => PossibleUtilityClick(EnumUtilityType.Water)" MarginTop="8" Column="4" Row="3">
+    @{
+        var dice = GetWaterDiceUsed();
+    }
+    @if (HadWater() == true)
+    {
+        <BasicDiceBlazor Dice="dice" TargetHeight="@TargetImageHeight" />
+        return;
+    }
+    <ColorSpaceComponent Border="@GetUtilityBorder" TargetImageHeight="@TargetImageHeight" Color="@GetUtilityColor">
+        <BasicDiceBlazor Dice="dice" TargetHeight="@TargetImageHeight" OnBoardNotOwned=true />
+    </ColorSpaceComponent>
+</SpaceBlazor>
+<SpaceBlazor OnClicked="() => PossibleUtilityClick(EnumUtilityType.Electric)" MarginTop="8" Column="5" Row="3">
+    @{
+        var dice = GetElectricUsed();
+    }
+    @if (HadElectric() == true)
+    {
+        <BasicDiceBlazor Dice="dice" TargetHeight="@TargetImageHeight" />
+        return;
+    }
+    <ColorSpaceComponent Border="@GetUtilityBorder" TargetImageHeight="@TargetImageHeight" Color="@GetUtilityColor">
+        <BasicDiceBlazor Dice="dice" TargetHeight="@TargetImageHeight" OnBoardNotOwned=true />
+    </ColorSpaceComponent>
+</SpaceBlazor>

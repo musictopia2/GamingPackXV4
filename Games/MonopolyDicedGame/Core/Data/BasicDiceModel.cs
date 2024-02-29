@@ -82,6 +82,26 @@ public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>
             return output;
         }
     }
+    public void UseUtility(EnumUtilityType utility)
+    {
+        if (Index > 0)
+        {
+            throw new CustomBasicException("Must be blank dice first");
+        }
+        if (utility == EnumUtilityType.None)
+        {
+            throw new CustomBasicException("No utility was chosen");
+        }
+        Populate((int) utility);
+    }
+    public void UseChance()
+    {
+        if (Index > 0)
+        {
+            throw new CustomBasicException("Must be blank dice first");
+        }
+        Populate(12);
+    }
     public void Populate(int chosen)
     {
         Index = chosen;

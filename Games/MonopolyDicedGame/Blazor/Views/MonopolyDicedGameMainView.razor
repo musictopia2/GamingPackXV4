@@ -7,18 +7,23 @@
                          HousesOwned="_container.SaveRoot.NumberOfHouses"
                          HasHotel=_container.SaveRoot.HasHotel
                          MiscList="_others"
+                         OwnList="_container.SaveRoot.Owns"
+                         UtilityClicked="SampleClickUtility"
+                         TrainClicked="SampleClickTrain"
+                         PropertyClicked="SamplePropertyClicked"
+                         IsEnabled = "true"
                          ImageHeight="9vh" />
-        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
     </StackItem>
     <StackItem>
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
         @if (CanTestRoll())
         {
             <GameButtonComponent Display="Test Roll Misc" CustomCallBack="TestRollMisc" />
-
         }
         else
         {
             <GameButtonComponent Display="Clear Test Roll" CustomCallBack="ClearTestRoll" />
         }
+        
     </StackItem>
 </StackLayout>

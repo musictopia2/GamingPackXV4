@@ -5,34 +5,12 @@ ViewPort="@_size"
               BackgroundColor="#6ecacc">
     <PoliceBoardComponent PoliceUsed="@NumberOfCops" TargetImageHeight="@ImageHeight" />
     <SimpleRepeater HowMany=8 Context="item">
-        <PropertyBoardBlazor Owned=1 Group="@item" TargetHeight="@ImageHeight" />
+            <PropertyBoardBlazor IsEnabled=IsEnabled OnClicked="() => PossiblePropertyClick(item)" OwnList=OwnList Group="@item" TargetHeight="@ImageHeight" />
     </SimpleRepeater>
-    <TrainSpaceBlazor Owned="2" TargetHeight="@ImageHeight" />
-
-    <SpaceBlazor MarginTop="8" Column="4" Row="3">
-        @{
-            var dice = GetWaterDice();
-        }
-        @* <ColorSpaceComponent Border="@GetUtilityBorder" TargetImageHeight="@ImageHeight" Color="@GetUtilityColor">
-            <BasicDiceBlazor Dice="dice" TargetHeight="@ImageHeight" OnBoardNotOwned=true />
-        </ColorSpaceComponent> *@
-        <BasicDiceBlazor Dice="dice" TargetHeight="@ImageHeight" />
-
-    </SpaceBlazor>
-    <SpaceBlazor MarginTop="8" Column="5" Row="3">
-        @{
-            var dice = GetElectricDice();
-        }
-        <ColorSpaceComponent Border="@GetUtilityBorder" TargetImageHeight="@ImageHeight" Color="@GetUtilityColor">
-            <BasicDiceBlazor Dice="dice" TargetHeight="@ImageHeight" OnBoardNotOwned=true />
-        </ColorSpaceComponent>
-        @* <BasicDiceBlazor Dice="dice" TargetHeight="@ImageHeight" /> *@
-    </SpaceBlazor>
-
+    <TrainSpaceBlazor IsEnabled=IsEnabled OnClicked=PossibleTrainClick OwnList="@OwnList" TargetHeight="@ImageHeight" />
+    <UtilitySpaceComponent IsEnabled=IsEnabled TargetImageHeight="@ImageHeight" OwnList="@OwnList" UtilityClicked="PossibleUtilityClick" />
     <MiscSpaceComponent TargetImageHeight="@ImageHeight" MiscList="MiscList" />
-
     <HouseSpaceComponent ImageHeight="@ImageHeight" HasHotel=HasHotel HousesOwned="HousesOwned" />
-
     <SpaceBlazor MarginTop="5" MarginLeft="25" Row="5" Column="6">
         @if (HouseValue == EnumMiscType.None)
         {

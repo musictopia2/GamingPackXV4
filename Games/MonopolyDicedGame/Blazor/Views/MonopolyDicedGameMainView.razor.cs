@@ -3,6 +3,8 @@ public partial class MonopolyDicedGameMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
+    [Inject]
+    private IMessageBox? Message { get; set; }
     private readonly BasicList<LabelGridModel> _labels = [];
     private BasicList<EnumMiscType> _others = [];
     private MonopolyDicedGameGameContainer? _container;
@@ -19,6 +21,67 @@ public partial class MonopolyDicedGameMainView
             ;
         base.OnInitialized();
     }
+    private void SampleClickUtility(EnumUtilityType utility)
+    {
+        OwnedModel own = new();
+        own.UsedOn = EnumBasicType.Utility;
+        own.Utility = utility;
+        _container!.SaveRoot.Owns.Add(own);
+    }
+    private void SampleClickTrain()
+    {
+        OwnedModel own = new();
+        own.UsedOn = EnumBasicType.Railroad;
+        _container!.SaveRoot.Owns.Add(own);
+    }
+    private void SamplePropertyClicked(int group)
+    {
+        OwnedModel own = new();
+        own.Group = group;
+        _container!.SaveRoot.Owns.Add(own);
+    }
+    //private async Task TestPropertyClicked(int group)
+    //{
+    //    await Message!.ShowMessageAsync($"Clicked on {group}");
+    //}
+
+    //keep here so i have an idea of what is eventually needed.
+    public void SamplePlacement()
+    {
+        //this will test the placement.
+
+        _container!.SaveRoot.Owns.Clear();
+
+        //will pretend like you are placing 5 items.
+        OwnedModel own = new();
+        own.UsedOn = EnumBasicType.Railroad;
+        own.WasChance = true;
+        _container.SaveRoot.Owns.Add(own);
+        own = new();
+        own.UsedOn = EnumBasicType.Railroad;
+        _container.SaveRoot.Owns.Add(own);
+
+        
+
+
+
+        own = new();
+        own.Utility = EnumUtilityType.Water;
+        own.WasChance = true;
+        own.UsedOn = EnumBasicType.Utility;
+        _container.SaveRoot.Owns.Add(own);
+        own = new();
+        own.Utility = EnumUtilityType.Electric;
+        own.UsedOn = EnumBasicType.Utility;
+        _container.SaveRoot.Owns.Add(own);
+        own = new();
+        own.Group = 8;
+        _container.SaveRoot.Owns.Add(own);
+        own = new();
+        own.Group = 2;
+        _container.SaveRoot.Owns.Add(own);
+    }
+
     private bool CanTestRoll() => _container!.SaveRoot.NumberOfCops < 3;
     private void ClearTestRoll()
     {
