@@ -3,7 +3,7 @@ ViewPort="@_size"
     ContainerHeight="@TargetHeight"
     ContainerWidth="@TargetHeight"
               BackgroundColor="#6ecacc">
-    <PoliceBoardComponent PoliceUsed="1" TargetImageHeight="@ImageHeight" />
+    <PoliceBoardComponent PoliceUsed="@NumberOfCops" TargetImageHeight="@ImageHeight" />
     <SimpleRepeater HowMany=8 Context="item">
         <PropertyBoardBlazor Owned=1 Group="@item" TargetHeight="@ImageHeight" />
     </SimpleRepeater>
@@ -29,7 +29,9 @@ ViewPort="@_size"
         @* <BasicDiceBlazor Dice="dice" TargetHeight="@ImageHeight" /> *@
     </SpaceBlazor>
 
-    <SpaceBlazor MarginTop="5" MarginLeft=4 Row="5" Column="3">
+    <MiscSpaceComponent TargetImageHeight="@ImageHeight" MiscList="MiscList" />
+
+    @* <SpaceBlazor MarginTop="5" MarginLeft=4 Row="5" Column="3">
         <ColorSpaceComponent Color="@GetActionColor" TargetImageHeight="@ImageHeight">
 
         </ColorSpaceComponent>
@@ -43,7 +45,7 @@ ViewPort="@_size"
         <ColorSpaceComponent Color="@GetActionColor" TargetImageHeight="@ImageHeight">
 
         </ColorSpaceComponent>
-    </SpaceBlazor>
+    </SpaceBlazor> *@
 
     <SpaceBlazor MarginTop="5" MarginLeft="25" Row="5" Column="6">
         <ColorSpaceComponent TargetImageHeight="@ImageHeight" />

@@ -46,6 +46,11 @@ public class MiscDiceBlazor : ComponentBase
             container.DrawHotel(this);
             return;
         }
+        if (Category == EnumMiscType.Go)
+        {
+            container.DrawGoDice(this);
+            return;
+        }
         throw new CustomBasicException("Unable to draw");
     }
     protected override void BuildRenderTree(RenderTreeBuilder builder)

@@ -48,6 +48,7 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
     public override async Task SetUpGameAsync(bool isBeginning)
     {
         LoadControls();
+        SaveRoot.RollNumber = 1;
         if (FinishUpAsync == null)
         {
             throw new CustomBasicException("The loader never set the finish up code.  Rethink");
@@ -67,7 +68,7 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
     public override async Task StartNewTurnAsync()
     {
         PrepStartTurn(); //anything else is below.
-
+        SaveRoot.RollNumber = 1;
         await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
     }
 }

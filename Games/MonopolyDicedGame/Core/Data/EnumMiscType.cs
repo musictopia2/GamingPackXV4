@@ -6,5 +6,6 @@ public enum EnumMiscType
     Free,
     RegularHouse,
     BrokenHouse,
-    Hotel
+    Hotel,
+    Go
 }

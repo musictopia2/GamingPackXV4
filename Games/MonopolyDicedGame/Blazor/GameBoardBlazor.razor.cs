@@ -5,8 +5,10 @@ public partial class GameBoardBlazor : ComponentBase
     public string TargetHeight { get; set; } = "";
     [Parameter]
     public string ImageHeight { get; set; } = ""; //i am forced to do this too unfortunately.
-
-
+    [Parameter]
+    public BasicList<EnumMiscType> MiscList { get; set; } = [];
+    [Parameter]
+    public int NumberOfCops { get; set; }
     //next version may do some rethinking.
 
     private SizeF _size = new(400, 400);

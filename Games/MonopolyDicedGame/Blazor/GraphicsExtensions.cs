@@ -55,6 +55,10 @@ public static class GraphicsExtensions
         bounds = new(2, 32, 46, 19);
         container.DrawText(bounds, "100", 18, cc1.Black.ToWebColor(), false);
     }
+    public static void DrawGoDice(this IParentGraphic container, object assembly)
+    {
+        container.DrawImageDice(assembly, "go.svg");
+    }
     public static void DrawChanceDice(this IParentGraphic container, object assembly)
     {
         container.DrawImageDice(assembly, "chance.svg");
