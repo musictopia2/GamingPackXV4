@@ -1,0 +1,24 @@
+﻿<SpaceBlazor Row="7" Column="3" MarginTop=-4 MarginLeft="4">
+    @if (PoliceUsed ==0)
+    {
+        <ColorSpaceComponent TargetImageHeight="@TargetImageHeight" />
+        return;
+    }
+    <MiscDiceBlazor Category="EnumMiscType.Police" TargetHeight="@TargetImageHeight" />
+</SpaceBlazor>
+<SpaceBlazor Row="7" Column="4" MarginTop=-4 MarginLeft="4">
+    @if (PoliceUsed < 2)
+    {
+        <ColorSpaceComponent TargetImageHeight="@TargetImageHeight" />
+        return;
+    }
+    <MiscDiceBlazor Category="EnumMiscType.Police" TargetHeight="@TargetImageHeight" />
+</SpaceBlazor>
+<SpaceBlazor Row="7" Column="5" MarginTop=-4 MarginLeft="4">
+    @if (PoliceUsed < 3)
+    {
+        <ColorSpaceComponent TargetImageHeight="@TargetImageHeight" />
+        return;
+    }
+    <MiscDiceBlazor Category="EnumMiscType.Police" TargetHeight="@TargetImageHeight" />
+</SpaceBlazor>

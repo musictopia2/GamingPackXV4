@@ -11,12 +11,20 @@ public static class GraphicsExtensions
         container.Children.Add(circle);
         container.DrawText(new(), value, 0, "", true);
     }
+    public static void DrawTrainBoard(this IParentGraphic container, string value, object assembly)
+    {
+        RectangleF bounds = new(10, 22, 28, 28);
+        container.DrawImageDice(assembly, "whitetrain.svg", bounds);
+        bounds = new(0, -2, 50, 30);
+        container.DrawText(bounds, value, 20, "", true); //not sure if that needs to be changed (can be done if necessary)
+    }
     public static void DrawTrainDice(this IParentGraphic container, object assembly)
     {
         container.DrawImageDice(assembly, "blacktrain.svg");
         container.DrawText(new(), "200", 0, "", true);
         //do other things on top of this.
     }
+
     public static void DrawWaterDice(this IParentGraphic container, object assembly)
     {
         container.DrawUtilitiesDice(assembly, "blackwaterworks.svg");
@@ -24,6 +32,21 @@ public static class GraphicsExtensions
     public static void DrawElectricDice(this IParentGraphic container, object assembly)
     {
         container.DrawUtilitiesDice(assembly, "blackelectric.svg");
+    }
+    public static void DrawWaterBoard(this IParentGraphic container, object assembly, string value)
+    {
+        container.DrawUtilitiesBoard(assembly, "whitewaterworks.svg", value);
+    }
+    public static void DrawElectricBoard(this IParentContainer container, object assembly, string value)
+    {
+        container.DrawUtilitiesBoard(assembly, "whiteelectric.svg", value);
+    }
+    private static void DrawUtilitiesBoard(this IParentGraphic container, object assembly, string name, string value)
+    {
+        RectangleF bounds = new(10, 22, 28, 28);
+        container.DrawImageDice(assembly, name, bounds);
+        bounds = new(0, -2, 50, 30);
+        container.DrawText(bounds, value, 20, "", true);
     }
     private static void DrawUtilitiesDice(this IParentGraphic container, object assembly, string name)
     {

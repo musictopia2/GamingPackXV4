@@ -1,0 +1,52 @@
+﻿<CanvasLayout 
+ViewPort="@_size"
+    ContainerHeight="@TargetHeight"
+    ContainerWidth="@TargetHeight"
+              BackgroundColor="#6ecacc">
+    <PoliceBoardComponent PoliceUsed="1" TargetImageHeight="@ImageHeight" />
+    <SimpleRepeater HowMany=8 Context="item">
+        <PropertyBoardBlazor Owned=1 Group="@item" TargetHeight="@ImageHeight" />
+    </SimpleRepeater>
+    <TrainSpaceBlazor Owned="2" TargetHeight="@ImageHeight" />
+
+    <SpaceBlazor MarginTop="8" Column="4" Row="3">
+        @{
+            var dice = GetWaterDice();
+        }
+        @* <ColorSpaceComponent Border="@GetUtilityBorder" TargetImageHeight="@ImageHeight" Color="@GetUtilityColor">
+            <BasicDiceBlazor Dice="dice" TargetHeight="@ImageHeight" OnBoardNotOwned=true />
+        </ColorSpaceComponent> *@
+        <BasicDiceBlazor Dice="dice" TargetHeight="@ImageHeight" />
+
+    </SpaceBlazor>
+    <SpaceBlazor MarginTop="8" Column="5" Row="3">
+        @{
+            var dice = GetElectricDice();
+        }
+        <ColorSpaceComponent Border="@GetUtilityBorder" TargetImageHeight="@ImageHeight" Color="@GetUtilityColor">
+            <BasicDiceBlazor Dice="dice" TargetHeight="@ImageHeight" OnBoardNotOwned=true />
+        </ColorSpaceComponent>
+        @* <BasicDiceBlazor Dice="dice" TargetHeight="@ImageHeight" /> *@
+    </SpaceBlazor>
+
+    <SpaceBlazor MarginTop="5" MarginLeft=4 Row="5" Column="3">
+        <ColorSpaceComponent Color="@GetActionColor" TargetImageHeight="@ImageHeight">
+
+        </ColorSpaceComponent>
+    </SpaceBlazor>
+    <SpaceBlazor MarginTop="5" MarginLeft="4" Row="5" Column="4">
+        <ColorSpaceComponent Color="@GetActionColor" TargetImageHeight="@ImageHeight">
+
+        </ColorSpaceComponent>
+    </SpaceBlazor>
+    <SpaceBlazor MarginTop="5" MarginLeft="4" Row="5" Column="5">
+        <ColorSpaceComponent Color="@GetActionColor" TargetImageHeight="@ImageHeight">
+
+        </ColorSpaceComponent>
+    </SpaceBlazor>
+
+    <SpaceBlazor MarginTop="5" MarginLeft="25" Row="5" Column="6">
+        <ColorSpaceComponent TargetImageHeight="@ImageHeight" />
+    </SpaceBlazor>
+
+</CanvasLayout>

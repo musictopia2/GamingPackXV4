@@ -1,0 +1,21 @@
+﻿@{
+    var list = GetSpaces();
+    var dice = GetDice();
+}
+@foreach (var item in list)
+{
+    <SpaceBlazor OnClicked="OnClicked" MarginTop=4 Column="item.Column" Row="item.Row">
+        @if (item.Owned == false)
+        {
+            <ColorSpaceComponent Color="@Color"
+                                 TargetImageHeight="@TargetHeight">
+
+                                 <BasicDiceBlazor TargetHeight="@TargetHeight" Dice="dice" OnBoardNotOwned=true />
+
+
+            </ColorSpaceComponent>
+            return;
+        }
+        <BasicDiceBlazor TargetHeight="@TargetHeight" Dice="dice" />
+    </SpaceBlazor>
+}

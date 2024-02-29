@@ -10,13 +10,9 @@ public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>
     public int Group { get; set; }
     public int GetMonopolyValue()
     {
-        if (WhatCard == EnumBasicType.Railroad)
+        if (WhatCard == EnumBasicType.Railroad || WhatCard == EnumBasicType.Utility)
         {
-            return 2500;
-        }
-        if (WhatCard == EnumBasicType.Utility)
-        {
-            return 800;
+            return WhatCard.GetMonopolyValue();
         }
         if (WhatCard == EnumBasicType.Chance)
         {
@@ -26,39 +22,7 @@ public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>
         {
             throw new CustomBasicException("Unable to get the monopoly value");
         }
-        if (Group == 1)
-        {
-            return 600;
-        }
-        if (Group == 2)
-        {
-            return 1000;
-        }
-        if (Group == 3)
-        {
-            return 1500;
-        }
-        if (Group == 4)
-        {
-            return 1800;
-        }
-        if (Group == 5)
-        {
-            return 2200;
-        }
-        if (Group == 6)
-        {
-            return 2700;
-        }
-        if (Group == 7)
-        {
-            return 3000;
-        }
-        if (Group == 8)
-        {
-            return 3500;
-        }
-        throw new CustomBasicException("Unable to get the property value");
+        return Group.GetMonopolyValue();
     }
     public int GetRegularValue()
     {
@@ -90,43 +54,7 @@ public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>
     }
     public string GetColor()
     {
-        if (Group <= 0)
-        {
-            throw new CustomBasicException("No need for color because no group found");
-        }
-        if (Group == 1)
-        {
-            return cc1.Brown.ToWebColor();
-        }
-        if (Group == 2)
-        {
-            return cc1.Cyan.ToWebColor();
-        }
-        if (Group == 3)
-        {
-            return cc1.MediumVioletRed.ToWebColor();
-        }
-        if (Group == 4)
-        {
-            return cc1.DarkOrange.ToWebColor();
-        }
-        if (Group == 5)
-        {
-            return cc1.Red.ToWebColor();
-        }
-        if (Group == 6)
-        {
-            return cc1.Yellow.ToWebColor();
-        }
-        if (Group == 7)
-        {
-            return cc1.Green.ToWebColor();
-        }
-        if (Group == 8)
-        {
-            return cc1.DarkBlue.ToWebColor();
-        }
-        throw new CustomBasicException("Only 1 to 8 are supported");
+        return Group.GetColor();
     }
     public IGamePackageResolver? MainContainer { get; set; }
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
