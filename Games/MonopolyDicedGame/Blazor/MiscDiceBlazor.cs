@@ -10,8 +10,8 @@ public class MiscDiceBlazor : ComponentBase
     private static Rect StartRect()
     {
         Rect output = new();
-        output.RX = "2";
-        output.RY = "2";
+        output.RX = "0";
+        output.RY = "0";
         output.Width = "50";
         output.Height = "50";
         return output;

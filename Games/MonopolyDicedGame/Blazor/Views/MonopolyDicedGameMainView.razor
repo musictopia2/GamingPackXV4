@@ -24,7 +24,15 @@
         {
             <GameButtonComponent Display="Clear Test Roll" CustomCallBack="ClearTestRoll" />
         } *@
-        <GameButtonComponent Display="Test Roll Regular" CustomCallBack="TestRollAsync" />
+        
+        @if (CanTestRoll())
+        {
+            <GameButtonComponent Display="Test Roll" CustomCallBack="TestRollAsync" />
+        }
+        else
+        {
+            <GameButtonComponent Display="Clear" CustomCallBack="Clear" />
+        }
         <div>
             <MonopolyListBlazor OnDiceClick=OnTestDiceClick DiceList="@_monopolySets!.DiceList" ImageHeight="9vh" />
         </div>

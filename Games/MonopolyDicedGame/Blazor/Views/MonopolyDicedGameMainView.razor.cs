@@ -212,6 +212,17 @@ public partial class MonopolyDicedGameMainView
         _container.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound();
     }
     private bool _rolling;
+    private bool CanTestRoll() => _container!.SaveRoot.NumberOfCops < 3;
+    private void Clear()
+    {
+        _container!.SaveRoot.RollNumber = 1;
+        _container.SaveRoot.NumberOfCops = 0;
+        _container.SaveRoot.NumberOfHouses = 0;
+        _container.SaveRoot.HasHotel = false;
+        _monopolySets!.DiceList.Clear();
+        _others.Clear();
+        _container.SaveRoot.Owns.Clear();
+    }
     private async Task TestRollAsync()
     {
         if (_rolling)
@@ -221,6 +232,18 @@ public partial class MonopolyDicedGameMainView
         _rolling = true;
         var first = _monopolySets!.RollDice();
         await _monopolySets.ShowRollingAsync(first);
+        _others = _container!.SaveRoot.GetMiscResults(_container.Random);
+        _container.SaveRoot.RollNumber++;
+        _container.SaveRoot.NumberOfCops += _others.Count(x => x == EnumMiscType.Police);
+        if (_others.Any(x => x == EnumMiscType.Free))
+        {
+            _container.SaveRoot.NumberOfCops--;
+        }
+        if (_others.Any(x => x == EnumMiscType.Go))
+        {
+            _container.SaveRoot.CurrentScore += 200;
+            _container.SaveRoot.TotalGos++;
+        }
         if (_container!.SaveRoot.HasAtLeastOnePropertyMonopoly)
         {
             var second = _house!.RollDice();
@@ -251,12 +274,12 @@ public partial class MonopolyDicedGameMainView
                     _container.SaveRoot.NumberOfHouses = 0; //because you now have hotel.
                 }
             }
-            _container!.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound();
         }
+        _container!.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound(); //needs to be here because you may have 3 cops.
         _rolling = false;
     }
 
-    private bool CanTestRoll() => _container!.SaveRoot.NumberOfCops < 3;
+    
     private void ClearTestRoll()
     {
         _container!.SaveRoot.RollNumber = 1;

@@ -15,8 +15,8 @@ public class HouseDice(MonopolyDicedGameGameContainer gameContainer) : IComplete
         {
             WeightedAverageLists<EnumMiscType> weights = new();
             weights.AddWeightedItem(EnumMiscType.RegularHouse, 13)
-                .AddWeightedItem(EnumMiscType.BrokenHouse, 1)
-                .AddWeightedItem(EnumMiscType.Hotel, 10)
+                .AddWeightedItem(EnumMiscType.BrokenHouse, 2)
+                .AddWeightedItem(EnumMiscType.Hotel, 3)
                 .AddWeightedItem(EnumMiscType.Free, 4);
             return weights.GetWeightedList();
         }
