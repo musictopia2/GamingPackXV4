@@ -6,15 +6,15 @@ public partial class MonopolyDicedGameMainView
     [Inject]
     private IToast? Toast { get; set; }
     private readonly BasicList<LabelGridModel> _labels = [];
-    private BasicList<EnumMiscType> _others = [];
+    //private BasicList<EnumMiscType> _others = [];
     private MonopolyDicedGameGameContainer? _container;
-    private HouseDice? _house;
-    private MonopolyDiceSet? _monopolySets;
+    private HouseDice? _house; //hopefully still okay.
+    //private MonopolyDiceSet? _monopolySets; //maybe still okay.
     protected override void OnInitialized()
     {
         _container = aa1.Resolver!.Resolve<MonopolyDicedGameGameContainer>();
         _house = aa1.Resolver!.Resolve<HouseDice>();
-        _monopolySets = aa1.Resolver!.Resolve<MonopolyDiceSet>();
+        //_monopolySets = aa1.Resolver!.Resolve<MonopolyDiceSet>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(MonopolyDicedGameVMData.NormalTurn))
             .AddLabel("Status", nameof(MonopolyDicedGameVMData.Status))
@@ -23,8 +23,9 @@ public partial class MonopolyDicedGameMainView
             ;
         base.OnInitialized();
     }
+    private ICustomCommand RollDiceCommand => DataContext!.RollCommand!;
 
-    private BasicList<BasicDiceModel> GetSelectedDice => _monopolySets!.DiceList.GetSelectedItems();
+    private BasicList<BasicDiceModel> GetSelectedDice => _container!.SaveRoot.DiceList.GetSelectedItems();
     private static void OnTestDiceClick(BasicDiceModel dice)
     {
         dice.IsSelected = !dice.IsSelected;
@@ -70,8 +71,8 @@ public partial class MonopolyDicedGameMainView
             }
             own.Utility = utility;
             _container!.SaveRoot.Owns.Add(own);
-            _monopolySets!.DiceList.RemoveSpecificItem(dice);
-            _monopolySets.DiceList.Sort();
+            _container!.SaveRoot.DiceList.RemoveSpecificItem(dice);
+            _container!.SaveRoot.DiceList.Sort();
             _container.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound();
             return;
         }
@@ -144,9 +145,9 @@ public partial class MonopolyDicedGameMainView
             }
             _container!.SaveRoot.Owns.Add(own);
             item.IsSelected = false;
-            _monopolySets!.DiceList.RemoveSpecificItem(item);
+            _container!.SaveRoot!.DiceList.RemoveSpecificItem(item);
         }
-        _monopolySets!.DiceList.Sort();
+        _container!.SaveRoot!.DiceList.Sort();
         _container.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound();
     }
     private void SamplePropertyClicked(int group)
@@ -206,134 +207,134 @@ public partial class MonopolyDicedGameMainView
             }
             _container!.SaveRoot.Owns.Add(own);
             item.IsSelected = false;
-            _monopolySets!.DiceList.RemoveSpecificItem(item);
+            _container!.SaveRoot!.DiceList.RemoveSpecificItem(item);
         }
-        _monopolySets!.DiceList.Sort();
+        _container!.SaveRoot!.DiceList.Sort();
         _container.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound();
     }
-    private bool _rolling;
-    private bool CanTestRoll() => _container!.SaveRoot.NumberOfCops < 3;
-    private void Clear()
-    {
-        _container!.SaveRoot.RollNumber = 1;
-        _container.SaveRoot.NumberOfCops = 0;
-        _container.SaveRoot.NumberOfHouses = 0;
-        _container.SaveRoot.HasHotel = false;
-        _monopolySets!.DiceList.Clear();
-        _others.Clear();
-        _container.SaveRoot.Owns.Clear();
-    }
-    private async Task TestRollAsync()
-    {
-        if (_rolling)
-        {
-            return;
-        }
-        _rolling = true;
-        var first = _monopolySets!.RollDice();
-        await _monopolySets.ShowRollingAsync(first);
-        _others = _container!.SaveRoot.GetMiscResults(_container.Random);
-        _container.SaveRoot.RollNumber++;
-        _container.SaveRoot.NumberOfCops += _others.Count(x => x == EnumMiscType.Police);
-        if (_others.Any(x => x == EnumMiscType.Free))
-        {
-            _container.SaveRoot.NumberOfCops--;
-        }
-        if (_others.Any(x => x == EnumMiscType.Go))
-        {
-            _container.SaveRoot.CurrentScore += 200;
-            _container.SaveRoot.TotalGos++;
-        }
-        if (_container!.SaveRoot.HasAtLeastOnePropertyMonopoly)
-        {
-            var second = _house!.RollDice();
-            await _house.ShowRollingAsync(second);
-            if (_house.Value == EnumMiscType.Free && _container!.SaveRoot.NumberOfCops > 0)
-            {
-                _container.SaveRoot.NumberOfCops--;
-            }
-            if (_house.Value == EnumMiscType.BrokenHouse)
-            {
-                if (_container!.SaveRoot.NumberOfHouses > 0)
-                {
-                    _container.SaveRoot.NumberOfHouses--;
-                }
-            }
-            if (_house.Value == EnumMiscType.RegularHouse)
-            {
-                if (_container!.SaveRoot.NumberOfHouses < 4 && _container.SaveRoot.HasHotel == false)
-                {
-                    _container.SaveRoot.NumberOfHouses++;
-                }
-            }
-            if (_house.Value == EnumMiscType.Hotel)
-            {
-                if (_container!.SaveRoot.NumberOfHouses == 4)
-                {
-                    _container.SaveRoot.HasHotel = true;
-                    _container.SaveRoot.NumberOfHouses = 0; //because you now have hotel.
-                }
-            }
-        }
-        _container!.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound(); //needs to be here because you may have 3 cops.
-        _rolling = false;
-    }
+    //private bool _rolling;
+    //private bool CanTestRoll() => _container!.SaveRoot.NumberOfCops < 3;
+    //private void Clear()
+    //{
+    //    _container!.SaveRoot.RollNumber = 1;
+    //    _container.SaveRoot.NumberOfCops = 0;
+    //    _container.SaveRoot.NumberOfHouses = 0;
+    //    _container.SaveRoot.HasHotel = false;
+    //    _monopolySets!.DiceList.Clear();
+    //    _others.Clear();
+    //    _container.SaveRoot.Owns.Clear();
+    //}
+    //private async Task TestRollAsync()
+    //{
+    //    if (_rolling)
+    //    {
+    //        return;
+    //    }
+    //    _rolling = true;
+    //    var first = _monopolySets!.RollDice();
+    //    await _monopolySets.ShowRollingAsync(first);
+    //    _others = _container!.SaveRoot.GetMiscResults(_container.Random);
+    //    _container.SaveRoot.RollNumber++;
+    //    _container.SaveRoot.NumberOfCops += _others.Count(x => x == EnumMiscType.Police);
+    //    if (_others.Any(x => x == EnumMiscType.Free))
+    //    {
+    //        _container.SaveRoot.NumberOfCops--;
+    //    }
+    //    if (_others.Any(x => x == EnumMiscType.Go))
+    //    {
+    //        _container.SaveRoot.CurrentScore += 200;
+    //        _container.SaveRoot.TotalGos++;
+    //    }
+    //    if (_container!.SaveRoot.HasAtLeastOnePropertyMonopoly)
+    //    {
+    //        var second = _house!.RollDice();
+    //        await _house.ShowRollingAsync(second);
+    //        if (_house.Value == EnumMiscType.Free && _container!.SaveRoot.NumberOfCops > 0)
+    //        {
+    //            _container.SaveRoot.NumberOfCops--;
+    //        }
+    //        if (_house.Value == EnumMiscType.BrokenHouse)
+    //        {
+    //            if (_container!.SaveRoot.NumberOfHouses > 0)
+    //            {
+    //                _container.SaveRoot.NumberOfHouses--;
+    //            }
+    //        }
+    //        if (_house.Value == EnumMiscType.RegularHouse)
+    //        {
+    //            if (_container!.SaveRoot.NumberOfHouses < 4 && _container.SaveRoot.HasHotel == false)
+    //            {
+    //                _container.SaveRoot.NumberOfHouses++;
+    //            }
+    //        }
+    //        if (_house.Value == EnumMiscType.Hotel)
+    //        {
+    //            if (_container!.SaveRoot.NumberOfHouses == 4)
+    //            {
+    //                _container.SaveRoot.HasHotel = true;
+    //                _container.SaveRoot.NumberOfHouses = 0; //because you now have hotel.
+    //            }
+    //        }
+    //    }
+    //    _container!.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound(); //needs to be here because you may have 3 cops.
+    //    _rolling = false;
+    //}
 
     
-    private void ClearTestRoll()
-    {
-        _container!.SaveRoot.RollNumber = 1;
-        _container.SaveRoot.NumberOfCops = 0;
-        _others.Clear();
-    }
-    private async Task TestRollMiscAsync()
-    {
+    //private void ClearTestRoll()
+    //{
+    //    _container!.SaveRoot.RollNumber = 1;
+    //    _container.SaveRoot.NumberOfCops = 0;
+    //    _others.Clear();
+    //}
+    //private async Task TestRollMiscAsync()
+    //{
 
-        var list = _house!.RollDice();
-        await _house.ShowRollingAsync(list);
-        _others = _container!.SaveRoot.GetMiscResults(_container.Random);
-        _container.SaveRoot.RollNumber++;
-        _container.SaveRoot.NumberOfCops += _others.Count(x => x == EnumMiscType.Police);
-        if (_others.Any(x => x == EnumMiscType.Free))
-        {
-            _container.SaveRoot.NumberOfCops--;
-        }
-        if (_others.Any(x => x == EnumMiscType.Go))
-        {
-            _container.SaveRoot.CurrentScore += 200;
-            _container.SaveRoot.TotalGos++;
-        }
-        if (_house.Value == EnumMiscType.Free && _container.SaveRoot.NumberOfCops > 0)
-        {
-            _container.SaveRoot.NumberOfCops--;
-        }
-        if (_house.Value == EnumMiscType.BrokenHouse)
-        {
-            if (_container.SaveRoot.NumberOfHouses > 0)
-            {
-                _container.SaveRoot.NumberOfHouses--;
-            }
-        }
-        if (_house.Value == EnumMiscType.RegularHouse)
-        {
-            if (_container.SaveRoot.NumberOfHouses < 4 && _container.SaveRoot.HasHotel == false)
-            {
-                _container.SaveRoot.NumberOfHouses++;
-            }
-        }
-        if (_house.Value == EnumMiscType.Hotel)
-        {
-            if (_container.SaveRoot.NumberOfHouses == 4)
-            {
-                _container.SaveRoot.HasHotel = true;
-                _container.SaveRoot.NumberOfHouses = 0; //because you now have hotel.
-            }
-        }
-        if (_container.SaveRoot.NumberOfCops > 2)
-        {
-            _container.SaveRoot.CurrentScore = 0; //this means 0 points period.
-        }
-        //for now, the code is here.  will eventually move to somewhere else.
-        _container.Command.UpdateAll();
-    }
+    //    var list = _house!.RollDice();
+    //    await _house.ShowRollingAsync(list);
+    //    _others = _container!.SaveRoot.GetMiscResults(_container.Random);
+    //    _container.SaveRoot.RollNumber++;
+    //    _container.SaveRoot.NumberOfCops += _others.Count(x => x == EnumMiscType.Police);
+    //    if (_others.Any(x => x == EnumMiscType.Free))
+    //    {
+    //        _container.SaveRoot.NumberOfCops--;
+    //    }
+    //    if (_others.Any(x => x == EnumMiscType.Go))
+    //    {
+    //        _container.SaveRoot.CurrentScore += 200;
+    //        _container.SaveRoot.TotalGos++;
+    //    }
+    //    if (_house.Value == EnumMiscType.Free && _container.SaveRoot.NumberOfCops > 0)
+    //    {
+    //        _container.SaveRoot.NumberOfCops--;
+    //    }
+    //    if (_house.Value == EnumMiscType.BrokenHouse)
+    //    {
+    //        if (_container.SaveRoot.NumberOfHouses > 0)
+    //        {
+    //            _container.SaveRoot.NumberOfHouses--;
+    //        }
+    //    }
+    //    if (_house.Value == EnumMiscType.RegularHouse)
+    //    {
+    //        if (_container.SaveRoot.NumberOfHouses < 4 && _container.SaveRoot.HasHotel == false)
+    //        {
+    //            _container.SaveRoot.NumberOfHouses++;
+    //        }
+    //    }
+    //    if (_house.Value == EnumMiscType.Hotel)
+    //    {
+    //        if (_container.SaveRoot.NumberOfHouses == 4)
+    //        {
+    //            _container.SaveRoot.HasHotel = true;
+    //            _container.SaveRoot.NumberOfHouses = 0; //because you now have hotel.
+    //        }
+    //    }
+    //    if (_container.SaveRoot.NumberOfCops > 2)
+    //    {
+    //        _container.SaveRoot.CurrentScore = 0; //this means 0 points period.
+    //    }
+    //    //for now, the code is here.  will eventually move to somewhere else.
+    //    _container.Command.UpdateAll();
+    //}
 }

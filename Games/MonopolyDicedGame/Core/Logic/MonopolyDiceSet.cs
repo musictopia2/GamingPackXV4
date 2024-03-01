@@ -1,18 +1,10 @@
 ﻿namespace MonopolyDicedGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class MonopolyDiceSet(IGamePackageResolver resolver, IGameNetwork network, TestOptions test, CommandContainer command) : IRollMultipleDice<BasicDiceModel>, ISerializable
+public class MonopolyDiceSet(IGamePackageResolver resolver, MonopolyDicedGameGameContainer gameContainer) : IRollMultipleDice<BasicDiceModel>, ISerializable
 {
     public IGamePackageResolver? MainContainer { get; set; } = resolver;
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
-    public BasicList<BasicDiceModel> DiceList { get; set; } = [];
-    public Func<MonopolyDicedGameSaveInfo>? SaveRoot { get; set; }
-
-
-    //for now, use its dicelist.
-    //later will rethink.
-    private IAsyncDelayer? _delay;
-
     public async Task<BasicList<BasicList<BasicDiceModel>>> GetDiceList(string content)
     {
         return await js1.DeserializeObjectAsync<BasicList<BasicList<BasicDiceModel>>>(content);
@@ -20,16 +12,11 @@ public class MonopolyDiceSet(IGamePackageResolver resolver, IGameNetwork network
     public BasicList<BasicList<BasicDiceModel>> RollDice(int howManySections = 6)
     {
         int newNum;
-        
-        DiceList.Clear(); //has to clear until i make more progress.
         newNum = 8; //go ahead and try 8 for this.
-
-        newNum -= SaveRoot!.Invoke().Owns.Count;
-
-        AsyncDelayer.SetDelayer(this, ref _delay!);
+        newNum -= gameContainer.SaveRoot.Owns.Count;
         IDiceContainer<int> thisG = MainContainer!.Resolve<IDiceContainer<int>>();
         thisG.MainContainer = MainContainer;
-        GlobalDiceHelpers.OwnedOnBoard = SaveRoot!.Invoke().Owns;
+        GlobalDiceHelpers.OwnedOnBoard = gameContainer.SaveRoot.Owns;
         BasicList<BasicList<BasicDiceModel>> output = [];
         howManySections.Times(() =>
         {
@@ -71,26 +58,52 @@ public class MonopolyDiceSet(IGamePackageResolver resolver, IGameNetwork network
         });
         return output;
     }
-    public async Task SendMessageAsync(BasicList<BasicList<BasicDiceModel>> thisList)
-    {
-        await SendMessageAsync("rolled", thisList); //well see.
-    }
+    //public async Task SendMessageAsync(BasicList<BasicList<BasicDiceModel>> thisList)
+    //{
+    //    await SendMessageAsync("rolled", thisList); //well see.
+    //}
     public async Task SendMessageAsync(string category, BasicList<BasicList<BasicDiceModel>> thisList)
     {
-        await network.SendAllAsync(category, thisList); //i think
+        await gameContainer.Network!.SendAllAsync(category, thisList); //i think
     }
     public async Task ShowRollingAsync(BasicList<BasicList<BasicDiceModel>> thisCol)
     {
-        AsyncDelayer.SetDelayer(this, ref _delay!);
         await thisCol.ForEachAsync(async firsts =>
         {
-            DiceList.ReplaceRange(firsts);
-            command.UpdateSpecificAction("monopolydice"); //i think.
-            if (test.NoAnimations == false)
+            gameContainer.SaveRoot.DiceList.ReplaceRange(firsts);
+            gameContainer.Command.UpdateSpecificAction("monopolydice"); //i think.
+            if (gameContainer.Test.NoAnimations == false)
             {
-                await _delay.DelayMilli(50);
+                await gameContainer.Delay.DelayMilli(50);
             }
         });
-        DiceList.Sort();
+        gameContainer.SaveRoot.DiceList.Sort();
+    }
+    public void SelectDice(int whichOne)
+    {
+        gameContainer.SaveRoot.DiceList[whichOne].IsSelected = !gameContainer.SaveRoot.DiceList[whichOne].IsSelected;
+    }
+    public async Task SelectDiceAsync(BasicDiceModel dice)
+    {
+        if (gameContainer.Command.IsExecuting)
+        {
+            return;
+        }
+        gameContainer.Command.IsExecuting = true; //if i don't have as command, has to do this way.
+        var list = gameContainer.SaveRoot.DiceList;
+        int index = list.IndexOf(dice);
+        if (index == -1)
+        {
+            throw new CustomBasicException("had problems hooking up.  Rethink");
+        }
+        if (gameContainer.BasicData.MultiPlayer == true)
+        {
+            await gameContainer.Network!.SendAllAsync("diceclicked", index); //i think
+        }
+        await gameContainer.SelectOneMainAsync!.Invoke(index); //same idea from rummy dice game.
+    }
+    public bool HasSelectedDice()
+    {
+        return gameContainer.SaveRoot.DiceList.Any(xx => xx.IsSelected == true);
     }
 }

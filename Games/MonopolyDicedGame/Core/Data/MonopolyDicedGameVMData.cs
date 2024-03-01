@@ -13,6 +13,8 @@ public partial class MonopolyDicedGameVMData : IViewModelData
     [LabelColumn]
     public int CurrentScore { get; set; }
 
+    public BasicList<EnumMiscType> OtherActions { get; set; } = [];
+    public HouseDice? HouseDice { get; set; }
     //any other ui related properties will be here.
     //can copy/paste for the actual view model.
 

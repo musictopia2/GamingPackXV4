@@ -6,7 +6,7 @@
                          HouseDice="_house"
                          HousesOwned="_container.SaveRoot.NumberOfHouses"
                          HasHotel=_container.SaveRoot.HasHotel
-                         MiscList="_others"
+                         MiscList="DataContext!.VMData.OtherActions"
                          OwnList="_container.SaveRoot.Owns"
                          UtilityClicked="SampleClickUtility"
                          TrainClicked="SampleClickTrain"
@@ -16,6 +16,9 @@
     </StackItem>
     <StackItem>
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+
+        <GameButtonComponent Display="Roll Dice" CommandObject="RollDiceCommand" />
+
         @* @if (CanTestRoll())
         {
             <GameButtonComponent Display="Test Roll Misc" CustomCallBack="TestRollMiscAsync" />
@@ -25,16 +28,16 @@
             <GameButtonComponent Display="Clear Test Roll" CustomCallBack="ClearTestRoll" />
         } *@
         
-        @if (CanTestRoll())
+        @* @if (CanTestRoll())
         {
             <GameButtonComponent Display="Test Roll" CustomCallBack="TestRollAsync" />
         }
         else
         {
             <GameButtonComponent Display="Clear" CustomCallBack="Clear" />
-        }
+        } *@
         <div>
-            <MonopolyListBlazor OnDiceClick=OnTestDiceClick DiceList="@_monopolySets!.DiceList" ImageHeight="9vh" />
+            <MonopolyListBlazor OnDiceClick=OnTestDiceClick DiceList="@_container!.SaveRoot.DiceList" ImageHeight="9vh" />
         </div>
     </StackItem>
 </StackLayout>

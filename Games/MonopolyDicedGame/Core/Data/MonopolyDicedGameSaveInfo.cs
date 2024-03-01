@@ -19,6 +19,7 @@ public class MonopolyDicedGameSaveInfo : BasicSavedGameClass<MonopolyDicedGamePl
     //because too many.
 
     public BasicList<OwnedModel> Owns { get; set; } = [];
+    public BasicList<BasicDiceModel> DiceList { get; set; } = [];
     private int _currentScore;
     public int CurrentScore
     {

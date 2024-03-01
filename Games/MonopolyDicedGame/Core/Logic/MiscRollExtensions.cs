@@ -10,6 +10,12 @@ internal static class MiscRollExtensions
         bool ask;
         int chances;
 
+        //ask = randoms.NextBool(90);
+        //if (ask)
+        //{
+        //    return 3; //for now until i figure out the new bug.
+        //}
+
         ask = randoms.NextBool(10);
         if (ask)
         {
