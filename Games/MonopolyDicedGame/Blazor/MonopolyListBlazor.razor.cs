@@ -1,5 +1,5 @@
 namespace MonopolyDicedGame.Blazor;
-public partial class MonopolyListBlazor
+public partial class MonopolyListBlazor : IDisposable
 {
     [CascadingParameter]
     public MonopolyDicedGameMainViewModel? DataContext { get; set; }
@@ -31,5 +31,12 @@ public partial class MonopolyListBlazor
             return;
         }
         await DataContext.MonopolyDice.SelectDiceAsync(dice);
+    }
+
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
+    public void Dispose()
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
+    {
+        DataContext!.CommandContainer.RemoveAction("monopolydice");
     }
 }

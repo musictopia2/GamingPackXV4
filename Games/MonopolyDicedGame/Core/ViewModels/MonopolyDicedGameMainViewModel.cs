@@ -219,7 +219,7 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
             //this means can process for utility
             if (MainGame.BasicData.MultiPlayer)
             {
-                await MainGame.Network!.SendAllAsync("utilitychosen");
+                await MainGame.Network!.SendAllAsync("utilitychosen", utility);
             }
             await MainGame.ChoseUtilityAsync(utility);
             return;

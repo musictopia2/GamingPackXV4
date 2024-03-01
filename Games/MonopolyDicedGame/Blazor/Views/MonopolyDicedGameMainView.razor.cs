@@ -4,6 +4,7 @@ public partial class MonopolyDicedGameMainView
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
     private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private MonopolyDicedGameGameContainer? _container;
     private HouseDice? _house; //hopefully still okay.
     protected override void OnInitialized()
@@ -14,8 +15,10 @@ public partial class MonopolyDicedGameMainView
         _labels.AddLabel("Turn", nameof(MonopolyDicedGameVMData.NormalTurn))
             .AddLabel("Status", nameof(MonopolyDicedGameVMData.Status))
             .AddLabel("Roll", nameof(MonopolyDicedGameVMData.RollNumber))
-            .AddLabel("Current Score", nameof(MonopolyDicedGameVMData.CurrentScore))
-            ;
+            .AddLabel("Current Score", nameof(MonopolyDicedGameVMData.CurrentScore));
+        _scores.Clear();
+        _scores.AddColumn("Recent Score", true, nameof(MonopolyDicedGamePlayerItem.CurrentScore))
+            .AddColumn("Total Game", true, nameof(MonopolyDicedGamePlayerItem.TotalScore));
         base.OnInitialized();
     }
     private ICustomCommand RollDiceCommand => DataContext!.RollCommand!;

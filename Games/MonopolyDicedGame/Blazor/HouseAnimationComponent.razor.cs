@@ -1,5 +1,5 @@
 namespace MonopolyDicedGame.Blazor;
-public partial class HouseAnimationComponent
+public partial class HouseAnimationComponent : IDisposable
 {
     [CascadingParameter]
     public MonopolyDicedGameMainViewModel? DataContext { get; set; }
@@ -9,6 +9,14 @@ public partial class HouseAnimationComponent
     [Parameter]
     [EditorRequired]
     public HouseDice? HouseDice { get; set; }
+
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
+    public void Dispose()
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
+    {
+        DataContext!.CommandContainer.RemoveAction("housedice");
+    }
+
     protected override void OnInitialized()
     {
         DataContext!.CommandContainer.AddAction(ShowChange, "housedice");

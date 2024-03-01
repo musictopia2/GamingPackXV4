@@ -100,21 +100,24 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
         get
         {
             //this will show the possibilities.
-            BasicList<int> output = [];
+            BasicList<int> output;
             WeightedAverageLists<int> weights = new();
             int used;
             int upTo;
+            bool ask;
             upTo = 8;
             used = UsedUp(upTo);
-            if (used == 0)
+            ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(10);
+            if (ask)
             {
-                //this means possible to do boardwalk/parkplace
-                weights.AddWeightedItem(upTo, 3); //for now pretend like its most likely to be boardwalk and parkplace.
-                //until i make more progress.
-            }
-            else if (used == 1)
-            {
-                weights.AddWeightedItem(upTo, 1); //want to make it much harder to get what is needed for monopoly.
+                if (used == 0)
+                {
+                    weights.AddWeightedItem(upTo, 3); //for now pretend like its most likely to be boardwalk and parkplace.
+                }
+                else if (used == 1)
+                {
+                    weights.AddWeightedItem(upTo, 1); //want to make it much harder to get what is needed for monopoly.
+                }
             }
             upTo = 7;
             used = UsedUp(upTo);
@@ -246,13 +249,17 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
                 weights.AddWeightedItem(11, 1);
             }
             int chances = UsedUp(12);
-            if (chances == 0)
+            ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(10);
+            if (ask)
             {
-                weights.AddWeightedItem(12, 2);
-            }
-            else if (chances == 1)
-            {
-                weights.AddWeightedItem(12, 1);
+                if (chances == 0)
+                {
+                    weights.AddWeightedItem(12, 2);
+                }
+                else if (chances == 1)
+                {
+                    weights.AddWeightedItem(12, 1);
+                }
             }
             output = weights.GetWeightedList();
             return output;

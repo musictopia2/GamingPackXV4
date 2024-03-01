@@ -96,6 +96,9 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
             case "propertychosen":
                 await ChosePropertyAsync(int.Parse(content));
                 return;
+            case "finishroll":
+                await FinishRollingAsync();
+                return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
@@ -107,15 +110,26 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
 
         //do other things here.
 
+        SingleInfo = PlayerList.GetWhoPlayer();
+        int score = SaveRoot.GetTotalScoreInRound();
+        SingleInfo.CurrentScore = score;
+        SingleInfo.TotalScore += score;
+        _houseDice.Value = EnumMiscType.None; //reset to none again.
+        if (SingleInfo.TotalScore >= 25000)
+        {
+            //since this is the first player to reach 25000, the game is over and that player wins period.
+            await ShowWinAsync();
+            return;
+        }
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
-
     }
     public override async Task StartNewTurnAsync()
     {
         PrepStartTurn(); //anything else is below.
         SaveRoot.RollNumber = 1;
         SaveRoot.NumberOfCops = 0;
+        SaveRoot.TotalGos = 0;
         SaveRoot.NumberOfHouses = 0;
         SaveRoot.HasAtLeastOnePropertyMonopoly = false;
         SaveRoot.HasHotel = false;
@@ -230,6 +244,7 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
                 SaveRoot.NumberOfHouses = 0; //because you now have hotel.
             }
         }
+        SaveRoot.CurrentScore = SaveRoot.GetTotalScoreInRound(); //because you have new houses.
         //both call this.
         //after this, finish roll no matter what.
         await FinishRollingAsync();

@@ -50,3 +50,4 @@ global using Microsoft.AspNetCore.Components.Rendering;
 global using static BasicGameFrameworkLibrary.Core.Dice.SharedDiceRoutines;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
 global using BasicGameFrameworkLibrary.Core.Extensions;
+global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
