@@ -107,7 +107,14 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             bool ask;
             upTo = 8;
             used = UsedUp(upTo);
-            ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(20);
+            if (used == 0)
+            {
+                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(60);
+            }
+            else
+            {
+                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(10);
+            }
             if (ask)
             {
                 if (used == 0)
@@ -249,7 +256,14 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
                 weights.AddWeightedItem(11, 1);
             }
             int chances = UsedUp(12);
-            ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(10);
+            if (chances == 0)
+            {
+                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(30);
+            }
+            else
+            {
+                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(5);
+            }
             if (ask)
             {
                 if (chances == 0)
