@@ -18,6 +18,7 @@
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
 
         <GameButtonComponent Display="Roll Dice" CommandObject="RollDiceCommand" />
+        <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
 
         @* @if (CanTestRoll())
         {
@@ -37,7 +38,7 @@
             <GameButtonComponent Display="Clear" CustomCallBack="Clear" />
         } *@
         <div>
-            <MonopolyListBlazor OnDiceClick=OnTestDiceClick DiceList="@_container!.SaveRoot.DiceList" ImageHeight="9vh" />
+            <MonopolyListBlazor ImageHeight="9vh" />
         </div>
     </StackItem>
 </StackLayout>

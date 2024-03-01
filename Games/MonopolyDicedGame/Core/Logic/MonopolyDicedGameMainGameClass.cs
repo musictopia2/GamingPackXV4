@@ -90,6 +90,17 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
     }
+    public override async Task EndTurnAsync()
+    {
+        //for now, nothing else.  later will do extra stuff for ending turn.
+        //return base.EndTurnAsync();
+
+        //do other things here.
+
+        WhoTurn = await PlayerList.CalculateWhoTurnAsync();
+        await StartNewTurnAsync();
+
+    }
     public override async Task StartNewTurnAsync()
     {
         PrepStartTurn(); //anything else is below.

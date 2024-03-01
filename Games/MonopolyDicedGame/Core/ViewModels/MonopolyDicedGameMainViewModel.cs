@@ -2,8 +2,6 @@ namespace MonopolyDicedGame.Core.ViewModels;
 [InstanceGame]
 public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
 {
-    private readonly MonopolyDicedGameMainGameClass _mainGame; //if we don't need, delete.
-    private readonly MonopolyDiceSet _monopolyDice;
     private readonly IToast _toast;
     public MonopolyDicedGameVMData VMData { get; set; }
     public MonopolyDicedGameMainViewModel(CommandContainer commandContainer,
@@ -18,27 +16,28 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
         )
         : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
     {
-        _mainGame = mainGame;
+        MainGame = mainGame;
         VMData = data;
-        _monopolyDice = monopolyDice;
+        MonopolyDice = monopolyDice;
         _toast = toast;
         CreateCommands(commandContainer);
     }
     //anything else needed is here.
-
+    public MonopolyDicedGameMainGameClass MainGame;
+    public MonopolyDiceSet MonopolyDice;
     partial void CreateCommands(CommandContainer command);
-    public bool CanRoll => _mainGame.SaveRoot.NumberOfCops < 3;
-
+    public override bool CanEndTurn() => MainGame.SaveRoot.RollNumber > 1;
+    public bool CanRoll => MainGame.SaveRoot.NumberOfCops < 3;
     [Command(EnumCommandCategory.Game)]
     public async Task RollAsync()
     {
         //will be a command now to roll the dice (getting closer to reals).
-        if (_monopolyDice.HasSelectedDice())
+        if (MonopolyDice.HasSelectedDice())
         {
             _toast.ShowUserErrorToast("Need to either unselect the dice or use them.");
             return;
         }
-        await _mainGame.RollDiceAsync();
+        await MainGame.RollDiceAsync();
     }
 
 }

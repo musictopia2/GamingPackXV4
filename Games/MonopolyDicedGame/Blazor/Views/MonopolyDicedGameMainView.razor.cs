@@ -24,12 +24,12 @@ public partial class MonopolyDicedGameMainView
         base.OnInitialized();
     }
     private ICustomCommand RollDiceCommand => DataContext!.RollCommand!;
-
+    private ICustomCommand EndTurnCommand => DataContext!.EndTurnCommand!;
     private BasicList<BasicDiceModel> GetSelectedDice => _container!.SaveRoot.DiceList.GetSelectedItems();
-    private static void OnTestDiceClick(BasicDiceModel dice)
-    {
-        dice.IsSelected = !dice.IsSelected;
-    }
+    //private static void OnTestDiceClick(BasicDiceModel dice)
+    //{
+    //    dice.IsSelected = !dice.IsSelected;
+    //}
     private void SampleClickUtility(EnumUtilityType utility)
     {
         var list = GetSelectedDice;
