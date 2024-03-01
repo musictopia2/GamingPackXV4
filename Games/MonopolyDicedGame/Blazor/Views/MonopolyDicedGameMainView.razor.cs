@@ -23,18 +23,7 @@ public partial class MonopolyDicedGameMainView
             ;
         base.OnInitialized();
     }
-    private bool _rolling;
-    private async Task TestRollRegularAsync()
-    {
-        if (_rolling)
-        {
-            return;
-        }
-        _rolling = true;
-        var list = _monopolySets!.RollDice();
-        await _monopolySets.ShowRollingAsync(list);
-        _rolling = false;
-    }
+
     private BasicList<BasicDiceModel> GetSelectedDice => _monopolySets!.DiceList.GetSelectedItems();
     private static void OnTestDiceClick(BasicDiceModel dice)
     {
@@ -66,7 +55,7 @@ public partial class MonopolyDicedGameMainView
             Toast!.ShowUserErrorToast("You already own this utility");
             return;
         }
-        if (HasChanceError(list))
+        if (HasChanceError(list, x => x.UsedOn == EnumBasicType.Utility))
         {
             return;
         }
@@ -88,7 +77,7 @@ public partial class MonopolyDicedGameMainView
         }
         Toast!.ShowUserErrorToast("This is not the proper utility"); //don't unselect automatically.
     }
-    private bool HasChanceError(BasicList<BasicDiceModel> list)
+    private bool HasChanceError(BasicList<BasicDiceModel> list, Func<OwnedModel, bool> selector)
     {
         int chancesSelected = list.Count(x => x.WhatDice == EnumBasicType.Chance);
         if (chancesSelected > 1)
@@ -96,7 +85,7 @@ public partial class MonopolyDicedGameMainView
             Toast!.ShowUserErrorToast("You can only choose one chance to place in a group");
             return true;
         }
-        int chancesOwned = _container!.SaveRoot.Owns.Count(x => x.WasChance);
+        int chancesOwned = _container!.SaveRoot.Owns.Count(x => x.WasChance && selector.Invoke(x));
         if (chancesOwned > 0 && chancesSelected > 0)
         {
             Toast!.ShowUserErrorToast("Only one chance can be used per group");
@@ -141,7 +130,7 @@ public partial class MonopolyDicedGameMainView
             Toast!.ShowUserErrorToast("This results in too many trains.  Only 4 are allowed at the most");
             return;
         }
-        if (HasChanceError(list))
+        if (HasChanceError(list, x => x.UsedOn == EnumBasicType.Railroad))
         {
             return;
         }
@@ -186,7 +175,7 @@ public partial class MonopolyDicedGameMainView
             Toast!.ShowUserErrorToast("You have dice selected that does not belong to this group");
             return;
         }
-        if (HasChanceError(list))
+        if (HasChanceError(list, x => x.Group == group))
         {
             return;
         }
@@ -222,6 +211,51 @@ public partial class MonopolyDicedGameMainView
         _monopolySets!.DiceList.Sort();
         _container.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound();
     }
+    private bool _rolling;
+    private async Task TestRollAsync()
+    {
+        if (_rolling)
+        {
+            return;
+        }
+        _rolling = true;
+        var first = _monopolySets!.RollDice();
+        await _monopolySets.ShowRollingAsync(first);
+        if (_container!.SaveRoot.HasAtLeastOnePropertyMonopoly)
+        {
+            var second = _house!.RollDice();
+            await _house.ShowRollingAsync(second);
+            if (_house.Value == EnumMiscType.Free && _container!.SaveRoot.NumberOfCops > 0)
+            {
+                _container.SaveRoot.NumberOfCops--;
+            }
+            if (_house.Value == EnumMiscType.BrokenHouse)
+            {
+                if (_container!.SaveRoot.NumberOfHouses > 0)
+                {
+                    _container.SaveRoot.NumberOfHouses--;
+                }
+            }
+            if (_house.Value == EnumMiscType.RegularHouse)
+            {
+                if (_container!.SaveRoot.NumberOfHouses < 4 && _container.SaveRoot.HasHotel == false)
+                {
+                    _container.SaveRoot.NumberOfHouses++;
+                }
+            }
+            if (_house.Value == EnumMiscType.Hotel)
+            {
+                if (_container!.SaveRoot.NumberOfHouses == 4)
+                {
+                    _container.SaveRoot.HasHotel = true;
+                    _container.SaveRoot.NumberOfHouses = 0; //because you now have hotel.
+                }
+            }
+            _container!.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound();
+        }
+        _rolling = false;
+    }
+
     private bool CanTestRoll() => _container!.SaveRoot.NumberOfCops < 3;
     private void ClearTestRoll()
     {

@@ -3,6 +3,7 @@ public static class AdvancedScoreExtensions
 {
     public static int GetTotalScoreInRound(this MonopolyDicedGameSaveInfo saveRoot)
     {
+        saveRoot.HasAtLeastOnePropertyMonopoly = false;
         if (saveRoot.NumberOfCops == 3)
         {
             return 0; //because you already have 3 cops.
@@ -15,6 +16,7 @@ public static class AdvancedScoreExtensions
             if (saveRoot.HasMonopoly(x))
             {
                 output += x.GetMonopolyValue();
+                saveRoot.HasAtLeastOnePropertyMonopoly = true;
             }
             else
             {
@@ -54,6 +56,15 @@ public static class AdvancedScoreExtensions
         output += highestUsed;
         int goValues = saveRoot.TotalGos * 200;
         output += goValues;
+        if (saveRoot.HasHotel)
+        {
+            output += 9000;
+        }
+        else
+        {
+            int totalHouses = saveRoot.NumberOfHouses * 1000; //i am guessing that a hotel plus 4 houses is equal to 9000 extra points.
+            output += totalHouses;
+        }
         return output;
     }
     public static int GetPropertyIncompleteScore(this MonopolyDicedGameSaveInfo saveRoot, int group)

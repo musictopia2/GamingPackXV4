@@ -10,7 +10,7 @@ public partial class GameBoardBlazor : ComponentBase
     [Parameter]
     public int NumberOfCops { get; set; }
     [Parameter]
-    public EnumMiscType HouseValue { get; set; }
+    public HouseDice? HouseDice { get; set; }
     [Parameter]
     public bool HasHotel { get; set; }
     [Parameter]

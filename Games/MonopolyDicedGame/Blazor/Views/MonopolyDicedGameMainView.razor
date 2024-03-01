@@ -3,7 +3,7 @@
     <StackItem>
         <GameBoardBlazor NumberOfCops="_container!.SaveRoot.NumberOfCops"
                          TargetHeight="75vh"
-                         HouseValue="_house!.Value"
+                         HouseDice="_house"
                          HousesOwned="_container.SaveRoot.NumberOfHouses"
                          HasHotel=_container.SaveRoot.HasHotel
                          MiscList="_others"
@@ -16,15 +16,15 @@
     </StackItem>
     <StackItem>
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
-        @if (CanTestRoll())
+        @* @if (CanTestRoll())
         {
             <GameButtonComponent Display="Test Roll Misc" CustomCallBack="TestRollMiscAsync" />
         }
         else
         {
             <GameButtonComponent Display="Clear Test Roll" CustomCallBack="ClearTestRoll" />
-        }
-        <GameButtonComponent Display="Test Roll Regular" CustomCallBack="TestRollRegularAsync" />
+        } *@
+        <GameButtonComponent Display="Test Roll Regular" CustomCallBack="TestRollAsync" />
         <div>
             <MonopolyListBlazor OnDiceClick=OnTestDiceClick DiceList="@_monopolySets!.DiceList" ImageHeight="9vh" />
         </div>

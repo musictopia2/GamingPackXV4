@@ -11,15 +11,6 @@ ViewPort="@_size"
     <UtilitySpaceComponent IsEnabled=IsEnabled TargetImageHeight="@ImageHeight" OwnList="@OwnList" UtilityClicked="PossibleUtilityClick" />
     <MiscSpaceComponent TargetImageHeight="@ImageHeight" MiscList="MiscList" />
     <HouseSpaceComponent ImageHeight="@ImageHeight" HasHotel=HasHotel HousesOwned="HousesOwned" />
-    <SpaceBlazor MarginTop="5" MarginLeft="25" Row="5" Column="6">
-        @if (HouseValue == EnumMiscType.None)
-        {
-            <ColorSpaceComponent TargetImageHeight="@ImageHeight" />
-        }
-        else
-        {
-            <MiscDiceBlazor TargetHeight="@ImageHeight" Category="@HouseValue" />
-        }
-    </SpaceBlazor>
-
+    <HouseAnimationComponent HouseDice="HouseDice" ImageHeight="@ImageHeight" />
+    
 </CanvasLayout>
