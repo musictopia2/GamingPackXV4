@@ -8,14 +8,15 @@
                          HasHotel=_container.SaveRoot.HasHotel
                          MiscList="DataContext!.VMData.OtherActions"
                          OwnList="_container.SaveRoot.Owns"
-                         UtilityClicked="SampleClickUtility"
-                         TrainClicked="SampleClickTrain"
-                         PropertyClicked="SamplePropertyClicked"
+                         UtilityClicked="UtilityV2Async"
+                         TrainClicked="TrainV2Async"
+                         PropertyClicked="PropertyV2Async"
                          IsEnabled = "true"
                          ImageHeight="9vh" />
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
     </StackItem>
     <StackItem>
-        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        
 
         <GameButtonComponent Display="Roll Dice" CommandObject="RollDiceCommand" />
         <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
@@ -37,8 +38,13 @@
         {
             <GameButtonComponent Display="Clear" CustomCallBack="Clear" />
         } *@
+        <MonopolyListBlazor ImageHeight="9vh" />
+
+        
         <div>
-            <MonopolyListBlazor ImageHeight="9vh" />
+            Test
         </div>
+
+
     </StackItem>
 </StackLayout>

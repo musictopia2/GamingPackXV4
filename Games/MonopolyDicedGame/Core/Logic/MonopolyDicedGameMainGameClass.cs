@@ -86,6 +86,16 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
                 var houses = await js1.DeserializeObjectAsync<BasicList<EnumMiscType>>(content);
                 await ShowRollingHouseAsync(houses);
                 return;
+            case "utilitychosen":
+                var utility = await js1.DeserializeObjectAsync<EnumUtilityType>(content);
+                await ChoseUtilityAsync(utility);
+                return;
+            case "trainchosen":
+                await ChoseTrainAsync();
+                return;
+            case "propertychosen":
+                await ChosePropertyAsync(int.Parse(content));
+                return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
@@ -107,7 +117,9 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
         SaveRoot.RollNumber = 1;
         SaveRoot.NumberOfCops = 0;
         SaveRoot.NumberOfHouses = 0;
+        SaveRoot.HasAtLeastOnePropertyMonopoly = false;
         SaveRoot.HasHotel = false;
+        SaveRoot.CurrentScore = 0;
         SaveRoot.DiceList.Clear();
         SaveRoot.Owns.Clear();
         _model.OtherActions.Clear();
@@ -164,6 +176,10 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
     private async Task FinishRollingAsync()
     {
         //not sure if there is anything else that is needed here.
+        if (SaveRoot.NumberOfCops > 2)
+        {
+            SaveRoot.CurrentScore = 0;
+        }
         await ContinueTurnAsync();
     }
     private void ShowCopResults(BasicList<EnumMiscType> cops)
@@ -217,5 +233,61 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
         //both call this.
         //after this, finish roll no matter what.
         await FinishRollingAsync();
+    }
+    public async Task ChoseUtilityAsync(EnumUtilityType utility)
+    {
+        //has to assume the one selected dice will be the utility.
+        var dice = SaveRoot.DiceList.GetSelectedItems().Single(); //let it blow up if it needs to.
+        dice.IsSelected = false;
+        OwnedModel own = new();
+        own.UsedOn = EnumBasicType.Utility;
+        if (dice.WhatDice == EnumBasicType.Chance)
+        {
+            own.WasChance = true;
+        }
+        own.Utility = utility;
+        SaveRoot.Owns.Add(own);
+        SaveRoot.DiceList.RemoveSpecificItem(dice);
+        SaveRoot.DiceList.Sort();
+        SaveRoot.CurrentScore = SaveRoot.GetTotalScoreInRound();
+        await ContinueTurnAsync();
+    }
+    public async Task ChoseTrainAsync()
+    {
+        var list = SaveRoot.DiceList.GetSelectedItems();
+        foreach (var item in list)
+        {
+            OwnedModel own = new();
+            own.UsedOn = EnumBasicType.Railroad;
+            if (item.WhatDice == EnumBasicType.Chance)
+            {
+                own.WasChance = true;
+            }
+            SaveRoot.Owns.Add(own);
+            item.IsSelected = false;
+            SaveRoot!.DiceList.RemoveSpecificItem(item);
+        }
+        SaveRoot!.DiceList.Sort();
+        SaveRoot.CurrentScore = SaveRoot.GetTotalScoreInRound();
+        await ContinueTurnAsync();
+    }
+    public async Task ChosePropertyAsync(int group)
+    {
+        var list = SaveRoot.DiceList.GetSelectedItems();
+        foreach (var item in list)
+        {
+            OwnedModel own = new();
+            own.Group = group;
+            if (item.WhatDice == EnumBasicType.Chance)
+            {
+                own.WasChance = true;
+            }
+            SaveRoot.Owns.Add(own);
+            item.IsSelected = false;
+            SaveRoot!.DiceList.RemoveSpecificItem(item);
+        }
+        SaveRoot!.DiceList.Sort();
+        SaveRoot.CurrentScore = SaveRoot.GetTotalScoreInRound();
+        await ContinueTurnAsync();
     }
 }
