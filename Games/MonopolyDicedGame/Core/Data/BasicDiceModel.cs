@@ -107,7 +107,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             bool ask;
             upTo = 8;
             used = UsedUp(upTo);
-            ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(10);
+            ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(20);
             if (ask)
             {
                 if (used == 0)
