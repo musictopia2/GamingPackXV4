@@ -12,6 +12,7 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<MonopolyDicedGameShellV
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
         Core.DIFinishProcesses.SpecializedRegistrationHelpers.RegisterCommonMultplayerClasses(GetDIContainer);
         Core.DIFinishProcesses.AutoResetClass.RegisterAutoResets();
+        register.RegisterSingleton<IGenerateDice<int>, BasicDiceModel>();
         //anything that needs to be registered will be here.
         return Task.CompletedTask;
     }

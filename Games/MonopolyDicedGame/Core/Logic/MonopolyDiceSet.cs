@@ -20,9 +20,8 @@ public class MonopolyDiceSet(IGamePackageResolver resolver, IGameNetwork network
     public BasicList<BasicList<BasicDiceModel>> RollDice(int howManySections = 6)
     {
         int newNum;
-        //for now, has to have all 10 of them.
         DiceList.Clear(); //has to clear until i make more progress.
-        newNum = 3;
+        newNum = 7; //go ahead and try 8 for this.
         AsyncDelayer.SetDelayer(this, ref _delay!);
         IDiceContainer<int> thisG = MainContainer!.Resolve<IDiceContainer<int>>();
         thisG.MainContainer = MainContainer;
@@ -88,5 +87,6 @@ public class MonopolyDiceSet(IGamePackageResolver resolver, IGameNetwork network
                 await _delay.DelayMilli(50);
             }
         });
+        DiceList.Sort();
     }
 }

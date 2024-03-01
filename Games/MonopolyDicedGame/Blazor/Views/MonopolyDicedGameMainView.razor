@@ -18,12 +18,15 @@
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
         @if (CanTestRoll())
         {
-            <GameButtonComponent Display="Test Roll Misc" CustomCallBack="TestRollMisc" />
+            <GameButtonComponent Display="Test Roll Misc" CustomCallBack="TestRollMiscAsync" />
         }
         else
         {
             <GameButtonComponent Display="Clear Test Roll" CustomCallBack="ClearTestRoll" />
         }
-        
+        <GameButtonComponent Display="Test Roll Regular" CustomCallBack="TestRollRegularAsync" />
+        <div>
+            <MonopolyListBlazor DiceList="@_monopolySets!.DiceList" ImageHeight="9vh" />
+        </div>
     </StackItem>
 </StackLayout>

@@ -3,16 +3,16 @@ public partial class MonopolyDicedGameMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    [Inject]
-    private IMessageBox? Message { get; set; }
     private readonly BasicList<LabelGridModel> _labels = [];
     private BasicList<EnumMiscType> _others = [];
     private MonopolyDicedGameGameContainer? _container;
     private HouseDice? _house;
+    private MonopolyDiceSet? _monopolySets;
     protected override void OnInitialized()
     {
         _container = aa1.Resolver!.Resolve<MonopolyDicedGameGameContainer>();
         _house = aa1.Resolver!.Resolve<HouseDice>();
+        _monopolySets = aa1.Resolver!.Resolve<MonopolyDiceSet>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(MonopolyDicedGameVMData.NormalTurn))
             .AddLabel("Status", nameof(MonopolyDicedGameVMData.Status))
@@ -20,6 +20,18 @@ public partial class MonopolyDicedGameMainView
             .AddLabel("Current Score", nameof(MonopolyDicedGameVMData.CurrentScore))
             ;
         base.OnInitialized();
+    }
+    private bool _rolling;
+    private async Task TestRollRegularAsync()
+    {
+        if (_rolling)
+        {
+            return;
+        }
+        _rolling = true;
+        var list = _monopolySets!.RollDice();
+        await _monopolySets.ShowRollingAsync(list);
+        _rolling = false;
     }
     private void SampleClickUtility(EnumUtilityType utility)
     {
@@ -89,7 +101,7 @@ public partial class MonopolyDicedGameMainView
         _container.SaveRoot.NumberOfCops = 0;
         _others.Clear();
     }
-    private async Task TestRollMisc()
+    private async Task TestRollMiscAsync()
     {
 
         var list = _house!.RollDice();

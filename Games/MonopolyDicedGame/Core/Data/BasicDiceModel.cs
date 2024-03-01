@@ -1,5 +1,5 @@
 ﻿namespace MonopolyDicedGame.Core.Data;
-public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>
+public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>, IComparable<BasicDiceModel>
 {
     public int HeightWidth => 50;
     public bool IsSelected { get; set; }
@@ -103,48 +103,158 @@ public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>
             BasicList<int> output = [];
             WeightedAverageLists<int> weights = new();
             int used;
-            used = UsedUp(8);
-            if (used < 2)
+            int upTo;
+            upTo = 8;
+            used = UsedUp(upTo);
+            if (used == 0)
             {
                 //this means possible to do boardwalk/parkplace
-                weights.AddWeightedItem(8, 100); //for now pretend like its most likely to be boardwalk and parkplace.
+                weights.AddWeightedItem(upTo, 3); //for now pretend like its most likely to be boardwalk and parkplace.
                 //until i make more progress.
             }
-            used = UsedUp(11);
-            if (used < 4)
+            else if (used == 1)
             {
-                //this means possible to do railroads.
-                weights.AddWeightedItem(11, 6);
+                weights.AddWeightedItem(upTo, 1); //want to make it much harder to get what is needed for monopoly.
             }
-            used = UsedUp(12);
-            if (used < 2)
+            upTo = 7;
+            used = UsedUp(upTo);
+            if (used == 0)
             {
-                //this is for chance.
+                weights.AddWeightedItem(upTo, 5);
+            }
+            else if (used == 1)
+            {
+                weights.AddWeightedItem(upTo, 3);
+            }
+            else if (used == 2)
+            {
+                weights.AddWeightedItem(upTo, 1);
+            }
+            upTo = 6;
+            used = UsedUp(upTo);
+            if (used == 0)
+            {
+                weights.AddWeightedItem(upTo, 6);
+            }
+            else if (used == 1)
+            {
+                weights.AddWeightedItem(upTo, 4);
+            }
+            else if (used == 2)
+            {
+                weights.AddWeightedItem(upTo, 1);
+            }
+            upTo = 5;
+            used = UsedUp(upTo);
+            if (used == 0)
+            {
+                weights.AddWeightedItem(upTo, 6);
+            }
+            else if (used == 1)
+            {
+                weights.AddWeightedItem(upTo, 4);
+            }
+            else if (used == 2)
+            {
+                weights.AddWeightedItem(upTo, 1);
+            }
+            upTo = 4;
+            used = UsedUp(upTo);
+            if (used == 0)
+            {
+                weights.AddWeightedItem(upTo, 8);
+            }
+            else if (used == 1)
+            {
+                weights.AddWeightedItem(upTo, 6);
+            }
+            else if (used == 2)
+            {
+                weights.AddWeightedItem(upTo, 1);
+            }
+            upTo = 3;
+            used = UsedUp(upTo);
+            if (used == 0)
+            {
+                weights.AddWeightedItem(upTo, 10);
+            }
+            else if (used == 1)
+            {
+                weights.AddWeightedItem(upTo, 7);
+            }
+            else if (used == 2)
+            {
+                weights.AddWeightedItem(upTo, 1);
+            }
+            upTo = 2;
+            used = UsedUp(upTo);
+            if (used == 0)
+            {
+                weights.AddWeightedItem(upTo, 12);
+            }
+            else if (used == 1)
+            {
+                weights.AddWeightedItem(upTo, 9);
+            }
+            else if (used == 2)
+            {
+                weights.AddWeightedItem(upTo, 1);
+            }
+            upTo = 1;
+            used = UsedUp(upTo);
+            if (used == 0)
+            {
+                weights.AddWeightedItem(upTo, 15);
+            }
+            else if (used == 1)
+            {
+                weights.AddWeightedItem(upTo, 2);
+            }
+            int waterUsed;
+            int electricUsed;
+            waterUsed = UsedUp(9);
+            electricUsed = UsedUp(10);
+            if (waterUsed == 0 && electricUsed == 0)
+            {
+                weights.AddWeightedItem(9, 7);
+                weights.AddWeightedItem(10, 7);
+            }
+            else if (waterUsed > 0 && electricUsed == 0)
+            {
+                //electric alone.
+                weights.AddWeightedItem(10, 3);
+            }
+            else if (waterUsed == 0 && electricUsed > 0)
+            {
+                weights.AddWeightedItem(9, 3);
+            }
+            int railroads = UsedUp(11);
+            if (railroads == 0)
+            {
+                weights.AddWeightedItem(11, 12);
+            }
+            else if (railroads == 1)
+            {
+                weights.AddWeightedItem(11, 8);
+            }
+            else if (railroads == 2)
+            {
+                weights.AddWeightedItem(11, 3);
+            }
+            else if (railroads == 3)
+            {
+                weights.AddWeightedItem(11, 1);
+            }
+            int chances = UsedUp(12);
+            if (chances == 0)
+            {
+                weights.AddWeightedItem(12, 2);
+            }
+            else if (chances == 1)
+            {
                 weights.AddWeightedItem(12, 1);
             }
-            used = UsedUp(9);
-            if (used > 0)
-            {
-                weights.AddWeightedItem(9, 5);
-            }
-            used = UsedUp(10);
-            if (used > 0)
-            {
-                weights.AddWeightedItem(10, 5);
-            }
-
-
-            //for now, not sure how to populate.
-
-            //anything on this list can be chosen.
-            //this will show percentages of how likely something is to be chosen.
-            //if the shared dice has nothing to do something else, needs to think about that possibility.
-            //since this can have exceptions.
-
-            //obviously if everything has been filled, then nothing can be chosen.
-
-
-
+            output = weights.GetWeightedList();
             return output;
         }
     }
@@ -193,5 +303,15 @@ public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>
             return;
         }
         throw new CustomBasicException("Must be between 1 and 12 for basic dice");
+    }
+
+    int IComparable<BasicDiceModel>.CompareTo(BasicDiceModel? other)
+    {
+
+        if (other!.Group > 0 && Group > 0)
+        {
+            return Group.CompareTo(other.Group);
+        }
+        return WhatDice.CompareTo(other.WhatDice);
     }
 }

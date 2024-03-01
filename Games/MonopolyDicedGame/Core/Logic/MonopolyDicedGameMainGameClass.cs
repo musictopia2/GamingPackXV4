@@ -17,13 +17,15 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
         IRandomGenerator rs,
         MonopolyDicedGameGameContainer gameContainer,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        MonopolyDiceSet monopolyDice
         ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     {
         _model = model;
         _rs = rs;
+        monopolyDice.SaveRoot = GetSave;
     }
-
+    private MonopolyDicedGameSaveInfo GetSave() => SaveRoot;
     private readonly MonopolyDicedGameVMData? _model;
     private readonly IRandomGenerator _rs; //if we don't need, take out.
 

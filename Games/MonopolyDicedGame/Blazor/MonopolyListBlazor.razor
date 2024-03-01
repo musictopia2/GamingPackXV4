@@ -1,0 +1,8 @@
+﻿<StackLayout>
+    @foreach (var item in DiceList)
+    {
+        <StackItem>
+            <BasicDiceBlazor TargetHeight="@ImageHeight" Dice="item" />
+        </StackItem>
+    }
+</StackLayout>
