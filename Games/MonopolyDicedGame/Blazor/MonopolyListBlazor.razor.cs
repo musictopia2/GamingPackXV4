@@ -11,6 +11,8 @@ public partial class MonopolyListBlazor
     [Parameter]
     [EditorRequired]
     public string ImageHeight { get; set; } = "";
+    [Parameter]
+    public EventCallback<BasicDiceModel> OnDiceClick { get; set; }
 
     //won't allow selecting/unselecting dice yet.
 

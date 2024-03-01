@@ -2,7 +2,9 @@
     @foreach (var item in DiceList)
     {
         <StackItem>
-            <BasicDiceBlazor TargetHeight="@ImageHeight" Dice="item" />
+            <div @onclick="() => OnDiceClick.InvokeAsync(item)">
+                <BasicDiceBlazor TargetHeight="@ImageHeight" Dice="item" />
+            </div>
         </StackItem>
     }
 </StackLayout>

@@ -1,5 +1,5 @@
 ﻿namespace MonopolyDicedGame.Core.Data;
-public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>, IComparable<BasicDiceModel>
+public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer<int>, IComparable<BasicDiceModel>
 {
     public int HeightWidth => 50;
     public bool IsSelected { get; set; }
@@ -216,26 +216,26 @@ public class BasicDiceModel : IBasicDice<int>, IDiceContainer<int>, IComparable<
             electricUsed = UsedUp(10);
             if (waterUsed == 0 && electricUsed == 0)
             {
-                weights.AddWeightedItem(9, 7);
-                weights.AddWeightedItem(10, 7);
+                weights.AddWeightedItem(9, 4);
+                weights.AddWeightedItem(10, 4);
             }
             else if (waterUsed > 0 && electricUsed == 0)
             {
                 //electric alone.
-                weights.AddWeightedItem(10, 3);
+                weights.AddWeightedItem(10, 1);
             }
             else if (waterUsed == 0 && electricUsed > 0)
             {
-                weights.AddWeightedItem(9, 3);
+                weights.AddWeightedItem(9, 1);
             }
             int railroads = UsedUp(11);
             if (railroads == 0)
             {
-                weights.AddWeightedItem(11, 12);
+                weights.AddWeightedItem(11, 8);
             }
             else if (railroads == 1)
             {
-                weights.AddWeightedItem(11, 8);
+                weights.AddWeightedItem(11, 6);
             }
             else if (railroads == 2)
             {
