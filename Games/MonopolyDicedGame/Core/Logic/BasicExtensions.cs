@@ -1,6 +1,55 @@
 ﻿namespace MonopolyDicedGame.Core.Logic;
 public static class BasicExtensions
 {
+    
+    public static int GetIncompleteValue(this OwnedModel own)
+    {
+        if (own.WasChance)
+        {
+            return 0;
+        }
+        if (own.UsedOn == EnumBasicType.Railroad)
+        {
+            return 200;
+        }
+        if (own.UsedOn == EnumBasicType.Utility)
+        {
+            return 100;
+        }
+        if (own.Group == 1)
+        {
+            return 50;
+        }
+        if (own.Group == 2)
+        {
+            return 100;
+        }
+        if (own.Group == 3)
+        {
+            return 150;
+        }
+        if (own.Group == 4)
+        {
+            return 200;
+        }
+        if (own.Group == 5)
+        {
+            return 250;
+        }
+        if (own.Group == 6)
+        {
+            return 300;
+        }
+        if (own.Group == 7)
+        {
+            return 400;
+        }
+        if (own.Group == 8)
+        {
+            return 500;
+        }
+        throw new CustomBasicException("Unable to calculate score");
+    }
     public static int GetMonopolyValue(this int group)
     {
         if (group == 1)

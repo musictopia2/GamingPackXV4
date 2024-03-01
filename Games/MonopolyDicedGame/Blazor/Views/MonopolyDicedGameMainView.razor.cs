@@ -83,6 +83,7 @@ public partial class MonopolyDicedGameMainView
             _container!.SaveRoot.Owns.Add(own);
             _monopolySets!.DiceList.RemoveSpecificItem(dice);
             _monopolySets.DiceList.Sort();
+            _container.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound();
             return;
         }
         Toast!.ShowUserErrorToast("This is not the proper utility"); //don't unselect automatically.
@@ -157,6 +158,7 @@ public partial class MonopolyDicedGameMainView
             _monopolySets!.DiceList.RemoveSpecificItem(item);
         }
         _monopolySets!.DiceList.Sort();
+        _container.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound();
     }
     private void SamplePropertyClicked(int group)
     {
@@ -218,6 +220,7 @@ public partial class MonopolyDicedGameMainView
             _monopolySets!.DiceList.RemoveSpecificItem(item);
         }
         _monopolySets!.DiceList.Sort();
+        _container.SaveRoot.CurrentScore = _container.SaveRoot.GetTotalScoreInRound();
     }
     private bool CanTestRoll() => _container!.SaveRoot.NumberOfCops < 3;
     private void ClearTestRoll()
@@ -241,6 +244,7 @@ public partial class MonopolyDicedGameMainView
         if (_others.Any(x => x == EnumMiscType.Go))
         {
             _container.SaveRoot.CurrentScore += 200;
+            _container.SaveRoot.TotalGos++;
         }
         if (_house.Value == EnumMiscType.Free && _container.SaveRoot.NumberOfCops > 0)
         {

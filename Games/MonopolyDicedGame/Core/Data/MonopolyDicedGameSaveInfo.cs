@@ -10,7 +10,8 @@ public class MonopolyDicedGameSaveInfo : BasicSavedGameClass<MonopolyDicedGamePl
     public int NumberOfHouses { get; set; }
     public bool HasHotel { get; set; } //if you have all 4 houses, then will be hotel.
     public int NumberOfCops { get; set; }
-    
+    public int TotalGos { get; set; }
+
     //hint:  when you click on utility, then if you select both, will place automatically.
     //if you select one of them, will place them automatically.
     //however, if you click on chance plus 2 utilities, then display toast error.
