@@ -8,6 +8,14 @@ public partial class ClueCardGameVMData : IBasicCardGamesData<ClueCardGameCardIn
     public string NormalTurn { get; set; } = "";
     [LabelColumn]
     public string Status { get; set; } = "";
+
+    [LabelColumn]
+    public string CurrentRoomName { get; set; } = "";
+    [LabelColumn]
+    public string CurrentCharacterName { get; set; } = "";
+    [LabelColumn]
+    public string CurrentWeaponName { get; set; } = "";
+
     public ClueCardGameVMData(CommandContainer command)
     {
         Deck1 = new(command);

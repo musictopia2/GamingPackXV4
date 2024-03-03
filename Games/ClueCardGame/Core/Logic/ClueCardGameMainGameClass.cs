@@ -7,6 +7,7 @@ public class ClueCardGameMainGameClass
     private readonly ClueCardGameVMData _model;
     private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
     private readonly ClueCardGameGameContainer _gameContainer; //if we don't need it, take it out.
+
     public ClueCardGameMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
         BasicData basicData,
@@ -25,6 +26,7 @@ public class ClueCardGameMainGameClass
         _command = command;
         _gameContainer = gameContainer;
     }
+    public static BasicList<int> ExcludeList { get; set; } = [];
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -34,8 +36,9 @@ public class ClueCardGameMainGameClass
     private void LoadControls()
     {
         if (IsLoaded == true)
+        {
             return;
-
+        }
         IsLoaded = true; //i think needs to be here.
     }
     protected override async Task ComputerTurnAsync()
@@ -48,7 +51,21 @@ public class ClueCardGameMainGameClass
         LoadControls();
 
         //at this point, all cards has been used.
-        
+        ExcludeList.Clear();
+        var list = _gameContainer.DeckList.Where(x => x.WhatType == EnumCardType.IsWeapon).ToBasicList();
+        var item = list.GetRandomItem();
+        SaveRoot.Solution = new();
+        SaveRoot.Solution.WeaponName = item.Name;
+        ExcludeList.Add(item.Deck);
+        list = _gameContainer.DeckList.Where(x => x.WhatType == EnumCardType.IsCharacter).ToBasicList();
+        item = list.GetRandomItem();
+        ExcludeList.Add(item.Deck);
+        SaveRoot.Solution.CharacterName = item.Name;
+        list = _gameContainer.DeckList.Where(x => x.WhatType == EnumCardType.IsRoom).ToBasicList();
+        item = list.GetRandomItem();
+        ExcludeList.Add(item.Deck);
+        SaveRoot.Solution.RoomName = item.Name;
+
 
         return base.StartSetUpAsync(isBeginning);
     }

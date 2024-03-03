@@ -14,10 +14,10 @@ public class ClueCardGameDetailClass : IGameInfo, ICardInfo<ClueCardGameCardInfo
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
     int ICardInfo<ClueCardGameCardInformation>.CardsToPassOut => 3; //change to what you need.
-    BasicList<int> ICardInfo<ClueCardGameCardInformation>.PlayerExcludeList => [];
+    BasicList<int> ICardInfo<ClueCardGameCardInformation>.PlayerExcludeList => ClueCardGameMainGameClass.ExcludeList;
     BasicList<int> ICardInfo<ClueCardGameCardInformation>.DiscardExcludeList(IListShuffler<ClueCardGameCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool ICardInfo<ClueCardGameCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<ClueCardGameCardInformation>.ReshuffleAllCardsFromDiscard => false;
@@ -26,7 +26,7 @@ public class ClueCardGameDetailClass : IGameInfo, ICardInfo<ClueCardGameCardInfo
     bool ICardInfo<ClueCardGameCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<ClueCardGameCardInformation>.NoPass => false;
     bool ICardInfo<ClueCardGameCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<ClueCardGameCardInformation> ICardInfo<ClueCardGameCardInformation>.DummyHand { get; set; } = new DeckRegularDict<ClueCardGameCardInformation>();
+    DeckRegularDict<ClueCardGameCardInformation> ICardInfo<ClueCardGameCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<ClueCardGameCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<ClueCardGameCardInformation>.CanSortCardsToBeginWith => true;
 }
