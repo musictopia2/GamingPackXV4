@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\card1.png" />
+    <None Remove="Resources\card10.png" />
+    <None Remove="Resources\card11.png" />
+    <None Remove="Resources\card12.png" />
+    <None Remove="Resources\card13.png" />
+    <None Remove="Resources\card14.png" />
+    <None Remove="Resources\card15.png" />
+    <None Remove="Resources\card2.png" />
+    <None Remove="Resources\card3.png" />
+    <None Remove="Resources\card4.png" />
+    <None Remove="Resources\card5.png" />
+    <None Remove="Resources\card6.png" />
+    <None Remove="Resources\card7.png" />
+    <None Remove="Resources\card8.png" />
+    <None Remove="Resources\card9.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\card1.png" />
+    <EmbeddedResource Include="Resources\card10.png" />
+    <EmbeddedResource Include="Resources\card11.png" />
+    <EmbeddedResource Include="Resources\card12.png" />
+    <EmbeddedResource Include="Resources\card13.png" />
+    <EmbeddedResource Include="Resources\card14.png" />
+    <EmbeddedResource Include="Resources\card15.png" />
+    <EmbeddedResource Include="Resources\card2.png" />
+    <EmbeddedResource Include="Resources\card3.png" />
+    <EmbeddedResource Include="Resources\card4.png" />
+    <EmbeddedResource Include="Resources\card5.png" />
+    <EmbeddedResource Include="Resources\card6.png" />
+    <EmbeddedResource Include="Resources\card7.png" />
+    <EmbeddedResource Include="Resources\card8.png" />
+    <EmbeddedResource Include="Resources\card9.png" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
+	  <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
+  <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
+
+	  <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.13" />
+	  <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
+	  <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
+	  <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
+	  <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
+  </ItemGroup>
+
+ 
+
+</Project>
