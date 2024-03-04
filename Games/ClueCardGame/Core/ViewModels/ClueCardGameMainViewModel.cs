@@ -22,31 +22,25 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         VMData = viewModel;
         _toast = toast;
         _gameContainer = gameContainer;
+        VMData.PlayerHand1.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.FindClues);
         CreateCommands(commandContainer);
     }
-
     partial void CreateCommands(CommandContainer command);
-
-    //anything else needed is here.
-    //if i need something extra, will add to template as well.
     protected override bool CanEnableDeck()
     {
-        //todo:  decide whether to enable deck.
         return false; //otherwise, can't compile.
     }
     protected override bool CanEnablePile1()
     {
-        //todo:  decide whether to enable deck.
         return false; //otherwise, can't compile.
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
-        //if we have anything, will be here.
         await Task.CompletedTask;
     }
     public override bool CanEnableAlways()
     {
-        return true;
+        return false;
     }
     public bool CanMakePrediction
     {
@@ -99,8 +93,7 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
             };
             await _gameContainer.Network!.SendAllAsync("cluegiven", hint);
             //only whoever turn it is needs to show who gave it.
-            //has to send to everybody.  that way the host can record (since recording must be done).
-            //await _gameContainer.Network!.SendToParticularPlayerAsync("cluegiven", payLoad.Deck, tempPlayer.NickName);
+            //has to send to everybody even though there is private autoresume.  that way can be recorded for everybody (for additional clues)
         }
         CommandContainer!.ManuelFinish = true;
         card.IsSelected = false;

@@ -36,8 +36,6 @@ public class ClueCardGameMainGameClass
         _message = message;
     }
     public static BasicList<int> ExcludeList { get; set; } = [];
-
-
     public int MyID => PlayerList!.GetSelf().Id; //i think.
     public int OtherTurn
     {
@@ -67,12 +65,7 @@ public class ClueCardGameMainGameClass
             _gameContainer.DetectiveDetails.PersonalNotebook = GetDetectiveList();
             await _privateAutoResume.SaveStateAsync(_gameContainer);
         }
-
         this.ShowTurn();
-
-        //this is private autoresume.
-
-
         await base.FinishGetSavedAsync();
     }
     private void LoadControls()
@@ -197,7 +190,12 @@ public class ClueCardGameMainGameClass
     {
         await base.StartNewTurnAsync();
         SaveRoot.WhoGaveClue = "";
-
+        if (_gameContainer.DetectiveDetails is null)
+        {
+            throw new CustomBasicException("I don't think that detective details can be null when starting new turn");
+        }
+        _gameContainer.DetectiveDetails.StartAccusation = false;
+        SaveRoot.GameStatus = EnumClueStatusList.MakePrediction; //you start out by making prediction.
         await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
     }
     public override async Task EndTurnAsync()
@@ -206,7 +204,6 @@ public class ClueCardGameMainGameClass
         SingleInfo.MainHandList.UnhighlightObjects(); //i think this is best.
 
         //anything else is here.  varies by game.
-
 
         _command.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
@@ -225,6 +222,10 @@ public class ClueCardGameMainGameClass
         list.Add(card);
         _model.Accusation.HandList.ReplaceRange(list);
     }
+    public override Task ContinueTurnAsync()
+    {
+        return EndStepAsync(); //go ahead and call this instead.
+    }
     public async Task MakeAccusationAsync(SolutionInfo accusation)
     {
         if (accusation.CharacterName == "" || accusation.WeaponName == "" || accusation.RoomName == "")
@@ -237,8 +238,6 @@ public class ClueCardGameMainGameClass
             FillOutAccusation(accusation);
             await Delay!.DelaySeconds(.75);
         }
-
-
         SingleInfo = PlayerList!.GetWhoPlayer();
         if (SingleInfo.CanSendMessage(BasicData!))
         {
@@ -338,11 +337,9 @@ public class ClueCardGameMainGameClass
         }
         return false;
     }
-
     private async Task EndStepAsync()
     {
         await SaveStateAsync(); //i tihnk needs to be here now.
-
         if (SaveRoot!.GameStatus == EnumClueStatusList.EndTurn)
         {
             OtherTurn = 0;
@@ -489,7 +486,8 @@ public class ClueCardGameMainGameClass
             await EndStepAsync();
             return;
         }
-        throw new CustomBasicException("The computer should have skipped their turns since their moving was really hosed");
+        await EndTurnAsync(); //for now, will end their turns.  will eventually allow them to move.
+        //throw new CustomBasicException("The computer should have skipped their turns since their moving was really hosed");
     }
     public async Task MarkCardAsync(ClueCardGamePlayerItem player, ClueCardGameCardInformation card, bool beginning)
     {
