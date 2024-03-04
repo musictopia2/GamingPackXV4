@@ -21,5 +21,7 @@ public partial class ClueCardGameMainView
         base.OnInitialized();
     }
     private BasicGameCommand EndTurnCommand => DataContext!.EndTurnCommand!;
+    private BasicGameCommand AddPredictionCommand => DataContext!.AddPredictionCommand!;
+    private BasicGameCommand MakePredictionCommand => DataContext!.MakePredictionCommand!;
     private string GetStyle(ClueCardGamePlayerItem player) => _gameContainer!.SaveRoot.WhoGaveClue == player.NickName ? "color: lime;" : "";
 }

@@ -27,6 +27,8 @@ public partial class ClueCardGameVMData : IBasicCardGamesData<ClueCardGameCardIn
         Accusation.Visible = false;
         Accusation.Text = "Accusation";
         PlayerHand1.AutoSelect = EnumHandAutoType.None;
+        Prediction.AutoSelect = EnumHandAutoType.None;
+        Accusation.AutoSelect = EnumHandAutoType.None;
     }
     public DeckObservablePile<ClueCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<ClueCardGameCardInformation> Pile1 { get; set; }

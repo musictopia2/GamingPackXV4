@@ -12,6 +12,7 @@
     </StackItem>
     <StackItem Length="400px">
         <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        <GameButtonComponent Display="Make Prediction" CommandObject="MakePredictionCommand" />
         <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
     </StackItem>
     <StackItem>
@@ -26,3 +27,13 @@
         }
     </StackItem>
 </StackLayout>
+@if (_vmData.Accusation.Visible == false)
+{
+    <HandBlazor Hand="_vmData.Prediction" />
+}
+<HandBlazor Hand="_vmData.Accusation" />
+<BasicNotebookComponent
+    PredictCommand="AddPredictionCommand"
+    PersonalNotebook="_gameContainer.DetectiveDetails!.PersonalNotebook"
+    
+    />

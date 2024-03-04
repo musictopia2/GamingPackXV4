@@ -5,6 +5,7 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
     private readonly ClueCardGameMainGameClass _mainGame; //if we don't need, delete.
     private readonly IToast _toast;
     private readonly ClueCardGameGameContainer _gameContainer;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     public ClueCardGameVMData VMData { get; set; }
     public ClueCardGameMainViewModel(CommandContainer commandContainer,
         ClueCardGameMainGameClass mainGame,
@@ -14,7 +15,8 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         IToast toast,
-        ClueCardGameGameContainer gameContainer
+        ClueCardGameGameContainer gameContainer,
+        PrivateAutoResumeProcesses privateAutoResume
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
@@ -22,10 +24,43 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         VMData = viewModel;
         _toast = toast;
         _gameContainer = gameContainer;
+        _privateAutoResume = privateAutoResume;
+        VMData.Prediction.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction);
+        VMData.Prediction.ObjectClickedAsync = PredictionChangeMindAsync;
         VMData.PlayerHand1.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.FindClues);
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
+    private async Task PredictionChangeMindAsync(ClueCardGameCardInformation card, int index)
+    {
+        bool rets = await RemovePredictionAsync(card);
+        if (rets == false)
+        {
+            _toast.ShowUserErrorToast("I think there was a bug because did not find a card to remove");
+        }
+    }
+    private async Task<bool> RemovePredictionAsync(ClueCardGameCardInformation card)
+    {
+        if (card.Name == _mainGame.SaveRoot.CurrentPrediction!.FirstName)
+        {
+            _mainGame.SaveRoot.CurrentPrediction.FirstName = "";
+            _gameContainer.DetectiveDetails!.CurrentPrediction!.FirstName = "";
+            VMData.FirstName = "";
+            VMData.Prediction.HandList.RemoveObjectByDeck(card.Deck);
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+            return true;
+        }
+        if (card.Name == _mainGame.SaveRoot.CurrentPrediction.SecondName)
+        {
+            _mainGame.SaveRoot.CurrentPrediction.SecondName = "";
+            _gameContainer.DetectiveDetails!.CurrentPrediction!.SecondName = "";
+            VMData.SecondName = "";
+            VMData.Prediction.HandList.RemoveObjectByDeck(card.Deck);
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+            return true;
+        }
+        return false;
+    }
     protected override bool CanEnableDeck()
     {
         return false; //otherwise, can't compile.
@@ -43,11 +78,50 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         return false;
     }
     public override bool CanEndTurn() => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.EndTurn;
+    
+    public bool CanAddPrediction => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction;
+    [Command(EnumCommandCategory.Game)]
+    public async Task AddPredictionAsync(ClueCardGameCardInformation card)
+    {
+        bool rets;
+        rets = await RemovePredictionAsync(card);
+        if (rets)
+        {
+            return;
+        }
+        ClueCardGameCardInformation newItem;
+        if (VMData.FirstName == "")
+        {
+            //replace it.
+            _mainGame.SaveRoot.CurrentPrediction!.FirstName = card.Name;
+            _gameContainer.DetectiveDetails!.CurrentPrediction!.FirstName = card.Name;
+            VMData.FirstName = card.Name;
+            newItem = new();
+            newItem.Populate(card.Deck);
+            VMData.Prediction.HandList.Add(newItem);
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+            return;
+        }
+        if (VMData.SecondName == "")
+        {
+            _mainGame.SaveRoot.CurrentPrediction!.SecondName = card.Name;
+            _gameContainer.DetectiveDetails!.CurrentPrediction!.SecondName = card.Name;
+            VMData.SecondName = card.Name;
+            newItem = new();
+            newItem.Populate(card.Deck);
+            VMData.Prediction.HandList.Add(newItem);
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+            return;
+        }
+        _toast.ShowUserErrorToast("You already chose the 2 cards.  Click on a card in the prediction area to remove it");
+        //_toast.ShowInfoToast(card.Deck.ToString());
+        //await Task.Delay(1);
+    }
     public bool CanMakePrediction
     {
         get
         {
-            if (VMData.FirstName  == "" || VMData.SecondName == "")
+            if (VMData.FirstName == "" || VMData.SecondName == "")
             {
                 return false;
             }
@@ -59,7 +133,7 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
             {
                 return true;
             }
-            
+
             return false;
         }
     }

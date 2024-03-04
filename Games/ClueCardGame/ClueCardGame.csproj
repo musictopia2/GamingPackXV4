@@ -27,10 +27,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\card1.png" />
     <EmbeddedResource Include="Resources\card10.png" />
-    <EmbeddedResource Include="Resources\card11.png" />
     <EmbeddedResource Include="Resources\card12.png" />
     <EmbeddedResource Include="Resources\card13.png" />
     <EmbeddedResource Include="Resources\card14.png" />
+    <EmbeddedResource Include="Resources\card11.png" />
     <EmbeddedResource Include="Resources\card15.png" />
     <EmbeddedResource Include="Resources\card2.png" />
     <EmbeddedResource Include="Resources\card3.png" />

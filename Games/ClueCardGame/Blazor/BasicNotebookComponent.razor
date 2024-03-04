@@ -1,0 +1,42 @@
+﻿@{
+    var list1 = GetCardsInCategory(EnumCardType.IsCharacter);
+}
+<StackLayout>
+    @foreach (var item in list1)
+    {
+        <StackItem>
+            <CardGraphicsBlazor CommandParameter="item"
+                                TargetHeight="@RealHeight"
+                CommandObject="PredictCommand"
+                DeckObject="item" />
+        </StackItem>
+    }
+</StackLayout>
+@{
+    var list2 = GetCardsInCategory(EnumCardType.IsWeapon);
+}
+<StackLayout>
+    @foreach (var item in list2)
+    {
+        <StackItem>
+            <CardGraphicsBlazor CommandParameter="item"
+                                TargetHeight="@RealHeight"
+                CommandObject="PredictCommand"
+                DeckObject="item" />
+        </StackItem>
+    }
+</StackLayout>
+@{
+    var list3 = GetCardsInCategory(EnumCardType.IsRoom);
+}
+<StackLayout>
+    @foreach (var item in list3)
+    {
+        <StackItem>
+            <CardGraphicsBlazor CommandParameter="item"
+                                TargetHeight="@RealHeight"
+                CommandObject="PredictCommand"
+                DeckObject="item" />
+        </StackItem>
+    }
+</StackLayout>
