@@ -7,13 +7,12 @@ public class ClueCardGameSaveInfo : BasicSavedCardClass<ClueCardGamePlayerItem, 
     {
         if (CurrentPrediction is not null)
         {
-            model.CurrentCharacterName = CurrentPrediction.CharacterName;
-            model.CurrentWeaponName = CurrentPrediction.WeaponName;
-            model.CurrentRoomName = CurrentPrediction.RoomName;
+            model.FirstName = CurrentPrediction.FirstName;
+            model.SecondName = CurrentPrediction.SecondName;
         }
     }
-    public bool AccusationMade { get; set; }
-    public PredictionInfo Solution { get; set; } = new();
+    public SolutionInfo Solution { get; set; } = new();
     public int PreviousClue { get; set; } //this means if given, then whoevers turn it is can show that clue.
     public EnumClueStatusList GameStatus { get; set; }
+    public string WhoGaveClue { get; set; } = "";
 }

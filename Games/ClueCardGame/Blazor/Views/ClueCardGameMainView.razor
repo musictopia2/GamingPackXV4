@@ -3,11 +3,25 @@
 {
     return;
 }
-<p>Welcome to Clue Card Game Part 1</p>
-
-<div>
-    <HandBlazor Hand="_vmData.PlayerHand1" />
-</div>
-<div>
-    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
-</div>
+<StackLayout>
+    <StackItem>
+        <HandBlazor Hand="_vmData.PlayerHand1" />
+    </StackItem>
+    <StackItem>
+        <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem Length="400px">
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+    <StackItem>
+        <div style="font-weight: bold;">
+            Play Order
+        </div>
+        @foreach (var item in _players)
+        {
+            <div>
+                @item.NickName
+            </div>
+        }
+    </StackItem>
+</StackLayout>

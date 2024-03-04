@@ -58,3 +58,4 @@ global using BasicGameFrameworkLibrary.Core.BasicDrawables.BasicClasses;
 global using ClueCardGame.Core.Cards;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 global using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Hands;
+global using MonopolyCardGame.Core.Data;

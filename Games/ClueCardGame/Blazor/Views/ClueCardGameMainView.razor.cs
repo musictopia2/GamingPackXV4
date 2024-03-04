@@ -3,21 +3,21 @@ public partial class ClueCardGameMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private ClueCardGameVMData? _vmData;
     private ClueCardGameGameContainer? _gameContainer;
+    private PlayerCollection<ClueCardGamePlayerItem> _players = [];
     protected override void OnInitialized()
     {
         _vmData = aa1.Resolver!.Resolve<ClueCardGameVMData>();
         _gameContainer = aa1.Resolver.Resolve<ClueCardGameGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ClueCardGameVMData.NormalTurn))
-            .AddLabel("Status", nameof(ClueCardGameVMData.Status));
-        _scores.Clear();
-        _scores.AddColumn("Cards Left", true, nameof(ClueCardGamePlayerItem.ObjectCount))
-
-            ; //cards left is common.  can be anything you need.
+            .AddLabel("Status", nameof(ClueCardGameVMData.Status))
+            .AddLabel("First Name", nameof(ClueCardGameVMData.FirstName))
+            .AddLabel("Second Name ", nameof(ClueCardGameVMData.SecondName))
+        ;
+        _players = _gameContainer.PlayerList!;
         base.OnInitialized();
     }
 }
