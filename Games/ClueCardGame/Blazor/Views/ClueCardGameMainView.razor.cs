@@ -20,4 +20,6 @@ public partial class ClueCardGameMainView
         _players = _gameContainer.PlayerList!;
         base.OnInitialized();
     }
+    private BasicGameCommand EndTurnCommand => DataContext!.EndTurnCommand!;
+    private string GetStyle(ClueCardGamePlayerItem player) => _gameContainer!.SaveRoot.WhoGaveClue == player.NickName ? "color: lime;" : "";
 }

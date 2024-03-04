@@ -221,6 +221,7 @@ public class ClueCardGameMainGameClass
         card = _gameContainer.GetClonedCard(accusation.RoomName);
         list.Add(card);
         _model.Accusation.HandList.ReplaceRange(list);
+        _command.UpdateAll(); //i think.
     }
     public override Task ContinueTurnAsync()
     {
@@ -262,6 +263,7 @@ public class ClueCardGameMainGameClass
             await ShowTieAsync();
             return;
         }
+        _model.Accusation.Visible = false;
         SaveRoot.GameStatus = EnumClueStatusList.EndTurn;
         await EndStepAsync();
     }

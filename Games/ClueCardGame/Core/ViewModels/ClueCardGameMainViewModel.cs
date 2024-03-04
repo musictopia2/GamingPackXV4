@@ -42,6 +42,7 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
     {
         return false;
     }
+    public override bool CanEndTurn() => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.EndTurn;
     public bool CanMakePrediction
     {
         get

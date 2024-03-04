@@ -27,13 +27,12 @@ public partial class ClueCardGameVMData : IBasicCardGamesData<ClueCardGameCardIn
         Accusation.Visible = false;
         Accusation.Text = "Accusation";
         PlayerHand1.AutoSelect = EnumHandAutoType.None;
-
     }
     public DeckObservablePile<ClueCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<ClueCardGameCardInformation> Pile1 { get; set; }
     public HandObservable<ClueCardGameCardInformation> PlayerHand1 { get; set; }
     public HandObservable<ClueCardGameCardInformation> Prediction { get; set; }
-    public HandObservable<ClueCardGameCardInformation> Accusation { get; set; }
+    public HandObservable<ClueCardGameCardInformation> Accusation { get; set; } //knows because of visible of this one.
     public SingleObservablePile<ClueCardGameCardInformation>? OtherPile { get; set; }
     //any other ui related properties will be here.
     //can copy/paste for the actual view model.

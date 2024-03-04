@@ -12,6 +12,7 @@
     </StackItem>
     <StackItem Length="400px">
         <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
     </StackItem>
     <StackItem>
         <div style="font-weight: bold;">
@@ -19,7 +20,7 @@
         </div>
         @foreach (var item in _players)
         {
-            <div>
+            <div style="@GetStyle(item)">
                 @item.NickName
             </div>
         }
