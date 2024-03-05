@@ -75,10 +75,15 @@ public class ClueCardGameMainGameClass
             PopulateComputerData();
             await _privateAutoResume.SaveStateAsync(_gameContainer);
         }
-        else if (SaveRoot.CurrentPrediction!.FirstName == "" && SaveRoot.CurrentPrediction.SecondName == "")
+        else
         {
-            SaveRoot.CurrentPrediction.FirstName = _gameContainer.DetectiveDetails!.CurrentPrediction!.FirstName;
-            SaveRoot.CurrentPrediction.SecondName = _gameContainer.DetectiveDetails.CurrentPrediction.SecondName;
+            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+            if (SaveRoot.CurrentPrediction!.FirstName == "" && SaveRoot.CurrentPrediction.SecondName == "")
+            {
+                SaveRoot.CurrentPrediction.FirstName = _gameContainer.DetectiveDetails!.CurrentPrediction!.FirstName;
+                SaveRoot.CurrentPrediction.SecondName = _gameContainer.DetectiveDetails.CurrentPrediction.SecondName;
+                SaveRoot.LoadMod(_model);
+            }
         }
         if (SaveRoot.CurrentPrediction!.FirstName != "" || SaveRoot.CurrentPrediction.SecondName != "")
         {
@@ -320,10 +325,10 @@ public class ClueCardGameMainGameClass
         }
         _model.Accusation.Visible = false;
         _model.Prediction.Visible = true;
-        if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
-        {
-            _gameContainer.DetectiveDetails!.HumanFailed = true;
-        }
+        //if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+        //{
+        //    _gameContainer.DetectiveDetails!.HumanFailed = true;
+        //}
         _gameContainer.DetectiveDetails!.StartAccusation = false;
         await _privateAutoResume.SaveStateAsync(_gameContainer);
         SaveRoot.GameStatus = EnumClueStatusList.EndTurn;

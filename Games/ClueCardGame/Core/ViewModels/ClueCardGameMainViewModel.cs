@@ -46,9 +46,9 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         if (finds is not null)
         {
             VMData.Accusation.HandList.RemoveObjectByDeck(card.Deck);
-            if (finds.Name == _gameContainer.DetectiveDetails!.Accusation.RoomName)
+            if (finds.Name == _gameContainer.DetectiveDetails!.Accusation.CharacterName)
             {
-                _gameContainer.DetectiveDetails.Accusation.RoomName = "";
+                _gameContainer.DetectiveDetails.Accusation.CharacterName = "";
             }
             else if (finds.Name == _gameContainer.DetectiveDetails!.Accusation.WeaponName)
             {
@@ -114,7 +114,19 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         return false;
     }
     public override bool CanEndTurn() => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.EndTurn && _gameContainer.DetectiveDetails!.StartAccusation == false;
-    public bool CanStartAccusation() => _mainGame.SaveRoot.GameStatus != EnumClueStatusList.FindClues && _gameContainer.DetectiveDetails!.StartAccusation == false && _gameContainer.DetectiveDetails!.HumanFailed == false;
+    public bool CanStartAccusation()
+    {
+        var player = _mainGame.PlayerList.GetSelf();
+        if (player.InGame == false)
+        {
+            return false;
+        }
+        if (_mainGame.SaveRoot.GameStatus == EnumClueStatusList.FindClues)
+        {
+            return false;
+        }
+        return _gameContainer.DetectiveDetails!.StartAccusation == false;
+    }
     [Command(EnumCommandCategory.Game)]
     public async Task StartAccusationAsync()
     {
@@ -142,9 +154,27 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         VMData.Accusation.ClearHand(); //has to clear hand because you cancelled.  if you do again, redo.
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
-    public bool CanAddAccusation => _gameContainer.DetectiveDetails!.StartAccusation && _mainGame.SaveRoot.GameStatus != EnumClueStatusList.FindClues;
+
+    public bool CanAdd => _mainGame.SaveRoot.GameStatus != EnumClueStatusList.FindClues;
     [Command(EnumCommandCategory.Game)]
-    public async Task AddAccusationAsync(ClueCardGameCardInformation card)
+    public async Task AddAsync(ClueCardGameCardInformation card)
+    {
+        if (_gameContainer.DetectiveDetails!.StartAccusation)
+        {
+            await AddAccusationAsync(card);
+            return;
+        }
+        if (CanAddPrediction)
+        {
+            await AddPredictionAsync(card);
+            return;
+        }
+        //do nothing otherwise.
+    }
+
+    //public bool CanAddAccusation => _gameContainer.DetectiveDetails!.StartAccusation && _mainGame.SaveRoot.GameStatus != EnumClueStatusList.FindClues;
+    //[Command(EnumCommandCategory.Game)]
+    private async Task AddAccusationAsync(ClueCardGameCardInformation card)
     {
         bool rets;
         rets = await RemoveAccusationAsync(card);
@@ -186,9 +216,9 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         }
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
-    public bool CanAddPrediction => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction && _gameContainer.DetectiveDetails!.StartAccusation == false;
-    [Command(EnumCommandCategory.Game)]
-    public async Task AddPredictionAsync(ClueCardGameCardInformation card)
+    private bool CanAddPrediction => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction && _gameContainer.DetectiveDetails!.StartAccusation == false;
+    //[Command(EnumCommandCategory.Game)]
+    private async Task AddPredictionAsync(ClueCardGameCardInformation card)
     {
         bool rets;
         rets = await RemovePredictionAsync(card);

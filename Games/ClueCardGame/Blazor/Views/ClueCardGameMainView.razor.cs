@@ -25,7 +25,7 @@ public partial class ClueCardGameMainView
         ? DataContext!.CancelAccusationCommand!
         : DataContext!.StartAccusationCommand!;
     private string ToggleDisplay => _gameContainer!.DetectiveDetails!.StartAccusation ? "Cancel Accusation" : "Start Accusation";
-    private BasicGameCommand AddCommand => _gameContainer!.DetectiveDetails!.StartAccusation! ? DataContext!.AddAccusationCommand! : DataContext!.AddPredictionCommand!;
+    private BasicGameCommand AddCommand => DataContext!.AddCommand!;
     
     //private BasicGameCommand AddPredictionCommand => DataContext!.AddPredictionCommand!;
     private BasicGameCommand MakeCommand => _gameContainer!.DetectiveDetails!.StartAccusation

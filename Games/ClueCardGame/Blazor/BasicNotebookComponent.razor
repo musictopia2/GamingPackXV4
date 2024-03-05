@@ -1,14 +1,18 @@
-﻿@{
+﻿@using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base
+@{
     var list1 = GetCardsInCategory(EnumCardType.IsCharacter);
 }
 <StackLayout>
     @foreach (var item in list1)
     {
         <StackItem>
-            <CardGraphicsBlazor CommandParameter="item"
-                                TargetHeight="@RealHeight"
-                                CommandObject="AddCommand"
-                DeckObject="item" />
+            <FlexibleDeckRenderComponent DeckObject=item UseKey="true">
+                <CardGraphicsBlazor CommandParameter="item"
+                                    TargetHeight="@RealHeight"
+                                    CommandObject="AddCommand"
+                                    DeckObject="item" />
+            </FlexibleDeckRenderComponent>
+
         </StackItem>
     }
 </StackLayout>
@@ -19,10 +23,12 @@
     @foreach (var item in list2)
     {
         <StackItem>
-            <CardGraphicsBlazor CommandParameter="item"
-                                TargetHeight="@RealHeight"
-                                CommandObject="AddCommand"
-                DeckObject="item" />
+            <FlexibleDeckRenderComponent DeckObject=item UseKey="true">
+                <CardGraphicsBlazor CommandParameter="item"
+                                    TargetHeight="@RealHeight"
+                                    CommandObject="AddCommand"
+                                    DeckObject="item" />
+            </FlexibleDeckRenderComponent>
         </StackItem>
     }
 </StackLayout>
@@ -33,10 +39,12 @@
     @foreach (var item in list3)
     {
         <StackItem>
-            <CardGraphicsBlazor CommandParameter="item"
-                                TargetHeight="@RealHeight"
-                                CommandObject="AddCommand"
-                DeckObject="item" />
+            <FlexibleDeckRenderComponent DeckObject=item UseKey="true">
+                <CardGraphicsBlazor CommandParameter="item"
+                                    TargetHeight="@RealHeight"
+                                    CommandObject="AddCommand"
+                                    DeckObject="item" />
+            </FlexibleDeckRenderComponent>
         </StackItem>
     }
 </StackLayout>

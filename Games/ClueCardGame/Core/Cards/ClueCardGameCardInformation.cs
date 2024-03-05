@@ -47,6 +47,10 @@ public class ClueCardGameCardInformation : SimpleDeckObject, IDeckObject, ICompa
         CardValue = chosen.ToEnum<EnumCardValues>();
         Name = __names[chosen - 1];
     }
+    public override string GetKey()
+    {
+        return Deck.ToString();
+    }
     public void Reset()
     {
         //anything that is needed to reset.
