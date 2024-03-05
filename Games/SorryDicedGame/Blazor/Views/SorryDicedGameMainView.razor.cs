@@ -25,4 +25,5 @@ public partial class SorryDicedGameMainView
     }
     private ICustomCommand EndCommand => DataContext!.EndTurnCommand!;
     private ICustomCommand RollCommand => DataContext!.RollCommand!;
+    private BasicGameCommand ChooseStartCommand => DataContext!.ChoseStartPieceCommand!;
 }

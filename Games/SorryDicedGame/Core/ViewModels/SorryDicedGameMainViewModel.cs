@@ -3,6 +3,7 @@ namespace SorryDicedGame.Core.ViewModels;
 public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
 {
     public readonly SorryDicedGameMainGameClass MainGame; //if we don't need, delete.
+    private readonly IToast _toast;
     public SorryDicedGameVMData VMData { get; set; }
     public SorryDicedGameMainViewModel(CommandContainer commandContainer,
         SorryDicedGameMainGameClass mainGame,
@@ -10,12 +11,14 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
         TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        SorryDicedGameVMData data
+        SorryDicedGameVMData data,
+        IToast toast
         )
         : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
     {
         MainGame = mainGame;
         VMData = data;
+        _toast = toast;
         CreateCommands(commandContainer);
     }
     //anything else needed is here.
@@ -27,6 +30,12 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
         //will be a command now to roll the dice (getting closer to reals).
         
         await MainGame.RollAsync();
+    }
+    [Command(EnumCommandCategory.Game)]
+    public async Task ChoseStartPiece(EnumColorChoice color)
+    {
+        _toast.ShowInfoToast(color.ToString());
+        await Task.Delay(1);
     }
 
 }

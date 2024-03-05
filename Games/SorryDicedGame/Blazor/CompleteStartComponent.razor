@@ -11,7 +11,7 @@
         @foreach (var player in Players)
         {
             <GridItem Column="column" Row="row">
-                <PawnComponent HowMany="4" ImageHeight="@ImageHeight" ColorUsed="player.Color" />
+                <TemporaryBoard HowMany="0" ImageHeight="@ImageHeight" OnChoseColor=PrivateChoseColorAsync ColorUsed="player.Color" />
             </GridItem>
             column++;
             if (column > 2)

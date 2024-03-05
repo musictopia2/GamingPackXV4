@@ -11,8 +11,8 @@
         <GridItem Column="item.column" Row="item.row">
             
             <RawGameBoard TargetHeight="@ImageHeight" BoardSize="TargetSize">
-                <svg>
-                    <rect fill="@ColorUsed" width="40" height="40" />
+                <svg @onclick="PrivateColorClick">
+                    <rect fill="@ColorUsed"  width="40" height="40" />
                     @if (item.index < HowMany)
                     {
                         <BasePieceGraphics Location="new(2, 2)" TargetSize="36">
