@@ -12,4 +12,5 @@ public class SorryDicedGameGameContainer : BasicGameContainer<SorryDicedGamePlay
         IRandomGenerator random) : base(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
     {
     }
+    public static bool CanStart { get; set; }
 }

@@ -6,7 +6,7 @@ public partial class CompleteDiceRollerComponent : IDisposable
     [Parameter]
     [EditorRequired]
     public string ImageHeight { get; set; } = "";
-
+    
 
     private BasicList<SorryDiceModel> DiceList { get; set; } = [];
     protected override void OnInitialized()

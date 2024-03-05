@@ -28,6 +28,7 @@ public class SorryDicedGameMainGameClass
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
+        SorryDicedGameGameContainer.CanStart = PlayerList.DidChooseColors();
         BoardGameSaved(); //i think.
         //anything else needed is here.
         return Task.CompletedTask;
@@ -53,6 +54,7 @@ public class SorryDicedGameMainGameClass
         {
             throw new CustomBasicException("The loader never set the finish up code.  Rethink");
         }
+        SorryDicedGameGameContainer.CanStart = false;
         SaveRoot!.ImmediatelyStartTurn = true; //most of the time, needs to immediately start turn.  if i am wrong, rethink.
         await FinishUpAsync(isBeginning);
     }
@@ -112,7 +114,7 @@ public class SorryDicedGameMainGameClass
             throw new CustomBasicException("Nobody is handling filling the rest of the colors.  Rethink");
         }
         MiscDelegates.FillRestColors.Invoke();
-
+        SorryDicedGameGameContainer.CanStart = true;
         await EndTurnAsync();
     }
 
