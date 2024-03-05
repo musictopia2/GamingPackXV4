@@ -1,3 +1,4 @@
+
 namespace SorryDicedGame.Core.Logic;
 [SingletonGame]
 public class SorryDicedGameMainGameClass
@@ -105,6 +106,12 @@ public class SorryDicedGameMainGameClass
     public override async Task AfterChoosingColorsAsync()
     {
         //anything else that is needed after they finished choosing colors.
+
+        if (MiscDelegates.FillRestColors == null)
+        {
+            throw new CustomBasicException("Nobody is handling filling the rest of the colors.  Rethink");
+        }
+        MiscDelegates.FillRestColors.Invoke();
 
         await EndTurnAsync();
     }

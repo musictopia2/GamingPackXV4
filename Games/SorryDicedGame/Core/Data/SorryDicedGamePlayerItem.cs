@@ -6,4 +6,19 @@ public class SorryDicedGamePlayerItem : PlayerBoardGame<EnumColorChoice>
     {
         Color = EnumColorChoice.None;
     }
+    public override bool CanStartInGame
+    {
+        get
+        {
+            if (PlayerCategory != EnumPlayerCategory.Computer)
+            {
+                return true;
+            }
+            if (NickName.StartsWith("Computeridle"))
+            {
+                return false;
+            }
+            return true;
+        }
+    }
 }

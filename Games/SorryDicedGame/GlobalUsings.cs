@@ -49,3 +49,4 @@ global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorStri
 global using Microsoft.AspNetCore.Components.Rendering;
 global using SvgHelper.Blazor.Logic;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
+global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.MiscHelpers;
