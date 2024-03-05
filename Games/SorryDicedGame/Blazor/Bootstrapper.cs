@@ -12,7 +12,7 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<SorryDicedGameShellView
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
         Core.DIFinishProcesses.SpecializedRegistrationHelpers.RegisterCommonMultplayerClasses(GetDIContainer);
         Core.DIFinishProcesses.AutoResetClass.RegisterAutoResets();
-        //anything that needs to be registered will be here.
+        register.RegisterSingleton<IGenerateDice<int>, SorryDiceModel>();
         return Task.CompletedTask;
     }
 

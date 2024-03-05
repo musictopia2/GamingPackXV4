@@ -1,8 +1,8 @@
 namespace SorryDicedGame.Core.ViewModels;
 [InstanceGame]
-public class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
+public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
 {
-    private readonly SorryDicedGameMainGameClass _mainGame; //if we don't need, delete.
+    public readonly SorryDicedGameMainGameClass MainGame; //if we don't need, delete.
     public SorryDicedGameVMData VMData { get; set; }
     public SorryDicedGameMainViewModel(CommandContainer commandContainer,
         SorryDicedGameMainGameClass mainGame,
@@ -14,9 +14,19 @@ public class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
         )
         : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
     {
-        _mainGame = mainGame;
+        MainGame = mainGame;
         VMData = data;
+        CreateCommands(commandContainer);
     }
     //anything else needed is here.
+    partial void CreateCommands(CommandContainer command);
+
+    [Command(EnumCommandCategory.Game)]
+    public async Task RollAsync()
+    {
+        //will be a command now to roll the dice (getting closer to reals).
+        
+        await MainGame.RollAsync();
+    }
 
 }

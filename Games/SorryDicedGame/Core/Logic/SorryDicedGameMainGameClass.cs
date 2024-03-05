@@ -15,14 +15,15 @@ public class SorryDicedGameMainGameClass
         CommandContainer command,
         SorryDicedGameGameContainer gameContainer,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        SorryCompleteDiceSet completeDice
         ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     {
         _model = model;
+        _completeDice = completeDice;
     }
-
     private readonly SorryDicedGameVMData? _model;
-
+    private readonly SorryCompleteDiceSet _completeDice;
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -54,12 +55,15 @@ public class SorryDicedGameMainGameClass
         SaveRoot!.ImmediatelyStartTurn = true; //most of the time, needs to immediately start turn.  if i am wrong, rethink.
         await FinishUpAsync(isBeginning);
     }
-    Task IMiscDataNM.MiscDataReceived(string status, string content)
+    async Task IMiscDataNM.MiscDataReceived(string status, string content)
     {
         switch (status) //can't do switch because we don't know what the cases are ahead of time.
         {
             //put in cases here.
-
+            case "dicelist":
+                var dice = await _completeDice.GetDiceList(content);
+                await ShowRollingAsync(dice);
+                return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
@@ -104,4 +108,20 @@ public class SorryDicedGameMainGameClass
 
         await EndTurnAsync();
     }
+
+    public async Task RollAsync()
+    {
+        var firsts = _completeDice.RollDice();
+        if (BasicData.MultiPlayer)
+        {
+            await _completeDice.SendMessageAsync("dicelist", firsts);
+        }
+        await ShowRollingAsync(firsts);
+    }
+    private async Task ShowRollingAsync(BasicList<BasicList<SorryDiceModel>> thisList)
+    {
+        await _completeDice.ShowRollingAsync(thisList);
+        await ContinueTurnAsync();
+    }
+
 }

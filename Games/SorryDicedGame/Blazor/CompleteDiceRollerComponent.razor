@@ -1,0 +1,13 @@
+﻿<div style="height: @ImageHeight; margin-bottom: 4px;">
+    <StackLayout>
+        @foreach (var item in DiceList)
+        {
+            <StackItem>
+                <SorryDiceComponent TargetHeight="@ImageHeight" Dice="item" />
+                @* <div @onclick="() => SelectDiceAsync(item)">
+                    <BasicDiceBlazor TargetHeight="@ImageHeight" Dice="item" />
+                </div> *@
+            </StackItem>
+        }
+    </StackLayout>
+</div>

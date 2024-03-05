@@ -1,4 +1,7 @@
 @inherits BasicGameView<SorryDicedGameMainViewModel>
-<p>Welcome to SorryDicedGame</p>
 <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
+<GameButtonComponent Display="Roll Dice" CommandObject="RollCommand" />
+
+<CompleteDiceRollerComponent ImageHeight="15vh" />
+
 <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />

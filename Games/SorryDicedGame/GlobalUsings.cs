@@ -41,3 +41,11 @@ global using BasicGameFrameworkLibrary.Blazor.Helpers;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfaceModels;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
 global using System.Drawing; //very common
+global using BasicGameFrameworkLibrary.Core.Dice;
+global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
+global using SvgHelper.Blazor.Logic.Classes.SubClasses;
+global using SvgHelper.Blazor.Logic.Classes.Interfaces;
+global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using Microsoft.AspNetCore.Components.Rendering;
+global using SvgHelper.Blazor.Logic;
+global using BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
