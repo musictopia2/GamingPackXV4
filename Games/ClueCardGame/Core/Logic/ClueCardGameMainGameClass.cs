@@ -212,7 +212,6 @@ public class ClueCardGameMainGameClass
                 return;
             case "cluegiven":
                 //needs a new model for cluegiven.
-
                 HintInfo hint = await js1.DeserializeObjectAsync<HintInfo>(content);
                 ClueCardGameCardInformation card = new();
                 card.Populate(hint.Deck);
@@ -223,10 +222,11 @@ public class ClueCardGameMainGameClass
                 {
                     await MarkCardAsync(SingleInfo, card, false); //try this way now (?)
                     _model!.Pile1!.AddCard(card);
-                    _command.UpdateAll();
+                    
                     //for  now, show a messagebox with the information unless i find another way.
                     //await _message!.ShowMessageAsync($"Clue given by {hint.NickName}"); //hopefully this is okay.
                 }
+                _command.UpdateAll();
                 await ContinueTurnAsync(); //try this (?)
                 return;
             default:
@@ -255,6 +255,7 @@ public class ClueCardGameMainGameClass
     }
     public override async Task EndTurnAsync()
     {
+        //_toast.ShowInfoToast("Ending Turn");
         _command.ManuelFinish = true; //because it could be somebody else's turn.
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects(); //i think this is best.
@@ -342,6 +343,7 @@ public class ClueCardGameMainGameClass
         card = _gameContainer.GetClonedCard(SaveRoot.CurrentPrediction!.SecondName);
         list.Add(card);
         _model.Prediction.HandList.ReplaceRange(list);
+        _command.UpdateAll();
     }
     public async Task MakePredictionAsync()
     {
@@ -408,6 +410,7 @@ public class ClueCardGameMainGameClass
     }
     private async Task EndStepAsync()
     {
+        //_toast.ShowInfoToast("End Step");
         await SaveStateAsync(); //i tihnk needs to be here now.
         if (SaveRoot!.GameStatus == EnumClueStatusList.EndTurn)
         {
@@ -421,6 +424,7 @@ public class ClueCardGameMainGameClass
         if (OtherTurn > 0 && OtherTurn == MyID)
         {
             var player = PlayerList.GetWhoPlayer();
+            _command.UpdateAll(); //do this as well.
             await _message.ShowMessageAsync($"You need to give a clue for the {player.NickName}");
             await ShowHumanCanPlayAsync();
             return;
@@ -432,6 +436,12 @@ public class ClueCardGameMainGameClass
         }
         if (BasicData.MultiPlayer == true && OtherTurn == 0)
         {
+            if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Computer)
+            {
+                await ComputerRegularTurnAsync(); //try this way.
+                return;
+                //_command.UpdateAll();
+            }
             Network!.IsEnabled = true;
             return;
         }
@@ -534,7 +544,7 @@ public class ClueCardGameMainGameClass
             ClueCardGameCardInformation thisCard = newPlayer.MainHandList.Single(items => items.Name == thisInfo);
             SingleInfo = PlayerList.GetWhoPlayer();
 
-            if (newPlayer.CanSendMessage(BasicData!) && WhoTurn != MyID)
+            if (newPlayer.CanSendMessage(BasicData!))
             {
                 HintInfo hint = new()
                 {

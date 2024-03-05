@@ -28,8 +28,15 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         VMData.Prediction.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction);
         VMData.Prediction.ObjectClickedAsync = PredictionChangeMindAsync;
         VMData.Accusation.ObjectClickedAsync = AccusationChangeMindAsync;
-        VMData.PlayerHand1.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.FindClues);
         CreateCommands(commandContainer);
+    }
+    protected override bool AlwaysEnableHand()
+    {
+        return false;
+    }
+    protected override bool CanEnableHand()
+    {
+        return _mainGame.SaveRoot.GameStatus == EnumClueStatusList.FindClues;
     }
     partial void CreateCommands(CommandContainer command);
     private async Task AccusationChangeMindAsync(ClueCardGameCardInformation card, int index)
@@ -108,10 +115,6 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
     protected override async Task ProcessDiscardClickedAsync()
     {
         await Task.CompletedTask;
-    }
-    public override bool CanEnableAlways()
-    {
-        return false;
     }
     public override bool CanEndTurn() => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.EndTurn && _gameContainer.DetectiveDetails!.StartAccusation == false;
     public bool CanStartAccusation()
@@ -337,6 +340,7 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         card.IsSelected = false;
         await _mainGame.MarkCardAsync(tempPlayer, card, false);
         _gameContainer.SaveRoot!.GameStatus = EnumClueStatusList.EndTurn;
+        _mainGame.OtherTurn = 0; //has to be 0 now for otherturn.
         if (_gameContainer.BasicData.MultiPlayer == false)
         {
             throw new CustomBasicException("Computer should have never had this");

@@ -1,6 +1,6 @@
 ﻿namespace ClueCardGame.Core.Logic;
 [SingletonGame]
-public class PrivateAutoResumeProcesses(IPrivateSaveGame save) : ISerializable
+public class PrivateAutoResumeProcesses(IPrivateSaveGame save, TestOptions test) : ISerializable
 {
     private string _resumeData = "";
     public async Task<bool> HasAutoResumeAsync()
@@ -23,6 +23,10 @@ public class PrivateAutoResumeProcesses(IPrivateSaveGame save) : ISerializable
     }
     public async Task SaveStateAsync(ClueCardGameGameContainer container)
     {
+        if (test.SaveOption == EnumTestSaveCategory.RestoreOnly)
+        {
+            return; //can't save anymore
+        }
         //this will go ahead and populate the save state.
         if (container.DetectiveDetails is null)
         {
