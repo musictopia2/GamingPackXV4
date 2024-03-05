@@ -203,14 +203,7 @@ public class ClueCardGameMainGameClass
                 return;
             case "accusation":
                 SolutionInfo accusation = await js1.DeserializeObjectAsync<SolutionInfo>(content);
-                if (status == "prediction")
-                {
-                    await MakePredictionAsync();
-                }
-                else
-                {
-                    await MakeAccusationAsync(accusation);
-                }
+                await MakeAccusationAsync(accusation);
                 return;
             case "cluegiven":
                 //needs a new model for cluegiven.
@@ -257,13 +250,17 @@ public class ClueCardGameMainGameClass
     }
     public override async Task EndTurnAsync()
     {
+        _command.ManuelFinish = true; //because it could be somebody else's turn.
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects(); //i think this is best.
         ClearPrediction();
-        //anything else is here.  varies by game.
+        _model.Prediction.Visible = true;
+        _model.Accusation.Visible = false;
+        _model.Accusation.ClearHand();
+        _gameContainer.DetectiveDetails!.Accusation = new();
+        await _privateAutoResume.SaveStateAsync(_gameContainer);
         SaveRoot.WhoGaveClue = ""; //i think
         _model.Pile1.ClearCards();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
@@ -315,13 +312,20 @@ public class ClueCardGameMainGameClass
             _toast.ShowWarningToast($"Sorry, the accusation was not correct {SingleInfo.NickName}.  You are out of the game but need to still be there in order to prove other predictions wrong.");
         }
         SingleInfo.InGame = false;
-        if (PlayerList.Count(items => items.InGame == true) <= 1)
+        if (PlayerList.Count(items => items.InGame == true && items.PlayerCategory != EnumPlayerCategory.Computer) <= 1)
         {
             _toast.ShowWarningToast($"Sorry, nobody got the solution correct.  Therefore, nobody won.  The solution was {Constants.VBCrLf} {accusation.CharacterName} did it in the {accusation.RoomName} with the {accusation.WeaponName}");
             await ShowTieAsync();
             return;
         }
         _model.Accusation.Visible = false;
+        _model.Prediction.Visible = true;
+        if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            _gameContainer.DetectiveDetails!.HumanFailed = true;
+        }
+        _gameContainer.DetectiveDetails!.StartAccusation = false;
+        await _privateAutoResume.SaveStateAsync(_gameContainer);
         SaveRoot.GameStatus = EnumClueStatusList.EndTurn;
         await EndStepAsync();
     }

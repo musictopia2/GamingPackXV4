@@ -21,7 +21,16 @@ public partial class ClueCardGameMainView
         base.OnInitialized();
     }
     private BasicGameCommand EndTurnCommand => DataContext!.EndTurnCommand!;
-    private BasicGameCommand AddPredictionCommand => DataContext!.AddPredictionCommand!;
-    private BasicGameCommand MakePredictionCommand => DataContext!.MakePredictionCommand!;
+    private BasicGameCommand ToggleCommand => _gameContainer!.DetectiveDetails!.StartAccusation
+        ? DataContext!.CancelAccusationCommand!
+        : DataContext!.StartAccusationCommand!;
+    private string ToggleDisplay => _gameContainer!.DetectiveDetails!.StartAccusation ? "Cancel Accusation" : "Start Accusation";
+    private BasicGameCommand AddCommand => _gameContainer!.DetectiveDetails!.StartAccusation! ? DataContext!.AddAccusationCommand! : DataContext!.AddPredictionCommand!;
+    
+    //private BasicGameCommand AddPredictionCommand => DataContext!.AddPredictionCommand!;
+    private BasicGameCommand MakeCommand => _gameContainer!.DetectiveDetails!.StartAccusation
+        ? DataContext!.MakeAccusationCommand!
+        : DataContext!.MakePredictionCommand!;
+    private string MakeDisplay => _gameContainer!.DetectiveDetails!.StartAccusation ? "Make Accusation" : "Make Prediction";
     private string GetStyle(ClueCardGamePlayerItem player) => _gameContainer!.SaveRoot.WhoGaveClue == player.NickName ? "color: lime;" : "";
 }

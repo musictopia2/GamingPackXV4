@@ -27,16 +27,52 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         _privateAutoResume = privateAutoResume;
         VMData.Prediction.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction);
         VMData.Prediction.ObjectClickedAsync = PredictionChangeMindAsync;
+        VMData.Accusation.ObjectClickedAsync = AccusationChangeMindAsync;
         VMData.PlayerHand1.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.FindClues);
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
+    private async Task AccusationChangeMindAsync(ClueCardGameCardInformation card, int index)
+    {
+        bool rets = await RemoveAccusationAsync(card);
+        if (rets == false)
+        {
+            _toast.ShowUserErrorToast("I think there was a bug because did not find a card to remove for accusation");
+        }
+    }
+    private async Task<bool> RemoveAccusationAsync(ClueCardGameCardInformation card)
+    {
+        var finds = VMData.Accusation.HandList.SingleOrDefault(x => x.Name == card.Name);
+        if (finds is not null)
+        {
+            VMData.Accusation.HandList.RemoveObjectByDeck(card.Deck);
+            if (finds.Name == _gameContainer.DetectiveDetails!.Accusation.RoomName)
+            {
+                _gameContainer.DetectiveDetails.Accusation.RoomName = "";
+            }
+            else if (finds.Name == _gameContainer.DetectiveDetails!.Accusation.WeaponName)
+            {
+                _gameContainer.DetectiveDetails.Accusation.WeaponName = "";
+            }
+            else if (finds.Name == _gameContainer.DetectiveDetails!.Accusation.RoomName)
+            {
+                _gameContainer.DetectiveDetails.Accusation.RoomName = "";
+            }
+            else
+            {
+                throw new CustomBasicException("Failed to find in the accusation details");
+            }
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+            return true;
+        }
+        return false;
+    }
     private async Task PredictionChangeMindAsync(ClueCardGameCardInformation card, int index)
     {
         bool rets = await RemovePredictionAsync(card);
         if (rets == false)
         {
-            _toast.ShowUserErrorToast("I think there was a bug because did not find a card to remove");
+            _toast.ShowUserErrorToast("I think there was a bug because did not find a card to remove for prediction");
         }
     }
     private async Task<bool> RemovePredictionAsync(ClueCardGameCardInformation card)
@@ -77,9 +113,80 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
     {
         return false;
     }
-    public override bool CanEndTurn() => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.EndTurn;
-    
-    public bool CanAddPrediction => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction;
+    public override bool CanEndTurn() => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.EndTurn && _gameContainer.DetectiveDetails!.StartAccusation == false;
+    public bool CanStartAccusation() => _mainGame.SaveRoot.GameStatus != EnumClueStatusList.FindClues && _gameContainer.DetectiveDetails!.StartAccusation == false && _gameContainer.DetectiveDetails!.HumanFailed == false;
+    [Command(EnumCommandCategory.Game)]
+    public async Task StartAccusationAsync()
+    {
+        _gameContainer.DetectiveDetails!.StartAccusation = true;
+        _gameContainer.DetectiveDetails.Accusation = new();
+        VMData.Accusation.ClearHand();
+        VMData.Prediction.ClearHand(); //i think will clear hand here too.
+        VMData.Accusation.Visible = true;
+        VMData.Prediction.Visible = false;
+        _mainGame.SaveRoot.CurrentPrediction!.FirstName = "";
+        _mainGame.SaveRoot.CurrentPrediction.SecondName = "";
+        _mainGame.SaveRoot.LoadMod(VMData);
+        _gameContainer.DetectiveDetails.CurrentPrediction!.FirstName = "";
+        _gameContainer.DetectiveDetails.CurrentPrediction.SecondName = "";
+        await _privateAutoResume.SaveStateAsync(_gameContainer);
+    }
+    public bool CanCancelAccusation => _gameContainer.DetectiveDetails!.StartAccusation;
+    [Command(EnumCommandCategory.Game)]
+    public async Task CancelAccusationAsync()
+    {
+        _gameContainer.DetectiveDetails!.StartAccusation = false;
+        _gameContainer.DetectiveDetails.Accusation = new();
+        VMData.Accusation.Visible = false;
+        VMData.Prediction.Visible = true;
+        VMData.Accusation.ClearHand(); //has to clear hand because you cancelled.  if you do again, redo.
+        await _privateAutoResume.SaveStateAsync(_gameContainer);
+    }
+    public bool CanAddAccusation => _gameContainer.DetectiveDetails!.StartAccusation && _mainGame.SaveRoot.GameStatus != EnumClueStatusList.FindClues;
+    [Command(EnumCommandCategory.Game)]
+    public async Task AddAccusationAsync(ClueCardGameCardInformation card)
+    {
+        bool rets;
+        rets = await RemoveAccusationAsync(card);
+        if (rets)
+        {
+            return;
+        }
+        ClueCardGameCardInformation newItem;
+        newItem = new();
+        newItem.Populate(card.Deck);
+        //can replace easily as well if you really want to.
+
+        //this means if you pick 2 rooms, one will replace the other.
+
+        var fins = VMData.Accusation.HandList.SingleOrDefault(x => x.WhatType == card.WhatType);
+        if (fins is null)
+        {
+            VMData.Accusation.HandList.Add(newItem);
+        }
+        else
+        {
+            VMData.Accusation.HandList.ReplaceItem(fins, newItem); //hopefully this works (?)
+        }
+        if (card.WhatType == EnumCardType.IsWeapon)
+        {
+            _gameContainer.DetectiveDetails!.Accusation.WeaponName = card.Name;
+        }
+        else if (card.WhatType == EnumCardType.IsRoom)
+        {
+            _gameContainer.DetectiveDetails!.Accusation.RoomName = card.Name;
+        }
+        else if (card.WhatType == EnumCardType.IsCharacter)
+        {
+            _gameContainer.DetectiveDetails!.Accusation.CharacterName = card.Name;
+        }
+        else
+        {
+            throw new CustomBasicException("Failed to add accusation");
+        }
+        await _privateAutoResume.SaveStateAsync(_gameContainer);
+    }
+    public bool CanAddPrediction => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction && _gameContainer.DetectiveDetails!.StartAccusation == false;
     [Command(EnumCommandCategory.Game)]
     public async Task AddPredictionAsync(ClueCardGameCardInformation card)
     {
@@ -143,6 +250,32 @@ public partial class ClueCardGameMainViewModel : BasicCardGamesVM<ClueCardGameCa
         _mainGame!.SaveRoot!.CurrentPrediction!.FirstName = VMData.FirstName;
         _mainGame.SaveRoot.CurrentPrediction.SecondName = VMData.SecondName;
         await _mainGame.MakePredictionAsync();
+    }
+    public bool CanMakeAccusation()
+    {
+        if (_mainGame.SaveRoot.GameStatus == EnumClueStatusList.FindClues)
+        {
+            return false;
+        }
+        if (_gameContainer.DetectiveDetails!.Accusation.CharacterName == "")
+        {
+            return false;
+        }
+        if (_gameContainer.DetectiveDetails!.Accusation.WeaponName == "")
+        {
+            return false;
+        }
+        if (_gameContainer.DetectiveDetails!.Accusation.RoomName == "")
+        {
+            return false;
+        }
+        return true;
+    }
+    [Command(EnumCommandCategory.Game)]
+    public async Task MakeAccusationAsync()
+    {
+        //this means you can make it because all is filled out.
+        await _mainGame.MakeAccusationAsync(_gameContainer.DetectiveDetails!.Accusation);
     }
     protected override async Task ProcessHandClickedAsync(ClueCardGameCardInformation card, int index)
     {

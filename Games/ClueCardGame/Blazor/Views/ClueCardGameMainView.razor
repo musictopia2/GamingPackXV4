@@ -10,12 +10,24 @@
     <StackItem>
         <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
     </StackItem>
-    <StackItem Length="400px">
+    <StackItem Length="650px">
         <LabelGridComponent DataContext="_vmData" Labels="_labels" />
-        <GameButtonComponent Display="Make Prediction" CommandObject="MakePredictionCommand" />
-        <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
+        <StackLayout>
+            <StackItem Length="1fr">
+                <GameButtonComponent Display="@MakeDisplay" Width="100%" CommandObject="MakeCommand" />
+            </StackItem>
+            <StackItem Length="1fr">
+                <GameButtonComponent Display="End Turn" Width="100%" CommandObject="EndTurnCommand" />
+            </StackItem>
+            <StackItem Length="1fr">
+                <GameButtonComponent Display="@ToggleDisplay" Width="100%" CommandObject="ToggleCommand" />
+            </StackItem>
+        </StackLayout>
+        
+        
+        
     </StackItem>
-    <StackItem>
+    <StackItem Style="margin-left: 10px;">
         <div style="font-weight: bold;">
             Play Order
         </div>
@@ -33,7 +45,7 @@
 }
 <HandBlazor Hand="_vmData.Accusation" />
 <BasicNotebookComponent
-    PredictCommand="AddPredictionCommand"
+    AddCommand="AddCommand"
     PersonalNotebook="_gameContainer.DetectiveDetails!.PersonalNotebook"
     
     />

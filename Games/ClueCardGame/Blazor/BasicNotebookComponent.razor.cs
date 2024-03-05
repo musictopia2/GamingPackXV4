@@ -8,7 +8,7 @@ public partial class BasicNotebookComponent
 
     [Parameter]
     [EditorRequired]
-    public ICustomCommand? PredictCommand { get; set; }
+    public ICustomCommand? AddCommand { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; } = 15;
     private string RealHeight => $"{TargetHeight}vh";
