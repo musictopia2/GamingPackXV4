@@ -184,9 +184,40 @@ public class SorryDicedGameMainGameClass
         }
         await ShowRollingAsync(firsts);
     }
+    private bool HasAnyProperMove(SorryDiceModel dice)
+    {
+        if (dice.Category == EnumDiceCategory.Slide)
+        {
+            return true; //slides are always valid.
+        }
+        if (dice.Category == EnumDiceCategory.Wild)
+        {
+            return true;
+        }
+        bool rets;
+        if (dice.Category == EnumDiceCategory.Sorry)
+        {
+            rets = SaveRoot.BoardList.Any(x => x.At == EnumBoardCategory.Home && x.PlayerOwned != WhoTurn);
+            return rets; //hopefully this simple.
+        }
+        int count = SaveRoot.BoardList.Count(x => x.PlayerOwned == WhoTurn && x.At != EnumBoardCategory.Start && x.Color == dice.Color);
+        if (count == 4)
+        {
+            return false;
+        }
+        return true;
+    }
+    private void FigureOutAnyProperMovesFromDice()
+    {
+        foreach (var item in SaveRoot.DiceList)
+        {
+            item.IsEnabled = HasAnyProperMove(item);
+        }
+    }
     private async Task ShowRollingAsync(BasicList<BasicList<SorryDiceModel>> thisList)
     {
         await _completeDice.ShowRollingAsync(thisList);
+        FigureOutAnyProperMovesFromDice();
         await ContinueTurnAsync();
     }
     public async Task WaitAsync(WaitingModel wait)
