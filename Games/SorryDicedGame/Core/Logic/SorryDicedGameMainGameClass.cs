@@ -101,6 +101,7 @@ public class SorryDicedGameMainGameClass
         if (PlayerList.DidChooseColors())
         {
             PrepStartTurn();
+            SaveRoot.DiceList.Clear();
         }
 
         await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
