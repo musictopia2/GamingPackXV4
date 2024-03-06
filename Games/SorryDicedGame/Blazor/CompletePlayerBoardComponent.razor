@@ -7,7 +7,10 @@
         @if (Players.Count >= item.index + 1)
         {
             <GridItem Column="item.column" Row="item.row">
-                <PlayerBoard Player="Players[item.index]"
+                <PlayerBoard 
+                    OnHomeClicked="OnHomeClicked"
+                    OnWaitingClicked="OnWaitingClicked"
+                    Player="Players[item.index]"
                     ImageHeight="@ImageHeight"
                 />
             </GridItem>

@@ -4,11 +4,15 @@ public partial class PlayerBoard
     [Parameter]
     [EditorRequired]
     public string ImageHeight { get; set; } = "";
-
     [Parameter]
     [EditorRequired]
     public SorryDicedGamePlayerItem? Player { get; set; }
-
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<SorryDicedGamePlayerItem> OnHomeClicked { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<WaitingModel> OnWaitingClicked { get; set; }
     private static string Columns => gg1.RepeatAuto(2);
     //for now pretend like you have all 4 in waiting and at home.
     //no clicking for now.
@@ -18,4 +22,18 @@ public partial class PlayerBoard
 
     //for now, has all 4 at home too.
     private static SizeF TargetSize => new(40, 40);
+    private void PrivateHomeClicked()
+    {
+        //for now, can always click.  later rethink.
+        OnHomeClicked.InvokeAsync(Player);
+    }
+    private void WaitingClicked(EnumColorChoice color)
+    {
+        WaitingModel waiting = new()
+        {
+            Player = Player!,
+            ColorUsed = color
+        };
+        OnWaitingClicked.InvokeAsync(waiting);
+    }
 }

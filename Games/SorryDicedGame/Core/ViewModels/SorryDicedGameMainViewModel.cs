@@ -52,7 +52,35 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
             item.IsSelected = false;
         }
         dice.IsSelected = true;
-        
+    }
+    public bool CanHome(SorryDicedGamePlayerItem player)
+    {
+        if (player.PlayerCategory != EnumPlayerCategory.Self)
+        {
+            return true; //for now. can change later.
+        }
+        if (MainGame.BasicData.MultiPlayer == false)
+        {
+            if (player.Id == MainGame.WhoTurn)
+            {
+                return false;
+            }
+            return true; //for now.  can change later.
+        }
+        return false;
+    }
+    [Command(EnumCommandCategory.Game)]
+    public async Task HomeAsync(SorryDicedGamePlayerItem player)
+    {
+        _toast.ShowInfoToast($"{player.NickName} from home");
+        await Task.Delay(1);
+    }
+
+    [Command(EnumCommandCategory.Game)]
+    public async Task WaitingAsync(WaitingModel wait)
+    {
+        _toast.ShowInfoToast($"{wait.Player.NickName} is waiting but color {wait.ColorUsed}");
+        await Task.Delay(1);
     }
 
 }

@@ -8,6 +8,7 @@
         <GridRepeater TotalColumns="2" TotalRows="2" Context="item">
             <GridItem Column="item.column" Row="item.row">
                 <TemporaryBoard HowMany="4"
+                                OnChoseColor="WaitingClicked"
                                 ImageHeight="@ImageHeight"
                                 ColorUsed="GetColor(item.index)" />
             </GridItem>
@@ -20,7 +21,7 @@
             <SimpleRepeater HowMany="4" Context="index">
                 <StackItem>
                     <RawGameBoard TargetHeight="@ImageHeight" BoardSize="TargetSize">
-                        <svg>
+                        <svg @onclick=PrivateHomeClicked>
                             <rect fill="@Player.Color" width="40" height="40" />
                             <BasePieceGraphics Location="new(2, 2)" TargetSize="36">
                                 <PawnPiece MainColor="@Player.Color.Color" />

@@ -16,6 +16,8 @@ public partial class SorryDicedGameMainView
     private ICustomCommand RollCommand => DataContext!.RollCommand!;
     private BasicGameCommand ChooseStartCommand => DataContext!.ChoseStartPieceCommand!;
     private BasicGameCommand DiceCommand => DataContext!.SelectDiceCommand!;
+    private BasicGameCommand HomeCommand => DataContext!.HomeCommand!;
+    private BasicGameCommand WaitingCommand => DataContext!.WaitingCommand!;
     private BasicList<SorryDicedGamePlayerItem> GetPlayerBoards()
     {
         BasicList<SorryDicedGamePlayerItem> players;

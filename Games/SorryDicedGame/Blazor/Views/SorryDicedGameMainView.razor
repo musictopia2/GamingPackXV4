@@ -12,7 +12,9 @@
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
     </StackItem>
     <StackItem>
-        <CompletePlayerBoardComponent ImageHeight="6vh" Players="@GetPlayerBoards()"  />
+        <CompletePlayerBoardComponent ImageHeight="6vh"
+            HomeCommand="HomeCommand"
+            WaitingCommand="WaitingCommand"
+            Players="@GetPlayerBoards()"  />
     </StackItem>
 </StackLayout>
-
