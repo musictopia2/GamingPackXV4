@@ -22,8 +22,22 @@ public class SorryDiceComponent : GraphicsCommand
             return;
         }
         Rect rect = StartRect();
-        rect.Fill = cc1.Black.ToWebColor();
+        if (Dice.IsEnabled)
+        {
+            rect.Fill = cc1.Black.ToWebColor();
+        }
+        else
+        {
+            rect.Fill = cc1.DarkGray.ToWebColor();
+        }
         container.Children.Add(rect);
+        if (Dice.IsSelected)
+        {
+            rect = StartRect();
+            rect.Fill = cc1.Red.ToWebColor();
+            rect.Fill_Opacity = ".5";
+            container.Children.Add(rect);
+        }
         if (Dice.Category == EnumDiceCategory.Color)
         {
             //this means will simply be the pawn piece.
@@ -49,22 +63,24 @@ public class SorryDiceComponent : GraphicsCommand
         }
         if (Dice.Category == EnumDiceCategory.Slide)
         {
-            //has to figure out the slide now.
-            //RectangleF slide = new(2, 10, 36, 20);
             Rect slide = new();
             RectangleF fins = new(2, 25, 36, 10);
             slide.PopulateRectangle(fins);
             slide.Fill = cc1.Red.ToWebColor();
-
-            
             container.Children.Add(slide);
             fins = new(2, 2, 36, 20);
-
             Text text = new();
             text.Font_Size = 15;
             text.Content = "Slide";
             text.CenterText(container, fins);
-            text.Fill = cc1.White.ToWebColor();
+            if (Dice.IsEnabled)
+            {
+                text.Fill = cc1.White.ToWebColor();
+            }
+            else
+            {
+                text.Fill = cc1.Black.ToWebColor();
+            }
             return;
         }
         if (Dice.Category == EnumDiceCategory.Sorry)
@@ -89,6 +105,7 @@ public class SorryDiceComponent : GraphicsCommand
         svg.Height = TargetHeight;
         svg.ViewBox = "0 0 40 40";
         CreateGrapics(svg);
+        CreateClick(svg);
         render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);
     }

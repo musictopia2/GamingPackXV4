@@ -1,7 +1,8 @@
 ﻿namespace SorryDicedGame.Core.Data;
-public class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>
+public class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>, ISelectableObject
 {
     public int HeightWidth => 40;
+    public bool IsEnabled { get; set; } = true;
     public int Value { get; set; }
     public int Index { get; set; }
     public bool Visible { get; set; }
@@ -44,6 +45,8 @@ public class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>
             return weights.GetWeightedList();
         }
     }
+
+    public bool IsSelected { get; set; }
 
     public void Populate(int chosen)
     {

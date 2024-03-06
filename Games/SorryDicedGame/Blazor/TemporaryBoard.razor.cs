@@ -5,8 +5,10 @@ public partial class TemporaryBoard
     [EditorRequired]
     public EnumColorChoice ColorUsed { get; set; }
     [Parameter]
+    [EditorRequired]
     public string ImageHeight { get; set; } = "";
     [Parameter]
+    [EditorRequired]
     public int HowMany { get; set; }
     private static string Columns => gg1.RepeatAuto(2);
     private static SizeF TargetSize => new(40, 40);

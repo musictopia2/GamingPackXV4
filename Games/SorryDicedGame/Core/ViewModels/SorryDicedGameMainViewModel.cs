@@ -37,5 +37,22 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
         _toast.ShowInfoToast(color.ToString());
         await Task.Delay(1);
     }
+    public static bool CanSelectDice(SorryDiceModel dice) => dice.IsEnabled; //not sure if i can do static or not (?)
+    [Command(EnumCommandCategory.Game)]
+    public async Task SelectDiceAsync(SorryDiceModel dice)
+    {
+        await Task.Delay(1);
+        if (dice.IsSelected)
+        {
+            dice.IsSelected = false;
+            return;
+        }
+        foreach (var item in MainGame.SaveRoot.DiceList)
+        {
+            item.IsSelected = false;
+        }
+        dice.IsSelected = true;
+        
+    }
 
 }

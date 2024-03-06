@@ -1,10 +1,18 @@
 @inherits BasicGameView<SorryDicedGameMainViewModel>
-<GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
-<GameButtonComponent Display="Roll Dice" CommandObject="RollCommand" />
+<StackLayout>
+    <StackItem Length="50vh">
+        <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
+        <GameButtonComponent Display="Roll Dice" CommandObject="RollCommand" />
 
-<CompleteDiceRollerComponent ImageHeight="15vh" />
-<CompleteStartComponent ImageHeight="6vh"
-    StartPieceChosen="ChooseStartCommand"
-    Players="DataContext!.MainGame.PlayerList" />
+        <CompleteDiceRollerComponent ImageHeight="15vh" DiceCommand="DiceCommand" />
+        <CompleteStartComponent ImageHeight="6vh"
+                                StartPieceChosen="ChooseStartCommand"
+                                Players="DataContext!.MainGame.PlayerList" />
 
-<LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+    </StackItem>
+    <StackItem>
+        <CompletePlayerBoardComponent ImageHeight="6vh" Players="@GetPlayerBoards()"  />
+    </StackItem>
+</StackLayout>
+

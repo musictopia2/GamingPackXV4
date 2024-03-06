@@ -3,7 +3,10 @@
         @foreach (var item in DiceList)
         {
             <StackItem>
-                <SorryDiceComponent TargetHeight="@ImageHeight" Dice="item" />
+                <SorryDiceComponent TargetHeight="@ImageHeight" 
+                    CommandObject="DiceCommand"
+                    CommandParameter="item"
+                    Dice="item" />
                 @* <div @onclick="() => SelectDiceAsync(item)">
                     <BasicDiceBlazor TargetHeight="@ImageHeight" Dice="item" />
                 </div> *@

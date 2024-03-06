@@ -1,0 +1,36 @@
+﻿@if (Player is null)
+{
+    <div>No player found</div>
+    return;
+}
+<BaseFrameBlazor Text="@GetWaitingText">
+    <GridTwoByTwo ColumnLength="@Columns">
+        <GridRepeater TotalColumns="2" TotalRows="2" Context="item">
+            <GridItem Column="item.column" Row="item.row">
+                <TemporaryBoard HowMany="4"
+                                ImageHeight="@ImageHeight"
+                                ColorUsed="GetColor(item.index)" />
+            </GridItem>
+        </GridRepeater>
+    </GridTwoByTwo>
+</BaseFrameBlazor>
+<div>
+    <BaseFrameBlazor Text="@GetHomeText">
+        <StackLayout ItemSpacing="0px">
+            <SimpleRepeater HowMany="4" Context="index">
+                <StackItem>
+                    <RawGameBoard TargetHeight="@ImageHeight" BoardSize="TargetSize">
+                        <svg>
+                            <rect fill="@Player.Color" width="40" height="40" />
+                            <BasePieceGraphics Location="new(2, 2)" TargetSize="36">
+                                <PawnPiece MainColor="@Player.Color.Color" />
+                            </BasePieceGraphics>
+                        </svg>
+                        
+                    </RawGameBoard>
+                </StackItem>
+
+            </SimpleRepeater>
+        </StackLayout>
+    </BaseFrameBlazor>
+</div>

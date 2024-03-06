@@ -60,5 +60,6 @@ public class SorryCompleteDiceSet(IGamePackageResolver resolver, SorryDicedGameG
                 await gameContainer.Delay.DelayMilli(50);
             }
         });
+        gameContainer.SaveRoot.DiceList.First().IsEnabled = false;
     }
 }
