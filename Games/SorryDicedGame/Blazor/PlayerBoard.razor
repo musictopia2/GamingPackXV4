@@ -7,7 +7,7 @@
     <GridTwoByTwo ColumnLength="@Columns">
         <GridRepeater TotalColumns="2" TotalRows="2" Context="item">
             <GridItem Column="item.column" Row="item.row">
-                <TemporaryBoard HowMany="4"
+                <TemporaryBoard HowMany="0"
                                 OnChoseColor="WaitingClicked"
                                 ImageHeight="@ImageHeight"
                                 ColorUsed="GetColor(item.index)" />
@@ -19,18 +19,11 @@
     <BaseFrameBlazor Text="@GetHomeText">
         <StackLayout ItemSpacing="0px">
             <SimpleRepeater HowMany="4" Context="index">
-                <StackItem>
-                    <RawGameBoard TargetHeight="@ImageHeight" BoardSize="TargetSize">
-                        <svg @onclick=PrivateHomeClicked>
-                            <rect fill="@Player.Color" width="40" height="40" />
-                            <BasePieceGraphics Location="new(2, 2)" TargetSize="36">
-                                <PawnPiece MainColor="@Player.Color.Color" />
-                            </BasePieceGraphics>
-                        </svg>
-                        
-                    </RawGameBoard>
+                <StackItem Length="@ImageHeight">
+                    <SorrySpaceComponent ColorUsed="@Player.Color"
+                        ImageHeight="@ImageHeight"
+                        HasPiece=false OnClick="PrivateHomeClicked" />
                 </StackItem>
-
             </SimpleRepeater>
         </StackLayout>
     </BaseFrameBlazor>

@@ -9,7 +9,6 @@ public partial class CompleteDiceRollerComponent : IDisposable
     [Parameter]
     [EditorRequired]
     public ICustomCommand? DiceCommand { get; set; }
-
     private BasicList<SorryDiceModel> DiceList { get; set; } = [];
     protected override void OnInitialized()
     {
@@ -31,5 +30,4 @@ public partial class CompleteDiceRollerComponent : IDisposable
     {
         DataContext!.CommandContainer.RemoveAction("sorrydice");
     }
-
 }

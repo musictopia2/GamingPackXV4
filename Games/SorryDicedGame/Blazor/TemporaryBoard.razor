@@ -8,28 +8,10 @@
 <GridTwoByTwo ColumnLength="@Columns">
     <GridRepeater TotalColumns="2" TotalRows="2" Context="item">
         <GridItem Column="item.column" Row="item.row">
-            
-            <RawGameBoard TargetHeight="@ImageHeight" BoardSize="TargetSize">
-                <svg @onclick="PrivateColorClick">
-                    <rect fill="@ColorUsed"  width="40" height="40" />
-                    @if (item.index < HowMany)
-                    {
-                        <BasePieceGraphics Location="new(2, 2)" TargetSize="36">
-                            <PawnPiece MainColor="@ColorUsed.Color" />
-                        </BasePieceGraphics>
-                    }
-                </svg>
-            </RawGameBoard>
-            
-            
-            @* <div style="height: @SpaceHeight; width: @SpaceHeight; background-color: @ColorUsed">
-                @if (item.index < HowMany)
-                {
-                    <BasePieceGraphics Location="new(4, 4)" TargetSize="@ImageHeight">
-                        <PawnPiece MainColor="@ColorUsed.Color" />
-                    </BasePieceGraphics>
-                }
-            </div> *@
+            @{
+                bool hasPiece = item.index < HowMany;
+            }
+            <SorrySpaceComponent ColorUsed="@ColorUsed" ImageHeight="@ImageHeight" HasPiece=@hasPiece OnClick="PrivateColorClick" />
         </GridItem>
     </GridRepeater>
 </GridTwoByTwo>
