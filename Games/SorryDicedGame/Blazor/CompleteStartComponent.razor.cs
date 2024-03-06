@@ -5,6 +5,9 @@ public partial class CompleteStartComponent
     public string ImageHeight { get; set; } = "";
     [Parameter]
     public PlayerCollection<SorryDicedGamePlayerItem> Players { get; set; } = [];
+    [Parameter]
+    [EditorRequired]
+    public BasicList<BoardModel> BoardList { get; set; } = [];
     private static string Columns => gg1.RepeatAuto(2);
     [Parameter]
     [EditorRequired]
@@ -21,4 +24,5 @@ public partial class CompleteStartComponent
             return;
         }
     }
+    private int HowMany(SorryDicedGamePlayerItem player) => BoardList.Count(x => x.PlayerOwned == player.Id && x.At == EnumBoardCategory.Start);
 }

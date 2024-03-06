@@ -7,7 +7,7 @@
     <GridTwoByTwo ColumnLength="@Columns">
         <GridRepeater TotalColumns="2" TotalRows="2" Context="item">
             <GridItem Column="item.column" Row="item.row">
-                <TemporaryBoard HowMany="0"
+                <TemporaryBoard HowMany="@HowManyWaiting(item.index)"
                                 OnChoseColor="WaitingClicked"
                                 ImageHeight="@ImageHeight"
                                 ColorUsed="GetColor(item.index)" />
@@ -20,9 +20,9 @@
         <StackLayout ItemSpacing="0px">
             <SimpleRepeater HowMany="4" Context="index">
                 <StackItem Length="@ImageHeight">
-                    <SorrySpaceComponent ColorUsed="@Player.Color"
+                    <SorrySpaceComponent ColorUsed="@Player.SlideColor"
                         ImageHeight="@ImageHeight"
-                        HasPiece=false OnClick="PrivateHomeClicked" />
+                        HasPiece="@HasPieceAtHome(index)" OnClick="PrivateHomeClicked" />
                 </StackItem>
             </SimpleRepeater>
         </StackLayout>

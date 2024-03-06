@@ -3,18 +3,25 @@
     <StackItem Length="50vh">
         <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
         <GameButtonComponent Display="Roll Dice" CommandObject="RollCommand" />
-
         <CompleteDiceRollerComponent ImageHeight="15vh" DiceCommand="DiceCommand" />
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
         <CompleteStartComponent ImageHeight="6vh"
+                                BoardList="DataContext!.MainGame.SaveRoot.BoardList"
                                 StartPieceChosen="ChooseStartCommand"
                                 Players="DataContext!.MainGame.PlayerList" />
-
-        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
     </StackItem>
     <StackItem>
         <CompletePlayerBoardComponent ImageHeight="6vh"
+            BoardList="DataContext!.MainGame.SaveRoot.BoardList"
             HomeCommand="HomeCommand"
             WaitingCommand="WaitingCommand"
             Players="@GetPlayerBoards()"  />
     </StackItem>
+    @if (SorryDicedGameGameContainer.IsGameOver == false)
+    {
+        <StackItem>
+            <ScoreBoardBlazor P="SorryDicedGamePlayerItem" Players="DataContext!.MainGame.PlayerList" Columns="_scores" />
+        </StackItem>
+        return;
+    }
 </StackLayout>

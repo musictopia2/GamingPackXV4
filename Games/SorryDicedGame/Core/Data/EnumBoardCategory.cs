@@ -2,6 +2,7 @@
 public enum EnumBoardCategory
 {
     None,
+    Start,
     Waiting,
     Home
 }

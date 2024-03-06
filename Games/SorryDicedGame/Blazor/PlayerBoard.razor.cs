@@ -12,6 +12,9 @@ public partial class PlayerBoard
     public EventCallback<SorryDicedGamePlayerItem> OnHomeClicked { get; set; }
     [Parameter]
     [EditorRequired]
+    public BasicList<BoardModel> BoardList { get; set; } = [];
+    [Parameter]
+    [EditorRequired]
     public EventCallback<WaitingModel> OnWaitingClicked { get; set; }
     private static string Columns => gg1.RepeatAuto(2);
     private string GetWaitingText => $"{Player!.NickName} Waiting";
@@ -30,5 +33,20 @@ public partial class PlayerBoard
             ColorUsed = color
         };
         OnWaitingClicked.InvokeAsync(waiting);
+    }
+    private int HowManyWaiting(int index)
+    {
+        int x = index + 1; //since it sends 0 based when its a grid.
+        EnumColorChoice color = EnumColorChoice.FromValue(x);
+        return BoardList.Count(x => x.PlayerOwned == Player!.Id && x.At == EnumBoardCategory.Waiting && x.Color == color);
+    }
+    private bool HasPieceAtHome(int index)
+    {
+        int count = BoardList.Count(x => x.PlayerOwned == Player!.Id && x.At == EnumBoardCategory.Home);
+        if (count >= index)
+        {
+            return true;
+        }
+        return false;
     }
 }
