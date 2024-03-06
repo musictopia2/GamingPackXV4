@@ -23,12 +23,9 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
     }
     partial void CreateCommands(CommandContainer command);
     public bool CanRoll => MainGame.SaveRoot.DiceList.Count == 0;
-
     [Command(EnumCommandCategory.Game)]
     public async Task RollAsync()
     {
-        //will be a command now to roll the dice (getting closer to reals).
-
         await MainGame.RollAsync();
     }
     public bool CanChoseStartPiece(EnumColorChoice color)
@@ -58,17 +55,11 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
     [Command(EnumCommandCategory.Game)]
     public async Task ChoseStartPiece(EnumColorChoice color)
     {
-
-
-        //the view model handles validations.
         if (MainGame.BasicData.MultiPlayer)
         {
-            //send to other players.
             await MainGame.Network!.SendAllAsync("start", color);
         }
         await MainGame.StartPieceAsync(color);
-        //_toast.ShowInfoToast(color.ToString());
-        //await Task.Delay(1);
     }
     public static bool CanSelectDice(SorryDiceModel dice) => dice.IsEnabled; //not sure if i can do static or not (?)
     [Command(EnumCommandCategory.Game)]
@@ -84,17 +75,6 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
             await MainGame.Network!.SendAllAsync("selectdice", index);
         }
         await MainGame.SelectUnselectDiceAsync(index);
-        //await Task.Delay(1);
-        //if (dice.IsSelected)
-        //{
-        //    dice.IsSelected = false;
-        //    return;
-        //}
-        //foreach (var item in MainGame.SaveRoot.DiceList)
-        //{
-        //    item.IsSelected = false;
-        //}
-        //dice.IsSelected = true;
     }
     public bool CanHome(SorryDicedGamePlayerItem player)
     {
@@ -161,9 +141,6 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
     [Command(EnumCommandCategory.Game)]
     public async Task WaitingAsync(WaitingModel wait)
     {
-
-        //for now, will always slide.
-        //later will do something else.
         if (SorryDicedGameGameContainer.SelectedDice!.Category == EnumDiceCategory.Slide)
         {
             await SlideAsync(wait);
@@ -176,7 +153,6 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
             return;
         }
         var chosen = MainGame.PlayerList[wait.Player];
-        //if there is one of that color at start, must use that one first.
         var rets = MainGame.SaveRoot.BoardList.Any(x => x.Color == wait.ColorUsed && x.At == EnumBoardCategory.Start);
         if (rets)
         {

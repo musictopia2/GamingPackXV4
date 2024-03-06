@@ -1,5 +1,4 @@
-﻿
-namespace SorryDicedGame.Blazor;
+﻿namespace SorryDicedGame.Blazor;
 public class SorryDiceComponent : GraphicsCommand
 {
     [Parameter]
@@ -40,12 +39,7 @@ public class SorryDiceComponent : GraphicsCommand
         }
         if (Dice.Category == EnumDiceCategory.Color)
         {
-            //this means will simply be the pawn piece.
             var otherRect = new RectangleF(3, 3, 34, 34);
-
-            //string yourColor = cc1.Blue.ToWebColor();
-            //string otherColor = Dice.Color.Color;
-            //string nextColor = Dice.Color.WebColor;
             container!.DrawPawnPiece(otherRect, Dice.Color.Color);
             return;
         }
@@ -94,8 +88,6 @@ public class SorryDiceComponent : GraphicsCommand
             text.PopulateStrokesToStyles(cc1.White.ToWebColor(), 1);
             return;
         }
-
-        //for now, nothing else.
     }
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {

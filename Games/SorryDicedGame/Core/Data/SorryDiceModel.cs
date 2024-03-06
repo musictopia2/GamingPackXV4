@@ -46,9 +46,7 @@ public class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>, ISelectableOb
             return weights.GetWeightedList();
         }
     }
-
     public bool IsSelected { get; set; }
-
     public void Populate(int chosen)
     {
         Index = chosen;

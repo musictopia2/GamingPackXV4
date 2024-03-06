@@ -22,7 +22,6 @@ public partial class PlayerBoard
     private string GetHomeText => $"{Player!.NickName} Home";
     private void PrivateHomeClicked()
     {
-        //for now, can always click.  later rethink.
         OnHomeClicked.InvokeAsync(Player);
     }
     private void WaitingClicked(EnumColorChoice color)

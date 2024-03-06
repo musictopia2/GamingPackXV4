@@ -23,5 +23,4 @@ public partial class SorryDicedGamePlayerItem : PlayerBoardGame<EnumColorChoice>
         }
     }
     public EnumColorChoice SlideColor { get; set; }
-    //public int HowManyAtStart { get; set; }
 }

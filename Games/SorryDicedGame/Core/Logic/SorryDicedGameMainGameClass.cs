@@ -22,10 +22,12 @@ public class SorryDicedGameMainGameClass
         ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     {
         _model = model;
+        _command = command;
         _completeDice = completeDice;
     }
 
     private readonly SorryDicedGameVMData _model;
+    private readonly CommandContainer _command;
     private readonly SorryCompleteDiceSet _completeDice;
     public override Task FinishGetSavedAsync()
     {
@@ -33,7 +35,6 @@ public class SorryDicedGameMainGameClass
         SorryDicedGameGameContainer.IsGameOver = false;
         SorryDicedGameGameContainer.CanStart = PlayerList.DidChooseColors();
         BoardGameSaved(); //i think.
-        //anything else needed is here.
         return Task.CompletedTask;
     }
     private void LoadControls()
@@ -101,7 +102,6 @@ public class SorryDicedGameMainGameClass
             PrepStartTurn();
             SaveRoot.DiceList.Clear();
         }
-
         await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
     }
     private bool IsGameOver()
@@ -118,7 +118,6 @@ public class SorryDicedGameMainGameClass
         GetPlayerToContinueTurn();
         if (PlayerList.DidChooseColors())
         {
-            //can do extra things upon continue turn.  many board games require other things.
             if (IsGameOver())
             {
                 SorryDicedGameGameContainer.SelectedDice = null;
@@ -142,8 +141,7 @@ public class SorryDicedGameMainGameClass
             }
             else
             {
-                _model.Instructions = "Choose a dice to make a move" +
-                    ""; //until i figure out what else is needed.
+                _model.Instructions = "Choose a dice to make a move";
             }
             SorryDicedGameGameContainer.SelectedDice = dice;
         }
@@ -170,24 +168,15 @@ public class SorryDicedGameMainGameClass
     }
     public override async Task MakeMoveAsync(int space)
     {
-        //well see what we need for the move.
         await Task.CompletedTask;
     }
     public override async Task EndTurnAsync()
     {
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
-        //if anything else is needed, do here.
-        if (PlayerList.DidChooseColors())
-        {
-            //can do extra things upon ending turn.  many board games require other things. only do if the player actually chose colors.
-
-        }
         await StartNewTurnAsync();
     }
     public override async Task AfterChoosingColorsAsync()
     {
-        //anything else that is needed after they finished choosing colors.
-
         if (MiscDelegates.FillRestColors == null)
         {
             throw new CustomBasicException("Nobody is handling filling the rest of the colors.  Rethink");
@@ -231,7 +220,7 @@ public class SorryDicedGameMainGameClass
         }
         if (dice.Category == EnumDiceCategory.Slide)
         {
-            return true; //slides are always valid.
+            return true;
         }
         if (dice.Category == EnumDiceCategory.Wild)
         {
@@ -241,7 +230,7 @@ public class SorryDicedGameMainGameClass
         if (dice.Category == EnumDiceCategory.Sorry)
         {
             rets = SaveRoot.BoardList.Any(x => x.At == EnumBoardCategory.Home && x.PlayerOwned != WhoTurn);
-            return rets; //hopefully this simple.
+            return rets;
         }
         rets = SaveRoot.BoardList.Any(x =>
         {
@@ -263,14 +252,7 @@ public class SorryDicedGameMainGameClass
             }
             return true;
         });
-        //rets = SaveRoot.BoardList.Any(x => x.At != EnumBoardCategory.Home && x.Color == dice.Color);
         return rets;
-        //int count = SaveRoot.BoardList.Count(x => x.PlayerOwned == WhoTurn && x.At != EnumBoardCategory.Start && x.Color == dice.Color);
-        //if (count == 4)
-        //{
-        //    return false;
-        //}
-        //return true;
     }
     private void FigureOutAnyProperMovesFromDice()
     {
@@ -287,18 +269,14 @@ public class SorryDicedGameMainGameClass
     public async Task WaitAsync(WaitingModel wait)
     {
         var item = SaveRoot.BoardList.First(x => x.PlayerOwned == wait.Player && x.Color == wait.ColorUsed);
-        //this will decide what to do.
         await MovePieceAsync(item, wait.ColorUsed);
     }
     public async Task StartPieceAsync(EnumColorChoice color)
     {
-        //choose a color from the board.
         BoardModel item = SaveRoot.BoardList.First(x => x.Color == color && x.At == EnumBoardCategory.Start);
-        //this will decide what to do.
-        await MovePieceAsync(item, color);
-        //if there is none, will give error.
+        await MovePieceAsync(item, color, true);
     }
-    private async Task MovePieceAsync(BoardModel item, EnumColorChoice color)
+    private async Task MovePieceAsync(BoardModel item, EnumColorChoice color, bool fromStart = false)
     {
         item.PlayerOwned = WhoTurn;
         GetPlayerToContinueTurn();
@@ -310,10 +288,14 @@ public class SorryDicedGameMainGameClass
         {
             item.At = EnumBoardCategory.Waiting;
         }
-        ChangeDice();
+        ChangeDiceAndRefresh();
+        if (fromStart)
+        {
+            _command.UpdateSpecificAction("sorrystart");
+        }
         await ContinueTurnAsync();
     }
-    private static void ChangeDice()
+    private void ChangeDiceAndRefresh()
     {
         if (SorryDicedGameGameContainer.SelectedDice is null)
         {
@@ -322,12 +304,13 @@ public class SorryDicedGameMainGameClass
         SorryDicedGameGameContainer.SelectedDice.IsSelected = false;
         SorryDicedGameGameContainer.SelectedDice.Used = true; //because you used it.
         SorryDicedGameGameContainer.SelectedDice.IsEnabled = false; //because you made the move.
+        _command.UpdateSpecificAction("sorryplayers");
     }
     public async Task SlideAsync(WaitingModel wait)
     {
         SaveRoot.BoardList.ForConditionalItems(x => x.PlayerOwned == wait.Player && x.At == EnumBoardCategory.Home, board =>
         {
-            board.At = EnumBoardCategory.Waiting; //you are now waiting
+            board.At = EnumBoardCategory.Waiting;
         });
         var player = PlayerList[wait.Player];
         player.SlideColor = wait.ColorUsed;
@@ -335,7 +318,7 @@ public class SorryDicedGameMainGameClass
         {
             board.At = EnumBoardCategory.Home;
         });
-        ChangeDice();
+        ChangeDiceAndRefresh();
         await ContinueTurnAsync();
     }
     public async Task SorryAsync(SorryDicedGamePlayerItem player)
@@ -351,7 +334,7 @@ public class SorryDicedGameMainGameClass
         {
             piece.At = EnumBoardCategory.Waiting;
         }
-        ChangeDice();
+        ChangeDiceAndRefresh();
         await ContinueTurnAsync();
     }
     public async Task SelectUnselectDiceAsync(int index)
@@ -361,7 +344,7 @@ public class SorryDicedGameMainGameClass
         {
             dice.IsSelected = false;
             await ContinueTurnAsync();
-            return; //you changed your mind.
+            return;
         }
         foreach (var item in SaveRoot.DiceList)
         {

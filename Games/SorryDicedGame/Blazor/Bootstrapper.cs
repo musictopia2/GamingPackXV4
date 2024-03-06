@@ -1,12 +1,7 @@
 //i think this is the most common things i like to do
 namespace SorryDicedGame.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<SorryDicedGameShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<SorryDicedGameShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
@@ -15,8 +10,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<SorryDicedGameShellView
         register.RegisterSingleton<IGenerateDice<int>, SorryDiceModel>();
         return Task.CompletedTask;
     }
-
-    //this part should not change
     protected override void FinishRegistrations(IGamePackageRegister register)
     {
         register.RegisterType<SorryDicedGameShellViewModel>(); //has to use interface part to make it work with source generators.

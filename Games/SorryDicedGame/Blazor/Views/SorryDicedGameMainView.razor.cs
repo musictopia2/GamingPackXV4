@@ -34,9 +34,6 @@ public partial class SorryDicedGameMainView
             players = DataContext.MainGame.PlayerList.GetAllPlayersStartingWithSelf();
         }
         players.RemoveAllOnly(x => x.InGame == false);
-        return players; //for now will show idle (eventually will remove them.  is needed to make sure there is room for them all.
-        //var list = DataContext.MainGame.PlayerList.GetAllPlayersStartingWithSelf();
-        //list.RemoveAllOnly(x => x.InGame == false); //if a player is out of the game, then not needed for this.
-        //return list;
+        return players;
     }
 }

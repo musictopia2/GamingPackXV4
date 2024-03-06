@@ -9,7 +9,4 @@ public partial class SorryDicedGameVMData : ISimpleBoardGamesData
     public string Status { get; set; } = "";
     [LabelColumn]
     public string Instructions { get; set; } = "";
-    //any other ui related properties will be here.
-    //can copy/paste for the actual view model.
-
 }
