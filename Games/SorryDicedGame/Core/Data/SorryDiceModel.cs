@@ -3,6 +3,7 @@ public class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>, ISelectableOb
 {
     public int HeightWidth => 40;
     public bool IsEnabled { get; set; } = true;
+    public bool Used { get; set; }
     public int Value { get; set; }
     public int Index { get; set; }
     public bool Visible { get; set; }

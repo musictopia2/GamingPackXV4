@@ -126,14 +126,24 @@ public class SorryDicedGameMainGameClass
                 await ShowWinAsync();
                 return;
             }
+            FigureOutAnyProperMovesFromDice();
             var dice = SaveRoot.DiceList.GetSelectedDice();
             if (dice is not null)
             {
                 PopulateDiceInstructions(dice);
             }
+            else if (SaveRoot.DiceList.Count == 0)
+            {
+                _model.Instructions = "Roll The Dice";
+            }
+            else if (SaveRoot.DiceList.All(x => x.IsEnabled == false))
+            {
+                _model.Instructions = "End Turn";
+            }
             else
             {
-                _model.Instructions = "None"; //until i figure out what else is needed.
+                _model.Instructions = "Choose a dice to make a move" +
+                    ""; //until i figure out what else is needed.
             }
             SorryDicedGameGameContainer.SelectedDice = dice;
         }
@@ -215,6 +225,10 @@ public class SorryDicedGameMainGameClass
     }
     private bool HasAnyProperMove(SorryDiceModel dice)
     {
+        if (dice.Used)
+        {
+            return false;
+        }
         if (dice.Category == EnumDiceCategory.Slide)
         {
             return true; //slides are always valid.
@@ -229,12 +243,34 @@ public class SorryDicedGameMainGameClass
             rets = SaveRoot.BoardList.Any(x => x.At == EnumBoardCategory.Home && x.PlayerOwned != WhoTurn);
             return rets; //hopefully this simple.
         }
-        int count = SaveRoot.BoardList.Count(x => x.PlayerOwned == WhoTurn && x.At != EnumBoardCategory.Start && x.Color == dice.Color);
-        if (count == 4)
+        rets = SaveRoot.BoardList.Any(x =>
         {
-            return false;
-        }
-        return true;
+            if (x.Color != dice.Color)
+            {
+                return false;
+            }
+            if (x.At == EnumBoardCategory.Home)
+            {
+                return false;
+            }
+            if (x.PlayerOwned == WhoTurn && x.At == EnumBoardCategory.Start)
+            {
+                return true;
+            }
+            if (x.PlayerOwned == WhoTurn)
+            {
+                return false;
+            }
+            return true;
+        });
+        //rets = SaveRoot.BoardList.Any(x => x.At != EnumBoardCategory.Home && x.Color == dice.Color);
+        return rets;
+        //int count = SaveRoot.BoardList.Count(x => x.PlayerOwned == WhoTurn && x.At != EnumBoardCategory.Start && x.Color == dice.Color);
+        //if (count == 4)
+        //{
+        //    return false;
+        //}
+        //return true;
     }
     private void FigureOutAnyProperMovesFromDice()
     {
@@ -246,7 +282,6 @@ public class SorryDicedGameMainGameClass
     private async Task ShowRollingAsync(BasicList<BasicList<SorryDiceModel>> thisList)
     {
         await _completeDice.ShowRollingAsync(thisList);
-        FigureOutAnyProperMovesFromDice();
         await ContinueTurnAsync();
     }
     public async Task WaitAsync(WaitingModel wait)
@@ -285,6 +320,7 @@ public class SorryDicedGameMainGameClass
             throw new CustomBasicException("Has no dice to disable when moving piece");
         }
         SorryDicedGameGameContainer.SelectedDice.IsSelected = false;
+        SorryDicedGameGameContainer.SelectedDice.Used = true; //because you used it.
         SorryDicedGameGameContainer.SelectedDice.IsEnabled = false; //because you made the move.
     }
     public async Task SlideAsync(WaitingModel wait)

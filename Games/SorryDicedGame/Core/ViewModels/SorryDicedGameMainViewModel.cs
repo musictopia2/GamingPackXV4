@@ -22,6 +22,7 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
+    public bool CanRoll => MainGame.SaveRoot.DiceList.Count == 0;
 
     [Command(EnumCommandCategory.Game)]
     public async Task RollAsync()
@@ -207,5 +208,9 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
             await MainGame.Network!.SendAllAsync("slide", wait);
         }
         await MainGame.SlideAsync(wait);
+    }
+    public override bool CanEndTurn()
+    {
+        return MainGame.SaveRoot.DiceList.Count > 0 && MainGame.SaveRoot.DiceList.All(x => x.IsEnabled == false);
     }
 }
