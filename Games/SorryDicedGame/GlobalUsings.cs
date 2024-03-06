@@ -52,3 +52,4 @@ global using BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.MiscHelpers;
 global using gg1 = BasicBlazorLibrary.Components.CssGrids.Helpers;
 global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
+global using BasicGameFrameworkLibrary.Core.Extensions;

@@ -29,7 +29,7 @@ public partial class PlayerBoard
     {
         WaitingModel waiting = new()
         {
-            Player = Player!,
+            Player = Player!.Id,
             ColorUsed = color
         };
         OnWaitingClicked.InvokeAsync(waiting);

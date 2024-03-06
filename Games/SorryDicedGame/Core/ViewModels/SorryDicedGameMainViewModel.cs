@@ -21,7 +21,6 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
         _toast = toast;
         CreateCommands(commandContainer);
     }
-    //anything else needed is here.
     partial void CreateCommands(CommandContainer command);
 
     [Command(EnumCommandCategory.Game)]
@@ -33,9 +32,25 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
     }
     public bool CanChoseStartPiece(EnumColorChoice color)
     {
+        if (SorryDicedGameGameContainer.SelectedDice is null)
+        {
+            return false; //because you did not roll or choose dice yet.
+        }
         if (MainGame.SaveRoot.BoardList.Any(x => x.Color == color && x.At == EnumBoardCategory.Start))
         {
-            return true;
+            if (SorryDicedGameGameContainer.SelectedDice.Category == EnumDiceCategory.Wild)
+            {
+                return true;
+            }
+            if (SorryDicedGameGameContainer.SelectedDice.Category != EnumDiceCategory.Color)
+            {
+                return false;
+            }
+            if (SorryDicedGameGameContainer.SelectedDice.Color == color)
+            {
+                return true;
+            }
+            return false;
         }
         return false;
     }
@@ -58,20 +73,38 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
     [Command(EnumCommandCategory.Game)]
     public async Task SelectDiceAsync(SorryDiceModel dice)
     {
-        await Task.Delay(1);
-        if (dice.IsSelected)
+        int index = MainGame.SaveRoot.DiceList.IndexOf(dice);
+        if (index == -1)
         {
-            dice.IsSelected = false;
-            return;
+            throw new CustomBasicException("Not found on the dice list");
         }
-        foreach (var item in MainGame.SaveRoot.DiceList)
+        if (MainGame.BasicData.MultiPlayer)
         {
-            item.IsSelected = false;
+            await MainGame.Network!.SendAllAsync("selectdice", index);
         }
-        dice.IsSelected = true;
+        await MainGame.SelectUnselectDiceAsync(index);
+        //await Task.Delay(1);
+        //if (dice.IsSelected)
+        //{
+        //    dice.IsSelected = false;
+        //    return;
+        //}
+        //foreach (var item in MainGame.SaveRoot.DiceList)
+        //{
+        //    item.IsSelected = false;
+        //}
+        //dice.IsSelected = true;
     }
     public bool CanHome(SorryDicedGamePlayerItem player)
     {
+        if (SorryDicedGameGameContainer.SelectedDice is null)
+        {
+            return false; //because you did not roll or choose dice yet.
+        }
+        if (SorryDicedGameGameContainer.SelectedDice.Category != EnumDiceCategory.Sorry)
+        {
+            return false; //because you have to roll a sorry for this.
+        }
         if (player.PlayerCategory != EnumPlayerCategory.Self)
         {
             return true; //for now. can change later.
@@ -82,7 +115,7 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
             {
                 return false;
             }
-            return true; //for now.  can change later.
+            return true;
         }
         return false;
     }
@@ -100,24 +133,48 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
         }
         await MainGame.SorryAsync(player);
     }
+    public static bool CanWaiting(WaitingModel wait)
+    {
+        if (SorryDicedGameGameContainer.SelectedDice is null)
+        {
+            return false; //because you did not roll or choose dice yet.
+        }
+        if (SorryDicedGameGameContainer.SelectedDice.Category == EnumDiceCategory.Slide)
+        {
+            return true; //i think.
+        }
+        if (SorryDicedGameGameContainer.SelectedDice.Category == EnumDiceCategory.Sorry)
+        {
+            return false;
+        }
+        if (SorryDicedGameGameContainer.SelectedDice.Category == EnumDiceCategory.Wild)
+        {
+            return true;
+        }
+        if (SorryDicedGameGameContainer.SelectedDice.Category != EnumDiceCategory.Color)
+        {
+            return false;
+        }
+        return SorryDicedGameGameContainer.SelectedDice.Color == wait.ColorUsed;
+    }
     [Command(EnumCommandCategory.Game)]
     public async Task WaitingAsync(WaitingModel wait)
     {
 
         //for now, will always slide.
         //later will do something else.
-        bool slide = false;
-        if (slide)
+        if (SorryDicedGameGameContainer.SelectedDice!.Category == EnumDiceCategory.Slide)
         {
             await SlideAsync(wait);
             return;
         }
         var player = MainGame.PlayerList.GetWhoPlayer();
-        if (player.Id == wait.Player!.Id)
+        if (player.Id == wait.Player)
         {
             _toast.ShowUserErrorToast("Cannot click on your own wait area when there is no slide");
             return;
         }
+        var chosen = MainGame.PlayerList[wait.Player];
         //if there is one of that color at start, must use that one first.
         var rets = MainGame.SaveRoot.BoardList.Any(x => x.Color == wait.ColorUsed && x.At == EnumBoardCategory.Start);
         if (rets)
@@ -125,10 +182,10 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
             _toast.ShowUserErrorToast("Cannot click on wait area because must use one from start first");
             return;
         }
-        rets = MainGame.SaveRoot.BoardList.Any(x => x.Color == wait.ColorUsed && x.PlayerOwned == wait.Player.Id && x.At == EnumBoardCategory.Waiting);
+        rets = MainGame.SaveRoot.BoardList.Any(x => x.Color == wait.ColorUsed && x.PlayerOwned == wait.Player && x.At == EnumBoardCategory.Waiting);
         if (rets == false)
         {
-            _toast.ShowUserErrorToast($"{wait.Player.NickName} has no color {wait.ColorUsed} in their waiting area");
+            _toast.ShowUserErrorToast($"{chosen.NickName} has no color {wait.ColorUsed} in their waiting area");
             return;
         }
         if (MainGame.BasicData.MultiPlayer)
@@ -139,7 +196,8 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
     }
     private async Task SlideAsync(WaitingModel wait)
     {
-        if (wait.ColorUsed == wait.Player!.SlideColor)
+        var player = MainGame.PlayerList[wait.Player];
+        if (wait.ColorUsed == player.SlideColor)
         {
             _toast.ShowUserErrorToast("Must choose a different slide color");
             return;
@@ -150,5 +208,4 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
         }
         await MainGame.SlideAsync(wait);
     }
-
 }

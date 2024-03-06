@@ -1,6 +1,6 @@
 @inherits BasicGameView<SorryDicedGameMainViewModel>
 <StackLayout>
-    <StackItem Length="50vh">
+    <StackItem Length="80vh">
         <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
         <GameButtonComponent Display="Roll Dice" CommandObject="RollCommand" />
         <CompleteDiceRollerComponent ImageHeight="15vh" DiceCommand="DiceCommand" />
@@ -16,12 +16,13 @@
             HomeCommand="HomeCommand"
             WaitingCommand="WaitingCommand"
             Players="@GetPlayerBoards()"  />
+        @if (SorryDicedGameGameContainer.IsGameOver == false)
+        {
+            <div>
+                <ScoreBoardBlazor P="SorryDicedGamePlayerItem" Players="DataContext!.MainGame.PlayerList" Columns="_scores" />
+            </div>
+            return;
+        }
     </StackItem>
-    @if (SorryDicedGameGameContainer.IsGameOver == false)
-    {
-        <StackItem>
-            <ScoreBoardBlazor P="SorryDicedGamePlayerItem" Players="DataContext!.MainGame.PlayerList" Columns="_scores" />
-        </StackItem>
-        return;
-    }
+    
 </StackLayout>

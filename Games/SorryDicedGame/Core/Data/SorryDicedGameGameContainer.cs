@@ -11,4 +11,5 @@ public class SorryDicedGameGameContainer(BasicData basicData,
 {
     public static bool CanStart { get; set; }
     public static bool IsGameOver { get; set; }
+    public static SorryDiceModel? SelectedDice { get; set; }
 }
