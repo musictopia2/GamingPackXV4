@@ -3,6 +3,6 @@ public class DealCardGameDeckCount : IDeckCount
 {
     public int GetDeckCount()
     {
-        return 0; //change to what it really is.
+        return 106; //change to what it really is.
     }
 }

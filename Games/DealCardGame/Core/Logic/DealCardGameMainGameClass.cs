@@ -34,14 +34,19 @@ public class DealCardGameMainGameClass
     private void LoadControls()
     {
         if (IsLoaded == true)
+        {
             return;
-
+        }
         IsLoaded = true; //i think needs to be here.
     }
     protected override async Task ComputerTurnAsync()
     {
         //if there is nothing, then just won't do anything.
         await Task.CompletedTask;
+    }
+    protected override Task LastPartOfSetUpBeforeBindingsAsync()
+    {
+        return base.LastPartOfSetUpBeforeBindingsAsync();
     }
     protected override Task StartSetUpAsync(bool isBeginning)
     {
