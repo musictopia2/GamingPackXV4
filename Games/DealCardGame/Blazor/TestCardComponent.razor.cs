@@ -1,11 +1,11 @@
 namespace DealCardGame.Blazor;
 public partial class TestCardComponent
 {
-    private int _index = 21;
+    private int _index = 49;
     private DealCardGameCardInformation _card = new();
     private void AnotherOne()
     {
-        if (_index <= 47)
+        if (_index <= 105)
         {
             _index++;
             _card = new();

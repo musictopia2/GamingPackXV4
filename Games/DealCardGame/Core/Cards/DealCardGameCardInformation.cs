@@ -7,6 +7,8 @@ public class DealCardGameCardInformation : SimpleDeckObject, IDeckObject, ICompa
     public bool AnyColor { get; set; } //sometimes something can represent any color
     public EnumColor FirstColorChoice { get; set; } = EnumColor.None;
     public EnumColor SecondColorChoice { get; set; } = EnumColor.None;
+    public string FirstActionText { get; set; } = "";
+    public string SecondActionText { get; set; } = ""; //this will help the ui.
     public EnumCardType CardType { get; set; } = EnumCardType.None; //has to figure out what this is.
     public EnumActionCategory ActionCategory { get; set; } = EnumActionCategory.None;
     public DealCardGameCardInformation()
@@ -207,8 +209,8 @@ public class DealCardGameCardInformation : SimpleDeckObject, IDeckObject, ICompa
             }
             if (chosen <= 69)
             {
-                FirstColorChoice = EnumColor.Lime;
-                SecondColorChoice = EnumColor.Black;
+                FirstColorChoice = EnumColor.Black;
+                SecondColorChoice = EnumColor.Lime;
                 return;
             }
             AnyColor = true;
@@ -221,67 +223,88 @@ public class DealCardGameCardInformation : SimpleDeckObject, IDeckObject, ICompa
             if (chosen <= 75)
             {
                 ActionCategory = EnumActionCategory.House;
+                FirstActionText = "House";
                 ClaimedValue = 3;
                 return;
             }
             if (chosen <= 77)
             {
                 ActionCategory = EnumActionCategory.Hotel;
+                FirstActionText = "Hotel";
                 ClaimedValue = 4;
                 return;
             }
             if (chosen <= 79)
             {
                 ActionCategory = EnumActionCategory.DoubleRent;
+                FirstActionText = "Double";
+                SecondActionText = "The Rent!";
                 ClaimedValue = 1;
                 return;
             }
             if (chosen <= 82)
             {
                 ActionCategory = EnumActionCategory.Birthday;
+                FirstActionText = "It's My";
+                SecondActionText = "Birthday";
                 ClaimedValue = 2;
                 return;
             }
             if (chosen <= 85)
             {
                 ActionCategory = EnumActionCategory.DebtCollector;
+                FirstActionText = "Debt";
+                SecondActionText = "Collector";
                 ClaimedValue = 3;
                 return;
             }
             if (chosen <= 88)
             {
                 ActionCategory = EnumActionCategory.ForcedDeal;
+                FirstActionText = "Forced";
+                SecondActionText = "Deal";
                 ClaimedValue = 3;
                 return;
             }
             if (chosen <= 91)
             {
                 ActionCategory = EnumActionCategory.SlyDeal;
+                FirstActionText = "Sly";
+                SecondActionText = "Deal";
                 ClaimedValue = 3;
                 return;
             }
             if (chosen <= 94)
             {
                 ActionCategory = EnumActionCategory.JustSayNo;
+                FirstActionText = "Just";
+                SecondActionText = "Say No!";
                 ClaimedValue = 4;
                 return;
             }
             if (chosen <= 96)
             {
                 ActionCategory = EnumActionCategory.DealBreaker;
+                FirstActionText = "Deal";
+                SecondActionText = "Breaker";
                 ClaimedValue = 5;
                 return;
             }
             ActionCategory = EnumActionCategory.Gos;
+            FirstActionText = "Pass";
+            SecondActionText = "Go";
             ClaimedValue = 1;
             return;
         }
         throw new CustomBasicException("Nothing found");
     }
-
     public void Reset()
     {
         //anything that is needed to reset.
+        if (CardType == EnumCardType.ActionRent || CardType == EnumCardType.PropertyWild)
+        {
+            MainColor = EnumColor.None; //has to reset what the wilds was used as,
+        }
     }
 
     int IComparable<DealCardGameCardInformation>.CompareTo(DealCardGameCardInformation? other)
