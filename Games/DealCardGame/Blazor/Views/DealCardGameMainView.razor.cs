@@ -20,4 +20,20 @@ public partial class DealCardGameMainView
             ; //cards left is common.  can be anything you need.
         base.OnInitialized();
     }
+    private BasicList<DealCardGameCardInformation> GetCards(int item)
+    {
+        BasicList<DealCardGameCardInformation> output = [];
+        var firsts = _gameContainer!.DeckList.First(x => x.MainColor == EnumColor.FromValue(item) && x.CardType == EnumCardType.PropertyRegular);
+        4.Times(() =>
+        {
+            DealCardGameCardInformation card = new();
+            card.Populate(firsts.Deck);
+            output.Add(card);
+            //DealCardGameCardInformation card = new();
+            //int index = 20 + item;
+            //card.Populate(index);
+            //output.Add(card);
+        });
+        return output;
+    }
 }

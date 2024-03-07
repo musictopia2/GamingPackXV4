@@ -3,23 +3,57 @@
 {
     return;
 }
-<p>Welcome to DealCardGame</p>
-<StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
+@{
+    bool isTesting = false;
+}
+
+@if (isTesting)
+{
+    <TestCardComponent />
+    return;
+}
+<StackLayout>
     <StackItem>
         <DrawPileBlazor DeckPile="_vmData.Deck1" />
     </StackItem>
     <StackItem>
         <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
     </StackItem>
+    <StackItem>
+        Yours
+    </StackItem>
 </StackLayout>
-<div>
-    <HandBlazor Hand="_vmData.PlayerHand1" />
-</div>
-<div>
-    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
-</div>
-<div>
-    <ScoreBoardBlazor P="DealCardGamePlayerItem"
-                      Columns="_scores"
-                      Players="_gameContainer.SaveRoot.PlayerList" />
-</div>
+<StackLayout>
+    <StackItem>
+        <div>
+            <HandBlazor Hand="_vmData.PlayerHand1" />
+        </div>
+        <div>
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </div>
+        <div>
+            <ScoreBoardBlazor P="DealCardGamePlayerItem"
+                              Columns="_scores"
+                              Players="_gameContainer.SaveRoot.PlayerList" />
+        </div>
+    </StackItem>
+    @* <StackItem Length="1fr">
+        <GridContainer Height="70vh" Columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr" Rows="1fr 1fr 1fr 1fr">
+            <BasicBlazorLibrary.Components.Repeaters.GridRepeater TotalColumns="10" TotalRows="4" Context="item">
+                <GridItem Row="@item.row" Column="@item.column">
+                    @{
+                        var list = GetCards(item.column);
+                    }
+                    @foreach (var item in list)
+                    {
+                        <div>
+                            <CardGraphicsBlazor DeckObject="item" TargetHeight="4vh" />
+                        </div>
+                        
+                    }
+                </GridItem>
+            </BasicBlazorLibrary.Components.Repeaters.GridRepeater>
+        </GridContainer>
+    </StackItem> *@
+</StackLayout>
+
