@@ -143,6 +143,12 @@ public class CardGraphicsBlazor : BaseDeckGraphics<DealCardGameCardInformation>
         rect.PopulateRectangle(bounds);
         rect.Fill = DeckObject!.MainColor.WebColor;
         MainGroup!.Children.Add(rect);
+        bounds = new(6, 18, 38, 38);
+        Circle circle = new();
+        circle.PopulateCircle(bounds, cc1.White);
+        circle.PopulateStrokesToStyles(cc1.Black.ToWebColor(), 1);
+        MainGroup!.Children.Add(circle);
+        AddBoldText(bounds, "Property", 7);
         DrawSimpleClaimValue();
     }
     private void DrawWildPropertyAnyChoice()
