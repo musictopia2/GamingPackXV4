@@ -2,6 +2,7 @@ namespace DealCardGame.Core.ViewModels;
 [InstanceGame]
 public class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCardInformation>
 {
+    //private readonly DealCardGameMainGameClass MainGame;
     private readonly DealCardGameMainGameClass _mainGame; //if we don't need, delete.
     public DealCardGameVMData VMData { get; set; }
     public DealCardGameMainViewModel(CommandContainer commandContainer,

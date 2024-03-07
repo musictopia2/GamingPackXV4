@@ -1,4 +1,4 @@
-﻿<div>
+﻿@* <div>
     @_index
 </div>
 <div>
@@ -6,4 +6,33 @@
 </div>
 <div>
     <CardGraphicsBlazor DeckObject="_card" TargetHeight="20vh" />
+</div> *@
+
+@* This shows how to show the houses and hotels either vertically or horizontally
+ *@
+<div style="height: 3vh;">
+    <StackLayout>
+        <StackItem Length="3vh">
+            <ResourceImage Assembly="GetAssembly" FileName="house.svg" X="0" Y="0" Height="4vh" Width="4vh" Fixed=true />
+        </StackItem>
+        <StackItem Length="3vh">
+            <ResourceImage Assembly="GetAssembly" FileName="hotel.svg" X="0" Y="0" Height="4vh" Width="4vh" />
+        </StackItem>
+    </StackLayout>
 </div>
+
+
+<div style="height: 4vh;">
+    <ResourceImage Assembly="GetAssembly" FileName="house.svg" X="0" Y="0" Height="4vh" Width="4vh" Fixed=true />
+</div>
+<div style="height: 4vh;">
+    <ResourceImage Assembly="GetAssembly" FileName="hotel.svg" X="0" Y="0" Height="4vh" Width="4vh" />
+</div>
+
+
+@* <StackItem Length="4vh">
+    
+</StackItem>
+<StackItem>
+    <ResourceImage Assembly="GetAssembly" FileName="hotel.svg" X="0" Y="0" Height="4vh" Width="4vh" />
+</StackItem> *@

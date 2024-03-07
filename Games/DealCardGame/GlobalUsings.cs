@@ -59,3 +59,4 @@ global using DealCardGame.Core.Cards;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 global using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Hands;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using gg1 = BasicBlazorLibrary.Components.CssGrids.Helpers;

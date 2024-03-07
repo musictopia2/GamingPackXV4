@@ -36,4 +36,11 @@ public partial class DealCardGameMainView
         });
         return output;
     }
+    private BasicList<DealCardGamePlayerItem> GetPlayers()
+    {
+        var output = _gameContainer!.PlayerList!.GetAllPlayersStartingWithSelf();
+        return output;
+    }
+    private static string Rows => $"{gg1.RepeatMinimum(2)}";
+
 }

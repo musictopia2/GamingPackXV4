@@ -1,0 +1,32 @@
+﻿<div @onclick=PrivateClicked style="margin-top: 20px; margin-left: 5px; width: 95%; height: 85%; background-color: @Color.WebColor">
+    <GridContainer Height="100%" Rows="@Rows">
+        <GridItem Column="1" Row="1">
+            <div style="font-family: Lato; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black; font-size: 1.5rem;">
+                @Completed
+            </div>
+        </GridItem>
+        <GridItem Column="1" Row="2">
+            <div style="height: 3vh;">
+                <StackLayout>
+                    <StackItem Length="3vh">
+                        @if (HasHouse)
+                        {
+                            <ResourceImage Assembly="GetAssembly" FileName="house.svg" X="0" Y="0" Height="3vh" Width="3vh" Fixed=true />
+                        }
+                    </StackItem>
+                    <StackItem Length="3vh">
+                        @if (HasHotel)
+                        {
+                            <ResourceImage Assembly="GetAssembly" FileName="hotel.svg" X="0" Y="0" Height="3vh" Width="3vh" Fixed=true />
+                        }
+                    </StackItem>
+                </StackLayout>
+            </div>
+        </GridItem>
+        <GridItem Column="1" Row="3">
+            <div style="font-family: Lato; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black; font-size: 1.5rem;">
+                @Rent
+            </div>
+        </GridItem>
+    </GridContainer>
+</div>
