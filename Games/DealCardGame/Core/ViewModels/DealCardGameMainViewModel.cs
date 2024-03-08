@@ -81,6 +81,76 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         var card = list.Single();
         return card;
     }
+
+
+    [Command(EnumCommandCategory.Game)]
+    public async Task SetChosenAsync(SetPlayerModel model)
+    {
+        var player = _mainGame.PlayerList[model.PlayerId];
+        if (player.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            //this means you clicked on your own.
+            var card = GetSelectedCard();
+            if (card is null)
+            {
+                return;
+            }
+
+            if (card.CardType == EnumCardType.PropertyRegular || card.CardType == EnumCardType.PropertyWild)
+            {
+                await PlayPropertyAsync(card, model.Color);
+                return;
+            }
+            if (card.CardType == EnumCardType.ActionRent)
+            {
+                _toast.ShowUserErrorToast("Charging rent is not supported for now");
+                //await RentAsync(card, model.Color);
+                return;
+            }
+            _toast.ShowUserErrorToast("For now, cannot click on your cards because only rent and property cards are supported");
+            return;
+        }
+    }
+    private bool CanPlayProperty(DealCardGameCardInformation card, EnumColor color)
+    {
+        if (card.CardType == EnumCardType.PropertyRegular)
+        {
+            if (card.MainColor != color)
+            {
+                _toast.ShowUserErrorToast("Cannot play property to this set");
+                return false;
+            }
+            return true;
+        }
+        if (card.AnyColor)
+        {
+            return true;
+        }
+        if (card.FirstColorChoice == color ||  card.SecondColorChoice == color)
+        {
+            return true;
+        }
+        _toast.ShowUserErrorToast("Wrong color for this wild property");
+        return false;
+    }
+    private async Task PlayPropertyAsync(DealCardGameCardInformation card, EnumColor color)
+    {
+        if (CanPlayProperty(card, color) == false)
+        {
+            return;
+        }
+        if (_mainGame.BasicData.MultiPlayer)
+        {
+            SetCardModel set = new(card.Deck, color);
+            await _mainGame.Network!.SendAllAsync("playproperty", set);
+        }
+        await _mainGame.PlayPropertyAsync(card.Deck, color);
+    }
+    //private async Task RentAsync(DealCardGameCardInformation card, EnumColor color)
+    //{
+
+    //}
+
     [Command(EnumCommandCategory.Game)]
     public async Task PlayAsync()
     {
@@ -101,8 +171,8 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         }
         if (_mainGame.BasicData.MultiPlayer)
         {
-            await _mainGame.Network!.SendAllAsync("play", card.Deck);
+            await _mainGame.Network!.SendAllAsync("playaction", card.Deck);
         }
-        await _mainGame.ProcessPlayAsync(card.Deck);
+        await _mainGame.PlayActionAsync(card.Deck);
     }
 }

@@ -1,6 +1,3 @@
-using System.Diagnostics.Metrics;
-using System.Runtime.InteropServices;
-
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -72,14 +69,19 @@ public class DealCardGameMainGameClass
 
     async Task IMiscDataNM.MiscDataReceived(string status, string content)
     {
+        SetCardModel setCard;
         switch (status) //can't do switch because we don't know what the cases are ahead of time.
         {
             //put in cases here.
-            case "play":
-                await ProcessPlayAsync(int.Parse(content));
+            case "playaction":
+                await PlayActionAsync(int.Parse(content));
                 return;
             case "bank":
                 await BankAsync(int.Parse(content));
+                return;
+            case "playproperty":
+                setCard = await js1.DeserializeObjectAsync<SetCardModel>(content);
+                await PlayPropertyAsync(setCard.Deck, setCard.Color);
                 return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
@@ -110,7 +112,7 @@ public class DealCardGameMainGameClass
         PlayerDraws = WhoTurn;
         await DrawAsync(); //hopefully that after drawing, will continueturn (?)
     }
-    public async Task ProcessPlayAsync(int deck)
+    public async Task PlayActionAsync(int deck)
     {
         SingleInfo!.MainHandList.RemoveObjectByDeck(deck);
         DealCardGameCardInformation thisCard = _gameContainer.DeckList!.GetSpecificItem(deck); //i think
@@ -119,6 +121,10 @@ public class DealCardGameMainGameClass
             await PlayPassGoAsync(thisCard);
             return;
         }
+    }
+    public async Task PlayPropertyAsync(int deck, EnumColor color)
+    {
+
     }
     private async Task PlayPassGoAsync(DealCardGameCardInformation card)
     {

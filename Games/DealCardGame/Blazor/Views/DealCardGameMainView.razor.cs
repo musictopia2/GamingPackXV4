@@ -46,4 +46,5 @@ public partial class DealCardGameMainView
     private BasicGameCommand PlayCommand => DataContext!.PlayCommand!;
     private BasicGameCommand EndTurnCommand => DataContext!.EndTurnCommand!;
     private BasicGameCommand BankCommand => DataContext!.BankCommand!;
+    private BasicGameCommand SetChosenCommand => DataContext!.SetChosenCommand!;
 }
