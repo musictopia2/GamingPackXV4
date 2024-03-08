@@ -22,12 +22,12 @@ public partial class ReadOnlyPlayerSetComponent
     [EditorRequired]
     public int PlayerId { get; set; }
     [Parameter]
-    public EventCallback<SetModel> OnSetClicked { get; set; }
+    public EventCallback<SetPlayerModel> OnSetClicked { get; set; }
     private static string Rows => gg1.RepeatSpreadOut(3);
     private Assembly GetAssembly => Assembly.GetAssembly(GetType())!;
     private void PrivateClicked()
     {
-        SetModel set = new()
+        SetPlayerModel set = new()
         {
             PlayerId = PlayerId,
             Color = Color,

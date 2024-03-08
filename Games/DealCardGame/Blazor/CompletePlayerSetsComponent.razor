@@ -8,13 +8,19 @@
     </SimpleRepeater>
     <GridRepeater TotalColumns="10" TotalRows="@Players.Count" Context="item">
         <GridItem Row="@item.row" Column="@item.column">
+            @{
+                bool hasHotel = HasHotel(item.column, item.row);
+                bool hasHouse = HasHouse(item.column, item.row);
+                int rentOwed = RentOwed(item.column, item.row, hasHouse, hasHotel);
+                int completed = SetsCompleted(item.column, item.row);
+            }
             <ReadOnlyPlayerSetComponent Color="@GetColor(item.column)" 
-                OnSetClicked="PrivateSetClicked"
-                HasHotel=@HasTestHotelOrHouse(item.column)
-                                        HasHouse=@HasTestHotelOrHouse(item.column)
-                Rent="12"
-                Completed="4"
-                PlayerId="item.row" />
+                                        OnSetClicked="PrivateSetClicked"
+                                        HasHotel=hasHotel
+                                        HasHouse=hasHouse
+                                        Rent=rentOwed
+                                        Completed=completed
+                                        PlayerId="item.row" />
         </GridItem>
     </GridRepeater>
 </GridContainer>

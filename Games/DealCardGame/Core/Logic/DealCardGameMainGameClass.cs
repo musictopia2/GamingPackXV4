@@ -49,6 +49,19 @@ public class DealCardGameMainGameClass
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
     {
+        foreach (var player in PlayerList)
+        {
+            var list = EnumColor.ColorList;
+            player.SetData.Clear();
+            foreach (var item in list)
+            {
+                SetPropertiesModel model = new()
+                {
+                    Color = item
+                };
+                player.SetData.Add(model);
+            }
+        }
         return base.LastPartOfSetUpBeforeBindingsAsync();
     }
     protected override Task StartSetUpAsync(bool isBeginning)
