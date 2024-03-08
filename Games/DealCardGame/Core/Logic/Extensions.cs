@@ -1,6 +1,11 @@
 ﻿namespace DealCardGame.Core.Logic;
 public static class Extensions
 {
+    public static void AddCardToPlayerPropertySet(this DealCardGamePlayerItem player, DealCardGameCardInformation card, EnumColor color)
+    {
+        var list = player.SetData.GetCards(color);
+        list.Add(card);
+    }
     public static BasicList<DealCardGameCardInformation> GetCards(this BasicList<SetPropertiesModel> properties, EnumColor color)
     {
         return properties.Single(x => x.Color == color).Cards;

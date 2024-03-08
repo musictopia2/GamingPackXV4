@@ -95,7 +95,6 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             {
                 return;
             }
-
             if (card.CardType == EnumCardType.PropertyRegular || card.CardType == EnumCardType.PropertyWild)
             {
                 await PlayPropertyAsync(card, model.Color);
@@ -103,13 +102,14 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             }
             if (card.CardType == EnumCardType.ActionRent)
             {
-                _toast.ShowUserErrorToast("Charging rent is not supported for now");
+                _toast.ShowUserErrorToast("Charging rent is not supported yet");
                 //await RentAsync(card, model.Color);
                 return;
             }
             _toast.ShowUserErrorToast("For now, cannot click on your cards because only rent and property cards are supported");
             return;
         }
+        _toast.ShowUserErrorToast("Cannot choose another player for anything yet");
     }
     private bool CanPlayProperty(DealCardGameCardInformation card, EnumColor color)
     {

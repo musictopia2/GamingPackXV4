@@ -114,17 +114,31 @@ public class DealCardGameMainGameClass
     }
     public async Task PlayActionAsync(int deck)
     {
-        SingleInfo!.MainHandList.RemoveObjectByDeck(deck);
-        DealCardGameCardInformation thisCard = _gameContainer.DeckList!.GetSpecificItem(deck); //i think
-        if (thisCard.ActionCategory == EnumActionCategory.Gos)
+        var card = GetPlayerSelectedSingleCard(deck);
+        if (card.ActionCategory == EnumActionCategory.Gos)
         {
-            await PlayPassGoAsync(thisCard);
+            await PlayPassGoAsync(card);
             return;
         }
     }
     public async Task PlayPropertyAsync(int deck, EnumColor color)
     {
-
+        var card = GetPlayerSelectedSingleCard(deck);
+        if (card.CardType == EnumCardType.PropertyWild)
+        {
+            card.MainColor = color;
+        }
+        SingleInfo!.AddCardToPlayerPropertySet(card, color);
+        SingleInfo!.Money += card.ClaimedValue; //because this can be used in order to pay other players.
+        await ShowCardTemporarilyAsync(card);
+        await ContinueTurnAsync();
+    }
+    private DealCardGameCardInformation GetPlayerSelectedSingleCard(int deck)
+    {
+        GetPlayerToContinueTurn();
+        SingleInfo!.MainHandList.RemoveObjectByDeck(deck);
+        DealCardGameCardInformation output = _gameContainer.DeckList!.GetSpecificItem(deck); //i think
+        return output;
     }
     private async Task PlayPassGoAsync(DealCardGameCardInformation card)
     {
@@ -145,17 +159,19 @@ public class DealCardGameMainGameClass
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
-    public async Task BankAsync(int deck)
+    private async Task ShowCardTemporarilyAsync(DealCardGameCardInformation card)
     {
-        SingleInfo!.MainHandList.RemoveObjectByDeck(deck);
-        DealCardGameCardInformation thisCard = _gameContainer.DeckList!.GetSpecificItem(deck); //i think
-        SingleInfo.Money += thisCard.ClaimedValue;
-        SingleInfo.BankedCards.Add(thisCard); //this card is put into the bank.  needs to show up there so if you have to pay up, can use these cards.
-
-        _model.ShownCard = thisCard;
+        _model.ShownCard = card;
         _command.UpdateAll();
         await Delay!.DelayMilli(400);
         _model.ShownCard = null;
+    }
+    public async Task BankAsync(int deck)
+    {
+        var card = GetPlayerSelectedSingleCard(deck);
+        SingleInfo!.Money += card.ClaimedValue;
+        SingleInfo.BankedCards.Add(card); //this card is put into the bank.  needs to show up there so if you have to pay up, can use these cards.
+        await ShowCardTemporarilyAsync(card);
         await ContinueTurnAsync();
     }
 }
