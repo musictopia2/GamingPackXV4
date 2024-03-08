@@ -49,7 +49,7 @@ public partial class CompletePlayerSetsComponent
         var list = playerUsed.SetData.GetCards(color);
         return list.RentForSet(color, hasHouse, hasHotel);
     }
-
+    private int GetPlayerId(int row) => Players[row - 1].Id;
 
 
     //private static bool HasTestHotelOrHouse(int column)

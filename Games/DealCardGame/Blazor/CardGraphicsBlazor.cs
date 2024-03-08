@@ -67,7 +67,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<DealCardGameCardInformation>
         //text.CenterText(MainGroup!, bounds);
         text.Fill = cc1.Black.ToWebColor();
         text.Font_Size = 21;
-        text.PopulateStrokesToStyles(cc1.White.ToWebColor(), 1);
+        text.PopulateStrokesToStyles(cc1.White.ToWebColor(), .5f);
         text.Content = DeckObject!.ClaimedValue.ToString();
     }
     private void DrawActionStandard()
