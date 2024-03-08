@@ -1,9 +1,10 @@
 namespace DealCardGame.Core.ViewModels;
 [InstanceGame]
-public class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCardInformation>
+public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCardInformation>
 {
     //private readonly DealCardGameMainGameClass MainGame;
     private readonly DealCardGameMainGameClass _mainGame; //if we don't need, delete.
+    private readonly IToast _toast;
     public DealCardGameVMData VMData { get; set; }
     public DealCardGameMainViewModel(CommandContainer commandContainer,
         DealCardGameMainGameClass mainGame,
@@ -18,7 +19,10 @@ public class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCardInform
     {
         _mainGame = mainGame;
         VMData = viewModel;
+        _toast = toast;
+        CreateCommands(commandContainer);
     }
+    partial void CreateCommands(CommandContainer command);
     //anything else needed is here.
     //if i need something extra, will add to template as well.
     protected override bool CanEnableDeck()
@@ -39,5 +43,31 @@ public class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCardInform
     public override bool CanEnableAlways()
     {
         return true;
+    }
+    [Command(EnumCommandCategory.Game)]
+    public async Task PlayAsync()
+    {
+        var list = VMData.PlayerHand1.ListSelectedObjects();
+        if (list.Count == 0)
+        {
+            _toast.ShowUserErrorToast("There was no card selected to play");
+            return;
+        }
+        if (list.Count > 1)
+        {
+            _toast.ShowUserErrorToast("Should have only had the possibility of selecting one card");
+            return;
+        }
+        var card = list.Single();
+        if (card.ActionCategory != EnumActionCategory.Gos)
+        {
+            _toast.ShowUserErrorToast("For now, only gos can be played");
+            return;
+        }
+        if (_mainGame.BasicData.MultiPlayer)
+        {
+            await _mainGame.Network!.SendAllAsync("play", card.Deck);
+        }
+        await _mainGame.ProcessPlayAsync(card.Deck);
     }
 }

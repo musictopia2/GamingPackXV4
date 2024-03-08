@@ -17,36 +17,43 @@ public class CardGraphicsBlazor : BaseDeckGraphics<DealCardGameCardInformation>
         if (DeckObject!.CardType == EnumCardType.Money)
         {
             DrawMoney();
+            DrawHighlighters();
             return;
         }
         if (DeckObject!.CardType == EnumCardType.PropertyRegular)
         {
             DrawRegularProperty();
+            DrawHighlighters();
             return;
         }
         if (DeckObject!.CardType == EnumCardType.PropertyWild && DeckObject.AnyColor == false)
         {
             DrawWildProperty2Choices();
+            DrawHighlighters();
             return;
         }
         if (DeckObject.CardType == EnumCardType.PropertyWild)
         {
             DrawWildPropertyAnyChoice();
+            DrawHighlighters();
             return;
         }
         if (DeckObject.CardType == EnumCardType.ActionRent && DeckObject.AnyColor == false)
         {
             DrawRentRegular();
+            DrawHighlighters();
             return;
         }
         if (DeckObject.CardType == EnumCardType.ActionRent)
         {
             DrawRentWild();
+            DrawHighlighters();
             return;
         }
         if (DeckObject.CardType == EnumCardType.ActionStandard)
         {
             DrawActionStandard();
+            DrawHighlighters();
             return;
         }
     }

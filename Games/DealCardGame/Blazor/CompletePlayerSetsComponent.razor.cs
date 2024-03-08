@@ -14,7 +14,7 @@ public partial class CompletePlayerSetsComponent
         var player = Players[set.PlayerId - 1]; //somehow 0 based.
         Toast!.ShowInfoToast($"Clicked On Color {set.Color} with nick name of {player.NickName}");
     }
-    private bool HasTestHotelOrHouse(int column)
+    private static bool HasTestHotelOrHouse(int column)
     {
         EnumColor color = GetColor(column);
         if (color == EnumColor.Black || color == EnumColor.Lime)

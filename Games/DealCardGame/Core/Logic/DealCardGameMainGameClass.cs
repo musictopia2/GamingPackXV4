@@ -1,3 +1,6 @@
+using System.Diagnostics.Metrics;
+using System.Runtime.InteropServices;
+
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -54,12 +57,14 @@ public class DealCardGameMainGameClass
         return base.StartSetUpAsync(isBeginning);
     }
 
-    Task IMiscDataNM.MiscDataReceived(string status, string content)
+    async Task IMiscDataNM.MiscDataReceived(string status, string content)
     {
         switch (status) //can't do switch because we don't know what the cases are ahead of time.
         {
             //put in cases here.
-
+            case "play":
+                await ProcessPlayAsync(int.Parse(content));
+                return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
@@ -67,8 +72,44 @@ public class DealCardGameMainGameClass
     public override async Task StartNewTurnAsync()
     {
         await base.StartNewTurnAsync();
-
-        await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
+        await DrawToStartAsync();
+        //await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
+    }
+    private async Task DrawToStartAsync()
+    {
+        GetPlayerToContinueTurn();
+        if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Computer)
+        {
+            await ContinueTurnAsync();
+            return;
+        }
+        if (SingleInfo!.MainHandList.Count == 0)
+        {
+            LeftToDraw = 5;
+        }
+        else
+        {
+            LeftToDraw = 2;
+        }
+        PlayerDraws = WhoTurn;
+        await DrawAsync(); //hopefully that after drawing, will continueturn (?)
+    }
+    public async Task ProcessPlayAsync(int deck)
+    {
+        SingleInfo!.MainHandList.RemoveObjectByDeck(deck);
+        DealCardGameCardInformation thisCard = _gameContainer.DeckList!.GetSpecificItem(deck); //i think
+        if (thisCard.ActionCategory == EnumActionCategory.Gos)
+        {
+            await PlayPassGoAsync(thisCard);
+            return;
+        }
+    }
+    private async Task PlayPassGoAsync(DealCardGameCardInformation card)
+    {
+        PlayerDraws = WhoTurn;
+        LeftToDraw = 2;
+        await AnimatePlayAsync(card);
+        await DrawAsync();
     }
     public override async Task EndTurnAsync()
     {
