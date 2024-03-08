@@ -18,6 +18,9 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public SingleObservablePile<DealCardGameCardInformation> Pile1 { get; set; }
     public HandObservable<DealCardGameCardInformation> PlayerHand1 { get; set; }
     public SingleObservablePile<DealCardGameCardInformation>? OtherPile { get; set; }
+
+    public DealCardGameCardInformation? ShownCard { get; set; }
+
     //any other ui related properties will be here.
     //can copy/paste for the actual view model.
 }

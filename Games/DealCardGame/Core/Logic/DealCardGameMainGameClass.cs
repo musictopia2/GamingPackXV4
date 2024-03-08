@@ -65,6 +65,9 @@ public class DealCardGameMainGameClass
             case "play":
                 await ProcessPlayAsync(int.Parse(content));
                 return;
+            case "bank":
+                await BankAsync(int.Parse(content));
+                return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
@@ -122,5 +125,18 @@ public class DealCardGameMainGameClass
         _command.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
+    }
+    public async Task BankAsync(int deck)
+    {
+        SingleInfo!.MainHandList.RemoveObjectByDeck(deck);
+        DealCardGameCardInformation thisCard = _gameContainer.DeckList!.GetSpecificItem(deck); //i think
+        SingleInfo.Money += thisCard.ClaimedValue;
+        SingleInfo.BankedCards.Add(thisCard); //this card is put into the bank.  needs to show up there so if you have to pay up, can use these cards.
+
+        _model.ShownCard = thisCard;
+        _command.UpdateAll();
+        await Delay!.DelayMilli(400);
+        _model.ShownCard = null;
+        await ContinueTurnAsync();
     }
 }

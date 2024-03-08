@@ -16,6 +16,7 @@ public partial class DealCardGameMainView
             .AddLabel("Status", nameof(DealCardGameVMData.Status));
         _scores.Clear();
         _scores.AddColumn("Cards Left", true, nameof(DealCardGamePlayerItem.ObjectCount))
+            .AddColumn("Money", true, nameof(DealCardGamePlayerItem.Money), category: EnumScoreSpecialCategory.Currency)
 
             ; //cards left is common.  can be anything you need.
         base.OnInitialized();
@@ -44,4 +45,5 @@ public partial class DealCardGameMainView
     private static string Rows => $"{gg1.RepeatMinimum(2)}";
     private BasicGameCommand PlayCommand => DataContext!.PlayCommand!;
     private BasicGameCommand EndTurnCommand => DataContext!.EndTurnCommand!;
+    private BasicGameCommand BankCommand => DataContext!.BankCommand!;
 }

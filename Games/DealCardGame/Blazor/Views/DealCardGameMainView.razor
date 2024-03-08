@@ -29,6 +29,7 @@
         <div>
             <GameButtonComponent Display="Play" CommandObject="PlayCommand" />
             <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
+            <GameButtonComponent Display="Bank" CommandObject="BankCommand" />
         </div>
         <div>
             <LabelGridComponent DataContext="_vmData" Labels="_labels" />
@@ -38,6 +39,10 @@
                               Columns="_scores"
                               Players="_gameContainer.SaveRoot.PlayerList" />
         </div>
+        @if (_vmData.ShownCard is not null)
+        {
+            <CardGraphicsBlazor DeckObject="_vmData.ShownCard" TargetHeight="15vh" />
+        }
     </GridItem>
     <GridItem Column="3" Row="1" RowSpan="3">
         <CompletePlayerSetsComponent Players="GetPlayers()" />

@@ -44,21 +44,56 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     {
         return true;
     }
+
+
     [Command(EnumCommandCategory.Game)]
-    public async Task PlayAsync()
+    public async Task BankAsync()
+    {
+        var card = GetSelectedCard();
+        if (card is null)
+        {
+            return;
+        }
+        if (card.CardType == EnumCardType.PropertyWild || card.CardType == EnumCardType.PropertyRegular)
+        {
+            _toast.ShowUserErrorToast("Properties cannot be put into the bank");
+            return;
+        }
+        if (_mainGame.BasicData.MultiPlayer)
+        {
+            await _mainGame.Network!.SendAllAsync("bank", card.Deck);
+        }
+        await _mainGame.BankAsync(card.Deck);
+    }
+    private DealCardGameCardInformation? GetSelectedCard()
     {
         var list = VMData.PlayerHand1.ListSelectedObjects();
         if (list.Count == 0)
         {
-            _toast.ShowUserErrorToast("There was no card selected to play");
-            return;
+            _toast.ShowUserErrorToast("There was no card selected");
+            return null;
         }
         if (list.Count > 1)
         {
             _toast.ShowUserErrorToast("Should have only had the possibility of selecting one card");
-            return;
+            return null;
         }
         var card = list.Single();
+        return card;
+    }
+    [Command(EnumCommandCategory.Game)]
+    public async Task PlayAsync()
+    {
+        var card = GetSelectedCard();
+        if (card is null)
+        {
+            return;
+        }
+        if (card.CardType == EnumCardType.Money)
+        {
+            _toast.ShowUserErrorToast("Cannot play money.  Either discard or put into your bank");
+            return;
+        }
         if (card.ActionCategory != EnumActionCategory.Gos)
         {
             _toast.ShowUserErrorToast("For now, only gos can be played");
