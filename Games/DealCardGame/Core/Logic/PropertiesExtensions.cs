@@ -1,12 +1,51 @@
 ﻿namespace DealCardGame.Core.Logic;
-public static class Extensions
+public static class PropertiesExtensions
 {
-    public static void AddCardToPlayerPropertySet(this DealCardGamePlayerItem player, DealCardGameCardInformation card, EnumColor color)
+    public static SetPropertiesModel? GetPropertyFromCard(this DealCardGamePlayerItem player, int deck)
+    {
+        foreach (var item in player.SetData)
+        {
+            if (item.Cards.ObjectExist(deck))
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+    public static BasicList<SetPropertiesModel> GetSelectedProperties(this BasicList<SetPropertiesModel> properties)
+    {
+        BasicList<SetPropertiesModel> output = [];
+        foreach (var item in properties)
+        {
+            var list = item.Cards.GetSelectedItems();
+            if (list.Count > 0)
+            {
+                SetPropertiesModel other = new()
+                {
+                    Cards = list,
+                    Color = item.Color,
+                };
+                output.Add(other);
+            }
+        }
+        return output;
+    }
+    public static void RemoveCardFromPlayerSet(this BasicList<SetPropertiesModel> properties, int deck, EnumColor color)
+    {
+        var list = properties.GetCards(color);
+        list.RemoveObjectByDeck(deck);
+    }
+    public static void AddSingleCardToPlayerPropertySet(this DealCardGamePlayerItem player, DealCardGameCardInformation card, EnumColor color)
     {
         var list = player.SetData.GetCards(color);
         list.Add(card);
     }
-    public static BasicList<DealCardGameCardInformation> GetCards(this BasicList<SetPropertiesModel> properties, EnumColor color)
+    public static void AddSeveralCardsToPlayerPropertySet(this DealCardGamePlayerItem player, DeckRegularDict<DealCardGameCardInformation> cards, EnumColor color)
+    {
+        var list = player.SetData.GetCards(color);
+        list.AddRange(cards);
+    }
+    public static DeckRegularDict<DealCardGameCardInformation> GetCards(this BasicList<SetPropertiesModel> properties, EnumColor color)
     {
         return properties.Single(x => x.Color == color).Cards;
     }

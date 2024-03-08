@@ -8,5 +8,8 @@ public partial class DealCardGamePlayerItem : PlayerSingleHand<DealCardGameCardI
 
 
     public BasicList<SetPropertiesModel> SetData { get; set; } = [];
-    //public Dictionary<EnumColor, BasicList<DealCardGameCardInformation>> SetData { get; set; } = [];
+
+    public decimal Debt { get; set; } //go ahead and store as decimal even though it would be whole numbers.
+
+    public BasicList<int> Payments { get; set; } = []; //this is so after everybody has paid, then will finish processing.
 }
