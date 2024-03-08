@@ -43,4 +43,5 @@ public partial class DealCardGameMainView
     }
     private static string Rows => $"{gg1.RepeatMinimum(2)}";
     private BasicGameCommand PlayCommand => DataContext!.PlayCommand!;
+    private BasicGameCommand EndTurnCommand => DataContext!.EndTurnCommand!;
 }
