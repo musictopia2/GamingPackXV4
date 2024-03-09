@@ -7,6 +7,7 @@ public class DealCardGameMainGameClass
     private readonly DealCardGameVMData _model;
     private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
     private readonly DealCardGameGameContainer _gameContainer; //if we don't need it, take it out.
+    private readonly IToast _toast;
     private readonly PrivateAutoResumeProcesses _privateAutoResume;
     public DealCardGameMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
@@ -26,6 +27,7 @@ public class DealCardGameMainGameClass
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
+        _toast = toast;
         _privateAutoResume = privateAutoResume;
     }
     public int OtherTurn
@@ -56,6 +58,11 @@ public class DealCardGameMainGameClass
             _gameContainer.PersonalInformation.Payments.Clear(); //clear those things out.
             await _privateAutoResume.SaveStateAsync(_gameContainer);
         }
+        else if (rets == false)
+        {
+            //redo the state again to show at the beginning.
+            await StartPaymentProcessesForSelectedPlayerAsync();
+        }
         //anything else needed is here.
         await base.FinishGetSavedAsync();
     }
@@ -66,6 +73,16 @@ public class DealCardGameMainGameClass
             return;
         }
         IsLoaded = true; //i think needs to be here.
+    }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        if (_gameContainer.PersonalInformation.NeedsPayment)
+        {
+            _command.UpdateSpecificAction("processpayment");
+        }
+        
+        //_command.UpdateAll();
     }
     protected override async Task ComputerTurnAsync()
     {
@@ -121,6 +138,15 @@ public class DealCardGameMainGameClass
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
     }
+    protected override void GetPlayerToContinueTurn()
+    {
+        if (OtherTurn == 0)
+        {
+            base.GetPlayerToContinueTurn();
+            return;
+        }
+        SingleInfo = PlayerList.GetOtherPlayer();
+    }
     public override async Task ContinueTurnAsync()
     {
         if (_fromAutoResume == false)
@@ -132,7 +158,8 @@ public class DealCardGameMainGameClass
             await base.ContinueTurnAsync();
             return;
         }
-        if (_gameContainer.PersonalInformation.NeedsPayment == false)
+        var player = PlayerList.GetOtherPlayer();
+        if (_gameContainer.PersonalInformation.NeedsPayment == false && player.PlayerCategory == EnumPlayerCategory.Self)
         {
             //this means you already paid.  but needs to send the information to other players.
             BasicList<int> cards = _gameContainer.PersonalInformation.Payments.GetDeckListFromObjectList();
@@ -232,6 +259,7 @@ public class DealCardGameMainGameClass
             return;
         }
         await StartPaymentProcessesForSelectedPlayerAsync();
+        await ContinueTurnAsync(); //i think.
     }
     private async Task StartFiguringOutPaymentsForAllPlayersAsync(int owed)
     {
@@ -242,6 +270,10 @@ public class DealCardGameMainGameClass
                 if (player.Money <= owed)
                 {
                     player.Debt = player.Money;
+                }
+                else
+                {
+                    player.Debt = owed;
                 }
             }
         }
@@ -256,12 +288,18 @@ public class DealCardGameMainGameClass
             return;
         }
         await StartPaymentProcessesForSelectedPlayerAsync();
+        await ContinueTurnAsync(); //i think.
     }
     private async Task StartPaymentProcessesForSelectedPlayerAsync()
     {
         SingleInfo = PlayerList.First(x => x.Debt > 0);
         SaveRoot.GameStatus = EnumGameStatus.NeedsPayment;
-        if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+        await RecordPersonalStartPaymentProcessesAsync();
+        OtherTurn = SingleInfo.Id;   
+    }
+    private async Task RecordPersonalStartPaymentProcessesAsync()
+    {
+        if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             _gameContainer.PersonalInformation.NeedsPayment = true;
         }
@@ -269,13 +307,13 @@ public class DealCardGameMainGameClass
         {
             _gameContainer.PersonalInformation.NeedsPayment = false; //i think.
         }
-        OtherTurn = SingleInfo.Id;
+
         _gameContainer.PersonalInformation.Payments.Clear();
         _gameContainer.PersonalInformation.State.SetData = SingleInfo.SetData.ToBasicList();
         _gameContainer.PersonalInformation.State.BankedCards = SingleInfo.BankedCards.ToRegularDeckDict();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
-        await ContinueTurnAsync(); //i think.
     }
+
     private void AttemptToAutomatePayment(DealCardGamePlayerItem currentPlayer, int owed)
     {
         DealCardGamePlayerItem realPlayer = PlayerList.GetWhoPlayer();
@@ -317,6 +355,8 @@ public class DealCardGameMainGameClass
         GetPlayerToContinueTurn();
         SingleInfo!.MainHandList.RemoveObjectByDeck(deck);
         DealCardGameCardInformation output = _gameContainer.DeckList!.GetSpecificItem(deck); //i think
+        output.IsSelected = false;
+        output.Drew = false;
         return output;
     }
     private async Task PlayPassGoAsync(DealCardGameCardInformation card)
@@ -368,11 +408,6 @@ public class DealCardGameMainGameClass
             await AfterPaymentsAsync();
             return;
         }
-        await ContinueOutOtherPaymentsAsync();
-    }
-    private async Task ContinueOutOtherPaymentsAsync()
-    {
-        var player = PlayerList.First(x => x.Debt > 0);
         OtherTurn = player.Id;
         SingleInfo = PlayerList.GetOtherPlayer();
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
@@ -382,10 +417,10 @@ public class DealCardGameMainGameClass
         }
         _gameContainer.PersonalInformation.NeedsPayment = true; //for everybody, will record that we need payment.
         await _privateAutoResume.SaveStateAsync(_gameContainer);
-        await ContinueTurnAsync();
     }
     public async Task ConfirmPaymentAsync()
     {
+        OtherTurn = 0;
         GetPlayerToContinueTurn(); //will finish processing.
         foreach (var player in PlayerList)
         {
@@ -414,6 +449,7 @@ public class DealCardGameMainGameClass
     }
     private async Task AfterPaymentsAsync()
     {
+        OtherTurn = 0;
         GetPlayerToContinueTurn(); //will finish processing.
         DealCardGameCardInformation card;
         BasicList<DealCardGameCardInformation> payments = [];

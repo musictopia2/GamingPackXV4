@@ -52,6 +52,15 @@ public static class PropertiesExtensions
         var list = properties.GetCards(color);
         list.RemoveObjectByDeck(deck);
     }
+    public static DeckRegularDict<DealCardGameCardInformation> GetAllCardsFromPlayersSet(this BasicList<SetPropertiesModel> properties)
+    {
+        DeckRegularDict<DealCardGameCardInformation> output = [];
+        foreach (var item in properties)
+        {
+            output.AddRange(item.Cards);
+        }
+        return output;
+    }
     public static void AddSingleCardToPlayerPropertySet(this DealCardGamePlayerItem player, DealCardGameCardInformation card, EnumColor color)
     {
         var list = player.SetData.GetCards(color);

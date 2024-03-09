@@ -1,5 +1,5 @@
 namespace DealCardGame.Blazor;
-public partial class MakePaymentComponent
+public partial class MakePaymentComponent : IDisposable
 {
     //don't want to deal with screens either.
     private PaymentViewModel? DataContext { get; set; }
@@ -7,6 +7,11 @@ public partial class MakePaymentComponent
     protected override void OnInitialized()
     {
         DataContext = aa1.Resolver!.Resolve<PaymentViewModel>();
+
+        
+
+        //DataContext.NotifyStateChange = StateHasChanged;
+        DataContext.AddCommandAction(StateHasChanged);
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(DealCardGameVMData.NormalTurn))
             .AddLabel("Owed", nameof(DealCardGameVMData.Owed))
@@ -14,6 +19,14 @@ public partial class MakePaymentComponent
             ;
         base.OnInitialized();
     }
+
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
+    public void Dispose()
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
+    {
+        DataContext!.RemoveCommandAction();
+    }
+
     private BasicGameCommand AddPaymentsCommand => DataContext!.AddPaymentsCommand!;
     private BasicGameCommand StartOverCommand => DataContext!.StartOverCommand!;
     private BasicGameCommand FinishPaymentCommand => DataContext!.FinishPaymentCommand!;

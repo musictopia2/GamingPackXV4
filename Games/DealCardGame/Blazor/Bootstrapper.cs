@@ -9,6 +9,7 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<DealCardGameShellViewMo
     protected override Task RegisterTestsAsync()
     {
         TestData!.CardsToPass = 12;
+        TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
         GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
         return base.RegisterTestsAsync();
     }

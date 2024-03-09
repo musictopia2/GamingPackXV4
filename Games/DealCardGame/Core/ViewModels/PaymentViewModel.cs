@@ -12,7 +12,7 @@ public partial class PaymentViewModel : IBasicEnableProcess
         IToast toast,
         DealCardGameVMData model,
         PrivateAutoResumeProcesses privateAutoResume,
-        DealCardGameMainGameClass _mainGame
+        DealCardGameMainGameClass mainGame
         )
     {
         CreateCommands(gameContainer.Command);
@@ -20,18 +20,37 @@ public partial class PaymentViewModel : IBasicEnableProcess
         _toast = toast;
         VMData = model;
         _privateAutoResume = privateAutoResume;
-        this._mainGame = _mainGame;
+        _mainGame = mainGame;
         _player = _gameContainer.PlayerList!.GetSelf();
         VMData.NormalTurn = _player.NickName;
-
+        VMData.Owed = _player.Debt;
         VMData.Payments.HandList = _gameContainer.PersonalInformation.Payments;
         VMData.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards;
+        VMData.Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
     }
+    //private bool _canExecute = true;
     partial void CreateCommands(CommandContainer command);
+    //public Action? NotifyStateChange { get; set; }
+    private Action? _previousAction;
+    public void AddCommandAction(Action action)
+    {
+        _previousAction = _gameContainer.Command.ParentAction;
+        _gameContainer.Command.ParentAction = action; //for now.
+        //_gameContainer.Command.AddAction(action, "processpayment");
+    }
+    public void RemoveCommandAction()
+    {
+        _gameContainer.Command.ParentAction = _previousAction;
+        _previousAction = null;
+        //_gameContainer.Command.RemoveAction("processpayment");
+    }
+
     [Command(EnumCommandCategory.Game)]
     public async Task StartOverAsync()
     {
         //this is for self.
+        //NotifyStateChange?.Invoke();
+        _gameContainer.Command.UpdateAll();
         var player = _gameContainer.PlayerList!.GetSelf();
         _gameContainer.PersonalInformation.State.BankedCards = player.BankedCards.ToRegularDeckDict();
         _gameContainer.PersonalInformation.State.SetData = player.SetData.ToBasicList();
@@ -102,6 +121,6 @@ public partial class PaymentViewModel : IBasicEnableProcess
     }
     public bool CanEnableBasics()
     {
-        return true; //i think.
+        return true;
     }
 }
