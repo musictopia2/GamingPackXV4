@@ -7,13 +7,24 @@ public class CommandContainer
     private readonly BasicList<IControlObservable> _controlList = new();
     private readonly Dictionary<string, Action> _specialActions = new();
     public Action? ParentAction { get; set; }
+    public event Action? CustomStateHasChanged;
+    public void ResetCustomStates()
+    {
+        CustomStateHasChanged = null; //to avoid memory leaks (just in case i forget to unsubscribe.
+        //this is needed to avoid memory leaks.
+    }
     public CommandContainer()
     {
         IsExecuting = true;
     }
     public void UpdateAll()
     {
-        ParentAction?.Invoke();
+        if (CustomStateHasChanged is null)
+        {
+            ParentAction?.Invoke();
+            return;
+        }
+        CustomStateHasChanged.Invoke(); //this means if there are several then will call those as well.
     }
     public void UpdateSpecificAction(string key)
     {
