@@ -2,7 +2,7 @@
 public enum EnumGameStatus
 {
     None,
-    StartDebtCollector
+    StartDebtCollector,
     StartRent,
     NeedsPayment,
     ConfirmPayment

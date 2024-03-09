@@ -3,8 +3,8 @@ public partial class DealCardGameMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private DealCardGameVMData? _vmData;
     private DealCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()

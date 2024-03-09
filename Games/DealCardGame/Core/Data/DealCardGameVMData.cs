@@ -6,6 +6,8 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
 {
     [LabelColumn]
     public string NormalTurn { get; set; } = "";
+
+
     [LabelColumn]
     public string Status { get; set; } = "";
 
@@ -14,6 +16,7 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public decimal Owed { get; set; }
     [LabelColumn]
     public decimal PaidSoFar { get; set; }
+
     public DealCardGameVMData(CommandContainer command)
     {
         Deck1 = new(command);
@@ -25,6 +28,9 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
         Payments = new(command);
         Payments.Text = "Payments";
         Payments.AutoSelect = EnumHandAutoType.ShowObjectOnly; //show only.
+        Properties = new(command);
+        Properties.Text = "Properties To Pay With";
+        Properties.AutoSelect = EnumHandAutoType.SelectOneOnly;
     }
     public DeckObservablePile<DealCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<DealCardGameCardInformation> Pile1 { get; set; }
@@ -33,7 +39,7 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public DealCardGameCardInformation? ShownCard { get; set; }
     public HandObservable<DealCardGameCardInformation> Bank { get; set; }
     public HandObservable<DealCardGameCardInformation> Payments { get; set; }
-
+    public HandObservable<DealCardGameCardInformation> Properties { get; set; }
     //any other ui related properties will be here.
     //can copy/paste for the actual view model.
 }

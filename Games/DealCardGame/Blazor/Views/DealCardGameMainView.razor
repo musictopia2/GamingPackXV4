@@ -11,6 +11,11 @@
     <TestCardComponent />
     return;
 }
+@if (_gameContainer.PersonalInformation.NeedsPayment)
+{
+    <MakePaymentComponent />
+    return;
+}
 <GridContainer Rows="@Rows" ColumnGap="5px" RowGap=5px Columns="auto 35vw 1fr">
     <GridItem Row="1" Column="1">
         <StackLayout>

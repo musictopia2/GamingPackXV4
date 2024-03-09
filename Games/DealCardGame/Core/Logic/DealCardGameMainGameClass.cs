@@ -39,11 +39,25 @@ public class DealCardGameMainGameClass
             SaveRoot!.PlayOrder.OtherTurn = value;
         }
     }
-    public override Task FinishGetSavedAsync()
+    private bool _fromAutoResume;
+    public override async Task FinishGetSavedAsync()
     {
         LoadControls();
+        _fromAutoResume = true;
+        bool rets = await _privateAutoResume.HasAutoResumeAsync();
+        if (rets)
+        {
+            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+        }
+        if (SaveRoot.GameStatus != EnumGameStatus.NeedsPayment)
+        {
+            _gameContainer.PersonalInformation.NeedsPayment = false;
+            _gameContainer.PersonalInformation.State = new();
+            _gameContainer.PersonalInformation.Payments.Clear(); //clear those things out.
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+        }
         //anything else needed is here.
-        return base.FinishGetSavedAsync();
+        await base.FinishGetSavedAsync();
     }
     private void LoadControls()
     {
@@ -101,9 +115,30 @@ public class DealCardGameMainGameClass
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
     }
+    public override async Task ContinueTurnAsync()
+    {
+        if (_fromAutoResume == false)
+        {
+            await base.ContinueTurnAsync();
+        }
+        if (SaveRoot.GameStatus != EnumGameStatus.NeedsPayment)
+        {
+            await base.ContinueTurnAsync();
+            return;
+        }
+        if (_gameContainer.PersonalInformation.NeedsPayment == false)
+        {
+            //this means you already paid.  but needs to send the information to other players.
+            BasicList<int> cards = _gameContainer.PersonalInformation.Payments.GetDeckListFromObjectList();
+            await ProcessPaymentsAsync(cards);
+            return;
+        }
+        await base.ContinueTurnAsync();
+    }
     public override async Task StartNewTurnAsync()
     {
         await base.StartNewTurnAsync();
+        _fromAutoResume = false; //no longer from autoresume.
         await DrawToStartAsync();
         //await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
     }
@@ -192,12 +227,20 @@ public class DealCardGameMainGameClass
         }
         SingleInfo = PlayerList.First(x => x.Debt > 0);
         SaveRoot.GameStatus = EnumGameStatus.NeedsPayment;
-        _gameContainer.PersonalInformation.NeedsPayment = true;
+        if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            _gameContainer.PersonalInformation.NeedsPayment = true;
+        }
+        else
+        {
+            _gameContainer.PersonalInformation.NeedsPayment = false; //i think.
+        }
         OtherTurn = SingleInfo.Id;
         _gameContainer.PersonalInformation.Payments.Clear();
         _gameContainer.PersonalInformation.State.SetData = SingleInfo.SetData.ToBasicList();
         _gameContainer.PersonalInformation.State.BankedCards = SingleInfo.BankedCards.ToRegularDeckDict();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
+        await ContinueTurnAsync(); //i think.
     }
     private void AttemptToAutomatePayment(DealCardGamePlayerItem currentPlayer, int owed)
     {
@@ -278,6 +321,11 @@ public class DealCardGameMainGameClass
     }
     public async Task ProcessPaymentsAsync(BasicList<int> cards)
     {
+        _fromAutoResume = false; //not anymore.
+        if (_gameContainer.CanSendMessage())
+        {
+            await _gameContainer.Network!.SendAllAsync("finishpayment", cards);
+        }
         var player = PlayerList.GetOtherPlayer();
         player.Payments.ReplaceRange(cards);
         player.Debt = 0; //because you no longer owe.

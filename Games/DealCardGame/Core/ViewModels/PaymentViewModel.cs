@@ -1,10 +1,10 @@
 ﻿namespace DealCardGame.Core.ViewModels;
 [InstanceGame]
-public partial class PaymentViewModel
+public partial class PaymentViewModel : IBasicEnableProcess
 {
     private readonly DealCardGameGameContainer _gameContainer;
     private readonly IToast _toast;
-    private readonly DealCardGameVMData _model;
+    public readonly DealCardGameVMData VMData;
     private readonly PrivateAutoResumeProcesses _privateAutoResume;
     private readonly DealCardGameMainGameClass _mainGame;
     private readonly DealCardGamePlayerItem _player;
@@ -18,12 +18,14 @@ public partial class PaymentViewModel
         CreateCommands(gameContainer.Command);
         _gameContainer = gameContainer;
         _toast = toast;
-        _model = model;
+        VMData = model;
         _privateAutoResume = privateAutoResume;
         this._mainGame = _mainGame;
         _player = _gameContainer.PlayerList!.GetSelf();
-        _model.Payments.HandList = _gameContainer.PersonalInformation.Payments;
-        _model.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards;
+        VMData.NormalTurn = _player.NickName;
+
+        VMData.Payments.HandList = _gameContainer.PersonalInformation.Payments;
+        VMData.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards;
     }
     partial void CreateCommands(CommandContainer command);
     [Command(EnumCommandCategory.Game)]
@@ -33,10 +35,10 @@ public partial class PaymentViewModel
         var player = _gameContainer.PlayerList!.GetSelf();
         _gameContainer.PersonalInformation.State.BankedCards = player.BankedCards.ToRegularDeckDict();
         _gameContainer.PersonalInformation.State.SetData = player.SetData.ToBasicList();
-        _model.Payments.HandList = _gameContainer.PersonalInformation.Payments;
-        _model.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards; //may need to hook up again.
+        VMData.Payments.HandList = _gameContainer.PersonalInformation.Payments;
+        VMData.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards; //may need to hook up again.
         _gameContainer.PersonalInformation.Payments.Clear(); //you are clearing the payments.
-        _model.PaidSoFar = 0;
+        VMData.PaidSoFar = 0;
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
     [Command(EnumCommandCategory.Game)]
@@ -88,7 +90,7 @@ public partial class PaymentViewModel
     [Command(EnumCommandCategory.Game)]
     public async Task FinishPaymentAsync()
     {
-        if (_model.PaidSoFar < _model.Owed)
+        if (VMData.PaidSoFar < VMData.Owed)
         {
             //if you never had enough, would have done automatically.
             _toast.ShowUserErrorToast("You did not pay enough to satisfy the payment");
@@ -96,13 +98,10 @@ public partial class PaymentViewModel
         }
         //you need a list of cards used for payment.
         BasicList<int> cards = _gameContainer.PersonalInformation.Payments.GetDeckListFromObjectList();
-        if (_gameContainer.BasicData.MultiPlayer)
-        {
-            //_model.PlayerHand1.ListSelectedObjects().GetDeckListFromObjectList();
-            
-            //send the information that you have finished paying.
-            await _gameContainer.Network!.SendAllAsync("finishpayment", cards);
-        }
         await _mainGame.ProcessPaymentsAsync(cards);   
+    }
+    public bool CanEnableBasics()
+    {
+        return true; //i think.
     }
 }

@@ -1,6 +1,23 @@
 ﻿namespace DealCardGame.Core.Logic;
 public static class PropertiesExtensions
 {
+    public static bool HasRequiredSet(this SetPropertiesModel property)
+    {
+        var count = property.Cards.Count(x => x.ActionCategory == EnumActionCategory.None);
+        if (count > 3)
+        {
+            return true; //no matter what.
+        }
+        if (property.Color == EnumColor.Black)
+        {
+            return false; //since black requires 4
+        }
+        if (property.Color == EnumColor.Lime || property.Color == EnumColor.DarkBlue || property.Color == EnumColor.Brown)
+        {
+            return count >= 2;
+        }
+        return count >= 3;
+    }
     public static SetPropertiesModel? GetPropertyFromCard(this DealCardGamePlayerItem player, int deck)
     {
         foreach (var item in player.SetData)

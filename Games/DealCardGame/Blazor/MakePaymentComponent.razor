@@ -1,0 +1,17 @@
+﻿<div>
+    <HandBlazor TargetContainerSize="80vw" Hand="DataContext!.VMData.Bank" />
+</div>
+<div>
+    <HandBlazor TargetContainerSize="80vw" Hand="DataContext!.VMData.Properties" />
+</div>
+<div>
+    <HandBlazor TargetContainerSize="80vw" Hand="DataContext!.VMData.Payments" />
+</div>
+<div>
+    <GameButtonComponent Display="Start Over" CommandObject="StartOverCommand" />
+    <GameButtonComponent Display="Add Payments" CommandObject="AddPaymentsCommand" />
+    <GameButtonComponent Display="Finish Payments" CommandObject="FinishPaymentCommand" />
+</div>
+<div>
+    <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+</div>
