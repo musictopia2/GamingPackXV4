@@ -13,7 +13,7 @@ public partial class MakePaymentComponent : IDisposable
         //DataContext.NotifyStateChange = StateHasChanged;
         //DataContext.AddCommandAction(StateHasChanged);
         _labels.Clear();
-        _labels.AddLabel("Turn", nameof(DealCardGameVMData.NormalTurn))
+        _labels.AddLabel("Turn", nameof(DealCardGameVMData.OtherTurn))
             .AddLabel("Owed", nameof(DealCardGameVMData.Owed))
             .AddLabel("Paid So Far", nameof(DealCardGameVMData.PaidSoFar));
             ;

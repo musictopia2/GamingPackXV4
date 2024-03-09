@@ -9,7 +9,7 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<DealCardGameShellViewMo
     protected override Task RegisterTestsAsync()
     {
         TestData!.CardsToPass = 12;
-        TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
+        //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
         GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
         return base.RegisterTestsAsync();
     }
@@ -35,7 +35,7 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
 {
     Task ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>.SetUpTestHandsAsync(PlayerCollection<DealCardGamePlayerItem> playerList, IListShuffler<DealCardGameCardInformation> deckList)
     {
-        var player = playerList.GetOnlyOpponent();
+        var player = playerList.GetSelf();
         var card = deckList.First(x => x.ActionCategory == EnumActionCategory.Birthday);
         player.StartUpList.Add(card);
         card = deckList.First(x => x.ActionCategory == EnumActionCategory.DebtCollector);

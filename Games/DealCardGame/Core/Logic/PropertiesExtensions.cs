@@ -1,6 +1,19 @@
 ﻿namespace DealCardGame.Core.Logic;
 public static class PropertiesExtensions
 {
+
+    public static void ClonePlayerProperties(this DealCardGamePlayerItem player, PrivateModel model)
+    {
+        model.State.SetData = [];
+        foreach (var item in player.SetData)
+        {
+            SetPropertiesModel p = new();
+            p.Color = item.Color;
+            p.Cards = item.Cards.ToRegularDeckDict();
+            model.State.SetData.Add(p);
+        }
+    }
+
     public static bool HasRequiredSet(this SetPropertiesModel property)
     {
         var count = property.Cards.Count(x => x.ActionCategory == EnumActionCategory.None);

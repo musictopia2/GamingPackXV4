@@ -74,16 +74,6 @@ public class DealCardGameMainGameClass
         }
         IsLoaded = true; //i think needs to be here.
     }
-    protected override async Task ShowHumanCanPlayAsync()
-    {
-        await base.ShowHumanCanPlayAsync();
-        if (_gameContainer.PersonalInformation.NeedsPayment)
-        {
-            _command.UpdateSpecificAction("processpayment");
-        }
-        
-        //_command.UpdateAll();
-    }
     protected override async Task ComputerTurnAsync()
     {
         //if there is nothing, then just won't do anything.
@@ -134,8 +124,14 @@ public class DealCardGameMainGameClass
             case "resume":
                 await ResumeAsync();
                 return;
+            case "finishpayment":
+                BasicList<int> payments = await js1.DeserializeObjectAsync <BasicList<int>>(content);
+                await ProcessPaymentsAsync(payments);
+                return;
             default:
-                throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
+                _toast.ShowUserErrorToast($"Nothing for status {status}");
+                return;
+                //throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
     }
     protected override void GetPlayerToContinueTurn()
@@ -252,10 +248,15 @@ public class DealCardGameMainGameClass
         {
             throw new CustomBasicException("Needs to figure out the payment owed now");
         }
-        if (SingleInfo.Debt == 0)
+        if (SingleInfo.Debt == 0 && SingleInfo.Payments.Count == 0)
         {
             SaveRoot.GameStatus = EnumGameStatus.None; //i think.
             await ContinueTurnAsync();
+            return;
+        }
+        if (SingleInfo.Payments.Count > 0)
+        {
+            await AfterPaymentsAsync();
             return;
         }
         await StartPaymentProcessesForSelectedPlayerAsync();
@@ -281,18 +282,25 @@ public class DealCardGameMainGameClass
         {
             AttemptToAutomatePayment(player, owed);
         }
-        if (PlayerList.All(x => x.Debt == 0))
+        if (PlayerList.All(x => x.Debt == 0 && x.Payments.Count == 0))
         {
             SaveRoot.GameStatus = EnumGameStatus.None; //i think.
             await ContinueTurnAsync();
             return;
         }
-        await StartPaymentProcessesForSelectedPlayerAsync();
-        await ContinueTurnAsync(); //i think.
+
+        //var temp = PlayerList.FirstOrDefault(x => x.Debt > 0 && x.Payments.Count == 0);
+        if (PlayerList.Any(x => x.Debt > 0))
+        {
+            await StartPaymentProcessesForSelectedPlayerAsync();
+            await ContinueTurnAsync(); //i think.
+            return;
+        }
+        await AfterPaymentsAsync();
     }
     private async Task StartPaymentProcessesForSelectedPlayerAsync()
     {
-        SingleInfo = PlayerList.First(x => x.Debt > 0);
+        SingleInfo = PlayerList.First(x => x.Debt > 0 && x.Payments.Count == 0);
         SaveRoot.GameStatus = EnumGameStatus.NeedsPayment;
         await RecordPersonalStartPaymentProcessesAsync();
         OtherTurn = SingleInfo.Id;   
@@ -307,36 +315,56 @@ public class DealCardGameMainGameClass
         {
             _gameContainer.PersonalInformation.NeedsPayment = false; //i think.
         }
-
         _gameContainer.PersonalInformation.Payments.Clear();
-        _gameContainer.PersonalInformation.State.SetData = SingleInfo.SetData.ToBasicList();
+        SingleInfo.ClonePlayerProperties(_gameContainer.PersonalInformation);
         _gameContainer.PersonalInformation.State.BankedCards = SingleInfo.BankedCards.ToRegularDeckDict();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
 
-    private void AttemptToAutomatePayment(DealCardGamePlayerItem currentPlayer, int owed)
+    private static void AttemptToAutomatePayment(DealCardGamePlayerItem currentPlayer, int owed)
     {
-        DealCardGamePlayerItem realPlayer = PlayerList.GetWhoPlayer();
+        if (currentPlayer.Debt == 0)
+        {
+            return;
+        }
         if (currentPlayer.Money <= owed && currentPlayer.Money > 0)
         {
-            realPlayer.Money += currentPlayer.Money;
-            currentPlayer.Money = 0;
+            //realPlayer.Money += currentPlayer.Money;
+            //currentPlayer.Money = 0;
+            currentPlayer.Debt = 0;
+
+            currentPlayer.Payments.Clear();
+            foreach (var item in currentPlayer.BankedCards)
+            {
+                currentPlayer.Payments.Add(item.Deck);
+            }
             foreach (var item in currentPlayer.SetData)
             {
                 var list = item.Cards.ToRegularDeckDict();
                 list.RemoveAllOnly(x => x.ClaimedValue == 0);
-                var others = list.RemoveAllAndObtain(x => x.ActionCategory != EnumActionCategory.None);
-                list.RemoveGivenList(others);
-                realPlayer.AddSeveralCardsToPlayerPropertySet(list, item.Color);
-                realPlayer.BankedCards.AddRange(others);
+                foreach (var card in list)
+                {
+                    currentPlayer.Payments.Add(card.Deck);
+                }
+
             }
-            realPlayer.BankedCards.AddRange(currentPlayer.BankedCards.ToBasicList());
-            currentPlayer.BankedCards.Clear();
+
+            //foreach (var item in currentPlayer.SetData)
+            //{
+            //    var list = item.Cards.ToRegularDeckDict();
+            //    list.RemoveAllOnly(x => x.ClaimedValue == 0);
+            //    var others = list.RemoveAllAndObtain(x => x.ActionCategory != EnumActionCategory.None);
+            //    list.RemoveGivenList(others);
+            //    realPlayer.AddSeveralCardsToPlayerPropertySet(list, item.Color);
+            //    realPlayer.BankedCards.AddRange(others);
+            //}
+            //realPlayer.BankedCards.AddRange(currentPlayer.BankedCards.ToBasicList());
+            //currentPlayer.BankedCards.Clear();
         }
-        if (currentPlayer.Money == 0)
-        {
-            currentPlayer.Debt = 0; //to double check.
-        }
+        //if (currentPlayer.Money == 0)
+        //{
+        //    currentPlayer.Debt = 0; //to double check.
+        //}
     }
     public async Task PlayPropertyAsync(int deck, EnumColor color)
     {
@@ -397,6 +425,7 @@ public class DealCardGameMainGameClass
     {
         _fromAutoResume = false; //not anymore.
         _command.ResetCustomStates();
+        _command.UpdateAll(); //i can see if it at least updates my screen.
         if (_gameContainer.CanSendMessage())
         {
             await _gameContainer.Network!.SendAllAsync("finishpayment", cards);
@@ -406,6 +435,8 @@ public class DealCardGameMainGameClass
         player.Debt = 0; //because you no longer owe.
         if (PlayerList.All(x => x.Debt == 0))
         {
+            _gameContainer.PersonalInformation.NeedsPayment = false;
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
             await AfterPaymentsAsync();
             return;
         }
@@ -415,8 +446,8 @@ public class DealCardGameMainGameClass
         {
             _gameContainer.PersonalInformation.State = new();
             _gameContainer.PersonalInformation.Payments.Clear();
+            _gameContainer.PersonalInformation.NeedsPayment = true; //for everybody, will record that we need payment.
         }
-        _gameContainer.PersonalInformation.NeedsPayment = true; //for everybody, will record that we need payment.
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
     public async Task ConfirmPaymentAsync()
@@ -470,6 +501,7 @@ public class DealCardGameMainGameClass
                     SingleInfo.BankedCards.Add(card);
                 }
             });
+            player.Payments.Clear(); //i think it needs to clear out the payments afterwards.
         }
         SaveRoot.GameStatus = EnumGameStatus.ConfirmPayment;
         await ContinueTurnAsync();

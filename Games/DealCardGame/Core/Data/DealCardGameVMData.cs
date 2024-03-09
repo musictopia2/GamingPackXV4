@@ -6,7 +6,8 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
 {
     [LabelColumn]
     public string NormalTurn { get; set; } = "";
-
+    [LabelColumn]
+    public string OtherTurn { get; set; } = "";
 
     [LabelColumn]
     public string Status { get; set; } = "";

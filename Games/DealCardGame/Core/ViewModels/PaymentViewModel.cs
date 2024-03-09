@@ -22,10 +22,12 @@ public partial class PaymentViewModel : IBasicEnableProcess
         _privateAutoResume = privateAutoResume;
         _mainGame = mainGame;
         _player = _gameContainer.PlayerList!.GetSelf();
-        VMData.NormalTurn = _player.NickName;
+        VMData.OtherTurn = _player.NickName;
         VMData.Owed = _player.Debt;
         VMData.Payments.HandList = _gameContainer.PersonalInformation.Payments;
+        VMData.PaidSoFar = _gameContainer.PersonalInformation.Payments.Sum(x => x.ClaimedValue);
         VMData.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards;
+        VMData.Bank.HandList.Sort();
         VMData.Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
     }
     //private bool _canExecute = true;
@@ -61,11 +63,13 @@ public partial class PaymentViewModel : IBasicEnableProcess
         _gameContainer.Command.UpdateAll();
         var player = _gameContainer.PlayerList!.GetSelf();
         _gameContainer.PersonalInformation.State.BankedCards = player.BankedCards.ToRegularDeckDict();
-        _gameContainer.PersonalInformation.State.SetData = player.SetData.ToBasicList();
+        player.ClonePlayerProperties(_gameContainer.PersonalInformation);
         VMData.Payments.HandList = _gameContainer.PersonalInformation.Payments;
         VMData.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards; //may need to hook up again.
+        VMData.Bank.HandList.Sort();
         _gameContainer.PersonalInformation.Payments.Clear(); //you are clearing the payments.
         VMData.PaidSoFar = 0;
+        VMData.Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
     [Command(EnumCommandCategory.Game)]
@@ -108,9 +112,22 @@ public partial class PaymentViewModel : IBasicEnableProcess
                 _toast.ShowUserErrorToast("You do not have to use this card to pay because it has no claimed value");
                 return;
             }
+            card.IsSelected = false;
+            VMData.PaidSoFar += card.ClaimedValue;
             _gameContainer.PersonalInformation.Payments.Add(card);
             _gameContainer.PersonalInformation.State.SetData.RemoveCardFromPlayerSet(card.Deck, property.Color);
+            VMData.Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+            return;
         }
+        if (bankedCards.Count == 0)
+        {
+            _toast.ShowUserErrorToast("You did not choose any cards for payment");
+            return;
+        }
+        VMData.PaidSoFar += bankedCards.Sum(x => x.ClaimedValue);
+        _gameContainer.PersonalInformation.State.BankedCards.RemoveSelectedItems();
+        bankedCards.UnselectAllObjects();
         _gameContainer.PersonalInformation.Payments.AddRange(bankedCards);
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
