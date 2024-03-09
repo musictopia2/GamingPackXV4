@@ -121,14 +121,22 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             _toast.ShowUserErrorToast("For now, cannot click on your cards because only rent and property cards are supported");
             return;
         }
+        if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
+        {
+            if (_mainGame.BasicData.MultiPlayer)
+            {
+                await _mainGame.Network!.SendAllAsync("playerpayment", model.PlayerId);
+            }
+            await _mainGame.SelectSinglePlayerForPaymentAsync(model.PlayerId);
+            return;
+        }
+
         _toast.ShowUserErrorToast("Cannot choose another player for anything yet");
     }
     private bool CanPlayHouseOrHotel(DealCardGameCardInformation card, EnumColor color)
     {
         var player = _mainGame.PlayerList.GetWhoPlayer();
         SetPropertiesModel property = player.SetData.Single(x => x.Color == color);
-
-
         if (property.Cards.Any(x => x.ActionCategory == card.ActionCategory))
         {
             if (card.ActionCategory == EnumActionCategory.House)
@@ -234,5 +242,14 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             await _mainGame.Network!.SendAllAsync("playaction", card.Deck);
         }
         await _mainGame.PlayActionAsync(card.Deck);
+    }
+    [Command(EnumCommandCategory.Game)]
+    public async Task ResumeAsync()
+    {
+        if (_mainGame.BasicData.MultiPlayer)
+        {
+            await _mainGame.Network!.SendAllAsync("resume");
+        }
+        await _mainGame.ResumeAsync();
     }
 }

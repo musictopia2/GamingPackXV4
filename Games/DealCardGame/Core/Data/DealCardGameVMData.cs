@@ -40,6 +40,7 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public HandObservable<DealCardGameCardInformation> Bank { get; set; }
     public HandObservable<DealCardGameCardInformation> Payments { get; set; }
     public HandObservable<DealCardGameCardInformation> Properties { get; set; }
+    public string ChosenPlayer { get; set; } = ""; //this is needed so you can see the cards that are needed.
     //any other ui related properties will be here.
     //can copy/paste for the actual view model.
 }

@@ -111,6 +111,12 @@ public class DealCardGameMainGameClass
                 setCard = await js1.DeserializeObjectAsync<SetCardModel>(content);
                 await PlayPropertyAsync(setCard.Deck, setCard.Color);
                 return;
+            case "playerpayment":
+                await SelectSinglePlayerForPaymentAsync(int.Parse(content));
+                return;
+            case "resume":
+                await ResumeAsync();
+                return;
             default:
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
@@ -203,6 +209,30 @@ public class DealCardGameMainGameClass
         StartPossiblePaymentProcesses();
         await StartFiguringOutPaymentsForAllPlayersAsync(2);
     }
+    public async Task SelectSinglePlayerForPaymentAsync(int player)
+    {
+        OtherTurn = player;
+        SingleInfo = PlayerList.GetOtherPlayer();
+        _model.ChosenPlayer = SingleInfo.NickName;
+        _command.UpdateAll();
+        await Delay!.DelayMilli(700);
+        _model.ChosenPlayer = "";
+        if (SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
+        {
+            AttemptToAutomatePayment(SingleInfo, 5);
+        }
+        else
+        {
+            throw new CustomBasicException("Needs to figure out the payment owed now");
+        }
+        if (SingleInfo.Debt == 0)
+        {
+            SaveRoot.GameStatus = EnumGameStatus.None; //i think.
+            await ContinueTurnAsync();
+            return;
+        }
+        await StartPaymentProcessesForSelectedPlayerAsync();
+    }
     private async Task StartFiguringOutPaymentsForAllPlayersAsync(int owed)
     {
         foreach (var player in PlayerList)
@@ -225,6 +255,10 @@ public class DealCardGameMainGameClass
             await ContinueTurnAsync();
             return;
         }
+        await StartPaymentProcessesForSelectedPlayerAsync();
+    }
+    private async Task StartPaymentProcessesForSelectedPlayerAsync()
+    {
         SingleInfo = PlayerList.First(x => x.Debt > 0);
         SaveRoot.GameStatus = EnumGameStatus.NeedsPayment;
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
@@ -401,6 +435,12 @@ public class DealCardGameMainGameClass
             });
         }
         SaveRoot.GameStatus = EnumGameStatus.ConfirmPayment;
+        await ContinueTurnAsync();
+    }
+    public async Task ResumeAsync()
+    {
+        SaveRoot.GameStatus = EnumGameStatus.None; //i think.
+        _model.Payments.ClearHand();
         await ContinueTurnAsync();
     }
 }
