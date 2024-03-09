@@ -10,6 +10,8 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
 
     [LabelColumn]
     public string Status { get; set; } = "";
+    [LabelColumn]
+    public string Instructions { get; set; } = "";
 
     //another ui can use this.
     [LabelColumn]

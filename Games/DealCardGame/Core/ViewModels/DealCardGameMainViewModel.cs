@@ -218,6 +218,49 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     //{
 
     //}
+
+    private bool IsProperAction(DealCardGameCardInformation card)
+    {
+        if (card.ActionCategory == EnumActionCategory.None)
+        {
+            _toast.ShowUserErrorToast("This is not an action card");
+            return false;
+        }
+        if (card.ActionCategory == EnumActionCategory.DebtCollector
+            || card.ActionCategory == EnumActionCategory.Birthday ||
+            card.ActionCategory == EnumActionCategory.Gos)
+        {
+            return true;
+        }
+        if (card.ActionCategory == EnumActionCategory.House || card.ActionCategory == EnumActionCategory.Hotel)
+        {
+            _toast.ShowUserErrorToast("You play houses and hotels by choosing your property group to expand it");
+            return false;
+        }
+        if (card.ActionCategory == EnumActionCategory.DoubleRent)
+        {
+            _toast.ShowUserErrorToast("This gets played automatically if you choose to double the rent and you have it");
+            return false;
+        }
+        if (card.ActionCategory == EnumActionCategory.JustSayNo)
+        {
+            _toast.ShowUserErrorToast("Just say no is a special action you take to remove the action against you or reenable the action against the other player");
+            return false;
+        }
+        if (card.ActionCategory == EnumActionCategory.DealBreaker)
+        {
+            _toast.ShowUserErrorToast("Deal breaker gets played by choosing a property group of your opponent");
+            return false;
+        }
+        if (card.ActionCategory == EnumActionCategory.ForcedDeal || card.ActionCategory == EnumActionCategory.SlyDeal)
+        {
+            _toast.ShowUserErrorToast("Forced deals and sly deals get played by choosing a property group and choosing a card from that property");
+            return false;
+        }
+        _toast.ShowUserErrorToast("Cannot play action card for unknown reason.  If this should be possible, rethink");
+        return false;
+    }
+
     public bool CanPlay => IsConfirming() == false;
     [Command(EnumCommandCategory.Game)]
     public async Task PlayAsync()
@@ -227,16 +270,22 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         {
             return;
         }
-        if (card.CardType == EnumCardType.Money)
+        if (IsProperAction(card) == false)
         {
-            _toast.ShowUserErrorToast("Cannot play money.  Either discard or put into your bank");
             return;
         }
-        if (card.ActionCategory != EnumActionCategory.Gos)
-        {
-            _toast.ShowUserErrorToast("For now, only gos can be played");
-            return;
-        }
+        //if (card.CardType == EnumCardType.Money)
+        //{
+        //    _toast.ShowUserErrorToast("Cannot play money.  Either discard or put into your bank");
+        //    return;
+        //}
+        
+
+        //if (card.ActionCategory != EnumActionCategory.Gos)
+        //{
+        //    _toast.ShowUserErrorToast("For now, only gos can be played");
+        //    return;
+        //}
         if (_mainGame.BasicData.MultiPlayer)
         {
             await _mainGame.Network!.SendAllAsync("playaction", card.Deck);
