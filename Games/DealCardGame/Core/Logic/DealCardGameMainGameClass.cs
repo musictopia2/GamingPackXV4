@@ -396,6 +396,7 @@ public class DealCardGameMainGameClass
     public async Task ProcessPaymentsAsync(BasicList<int> cards)
     {
         _fromAutoResume = false; //not anymore.
+        _command.ResetCustomStates();
         if (_gameContainer.CanSendMessage())
         {
             await _gameContainer.Network!.SendAllAsync("finishpayment", cards);

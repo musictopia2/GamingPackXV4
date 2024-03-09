@@ -33,6 +33,10 @@
 	  <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
+  </ItemGroup>
+
  
 
 </Project>

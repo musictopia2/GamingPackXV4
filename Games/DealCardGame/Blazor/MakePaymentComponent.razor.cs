@@ -8,10 +8,10 @@ public partial class MakePaymentComponent : IDisposable
     {
         DataContext = aa1.Resolver!.Resolve<PaymentViewModel>();
 
-        
+        DataContext.AddCommand(StateHasChanged);
 
         //DataContext.NotifyStateChange = StateHasChanged;
-        DataContext.AddCommandAction(StateHasChanged);
+        //DataContext.AddCommandAction(StateHasChanged);
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(DealCardGameVMData.NormalTurn))
             .AddLabel("Owed", nameof(DealCardGameVMData.Owed))
@@ -24,7 +24,7 @@ public partial class MakePaymentComponent : IDisposable
     public void Dispose()
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
     {
-        DataContext!.RemoveCommandAction();
+        //DataContext!.RemoveCommandAction();
     }
 
     private BasicGameCommand AddPaymentsCommand => DataContext!.AddPaymentsCommand!;

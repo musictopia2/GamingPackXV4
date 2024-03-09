@@ -30,20 +30,28 @@ public partial class PaymentViewModel : IBasicEnableProcess
     }
     //private bool _canExecute = true;
     partial void CreateCommands(CommandContainer command);
+
+
+    public void AddCommand(Action action)
+    {
+        _gameContainer.Command.CustomStateHasChanged += action;
+        //_gameContainer.Command.
+    }
+
     //public Action? NotifyStateChange { get; set; }
-    private Action? _previousAction;
-    public void AddCommandAction(Action action)
-    {
-        _previousAction = _gameContainer.Command.ParentAction;
-        _gameContainer.Command.ParentAction = action; //for now.
-        //_gameContainer.Command.AddAction(action, "processpayment");
-    }
-    public void RemoveCommandAction()
-    {
-        _gameContainer.Command.ParentAction = _previousAction;
-        _previousAction = null;
-        //_gameContainer.Command.RemoveAction("processpayment");
-    }
+    //private Action? _previousAction;
+    //public void AddCommandAction(Action action)
+    //{
+    //    _previousAction = _gameContainer.Command.ParentAction;
+    //    _gameContainer.Command.ParentAction = action; //for now.
+    //    //_gameContainer.Command.AddAction(action, "processpayment");
+    //}
+    //public void RemoveCommandAction()
+    //{
+    //    _gameContainer.Command.ParentAction = _previousAction;
+    //    _previousAction = null;
+    //    //_gameContainer.Command.RemoveAction("processpayment");
+    //}
 
     [Command(EnumCommandCategory.Game)]
     public async Task StartOverAsync()
