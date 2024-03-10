@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -564,27 +566,22 @@ public class DealCardGameMainGameClass
         }
         var card = GetPlayerSelectedSingleCard(rent.Deck);
         await AnimatePlayAsync(card);
-        int amountOwed;
         OtherTurn = 0; //for now.
         GetPlayerToContinueTurn();
-        var list = SingleInfo!.SetData.GetCards(rent.Color);
-        bool hasHouse = list.HasHouse();
-        bool hasHotel = list.HasHotel();
-        amountOwed = list.RentForSet(rent.Color, hasHouse, hasHotel);
+
+        int amountOwed = rent.RentOwed(SingleInfo!);
         int take = 0;
         if (rent.RentCategory == EnumRentCategory.SingleDouble)
         {
-            amountOwed *= 2;
             take = 1;
         }
         else if (rent.RentCategory == EnumRentCategory.DoubleDouble)
         {
-            amountOwed *= 4;
             take = 2;
         }
         if (take > 0)
         {
-            var others = SingleInfo.MainHandList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(take).ToBasicList();
+            var others = SingleInfo!.MainHandList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(take).ToBasicList();
             foreach (var item in others)
             {
                 SingleInfo.MainHandList.RemoveSpecificItem(item);
@@ -593,5 +590,21 @@ public class DealCardGameMainGameClass
         }
         StartPossiblePaymentProcesses();
         await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);
+    }
+    public async Task StartRentAsync(SetPlayerModel model, DealCardGameCardInformation card)
+    {
+        if (card.AnyColor && PlayerList.Count > 2)
+        {
+            _gameContainer.PersonalInformation.RentInfo.Player = -1; //means needs to choose a player.
+        }
+        else
+        {
+            _gameContainer.PersonalInformation.RentInfo.Player = 0; //means you have to choose a player.
+        }
+        _gameContainer.PersonalInformation.RentInfo.Color = model.Color;
+        _gameContainer.PersonalInformation.RentInfo.Deck = card.Deck;
+        _gameContainer.PersonalInformation.RentInfo.RentCategory = EnumRentCategory.NeedChoice; //i think
+        await _privateAutoResume.SaveStateAsync(_gameContainer);
+        _command.UpdateAll();
     }
 }

@@ -117,8 +117,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             }
             if (card.CardType == EnumCardType.ActionRent)
             {
-                _toast.ShowUserErrorToast("Charging rent is not supported yet");
-                //await RentAsync(card, model.Color);
+                await StartRentAsync(model, card);
                 return;
             }
             _toast.ShowUserErrorToast("For now, cannot click on your cards because only rent and property cards are supported");
@@ -145,6 +144,28 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         }
 
         _toast.ShowUserErrorToast("Cannot choose another player for anything yet");
+    }
+    private bool CanChargeRent(SetPlayerModel model, DealCardGameCardInformation card)
+    {
+        if (card.AnyColor)
+        {
+            return true;
+        }
+        if (card.FirstColorChoice == model.Color || card.SecondColorChoice ==  model.Color)
+        {
+            return true;
+        }
+        _toast.ShowUserErrorToast("Cannot charge rent because you chose a property group different than the card supports");
+        return false;
+    }
+    private async Task StartRentAsync(SetPlayerModel model, DealCardGameCardInformation card)
+    {
+        if (CanChargeRent(model, card) == false)
+        {
+            return;
+        }
+        //don't communicate with other players yet.
+        await _mainGame.StartRentAsync(model, card);
     }
     private bool CanStealSet(SetPlayerModel model)
     {

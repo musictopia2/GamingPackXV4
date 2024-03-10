@@ -21,15 +21,28 @@ public partial class RentViewModel : IBasicEnableProcess
         _privateAutoResume = privateAutoResume;
         _mainGame = mainGame;
         VMData.RentPicker.LoadEntireList(); //i think.
-        VMData.RentPicker.AutoSelectCategory = EnumAutoSelectCategory.AutoSelect;
+        //if only one choice, then no picker is needed but still wants the ability to cancel if you decide to though:
         if (VMData.RentPicker.ItemList.Count == 1)
         {
-            VMData.RentPicker.SelectSpecificItem(EnumRentCategory.Alone); //this will always be the option if no other options are available
+            //VMData.RentPicker.SelectSpecificItem(EnumRentCategory.Alone); //this will always be the option if no other options are available
+            _gameContainer.PersonalInformation.RentInfo.RentCategory = EnumRentCategory.Alone;
         }
-
+        else
+        {
+            VMData.RentPicker.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
+            VMData.RentPicker.ItemClickedAsync = ItemSelectedAsync;
+            RentOwed = _gameContainer.PersonalInformation.RentInfo.RentOwed(_mainGame.SingleInfo!);
+        }
         //well see about the player picker.
-
     }
+    private Task ItemSelectedAsync(EnumRentCategory category)
+    {
+        _gameContainer.PersonalInformation.RentInfo.RentCategory = category;
+        RentOwed = _gameContainer.PersonalInformation.RentInfo.RentOwed(_mainGame.SingleInfo!);
+        VMData.RentPicker.SelectSpecificItem(category); //i think.
+        return Task.CompletedTask;
+    }
+    public int RentOwed { get; private set; }
     partial void CreateCommands(CommandContainer command);
     [Command(EnumCommandCategory.Game)]
     public async Task CancelAsync()

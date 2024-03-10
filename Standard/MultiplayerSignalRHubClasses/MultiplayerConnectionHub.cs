@@ -283,13 +283,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             {
                 await SendErrorAsync("You must now enter the game name in order to connect to host");
             }
-            if (_hostGame != "" && _hostGame != gameName)
-            {
-                await Clients.Caller.SendAsync("NoHost"); //try this.  can mean the client refreshed and went to a game but waiting for host to join the game
-                //await SendErrorAsync($"The host chose {_hostGame} but you chose {gameName}");
-                //if you get the error, you have to go back to main to choose different game (that is the solution to that problem).
-                return;
-            }
+            
             ConnectionInfo connect;
             if (_playerList.ContainsKey(nickName) == false)
             {
@@ -314,6 +308,16 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             connect.ConnectionID = Context.ConnectionId;
             connect.GameName = gameName; //you can still show as connected even if there is no host.  the host may appear later.
             //even if no host, can have host later though.
+
+            //try this way.  would mean the client is still connected.
+            if (_hostGame != "" && _hostGame != gameName)
+            {
+                await Clients.Caller.SendAsync("NoHost"); //try this.  can mean the client refreshed and went to a game but waiting for host to join the game
+                //await SendErrorAsync($"The host chose {_hostGame} but you chose {gameName}");
+                //if you get the error, you have to go back to main to choose different game (that is the solution to that problem).
+                return;
+            }
+
             if (_hostName != "" && _gameStarted == false)
             {
                 await Clients.Caller.SendAsync("HostName", _hostName);
