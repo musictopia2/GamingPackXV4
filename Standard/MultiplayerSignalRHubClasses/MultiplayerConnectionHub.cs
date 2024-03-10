@@ -285,7 +285,8 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             }
             if (_hostGame != "" && _hostGame != gameName)
             {
-                await SendErrorAsync($"The host chose {_hostGame} but you chose {gameName}");
+                await Clients.Caller.SendAsync("NoHost"); //try this.  can mean the client refreshed and went to a game but waiting for host to join the game
+                //await SendErrorAsync($"The host chose {_hostGame} but you chose {gameName}");
                 //if you get the error, you have to go back to main to choose different game (that is the solution to that problem).
                 return;
             }
