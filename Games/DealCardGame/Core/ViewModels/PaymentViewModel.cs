@@ -97,10 +97,12 @@ public partial class PaymentViewModel : IBasicEnableProcess
                 return;
             }
             var card = property.Cards.Single();
-            if (card.ActionCategory != EnumActionCategory.House || card.ActionCategory != EnumActionCategory.Hotel)
+            if (card.ActionCategory != EnumActionCategory.House && card.ActionCategory != EnumActionCategory.Hotel)
             {
+                var list = _gameContainer.PersonalInformation.State.SetData.GetCards(property.Color);
+
                 //if you have any properties there that is not house or hotel must remove those first.
-                var list = _player.SetData.GetCards(property.Color);
+                //var list = _player.SetData.GetCards(property.Color);
                 if (list.Any(x => x.ActionCategory == EnumActionCategory.House || x.ActionCategory == EnumActionCategory.Hotel))
                 {
                     _toast.ShowUserErrorToast("You must remove the house or hotel before removing the property for payment");

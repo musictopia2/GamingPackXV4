@@ -1,5 +1,3 @@
-using System.Drawing;
-
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -11,7 +9,9 @@ public class DealCardGameMainGameClass
     private readonly DealCardGameGameContainer _gameContainer; //if we don't need it, take it out.
     private readonly IToast _toast;
     private readonly PrivateAutoResumeProcesses _privateAutoResume;
+#pragma warning disable IDE0290 // Use primary constructor
     public DealCardGameMainGameClass(IGamePackageResolver mainContainer,
+#pragma warning restore IDE0290 // Use primary constructor
         IEventAggregator aggregator,
         BasicData basicData,
         TestOptions test,
@@ -313,7 +313,7 @@ public class DealCardGameMainGameClass
         SingleInfo = PlayerList.First(x => x.Debt > 0 && x.Payments.Count == 0);
         SaveRoot.GameStatus = EnumGameStatus.NeedsPayment;
         await RecordPersonalStartPaymentProcessesAsync();
-        OtherTurn = SingleInfo.Id;   
+        OtherTurn = SingleInfo.Id;
     }
     private async Task RecordPersonalStartPaymentProcessesAsync()
     {
@@ -500,7 +500,7 @@ public class DealCardGameMainGameClass
         {
             player.Payments.ForEach(deck =>
             {
-                card =_gameContainer.DeckList.GetSpecificItem(deck);
+                card = _gameContainer.DeckList.GetSpecificItem(deck);
                 card.IsSelected = false;
                 _model.Payments.HandList.Add(card);
                 SingleInfo!.Money += card.ClaimedValue;
@@ -509,6 +509,19 @@ public class DealCardGameMainGameClass
                 {
                     player.BankedCards.RemoveObjectByDeck(deck);
                     SingleInfo.BankedCards.Add(card);
+                }
+                else
+                {
+                    var other = player.GetPropertyFromCard(deck);
+                    other!.Cards.RemoveObjectByDeck(deck);
+                    if (card.ActionCategory == EnumActionCategory.House || card.ActionCategory == EnumActionCategory.Hotel)
+                    {
+                        SingleInfo.BankedCards.Add(card);
+                    }
+                    else
+                    {
+                        SingleInfo.AddSingleCardToPlayerPropertySet(card, other.Color);
+                    }
                 }
             });
             player.Payments.Clear(); //i think it needs to clear out the payments afterwards.
@@ -528,7 +541,7 @@ public class DealCardGameMainGameClass
         await AnimatePlayAsync(card);
         var chosen = PlayerList[player];
         _model.ChosenPlayer = chosen.NickName;
-        var list = chosen.SetData.GetCards(color);
+        var list = chosen.SetData.GetCards(color).ToRegularDeckDict();
         _model.StolenCards.HandList.ReplaceRange(list);
         _command.UpdateAll();
         await Delay!.DelayMilli(700);
