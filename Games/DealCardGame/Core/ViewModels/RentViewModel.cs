@@ -1,6 +1,6 @@
 ﻿namespace DealCardGame.Core.ViewModels;
 [InstanceGame]
-public partial class RentViewModel
+public partial class RentViewModel : IBasicEnableProcess
 {
     private readonly DealCardGameGameContainer _gameContainer;
     private readonly IToast _toast;
@@ -68,5 +68,9 @@ public partial class RentViewModel
             await _gameContainer.Network!.SendAllAsync("rentrequest", _gameContainer.PersonalInformation.RentInfo);
         }
         await _mainGame.RentRequestAsync(_gameContainer.PersonalInformation.RentInfo);
+    }
+    public bool CanEnableBasics()
+    {
+        return true;
     }
 }
