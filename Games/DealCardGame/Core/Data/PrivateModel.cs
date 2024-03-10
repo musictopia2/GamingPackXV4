@@ -4,6 +4,7 @@ public class PrivateModel : IMappable
     public DeckRegularDict<DealCardGameCardInformation> Payments { get; set; } = [];
     public bool NeedsPayment { get; set; }
     public StartPaymentPlayerState State { get; set; } = new();
+    public RentModel RentInfo { get; set; } = new();
 }
 
 

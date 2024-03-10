@@ -1,3 +1,5 @@
+using BasicGameFrameworkLibrary.Core.ChooserClasses;
+
 namespace DealCardGame.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
@@ -19,8 +21,7 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public decimal Owed { get; set; }
     [LabelColumn]
     public decimal PaidSoFar { get; set; }
-
-    public DealCardGameVMData(CommandContainer command)
+    public DealCardGameVMData(CommandContainer command, DealCardGameGameContainer gameContainer)
     {
         Deck1 = new(command);
         Pile1 = new(command);
@@ -37,6 +38,8 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
         StolenCards = new(command);
         StolenCards.Text = "Cards From Stolen Set";
         StolenCards.AutoSelect = EnumHandAutoType.ShowObjectOnly;
+        RentChooser rent = new(gameContainer);
+        RentPicker = new(command, rent);
     }
     public DeckObservablePile<DealCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<DealCardGameCardInformation> Pile1 { get; set; }
@@ -48,6 +51,9 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public HandObservable<DealCardGameCardInformation> Properties { get; set; }
     public HandObservable<DealCardGameCardInformation> StolenCards { get; set; }
     public string ChosenPlayer { get; set; } = ""; //this is needed so you can see the cards that are needed.
+    
+    public SimpleEnumPickerVM<EnumRentCategory> RentPicker { get; set; }
+    
     //any other ui related properties will be here.
     //can copy/paste for the actual view model.
 }

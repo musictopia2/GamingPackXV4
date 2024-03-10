@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -131,6 +133,10 @@ public class DealCardGameMainGameClass
             case "stealset":
                 StealSetModel steal = await js1.DeserializeObjectAsync<StealSetModel>(content);
                 await StealSetAsync(steal.Deck, steal.PlayerId, steal.Color);
+                return;
+            case "rentrequest":
+                RentModel rent = await js1.DeserializeObjectAsync<RentModel>(content);
+                await RentRequestAsync(rent);
                 return;
             default:
                 _toast.ShowUserErrorToast($"Nothing for status {status}");
@@ -535,5 +541,44 @@ public class DealCardGameMainGameClass
         chosen.ClearPlayerProperties(color);
         SingleInfo.AddSeveralCardsToPlayerPropertySet(list, color);
         await ContinueTurnAsync();
+    }
+    public async Task RentRequestAsync(RentModel rent)
+    {
+        if (rent.Player > 0)
+        {
+            _toast.ShowUserErrorToast("Unable to process other players for now");
+            return;
+        }
+        var card = GetPlayerSelectedSingleCard(rent.Deck);
+        await AnimatePlayAsync(card);
+        int amountOwed;
+        OtherTurn = 0; //for now.
+        GetPlayerToContinueTurn();
+        var list = SingleInfo!.SetData.GetCards(rent.Color);
+        bool hasHouse = list.HasHouse();
+        bool hasHotel = list.HasHotel();
+        amountOwed = list.RentForSet(rent.Color, hasHouse, hasHotel);
+        int take = 0;
+        if (rent.RentCategory == EnumRentCategory.SingleDouble)
+        {
+            amountOwed *= 2;
+            take = 1;
+        }
+        else if (rent.RentCategory == EnumRentCategory.DoubleDouble)
+        {
+            amountOwed *= 4;
+            take = 2;
+        }
+        if (take > 0)
+        {
+            var others = SingleInfo.MainHandList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(take).ToBasicList();
+            foreach (var item in others)
+            {
+                SingleInfo.MainHandList.RemoveSpecificItem(item);
+                await AnimatePlayAsync(item); //these cards has to be removed because it was played.
+            }
+        }
+        StartPossiblePaymentProcesses();
+        await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);
     }
 }
