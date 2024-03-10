@@ -125,8 +125,12 @@ public class DealCardGameMainGameClass
                 await ResumeAsync();
                 return;
             case "finishpayment":
-                BasicList<int> payments = await js1.DeserializeObjectAsync <BasicList<int>>(content);
+                BasicList<int> payments = await js1.DeserializeObjectAsync<BasicList<int>>(content);
                 await ProcessPaymentsAsync(payments);
+                return;
+            case "stealset":
+                StealSetModel steal = await js1.DeserializeObjectAsync<StealSetModel>(content);
+                await StealSetAsync(steal.Deck, steal.PlayerId, steal.Color);
                 return;
             default:
                 _toast.ShowUserErrorToast($"Nothing for status {status}");
@@ -510,6 +514,26 @@ public class DealCardGameMainGameClass
     {
         SaveRoot.GameStatus = EnumGameStatus.None; //i think.
         _model.Payments.ClearHand();
+        await ContinueTurnAsync();
+    }
+    public async Task StealSetAsync(int deck, int player, EnumColor color)
+    {
+        var card = GetPlayerSelectedSingleCard(deck);
+        await AnimatePlayAsync(card);
+        var chosen = PlayerList[player];
+        _model.ChosenPlayer = chosen.NickName;
+        var list = chosen.SetData.GetCards(color);
+        _model.StolenCards.HandList.ReplaceRange(list);
+        _command.UpdateAll();
+        await Delay!.DelayMilli(700);
+        _model.StolenCards.ClearHand();
+        int transferMoney = list.Sum(x => x.ClaimedValue);
+        chosen.Money -= transferMoney;
+        OtherTurn = 0; //to double check (for now)
+        GetPlayerToContinueTurn();
+        SingleInfo!.Money += transferMoney;
+        chosen.ClearPlayerProperties(color);
+        SingleInfo.AddSeveralCardsToPlayerPropertySet(list, color);
         await ContinueTurnAsync();
     }
 }

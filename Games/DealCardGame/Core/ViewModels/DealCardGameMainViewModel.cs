@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace DealCardGame.Core.ViewModels;
 [InstanceGame]
 public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCardInformation>
@@ -94,10 +96,11 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     public async Task SetChosenAsync(SetPlayerModel model)
     {
         var player = _mainGame.PlayerList[model.PlayerId];
+        DealCardGameCardInformation? card;
         if (player.PlayerCategory == EnumPlayerCategory.Self)
         {
             //this means you clicked on your own.
-            var card = GetSelectedCard();
+            card = GetSelectedCard();
             if (card is null)
             {
                 return;
@@ -130,8 +133,47 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             await _mainGame.SelectSinglePlayerForPaymentAsync(model.PlayerId);
             return;
         }
+        card = GetSelectedCard();
+        if (card is null)
+        {
+            return;
+        }
+        if (card.ActionCategory == EnumActionCategory.DealBreaker)
+        {
+            await DealBreakerProcessesAsync(card, model);
+            return;
+        }
 
         _toast.ShowUserErrorToast("Cannot choose another player for anything yet");
+    }
+    private bool CanStealSet(SetPlayerModel model)
+    {
+        var player = _mainGame.PlayerList[model.PlayerId];
+        SetPropertiesModel property = player.SetData.Single(x => x.Color == model.Color);
+        if (property.HasRequiredSet() == false)
+        {
+            _toast.ShowUserErrorToast("Cannot steal the set because the player did not even have a complete set");
+            return false;
+        }
+        return true;
+    }
+    private async Task DealBreakerProcessesAsync(DealCardGameCardInformation card, SetPlayerModel model)
+    {
+        if (CanStealSet(model) == false)
+        {
+            return;
+        }
+        if (_mainGame.BasicData.MultiPlayer)
+        {
+            StealSetModel steal = new()
+            {
+                Color = model.Color,
+                PlayerId = model.PlayerId,
+                Deck = card.Deck
+            };
+            await _mainGame.Network!.SendAllAsync("stealset", steal);
+        }
+        await _mainGame.StealSetAsync(card.Deck, model.PlayerId, model.Color);
     }
     private bool CanPlayHouseOrHotel(DealCardGameCardInformation card, EnumColor color)
     {
@@ -198,10 +240,8 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         {
             return;
         }
-        await FinishPlayPropertyHouseHotel(card, color);
-        
+        await FinishPlayPropertyHouseHotel(card, color);   
     }
-
     private async Task FinishPlayPropertyHouseHotel(DealCardGameCardInformation card, EnumColor color)
     {
         if (_mainGame.BasicData.MultiPlayer)

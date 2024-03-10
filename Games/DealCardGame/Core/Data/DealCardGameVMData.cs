@@ -34,6 +34,9 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
         Properties = new(command);
         Properties.Text = "Properties To Pay With";
         Properties.AutoSelect = EnumHandAutoType.SelectOneOnly;
+        StolenCards = new(command);
+        StolenCards.Text = "Cards From Stolen Set";
+        StolenCards.AutoSelect = EnumHandAutoType.ShowObjectOnly;
     }
     public DeckObservablePile<DealCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<DealCardGameCardInformation> Pile1 { get; set; }
@@ -43,6 +46,7 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public HandObservable<DealCardGameCardInformation> Bank { get; set; }
     public HandObservable<DealCardGameCardInformation> Payments { get; set; }
     public HandObservable<DealCardGameCardInformation> Properties { get; set; }
+    public HandObservable<DealCardGameCardInformation> StolenCards { get; set; }
     public string ChosenPlayer { get; set; } = ""; //this is needed so you can see the cards that are needed.
     //any other ui related properties will be here.
     //can copy/paste for the actual view model.

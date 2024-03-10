@@ -1,11 +1,6 @@
-
 namespace DealCardGame.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<DealCardGameShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<DealCardGameShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-
     protected override Task RegisterTestsAsync()
     {
         TestData!.CardsToPass = 12;
@@ -41,22 +36,32 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
         card = deckList.First(x => x.ActionCategory == EnumActionCategory.DebtCollector);
         player.StartUpList.Add(card);
 
-        //the other player has to play the birthday for testing.
-        //player = playerList.GetSelf();
+        card = deckList.First(x => x.ActionCategory == EnumActionCategory.DealBreaker);
+        player.StartUpList.Add(card); //so i can steal to see what happens.
+
         
 
+
+        //the other player has to play the birthday for testing.
+        //player = playerList.GetSelf();
+
+        player = playerList.GetOnlyOpponent();
+        if (player.PlayerCategory != EnumPlayerCategory.Computer)
+        {
+            var list = deckList.Where(x => x.ActionCategory == EnumActionCategory.House).Take(1);
+            player.StartUpList.AddRange(list);
+            list = deckList.Where(x => x.ActionCategory == EnumActionCategory.Hotel).Take(1);
+            player.StartUpList.AddRange(list);
+            //player.StartUpList.Add(card);
+            //card = deckList.First(x => x.ActionCategory == EnumActionCategory.House);
+            //player.StartUpList.Add(card);
+            //card = deckList.First(x => x.ActionCategory == EnumActionCategory.Hotel);
+            player.StartUpList.Add(card);
+            list = deckList.Where(x => x.MainColor == EnumColor.Yellow).Take(3);
+            player.StartUpList.AddRange(list); //needs to have a monopoly so i can test the house and hotel.
+        }
         //var card = deckList.First(x => x.ActionCategory == EnumActionCategory.Gos);
-        //var list = deckList.Where(x => x.ActionCategory == EnumActionCategory.House).Take(2);
-        //player.StartUpList.AddRange(list);
-        //list = deckList.Where(x => x.ActionCategory == EnumActionCategory.Hotel).Take(2);
-        //player.StartUpList.AddRange(list);
-        ////player.StartUpList.Add(card);
-        ////card = deckList.First(x => x.ActionCategory == EnumActionCategory.House);
-        ////player.StartUpList.Add(card);
-        ////card = deckList.First(x => x.ActionCategory == EnumActionCategory.Hotel);
-        //player.StartUpList.Add(card);
-        //list = deckList.Where(x => x.MainColor == EnumColor.Yellow).Take(3);
-        //player.StartUpList.AddRange(list); //needs to have a monopoly so i can test the house and hotel.
+        
         return Task.CompletedTask;
     }
 }

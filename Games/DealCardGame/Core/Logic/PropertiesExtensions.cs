@@ -1,7 +1,11 @@
 ﻿namespace DealCardGame.Core.Logic;
 public static class PropertiesExtensions
 {
-
+    public static void ClearPlayerProperties(this DealCardGamePlayerItem player, EnumColor color)
+    {
+        var property = player.SetData.Single(x => x.Color == color);
+        property.Cards.Clear();
+    }
     public static void ClonePlayerProperties(this DealCardGamePlayerItem player, PrivateModel model)
     {
         model.State.SetData = [];
@@ -13,7 +17,6 @@ public static class PropertiesExtensions
             model.State.SetData.Add(p);
         }
     }
-
     public static bool HasRequiredSet(this SetPropertiesModel property)
     {
         var count = property.Cards.Count(x => x.ActionCategory == EnumActionCategory.None);
