@@ -46,6 +46,7 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
         player.StartUpList.AddRange(list);
         list = deckList.Where(x => x.MainColor == EnumColor.Green && x.CardType == EnumCardType.PropertyRegular).Take(3);
         player.StartUpList.AddRange(list);
+        
         //the other player has to play the birthday for testing.
         //player = playerList.GetSelf();
 
@@ -65,6 +66,8 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
             //player.StartUpList.Add(card);
             list = deckList.Where(x => x.MainColor == EnumColor.Yellow).Take(3);
             player.StartUpList.AddRange(list); //needs to have a monopoly so i can test the house and hotel.
+            list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
+            player.StartUpList.AddRange(list);
         }
         //var card = deckList.First(x => x.ActionCategory == EnumActionCategory.Gos);
         

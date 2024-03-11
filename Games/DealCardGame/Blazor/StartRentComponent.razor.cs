@@ -9,4 +9,7 @@ public partial class StartRentComponent
     }
     public BasicGameCommand ProcessRentCommand => DataContext!.ProcessRentRequestCommand!;
     public BasicGameCommand CancelCommand => DataContext!.CancelCommand!;
+
+    //if i remove the screens then the basicgameviewmodel would be different because no more screens.
+
 }

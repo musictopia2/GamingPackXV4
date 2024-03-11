@@ -37,6 +37,7 @@ public partial class RentViewModel : IBasicEnableProcess
             RentOwed = -1; //because don't know yet.
             NeedsRentPicker = true;
         }
+        VMData.RentPicker.IsEnabled = NeedsRentPicker;
     }
     public void AddAction( Action action )
     {
@@ -68,7 +69,7 @@ public partial class RentViewModel : IBasicEnableProcess
     [Command(EnumCommandCategory.Game)]
     public async Task ProcessRentRequestAsync()
     {
-        if (VMData.RentPicker.ItemChosen == EnumRentCategory.NeedChoice)
+        if (_gameContainer.PersonalInformation.RentInfo.RentCategory == EnumRentCategory.NeedChoice)
         {
             _toast.ShowUserErrorToast("Must choose the rent category");
             return;

@@ -61,3 +61,4 @@ global using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Ha
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using gg1 = BasicBlazorLibrary.Components.CssGrids.Helpers;
 global using BasicGameFrameworkLibrary.Core.ChooserClasses;
+global using BasicGameFrameworkLibrary.Core.GamePieceModels;
