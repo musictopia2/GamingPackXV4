@@ -7,6 +7,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     //private readonly DealCardGameMainGameClass MainGame;
     private readonly DealCardGameMainGameClass _mainGame; //if we don't need, delete.
     private readonly IToast _toast;
+    private readonly DealCardGameGameContainer _gameContainer;
     public DealCardGameVMData VMData { get; set; }
     public DealCardGameMainViewModel(CommandContainer commandContainer,
         DealCardGameMainGameClass mainGame,
@@ -15,13 +16,15 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
+        IToast toast,
+        DealCardGameGameContainer gameContainer
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
         _mainGame = mainGame;
         VMData = viewModel;
         _toast = toast;
+        _gameContainer = gameContainer;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
@@ -52,8 +55,19 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     }
     private bool IsConfirming()
     {
-        //not sure (?)
-        return _mainGame.SaveRoot.GameStatus == EnumGameStatus.ConfirmPayment;
+        if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.ConfirmPayment)
+        {
+            return true;
+        }
+        if (_gameContainer.PersonalInformation.RentInfo.RentCategory != EnumRentCategory.NA)
+        {
+            return true;
+        }
+        return false;
+    }
+    public override bool CanEndTurn()
+    {
+        return IsConfirming() == false;
     }
     public bool CanBank => IsConfirming() == false;
     [Command(EnumCommandCategory.Game)]

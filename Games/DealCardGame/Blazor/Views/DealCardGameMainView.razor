@@ -16,6 +16,7 @@
     <MakePaymentComponent />
     return;
 }
+
 <GridContainer Rows="@Rows" ColumnGap="5px" RowGap=5px Columns="auto 35vw 1fr">
     <GridItem Row="1" Column="1">
         <StackLayout>
@@ -44,7 +45,7 @@
                               Columns="_scores"
                               Players="_gameContainer.SaveRoot.PlayerList" />
         </div>
-        @if (_gameContainer.PersonalInformation.RentInfo.RentCategory == EnumRentCategory.NeedChoice)
+        @if (_gameContainer.PersonalInformation.RentInfo.RentCategory != EnumRentCategory.NA)
         {
             <StartRentComponent />
             return;
