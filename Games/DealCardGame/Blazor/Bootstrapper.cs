@@ -38,20 +38,26 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
 
         card = deckList.First(x => x.ActionCategory == EnumActionCategory.DealBreaker);
         player.StartUpList.Add(card); //so i can steal to see what happens.
-
-        
-
-
+        card = deckList.First(x => x.CardType == EnumCardType.ActionRent && x.AnyColor == true);
+        player.StartUpList.Add(card);
+        var list = deckList.Where(x => x.ActionCategory == EnumActionCategory.House).Take(1);
+        player.StartUpList.AddRange(list);
+        list = deckList.Where(x => x.ActionCategory == EnumActionCategory.Hotel).Take(1);
+        player.StartUpList.AddRange(list);
+        list = deckList.Where(x => x.MainColor == EnumColor.Green && x.CardType == EnumCardType.PropertyRegular).Take(3);
+        player.StartUpList.AddRange(list);
         //the other player has to play the birthday for testing.
         //player = playerList.GetSelf();
 
         player = playerList.GetOnlyOpponent();
         if (player.PlayerCategory != EnumPlayerCategory.Computer)
         {
-            var list = deckList.Where(x => x.ActionCategory == EnumActionCategory.House).Take(1);
+            list = deckList.Where(x => x.ActionCategory == EnumActionCategory.House).Skip(1).Take(1);
             player.StartUpList.AddRange(list);
-            list = deckList.Where(x => x.ActionCategory == EnumActionCategory.Hotel).Take(1);
+            list = deckList.Where(x => x.ActionCategory == EnumActionCategory.Hotel).Skip(1).Take(1);
             player.StartUpList.AddRange(list);
+            card = deckList.Where(x => x.CardType == EnumCardType.ActionRent && x.AnyColor == true).Skip(1).First();
+            player.StartUpList.Add(card);
             //player.StartUpList.Add(card);
             //card = deckList.First(x => x.ActionCategory == EnumActionCategory.House);
             //player.StartUpList.Add(card);

@@ -37,8 +37,10 @@ public partial class RentViewModel : IBasicEnableProcess
             RentOwed = -1; //because don't know yet.
             NeedsRentPicker = true;
         }
-        
-        //well see about the player picker.
+    }
+    public void AddAction( Action action )
+    {
+        _gameContainer.Command.CustomStateHasChanged += action;
     }
     private Task ItemSelectedAsync(EnumRentCategory category)
     {
@@ -58,6 +60,7 @@ public partial class RentViewModel : IBasicEnableProcess
         _gameContainer.PersonalInformation.RentInfo.Color = EnumColor.None; //none chosen now.
         _gameContainer.PersonalInformation.RentInfo.Deck = 0;
         _gameContainer.PersonalInformation.RentInfo.Player = -1;
+        _gameContainer.Command.ResetCustomStates();
         VMData.PlayerHand1.UnselectAllObjects(); //if you can cancelling, must manually select one again.
         await _privateAutoResume.SaveStateAsync(_gameContainer);
         _gameContainer.Command.UpdateAll(); //i think.
@@ -89,6 +92,7 @@ public partial class RentViewModel : IBasicEnableProcess
         {
             await _gameContainer.Network!.SendAllAsync("rentrequest", _gameContainer.PersonalInformation.RentInfo);
         }
+        _gameContainer.Command.ResetCustomStates();
         await _mainGame.RentRequestAsync(_gameContainer.PersonalInformation.RentInfo);
     }
     public bool CanEnableBasics()
