@@ -5,7 +5,9 @@ public partial class StartRentComponent
     protected override void OnInitialized()
     {
         DataContext = aa1.Resolver!.Resolve<RentViewModel>();
-
-
     }
+
+    public BasicGameCommand ProcessRentCommand => DataContext!.ProcessRentRequestCommand!;
+    public BasicGameCommand CancelCommand => DataContext!.CancelCommand!;
+
 }

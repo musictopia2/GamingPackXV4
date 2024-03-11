@@ -1,3 +1,13 @@
-﻿<div>
-    Start Rent Processes
+﻿@if (DataContext!.NeedsRentPicker)
+{
+    <div>
+        Start Rent Picker Processes
+    </div>
+}
+<div style="background-color: @DataContext.ColorChosen.WebColor; font-size: 3rem;font-family: Lato; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;">
+    Rent Charged: @DataContext.RentOwed
+</div>
+<div>
+    <GameButtonComponent Display="Cancel" CommandObject="CancelCommand" />
+    <GameButtonComponent Display="Collect Rent" CommandObject="ProcessRentCommand" />
 </div>

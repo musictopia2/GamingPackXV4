@@ -1,5 +1,3 @@
-using System.Drawing;
-
 namespace DealCardGame.Core.ViewModels;
 [InstanceGame]
 public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCardInformation>
@@ -45,13 +43,17 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         //if we have anything, will be here.
         await Task.CompletedTask;
     }
-    public override bool CanEnableAlways()
+    protected override bool AlwaysEnableHand()
     {
         return false;
     }
     protected override bool CanEnableHand()
     {
-        return _mainGame.SaveRoot.GameStatus != EnumGameStatus.NeedsPayment && _mainGame.SaveRoot.GameStatus != EnumGameStatus.ConfirmPayment; //i think.
+        if (IsConfirming())
+        {
+            return false;
+        }
+        return _mainGame.SaveRoot.GameStatus != EnumGameStatus.NeedsPayment; //i think.
     }
     private bool IsConfirming()
     {
@@ -165,7 +167,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         {
             return true;
         }
-        if (card.FirstColorChoice == model.Color || card.SecondColorChoice ==  model.Color)
+        if (card.FirstColorChoice == model.Color || card.SecondColorChoice == model.Color)
         {
             return true;
         }
@@ -275,7 +277,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         {
             return;
         }
-        await FinishPlayPropertyHouseHotel(card, color);   
+        await FinishPlayPropertyHouseHotel(card, color);
     }
     private async Task FinishPlayPropertyHouseHotel(DealCardGameCardInformation card, EnumColor color)
     {
@@ -354,7 +356,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         //    _toast.ShowUserErrorToast("Cannot play money.  Either discard or put into your bank");
         //    return;
         //}
-        
+
 
         //if (card.ActionCategory != EnumActionCategory.Gos)
         //{

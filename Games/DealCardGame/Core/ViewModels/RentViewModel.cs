@@ -21,18 +21,23 @@ public partial class RentViewModel : IBasicEnableProcess
         _privateAutoResume = privateAutoResume;
         _mainGame = mainGame;
         VMData.RentPicker.LoadEntireList(); //i think.
+
         //if only one choice, then no picker is needed but still wants the ability to cancel if you decide to though:
         if (VMData.RentPicker.ItemList.Count == 1)
         {
             //VMData.RentPicker.SelectSpecificItem(EnumRentCategory.Alone); //this will always be the option if no other options are available
             _gameContainer.PersonalInformation.RentInfo.RentCategory = EnumRentCategory.Alone;
+            RentOwed = _gameContainer.PersonalInformation.RentInfo.RentOwed(_mainGame.SingleInfo!);
+            NeedsRentPicker = false;
         }
         else
         {
             VMData.RentPicker.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
             VMData.RentPicker.ItemClickedAsync = ItemSelectedAsync;
-            RentOwed = _gameContainer.PersonalInformation.RentInfo.RentOwed(_mainGame.SingleInfo!);
+            RentOwed = -1; //because don't know yet.
+            NeedsRentPicker = true;
         }
+        
         //well see about the player picker.
     }
     private Task ItemSelectedAsync(EnumRentCategory category)
@@ -42,7 +47,9 @@ public partial class RentViewModel : IBasicEnableProcess
         VMData.RentPicker.SelectSpecificItem(category); //i think.
         return Task.CompletedTask;
     }
+    public bool NeedsRentPicker { get; private set; }
     public int RentOwed { get; private set; }
+    public EnumColor ColorChosen => _gameContainer.PersonalInformation.RentInfo.Color;
     partial void CreateCommands(CommandContainer command);
     [Command(EnumCommandCategory.Game)]
     public async Task CancelAsync()
@@ -51,12 +58,14 @@ public partial class RentViewModel : IBasicEnableProcess
         _gameContainer.PersonalInformation.RentInfo.Color = EnumColor.None; //none chosen now.
         _gameContainer.PersonalInformation.RentInfo.Deck = 0;
         _gameContainer.PersonalInformation.RentInfo.Player = -1;
+        VMData.PlayerHand1.UnselectAllObjects(); //if you can cancelling, must manually select one again.
         await _privateAutoResume.SaveStateAsync(_gameContainer);
         _gameContainer.Command.UpdateAll(); //i think.
     }
+    [Command(EnumCommandCategory.Game)]
     public async Task ProcessRentRequestAsync()
     {
-        if (VMData.RentPicker.ItemChosen == default)
+        if (VMData.RentPicker.ItemChosen == EnumRentCategory.NeedChoice)
         {
             _toast.ShowUserErrorToast("Must choose the rent category");
             return;

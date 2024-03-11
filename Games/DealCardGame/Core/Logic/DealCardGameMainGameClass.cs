@@ -568,7 +568,6 @@ public class DealCardGameMainGameClass
         await AnimatePlayAsync(card);
         OtherTurn = 0; //for now.
         GetPlayerToContinueTurn();
-
         int amountOwed = rent.RentOwed(SingleInfo!);
         int take = 0;
         if (rent.RentCategory == EnumRentCategory.SingleDouble)
@@ -587,6 +586,14 @@ public class DealCardGameMainGameClass
                 SingleInfo.MainHandList.RemoveSpecificItem(item);
                 await AnimatePlayAsync(item); //these cards has to be removed because it was played.
             }
+        }
+        if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            _gameContainer.PersonalInformation.RentInfo.RentCategory = EnumRentCategory.NA;
+            _gameContainer.PersonalInformation.RentInfo.Color = EnumColor.None;
+            _gameContainer.PersonalInformation.RentInfo.Player = -1;
+            _gameContainer.PersonalInformation.RentInfo.Deck = 0;
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
         }
         StartPossiblePaymentProcesses();
         await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);
