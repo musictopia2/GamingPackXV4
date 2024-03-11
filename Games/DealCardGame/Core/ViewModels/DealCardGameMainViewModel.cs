@@ -65,6 +65,10 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         {
             return true;
         }
+        if (_gameContainer.PersonalInformation.StealInfo.StartStealing)
+        {
+            return true;
+        }
         return false;
     }
     public override bool CanEndTurn()
@@ -158,8 +162,36 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             await DealBreakerProcessesAsync(card, model);
             return;
         }
-
+        if (card.ActionCategory == EnumActionCategory.SlyDeal)
+        {
+            await StealPropertyAsync(model, card);
+            return;
+        }
         _toast.ShowUserErrorToast("Cannot choose another player for anything yet");
+    }
+    private bool CanStealProperty(SetPlayerModel model)
+    {
+        var player = _mainGame.PlayerList[model.PlayerId];
+        SetPropertiesModel property = player.SetData.Single(x => x.Color == model.Color);
+        if (property.HasRequiredSet() == true)
+        {
+            _toast.ShowUserErrorToast("Cannot steal because this is already a complete set");
+            return false;
+        }
+        if (property.Cards.Count == 0)
+        {
+            _toast.ShowUserErrorToast("Cannot steal because this group has no properties");
+            return false;
+        }
+        return true;
+    }
+    private async Task StealPropertyAsync(SetPlayerModel model, DealCardGameCardInformation card)
+    {
+        if (CanStealProperty(model) == false)
+        {
+            return;
+        }
+        await _mainGame.StartStealingPropertyAsync(model, card);
     }
     private bool CanChargeRent(SetPlayerModel model, DealCardGameCardInformation card)
     {
@@ -337,7 +369,6 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         _toast.ShowUserErrorToast("Cannot play action card for unknown reason.  If this should be possible, rethink");
         return false;
     }
-
     public bool CanPlay => IsConfirming() == false;
     [Command(EnumCommandCategory.Game)]
     public async Task PlayAsync()
@@ -351,23 +382,16 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         {
             return;
         }
-        //if (card.CardType == EnumCardType.Money)
-        //{
-        //    _toast.ShowUserErrorToast("Cannot play money.  Either discard or put into your bank");
-        //    return;
-        //}
-
-
-        //if (card.ActionCategory != EnumActionCategory.Gos)
-        //{
-        //    _toast.ShowUserErrorToast("For now, only gos can be played");
-        //    return;
-        //}
-        if (_mainGame.BasicData.MultiPlayer)
+        if (card.ActionCategory != EnumActionCategory.SlyDeal && card.ActionCategory != EnumActionCategory.ForcedDeal)
         {
-            await _mainGame.Network!.SendAllAsync("playaction", card.Deck);
+            if (_mainGame.BasicData.MultiPlayer)
+            {
+                await _mainGame.Network!.SendAllAsync("playaction", card.Deck);
+            }
+
+            await _mainGame.PlayActionAsync(card.Deck);
+            return;
         }
-        await _mainGame.PlayActionAsync(card.Deck);
     }
     [Command(EnumCommandCategory.Game)]
     public async Task ResumeAsync()

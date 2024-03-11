@@ -1,0 +1,17 @@
+﻿<OpponentPropertiesComponent 
+    PlayerChosen="DataContext!.GetChosenPlayer"
+    Command="DataContext.GetCommandContainer"
+    Color="@DataContext.StealInfo.Color"
+    OnCardChosen="OpponentPropertyChosen"
+/>
+<div>
+    <GameButtonComponent Display="Cancel" CommandObject="CancelCommand" />
+    <GameButtonComponent Display="Steal" CommandObject="StealCommand" />
+</div>
+@if (_chosenCard is null)
+{
+    return;
+}
+<div>
+    <CardGraphicsBlazor DeckObject="_chosenCard" TargetHeight="20vh" />
+</div>

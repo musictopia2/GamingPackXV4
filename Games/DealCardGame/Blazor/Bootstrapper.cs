@@ -46,10 +46,14 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
         player.StartUpList.AddRange(list);
         list = deckList.Where(x => x.MainColor == EnumColor.Green && x.CardType == EnumCardType.PropertyRegular).Take(3);
         player.StartUpList.AddRange(list);
-        
+
+        //next, focus on stealing.
+        card = deckList.First(x => x.ActionCategory == EnumActionCategory.SlyDeal);
+        player.StartUpList.Add(card);
+
         //the other player has to play the birthday for testing.
         //player = playerList.GetSelf();
-
+        //return Task.CompletedTask;
         player = playerList.GetOnlyOpponent();
         if (player.PlayerCategory != EnumPlayerCategory.Computer)
         {

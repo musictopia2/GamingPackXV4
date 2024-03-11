@@ -1,3 +1,6 @@
+using SvgHelper.Blazor.Logic.Classes.SubClasses;
+using System.Drawing;
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace DealCardGame.Core.Logic;
@@ -133,12 +136,16 @@ public class DealCardGameMainGameClass
                 await ProcessPaymentsAsync(payments);
                 return;
             case "stealset":
-                StealSetModel steal = await js1.DeserializeObjectAsync<StealSetModel>(content);
-                await StealSetAsync(steal.Deck, steal.PlayerId, steal.Color);
+                StealSetModel stealSet = await js1.DeserializeObjectAsync<StealSetModel>(content);
+                await StealSetAsync(stealSet.Deck, stealSet.PlayerId, stealSet.Color);
                 return;
             case "rentrequest":
                 RentModel rent = await js1.DeserializeObjectAsync<RentModel>(content);
                 await RentRequestAsync(rent);
+                return;
+            case "stealproperty":
+                StealPropertyModel stealProperty = await js1.DeserializeObjectAsync<StealPropertyModel>(content);
+                await FinishStealingPropertyAsync(stealProperty);
                 return;
             default:
                 _toast.ShowUserErrorToast($"Nothing for status {status}");
@@ -613,5 +620,59 @@ public class DealCardGameMainGameClass
         _gameContainer.PersonalInformation.RentInfo.RentCategory = EnumRentCategory.NeedChoice; //i think
         await _privateAutoResume.SaveStateAsync(_gameContainer);
         _command.UpdateAll();
+    }
+    public async Task StartStealingPropertyAsync(SetPlayerModel model, DealCardGameCardInformation card)
+    {
+        _gameContainer.PersonalInformation.StealInfo.StartStealing = true;
+        _gameContainer.PersonalInformation.StealInfo.PlayerId = model.PlayerId;
+        _gameContainer.PersonalInformation.StealInfo.Color = model.Color;
+        _gameContainer.PersonalInformation.StealInfo.CardPlayed = card.Deck;
+        _gameContainer.PersonalInformation.StealInfo.CardChosen = 0;
+        await _privateAutoResume.SaveStateAsync(_gameContainer);
+        _command.UpdateAll();
+    }
+    public async Task FinishStealingPropertyAsync(StealPropertyModel steal)
+    {
+        var cardPlayed = GetPlayerSelectedSingleCard(steal.CardPlayed);
+        await AnimatePlayAsync(cardPlayed);
+
+
+        var playerChosen = PlayerList.Single(x => x.Id == steal.PlayerId);
+
+        _model.ChosenPlayer = playerChosen.NickName; //this is the player who lost their card.
+        var cardStolen = _gameContainer.DeckList.GetSpecificItem(steal.CardChosen);
+        _model.ShownCard = cardStolen;
+
+        //var others = chosen.SetData
+
+        //var list = chosen.SetData.GetCards(color).ToRegularDeckDict();
+        //_model.StolenCards.HandList.ReplaceRange(list);
+        _command.UpdateAll();
+        await Delay!.DelayMilli(700);
+        _model.ChosenPlayer = "";
+        _model.ShownCard = null;
+
+        playerChosen.SetData.RemoveCardFromPlayerSet(cardStolen.Deck, steal.Color);
+
+        int transferMoney = cardPlayed.ClaimedValue;
+        playerChosen.Money -= transferMoney;
+        OtherTurn = 0; //to double check (for now)
+        GetPlayerToContinueTurn();
+        SingleInfo!.Money += transferMoney;
+        SingleInfo.AddSingleCardToPlayerPropertySet(cardStolen, steal.Color);
+        //chosen.ClearPlayerProperties(color);
+        //SingleInfo.AddSeveralCardsToPlayerPropertySet(list, color);
+
+
+        if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            _gameContainer!.PersonalInformation.StealInfo.StartStealing = false;
+            _gameContainer.PersonalInformation.StealInfo.Color = EnumColor.None;
+            _gameContainer.PersonalInformation.StealInfo.PlayerId = 0;
+            _gameContainer.PersonalInformation.StealInfo.CardPlayed = 0;
+            _gameContainer.PersonalInformation.StealInfo.CardChosen = 0;
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+        }
+        await ContinueTurnAsync();
     }
 }
