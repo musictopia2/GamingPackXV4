@@ -4,7 +4,7 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
     protected override Task RegisterTestsAsync()
     {
         TestData!.CardsToPass = 12;
-        //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
+        TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
         GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
         return base.RegisterTestsAsync();
     }
@@ -50,8 +50,10 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
         //next, focus on stealing.
         card = deckList.First(x => x.ActionCategory == EnumActionCategory.SlyDeal);
         player.StartUpList.Add(card);
-        
-        
+
+        card = deckList.First(x => x.ActionCategory == EnumActionCategory.ForcedDeal);
+        player.StartUpList.Add(card);
+
         //the other player has to play the birthday for testing.
         //player = playerList.GetSelf();
         //return Task.CompletedTask;
