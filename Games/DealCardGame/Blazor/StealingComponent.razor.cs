@@ -12,8 +12,8 @@ public partial class StealingComponent
     private DealCardGameCardInformation? _chosenCard;
     private void OpponentPropertyChosen(PropertyCardModel property)
     {
-        DataContext!.StealInfo.PlayerId = property.PlayerId;
-        DataContext.StealInfo.CardChosen = property.Card.Deck;
+        //DataContext!.StealInfo.PlayerId = property.PlayerId;
+        DataContext!.StealInfo.CardChosen = property.Card.Deck;
         _chosenCard = property.Card;
     }
 }

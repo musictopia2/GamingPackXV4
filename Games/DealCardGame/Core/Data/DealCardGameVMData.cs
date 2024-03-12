@@ -48,11 +48,9 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public DealCardGameCardInformation? ShownCard { get; set; }
     public HandObservable<DealCardGameCardInformation> StolenCards { get; set; }
     public string ChosenPlayer { get; set; } = ""; //this is needed so you can see the cards that are needed.
-    
     public HandObservable<DealCardGameCardInformation> ReceivedPayments { get; set; }
-
     public ListViewPicker PlayerPicker { get; set; }
-
+    public TradeDisplayModel? TradeDisplay { get; set; }
     private Task ChosePlayerAsync(int index, string player)
     {
         PlayerPicker.SelectedIndex = index;

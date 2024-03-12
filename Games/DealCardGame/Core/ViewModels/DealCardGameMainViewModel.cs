@@ -144,7 +144,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
                 await StartRentAsync(model, card);
                 return;
             }
-            _toast.ShowUserErrorToast("For now, cannot click on your cards because only rent and property cards are supported");
+            _toast.ShowUserErrorToast("Must choose another player for this one");
             return;
         }
         if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
@@ -171,7 +171,18 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             await StealPropertyAsync(model, card);
             return;
         }
-        _toast.ShowUserErrorToast("Cannot choose another player for anything yet");
+        if (card.ActionCategory == EnumActionCategory.ForcedDeal)
+        {
+            await TradePropertyAsync(model, card);
+            return;
+        }
+        if (card.ActionCategory == EnumActionCategory.JustSayNo)
+        {
+            _toast.ShowUserErrorToast("Just say no can never be played on other players");
+            return;
+        }
+        _toast.ShowUserErrorToast("Cannot click another player for this card");
+        //_toast.ShowUserErrorToast("Cannot choose another player for anything yet");
     }
     private bool CanStealProperty(SetPlayerModel model)
     {
@@ -188,6 +199,30 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             return false;
         }
         return true;
+    }
+    private bool CanTradeProperty(SetPlayerModel model)
+    {
+        var player = _mainGame.PlayerList[model.PlayerId];
+        SetPropertiesModel property = player.SetData.Single(x => x.Color == model.Color);
+        if (property.HasRequiredSet() == true)
+        {
+            _toast.ShowUserErrorToast("Cannot trade because this is already a complete set");
+            return false;
+        }
+        if (property.Cards.Count == 0)
+        {
+            _toast.ShowUserErrorToast("Cannot trade because this group has no properties");
+            return false;
+        }
+        return true;
+    }
+    public async Task TradePropertyAsync(SetPlayerModel model, DealCardGameCardInformation card)
+    {
+        if (CanTradeProperty(model) == false)
+        {
+            return;
+        }
+        await _mainGame.StartTradingPropertyAsync(model, card);
     }
     private async Task StealPropertyAsync(SetPlayerModel model, DealCardGameCardInformation card)
     {

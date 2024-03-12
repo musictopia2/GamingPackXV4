@@ -3,20 +3,11 @@
 {
     return;
 }
-@{
-    bool isTesting = false;
-}
-@if (isTesting)
-{
-    <TestCardComponent />
-    return;
-}
 @if (_gameContainer.PersonalInformation.NeedsPayment )
 {
     <MakePaymentComponent />
     return;
 }
-
 <GridContainer Rows="@Rows" ColumnGap="5px" RowGap=5px Columns="auto 35vw 1fr">
     <GridItem Row="1" Column="1">
         <StackLayout>
@@ -55,6 +46,24 @@
             <StealingComponent />
             return;
         }
+        @if (_gameContainer.PersonalInformation.TradeInfo.StartTrading)
+        {
+            <TradingComponent />
+            return;
+        }
+        @if (DataContext.VMData.TradeDisplay is not null)
+        {
+            <div>
+                <BaseFrameBlazor Text="@YourDisplayText">
+                    <CardGraphicsBlazor DeckObject="DataContext.VMData.TradeDisplay.WhoReceive" TargetHeight="18vh" />
+                </BaseFrameBlazor>
+                <BaseFrameBlazor Text="@OpponentDisplayText">
+                    <CardGraphicsBlazor DeckObject="DataContext.VMData.TradeDisplay.TradeReceive" TargetHeight="18vh" />
+                </BaseFrameBlazor>
+            </div>
+            
+            return;
+        }
         @if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
         {
             <ListChooserBlazor ListPicker="DataContext.VMData.PlayerPicker" TotalColumns="1" TextHeight="6vh" />
@@ -65,8 +74,6 @@
         {
             <CardGraphicsBlazor DeckObject="_vmData.ShownCard" TargetHeight="15vh" />
         }
-        
-
         @if (_vmData.ChosenPlayer is not null)
         {
             <div style="font-size: 2rem;">

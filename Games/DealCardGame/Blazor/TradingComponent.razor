@@ -1,0 +1,18 @@
+﻿<OpponentPropertiesComponent PlayerChosen="DataContext!.GetChosenPlayer"
+                             Command="DataContext.GetCommandContainer"
+                             Color="@DataContext.TradeInfo.OpponentColor"
+                             OnCardChosen="OpponentPropertyChosen" />
+
+<div>
+    <HandBlazor TargetContainerSize="30vw" Hand="@_hand" />
+</div>
+<div>
+    <BaseFrameBlazor Text="@YourText">
+        <CardGraphicsBlazor DeckObject="@YourCard()" TargetHeight="10vh" />
+    </BaseFrameBlazor>
+    <BaseFrameBlazor Text="@TradeText">
+        <CardGraphicsBlazor DeckObject="@TradeCard()" TargetHeight="10vh" />
+    </BaseFrameBlazor>
+    <GameButtonComponent Display="Cancel" CommandObject="CancelCommand" />
+    <GameButtonComponent Display="Trade" CommandObject="TradeCommand" />
+</div>

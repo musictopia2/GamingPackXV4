@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -148,6 +150,10 @@ public class DealCardGameMainGameClass
                 return;
             case "playerchosenfordebt":
                 await ChosePlayerForDebtAsync(int.Parse(content));
+                return;
+            case "trade":
+                TradePropertyModel tradeProperty = await js1.DeserializeObjectAsync<TradePropertyModel>(content);
+                await FinishTradingPropertyAsync(tradeProperty);
                 return;
             default:
                 _toast.ShowUserErrorToast($"Nothing for status {status}");
@@ -627,14 +633,69 @@ public class DealCardGameMainGameClass
         await _privateAutoResume.SaveStateAsync(_gameContainer);
         _command.UpdateAll();
     }
+    public async Task StartTradingPropertyAsync(SetPlayerModel model, DealCardGameCardInformation card)
+    {
+        _gameContainer.PersonalInformation.TradeInfo.StartTrading = true;
+        _gameContainer.PersonalInformation.TradeInfo.PlayerId = model.PlayerId;
+        _gameContainer.PersonalInformation.TradeInfo.OpponentColor = model.Color;
+        _gameContainer.PersonalInformation.TradeInfo.CardPlayed = card.Deck;
+        _gameContainer.PersonalInformation.TradeInfo.OpponentCard = 0;
+        _gameContainer.PersonalInformation.TradeInfo.YourCard = 0;
+        _gameContainer.PersonalInformation.TradeInfo.YourColor = EnumColor.None;
+        await _privateAutoResume.SaveStateAsync(_gameContainer);
+        _command.UpdateAll();
+    }
+    public async Task FinishTradingPropertyAsync(TradePropertyModel trade)
+    {
+        trade.StartTrading = false;
+        var cardPlayed = GetPlayerSelectedSingleCard(trade.CardPlayed);
+        await AnimatePlayAsync(cardPlayed);
+        var playerChosen = PlayerList.Single(x => x.Id == trade.PlayerId);
+        //needs to show details temporarily.
+        //show display trade.
+        OtherTurn = 0; //i think
+        GetPlayerToContinueTurn();
+        _model.TradeDisplay = new();
+        _model.TradeDisplay.TradePlayerName = playerChosen.NickName;
+        _model.TradeDisplay.WhoPlayerName = SingleInfo!.NickName;
+        DealCardGameCardInformation youReceive = _gameContainer.DeckList.GetSpecificItem(trade.OpponentCard);
+        _model.TradeDisplay.WhoReceive = youReceive;
+        DealCardGameCardInformation tradeReceive = _gameContainer.DeckList.GetSpecificItem(trade.YourCard);
+        _model.TradeDisplay.TradeReceive = tradeReceive;
+        _command.UpdateAll();
+        await Delay!.DelayMilli(1500);
+        _model.TradeDisplay = null;
+        _command.UpdateAll();
+        playerChosen.SetData.RemoveCardFromPlayerSet(trade.OpponentCard, trade.OpponentColor);
+        int transferMoney;
+        transferMoney = youReceive.ClaimedValue;
+        playerChosen.Money -= transferMoney;
+        SingleInfo.Money += transferMoney;
+        SingleInfo.AddSingleCardToPlayerPropertySet(youReceive, trade.OpponentColor);
+        transferMoney = tradeReceive.ClaimedValue;
+        playerChosen.Money += transferMoney;
+        SingleInfo.Money -= transferMoney;
+        playerChosen.AddSingleCardToPlayerPropertySet(tradeReceive, trade.YourColor);
+        SingleInfo.SetData.RemoveCardFromPlayerSet(trade.YourCard, trade.YourColor);
+        if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            _gameContainer.PersonalInformation.TradeInfo.StartTrading = false;
+            _gameContainer.PersonalInformation.TradeInfo.PlayerId = 0;
+            _gameContainer.PersonalInformation.TradeInfo.OpponentColor = EnumColor.None;
+            _gameContainer.PersonalInformation.TradeInfo.CardPlayed = 0;
+            _gameContainer.PersonalInformation.TradeInfo.OpponentCard = 0;
+            _gameContainer.PersonalInformation.TradeInfo.YourCard = 0;
+            _gameContainer.PersonalInformation.TradeInfo.YourColor = EnumColor.None;
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+        }
+        await ContinueTurnAsync();
+    }
     public async Task FinishStealingPropertyAsync(StealPropertyModel steal)
     {
+        steal.StartStealing = false;
         var cardPlayed = GetPlayerSelectedSingleCard(steal.CardPlayed);
         await AnimatePlayAsync(cardPlayed);
-
-
         var playerChosen = PlayerList.Single(x => x.Id == steal.PlayerId);
-
         _model.ChosenPlayer = playerChosen.NickName; //this is the player who lost their card.
         var cardStolen = _gameContainer.DeckList.GetSpecificItem(steal.CardChosen);
         _model.ShownCard = cardStolen;
@@ -645,7 +706,7 @@ public class DealCardGameMainGameClass
 
         playerChosen.SetData.RemoveCardFromPlayerSet(cardStolen.Deck, steal.Color);
 
-        int transferMoney = cardPlayed.ClaimedValue;
+        int transferMoney = cardStolen.ClaimedValue;
         playerChosen.Money -= transferMoney;
         OtherTurn = 0; //to double check (for now)
         GetPlayerToContinueTurn();
