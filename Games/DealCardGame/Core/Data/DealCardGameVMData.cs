@@ -1,4 +1,5 @@
 using BasicGameFrameworkLibrary.Core.ChooserClasses;
+using System.Xml.Linq;
 
 namespace DealCardGame.Core.Data;
 [SingletonGame]
@@ -26,34 +27,38 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
         Deck1 = new(command);
         Pile1 = new(command);
         PlayerHand1 = new(command);
-        Bank = new(command);
-        Bank.Text = "Bank";
-        Bank.AutoSelect = EnumHandAutoType.SelectAsMany;
-        Payments = new(command);
-        Payments.Text = "Payments";
-        Payments.AutoSelect = EnumHandAutoType.ShowObjectOnly; //show only.
-        Properties = new(command);
-        Properties.Text = "Properties To Pay With";
-        Properties.AutoSelect = EnumHandAutoType.SelectOneOnly;
+
+        ReceivedPayments = new(command);
+        ReceivedPayments.Text = "Payments Received";
+        ReceivedPayments.AutoSelect = EnumHandAutoType.ShowObjectOnly; //i think.
+
+        
         StolenCards = new(command);
         StolenCards.Text = "Cards From Stolen Set";
         StolenCards.AutoSelect = EnumHandAutoType.ShowObjectOnly;
-        RentChooser rent = new(gameContainer);
-        RentPicker = new(command, rent);
+        PlayerPicker = new(command, gameContainer.Resolver);
+        PlayerPicker.SelectionMode = ListViewPicker.EnumSelectionMode.SingleItem;
+        PlayerPicker.ItemSelectedAsync = ChosePlayerAsync;
+        PlayerPicker.IndexMethod = ListViewPicker.EnumIndexMethod.OneBased; //because you have the name.
     }
     public DeckObservablePile<DealCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<DealCardGameCardInformation> Pile1 { get; set; }
     public HandObservable<DealCardGameCardInformation> PlayerHand1 { get; set; }
     public SingleObservablePile<DealCardGameCardInformation>? OtherPile { get; set; }
     public DealCardGameCardInformation? ShownCard { get; set; }
-    public HandObservable<DealCardGameCardInformation> Bank { get; set; }
-    public HandObservable<DealCardGameCardInformation> Payments { get; set; }
-    public HandObservable<DealCardGameCardInformation> Properties { get; set; }
     public HandObservable<DealCardGameCardInformation> StolenCards { get; set; }
     public string ChosenPlayer { get; set; } = ""; //this is needed so you can see the cards that are needed.
     
-    public SimpleEnumPickerVM<EnumRentCategory> RentPicker { get; set; }
-    
+    public HandObservable<DealCardGameCardInformation> ReceivedPayments { get; set; }
+
+    public ListViewPicker PlayerPicker { get; set; }
+
+    private Task ChosePlayerAsync(int index, string player)
+    {
+        PlayerPicker.SelectedIndex = index;
+        return Task.CompletedTask;
+    }
+
     //any other ui related properties will be here.
     //can copy/paste for the actual view model.
 }

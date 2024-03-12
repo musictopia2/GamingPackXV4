@@ -1,10 +1,20 @@
 ﻿@if (DataContext!.NeedsRentPicker)
 {
-    <EnumPickerBlazor E="EnumRentCategory" Context="piece" Rows=3 TargetSize="10vh" ListPicker="DataContext.VMData.RentPicker">
+    <EnumPickerBlazor E="EnumRentCategory" Context="piece" Columns="3" TargetSize="5vh" ListPicker="DataContext.RentPicker">
         <RentOptionGraphicsComponent RentCategory="piece" />
     </EnumPickerBlazor>
 }
-<div style="background-color: @DataContext.ColorChosen.WebColor; font-size: 4rem;font-family: Lato; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;">
+@if (DataContext.NeedsRentPicker && DataContext.NeedsPlayerPicker)
+{
+    <div style="height: 1vh;">
+
+    </div>
+}
+@if (DataContext.NeedsPlayerPicker)
+{
+    <ListChooserBlazor ListPicker="DataContext.GetPlayerPicker" TotalColumns="2" TextHeight="6vh" />
+}
+<div style="background-color: @DataContext.ColorChosen.WebColor; font-size: 2rem;font-family: Lato; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;">
     Rent Charged: @DataContext.RentOwed
 </div>
 <div>

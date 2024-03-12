@@ -4,7 +4,7 @@ public partial class RentViewModel : IBasicEnableProcess
 {
     private readonly DealCardGameGameContainer _gameContainer;
     private readonly IToast _toast;
-    public readonly DealCardGameVMData VMData;
+    private readonly DealCardGameVMData _model;
     private readonly PrivateAutoResumeProcesses _privateAutoResume;
     private readonly DealCardGameMainGameClass _mainGame;
     public RentViewModel(DealCardGameGameContainer gameContainer,
@@ -17,13 +17,25 @@ public partial class RentViewModel : IBasicEnableProcess
         CreateCommands(gameContainer.Command);
         _gameContainer = gameContainer;
         _toast = toast;
-        VMData = model;
+        _model = model;
         _privateAutoResume = privateAutoResume;
         _mainGame = mainGame;
-        VMData.RentPicker.LoadEntireList(); //i think.
+        RentChooser rent = new(gameContainer);
+        RentPicker = new(gameContainer.Command, rent);
 
-        //if only one choice, then no picker is needed but still wants the ability to cancel if you decide to though:
-        if (VMData.RentPicker.ItemList.Count == 1)
+        if (_gameContainer.PersonalInformation.RentInfo.Player == -1)
+        {
+            //this means needs to populate the picker.
+            _mainGame.LoadPlayerPicker();
+        }
+
+        //may already load the entire list anyways (?)
+        if (RentPicker.ItemList.Count == 0)
+        {
+            _toast.ShowUserErrorToast("Has to have at least one item for the rent picker ui");
+            return;
+        }
+        if (RentPicker.ItemList.Count == 1)
         {
             //VMData.RentPicker.SelectSpecificItem(EnumRentCategory.Alone); //this will always be the option if no other options are available
             _gameContainer.PersonalInformation.RentInfo.RentCategory = EnumRentCategory.Alone;
@@ -32,12 +44,12 @@ public partial class RentViewModel : IBasicEnableProcess
         }
         else
         {
-            VMData.RentPicker.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
-            VMData.RentPicker.ItemClickedAsync = ItemSelectedAsync;
+            RentPicker.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
+            RentPicker.ItemClickedAsync = ItemSelectedAsync;
             RentOwed = -1; //because don't know yet.
             NeedsRentPicker = true;
         }
-        VMData.RentPicker.IsEnabled = NeedsRentPicker;
+        RentPicker.IsEnabled = NeedsRentPicker;
     }
     public void AddAction( Action action )
     {
@@ -47,12 +59,15 @@ public partial class RentViewModel : IBasicEnableProcess
     {
         _gameContainer.PersonalInformation.RentInfo.RentCategory = category;
         RentOwed = _gameContainer.PersonalInformation.RentInfo.RentOwed(_mainGame.SingleInfo!);
-        VMData.RentPicker.SelectSpecificItem(category); //i think.
+        RentPicker.SelectSpecificItem(category); //i think.
         return Task.CompletedTask;
     }
     public bool NeedsRentPicker { get; private set; }
+    public bool NeedsPlayerPicker => _gameContainer.PersonalInformation.RentInfo.Player == -1;
     public int RentOwed { get; private set; }
+    public ListViewPicker GetPlayerPicker => _model.PlayerPicker;
     public EnumColor ColorChosen => _gameContainer.PersonalInformation.RentInfo.Color;
+    public SimpleEnumPickerVM<EnumRentCategory> RentPicker { get; set; }
     partial void CreateCommands(CommandContainer command);
     [Command(EnumCommandCategory.Game)]
     public async Task CancelAsync()
@@ -62,7 +77,7 @@ public partial class RentViewModel : IBasicEnableProcess
         _gameContainer.PersonalInformation.RentInfo.Deck = 0;
         _gameContainer.PersonalInformation.RentInfo.Player = -1;
         _gameContainer.Command.ResetCustomStates();
-        VMData.PlayerHand1.UnselectAllObjects(); //if you can cancelling, must manually select one again.
+        _model.PlayerHand1.UnselectAllObjects(); //if you can cancelling, must manually select one again.
         await _privateAutoResume.SaveStateAsync(_gameContainer);
         _gameContainer.Command.UpdateAll(); //i think.
     }
@@ -73,6 +88,11 @@ public partial class RentViewModel : IBasicEnableProcess
         {
             _toast.ShowUserErrorToast("Must choose the rent category");
             return;
+        }
+        if (_model.PlayerPicker.SelectedIndex > 0)
+        {
+            string nickName = _model.PlayerPicker.GetText(_model.PlayerPicker.SelectedIndex);
+            _gameContainer.PersonalInformation.RentInfo.Player = _gameContainer.PlayerList!.Single(x => x.NickName == nickName).Id;
         }
         if (_gameContainer.PersonalInformation.RentInfo.Player == -1)
         {

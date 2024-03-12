@@ -3,10 +3,6 @@ public class RentChooser(DealCardGameGameContainer gameContainer) : IEnumListCla
 {
     BasicList<EnumRentCategory> IEnumListClass<EnumRentCategory>.GetEnumList()
     {
-        if (gameContainer.PlayerList!.Count == 0)
-        {
-            return [];
-        }
         var player = gameContainer.PlayerList!.GetWhoPlayer();
         int count = player.MainHandList.Count(x => x.ActionCategory == EnumActionCategory.DoubleRent);
         if (count == 0)

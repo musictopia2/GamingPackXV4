@@ -50,10 +50,17 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
         //next, focus on stealing.
         card = deckList.First(x => x.ActionCategory == EnumActionCategory.SlyDeal);
         player.StartUpList.Add(card);
-
+        
+        
         //the other player has to play the birthday for testing.
         //player = playerList.GetSelf();
         //return Task.CompletedTask;
+        if (playerList.Count > 2)
+        {
+            list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
+            player.StartUpList.AddRange(list);
+            return Task.CompletedTask;
+        }
         player = playerList.GetOnlyOpponent();
         if (player.PlayerCategory != EnumPlayerCategory.Computer)
         {

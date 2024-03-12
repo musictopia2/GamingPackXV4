@@ -61,6 +61,10 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         {
             return true;
         }
+        if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
+        {
+            return true; //because you have to choose a player to pay the debt.
+        }
         if (_gameContainer.PersonalInformation.RentInfo.RentCategory != EnumRentCategory.NA)
         {
             return true;
@@ -149,7 +153,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             {
                 await _mainGame.Network!.SendAllAsync("playerpayment", model.PlayerId);
             }
-            await _mainGame.SelectSinglePlayerForPaymentAsync(model.PlayerId);
+            await _mainGame.SelectSinglePlayerForPaymentAsync(model.PlayerId, 5);
             return;
         }
         card = GetSelectedCard();
@@ -401,5 +405,20 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             await _mainGame.Network!.SendAllAsync("resume");
         }
         await _mainGame.ResumeAsync();
+    }
+    [Command(EnumCommandCategory.Game)]
+    public async Task ChoosePlayerAsync()
+    {
+        if (VMData.PlayerPicker.SelectedIndex == 0)
+        {
+            _toast.ShowUserErrorToast("Must choose a player to use debt collector against");
+            return;
+        }
+        var player = _mainGame.PlayerList.Single(x => x.NickName == VMData.PlayerPicker.GetText(VMData.PlayerPicker.SelectedIndex));
+        if (_mainGame.BasicData.MultiPlayer)
+        {
+            await _mainGame.Network!.SendAllAsync("playerchosenfordebt", player.Id);
+        }
+        await _mainGame.ChosePlayerForDebtAsync(player.Id);
     }
 }

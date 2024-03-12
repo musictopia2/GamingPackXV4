@@ -1,8 +1,3 @@
-using SvgHelper.Blazor.Logic.Classes.SubClasses;
-using System.Drawing;
-using System.Numerics;
-using System.Runtime.InteropServices;
-
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -70,6 +65,10 @@ public class DealCardGameMainGameClass
             //redo the state again to show at the beginning.
             await StartPaymentProcessesForSelectedPlayerAsync();
         }
+        if (SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
+        {
+            LoadPlayerPicker(); //i think.
+        }
         //anything else needed is here.
         await base.FinishGetSavedAsync();
     }
@@ -126,7 +125,7 @@ public class DealCardGameMainGameClass
                 await PlayPropertyAsync(setCard.Deck, setCard.Color);
                 return;
             case "playerpayment":
-                await SelectSinglePlayerForPaymentAsync(int.Parse(content));
+                await SelectSinglePlayerForPaymentAsync(int.Parse(content), 5); //hopefully always 5 for this.
                 return;
             case "resume":
                 await ResumeAsync();
@@ -146,6 +145,9 @@ public class DealCardGameMainGameClass
             case "stealproperty":
                 StealPropertyModel stealProperty = await js1.DeserializeObjectAsync<StealPropertyModel>(content);
                 await FinishStealingPropertyAsync(stealProperty);
+                return;
+            case "playerchosenfordebt":
+                await ChosePlayerForDebtAsync(int.Parse(content));
                 return;
             default:
                 _toast.ShowUserErrorToast($"Nothing for status {status}");
@@ -240,10 +242,23 @@ public class DealCardGameMainGameClass
         if (PlayerList.Count > 2)
         {
             SaveRoot.GameStatus = EnumGameStatus.StartDebtCollector;
+            LoadPlayerPicker();
             await ContinueTurnAsync();
             return;
         }
         await StartFiguringOutPaymentsForAllPlayersAsync(5);
+    }
+    public async Task ChosePlayerForDebtAsync(int id)
+    {
+        var player = PlayerList.Single(x => x.Id == id);
+        SaveRoot.GameStatus = EnumGameStatus.None;
+        await SelectSinglePlayerForPaymentAsync(id, 5);
+    }
+    public void LoadPlayerPicker()
+    {
+        var list = PlayerList.AllPlayersExceptForCurrent().Select(x => x.NickName).ToBasicList();
+        _model.PlayerPicker.SelectedIndex = 0; //because its one based this time.
+        _model.PlayerPicker.LoadTextList(list);
     }
     private async Task StartBirthdayAsync(DealCardGameCardInformation card)
     {
@@ -251,7 +266,7 @@ public class DealCardGameMainGameClass
         StartPossiblePaymentProcesses();
         await StartFiguringOutPaymentsForAllPlayersAsync(2);
     }
-    public async Task SelectSinglePlayerForPaymentAsync(int player)
+    public async Task SelectSinglePlayerForPaymentAsync(int player, int owed)
     {
         OtherTurn = player;
         SingleInfo = PlayerList.GetOtherPlayer();
@@ -259,17 +274,11 @@ public class DealCardGameMainGameClass
         _command.UpdateAll();
         await Delay!.DelayMilli(700);
         _model.ChosenPlayer = "";
-        if (SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
-        {
-            AttemptToAutomatePayment(SingleInfo, 5);
-        }
-        else
-        {
-            throw new CustomBasicException("Needs to figure out the payment owed now");
-        }
+        AttemptToAutomatePayment(SingleInfo, owed);
         if (SingleInfo.Debt == 0 && SingleInfo.Payments.Count == 0)
         {
             SaveRoot.GameStatus = EnumGameStatus.None; //i think.
+            OtherTurn = 0; //because nobody owes anything.
             await ContinueTurnAsync();
             return;
         }
@@ -339,7 +348,6 @@ public class DealCardGameMainGameClass
         _gameContainer.PersonalInformation.State.BankedCards = SingleInfo.BankedCards.ToRegularDeckDict();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
-
     private static void AttemptToAutomatePayment(DealCardGamePlayerItem currentPlayer, int owed)
     {
         if (currentPlayer.Debt == 0)
@@ -348,10 +356,7 @@ public class DealCardGameMainGameClass
         }
         if (currentPlayer.Money <= owed && currentPlayer.Money > 0)
         {
-            //realPlayer.Money += currentPlayer.Money;
-            //currentPlayer.Money = 0;
             currentPlayer.Debt = 0;
-
             currentPlayer.Payments.Clear();
             foreach (var item in currentPlayer.BankedCards)
             {
@@ -365,25 +370,8 @@ public class DealCardGameMainGameClass
                 {
                     currentPlayer.Payments.Add(card.Deck);
                 }
-
             }
-
-            //foreach (var item in currentPlayer.SetData)
-            //{
-            //    var list = item.Cards.ToRegularDeckDict();
-            //    list.RemoveAllOnly(x => x.ClaimedValue == 0);
-            //    var others = list.RemoveAllAndObtain(x => x.ActionCategory != EnumActionCategory.None);
-            //    list.RemoveGivenList(others);
-            //    realPlayer.AddSeveralCardsToPlayerPropertySet(list, item.Color);
-            //    realPlayer.BankedCards.AddRange(others);
-            //}
-            //realPlayer.BankedCards.AddRange(currentPlayer.BankedCards.ToBasicList());
-            //currentPlayer.BankedCards.Clear();
         }
-        //if (currentPlayer.Money == 0)
-        //{
-        //    currentPlayer.Debt = 0; //to double check.
-        //}
     }
     public async Task PlayPropertyAsync(int deck, EnumColor color)
     {
@@ -504,14 +492,14 @@ public class DealCardGameMainGameClass
         GetPlayerToContinueTurn(); //will finish processing.
         DealCardGameCardInformation card;
         BasicList<DealCardGameCardInformation> payments = [];
-        _model.Payments.ClearHand();
+        _model.ReceivedPayments.ClearHand(); //just in case.
         foreach (var player in PlayerList)
         {
             player.Payments.ForEach(deck =>
             {
                 card = _gameContainer.DeckList.GetSpecificItem(deck);
                 card.IsSelected = false;
-                _model.Payments.HandList.Add(card);
+                _model.ReceivedPayments.HandList.Add(card);
                 SingleInfo!.Money += card.ClaimedValue;
                 player.Money -= card.ClaimedValue;
                 if (player.BankedCards.ObjectExist(deck))
@@ -541,7 +529,7 @@ public class DealCardGameMainGameClass
     public async Task ResumeAsync()
     {
         SaveRoot.GameStatus = EnumGameStatus.None; //i think.
-        _model.Payments.ClearHand();
+        _model.ReceivedPayments.ClearHand();
         await ContinueTurnAsync();
     }
     public async Task StealSetAsync(int deck, int player, EnumColor color)
@@ -566,11 +554,11 @@ public class DealCardGameMainGameClass
     }
     public async Task RentRequestAsync(RentModel rent)
     {
-        if (rent.Player > 0)
-        {
-            _toast.ShowUserErrorToast("Unable to process other players for now");
-            return;
-        }
+        //if (rent.Player > 0)
+        //{
+        //    _toast.ShowUserErrorToast("Unable to process other players for now");
+        //    return;
+        //}
         var card = GetPlayerSelectedSingleCard(rent.Deck);
         await AnimatePlayAsync(card);
         OtherTurn = 0; //for now.
@@ -594,6 +582,7 @@ public class DealCardGameMainGameClass
                 await AnimatePlayAsync(item); //these cards has to be removed because it was played.
             }
         }
+        int player = _gameContainer.PersonalInformation.RentInfo.Player;
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             _gameContainer.PersonalInformation.RentInfo.RentCategory = EnumRentCategory.NA;
@@ -603,7 +592,14 @@ public class DealCardGameMainGameClass
             await _privateAutoResume.SaveStateAsync(_gameContainer);
         }
         StartPossiblePaymentProcesses();
-        await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);
+        if (rent.Player == 0)
+        {
+            await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);
+        }
+        else
+        {
+            await SelectSinglePlayerForPaymentAsync(player, amountOwed); //iffy.
+        }
     }
     public async Task StartRentAsync(SetPlayerModel model, DealCardGameCardInformation card)
     {
@@ -642,11 +638,6 @@ public class DealCardGameMainGameClass
         _model.ChosenPlayer = playerChosen.NickName; //this is the player who lost their card.
         var cardStolen = _gameContainer.DeckList.GetSpecificItem(steal.CardChosen);
         _model.ShownCard = cardStolen;
-
-        //var others = chosen.SetData
-
-        //var list = chosen.SetData.GetCards(color).ToRegularDeckDict();
-        //_model.StolenCards.HandList.ReplaceRange(list);
         _command.UpdateAll();
         await Delay!.DelayMilli(700);
         _model.ChosenPlayer = "";
@@ -660,10 +651,6 @@ public class DealCardGameMainGameClass
         GetPlayerToContinueTurn();
         SingleInfo!.Money += transferMoney;
         SingleInfo.AddSingleCardToPlayerPropertySet(cardStolen, steal.Color);
-        //chosen.ClearPlayerProperties(color);
-        //SingleInfo.AddSeveralCardsToPlayerPropertySet(list, color);
-
-
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             _gameContainer!.PersonalInformation.StealInfo.StartStealing = false;

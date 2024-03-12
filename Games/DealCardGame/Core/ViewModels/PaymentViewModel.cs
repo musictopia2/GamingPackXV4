@@ -24,37 +24,29 @@ public partial class PaymentViewModel : IBasicEnableProcess
         _player = _gameContainer.PlayerList!.GetSelf();
         VMData.OtherTurn = _player.NickName;
         VMData.Owed = _player.Debt;
-        VMData.Payments.HandList = _gameContainer.PersonalInformation.Payments;
+        Payments = new(gameContainer.Command);
+        Payments.Text = "Payments";
+        Payments.AutoSelect = EnumHandAutoType.ShowObjectOnly; //show only.
+        Payments.HandList = _gameContainer.PersonalInformation.Payments;
         VMData.PaidSoFar = _gameContainer.PersonalInformation.Payments.Sum(x => x.ClaimedValue);
-        VMData.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards;
-        VMData.Bank.HandList.Sort();
-        VMData.Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
+        Bank = new(gameContainer.Command);
+        Bank.Text = "Bank";
+        Bank.AutoSelect = EnumHandAutoType.SelectAsMany;
+        Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards;
+        Bank.HandList.Sort();
+        Properties = new(gameContainer.Command);
+        Properties.Text = "Properties To Pay With";
+        Properties.AutoSelect = EnumHandAutoType.SelectOneOnly;
+        Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
     }
-    //private bool _canExecute = true;
     partial void CreateCommands(CommandContainer command);
-
-
+    public HandObservable<DealCardGameCardInformation> Properties { get; set; }
+    public HandObservable<DealCardGameCardInformation> Payments { get; set; }
+    public HandObservable<DealCardGameCardInformation> Bank { get; set; }
     public void AddCommand(Action action)
     {
         _gameContainer.Command.CustomStateHasChanged += action;
-        //_gameContainer.Command.
     }
-
-    //public Action? NotifyStateChange { get; set; }
-    //private Action? _previousAction;
-    //public void AddCommandAction(Action action)
-    //{
-    //    _previousAction = _gameContainer.Command.ParentAction;
-    //    _gameContainer.Command.ParentAction = action; //for now.
-    //    //_gameContainer.Command.AddAction(action, "processpayment");
-    //}
-    //public void RemoveCommandAction()
-    //{
-    //    _gameContainer.Command.ParentAction = _previousAction;
-    //    _previousAction = null;
-    //    //_gameContainer.Command.RemoveAction("processpayment");
-    //}
-
     [Command(EnumCommandCategory.Game)]
     public async Task StartOverAsync()
     {
@@ -64,12 +56,12 @@ public partial class PaymentViewModel : IBasicEnableProcess
         var player = _gameContainer.PlayerList!.GetSelf();
         _gameContainer.PersonalInformation.State.BankedCards = player.BankedCards.ToRegularDeckDict();
         player.ClonePlayerProperties(_gameContainer.PersonalInformation);
-        VMData.Payments.HandList = _gameContainer.PersonalInformation.Payments;
-        VMData.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards; //may need to hook up again.
-        VMData.Bank.HandList.Sort();
+        Payments.HandList = _gameContainer.PersonalInformation.Payments;
+        Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards; //may need to hook up again.
+        Bank.HandList.Sort();
         _gameContainer.PersonalInformation.Payments.Clear(); //you are clearing the payments.
         VMData.PaidSoFar = 0;
-        VMData.Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
+        Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
     [Command(EnumCommandCategory.Game)]
@@ -118,7 +110,7 @@ public partial class PaymentViewModel : IBasicEnableProcess
             VMData.PaidSoFar += card.ClaimedValue;
             _gameContainer.PersonalInformation.Payments.Add(card);
             _gameContainer.PersonalInformation.State.SetData.RemoveCardFromPlayerSet(card.Deck, property.Color);
-            VMData.Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
+            Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
             await _privateAutoResume.SaveStateAsync(_gameContainer);
             return;
         }
