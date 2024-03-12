@@ -4,7 +4,7 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
     protected override Task RegisterTestsAsync()
     {
         TestData!.CardsToPass = 12;
-        TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
+        //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
         GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
         return base.RegisterTestsAsync();
     }
