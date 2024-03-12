@@ -81,6 +81,13 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
             player.StartUpList.AddRange(list); //needs to have a monopoly so i can test the house and hotel.
             list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
             player.StartUpList.AddRange(list);
+
+            card = deckList.Where(x => x.ActionCategory == EnumActionCategory.SlyDeal).Skip(1).Take(1).Single();
+            player.StartUpList.Add(card);
+
+            card = deckList.Where(x => x.ActionCategory == EnumActionCategory.ForcedDeal).Skip(1).Take(1).Single();
+            player.StartUpList.Add(card);
+
         }
         //var card = deckList.First(x => x.ActionCategory == EnumActionCategory.Gos);
         
