@@ -21,6 +21,14 @@ else if (DataContext!.ActionCard.ActionCategory == EnumActionCategory.ForcedDeal
 {
     <DisplayTradeComponent  PlayerToDisplay="DataContext.GetSelf" />
 }
+else if (DataContext.ActionCard.ActionCategory == EnumActionCategory.Birthday)
+{
+    <DisplayMiscPaymentComponent Owed="2" PlayerToDisplay="DataContext.GetSelf" />
+}
+else if (DataContext.ActionCard.ActionCategory == EnumActionCategory.DebtCollector)
+{
+    <DisplayMiscPaymentComponent Owed="5" PlayerToDisplay="DataContext.GetSelf" />
+}
 else
 {
     <div>

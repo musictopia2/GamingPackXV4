@@ -1,7 +1,3 @@
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -13,7 +9,6 @@ public class DealCardGameMainGameClass
     private readonly DealCardGameGameContainer _gameContainer; //if we don't need it, take it out.
     private readonly IToast _toast;
     private readonly PrivateAutoResumeProcesses _privateAutoResume;
-    private readonly IMessageBox _message;
 #pragma warning disable IDE0290 // Use primary constructor
     public DealCardGameMainGameClass(IGamePackageResolver mainContainer,
 #pragma warning restore IDE0290 // Use primary constructor
@@ -28,8 +23,7 @@ public class DealCardGameMainGameClass
         DealCardGameGameContainer gameContainer,
         ISystemError error,
         IToast toast,
-        PrivateAutoResumeProcesses privateAutoResume,
-        IMessageBox message
+        PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
@@ -37,7 +31,6 @@ public class DealCardGameMainGameClass
         _gameContainer = gameContainer;
         _toast = toast;
         _privateAutoResume = privateAutoResume;
-        _message = message;
     }
     public int OtherTurn
     {
@@ -237,6 +230,12 @@ public class DealCardGameMainGameClass
             await FinishTradingPropertyAsync(trade);
             return;
         }
+        if (actionCard.ActionCategory == EnumActionCategory.DebtCollector)
+        {
+            ClearJustSayNo();
+            await SelectSinglePlayerForPaymentAsync(player, 5);
+            return;
+        }
         _toast.ShowUserErrorToast("Not supported yet");
         return;
     }
@@ -320,6 +319,14 @@ public class DealCardGameMainGameClass
             SaveRoot.YourColorChosen = EnumColor.None;
             SaveRoot.PlayerUsedAgainst = 0;
             SaveRoot.OpponentColorChosen = EnumColor.None;
+            await ContinueTurnAsync();
+            return;
+        }
+        if (action.ActionCategory == EnumActionCategory.DebtCollector || action.ActionCategory == EnumActionCategory.Birthday)
+        {
+            SaveRoot.GameStatus = EnumGameStatus.None;
+            OtherTurn = 0;
+            SaveRoot.PaymentOwed = 0;
             await ContinueTurnAsync();
             return;
         }
@@ -411,16 +418,34 @@ public class DealCardGameMainGameClass
         StartPossiblePaymentProcesses();
         if (PlayerList.Count > 2)
         {
+            SaveRoot.ActionCardUsed = card.Deck;
             SaveRoot.GameStatus = EnumGameStatus.StartDebtCollector;
             LoadPlayerPicker();
             await ContinueTurnAsync();
             return;
+        }
+        else
+        {
+            var player = PlayerList.Single(x => x.Id != WhoTurn);
+            //var player = PlayerList.GetOnlyOpponent();
+            if (player.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo) && player.Money > 0)
+            {
+                UpdateToJustSayNo(player, card.Deck);
+                await ContinueTurnAsync();
+                return;
+            }
         }
         await StartFiguringOutPaymentsForAllPlayersAsync(5);
     }
     public async Task ChosePlayerForDebtAsync(int id)
     {
         var player = PlayerList.Single(x => x.Id == id);
+        if (player.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
+        {
+            UpdateToJustSayNo(player, SaveRoot.ActionCardUsed);
+            await ContinueTurnAsync(); //cannot choose a player yet for payment because don't know if they will accept.
+            return;
+        }
         SaveRoot.GameStatus = EnumGameStatus.None;
         await SelectSinglePlayerForPaymentAsync(id, 5);
     }
@@ -440,6 +465,7 @@ public class DealCardGameMainGameClass
     {
         OtherTurn = player;
         SingleInfo = PlayerList.GetOtherPlayer();
+        SingleInfo.Debt = owed; //i think has to be here.
         _model.ChosenPlayer = SingleInfo.NickName;
         _command.UpdateAll();
         await Delay!.DelayMilli(700);
@@ -879,7 +905,7 @@ public class DealCardGameMainGameClass
         SingleInfo.Money -= transferMoney;
         playerChosen.AddSingleCardToPlayerPropertySet(tradeReceive, trade.YourColor);
         SingleInfo.SetData.RemoveCardFromPlayerSet(trade.YourCard, trade.YourColor);
-        
+
         await ContinueTurnAsync();
     }
     public async Task PossibleStealingPropertyAsync(StealPropertyModel steal)
@@ -941,7 +967,7 @@ public class DealCardGameMainGameClass
         GetPlayerToContinueTurn();
         SingleInfo!.Money += transferMoney;
         SingleInfo.AddSingleCardToPlayerPropertySet(cardStolen, steal.Color);
-        
+
         await ContinueTurnAsync();
     }
 }

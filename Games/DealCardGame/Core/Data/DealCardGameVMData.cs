@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+
 namespace DealCardGame.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
@@ -24,12 +26,9 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
         Deck1 = new(command);
         Pile1 = new(command);
         PlayerHand1 = new(command);
-
         ReceivedPayments = new(command);
         ReceivedPayments.Text = "Payments Received";
         ReceivedPayments.AutoSelect = EnumHandAutoType.ShowObjectOnly; //i think.
-
-
         StolenCards = new(command);
         StolenCards.Text = "Cards From Stolen Set";
         StolenCards.AutoSelect = EnumHandAutoType.ShowObjectOnly;
@@ -37,6 +36,16 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
         PlayerPicker.SelectionMode = ListViewPicker.EnumSelectionMode.SingleItem;
         PlayerPicker.ItemSelectedAsync = ChosePlayerAsync;
         PlayerPicker.IndexMethod = ListViewPicker.EnumIndexMethod.OneBased; //because you have the name.
+        Payments = new(gameContainer.Command);
+        Payments.Text = "Payments";
+        Payments.AutoSelect = EnumHandAutoType.ShowObjectOnly; //show only.
+        Bank = new(gameContainer.Command);
+        Bank.Text = "Bank";
+        Bank.AutoSelect = EnumHandAutoType.SelectAsMany;
+        Bank.HandList.Sort();
+        Properties = new(gameContainer.Command);
+        Properties.Text = "Properties To Pay With";
+        Properties.AutoSelect = EnumHandAutoType.SelectOneOnly;
     }
     public DeckObservablePile<DealCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<DealCardGameCardInformation> Pile1 { get; set; }
@@ -46,6 +55,12 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public HandObservable<DealCardGameCardInformation> StolenCards { get; set; }
     public string ChosenPlayer { get; set; } = ""; //this is needed so you can see the cards that are needed.
     public HandObservable<DealCardGameCardInformation> ReceivedPayments { get; set; }
+
+    public HandObservable<DealCardGameCardInformation> Properties { get; set; }
+    public HandObservable<DealCardGameCardInformation> Payments { get; set; }
+    public HandObservable<DealCardGameCardInformation> Bank { get; set; }
+
+
     public ListViewPicker PlayerPicker { get; set; }
     public TradeDisplayModel? TradeDisplay { get; set; }
     private Task ChosePlayerAsync(int index, string player)
