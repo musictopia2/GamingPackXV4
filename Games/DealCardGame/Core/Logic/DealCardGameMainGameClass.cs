@@ -1,3 +1,7 @@
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -157,7 +161,7 @@ public class DealCardGameMainGameClass
                 return;
             case "trade":
                 TradePropertyModel tradeProperty = await js1.DeserializeObjectAsync<TradePropertyModel>(content);
-                await FinishTradingPropertyAsync(tradeProperty);
+                await PossibleTradingPropertyAsync(tradeProperty);
                 return;
             case "accept":
                 //should have the information to finish up.
@@ -194,6 +198,7 @@ public class DealCardGameMainGameClass
     {
         OtherTurn = 0; //for sure no matter what.
         int player = SaveRoot.PlayerUsedAgainst;
+        GetPlayerToContinueTurn(); //try this just in case.
         EnumColor opponentColor = SaveRoot.OpponentColorChosen;
         if (actionCard.ActionCategory == EnumActionCategory.DealBreaker)
         {
@@ -214,6 +219,22 @@ public class DealCardGameMainGameClass
             };
             ClearJustSayNo();
             await FinishStealingPropertyAsync(steal);
+            return;
+        }
+        if (actionCard.ActionCategory == EnumActionCategory.ForcedDeal)
+        {
+            TradePropertyModel trade = new()
+            {
+                CardPlayed = actionCard.Deck,
+                YourCard = SaveRoot.YourTrade,
+                OpponentCard = SaveRoot.OpponentTrade,
+                PlayerId = player,
+                StartTrading = false,
+                YourColor = SaveRoot.YourColorChosen,
+                OpponentColor = SaveRoot.OpponentColorChosen
+            };
+            ClearJustSayNo();
+            await FinishTradingPropertyAsync(trade);
             return;
         }
         _toast.ShowUserErrorToast("Not supported yet");
@@ -796,16 +817,46 @@ public class DealCardGameMainGameClass
         await _privateAutoResume.SaveStateAsync(_gameContainer);
         _command.UpdateAll();
     }
-    public async Task FinishTradingPropertyAsync(TradePropertyModel trade)
+    public async Task PossibleTradingPropertyAsync(TradePropertyModel trade)
     {
         trade.StartTrading = false;
         var cardPlayed = GetPlayerSelectedSingleCard(trade.CardPlayed);
         await AnimatePlayAsync(cardPlayed);
         var playerChosen = PlayerList.Single(x => x.Id == trade.PlayerId);
-        //needs to show details temporarily.
-        //show display trade.
-        OtherTurn = 0; //i think
-        GetPlayerToContinueTurn();
+
+        if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            if (trade.Equals(_gameContainer.PersonalInformation.TradeInfo))
+            {
+                //has to somehow clone this.
+                trade = _gameContainer.PersonalInformation.TradeInfo.Clone(); //go ahead and clone this.
+            }
+            _gameContainer.PersonalInformation.TradeInfo.StartTrading = false;
+            _gameContainer.PersonalInformation.TradeInfo.PlayerId = 0;
+            _gameContainer.PersonalInformation.TradeInfo.OpponentColor = EnumColor.None;
+            _gameContainer.PersonalInformation.TradeInfo.CardPlayed = 0;
+            _gameContainer.PersonalInformation.TradeInfo.OpponentCard = 0;
+            _gameContainer.PersonalInformation.TradeInfo.YourCard = 0;
+            _gameContainer.PersonalInformation.TradeInfo.YourColor = EnumColor.None;
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+        }
+        if (playerChosen.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
+        {
+            //this means you can decide to just say no.
+            SaveRoot.OpponentColorChosen = trade.OpponentColor;
+            SaveRoot.YourColorChosen = trade.YourColor;
+            SaveRoot.YourTrade = trade.YourCard; //i think.
+            SaveRoot.OpponentTrade = trade.OpponentCard; //i think.
+            UpdateToJustSayNo(playerChosen, trade.CardPlayed);
+            //GetPlayerToContinueTurn(); //i think.
+            await ContinueTurnAsync();
+            return;
+        }
+        await FinishTradingPropertyAsync(trade);
+    }
+    public async Task FinishTradingPropertyAsync(TradePropertyModel trade)
+    {
+        var playerChosen = PlayerList.Single(x => x.Id == trade.PlayerId);
         _model.TradeDisplay = new();
         _model.TradeDisplay.TradePlayerName = playerChosen.NickName;
         _model.TradeDisplay.WhoPlayerName = SingleInfo!.NickName;
@@ -828,17 +879,7 @@ public class DealCardGameMainGameClass
         SingleInfo.Money -= transferMoney;
         playerChosen.AddSingleCardToPlayerPropertySet(tradeReceive, trade.YourColor);
         SingleInfo.SetData.RemoveCardFromPlayerSet(trade.YourCard, trade.YourColor);
-        if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
-        {
-            _gameContainer.PersonalInformation.TradeInfo.StartTrading = false;
-            _gameContainer.PersonalInformation.TradeInfo.PlayerId = 0;
-            _gameContainer.PersonalInformation.TradeInfo.OpponentColor = EnumColor.None;
-            _gameContainer.PersonalInformation.TradeInfo.CardPlayed = 0;
-            _gameContainer.PersonalInformation.TradeInfo.OpponentCard = 0;
-            _gameContainer.PersonalInformation.TradeInfo.YourCard = 0;
-            _gameContainer.PersonalInformation.TradeInfo.YourColor = EnumColor.None;
-            await _privateAutoResume.SaveStateAsync(_gameContainer);
-        }
+        
         await ContinueTurnAsync();
     }
     public async Task PossibleStealingPropertyAsync(StealPropertyModel steal)

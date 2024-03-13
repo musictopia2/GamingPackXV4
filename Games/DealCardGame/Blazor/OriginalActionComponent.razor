@@ -13,6 +13,12 @@ else if(ActionCard!.ActionCategory == EnumActionCategory.SlyDeal)
         <DisplayStolenPropertyComponent PlayerToDisplay="OpponentPlayer" />
     </div>
 }
+else if (ActionCard.ActionCategory == EnumActionCategory.ForcedDeal)
+{
+    <div>
+        <DisplayTradeComponent PlayerToDisplay="OpponentPlayer" />
+    </div>
+}
 else
 {
     <div>Not supported for now</div>

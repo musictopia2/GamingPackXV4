@@ -63,7 +63,7 @@ public partial class TradingViewModel : IBasicEnableProcess
             await _gameContainer.Network!.SendAllAsync("trade", _gameContainer.PersonalInformation.TradeInfo);
         }
         _gameContainer.Command.ResetCustomStates();
-        await _mainGame.FinishTradingPropertyAsync(_gameContainer.PersonalInformation.TradeInfo);
+        await _mainGame.PossibleTradingPropertyAsync(_gameContainer.PersonalInformation.TradeInfo);
     }
     public bool CanEnableBasics()
     {

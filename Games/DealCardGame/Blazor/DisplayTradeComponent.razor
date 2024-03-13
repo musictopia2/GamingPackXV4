@@ -1,0 +1,11 @@
+﻿<div style="font-size: 1.5rem;">
+    @DisplayName
+</div>
+<div>
+    <BaseFrameBlazor Text="@_mainPlayer!.NickName">
+        <CardGraphicsBlazor TargetHeight="15vh" DeckObject="_yourCard" />
+    </BaseFrameBlazor>
+    <BaseFrameBlazor Text="@_tradePlayer!.NickName">
+        <CardGraphicsBlazor TargetHeight="15vh" DeckObject="_opponentCard" />
+    </BaseFrameBlazor>
+</div>

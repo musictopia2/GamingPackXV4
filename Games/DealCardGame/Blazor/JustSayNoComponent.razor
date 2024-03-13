@@ -17,6 +17,10 @@ else if (DataContext!.ActionCard.ActionCategory == EnumActionCategory.SlyDeal)
 {
     <DisplayStolenPropertyComponent PlayerToDisplay="DataContext.GetSelf" />
 }
+else if (DataContext!.ActionCard.ActionCategory == EnumActionCategory.ForcedDeal)
+{
+    <DisplayTradeComponent  PlayerToDisplay="DataContext.GetSelf" />
+}
 else
 {
     <div>
