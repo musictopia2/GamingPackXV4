@@ -19,12 +19,8 @@ public class CommandContainer
     }
     public void UpdateAll()
     {
-        if (CustomStateHasChanged is not null)
-        {
-            CustomStateHasChanged?.Invoke();
-            return;
-        }
-        ParentAction?.Invoke(); 
+        ParentAction?.Invoke();
+        CustomStateHasChanged?.Invoke();
     }
     public void UpdateSpecificAction(string key)
     {

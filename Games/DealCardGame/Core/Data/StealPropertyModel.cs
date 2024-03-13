@@ -1,4 +1,5 @@
 ﻿namespace DealCardGame.Core.Data;
+[Cloneable(false)]
 public class StealPropertyModel
 {
     public int PlayerId { get; set; } //this is the player you are stealing from.

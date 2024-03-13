@@ -150,7 +150,7 @@ public class DealCardGameMainGameClass
                 return;
             case "stealproperty":
                 StealPropertyModel stealProperty = await js1.DeserializeObjectAsync<StealPropertyModel>(content);
-                await FinishStealingPropertyAsync(stealProperty);
+                await PossibleStealingPropertyAsync(stealProperty);
                 return;
             case "playerchosenfordebt":
                 await ChosePlayerForDebtAsync(int.Parse(content));
@@ -195,13 +195,27 @@ public class DealCardGameMainGameClass
         OtherTurn = 0; //for sure no matter what.
         int player = SaveRoot.PlayerUsedAgainst;
         EnumColor opponentColor = SaveRoot.OpponentColorChosen;
-        ClearJustSayNo();
         if (actionCard.ActionCategory == EnumActionCategory.DealBreaker)
         {
+            ClearJustSayNo();
             await FinishStealingSetAsync(player, opponentColor);
             return;
         }
-        _toast.ShowUserErrorToast("Only deal breakers are supported for now");
+        if (actionCard.ActionCategory == EnumActionCategory.SlyDeal)
+        {
+            //this means needs to capture the information needed in order to steal.
+            StealPropertyModel steal = new()
+            {
+                CardChosen = SaveRoot.CardStolen,
+                CardPlayed = actionCard.Deck,
+                Color = opponentColor,
+                PlayerId = player,
+                StartStealing = false
+            };
+            ClearJustSayNo();
+            await FinishStealingPropertyAsync(steal);
+        }
+        _toast.ShowUserErrorToast("Not supported yet");
         return;
     }
     private void ClearJustSayNo()
@@ -450,8 +464,6 @@ public class DealCardGameMainGameClass
             await ContinueTurnAsync();
             return;
         }
-
-        //var temp = PlayerList.FirstOrDefault(x => x.Debt > 0 && x.Payments.Count == 0);
         if (PlayerList.Any(x => x.Debt > 0))
         {
             await StartPaymentProcessesForSelectedPlayerAsync();
@@ -832,11 +844,43 @@ public class DealCardGameMainGameClass
         }
         await ContinueTurnAsync();
     }
-    public async Task FinishStealingPropertyAsync(StealPropertyModel steal)
+    public async Task PossibleStealingPropertyAsync(StealPropertyModel steal)
     {
         steal.StartStealing = false;
         var cardPlayed = GetPlayerSelectedSingleCard(steal.CardPlayed);
         await AnimatePlayAsync(cardPlayed);
+        var playerChosen = PlayerList.Single(x => x.Id == steal.PlayerId);
+        if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            if (steal.Equals(_gameContainer.PersonalInformation.StealInfo))
+            {
+                //has to somehow clone this.
+                steal = _gameContainer.PersonalInformation.StealInfo.Clone(); //go ahead and clone this.
+            }
+            _gameContainer!.PersonalInformation.StealInfo.StartStealing = false;
+            _gameContainer.PersonalInformation.StealInfo.Color = EnumColor.None;
+            _gameContainer.PersonalInformation.StealInfo.PlayerId = 0;
+            _gameContainer.PersonalInformation.StealInfo.CardPlayed = 0;
+            _gameContainer.PersonalInformation.StealInfo.CardChosen = 0;
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+        }
+        if (playerChosen.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
+        {
+            //this means they have the opportunity to just say no.
+            SaveRoot.OpponentColorChosen = steal.Color;
+            SaveRoot.CardStolen = steal.CardChosen; //i think.
+            SaveRoot.ActionCardUsed = cardPlayed.Deck;
+            OtherTurn = steal.PlayerId;
+            SaveRoot.PlayerUsedAgainst = steal.PlayerId;
+            SaveRoot.GameStatus = EnumGameStatus.ConsiderJustSayNo;
+            await ContinueTurnAsync();
+            return;
+        }
+
+        await FinishStealingPropertyAsync(steal); //i think.
+    }
+    public async Task FinishStealingPropertyAsync(StealPropertyModel steal)
+    {
         var playerChosen = PlayerList.Single(x => x.Id == steal.PlayerId);
         _model.ChosenPlayer = playerChosen.NickName; //this is the player who lost their card.
         var cardStolen = _gameContainer.DeckList.GetSpecificItem(steal.CardChosen);
@@ -854,15 +898,7 @@ public class DealCardGameMainGameClass
         GetPlayerToContinueTurn();
         SingleInfo!.Money += transferMoney;
         SingleInfo.AddSingleCardToPlayerPropertySet(cardStolen, steal.Color);
-        if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
-        {
-            _gameContainer!.PersonalInformation.StealInfo.StartStealing = false;
-            _gameContainer.PersonalInformation.StealInfo.Color = EnumColor.None;
-            _gameContainer.PersonalInformation.StealInfo.PlayerId = 0;
-            _gameContainer.PersonalInformation.StealInfo.CardPlayed = 0;
-            _gameContainer.PersonalInformation.StealInfo.CardChosen = 0;
-            await _privateAutoResume.SaveStateAsync(_gameContainer);
-        }
+        
         await ContinueTurnAsync();
     }
 }

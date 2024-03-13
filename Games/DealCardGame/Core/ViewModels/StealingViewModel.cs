@@ -50,7 +50,7 @@ public partial class StealingViewModel : IBasicEnableProcess
             await _gameContainer.Network!.SendAllAsync("stealproperty", _gameContainer.PersonalInformation.StealInfo);
         }
         _gameContainer.Command.ResetCustomStates();
-        await _mainGame.FinishStealingPropertyAsync(_gameContainer.PersonalInformation.StealInfo);
+        await _mainGame.PossibleStealingPropertyAsync(_gameContainer.PersonalInformation.StealInfo);
     }
     public bool CanEnableBasics()
     {

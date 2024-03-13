@@ -1,4 +1,5 @@
 ﻿namespace DealCardGame.Core.Data;
+[Cloneable(false)]
 public class TradePropertyModel
 {
     public int PlayerId { get; set; } //this is the player you are trading from.

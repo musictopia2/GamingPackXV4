@@ -13,10 +13,16 @@ else if (DataContext!.ActionCard.ActionCategory == EnumActionCategory.DealBreake
         Color="DataContext.SaveRoot.OpponentColorChosen"
         PlayerToDisplay="DataContext.GetSelf" />
 }
+else if (DataContext!.ActionCard.ActionCategory == EnumActionCategory.SlyDeal)
+{
+    <div>
+        Start Of Sly Deal
+    </div>
+}
 else
 {
     <div>
-        So far, can only handle deal breakers.
+        Not Supported Yet
     </div>
 }
 <div>
