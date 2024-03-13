@@ -9,6 +9,7 @@ public class DealCardGameMainGameClass
     private readonly DealCardGameGameContainer _gameContainer; //if we don't need it, take it out.
     private readonly IToast _toast;
     private readonly PrivateAutoResumeProcesses _privateAutoResume;
+    private readonly IMessageBox _message;
 #pragma warning disable IDE0290 // Use primary constructor
     public DealCardGameMainGameClass(IGamePackageResolver mainContainer,
 #pragma warning restore IDE0290 // Use primary constructor
@@ -23,7 +24,8 @@ public class DealCardGameMainGameClass
         DealCardGameGameContainer gameContainer,
         ISystemError error,
         IToast toast,
-        PrivateAutoResumeProcesses privateAutoResume
+        PrivateAutoResumeProcesses privateAutoResume,
+        IMessageBox message
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     {
         _model = currentMod;
@@ -31,6 +33,7 @@ public class DealCardGameMainGameClass
         _gameContainer = gameContainer;
         _toast = toast;
         _privateAutoResume = privateAutoResume;
+        _message = message;
     }
     public int OtherTurn
     {
@@ -185,13 +188,11 @@ public class DealCardGameMainGameClass
             await FinishStealingSetAsync(SaveRoot.PlayerUsedAgainst, SaveRoot.OpponentColorChosen);
             return;
         }
-
         _toast.ShowUserErrorToast("Only deal breakers are supported for now");
         return;
     }
     public async Task ProcessRejectionAsync()
     {
-        _toast.ShowInfoToast("Starting to reject part 1");
         GetPlayerToContinueTurn();
         var card = SingleInfo!.MainHandList.First(x => x.ActionCategory == EnumActionCategory.JustSayNo);
         SingleInfo.MainHandList.RemoveSpecificItem(card); //its played period.
@@ -211,6 +212,7 @@ public class DealCardGameMainGameClass
         if (SingleInfo.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
         {
             SaveRoot.GameStatus = EnumGameStatus.ConsiderJustSayNo;
+            _gameContainer.IsJustSayNoSelf = SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
             await ContinueTurnAsync();
             return;
         }
@@ -221,7 +223,6 @@ public class DealCardGameMainGameClass
             await CancelActionAsync();
             return;
         }
-        _toast.ShowUserErrorToast("Help");
     }
     private async Task CancelActionAsync()
     {
@@ -675,22 +676,8 @@ public class DealCardGameMainGameClass
         }
         await FinishStealingSetAsync(player, color);
     }
-    protected override async Task ShowHumanCanPlayAsync()
-    {
-        await base.ShowHumanCanPlayAsync();
-        if (SaveRoot.GameStatus == EnumGameStatus.ConsiderJustSayNo)
-        {
-            _command.UpdateSpecificAction("justsayno"); //try this way.
-        }
-        //return base.ShowHumanCanPlayAsync();
-    }
     public async Task RentRequestAsync(RentModel rent)
     {
-        //if (rent.Player > 0)
-        //{
-        //    _toast.ShowUserErrorToast("Unable to process other players for now");
-        //    return;
-        //}
         var card = GetPlayerSelectedSingleCard(rent.Deck);
         await AnimatePlayAsync(card);
         OtherTurn = 0; //for now.

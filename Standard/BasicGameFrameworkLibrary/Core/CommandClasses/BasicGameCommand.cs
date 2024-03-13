@@ -41,6 +41,7 @@ public class BasicGameCommand : ParentCommand, IGameCommand
     }
     public override async Task ExecuteAsync(object? parameter)
     {
+
         if (CanExecute(parameter) == false)
         {
             return;

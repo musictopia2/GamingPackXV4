@@ -26,7 +26,7 @@
 	  <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
   <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
 
-	  <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.14" />
+	  <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.15" />
 	  <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
 	  <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
 	  <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />

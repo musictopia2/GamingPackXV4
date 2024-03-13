@@ -4,7 +4,7 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
     protected override Task RegisterTestsAsync()
     {
         TestData!.CardsToPass = 18;
-        //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
+        TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
         GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
         return base.RegisterTestsAsync();
     }
@@ -90,6 +90,8 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
             player.StartUpList.Add(card);
             list = deckList.Where(x => x.ActionCategory == EnumActionCategory.JustSayNo).Skip(1);
             player.StartUpList.AddRange(list);
+            card = deckList.Where(x => x.ActionCategory == EnumActionCategory.DealBreaker).Skip(1).Take(1).Single();
+            player.StartUpList.Add(card);
         }
         //var card = deckList.First(x => x.ActionCategory == EnumActionCategory.Gos);
         

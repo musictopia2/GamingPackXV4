@@ -9,7 +9,7 @@
 }
 else if (DataContext!.ActionCard.ActionCategory == EnumActionCategory.DealBreaker)
 {
-    <DisplayStolenSetComponent Command="DataContext.GetCommandContainer"
+    <DisplayStolenSetComponent 
         Color="DataContext.SaveRoot.OpponentColorChosen"
         PlayerToDisplay="DataContext.GetSelf" />
 }
@@ -20,6 +20,6 @@ else
     </div>
 }
 <div>
-    <GameButtonComponent Display="Accept" CommandObject="AcceptCommand" />
-    <GameButtonComponent Display="Reject" CommandObject="RejectCommand" />
+    <GameButtonComponent Display="Accept Action Against Me" CommandObject="AcceptCommand" />
+    <GameButtonComponent Display="Play Just Say No" CommandObject="RejectCommand" />
 </div>

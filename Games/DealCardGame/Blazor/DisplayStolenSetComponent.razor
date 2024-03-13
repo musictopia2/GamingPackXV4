@@ -5,11 +5,16 @@
     </div>
     return;
 }
-@if (Command is null)
-{
-    <div>
-        No command
-    </div>
-    return;
-}
-<HandBlazor Hand="_hand" TargetContainerSize="20vw" />
+<BaseFrameBlazor Text="@DisplayName">
+    <StackLayout ItemSpacing="0px">
+        @{
+            var list = CardList;
+        }
+        @foreach (var item in list)
+        {
+        <StackItem>
+            <CardGraphicsBlazor DeckObject="item" TargetHeight="16vh" />
+        </StackItem>
+        }
+    </StackLayout>
+</BaseFrameBlazor>
