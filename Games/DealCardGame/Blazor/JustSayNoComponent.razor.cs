@@ -6,7 +6,6 @@ public partial class JustSayNoComponent
     protected override void OnInitialized()
     {
         DataContext = aa1.Resolver!.Resolve<JustSayNoViewModel>();
-        DataContext.AddAction(StateHasChanged);
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(DealCardGameVMData.OtherTurn))
             .AddLabel("Owed", nameof(DealCardGameVMData.Owed))

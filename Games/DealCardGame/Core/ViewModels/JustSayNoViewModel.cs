@@ -33,12 +33,7 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
         {
             await _mainGame.Network!.SendAllAsync("accept");
         }
-        RemoveAction();
         await _mainGame.ProcessAcceptanceAsync();
-    }
-    private void RemoveAction()
-    {
-        //_gameContainer.Command.ResetCustomStates();
     }
     [Command(EnumCommandCategory.Game)]
     public async Task RejectAsync()
@@ -49,18 +44,13 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
             {
                 await _mainGame.Network!.SendAllAsync("reject");
             }
-            RemoveAction();
             await _mainGame.ProcessRejectionAsync();
         }
         catch (Exception ex)
         {
             await _message.ShowMessageAsync(ex.Message);
-        }
+        }       
         
-    }
-    public void AddAction(Action action)
-    {
-        //_gameContainer.Command.CustomStateHasChanged += action;
     }
     public bool CanEnableBasics()
     {
