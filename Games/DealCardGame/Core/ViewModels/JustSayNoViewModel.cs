@@ -5,7 +5,6 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
     private readonly DealCardGameGameContainer _gameContainer;
     public readonly DealCardGameVMData VMData;
     private readonly DealCardGameMainGameClass _mainGame;
-    private readonly IMessageBox _message;
     private readonly DealCardGameCardInformation _actionCard;
     public JustSayNoViewModel(DealCardGameGameContainer gameContainer,
         DealCardGameVMData model,
@@ -16,8 +15,15 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
         _gameContainer = gameContainer;
         VMData = model;
         _mainGame = mainGame;
-        _message = message;
         _actionCard = _gameContainer.DeckList.GetSpecificItem(_gameContainer.SaveRoot.ActionCardUsed);
+    }
+    public void AddAction(Action action)
+    {
+        _gameContainer.Command.CustomStateHasChanged += action;
+    }
+    public void RemoveAction()
+    {
+        _gameContainer.Command.ResetCustomStates();
     }
     public DealCardGameCardInformation ActionCard => _actionCard;
     public CommandContainer GetCommandContainer => _gameContainer.Command;
@@ -33,24 +39,18 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
         {
             await _mainGame.Network!.SendAllAsync("accept");
         }
+        RemoveAction();
         await _mainGame.ProcessAcceptanceAsync();
     }
     [Command(EnumCommandCategory.Game)]
     public async Task RejectAsync()
     {
-        try
+        RemoveAction();
+        if (_mainGame.BasicData.MultiPlayer)
         {
-            if (_mainGame.BasicData.MultiPlayer)
-            {
-                await _mainGame.Network!.SendAllAsync("reject");
-            }
-            await _mainGame.ProcessRejectionAsync();
+            await _mainGame.Network!.SendAllAsync("reject");
         }
-        catch (Exception ex)
-        {
-            await _message.ShowMessageAsync(ex.Message);
-        }       
-        
+        await _mainGame.ProcessRejectionAsync();
     }
     public bool CanEnableBasics()
     {

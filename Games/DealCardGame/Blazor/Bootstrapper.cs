@@ -88,7 +88,7 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
 
             card = deckList.Where(x => x.ActionCategory == EnumActionCategory.ForcedDeal).Skip(1).Take(1).Single();
             player.StartUpList.Add(card);
-            list = deckList.Where(x => x.ActionCategory == EnumActionCategory.JustSayNo).Skip(1).Take(1);
+            list = deckList.Where(x => x.ActionCategory == EnumActionCategory.JustSayNo).Skip(1).Take(2);
             player.StartUpList.AddRange(list);
             card = deckList.Where(x => x.ActionCategory == EnumActionCategory.DealBreaker).Skip(1).Take(1).Single();
             player.StartUpList.Add(card);

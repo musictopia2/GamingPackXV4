@@ -15,9 +15,7 @@ else if (DataContext!.ActionCard.ActionCategory == EnumActionCategory.DealBreake
 }
 else if (DataContext!.ActionCard.ActionCategory == EnumActionCategory.SlyDeal)
 {
-    <div>
-        Start Of Sly Deal
-    </div>
+    <DisplayStolenPropertyComponent PlayerToDisplay="DataContext.GetSelf" />
 }
 else
 {

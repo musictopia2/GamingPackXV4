@@ -214,6 +214,7 @@ public class DealCardGameMainGameClass
             };
             ClearJustSayNo();
             await FinishStealingPropertyAsync(steal);
+            return;
         }
         _toast.ShowUserErrorToast("Not supported yet");
         return;
@@ -706,11 +707,7 @@ public class DealCardGameMainGameClass
         {
             //this means you can decide to just say no.
             SaveRoot.OpponentColorChosen = color;
-            OtherTurn = player;
-            SaveRoot.ActionCardUsed = deck; //i think.
-            SaveRoot.PlayerUsedAgainst = player;
-            _gameContainer.IsJustSayNoSelf = chosen.PlayerCategory == EnumPlayerCategory.Self;
-            SaveRoot.GameStatus = EnumGameStatus.ConsiderJustSayNo;
+            UpdateToJustSayNo(chosen, card.Deck);
             //GetPlayerToContinueTurn(); //i think.
             await ContinueTurnAsync();
             return;
@@ -869,15 +866,20 @@ public class DealCardGameMainGameClass
             //this means they have the opportunity to just say no.
             SaveRoot.OpponentColorChosen = steal.Color;
             SaveRoot.CardStolen = steal.CardChosen; //i think.
-            SaveRoot.ActionCardUsed = cardPlayed.Deck;
-            OtherTurn = steal.PlayerId;
-            SaveRoot.PlayerUsedAgainst = steal.PlayerId;
-            SaveRoot.GameStatus = EnumGameStatus.ConsiderJustSayNo;
+            UpdateToJustSayNo(playerChosen, cardPlayed.Deck);
             await ContinueTurnAsync();
             return;
         }
 
         await FinishStealingPropertyAsync(steal); //i think.
+    }
+    private void UpdateToJustSayNo(DealCardGamePlayerItem player, int actionDeck)
+    {
+        SaveRoot.ActionCardUsed = actionDeck;
+        _gameContainer.IsJustSayNoSelf = player.PlayerCategory == EnumPlayerCategory.Self;
+        SaveRoot.PlayerUsedAgainst = player.Id;
+        OtherTurn = player.Id; //hopefully this is also okay (?)
+        SaveRoot.GameStatus = EnumGameStatus.ConsiderJustSayNo;
     }
     public async Task FinishStealingPropertyAsync(StealPropertyModel steal)
     {

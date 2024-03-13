@@ -11,6 +11,7 @@ public partial class JustSayNoComponent
             .AddLabel("Owed", nameof(DealCardGameVMData.Owed))
             .AddLabel("Paid So Far", nameof(DealCardGameVMData.PaidSoFar));
         ;
+        DataContext.AddAction(StateHasChanged);
         base.OnInitialized();
     }
     private BasicGameCommand AcceptCommand => DataContext!.AcceptCommand!;
