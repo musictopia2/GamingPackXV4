@@ -12,5 +12,6 @@ public class DealCardGameGameContainer(BasicData basicData,
     IRandomGenerator random) : CardGameContainer<DealCardGameCardInformation, DealCardGamePlayerItem, DealCardGameSaveInfo>(basicData, test, gameInfo, delay, aggregator, command, resolver, deckList, random)
 {
     public PrivateModel PersonalInformation = new();
+    public bool IsJustSayNoSelf { get; set; }
     //public Func<BasicList<int>, Task>? Payments { get; set; }
 }

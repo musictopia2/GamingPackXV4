@@ -36,6 +36,11 @@
                               Columns="_scores"
                               Players="_gameContainer.SaveRoot.PlayerList" />
         </div>
+        @if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.ConsiderJustSayNo && _gameContainer.IsJustSayNoSelf)
+        {
+            <JustSayNoComponent />
+            return;
+        }
         @if (_gameContainer.PersonalInformation.RentInfo.RentCategory != EnumRentCategory.NA)
         {
             <StartRentComponent />

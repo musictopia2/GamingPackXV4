@@ -1,0 +1,14 @@
+﻿<CardGraphicsBlazor TargetHeight="20vh" DeckObject="ActionCard" />
+@if (ActionCard!.ActionCategory == EnumActionCategory.DealBreaker)
+{
+    <div>
+        <DisplayStolenSetComponent Color="SaveRoot!.OpponentColorChosen" 
+                                   PlayerToDisplay="OpponentPlayer"
+                                   Command="Command" />
+    </div>
+    
+}
+else
+{
+    <div>Only deal breakers are supported for now</div>
+}

@@ -7,4 +7,5 @@ public class PrivateModel : IMappable
     public RentModel RentInfo { get; set; } = new();
     public StealPropertyModel StealInfo { get; set; } = new();
     public TradePropertyModel TradeInfo { get; set; } = new();
+
 }

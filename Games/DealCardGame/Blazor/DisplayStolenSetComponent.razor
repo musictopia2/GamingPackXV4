@@ -1,0 +1,15 @@
+﻿@if (PlayerToDisplay is null)
+{
+    <div>
+        No Player Found
+    </div>
+    return;
+}
+@if (Command is null)
+{
+    <div>
+        No command
+    </div>
+    return;
+}
+<HandBlazor Hand="_hand" TargetContainerSize="20vw" />

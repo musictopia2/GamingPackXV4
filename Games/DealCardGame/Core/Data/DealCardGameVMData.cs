@@ -1,6 +1,3 @@
-using BasicGameFrameworkLibrary.Core.ChooserClasses;
-using System.Xml.Linq;
-
 namespace DealCardGame.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
@@ -32,7 +29,7 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
         ReceivedPayments.Text = "Payments Received";
         ReceivedPayments.AutoSelect = EnumHandAutoType.ShowObjectOnly; //i think.
 
-        
+
         StolenCards = new(command);
         StolenCards.Text = "Cards From Stolen Set";
         StolenCards.AutoSelect = EnumHandAutoType.ShowObjectOnly;

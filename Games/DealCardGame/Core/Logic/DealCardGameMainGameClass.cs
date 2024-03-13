@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -71,6 +69,8 @@ public class DealCardGameMainGameClass
         {
             LoadPlayerPicker(); //i think.
         }
+        GetPlayerToContinueTurn();
+        _gameContainer.IsJustSayNoSelf = SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
         //anything else needed is here.
         await base.FinishGetSavedAsync();
     }
@@ -109,10 +109,11 @@ public class DealCardGameMainGameClass
         LoadControls();
         return base.StartSetUpAsync(isBeginning);
     }
-
     async Task IMiscDataNM.MiscDataReceived(string status, string content)
     {
         SetCardModel setCard;
+        //DealCardGameCardInformation actionCard;
+        //DealCardGamePlayerItem currentPlayer;
         switch (status) //can't do switch because we don't know what the cases are ahead of time.
         {
             //put in cases here.
@@ -138,7 +139,7 @@ public class DealCardGameMainGameClass
                 return;
             case "stealset":
                 StealSetModel stealSet = await js1.DeserializeObjectAsync<StealSetModel>(content);
-                await StealSetAsync(stealSet.Deck, stealSet.PlayerId, stealSet.Color);
+                await StartToStealSetAsync(stealSet.Deck, stealSet.PlayerId, stealSet.Color);
                 return;
             case "rentrequest":
                 RentModel rent = await js1.DeserializeObjectAsync<RentModel>(content);
@@ -155,11 +156,109 @@ public class DealCardGameMainGameClass
                 TradePropertyModel tradeProperty = await js1.DeserializeObjectAsync<TradePropertyModel>(content);
                 await FinishTradingPropertyAsync(tradeProperty);
                 return;
+            case "accept":
+                //should have the information to finish up.
+                await ProcessAcceptanceAsync();
+                return;
+            case "reject":
+                await ProcessRejectionAsync();
+                return;
             default:
                 _toast.ShowUserErrorToast($"Nothing for status {status}");
                 return;
                 //throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
+    }
+    public async Task ProcessAcceptanceAsync()
+    {
+        DealCardGameCardInformation actionCard;
+        if (SaveRoot.ActionCardUsed == 0)
+        {
+            _toast.ShowUserErrorToast("No action card.  Rethink");
+            return;
+        }
+        actionCard = _gameContainer.DeckList.GetSpecificItem(SaveRoot.ActionCardUsed);
+        OtherTurn = 0; //for sure no matter what.
+        SaveRoot.GameStatus = EnumGameStatus.None; //i think.
+        if (actionCard.ActionCategory == EnumActionCategory.DealBreaker)
+        {
+            await FinishStealingSetAsync(SaveRoot.PlayerUsedAgainst, SaveRoot.OpponentColorChosen);
+            return;
+        }
+
+        _toast.ShowUserErrorToast("Only deal breakers are supported for now");
+        return;
+    }
+    public async Task ProcessRejectionAsync()
+    {
+        _toast.ShowInfoToast("Starting to reject part 1");
+        GetPlayerToContinueTurn();
+        var card = SingleInfo!.MainHandList.First(x => x.ActionCategory == EnumActionCategory.JustSayNo);
+        SingleInfo.MainHandList.RemoveSpecificItem(card); //its played period.
+        await AnimatePlayAsync(card);
+        bool wasSelf;
+        if (OtherTurn > 0)
+        {
+            wasSelf = true;
+            OtherTurn = 0;
+        }
+        else
+        {
+            wasSelf = false;
+            OtherTurn = SaveRoot.PlayerUsedAgainst;
+        }
+        GetPlayerToContinueTurn();
+        if (SingleInfo.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
+        {
+            SaveRoot.GameStatus = EnumGameStatus.ConsiderJustSayNo;
+            await ContinueTurnAsync();
+            return;
+        }
+        SaveRoot.GameStatus = EnumGameStatus.None;
+        if (wasSelf)
+        {
+            //since you don't have anything to counter, then just continue turn.
+            await CancelActionAsync();
+            return;
+        }
+        _toast.ShowUserErrorToast("Help");
+    }
+    private async Task CancelActionAsync()
+    {
+        DealCardGameCardInformation action = _gameContainer.DeckList.GetSpecificItem(SaveRoot.ActionCardUsed);
+        if (action.ActionCategory == EnumActionCategory.DealBreaker)
+        {
+            //this is the easiest.
+            SaveRoot.GameStatus = EnumGameStatus.None;
+            OtherTurn = 0;
+            SaveRoot.OpponentColorChosen = EnumColor.None;
+            SaveRoot.PlayerUsedAgainst = 0;
+            await ContinueTurnAsync(); //because nothing else.
+            return;
+        }
+        if (action.ActionCategory == EnumActionCategory.SlyDeal)
+        {
+            SaveRoot.GameStatus = EnumGameStatus.None;
+            OtherTurn = 0;
+            SaveRoot.OpponentColorChosen = EnumColor.None;
+            SaveRoot.CardStolen = 0;
+            SaveRoot.PlayerUsedAgainst = 0;
+            await ContinueTurnAsync();
+            return;
+        }
+        if (action.ActionCategory == EnumActionCategory.ForcedDeal)
+        {
+            SaveRoot.GameStatus = EnumGameStatus.None;
+            OtherTurn = 0;
+            SaveRoot.OpponentTrade = 0;
+            SaveRoot.YourTrade = 0;
+            SaveRoot.YourColorChosen = EnumColor.None;
+            SaveRoot.PlayerUsedAgainst = 0;
+            SaveRoot.OpponentColorChosen = EnumColor.None;
+            await ContinueTurnAsync();
+            return;
+        }
+        _toast.ShowUserErrorToast("Has to figure out how to cancel the action for other cases for now");
     }
     protected override void GetPlayerToContinueTurn()
     {
@@ -538,10 +637,9 @@ public class DealCardGameMainGameClass
         _model.ReceivedPayments.ClearHand();
         await ContinueTurnAsync();
     }
-    public async Task StealSetAsync(int deck, int player, EnumColor color)
+    private async Task FinishStealingSetAsync(int player, EnumColor color)
     {
-        var card = GetPlayerSelectedSingleCard(deck);
-        await AnimatePlayAsync(card);
+        OtherTurn = 0; //to double check (for now)
         var chosen = PlayerList[player];
         _model.ChosenPlayer = chosen.NickName;
         var list = chosen.SetData.GetCards(color).ToRegularDeckDict();
@@ -551,12 +649,40 @@ public class DealCardGameMainGameClass
         _model.StolenCards.ClearHand();
         int transferMoney = list.Sum(x => x.ClaimedValue);
         chosen.Money -= transferMoney;
-        OtherTurn = 0; //to double check (for now)
         GetPlayerToContinueTurn();
         SingleInfo!.Money += transferMoney;
         chosen.ClearPlayerProperties(color);
         SingleInfo.AddSeveralCardsToPlayerPropertySet(list, color);
         await ContinueTurnAsync();
+    }
+    public async Task StartToStealSetAsync(int deck, int player, EnumColor color)
+    {
+        var card = GetPlayerSelectedSingleCard(deck);
+        await AnimatePlayAsync(card);
+        var chosen = PlayerList[player];
+        if (chosen.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
+        {
+            //this means you can decide to just say no.
+            SaveRoot.OpponentColorChosen = color;
+            OtherTurn = player;
+            SaveRoot.ActionCardUsed = deck; //i think.
+            SaveRoot.PlayerUsedAgainst = player;
+            _gameContainer.IsJustSayNoSelf = chosen.PlayerCategory == EnumPlayerCategory.Self;
+            SaveRoot.GameStatus = EnumGameStatus.ConsiderJustSayNo;
+            //GetPlayerToContinueTurn(); //i think.
+            await ContinueTurnAsync();
+            return;
+        }
+        await FinishStealingSetAsync(player, color);
+    }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        if (SaveRoot.GameStatus == EnumGameStatus.ConsiderJustSayNo)
+        {
+            _command.UpdateSpecificAction("justsayno"); //try this way.
+        }
+        //return base.ShowHumanCanPlayAsync();
     }
     public async Task RentRequestAsync(RentModel rent)
     {

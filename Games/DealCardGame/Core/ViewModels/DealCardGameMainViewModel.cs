@@ -55,9 +55,14 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         }
         return _mainGame.SaveRoot.GameStatus != EnumGameStatus.NeedsPayment; //i think.
     }
+    //public bool IsSelf => _mainGame.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
     private bool IsConfirming()
     {
         if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.ConfirmPayment)
+        {
+            return true;
+        }
+        if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.ConsiderJustSayNo)
         {
             return true;
         }
@@ -281,7 +286,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             };
             await _mainGame.Network!.SendAllAsync("stealset", steal);
         }
-        await _mainGame.StealSetAsync(card.Deck, model.PlayerId, model.Color);
+        await _mainGame.StartToStealSetAsync(card.Deck, model.PlayerId, model.Color);
     }
     private bool CanPlayHouseOrHotel(DealCardGameCardInformation card, EnumColor color)
     {

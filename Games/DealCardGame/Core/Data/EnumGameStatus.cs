@@ -5,5 +5,6 @@ public enum EnumGameStatus
     StartDebtCollector,
     StartRent,
     NeedsPayment,
-    ConfirmPayment
+    ConfirmPayment,
+    ConsiderJustSayNo
 }

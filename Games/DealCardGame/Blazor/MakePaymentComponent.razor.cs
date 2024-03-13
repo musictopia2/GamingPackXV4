@@ -1,5 +1,5 @@
 namespace DealCardGame.Blazor;
-public partial class MakePaymentComponent : IDisposable
+public partial class MakePaymentComponent
 {
     //don't want to deal with screens either.
     private PaymentViewModel? DataContext { get; set; }
@@ -14,12 +14,6 @@ public partial class MakePaymentComponent : IDisposable
             .AddLabel("Paid So Far", nameof(DealCardGameVMData.PaidSoFar));
             ;
         base.OnInitialized();
-    }
-#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
-    public void Dispose()
-#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
-    {
-        //DataContext!.RemoveCommandAction();
     }
     private BasicGameCommand AddPaymentsCommand => DataContext!.AddPaymentsCommand!;
     private BasicGameCommand StartOverCommand => DataContext!.StartOverCommand!;

@@ -1,0 +1,25 @@
+﻿@if (DataContext!.IsWhoTurn)
+{
+    <OriginalActionComponent ActionCard="DataContext.ActionCard"
+        SelfPlayer="DataContext.GetSelf"
+        OpponentPlayer="DataContext.GetOpponent"
+        SaveRoot="DataContext.SaveRoot"
+        Command="DataContext.GetCommandContainer"
+    />
+}
+else if (DataContext!.ActionCard.ActionCategory == EnumActionCategory.DealBreaker)
+{
+    <DisplayStolenSetComponent Command="DataContext.GetCommandContainer"
+        Color="DataContext.SaveRoot.OpponentColorChosen"
+        PlayerToDisplay="DataContext.GetSelf" />
+}
+else
+{
+    <div>
+        So far, can only handle deal breakers.
+    </div>
+}
+<div>
+    <GameButtonComponent Display="Accept" CommandObject="AcceptCommand" />
+    <GameButtonComponent Display="Reject" CommandObject="RejectCommand" />
+</div>
