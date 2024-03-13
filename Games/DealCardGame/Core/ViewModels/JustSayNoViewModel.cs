@@ -38,7 +38,7 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
     }
     private void RemoveAction()
     {
-        _gameContainer.Command.ResetCustomStates();
+        //_gameContainer.Command.ResetCustomStates();
     }
     [Command(EnumCommandCategory.Game)]
     public async Task RejectAsync()
@@ -60,7 +60,7 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
     }
     public void AddAction(Action action)
     {
-        _gameContainer.Command.CustomStateHasChanged += action;
+        //_gameContainer.Command.CustomStateHasChanged += action;
     }
     public bool CanEnableBasics()
     {
