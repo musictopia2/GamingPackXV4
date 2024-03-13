@@ -19,12 +19,9 @@ public class CommandContainer
     }
     public void UpdateAll()
     {
-        if (CustomStateHasChanged is null)
-        {
-            ParentAction?.Invoke();
-            return;
-        }
-        CustomStateHasChanged.Invoke(); //this means if there are several then will call those as well.
+        ParentAction?.Invoke(); //forced to do both the custom statehaschanged but also the parent action.  because otherwise,
+        //makes it too complex.  had uses cases where both was needed (like updating partial screens).
+        CustomStateHasChanged?.Invoke(); //this means if there are several then will call those as well.
     }
     public void UpdateSpecificAction(string key)
     {
