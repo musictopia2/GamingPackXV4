@@ -181,15 +181,38 @@ public class DealCardGameMainGameClass
             return;
         }
         actionCard = _gameContainer.DeckList.GetSpecificItem(SaveRoot.ActionCardUsed);
+        if (OtherTurn == 0)
+        {
+            ClearJustSayNo();
+            //this means you are accepting you cannot play your card.
+            await ContinueTurnAsync();
+            return; //no need to let anybody know in this case.
+        }
+        await CompleteRealActionAsync(actionCard);
+    }
+    private async Task CompleteRealActionAsync(DealCardGameCardInformation actionCard)
+    {
         OtherTurn = 0; //for sure no matter what.
-        SaveRoot.GameStatus = EnumGameStatus.None; //i think.
+        int player = SaveRoot.PlayerUsedAgainst;
+        EnumColor opponentColor = SaveRoot.OpponentColorChosen;
+        ClearJustSayNo();
         if (actionCard.ActionCategory == EnumActionCategory.DealBreaker)
         {
-            await FinishStealingSetAsync(SaveRoot.PlayerUsedAgainst, SaveRoot.OpponentColorChosen);
+            await FinishStealingSetAsync(player, opponentColor);
             return;
         }
         _toast.ShowUserErrorToast("Only deal breakers are supported for now");
         return;
+    }
+    private void ClearJustSayNo()
+    {
+        SaveRoot.GameStatus = EnumGameStatus.None;
+        SaveRoot.ActionCardUsed = 0;
+        SaveRoot.PlayerUsedAgainst = 0;
+        SaveRoot.OpponentColorChosen = EnumColor.None;
+        SaveRoot.YourColorChosen = EnumColor.None;
+        SaveRoot.OpponentTrade = 0;
+        SaveRoot.YourTrade = 0;
     }
     public async Task ProcessRejectionAsync()
     {
@@ -222,6 +245,11 @@ public class DealCardGameMainGameClass
             //since you don't have anything to counter, then just continue turn.
             await CancelActionAsync();
             return;
+        }
+        else
+        {
+            DealCardGameCardInformation actionCard = _gameContainer.DeckList.GetSpecificItem(SaveRoot.ActionCardUsed);
+            await CompleteRealActionAsync(actionCard);
         }
     }
     private async Task CancelActionAsync()
@@ -647,6 +675,7 @@ public class DealCardGameMainGameClass
         _model.StolenCards.HandList.ReplaceRange(list);
         _command.UpdateAll();
         await Delay!.DelayMilli(700);
+        _model.ChosenPlayer = "";
         _model.StolenCards.ClearHand();
         int transferMoney = list.Sum(x => x.ClaimedValue);
         chosen.Money -= transferMoney;
