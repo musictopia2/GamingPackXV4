@@ -3,11 +3,11 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
 {
     protected override Task RegisterTestsAsync()
     {
-        TestData!.CardsToPass = 5;
+        TestData!.CardsToPass = 6;
         //TestData!.CardsToPass = 20;
         //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
         //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
-        GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, BirthdayCards>();
+        GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, RentCards>();
         return base.RegisterTestsAsync();
     }
     protected override Task ConfigureAsync(IGamePackageRegister register)
@@ -26,6 +26,35 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
         register.RegisterType<DealCardGameShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+    }
+}
+public class RentCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>
+{
+    Task ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>.SetUpTestHandsAsync(PlayerCollection<DealCardGamePlayerItem> playerList, IListShuffler<DealCardGameCardInformation> deckList)
+    {
+        int skip = 0;
+        var player = playerList.GetSelf(); //has to be me that has to play the rent 2 color choice.
+        DealCardGameCardInformation card;
+        card = deckList.First(x => x.CardType == EnumCardType.ActionRent && x.FirstColorChoice == EnumColor.Black);
+        player.StartUpList.Add(card);
+        card = deckList.First(x => x.CardType == EnumCardType.PropertyRegular && x.MainColor == EnumColor.Black);
+        player.StartUpList.Add(card);
+        foreach (var item in playerList)
+        {
+            card = deckList.Where(x => x.ActionCategory == EnumActionCategory.JustSayNo).Skip(skip).Take(1).Single();
+            item.StartUpList.Add(card);
+            card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 3).Skip(skip).Take(1).Single();
+            item.StartUpList.Add(card);
+            card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 4).Skip(skip).Take(1).Single();
+            item.StartUpList.Add(card);
+
+            //card = deckList.Where(x => x.ActionCategory == EnumActionCategory.Birthday).Skip(skip).Take(1).Single();
+            //item.StartUpList.Add(card);
+            //card = deckList.Where(x => x.ActionCategory == EnumActionCategory.DebtCollector).Skip(skip).Take(1).Single();
+            //item.StartUpList.Add(card);
+            skip++;
+        }
+        return Task.CompletedTask;
     }
 }
 public class BirthdayCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>

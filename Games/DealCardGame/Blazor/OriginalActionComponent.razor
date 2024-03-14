@@ -48,6 +48,16 @@ else if (ActionCard.CardType == EnumCardType.ActionRent && ActionCard.AnyColor)
             RentCategory="@SaveRoot.RentCategory" />
     </div>
 }
+else if (ActionCard.CardType == EnumCardType.ActionRent)
+{
+    <div>
+        <DisplaySeveralPlayersRentComponent Players="Players"
+                                            Owed="SaveRoot!.PaymentOwed"
+                                            PlayerToDisplay="OpponentPlayer"
+                                            RentCategory="SaveRoot.RentCategory" />
+    </div>
+   
+}
 else
 {
     <div>Not supported for now</div>

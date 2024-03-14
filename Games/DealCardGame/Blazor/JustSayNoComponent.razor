@@ -35,16 +35,24 @@ else if (DataContext.ActionCard.ActionCategory == EnumActionCategory.DebtCollect
         ActionCard="DataContext.ActionCard"
         Owed="5" PlayerToDisplay="DataContext.GetSelf" />
 }
-else if (DataContext.ActionCard.CardType == EnumCardType.ActionRent)
+else if (DataContext.ActionCard.CardType == EnumCardType.ActionRent && DataContext.ActionCard.AnyColor)
 {
     <DisplaySinglePlayerRentComponent Owed="DataContext.SaveRoot!.PaymentOwed"
                                       PlayerToDisplay="DataContext.GetSelf"
                                       RentCategory="@DataContext.SaveRoot.RentCategory" />
 }
+else if (DataContext.ActionCard.CardType == EnumCardType.ActionRent)
+{
+    <DisplaySeveralPlayersRentComponent
+                                        Players="DataContext.PlayerList"
+                                        Owed="DataContext.SaveRoot!.PaymentOwed"
+                                        PlayerToDisplay="DataContext.GetSelf"
+                                        RentCategory="@DataContext.SaveRoot.RentCategory" />
+}
 else
 {
     <div>
-        Not Supported Yet
+        Action not supported for just say no
     </div>
 }
 <div>

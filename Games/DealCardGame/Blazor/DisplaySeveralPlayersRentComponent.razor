@@ -1,0 +1,27 @@
+﻿<div style="font-size: 1.5rem;">
+    <div>
+        Due Amount: @Balance(PlayerToDisplay!)
+    </div>
+    <div>
+        @DisplayName
+    </div>
+    @foreach (var player in Players)
+    {
+        <div>
+            @player.NickName to pay @Balance(player)
+        </div>
+    }
+    @if (RentCategory == EnumRentCategory.Alone)
+    {
+        <div>
+            The amount includes just the base amount
+        </div>
+    }
+</div>
+@if (RentCategory == EnumRentCategory.Alone)
+{
+    return;
+}
+<SimpleRepeater HowMany="@TimesToRepeat()">
+    <CardGraphicsBlazor DeckObject="@GetDoubleRentCard()" TargetHeight="15vh" />
+</SimpleRepeater>

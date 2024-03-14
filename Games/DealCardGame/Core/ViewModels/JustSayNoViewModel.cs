@@ -8,8 +8,7 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
     private readonly DealCardGameCardInformation _actionCard;
     public JustSayNoViewModel(DealCardGameGameContainer gameContainer,
         DealCardGameVMData model,
-        DealCardGameMainGameClass mainGame,
-        IMessageBox message)
+        DealCardGameMainGameClass mainGame)
     {
         CreateCommands(gameContainer.Command);
         _gameContainer = gameContainer;

@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -9,7 +7,7 @@ public class DealCardGameMainGameClass
     private readonly DealCardGameVMData _model;
     private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
     private readonly DealCardGameGameContainer _gameContainer; //if we don't need it, take it out.
-    private readonly IToast _toast;
+    private readonly IMessageBox _message;
     private readonly PrivateAutoResumeProcesses _privateAutoResume;
 #pragma warning disable IDE0290 // Use primary constructor
     public DealCardGameMainGameClass(IGamePackageResolver mainContainer,
@@ -24,6 +22,7 @@ public class DealCardGameMainGameClass
         CommandContainer command,
         DealCardGameGameContainer gameContainer,
         ISystemError error,
+        IMessageBox message,
         IToast toast,
         PrivateAutoResumeProcesses privateAutoResume
         ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
@@ -31,7 +30,7 @@ public class DealCardGameMainGameClass
         _model = currentMod;
         _command = command;
         _gameContainer = gameContainer;
-        _toast = toast;
+        _message = message;
         _privateAutoResume = privateAutoResume;
     }
     public int OtherTurn
@@ -166,7 +165,7 @@ public class DealCardGameMainGameClass
                 await ProcessRejectionAsync();
                 return;
             default:
-                _toast.ShowUserErrorToast($"Nothing for status {status}");
+                await _message.ShowMessageAsync($"Nothing for status {status}");
                 return;
                 //throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
@@ -176,7 +175,7 @@ public class DealCardGameMainGameClass
         GetPlayerToContinueTurn();
         SingleInfo!.AllPlayerStatus = EnumAllPlayerStatus.Accept; //this means they can't decide again.
         return GetNextPlayerToDecidePeriod();
-        
+
     }
     private int GetNextPlayerToDecideBasedOnRejection()
     {
@@ -205,11 +204,11 @@ public class DealCardGameMainGameClass
         DealCardGameCardInformation actionCard;
         if (SaveRoot.ActionCardUsed == 0)
         {
-            _toast.ShowUserErrorToast("No action card.  Rethink");
+            await _message.ShowMessageAsync("No action card.  Rethink");
             return;
         }
         actionCard = _gameContainer.DeckList.GetSpecificItem(SaveRoot.ActionCardUsed);
-        
+
         if (OtherTurn == 0)
         {
             ClearJustSayNo();
@@ -302,7 +301,7 @@ public class DealCardGameMainGameClass
             await SelectSinglePlayerForPaymentAsync(player, amountOwed);
             return;
         }
-        _toast.ShowUserErrorToast("Not supported yet");
+        await _message.ShowMessageAsync("Not Supported");
         return;
     }
     private void ClearJustSayNo()
@@ -318,7 +317,7 @@ public class DealCardGameMainGameClass
     private int GetPlayerToDecideAgain()
     {
         //if it returns 0, then anybody who rejects must now accept.
-        
+
         PlayerList.ForConditionalItems(x => x.AllPlayerStatus == EnumAllPlayerStatus.Reject, player =>
         {
             if (player.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
@@ -355,18 +354,6 @@ public class DealCardGameMainGameClass
                 return;
             }
         }
-        //if (OtherTurn > 0)
-        //{
-        //    wasSelf = true;
-        //    OtherTurn = 0;
-        //}
-        //else
-        //{
-        //    wasSelf = false;
-        //    OtherTurn = SaveRoot.PlayerUsedAgainst;
-        //    //if (card.ActionCategory == EnumActionCategory.bir)
-        //}
-
         int nextPlayer;
         nextPlayer = GetNextPlayerToDecideBasedOnRejection();
         if (nextPlayer == 0)
@@ -391,7 +378,7 @@ public class DealCardGameMainGameClass
                 await StartFiguringOutPaymentsForAllPlayersAsync(owed);
                 return;
             }
-            _toast.ShowUserErrorToast("Unable to figure out advanced rejection");
+            await _message.ShowMessageAsync("Using unsupported advanced rejection");
             return;
         }
         SaveRoot.GameStatus = EnumGameStatus.ConsiderJustSayNo;
@@ -410,7 +397,7 @@ public class DealCardGameMainGameClass
             return;
         }
         bool wasSelf;
-        
+
         if (OtherTurn > 0)
         {
             wasSelf = true;
@@ -420,7 +407,6 @@ public class DealCardGameMainGameClass
         {
             wasSelf = false;
             OtherTurn = SaveRoot.PlayerUsedAgainst;
-            //if (card.ActionCategory == EnumActionCategory.bir)
         }
         GetPlayerToContinueTurn();
         if (SingleInfo.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
@@ -439,7 +425,6 @@ public class DealCardGameMainGameClass
         }
         else
         {
-            
             await CompleteRealActionAsync(actionCard);
         }
     }
@@ -448,7 +433,6 @@ public class DealCardGameMainGameClass
         DealCardGameCardInformation action = _gameContainer.DeckList.GetSpecificItem(SaveRoot.ActionCardUsed);
         if (action.ActionCategory == EnumActionCategory.DealBreaker)
         {
-            //this is the easiest.
             SaveRoot.GameStatus = EnumGameStatus.None;
             OtherTurn = 0;
             SaveRoot.OpponentColorChosen = EnumColor.None;
@@ -494,7 +478,7 @@ public class DealCardGameMainGameClass
             await ContinueTurnAsync();
             return;
         }
-        _toast.ShowUserErrorToast("Has to figure out how to cancel the action for other cases for now");
+        await _message.ShowMessageAsync("Cancel Action Not Supported");
     }
     protected override void GetPlayerToContinueTurn()
     {
@@ -645,9 +629,9 @@ public class DealCardGameMainGameClass
         await AnimatePlayAsync(card);
         StartPossiblePaymentProcesses();
         var list = GetAllPlayersForPossibleJustSayNo();
-        
+
         //needs to stick to a pattern.
-        
+
         if (list.Count == 0)
         {
             await StartFiguringOutPaymentsForAllPlayersAsync(2);
@@ -1037,12 +1021,12 @@ public class DealCardGameMainGameClass
         StartPossiblePaymentProcesses();
         if (rent.Player == 0 && card.AnyColor == false) //for now.
         {
-            await StartPossibleAllPlayersRentRequestAsync(amountOwed, category);
+            await StartPossibleAllPlayersRentRequestAsync(amountOwed, category, card);
             //await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);
         }
         else
         {
-            var chosen = PlayerList.Single(x => x.Id ==player);
+            var chosen = PlayerList.Single(x => x.Id == player);
             if (chosen.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo) && chosen.Money > 0)
             {
                 SaveRoot.RentCategory = category;
@@ -1054,14 +1038,24 @@ public class DealCardGameMainGameClass
             await SelectSinglePlayerForPaymentAsync(player, amountOwed); //iffy.
         }
     }
-    private async Task StartPossibleAllPlayersRentRequestAsync(int amountOwed, EnumRentCategory category)
+    private async Task StartPossibleAllPlayersRentRequestAsync(int amountOwed, EnumRentCategory category, DealCardGameCardInformation card)
     {
         if (category == EnumRentCategory.NeedChoice || category == EnumRentCategory.NA)
         {
             throw new CustomBasicException("No rent category was chosen");
         }
-        //this is a placeholder.
-        await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed); //for now.
+        StartPossiblePaymentProcesses();
+        var list = GetAllPlayersForPossibleJustSayNo();
+        //needs to stick to a pattern.
+        if (list.Count == 0)
+        {
+            await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);
+            return;
+        }
+        SaveRoot.RentCategory = category;
+        SaveRoot.PaymentOwed = amountOwed;
+        UpdateToJustSayNo(list.First(), card.Deck);
+        await ContinueTurnAsync();
     }
     public async Task StartRentAsync(SetPlayerModel model, DealCardGameCardInformation card)
     {
