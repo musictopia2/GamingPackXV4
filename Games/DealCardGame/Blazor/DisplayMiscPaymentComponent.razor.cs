@@ -29,7 +29,5 @@ public partial class DisplayMiscPaymentComponent
         }
     }
     private bool NeedsPlayerList => ActionCard!.ActionCategory == EnumActionCategory.Birthday;
-    //private string DisplayName => PlayerToDisplay!.PlayerCategory == EnumPlayerCategory.Self ? "Play Just Say No To Refuse To Pay" : "Play Just Say No To Force The Player To Still Pay";
     private decimal Balance => PlayerToDisplay!.Money >= Owed ? Owed : PlayerToDisplay!.Money;
-    private BasicList<DealCardGamePlayerItem> 
 }
