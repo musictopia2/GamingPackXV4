@@ -493,6 +493,15 @@ public class DealCardGameMainGameClass
     {
         if (_fromAutoResume == false)
         {
+            if (OtherTurn == 0)
+            {
+                GetPlayerToContinueTurn();
+                if (SingleInfo!.HowManyMonopolies() > 2)
+                {
+                    await ShowWinAsync();
+                    return; //because you win period.
+                }
+            }
             await base.ContinueTurnAsync();
         }
         if (SaveRoot.GameStatus != EnumGameStatus.NeedsPayment)
@@ -781,6 +790,8 @@ public class DealCardGameMainGameClass
             card.MainColor = color;
         }
         SingleInfo!.AddSingleCardToPlayerPropertySet(card, color);
+        //calculate the number of sets you have.
+        SingleInfo!.Monopolies = SingleInfo.HowManyMonopolies();
         SingleInfo!.Money += card.ClaimedValue; //because this can be used in order to pay other players.
         await ShowCardTemporarilyAsync(card);
         await ContinueTurnAsync();
@@ -955,10 +966,12 @@ public class DealCardGameMainGameClass
         await Delay!.DelayMilli(700);
         _model.ChosenPlayer = "";
         _model.StolenCards.ClearHand();
+        chosen.Monopolies--;
         int transferMoney = list.Sum(x => x.ClaimedValue);
         chosen.Money -= transferMoney;
         GetPlayerToContinueTurn();
         SingleInfo!.Money += transferMoney;
+        SingleInfo.Monopolies++;
         chosen.ClearPlayerProperties(color);
         SingleInfo.AddSeveralCardsToPlayerPropertySet(list, color);
         await ContinueTurnAsync();

@@ -4,6 +4,8 @@ public partial class DealCardGamePlayerItem : PlayerSingleHand<DealCardGameCardI
 {
     [ScoreColumn]
     public decimal Money { get; set; } //has to decide where the animation will take place at (since its not really being discarded)
+    [ScoreColumn]
+    public int Monopolies { get; set; }
     public DeckRegularDict<DealCardGameCardInformation> BankedCards { get; set; } = [];
     public BasicList<SetPropertiesModel> SetData { get; set; } = [];
     public decimal Debt { get; set; } //go ahead and store as decimal even though it would be whole numbers.

@@ -1,4 +1,6 @@
-﻿namespace DealCardGame.Core.Logic;
+﻿using System.Runtime.CompilerServices;
+
+namespace DealCardGame.Core.Logic;
 public static class PropertiesExtensions
 {
     public static void ClearPlayerProperties(this DealCardGamePlayerItem player, EnumColor color)
@@ -280,5 +282,9 @@ public static class PropertiesExtensions
             throw new CustomBasicException($"Failed to calculate rent for {color}");
         }
         throw new CustomBasicException("Unable to calculate rent");
+    }
+    public static int HowManyMonopolies(this DealCardGamePlayerItem player)
+    {
+        return player.SetData.Count(x => x.HasRequiredSet());
     }
 }

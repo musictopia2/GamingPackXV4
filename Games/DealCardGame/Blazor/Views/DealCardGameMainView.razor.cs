@@ -17,7 +17,7 @@ public partial class DealCardGameMainView
         _scores.Clear();
         _scores.AddColumn("Cards Left", true, nameof(DealCardGamePlayerItem.ObjectCount))
             .AddColumn("Money", true, nameof(DealCardGamePlayerItem.Money), category: EnumScoreSpecialCategory.Currency)
-
+            .AddColumn("Monopolies", true, nameof(DealCardGamePlayerItem.Monopolies))
             ; //cards left is common.  can be anything you need.
         base.OnInitialized();
     }
