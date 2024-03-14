@@ -25,10 +25,19 @@ else if (ActionCard.ActionCategory == EnumActionCategory.DebtCollector)
         <DisplayMiscPaymentComponent Owed="5" PlayerToDisplay="OpponentPlayer" />
     </div>
 }
-else if (ActionCard.ActionCategory == EnumActionCategory.Birthday)
+@* else if (ActionCard.ActionCategory == EnumActionCategory.Birthday)
 {
     <div>
         <DisplayMiscPaymentComponent Owed="2" PlayerToDisplay="OpponentPlayer" />
+    </div>
+} *@
+else if (ActionCard.CardType == EnumCardType.ActionRent && ActionCard.AnyColor)
+{
+    <div>
+        <DisplaySinglePlayerRentComponent 
+            Owed="SaveRoot!.PaymentOwed"
+            PlayerToDisplay="OpponentPlayer" 
+            RentCategory="@SaveRoot.RentCategory" />
     </div>
 }
 else

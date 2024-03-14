@@ -1,0 +1,21 @@
+﻿<div style="font-size: 1.5rem;">
+    <div>
+        Due Amount: @Balance
+    </div>
+    <div>
+        @DisplayName
+    </div>
+    @if (RentCategory == EnumRentCategory.Alone)
+    {
+        <div>
+            The amount includes just the base amount
+        </div>
+    }
+</div>
+@if (RentCategory == EnumRentCategory.Alone)
+{
+    return;
+}
+<SimpleRepeater HowMany="@TimesToRepeat()">
+    <CardGraphicsBlazor DeckObject="@GetDoubleRentCard()" TargetHeight="15vh" />
+</SimpleRepeater>

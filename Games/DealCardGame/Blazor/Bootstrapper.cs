@@ -56,6 +56,8 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
         player.StartUpList.Add(card);
         card = deckList.First(x => x.ActionCategory == EnumActionCategory.JustSayNo);
         player.StartUpList.Add(card);
+        list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
+        player.StartUpList.AddRange(list);
         //the other player has to play the birthday for testing.
         //player = playerList.GetSelf();
         //return Task.CompletedTask;
@@ -81,8 +83,8 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
             //player.StartUpList.Add(card);
             list = deckList.Where(x => x.MainColor == EnumColor.Yellow).Take(3);
             player.StartUpList.AddRange(list); //needs to have a monopoly so i can test the house and hotel.
-            list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
-            player.StartUpList.AddRange(list);
+            //list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
+            //player.StartUpList.AddRange(list);
 
             card = deckList.Where(x => x.ActionCategory == EnumActionCategory.SlyDeal).Skip(1).Take(1).Single();
             player.StartUpList.Add(card);

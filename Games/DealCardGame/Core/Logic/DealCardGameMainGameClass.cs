@@ -236,6 +236,12 @@ public class DealCardGameMainGameClass
             await SelectSinglePlayerForPaymentAsync(player, 5);
             return;
         }
+        if (actionCard.CardType == EnumCardType.ActionRent && actionCard.AnyColor)
+        {
+            int amountOwed = SaveRoot.PaymentOwed;
+            await SelectSinglePlayerForPaymentAsync(player, amountOwed);
+            return;
+        }
         _toast.ShowUserErrorToast("Not supported yet");
         return;
     }
@@ -326,6 +332,14 @@ public class DealCardGameMainGameClass
         {
             SaveRoot.GameStatus = EnumGameStatus.None;
             OtherTurn = 0;
+            SaveRoot.PaymentOwed = 0;
+            await ContinueTurnAsync();
+            return;
+        }
+        if (action.CardType == EnumCardType.ActionRent && action.AnyColor)
+        {
+            SaveRoot.GameStatus = EnumGameStatus.None;
+            OtherTurn = 0; //no problem to repeat for now.
             SaveRoot.PaymentOwed = 0;
             await ContinueTurnAsync();
             return;
@@ -787,6 +801,11 @@ public class DealCardGameMainGameClass
             }
         }
         int player = _gameContainer.PersonalInformation.RentInfo.Player;
+        EnumRentCategory category = rent.RentCategory;
+        if (player == 0 && card.AnyColor)
+        {
+            player = PlayerList.Single(x => x.Id != WhoTurn).Id;
+        }
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             _gameContainer.PersonalInformation.RentInfo.RentCategory = EnumRentCategory.NA;
@@ -796,12 +815,21 @@ public class DealCardGameMainGameClass
             await _privateAutoResume.SaveStateAsync(_gameContainer);
         }
         StartPossiblePaymentProcesses();
-        if (rent.Player == 0)
+        if (rent.Player == 0 && card.AnyColor == false) //for now.
         {
             await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);
         }
         else
         {
+            var chosen = PlayerList.Single(x => x.Id ==player);
+            if (chosen.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo) && chosen.Money > 0)
+            {
+                SaveRoot.RentCategory = category;
+                SaveRoot.PaymentOwed = amountOwed;
+                UpdateToJustSayNo(chosen, card.Deck);
+                await ContinueTurnAsync();
+                return;
+            }
             await SelectSinglePlayerForPaymentAsync(player, amountOwed); //iffy.
         }
     }
