@@ -3,9 +3,11 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
 {
     protected override Task RegisterTestsAsync()
     {
-        TestData!.CardsToPass = 20;
+        TestData!.CardsToPass = 8;
+        //TestData!.CardsToPass = 20;
         //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
-        GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
+        //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
+        GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, BirthdayCards>();
         return base.RegisterTestsAsync();
     }
     protected override Task ConfigureAsync(IGamePackageRegister register)
@@ -24,6 +26,24 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
         register.RegisterType<DealCardGameShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+    }
+}
+public class BirthdayCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>
+{
+    Task ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>.SetUpTestHandsAsync(PlayerCollection<DealCardGamePlayerItem> playerList, IListShuffler<DealCardGameCardInformation> deckList)
+    {
+        int skip = 0;
+        foreach (var item in playerList)
+        {
+            var card = deckList.Where(x => x.ActionCategory == EnumActionCategory.JustSayNo).Skip(skip).Take(1).Single();
+            item.StartUpList.Add(card);
+            card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 3).Skip(skip).Take(1).Single();
+            item.StartUpList.Add(card);
+            card = deckList.Where(x => x.ActionCategory == EnumActionCategory.Birthday).Skip(skip).Take(1).Single();
+            item.StartUpList.Add(card);
+            skip++;
+        }
+        return Task.CompletedTask;
     }
 }
 public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>
