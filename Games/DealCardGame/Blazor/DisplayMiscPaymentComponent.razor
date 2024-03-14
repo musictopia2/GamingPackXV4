@@ -5,4 +5,16 @@
     <div>
         @DisplayName
     </div>
+    @if (NeedsPlayerList)
+    {
+        @foreach (var player in Players)
+        {
+            if (player.AllPlayerStatus == EnumAllPlayerStatus.Accept)
+            {
+                <div>
+                    @player.NickName to pay @player.Debt
+                </div>
+            }
+        }
+    }
 </div>

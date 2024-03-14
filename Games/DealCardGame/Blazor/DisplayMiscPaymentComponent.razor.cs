@@ -7,6 +7,29 @@ public partial class DisplayMiscPaymentComponent
     [Parameter]
     [EditorRequired]
     public DealCardGamePlayerItem? PlayerToDisplay { get; set; }
-    private string DisplayName => PlayerToDisplay!.PlayerCategory == EnumPlayerCategory.Self ? "Play Just Say No To Refuse To Pay" : "Play Just Say No To Force The Player To Still Pay";
+    [Parameter]
+    [EditorRequired]
+    public DealCardGameCardInformation? ActionCard { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public BasicList<DealCardGamePlayerItem> Players { get; set; } = [];
+    private string DisplayName
+    {
+        get
+        {
+            if (PlayerToDisplay!.PlayerCategory == EnumPlayerCategory.Self)
+            {
+                return "Play Just Say No To Refuse To Pay";
+            }
+            if (ActionCard!.ActionCategory == EnumActionCategory.DebtCollector)
+            {
+                return "Play Just Say No To Force The Player To Still Pay";
+            }
+            return "Play Just Say No To Force The Following Players To Pay";
+        }
+    }
+    private bool NeedsPlayerList => ActionCard!.ActionCategory == EnumActionCategory.Birthday;
+    //private string DisplayName => PlayerToDisplay!.PlayerCategory == EnumPlayerCategory.Self ? "Play Just Say No To Refuse To Pay" : "Play Just Say No To Force The Player To Still Pay";
     private decimal Balance => PlayerToDisplay!.Money >= Owed ? Owed : PlayerToDisplay!.Money;
+    private BasicList<DealCardGamePlayerItem> 
 }

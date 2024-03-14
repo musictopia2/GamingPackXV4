@@ -21,15 +21,20 @@ else if (DataContext!.ActionCard.ActionCategory == EnumActionCategory.ForcedDeal
 {
     <DisplayTradeComponent  PlayerToDisplay="DataContext.GetSelf" />
 }
-@* else if (DataContext.ActionCard.ActionCategory == EnumActionCategory.Birthday)
+else if (DataContext.ActionCard.ActionCategory == EnumActionCategory.Birthday)
 {
-    <DisplayMiscPaymentComponent Owed="2" PlayerToDisplay="DataContext.GetSelf" />
-} *@
+    <DisplayMiscPaymentComponent Players=DataContext.PlayerList
+        ActionCard=DataContext.ActionCard Owed="2" 
+        PlayerToDisplay="DataContext.GetSelf" />
+}
 else if (DataContext.ActionCard.ActionCategory == EnumActionCategory.DebtCollector)
 {
-    <DisplayMiscPaymentComponent Owed="5" PlayerToDisplay="DataContext.GetSelf" />
+    <DisplayMiscPaymentComponent
+        Players="DataContext.PlayerList"
+        ActionCard="DataContext.ActionCard"
+        Owed="5" PlayerToDisplay="DataContext.GetSelf" />
 }
-else if (DataContext.ActionCard.CardType == EnumCardType.ActionRent && DataContext.ActionCard.AnyColor)
+else if (DataContext.ActionCard.CardType == EnumCardType.ActionRent)
 {
     <DisplaySinglePlayerRentComponent Owed="DataContext.SaveRoot!.PaymentOwed"
                                       PlayerToDisplay="DataContext.GetSelf"
