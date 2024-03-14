@@ -946,6 +946,10 @@ public class DealCardGameMainGameClass
             });
             player.Payments.Clear(); //i think it needs to clear out the payments afterwards.
         }
+        foreach (var player in PlayerList)
+        {
+            player.Monopolies = player.HowManyMonopolies(); //double check since they may break up some properties
+        }
         SaveRoot.GameStatus = EnumGameStatus.ConfirmPayment;
         await ContinueTurnAsync();
     }
