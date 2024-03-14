@@ -114,7 +114,7 @@ public partial class RentViewModel : IBasicEnableProcess
             await _gameContainer.Network!.SendAllAsync("rentrequest", _gameContainer.PersonalInformation.RentInfo);
         }
         _gameContainer.Command.ResetCustomStates();
-        await _mainGame.RentRequestAsync(_gameContainer.PersonalInformation.RentInfo);
+        await _mainGame.PossibleRentRequestAsync(_gameContainer.PersonalInformation.RentInfo);
     }
     public bool CanEnableBasics()
     {

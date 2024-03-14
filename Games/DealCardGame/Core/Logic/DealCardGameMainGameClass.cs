@@ -143,7 +143,7 @@ public class DealCardGameMainGameClass
                 return;
             case "rentrequest":
                 RentModel rent = await js1.DeserializeObjectAsync<RentModel>(content);
-                await RentRequestAsync(rent);
+                await PossibleRentRequestAsync(rent);
                 return;
             case "stealproperty":
                 StealPropertyModel stealProperty = await js1.DeserializeObjectAsync<StealPropertyModel>(content);
@@ -761,7 +761,7 @@ public class DealCardGameMainGameClass
         }
         await FinishStealingSetAsync(player, color);
     }
-    public async Task RentRequestAsync(RentModel rent)
+    public async Task PossibleRentRequestAsync(RentModel rent)
     {
         var card = GetPlayerSelectedSingleCard(rent.Deck);
         await AnimatePlayAsync(card);
@@ -813,7 +813,7 @@ public class DealCardGameMainGameClass
         }
         else
         {
-            _gameContainer.PersonalInformation.RentInfo.Player = 0; //means you have to choose a player.
+            _gameContainer.PersonalInformation.RentInfo.Player = 0; //means all players.
         }
         _gameContainer.PersonalInformation.RentInfo.Color = model.Color;
         _gameContainer.PersonalInformation.RentInfo.Deck = card.Deck;
