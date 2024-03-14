@@ -16,4 +16,7 @@ public partial class OriginalActionComponent
     [Parameter]
     [EditorRequired]
     public CommandContainer? Command { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public BasicList<DealCardGamePlayerItem> Players { get; set; } = [];
 }

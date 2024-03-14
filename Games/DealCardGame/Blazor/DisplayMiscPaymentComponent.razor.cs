@@ -29,5 +29,13 @@ public partial class DisplayMiscPaymentComponent
         }
     }
     private bool NeedsPlayerList => ActionCard!.ActionCategory == EnumActionCategory.Birthday;
-    private decimal Balance => PlayerToDisplay!.Money >= Owed ? Owed : PlayerToDisplay!.Money;
+    //private decimal Balance => PlayerToDisplay!.Money >= Owed ? Owed : PlayerToDisplay!.Money;
+    private decimal Balance(DealCardGamePlayerItem player)
+    {
+        if (player.Money >= Owed)
+        {
+            return Owed;
+        }
+        return player.Money;
+    }
 }

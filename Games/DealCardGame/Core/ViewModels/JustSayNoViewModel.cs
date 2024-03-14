@@ -31,7 +31,7 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
     public DealCardGamePlayerItem GetOpponent => _gameContainer.PlayerList!.Single(x => x.Id == SaveRoot.PlayerUsedAgainst);
     public bool IsWhoTurn => GetSelf.Id == _gameContainer.WhoTurn;
     public DealCardGameSaveInfo SaveRoot => _gameContainer.SaveRoot;
-    public BasicList<DealCardGamePlayerItem> PlayerList => _gameContainer.PlayerList!.Where(x => x.AllPlayerStatus == EnumAllPlayerStatus.Accept).ToBasicList();
+    public BasicList<DealCardGamePlayerItem> PlayerList => _gameContainer.PlayerList!.Where(x => x.AllPlayerStatus == EnumAllPlayerStatus.Reject).ToBasicList();
     partial void CreateCommands(CommandContainer command);
     [Command(EnumCommandCategory.Game)]
     public async Task AcceptAsync()

@@ -1,6 +1,7 @@
 ﻿@if (DataContext!.IsWhoTurn)
 {
     <OriginalActionComponent ActionCard="DataContext.ActionCard"
+        Players="DataContext.PlayerList"
         SelfPlayer="DataContext.GetSelf"
         OpponentPlayer="DataContext.GetOpponent"
         SaveRoot="DataContext.SaveRoot"

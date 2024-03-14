@@ -22,15 +22,23 @@ else if (ActionCard.ActionCategory == EnumActionCategory.ForcedDeal)
 else if (ActionCard.ActionCategory == EnumActionCategory.DebtCollector)
 {
     <div>
-        <DisplayMiscPaymentComponent Owed="5" PlayerToDisplay="OpponentPlayer" />
+        <DisplayMiscPaymentComponent 
+            ActionCard=ActionCard 
+            Players="Players"
+            Owed="5"
+            PlayerToDisplay="OpponentPlayer" />
     </div>
 }
-@* else if (ActionCard.ActionCategory == EnumActionCategory.Birthday)
+else if (ActionCard.ActionCategory == EnumActionCategory.Birthday)
 {
     <div>
-        <DisplayMiscPaymentComponent Owed="2" PlayerToDisplay="OpponentPlayer" />
+        <DisplayMiscPaymentComponent 
+            ActionCard="ActionCard"
+            Players="Players"
+            Owed="2" 
+            PlayerToDisplay="OpponentPlayer" />
     </div>
-} *@
+}
 else if (ActionCard.CardType == EnumCardType.ActionRent && ActionCard.AnyColor)
 {
     <div>

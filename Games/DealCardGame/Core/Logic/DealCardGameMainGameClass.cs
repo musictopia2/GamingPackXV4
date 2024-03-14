@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -225,6 +227,7 @@ public class DealCardGameMainGameClass
                 await StartFiguringOutPaymentsForAllPlayersAsync(2); //because its birthday.
                 return;
             }
+            _gameContainer.IsJustSayNoSelf = SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
             await ContinueTurnAsync();
             return;
         }
@@ -238,6 +241,7 @@ public class DealCardGameMainGameClass
                 await StartFiguringOutPaymentsForAllPlayersAsync(owed);
                 return;
             }
+            _gameContainer.IsJustSayNoSelf = SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
             await ContinueTurnAsync();
             return;
         }
@@ -368,10 +372,9 @@ public class DealCardGameMainGameClass
         if (nextPlayer == 0)
         {
             //can check to see if you can counter it.
-            OtherTurn = 0;
-            GetPlayerToContinueTurn();
             if (SingleInfo!.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
             {
+                _gameContainer.IsJustSayNoSelf = SingleInfo.PlayerCategory == EnumPlayerCategory.Self;
                 await ContinueTurnAsync();
                 return;
             }
@@ -400,9 +403,10 @@ public class DealCardGameMainGameClass
         var card = SingleInfo!.MainHandList.First(x => x.ActionCategory == EnumActionCategory.JustSayNo);
         SingleInfo.MainHandList.RemoveSpecificItem(card); //its played period.
         await AnimatePlayAsync(card);
-        if (card.ActionCategory == EnumActionCategory.Birthday || card.CardType == EnumCardType.ActionRent && card.AnyColor == false)
+        DealCardGameCardInformation actionCard = _gameContainer.DeckList.GetSpecificItem(SaveRoot.ActionCardUsed);
+        if (actionCard.ActionCategory == EnumActionCategory.Birthday || actionCard.CardType == EnumCardType.ActionRent && actionCard.AnyColor == false)
         {
-            await AdvancedRejectionAsync(card);
+            await AdvancedRejectionAsync(actionCard);
             return;
         }
         bool wasSelf;
@@ -435,7 +439,7 @@ public class DealCardGameMainGameClass
         }
         else
         {
-            DealCardGameCardInformation actionCard = _gameContainer.DeckList.GetSpecificItem(SaveRoot.ActionCardUsed);
+            
             await CompleteRealActionAsync(actionCard);
         }
     }
@@ -860,15 +864,26 @@ public class DealCardGameMainGameClass
             await AfterPaymentsAsync();
             return;
         }
-        OtherTurn = player.Id;
-        SingleInfo = PlayerList.GetOtherPlayer();
-        if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
-        {
-            _gameContainer.PersonalInformation.State = new();
-            _gameContainer.PersonalInformation.Payments.Clear();
-            _gameContainer.PersonalInformation.NeedsPayment = true; //for everybody, will record that we need payment.
-        }
-        await _privateAutoResume.SaveStateAsync(_gameContainer);
+
+
+        await StartPaymentProcessesForSelectedPlayerAsync();
+
+        await ContinueTurnAsync(); //try this way.
+
+        //if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        //{
+        //    _gameContainer.PersonalInformation.State = new();
+        //    _gameContainer.PersonalInformation.Payments.Clear();
+        //    _gameContainer.PersonalInformation.NeedsPayment = false; //i think
+        //}
+        //OtherTurn = PlayerList.First(x => x.Debt > 0).Id;
+        //SingleInfo = PlayerList.GetOtherPlayer();
+        //if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+        //{
+        //    _gameContainer.PersonalInformation.NeedsPayment = true; //for everybody, will record that we need payment.
+        //}
+        //await _privateAutoResume.SaveStateAsync(_gameContainer);
+        //_command.UpdateAll(); //well see
     }
     public async Task ConfirmPaymentAsync()
     {

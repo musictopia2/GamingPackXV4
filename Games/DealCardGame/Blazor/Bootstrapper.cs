@@ -3,7 +3,7 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
 {
     protected override Task RegisterTestsAsync()
     {
-        TestData!.CardsToPass = 8;
+        TestData!.CardsToPass = 5;
         //TestData!.CardsToPass = 20;
         //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
         //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
@@ -39,7 +39,11 @@ public class BirthdayCards : ITestCardSetUp<DealCardGameCardInformation, DealCar
             item.StartUpList.Add(card);
             card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 3).Skip(skip).Take(1).Single();
             item.StartUpList.Add(card);
+            card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 4).Skip(skip).Take(1).Single();
+            item.StartUpList.Add(card);
             card = deckList.Where(x => x.ActionCategory == EnumActionCategory.Birthday).Skip(skip).Take(1).Single();
+            item.StartUpList.Add(card);
+            card = deckList.Where(x => x.ActionCategory == EnumActionCategory.DebtCollector).Skip(skip).Take(1).Single();
             item.StartUpList.Add(card);
             skip++;
         }

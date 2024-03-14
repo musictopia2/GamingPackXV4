@@ -1,6 +1,6 @@
 ﻿<div style="font-size: 1.5rem;">
     <div>
-        Due Amount: @Balance
+        Due Amount: @Balance(PlayerToDisplay!)
     </div>
     <div>
         @DisplayName
@@ -9,12 +9,9 @@
     {
         @foreach (var player in Players)
         {
-            if (player.AllPlayerStatus == EnumAllPlayerStatus.Accept)
-            {
-                <div>
-                    @player.NickName to pay @player.Debt
-                </div>
-            }
+            <div>
+                @player.NickName to pay @Balance(player)
+            </div>
         }
     }
 </div>
