@@ -57,13 +57,13 @@ public class DealCardGameMainGameClass
         if (SaveRoot.GameStatus != EnumGameStatus.NeedsPayment)
         {
             _gameContainer.PersonalInformation.NeedsPayment = false;
-            _gameContainer.PersonalInformation.State = new();
+            _gameContainer.PersonalInformation.BankedCards.Clear();
+            _gameContainer.PersonalInformation.SetData.Clear(); //may put back later though.
             _gameContainer.PersonalInformation.Payments.Clear(); //clear those things out.
             await _privateAutoResume.SaveStateAsync(_gameContainer);
         }
         else if (rets == false)
         {
-            //redo the state again to show at the beginning.
             await StartPaymentProcessesForSelectedPlayerAsync();
         }
         if (SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
@@ -72,7 +72,6 @@ public class DealCardGameMainGameClass
         }
         GetPlayerToContinueTurn();
         _gameContainer.IsJustSayNoSelf = SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
-        //anything else needed is here.
         await base.FinishGetSavedAsync();
     }
     private void LoadControls()
@@ -85,7 +84,6 @@ public class DealCardGameMainGameClass
     }
     protected override async Task ComputerTurnAsync()
     {
-        //if there is nothing, then just won't do anything.
         await Task.CompletedTask;
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
@@ -113,11 +111,8 @@ public class DealCardGameMainGameClass
     async Task IMiscDataNM.MiscDataReceived(string status, string content)
     {
         SetCardModel setCard;
-        //DealCardGameCardInformation actionCard;
-        //DealCardGamePlayerItem currentPlayer;
-        switch (status) //can't do switch because we don't know what the cases are ahead of time.
+        switch (status)
         {
-            //put in cases here.
             case "playaction":
                 await PlayActionAsync(int.Parse(content));
                 return;
@@ -158,16 +153,18 @@ public class DealCardGameMainGameClass
                 await PossibleTradingPropertyAsync(tradeProperty);
                 return;
             case "accept":
-                //should have the information to finish up.
                 await ProcessAcceptanceAsync();
                 return;
             case "reject":
                 await ProcessRejectionAsync();
                 return;
+            case "finishorganizing":
+                BasicList<SetPropertiesModel> properties = await js1.DeserializeObjectAsync<BasicList<SetPropertiesModel>>(content);
+                await FinishOrganizingSetsAsync(properties);
+                return;
             default:
                 await _message.ShowMessageAsync($"Nothing for status {status}");
                 return;
-                //throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
     }
     private int GetNextPlayerToDecideBasedOnAcceptance()
@@ -175,7 +172,6 @@ public class DealCardGameMainGameClass
         GetPlayerToContinueTurn();
         SingleInfo!.AllPlayerStatus = EnumAllPlayerStatus.Accept; //this means they can't decide again.
         return GetNextPlayerToDecidePeriod();
-
     }
     private int GetNextPlayerToDecideBasedOnRejection()
     {
@@ -208,11 +204,9 @@ public class DealCardGameMainGameClass
             return;
         }
         actionCard = _gameContainer.DeckList.GetSpecificItem(SaveRoot.ActionCardUsed);
-
         if (OtherTurn == 0)
         {
             ClearJustSayNo();
-            //this means you are accepting you cannot play your card.
             await ContinueTurnAsync();
             return; //no need to let anybody know in this case.
         }
@@ -260,7 +254,6 @@ public class DealCardGameMainGameClass
         }
         if (actionCard.ActionCategory == EnumActionCategory.SlyDeal)
         {
-            //this means needs to capture the information needed in order to steal.
             StealPropertyModel steal = new()
             {
                 CardChosen = SaveRoot.CardStolen,
@@ -316,8 +309,6 @@ public class DealCardGameMainGameClass
     }
     private int GetPlayerToDecideAgain()
     {
-        //if it returns 0, then anybody who rejects must now accept.
-
         PlayerList.ForConditionalItems(x => x.AllPlayerStatus == EnumAllPlayerStatus.Reject, player =>
         {
             if (player.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
@@ -334,16 +325,12 @@ public class DealCardGameMainGameClass
         {
             return 0;
         }
-
         return player.Id;
     }
     private async Task AdvancedRejectionAsync(DealCardGameCardInformation card)
     {
-        //bool wasSelf;
         if (OtherTurn == 0)
         {
-            //this means its back to me.
-            //i rejected it too.
             int otherId = GetPlayerToDecideAgain();
             if (otherId > 0)
             {
@@ -358,7 +345,6 @@ public class DealCardGameMainGameClass
         nextPlayer = GetNextPlayerToDecideBasedOnRejection();
         if (nextPlayer == 0)
         {
-            //can check to see if you can counter it.
             if (SingleInfo!.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
             {
                 _gameContainer.IsJustSayNoSelf = SingleInfo.PlayerCategory == EnumPlayerCategory.Self;
@@ -397,7 +383,6 @@ public class DealCardGameMainGameClass
             return;
         }
         bool wasSelf;
-
         if (OtherTurn > 0)
         {
             wasSelf = true;
@@ -419,7 +404,6 @@ public class DealCardGameMainGameClass
         SaveRoot.GameStatus = EnumGameStatus.None;
         if (wasSelf)
         {
-            //since you don't have anything to counter, then just continue turn.
             await CancelActionAsync();
             return;
         }
@@ -524,7 +508,6 @@ public class DealCardGameMainGameClass
         await base.StartNewTurnAsync();
         _fromAutoResume = false; //no longer from autoresume.
         await DrawToStartAsync();
-        //await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
     }
     private async Task DrawToStartAsync()
     {
@@ -543,7 +526,7 @@ public class DealCardGameMainGameClass
             LeftToDraw = 2;
         }
         PlayerDraws = WhoTurn;
-        await DrawAsync(); //hopefully that after drawing, will continueturn (?)
+        await DrawAsync();
     }
     public async Task PlayActionAsync(int deck)
     {
@@ -567,7 +550,8 @@ public class DealCardGameMainGameClass
     private void StartPossiblePaymentProcesses()
     {
         _gameContainer.PersonalInformation.Payments.Clear();
-        _gameContainer.PersonalInformation.State = new(); //clear out.
+        _gameContainer.PersonalInformation.BankedCards.Clear();
+        _gameContainer.PersonalInformation.SetData.Clear(); //i think.
     }
     private async Task StartDebtCollectorAsync(DealCardGameCardInformation card)
     {
@@ -638,42 +622,19 @@ public class DealCardGameMainGameClass
         await AnimatePlayAsync(card);
         StartPossiblePaymentProcesses();
         var list = GetAllPlayersForPossibleJustSayNo();
-
-        //needs to stick to a pattern.
-
         if (list.Count == 0)
         {
             await StartFiguringOutPaymentsForAllPlayersAsync(2);
             return;
         }
-        //hopefully no need for another variable based on the action card.
-        //obvious based on action.
-        //SaveRoot.PaymentOwed = amountOwed;
         UpdateToJustSayNo(list.First(), card.Deck);
         await ContinueTurnAsync();
-
-        //all players has to have a turn to be able to just say no.
-        //before the main player can counter.
-        //if the main player counters, then if nobody has anything else, move on.
-        //however, if they accept, then needs to know the acceptance.
-
-        //information needed:
-        //1.  the id of the player
-        //2.  status (None, NeedsToDecide, Accept, Rejected)
-
-        //if they accept, then easy.
-        //if its none, then easy
-        //if its needstodecide, then waiting for them.
-        //if its rejected, then if main player rejects, then, if the other player does not have another one, then goes to accept
-
-
-        //await StartFiguringOutPaymentsForAllPlayersAsync(2);
     }
     public async Task SelectSinglePlayerForPaymentAsync(int player, int owed)
     {
         OtherTurn = player;
         SingleInfo = PlayerList.GetOtherPlayer();
-        SingleInfo.Debt = owed; //i think has to be here.
+        SingleInfo.Debt = owed;
         _model.ChosenPlayer = SingleInfo.NickName;
         _command.UpdateAll();
         await Delay!.DelayMilli(700);
@@ -681,7 +642,7 @@ public class DealCardGameMainGameClass
         AttemptToAutomatePayment(SingleInfo, owed);
         if (SingleInfo.Debt == 0 && SingleInfo.Payments.Count == 0)
         {
-            SaveRoot.GameStatus = EnumGameStatus.None; //i think.
+            SaveRoot.GameStatus = EnumGameStatus.None;
             OtherTurn = 0; //because nobody owes anything.
             await ContinueTurnAsync();
             return;
@@ -697,7 +658,6 @@ public class DealCardGameMainGameClass
     private async Task StartFiguringOutPaymentsForAllPlayersAsync(int owed)
     {
         var list = PlayerList.Where(x => x.AllPlayerStatus == EnumAllPlayerStatus.Accept);
-
         foreach (var player in list)
         {
             if (player.Id != WhoTurn)
@@ -749,7 +709,7 @@ public class DealCardGameMainGameClass
         }
         _gameContainer.PersonalInformation.Payments.Clear();
         SingleInfo.ClonePlayerProperties(_gameContainer.PersonalInformation);
-        _gameContainer.PersonalInformation.State.BankedCards = SingleInfo.BankedCards.ToRegularDeckDict();
+        _gameContainer.PersonalInformation.BankedCards = SingleInfo.BankedCards.ToRegularDeckDict();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
     private static void AttemptToAutomatePayment(DealCardGamePlayerItem currentPlayer, int owed)
@@ -790,7 +750,6 @@ public class DealCardGameMainGameClass
             card.MainColor = color;
         }
         SingleInfo!.AddSingleCardToPlayerPropertySet(card, color);
-        //calculate the number of sets you have.
         SingleInfo!.Monopolies = SingleInfo.HowManyMonopolies();
         SingleInfo!.Money += card.ClaimedValue; //because this can be used in order to pay other players.
         await ShowCardTemporarilyAsync(card);
@@ -815,11 +774,7 @@ public class DealCardGameMainGameClass
     public override async Task EndTurnAsync()
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
-        SingleInfo.MainHandList.UnhighlightObjects(); //i think this is best.
-
-        //anything else is here.  varies by game.
-
-
+        SingleInfo.MainHandList.UnhighlightObjects();
         _command.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
@@ -859,26 +814,8 @@ public class DealCardGameMainGameClass
             await AfterPaymentsAsync();
             return;
         }
-
-
         await StartPaymentProcessesForSelectedPlayerAsync();
-
-        await ContinueTurnAsync(); //try this way.
-
-        //if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
-        //{
-        //    _gameContainer.PersonalInformation.State = new();
-        //    _gameContainer.PersonalInformation.Payments.Clear();
-        //    _gameContainer.PersonalInformation.NeedsPayment = false; //i think
-        //}
-        //OtherTurn = PlayerList.First(x => x.Debt > 0).Id;
-        //SingleInfo = PlayerList.GetOtherPlayer();
-        //if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
-        //{
-        //    _gameContainer.PersonalInformation.NeedsPayment = true; //for everybody, will record that we need payment.
-        //}
-        //await _privateAutoResume.SaveStateAsync(_gameContainer);
-        //_command.UpdateAll(); //well see
+        await ContinueTurnAsync();
     }
     public async Task ConfirmPaymentAsync()
     {
@@ -987,10 +924,8 @@ public class DealCardGameMainGameClass
         var chosen = PlayerList[player];
         if (chosen.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
         {
-            //this means you can decide to just say no.
             SaveRoot.OpponentColorChosen = color;
             UpdateToJustSayNo(chosen, card.Deck);
-            //GetPlayerToContinueTurn(); //i think.
             await ContinueTurnAsync();
             return;
         }
@@ -1039,7 +974,6 @@ public class DealCardGameMainGameClass
         if (player == 0 && card.AnyColor == false) //for now.
         {
             await StartPossibleAllPlayersRentRequestAsync(amountOwed, category, card);
-            //await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);
         }
         else
         {
@@ -1063,7 +997,6 @@ public class DealCardGameMainGameClass
         }
         StartPossiblePaymentProcesses();
         var list = GetAllPlayersForPossibleJustSayNo();
-        //needs to stick to a pattern.
         if (list.Count == 0)
         {
             await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);
@@ -1123,8 +1056,7 @@ public class DealCardGameMainGameClass
         {
             if (trade.Equals(_gameContainer.PersonalInformation.TradeInfo))
             {
-                //has to somehow clone this.
-                trade = _gameContainer.PersonalInformation.TradeInfo.Clone(); //go ahead and clone this.
+                trade = _gameContainer.PersonalInformation.TradeInfo.Clone();
             }
             _gameContainer.PersonalInformation.TradeInfo.StartTrading = false;
             _gameContainer.PersonalInformation.TradeInfo.PlayerId = 0;
@@ -1137,13 +1069,11 @@ public class DealCardGameMainGameClass
         }
         if (playerChosen.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
         {
-            //this means you can decide to just say no.
             SaveRoot.OpponentColorChosen = trade.OpponentColor;
             SaveRoot.YourColorChosen = trade.YourColor;
-            SaveRoot.YourTrade = trade.YourCard; //i think.
-            SaveRoot.OpponentTrade = trade.OpponentCard; //i think.
+            SaveRoot.YourTrade = trade.YourCard;
+            SaveRoot.OpponentTrade = trade.OpponentCard;
             UpdateToJustSayNo(playerChosen, trade.CardPlayed);
-            //GetPlayerToContinueTurn(); //i think.
             await ContinueTurnAsync();
             return;
         }
@@ -1174,7 +1104,6 @@ public class DealCardGameMainGameClass
         SingleInfo.Money -= transferMoney;
         playerChosen.AddSingleCardToPlayerPropertySet(tradeReceive, trade.YourColor);
         SingleInfo.SetData.RemoveCardFromPlayerSet(trade.YourCard, trade.YourColor);
-
         await ContinueTurnAsync();
     }
     public async Task PossibleStealingPropertyAsync(StealPropertyModel steal)
@@ -1187,8 +1116,7 @@ public class DealCardGameMainGameClass
         {
             if (steal.Equals(_gameContainer.PersonalInformation.StealInfo))
             {
-                //has to somehow clone this.
-                steal = _gameContainer.PersonalInformation.StealInfo.Clone(); //go ahead and clone this.
+                steal = _gameContainer.PersonalInformation.StealInfo.Clone();
             }
             _gameContainer!.PersonalInformation.StealInfo.StartStealing = false;
             _gameContainer.PersonalInformation.StealInfo.Color = EnumColor.None;
@@ -1199,14 +1127,12 @@ public class DealCardGameMainGameClass
         }
         if (playerChosen.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
         {
-            //this means they have the opportunity to just say no.
             SaveRoot.OpponentColorChosen = steal.Color;
-            SaveRoot.CardStolen = steal.CardChosen; //i think.
+            SaveRoot.CardStolen = steal.CardChosen;
             UpdateToJustSayNo(playerChosen, cardPlayed.Deck);
             await ContinueTurnAsync();
             return;
         }
-
         await FinishStealingPropertyAsync(steal); //i think.
     }
     private void UpdateToJustSayNo(DealCardGamePlayerItem player, int actionDeck)
@@ -1214,29 +1140,46 @@ public class DealCardGameMainGameClass
         SaveRoot.ActionCardUsed = actionDeck;
         _gameContainer.IsJustSayNoSelf = player.PlayerCategory == EnumPlayerCategory.Self;
         SaveRoot.PlayerUsedAgainst = player.Id;
-        OtherTurn = player.Id; //hopefully this is also okay (?)
+        OtherTurn = player.Id;
         SaveRoot.GameStatus = EnumGameStatus.ConsiderJustSayNo;
     }
     public async Task FinishStealingPropertyAsync(StealPropertyModel steal)
     {
         var playerChosen = PlayerList.Single(x => x.Id == steal.PlayerId);
-        _model.ChosenPlayer = playerChosen.NickName; //this is the player who lost their card.
+        _model.ChosenPlayer = playerChosen.NickName;
         var cardStolen = _gameContainer.DeckList.GetSpecificItem(steal.CardChosen);
         _model.ShownCard = cardStolen;
         _command.UpdateAll();
         await Delay!.DelayMilli(700);
         _model.ChosenPlayer = "";
         _model.ShownCard = null;
-
         playerChosen.SetData.RemoveCardFromPlayerSet(cardStolen.Deck, steal.Color);
-
         int transferMoney = cardStolen.ClaimedValue;
         playerChosen.Money -= transferMoney;
-        OtherTurn = 0; //to double check (for now)
+        OtherTurn = 0;
         GetPlayerToContinueTurn();
         SingleInfo!.Money += transferMoney;
         SingleInfo.AddSingleCardToPlayerPropertySet(cardStolen, steal.Color);
-
+        await ContinueTurnAsync();
+    }
+    public async Task FinishOrganizingSetsAsync(BasicList<SetPropertiesModel> setData)
+    {
+        GetPlayerToContinueTurn();
+        if (_gameContainer.CanSendMessage())
+        {
+            await Network!.SendAllAsync("finishorganizing", setData);
+        }
+        if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        {
+            _gameContainer.PersonalInformation.Organizing = false;
+            await _privateAutoResume.SaveStateAsync(_gameContainer);
+        }
+        foreach (var item in SingleInfo.SetData)
+        {
+            var froms = setData.Single(x => x.Color == item.Color);
+            item.Cards.ReplaceRange(froms.Cards);
+        }
+        SingleInfo.Monopolies = SingleInfo.HowManyMonopolies();
         await ContinueTurnAsync();
     }
 }

@@ -26,9 +26,9 @@ public partial class PaymentViewModel : IBasicEnableProcess
         VMData.Owed = _player.Debt;
         VMData.Payments.HandList = _gameContainer.PersonalInformation.Payments;
         VMData.PaidSoFar = _gameContainer.PersonalInformation.Payments.Sum(x => x.ClaimedValue);
-        VMData.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards;
+        VMData.Bank.HandList = _gameContainer.PersonalInformation.BankedCards;
         VMData.Bank.HandList.Sort();
-        VMData.Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
+        VMData.Properties.HandList = _gameContainer.PersonalInformation.SetData.GetAllCardsFromPlayersSet();
     }
     partial void CreateCommands(CommandContainer command);
     
@@ -43,21 +43,21 @@ public partial class PaymentViewModel : IBasicEnableProcess
         //NotifyStateChange?.Invoke();
         _gameContainer.Command.UpdateAll();
         var player = _gameContainer.PlayerList!.GetSelf();
-        _gameContainer.PersonalInformation.State.BankedCards = player.BankedCards.ToRegularDeckDict();
+        _gameContainer.PersonalInformation.BankedCards = player.BankedCards.ToRegularDeckDict();
         player.ClonePlayerProperties(_gameContainer.PersonalInformation);
         VMData.Payments.HandList = _gameContainer.PersonalInformation.Payments;
-        VMData.Bank.HandList = _gameContainer.PersonalInformation.State.BankedCards; //may need to hook up again.
+        VMData.Bank.HandList = _gameContainer.PersonalInformation.BankedCards; //may need to hook up again.
         VMData.Bank.HandList.Sort();
         _gameContainer.PersonalInformation.Payments.Clear(); //you are clearing the payments.
         VMData.PaidSoFar = 0;
-        VMData.Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
+        VMData.Properties.HandList = _gameContainer.PersonalInformation.SetData.GetAllCardsFromPlayersSet();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
     [Command(EnumCommandCategory.Game)]
     public async Task AddPaymentsAsync()
     {
-        var bankedCards = _gameContainer.PersonalInformation.State.BankedCards.GetSelectedItems();
-        var properties = _gameContainer.PersonalInformation.State.SetData.GetSelectedProperties();
+        var bankedCards = _gameContainer.PersonalInformation.BankedCards.GetSelectedItems();
+        var properties = _gameContainer.PersonalInformation.SetData.GetSelectedProperties();
         if (properties.Count > 1)
         {
             _toast.ShowUserErrorToast("Should not have been allowed to choose more than one property");
@@ -80,7 +80,7 @@ public partial class PaymentViewModel : IBasicEnableProcess
             var card = property.Cards.Single();
             if (card.ActionCategory != EnumActionCategory.House && card.ActionCategory != EnumActionCategory.Hotel)
             {
-                var list = _gameContainer.PersonalInformation.State.SetData.GetCards(property.Color);
+                var list = _gameContainer.PersonalInformation.SetData.GetCards(property.Color);
 
                 //if you have any properties there that is not house or hotel must remove those first.
                 //var list = _player.SetData.GetCards(property.Color);
@@ -98,8 +98,8 @@ public partial class PaymentViewModel : IBasicEnableProcess
             card.IsSelected = false;
             VMData.PaidSoFar += card.ClaimedValue;
             _gameContainer.PersonalInformation.Payments.Add(card);
-            _gameContainer.PersonalInformation.State.SetData.RemoveCardFromPlayerSet(card.Deck, property.Color);
-            VMData.Properties.HandList = _gameContainer.PersonalInformation.State.SetData.GetAllCardsFromPlayersSet();
+            _gameContainer.PersonalInformation.SetData.RemoveCardFromPlayerSet(card.Deck, property.Color);
+            VMData.Properties.HandList = _gameContainer.PersonalInformation.SetData.GetAllCardsFromPlayersSet();
             await _privateAutoResume.SaveStateAsync(_gameContainer);
             return;
         }
@@ -109,7 +109,7 @@ public partial class PaymentViewModel : IBasicEnableProcess
             return;
         }
         VMData.PaidSoFar += bankedCards.Sum(x => x.ClaimedValue);
-        _gameContainer.PersonalInformation.State.BankedCards.RemoveSelectedItems();
+        _gameContainer.PersonalInformation.BankedCards.RemoveSelectedItems();
         bankedCards.UnselectAllObjects();
         _gameContainer.PersonalInformation.Payments.AddRange(bankedCards);
         await _privateAutoResume.SaveStateAsync(_gameContainer);

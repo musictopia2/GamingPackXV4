@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace DealCardGame.Core.ViewModels;
 [InstanceGame]
 public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCardInformation>
@@ -6,6 +8,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     private readonly DealCardGameMainGameClass _mainGame; //if we don't need, delete.
     private readonly IToast _toast;
     private readonly DealCardGameGameContainer _gameContainer;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     public DealCardGameVMData VMData { get; set; }
     public DealCardGameMainViewModel(CommandContainer commandContainer,
         DealCardGameMainGameClass mainGame,
@@ -15,7 +18,8 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         IToast toast,
-        DealCardGameGameContainer gameContainer
+        DealCardGameGameContainer gameContainer,
+        PrivateAutoResumeProcesses privateAutoResume
         )
         : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
     {
@@ -23,6 +27,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         VMData = viewModel;
         _toast = toast;
         _gameContainer = gameContainer;
+        _privateAutoResume = privateAutoResume;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
@@ -364,14 +369,6 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         }
         await _mainGame.PlayPropertyAsync(card.Deck, color);
     }
-
-
-
-    //private async Task RentAsync(DealCardGameCardInformation card, EnumColor color)
-    //{
-
-    //}
-
     private bool IsProperAction(DealCardGameCardInformation card)
     {
         if (card.ActionCategory == EnumActionCategory.None)
@@ -460,5 +457,17 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             await _mainGame.Network!.SendAllAsync("playerchosenfordebt", player.Id);
         }
         await _mainGame.ChosePlayerForDebtAsync(player.Id);
+    }
+    public bool CanStartOrganizing => IsConfirming() == false;
+    [Command(EnumCommandCategory.Game)]
+    public async Task StartOrganizing()
+    {
+        _gameContainer.PersonalInformation.Organizing = true;
+        //needs to populate the stuff as well.
+        _gameContainer.PersonalInformation.TemporaryCards.Clear();
+        var player = _gameContainer.PlayerList!.GetSelf();
+        player.ClonePlayerProperties(_gameContainer.PersonalInformation);
+        await _privateAutoResume.SaveStateAsync(_gameContainer);
+        _gameContainer.Command.UpdateAll(); //hopefully smart enough to load the new screen.
     }
 }

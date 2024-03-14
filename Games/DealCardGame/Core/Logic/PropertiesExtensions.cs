@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace DealCardGame.Core.Logic;
+﻿namespace DealCardGame.Core.Logic;
 public static class PropertiesExtensions
 {
     public static void ClearPlayerProperties(this DealCardGamePlayerItem player, EnumColor color)
@@ -10,13 +8,13 @@ public static class PropertiesExtensions
     }
     public static void ClonePlayerProperties(this DealCardGamePlayerItem player, PrivateModel model)
     {
-        model.State.SetData = [];
+        model.SetData = [];
         foreach (var item in player.SetData)
         {
             SetPropertiesModel p = new();
             p.Color = item.Color;
             p.Cards = item.Cards.ToRegularDeckDict();
-            model.State.SetData.Add(p);
+            model.SetData.Add(p);
         }
     }
     public static bool HasRequiredSet(this SetPropertiesModel property)
@@ -36,9 +34,9 @@ public static class PropertiesExtensions
         }
         return count >= 3;
     }
-    public static SetPropertiesModel? GetPropertyFromCard(this DealCardGamePlayerItem player, int deck)
+    public static SetPropertiesModel? GetPropertyFromCard(this BasicList<SetPropertiesModel> setData, int deck)
     {
-        foreach (var item in player.SetData)
+        foreach (var item in setData)
         {
             if (item.Cards.ObjectExist(deck))
             {
@@ -46,6 +44,10 @@ public static class PropertiesExtensions
             }
         }
         return null;
+    }
+    public static SetPropertiesModel? GetPropertyFromCard(this DealCardGamePlayerItem player, int deck)
+    {
+        return player.SetData.GetPropertyFromCard(deck);
     }
     public static BasicList<SetPropertiesModel> GetSelectedProperties(this BasicList<SetPropertiesModel> properties)
     {

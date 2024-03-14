@@ -49,6 +49,7 @@ public partial class DealCardGameMainView
     private BasicGameCommand SetChosenCommand => DataContext!.SetChosenCommand!;
     private BasicGameCommand ResumeCommand => DataContext!.ResumeCommand!;
     private BasicGameCommand ChoosePlayerCommand => DataContext!.ChoosePlayerCommand!;
+    private BasicGameCommand StartOrganizingCommand => DataContext!.StartOrganizingCommand!;
     private string YourDisplayText => $"{DataContext!.VMData.TradeDisplay!.WhoPlayerName} receives";
     private string OpponentDisplayText => $"{DataContext!.VMData.TradeDisplay!.TradePlayerName} receives";
 }

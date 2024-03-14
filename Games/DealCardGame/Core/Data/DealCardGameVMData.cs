@@ -21,7 +21,8 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public decimal Owed { get; set; }
     [LabelColumn]
     public decimal PaidSoFar { get; set; }
-    public DealCardGameVMData(CommandContainer command, DealCardGameGameContainer gameContainer)
+    public DealCardGameVMData(CommandContainer command, 
+        DealCardGameGameContainer gameContainer, IToast toast, PrivateAutoResumeProcesses privateAutoResume)
     {
         Deck1 = new(command);
         Pile1 = new(command);
@@ -46,6 +47,7 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
         Properties = new(gameContainer.Command);
         Properties.Text = "Properties To Pay With";
         Properties.AutoSelect = EnumHandAutoType.SelectOneOnly;
+        YourCompleteSets = new(gameContainer, toast, privateAutoResume);
     }
     public DeckObservablePile<DealCardGameCardInformation> Deck1 { get; set; }
     public SingleObservablePile<DealCardGameCardInformation> Pile1 { get; set; }
@@ -60,7 +62,7 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public HandObservable<DealCardGameCardInformation> Payments { get; set; }
     public HandObservable<DealCardGameCardInformation> Bank { get; set; }
 
-
+    public PersonalCompleteSets YourCompleteSets { get; set; }
     public ListViewPicker PlayerPicker { get; set; }
     public TradeDisplayModel? TradeDisplay { get; set; }
     private Task ChosePlayerAsync(int index, string player)

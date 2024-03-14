@@ -8,6 +8,11 @@
     <MakePaymentComponent />
     return;
 }
+@if (_gameContainer.PersonalInformation.Organizing)
+{
+    <PropertySetOrganizerComponent />
+    return;
+}
 <GridContainer Rows="@Rows" ColumnGap="5px" RowGap=5px Columns="auto 35vw 1fr">
     <GridItem Row="1" Column="1">
         <StackLayout>
@@ -27,6 +32,7 @@
             <GameButtonComponent Display="Play" CommandObject="PlayCommand" />
             <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
             <GameButtonComponent Display="Bank" CommandObject="BankCommand" />
+            <GameButtonComponent Display="Start Organizing" CommandObject="StartOrganizingCommand" />
         </div>
         <div>
             <LabelGridComponent DataContext="_vmData" Labels="_labels" />
