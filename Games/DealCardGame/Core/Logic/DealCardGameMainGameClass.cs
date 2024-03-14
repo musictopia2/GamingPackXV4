@@ -1019,7 +1019,7 @@ public class DealCardGameMainGameClass
             await _privateAutoResume.SaveStateAsync(_gameContainer);
         }
         StartPossiblePaymentProcesses();
-        if (rent.Player == 0 && card.AnyColor == false) //for now.
+        if (player == 0 && card.AnyColor == false) //for now.
         {
             await StartPossibleAllPlayersRentRequestAsync(amountOwed, category, card);
             //await StartFiguringOutPaymentsForAllPlayersAsync(amountOwed);

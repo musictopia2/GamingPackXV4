@@ -3,7 +3,7 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
 {
     protected override Task RegisterTestsAsync()
     {
-        TestData!.CardsToPass = 6;
+        TestData!.CardsToPass = 8;
         //TestData!.CardsToPass = 20;
         //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
         //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
@@ -39,6 +39,8 @@ public class RentCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
         player.StartUpList.Add(card);
         card = deckList.First(x => x.CardType == EnumCardType.PropertyRegular && x.MainColor == EnumColor.Black);
         player.StartUpList.Add(card);
+        var list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
+        player.StartUpList.AddRange(list);
         foreach (var item in playerList)
         {
             card = deckList.Where(x => x.ActionCategory == EnumActionCategory.JustSayNo).Skip(skip).Take(1).Single();
@@ -156,7 +158,7 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
             player.StartUpList.Add(card);
         }
         //var card = deckList.First(x => x.ActionCategory == EnumActionCategory.Gos);
-        
+
         return Task.CompletedTask;
     }
 }
