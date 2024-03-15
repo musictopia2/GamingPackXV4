@@ -94,7 +94,6 @@ public class BasicGameServerTCP : ISerializable
                                         return;
                                     }
                                     _hostName = thisMessage.YourNickName; //i think the entire message will be nick name in this case.
-                                    Console.WriteLine($"{_hostName} Is Hosting"); //to get hints.
                                     foreach (var item in _playerList.Values)
                                     {
                                         item.ThisStream!.Dispose();

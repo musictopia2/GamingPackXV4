@@ -47,6 +47,11 @@ public class DealCardGameMainGameClass
     private bool _fromAutoResume;
     public override async Task FinishGetSavedAsync()
     {
+        Console.WriteLine("Saved Data");
+        Console.WriteLine(SaveRoot.GameID);
+        Console.WriteLine("From Container");
+        Console.WriteLine(_gameContainer.SaveRoot.GameID);
+        Console.WriteLine("After");
         LoadControls();
         _fromAutoResume = true;
         bool rets = await _privateAutoResume.HasAutoResumeAsync();
@@ -58,9 +63,14 @@ public class DealCardGameMainGameClass
         {
             _gameContainer.PersonalInformation.NeedsPayment = false;
             _gameContainer.PersonalInformation.BankedCards.Clear();
-            _gameContainer.PersonalInformation.SetData.Clear(); //may put back later though.
+            if (_gameContainer.PersonalInformation.Organizing == false)
+            {
+                _gameContainer.PersonalInformation.SetData.Clear();
+            }
             _gameContainer.PersonalInformation.Payments.Clear(); //clear those things out.
+            Console.WriteLine("Saving Private");
             await _privateAutoResume.SaveStateAsync(_gameContainer);
+            Console.WriteLine("Finished Private");
         }
         else if (rets == false)
         {

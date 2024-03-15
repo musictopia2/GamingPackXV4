@@ -9,6 +9,10 @@ public class PropertySetHand(CommandContainer command) : HandObservable<DealCard
         {
             return true; //you can move them around if you want.
         }
+        if (card.AnyColor)
+        {
+            return true;
+        }
         if (card.FirstColorChoice == EnumColor.None)
         {
             return false;

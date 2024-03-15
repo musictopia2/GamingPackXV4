@@ -70,7 +70,9 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
     }
     private async Task FinishGetSavedAsync()
     {
+        //string gameId = _gameSetUp!.SaveRoot.GameID; //needs to hook back in.
         resolver.ReplaceObject(_gameSetUp!.SaveRoot);
+        //_gameSetUp.SaveRoot.GameID = gameId; //try this way.
         if (_gameSetUp.SaveRoot!.PlayerList != null)
         {
             _gameSetUp.SaveRoot.PlayerList.MainContainer = resolver;
