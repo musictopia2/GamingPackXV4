@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace DealCardGame.Core.ViewModels;
 [InstanceGame]
 public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCardInformation>
@@ -89,7 +87,8 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     {
         return IsConfirming() == false;
     }
-    public bool CanBank => IsConfirming() == false;
+    private bool HasPlays => _mainGame.SaveRoot.PlaysRemaining > 0;
+    public bool CanBank => IsConfirming() == false && HasPlays;
     [Command(EnumCommandCategory.Game)]
     public async Task BankAsync()
     {
@@ -125,7 +124,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         var card = list.Single();
         return card;
     }
-    public bool CanSetChosen => IsConfirming() == false;
+    public bool CanSetChosen => IsConfirming() == false && HasPlays;
     [Command(EnumCommandCategory.Game)]
     public async Task SetChosenAsync(SetPlayerModel model)
     {
@@ -157,15 +156,15 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             _toast.ShowUserErrorToast("Must choose another player for this one");
             return;
         }
-        if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
-        {
-            if (_mainGame.BasicData.MultiPlayer)
-            {
-                await _mainGame.Network!.SendAllAsync("playerpayment", model.PlayerId);
-            }
-            await _mainGame.SelectSinglePlayerForPaymentAsync(model.PlayerId, 5);
-            return;
-        }
+        //if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
+        //{
+        //    if (_mainGame.BasicData.MultiPlayer)
+        //    {
+        //        await _mainGame.Network!.SendAllAsync("playerpayment", model.PlayerId);
+        //    }
+        //    await _mainGame.SelectSinglePlayerForPaymentAsync(model.PlayerId, 5);
+        //    return;
+        //}
         card = GetSelectedCard();
         if (card is null)
         {
@@ -410,7 +409,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         _toast.ShowUserErrorToast("Cannot play action card for unknown reason.  If this should be possible, rethink");
         return false;
     }
-    public bool CanPlay => IsConfirming() == false;
+    public bool CanPlay => IsConfirming() == false && HasPlays;
     [Command(EnumCommandCategory.Game)]
     public async Task PlayAsync()
     {
@@ -460,7 +459,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     }
     public bool CanStartOrganizing => IsConfirming() == false;
     [Command(EnumCommandCategory.Game)]
-    public async Task StartOrganizing()
+    public async Task StartOrganizing() //a person can always organize even though they don't have any plays left
     {
         _gameContainer.PersonalInformation.Organizing = true;
         //needs to populate the stuff as well.

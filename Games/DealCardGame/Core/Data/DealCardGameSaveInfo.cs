@@ -14,4 +14,5 @@ public class DealCardGameSaveInfo : BasicSavedCardClass<DealCardGamePlayerItem, 
     public EnumColor YourColorChosen { get; set; } = EnumColor.None;
     public int OpponentTrade { get; set; } //this is the opponent card you want
     public int YourTrade { get; set; } //this is the card you are giving up.
+    public int PlaysRemaining { get; set; }
 }

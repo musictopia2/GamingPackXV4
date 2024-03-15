@@ -105,6 +105,7 @@ public class DealCardGameMainGameClass
                 player.SetData.Add(model);
             }
         }
+        SaveRoot.PlaysRemaining = 3; //start out with 3.
         return base.LastPartOfSetUpBeforeBindingsAsync();
     }
     protected override Task StartSetUpAsync(bool isBeginning)
@@ -479,6 +480,7 @@ public class DealCardGameMainGameClass
     }
     public override async Task ContinueTurnAsync()
     {
+        _model.PlaysRemaining = SaveRoot.PlaysRemaining; //to let the clients know.
         if (_fromAutoResume == false)
         {
             if (OtherTurn == 0)
@@ -511,6 +513,7 @@ public class DealCardGameMainGameClass
     {
         await base.StartNewTurnAsync();
         _fromAutoResume = false; //no longer from autoresume.
+        SaveRoot.PlaysRemaining = 3;
         await DrawToStartAsync();
     }
     private async Task DrawToStartAsync()
@@ -535,6 +538,7 @@ public class DealCardGameMainGameClass
     public async Task PlayActionAsync(int deck)
     {
         var card = GetPlayerSelectedSingleCard(deck);
+        SaveRoot.PlaysRemaining--; //because this uses up a play.
         if (card.ActionCategory == EnumActionCategory.Gos)
         {
             await PlayPassGoAsync(card);
@@ -754,6 +758,7 @@ public class DealCardGameMainGameClass
     public async Task PlayPropertyAsync(int deck, EnumColor color)
     {
         var card = GetPlayerSelectedSingleCard(deck);
+        SaveRoot.PlaysRemaining--;
         if (card.CardType == EnumCardType.PropertyWild)
         {
             card.MainColor = color;
@@ -930,6 +935,7 @@ public class DealCardGameMainGameClass
     {
         var card = GetPlayerSelectedSingleCard(deck);
         await AnimatePlayAsync(card);
+        SaveRoot.PlaysRemaining--; //reduce the amount of plays left (even if this ultimately goes to waste)
         var chosen = PlayerList[player];
         if (chosen.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
         {
@@ -944,6 +950,7 @@ public class DealCardGameMainGameClass
     {
         var card = GetPlayerSelectedSingleCard(rent.Deck);
         await AnimatePlayAsync(card);
+        SaveRoot.PlaysRemaining--;
         OtherTurn = 0; //for now.
         GetPlayerToContinueTurn();
         int amountOwed = rent.RentOwed(SingleInfo!);
@@ -961,6 +968,7 @@ public class DealCardGameMainGameClass
             var others = SingleInfo!.MainHandList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(take).ToBasicList();
             foreach (var item in others)
             {
+                SaveRoot.PlaysRemaining--;
                 SingleInfo.MainHandList.RemoveSpecificItem(item);
                 await AnimatePlayAsync(item); //these cards has to be removed because it was played.
             }
@@ -1057,10 +1065,10 @@ public class DealCardGameMainGameClass
     public async Task PossibleTradingPropertyAsync(TradePropertyModel trade)
     {
         trade.StartTrading = false;
+        SaveRoot.PlaysRemaining--;
         var cardPlayed = GetPlayerSelectedSingleCard(trade.CardPlayed);
         await AnimatePlayAsync(cardPlayed);
         var playerChosen = PlayerList.Single(x => x.Id == trade.PlayerId);
-
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             if (trade.Equals(_gameContainer.PersonalInformation.TradeInfo))
@@ -1118,6 +1126,7 @@ public class DealCardGameMainGameClass
     public async Task PossibleStealingPropertyAsync(StealPropertyModel steal)
     {
         steal.StartStealing = false;
+        SaveRoot.PlaysRemaining--;
         var cardPlayed = GetPlayerSelectedSingleCard(steal.CardPlayed);
         await AnimatePlayAsync(cardPlayed);
         var playerChosen = PlayerList.Single(x => x.Id == steal.PlayerId);

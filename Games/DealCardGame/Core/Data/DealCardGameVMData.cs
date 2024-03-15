@@ -15,6 +15,8 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public string Status { get; set; } = "";
     [LabelColumn]
     public string Instructions { get; set; } = "";
+    [LabelColumn]
+    public int PlaysRemaining { get; set; }
 
     //another ui can use this.
     [LabelColumn]

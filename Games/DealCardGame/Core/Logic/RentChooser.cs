@@ -5,11 +5,11 @@ public class RentChooser(DealCardGameGameContainer gameContainer) : IEnumListCla
     {
         var player = gameContainer.PlayerList!.GetWhoPlayer();
         int count = player.MainHandList.Count(x => x.ActionCategory == EnumActionCategory.DoubleRent);
-        if (count == 0)
+        if (count == 0 || gameContainer.SaveRoot.PlaysRemaining == 1)
         {
             return [EnumRentCategory.Alone];
         }
-        if (count == 1)
+        if (count == 1 || gameContainer.SaveRoot.PlaysRemaining == 2)
         {
             return [EnumRentCategory.Alone, EnumRentCategory.SingleDouble];
         }

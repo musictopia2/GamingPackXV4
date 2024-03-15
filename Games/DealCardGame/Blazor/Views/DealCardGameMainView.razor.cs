@@ -13,29 +13,14 @@ public partial class DealCardGameMainView
         _gameContainer = aa1.Resolver.Resolve<DealCardGameGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(DealCardGameVMData.NormalTurn))
-            .AddLabel("Status", nameof(DealCardGameVMData.Status));
+            .AddLabel("Status", nameof(DealCardGameVMData.Status))
+            .AddLabel("Plays Remaining", nameof(DealCardGameVMData.PlaysRemaining));
         _scores.Clear();
         _scores.AddColumn("Cards Left", true, nameof(DealCardGamePlayerItem.ObjectCount))
             .AddColumn("Money", true, nameof(DealCardGamePlayerItem.Money), category: EnumScoreSpecialCategory.Currency)
             .AddColumn("Monopolies", true, nameof(DealCardGamePlayerItem.Monopolies))
             ; //cards left is common.  can be anything you need.
         base.OnInitialized();
-    }
-    private BasicList<DealCardGameCardInformation> GetCards(int item)
-    {
-        BasicList<DealCardGameCardInformation> output = [];
-        var firsts = _gameContainer!.DeckList.First(x => x.MainColor == EnumColor.FromValue(item) && x.CardType == EnumCardType.PropertyRegular);
-        4.Times(() =>
-        {
-            DealCardGameCardInformation card = new();
-            card.Populate(firsts.Deck);
-            output.Add(card);
-            //DealCardGameCardInformation card = new();
-            //int index = 20 + item;
-            //card.Populate(index);
-            //output.Add(card);
-        });
-        return output;
     }
     private BasicList<DealCardGamePlayerItem> GetPlayers()
     {
