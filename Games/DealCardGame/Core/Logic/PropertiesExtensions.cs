@@ -137,7 +137,7 @@ public static class PropertiesExtensions
             {
                 return 1;
             }
-            if (howManyInSet == 2)
+            if (howManyInSet >= 2)
             {
                 return 2;
             }
@@ -153,7 +153,7 @@ public static class PropertiesExtensions
             {
                 return 2;
             }
-            if (howManyInSet == 3)
+            if (howManyInSet >= 3)
             {
                 return 3;
             }
@@ -169,7 +169,7 @@ public static class PropertiesExtensions
             {
                 return 2;
             }
-            if (howManyInSet == 3)
+            if (howManyInSet >= 3)
             {
                 return 4;
             }
@@ -185,7 +185,7 @@ public static class PropertiesExtensions
             {
                 return 3;
             }
-            if (howManyInSet == 3)
+            if (howManyInSet >= 3)
             {
                 return 5;
             }
@@ -201,7 +201,7 @@ public static class PropertiesExtensions
             {
                 return 3;
             }
-            if (howManyInSet == 3)
+            if (howManyInSet >= 3)
             {
                 return 6;
             }
@@ -217,7 +217,7 @@ public static class PropertiesExtensions
             {
                 return 4;
             }
-            if (howManyInSet == 3)
+            if (howManyInSet >= 3)
             {
                 return 6;
             }
@@ -233,7 +233,7 @@ public static class PropertiesExtensions
             {
                 return 4;
             }
-            if (howManyInSet == 3)
+            if (howManyInSet >= 3)
             {
                 return 7;
             }
@@ -245,7 +245,7 @@ public static class PropertiesExtensions
             {
                 return 3;
             }
-            if (howManyInSet == 2)
+            if (howManyInSet >= 2)
             {
                 return 8;
             }
@@ -257,7 +257,7 @@ public static class PropertiesExtensions
             {
                 return 1;
             }
-            if (howManyInSet == 2)
+            if (howManyInSet >= 2)
             {
                 return 2;
             }
@@ -277,7 +277,7 @@ public static class PropertiesExtensions
             {
                 return 3;
             }
-            if (howManyInSet == 4)
+            if (howManyInSet >= 4)
             {
                 return 4;
             }
