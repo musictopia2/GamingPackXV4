@@ -1,3 +1,5 @@
+using CommonBasicLibraries.BasicDataSettingsAndProcesses;
+
 namespace DealCardGame.Core.ViewModels;
 [InstanceGame]
 public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCardInformation>
@@ -33,18 +35,35 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     //if i need something extra, will add to template as well.
     protected override bool CanEnableDeck()
     {
-        //todo:  decide whether to enable deck.
-        return false; //otherwise, can't compile.
+        return false;
     }
     protected override bool CanEnablePile1()
     {
-        //todo:  decide whether to enable deck.
-        return false; //otherwise, can't compile.
+        if (IsConfirming())
+        {
+            return false;
+        }
+        if (_mainGame.SaveRoot.PlaysRemaining > 0)
+        {
+            return false;
+        }
+        var player = _gameContainer.PlayerList!.GetSelf();
+        if (player.MainHandList.Count <= 7)
+        {
+            return false;
+        }
+        return true;
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
-        //if we have anything, will be here.
-        await Task.CompletedTask;
+        int deck = VMData.PlayerHand1!.ObjectSelected();
+        if (deck == 0)
+        {
+            _toast.ShowUserErrorToast("You must select a card first");
+            return;
+        }
+        await _gameContainer.SendDiscardMessageAsync(deck);
+        await _mainGame.DiscardAsync(deck);
     }
     protected override bool AlwaysEnableHand()
     {
@@ -85,7 +104,17 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     }
     public override bool CanEndTurn()
     {
-        return IsConfirming() == false;
+        if (IsConfirming())
+        {
+            return false;
+        }
+        var player = _mainGame.PlayerList.GetSelf();
+        if (player.MainHandList.Count > 7)
+        {
+            return false;
+        }
+        return true;
+        //return IsConfirming() == false;
     }
     private bool HasPlays => _mainGame.SaveRoot.PlaysRemaining > 0;
     public bool CanBank => IsConfirming() == false && HasPlays;

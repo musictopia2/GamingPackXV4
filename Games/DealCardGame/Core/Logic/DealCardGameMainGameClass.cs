@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace DealCardGame.Core.Logic;
 [SingletonGame]
 public class DealCardGameMainGameClass
@@ -1122,6 +1124,8 @@ public class DealCardGameMainGameClass
         SingleInfo.Money -= transferMoney;
         playerChosen.AddSingleCardToPlayerPropertySet(tradeReceive, trade.YourColor);
         SingleInfo.SetData.RemoveCardFromPlayerSet(trade.YourCard, trade.YourColor);
+        playerChosen.Monopolies = playerChosen.HowManyMonopolies();
+        SingleInfo.Monopolies = SingleInfo.HowManyMonopolies();
         await ContinueTurnAsync();
     }
     public async Task PossibleStealingPropertyAsync(StealPropertyModel steal)
@@ -1179,6 +1183,7 @@ public class DealCardGameMainGameClass
         GetPlayerToContinueTurn();
         SingleInfo!.Money += transferMoney;
         SingleInfo.AddSingleCardToPlayerPropertySet(cardStolen, steal.Color);
+        SingleInfo.Monopolies = SingleInfo.HowManyMonopolies();
         await ContinueTurnAsync();
     }
     public async Task FinishOrganizingSetsAsync(BasicList<SetPropertiesModel> setData)
@@ -1200,5 +1205,14 @@ public class DealCardGameMainGameClass
         }
         SingleInfo.Monopolies = SingleInfo.HowManyMonopolies();
         await ContinueTurnAsync();
+    }
+    public override async Task DiscardAsync(DealCardGameCardInformation thisCard)
+    {
+        GetPlayerToContinueTurn();
+        SingleInfo!.MainHandList.RemoveObjectByDeck(thisCard.Deck);
+        await AnimatePlayAsync(thisCard);
+        await ContinueTurnAsync(); //hopefully this simple.
+        //var card = GetPlayerSelectedSingleCard(steal.CardPlayed);
+        //await AnimatePlayAsync(cardPlayed);
     }
 }

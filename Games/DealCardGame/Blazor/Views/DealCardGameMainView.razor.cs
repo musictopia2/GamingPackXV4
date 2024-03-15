@@ -27,7 +27,7 @@ public partial class DealCardGameMainView
         var output = _gameContainer!.PlayerList!.GetAllPlayersStartingWithSelf();
         return output;
     }
-    private static string Rows => $"{gg1.RepeatMinimum(2)}";
+    private static string Rows => $"16vh {gg1.RepeatMinimum(1)}";
     private BasicGameCommand PlayCommand => DataContext!.PlayCommand!;
     private BasicGameCommand EndTurnCommand => DataContext!.EndTurnCommand!;
     private BasicGameCommand BankCommand => DataContext!.BankCommand!;
