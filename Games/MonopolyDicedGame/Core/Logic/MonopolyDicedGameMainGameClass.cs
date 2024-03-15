@@ -115,9 +115,9 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
         SingleInfo.CurrentScore = score;
         SingleInfo.TotalScore += score;
         _houseDice.Value = EnumMiscType.None; //reset to none again.
-        if (SingleInfo.TotalScore >= 25000)
+        if (SingleInfo.TotalScore >= 20000)
         {
-            //since this is the first player to reach 25000, the game is over and that player wins period.
+            //since this is the first player to reach 20000, the game is over and that player wins period.
             await ShowWinAsync();
             return;
         }

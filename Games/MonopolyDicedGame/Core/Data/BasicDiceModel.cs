@@ -113,17 +113,17 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else
             {
-                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(10);
+                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(40);
             }
             if (ask)
             {
                 if (used == 0)
                 {
-                    weights.AddWeightedItem(upTo, 3); //for now pretend like its most likely to be boardwalk and parkplace.
+                    weights.AddWeightedItem(upTo, 3);
                 }
                 else if (used == 1)
                 {
-                    weights.AddWeightedItem(upTo, 1); //want to make it much harder to get what is needed for monopoly.
+                    weights.AddWeightedItem(upTo, 2); //want to make it much harder to get what is needed for monopoly.
                 }
             }
             upTo = 7;
@@ -138,7 +138,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 1);
+                weights.AddWeightedItem(upTo, 2);
             }
             upTo = 6;
             used = UsedUp(upTo);
@@ -152,7 +152,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 1);
+                weights.AddWeightedItem(upTo, 2);
             }
             upTo = 5;
             used = UsedUp(upTo);
@@ -166,7 +166,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 1);
+                weights.AddWeightedItem(upTo, 3);
             }
             upTo = 4;
             used = UsedUp(upTo);
@@ -180,7 +180,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 1);
+                weights.AddWeightedItem(upTo, 3);
             }
             upTo = 3;
             used = UsedUp(upTo);
@@ -194,7 +194,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 1);
+                weights.AddWeightedItem(upTo, 4);
             }
             upTo = 2;
             used = UsedUp(upTo);
@@ -208,35 +208,39 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 1);
+                weights.AddWeightedItem(upTo, 4);
             }
             upTo = 1;
             used = UsedUp(upTo);
             if (used == 0)
             {
-                weights.AddWeightedItem(upTo, 15);
+                weights.AddWeightedItem(upTo, 10);
             }
             else if (used == 1)
             {
                 weights.AddWeightedItem(upTo, 2);
             }
-            int waterUsed;
-            int electricUsed;
-            waterUsed = UsedUp(9);
-            electricUsed = UsedUp(10);
-            if (waterUsed == 0 && electricUsed == 0)
+            ask = MonopolyDicedGameGameContainer.GlobalRandom.NextBool(70);
+            if (ask)
             {
-                weights.AddWeightedItem(9, 4);
-                weights.AddWeightedItem(10, 4);
-            }
-            else if (waterUsed > 0 && electricUsed == 0)
-            {
-                //electric alone.
-                weights.AddWeightedItem(10, 1);
-            }
-            else if (waterUsed == 0 && electricUsed > 0)
-            {
-                weights.AddWeightedItem(9, 1);
+                int waterUsed;
+                int electricUsed;
+                waterUsed = UsedUp(9);
+                electricUsed = UsedUp(10);
+                if (waterUsed == 0 && electricUsed == 0)
+                {
+                    weights.AddWeightedItem(9, 4);
+                    weights.AddWeightedItem(10, 4);
+                }
+                else if (waterUsed > 0 && electricUsed == 0)
+                {
+                    //electric alone.
+                    weights.AddWeightedItem(10, 4);
+                }
+                else if (waterUsed == 0 && electricUsed > 0)
+                {
+                    weights.AddWeightedItem(9, 4);
+                }
             }
             int railroads = UsedUp(11);
             if (railroads == 0)
@@ -249,11 +253,11 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (railroads == 2)
             {
-                weights.AddWeightedItem(11, 3);
+                weights.AddWeightedItem(11, 4);
             }
             else if (railroads == 3)
             {
-                weights.AddWeightedItem(11, 1);
+                weights.AddWeightedItem(11, 3);
             }
             int chances = UsedUp(12);
             if (chances == 0)
@@ -262,7 +266,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else
             {
-                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(5);
+                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(15);
             }
             if (ask)
             {

@@ -12,7 +12,7 @@ public class MonopolyDiceSet(IGamePackageResolver resolver, MonopolyDicedGameGam
     public BasicList<BasicList<BasicDiceModel>> RollDice(int howManySections = 6)
     {
         int newNum;
-        newNum = 8; //go ahead and try 8 for this.
+        newNum = 7;
         newNum -= gameContainer.SaveRoot.Owns.Count;
         IDiceContainer<int> thisG = MainContainer!.Resolve<IDiceContainer<int>>();
         thisG.MainContainer = MainContainer;
