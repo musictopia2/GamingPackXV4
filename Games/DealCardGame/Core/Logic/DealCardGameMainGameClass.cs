@@ -745,6 +745,11 @@ public class DealCardGameMainGameClass
                 }
             }
         }
+        else if (currentPlayer.Money == 0)
+        {
+            currentPlayer.AllPlayerStatus = EnumAllPlayerStatus.None;
+            currentPlayer.Debt = 0;
+        }
     }
     public async Task PlayPropertyAsync(int deck, EnumColor color)
     {
@@ -960,7 +965,7 @@ public class DealCardGameMainGameClass
                 await AnimatePlayAsync(item); //these cards has to be removed because it was played.
             }
         }
-        int player = _gameContainer.PersonalInformation.RentInfo.Player;
+        int player = rent.Player;
         EnumRentCategory category = rent.RentCategory;
         if (player == 0 && card.AnyColor)
         {
