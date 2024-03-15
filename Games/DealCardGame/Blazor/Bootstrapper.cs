@@ -1,15 +1,14 @@
 namespace DealCardGame.Blazor;
 public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<DealCardGameShellViewModel>(starts, mode)
 {
-    protected override Task RegisterTestsAsync()
-    {
-        //TestData!.CardsToPass = 8;
-        TestData!.CardsToPass = 20;
-        //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
-        //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
-        GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, BirthdayCards>();
-        return base.RegisterTestsAsync();
-    }
+    //protected override Task RegisterTestsAsync()
+    //{
+    //    TestData!.CardsToPass = 20;
+    //    //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
+    //    //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
+    //    GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, BirthdayCards>();
+    //    return base.RegisterTestsAsync();
+    //}
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

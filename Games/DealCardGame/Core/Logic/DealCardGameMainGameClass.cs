@@ -47,7 +47,6 @@ public class DealCardGameMainGameClass
     private bool _fromAutoResume;
     public override async Task FinishGetSavedAsync()
     {
-        Console.WriteLine(_gameContainer.SaveRoot.GameID);
         LoadControls();
         _fromAutoResume = true;
         bool rets = await _privateAutoResume.HasAutoResumeAsync();
@@ -111,6 +110,7 @@ public class DealCardGameMainGameClass
     protected override Task StartSetUpAsync(bool isBeginning)
     {
         LoadControls();
+        SaveRoot.ImmediatelyStartTurn = true;
         return base.StartSetUpAsync(isBeginning);
     }
     async Task IMiscDataNM.MiscDataReceived(string status, string content)
@@ -803,6 +803,7 @@ public class DealCardGameMainGameClass
     public async Task BankAsync(int deck)
     {
         var card = GetPlayerSelectedSingleCard(deck);
+        SaveRoot.PlaysRemaining--;
         SingleInfo!.Money += card.ClaimedValue;
         SingleInfo.BankedCards.Add(card); //this card is put into the bank.  needs to show up there so if you have to pay up, can use these cards.
         await ShowCardTemporarilyAsync(card);
