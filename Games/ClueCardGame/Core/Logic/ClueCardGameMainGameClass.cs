@@ -174,6 +174,7 @@ public class ClueCardGameMainGameClass
     {
         LoadControls();
         SaveRoot.CurrentPrediction = new PredictionInfo();
+        SaveRoot!.ImmediatelyStartTurn = true;
         SaveRoot.GameStatus = EnumClueStatusList.MakePrediction; //i think.
         //at this point, all cards has been used.
         ExcludeList.Clear();
@@ -243,6 +244,8 @@ public class ClueCardGameMainGameClass
         }
         _gameContainer.DetectiveDetails.StartAccusation = false;
         await _privateAutoResume.SaveStateAsync(_gameContainer); //because it changed.
+        PrepStartTurn(); //try this.
+        _command.UpdateAll();
         SaveRoot.GameStatus = EnumClueStatusList.MakePrediction; //you start out by making prediction.
         await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
     }

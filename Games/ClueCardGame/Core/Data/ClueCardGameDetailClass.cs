@@ -4,7 +4,7 @@ public class ClueCardGameDetailClass : IGameInfo, ICardInfo<ClueCardGameCardInfo
 {
     EnumGameType IGameInfo.GameType => EnumGameType.NewGame;
     bool IGameInfo.CanHaveExtraComputerPlayers => true;
-    EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.Either;
+    EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
     string IGameInfo.GameName => "Clue Card Game";
     int IGameInfo.NoPlayers => 0;

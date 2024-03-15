@@ -206,6 +206,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     }
     public bool CanStart(int howManyExtra)
     {
+        //return false;
         if (_multiRestore == EnumRestoreCategory.MustRestore)
         {
             return false;
@@ -232,6 +233,13 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
             if (howManyExtra + tempCount == _game.NoPlayers)
             {
                 return false;
+            }
+        }
+        if (howManyExtra == 0)
+        {
+            if (tempCount < _game.MinPlayers)
+            {
+                return false; //because not enough players.
             }
         }
         return OpeningStatus == EnumOpeningStatus.HostingReadyToStart;
