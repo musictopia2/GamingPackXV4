@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	  <Version>8.0.4</Version>
+	  <Version>8.0.5</Version>
   </PropertyGroup>
 
 
@@ -16,7 +16,7 @@
     <PackageReference Include="GameLoaderBlazorLibrary" Version="8.0.5" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSignalRClasses" Version="8.0.4" />
-	  <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.13" />
+	  <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.18" />
   </ItemGroup>
 
   
