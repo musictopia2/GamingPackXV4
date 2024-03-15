@@ -15,13 +15,13 @@ internal static class MiscRollExtensions
         //{
         //    return 3; //for now until i figure out the new bug.
         //}
-
+        int rollNumber = saveRoot.RollNumber - 1;
         ask = randoms.NextBool(10);
         if (ask)
         {
             return 0; //10 percent chances of no cops no matter what.
         }
-        if (saveRoot.RollNumber > 10)
+        if (rollNumber > 10)
         {
             ask = randoms.NextBool(70);
             if (ask)
@@ -30,7 +30,7 @@ internal static class MiscRollExtensions
             }
             return 0; //after roll 10 make it all or nothing for the rest.
         }
-        if (saveRoot.RollNumber > 3)
+        if (rollNumber > 3)
         {
             ask = randoms.NextBool(10);
             if (ask)
@@ -38,21 +38,25 @@ internal static class MiscRollExtensions
                 return 2; //if you passed 3 rolls, 10 percent chances will have 2 cops
             }
         }
-        if (saveRoot.RollNumber == 1)
+        if (rollNumber == 1)
         {
-            chances = 15;
+            chances = 10;
         }
         else if (saveRoot.NumberOfCops == 2)
         {
-            chances = 40;
+            chances = 30;
         }
-        else if (saveRoot.RollNumber == 2)
+        else if (rollNumber == 2)
+        {
+            chances = 15;
+        }
+        else if (rollNumber == 3)
         {
             chances = 20;
         }
-        else if (saveRoot.RollNumber == 3)
+        else if (rollNumber == 4)
         {
-            chances = 25;
+            chances = 40;
         }
         else
         {
@@ -67,15 +71,15 @@ internal static class MiscRollExtensions
         {
             return 1;
         }
-        if (saveRoot.RollNumber == 1)
+        if (rollNumber == 1)
         {
-            chances = 5;
+            chances = 3;
         }
         else if (saveRoot.NumberOfCops == 1)
         {
             chances = 10;
         }
-        else if (saveRoot.RollNumber == 2)
+        else if (rollNumber == 2)
         {
             chances = 15;
         }
@@ -84,23 +88,23 @@ internal static class MiscRollExtensions
             chances = 25;
         }
         ask = randoms.NextBool(chances);
-        if (ask == false)
+        if (ask == false || saveRoot.NumberOfCops == 2)
+        {
+            return 1;
+        }
+        if (rollNumber == 1)
         {
             return 2;
         }
-        if (saveRoot.RollNumber == 1 || saveRoot.NumberOfCops == 2)
-        {
-            return 2;
-        }
-        if (saveRoot.RollNumber == 2)
+        if (rollNumber == 2)
         {
             chances = 5;
         }
-        else if (saveRoot.RollNumber == 3)
+        else if (rollNumber == 3)
         {
             chances = 10;
         }
-        else if (saveRoot.RollNumber > 8)
+        else if (rollNumber > 6)
         {
             chances = 90;
         }
