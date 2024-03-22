@@ -34,7 +34,6 @@ public class GolfHand : GameBoardObservable<RegularSimpleCard>
     private readonly GolfCardGameGameContainer _gameContainer;
     public GolfHand(GolfCardGameGameContainer gameContainer) : base(gameContainer.Command)
     {
-        IsEnabled = false;
         Text = "Your Hand";
         Rows = 1;
         Columns = 2;
@@ -44,6 +43,11 @@ public class GolfHand : GameBoardObservable<RegularSimpleCard>
     }
     protected override async Task ClickProcessAsync(RegularSimpleCard payLoad)
     {
+        if (IsEnabled == false)
+        {
+            //somehow if it gets through (the gameboard), then disable here.
+            return;
+        }
         int index = ObjectList.IndexOf(payLoad);
         if (_gameContainer.ChangeHandAsync == null)
         {

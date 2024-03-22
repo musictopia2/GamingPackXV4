@@ -24,7 +24,7 @@ public partial class GolfCardGameMainViewModel : BasicCardGamesVM<RegularSimpleC
         _toast = toast;
         _model.Deck1.NeverAutoDisable = true;
         _model.OtherPile!.PileClickedAsync = OtherPile_PileClickedAsync;
-        _model.OtherPile.SendEnableProcesses(this, (() => gameContainer.AlreadyDrew));
+        _model.OtherPile.SendEnableProcesses(this, () => gameContainer.AlreadyDrew);
         _model.GolfHand1.SendEnableProcesses(this, () => gameContainer.AlreadyDrew);
         _model.HiddenCards1.SendEnableProcesses(this, () => gameContainer.AlreadyDrew);
         CreateCommands(commandContainer);
