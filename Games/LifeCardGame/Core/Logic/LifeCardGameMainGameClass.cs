@@ -151,6 +151,7 @@ public class LifeCardGameMainGameClass
     public override async Task EndTurnAsync()
     {
         _command.ManuelFinish = true; //because it could be somebody else's turn.
+        _otherPlayerDraws = 0; //try this way.
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync(true);
         await StartNewTurnAsync();
     }
