@@ -56,6 +56,11 @@ public class MilkRunMainViewModel : BasicCardGamesVM<MilkRunCardInformation>
             await _mainGame.DiscardAsync(newDeck);
             return;
         }
+        if (_mainGame.SaveRoot.CardsDrawn == 2)
+        {
+            _toast.ShowUserErrorToast("You already drew 2 cards.  Therefore, cannot pick up from discard");
+            return;
+        }
         if (_mainGame!.SaveRoot!.DrawnFromDiscard == true)
         {
             _toast.ShowUserErrorToast("Sorry, you already picked up one card from discard.  Cannot pickup another one.  If you want to discard, then choose a card to discard");
