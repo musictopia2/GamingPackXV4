@@ -113,7 +113,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else
             {
-                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(40);
+                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(20);
             }
             if (ask)
             {
@@ -138,7 +138,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 2);
+                weights.AddWeightedItem(upTo, 1);
             }
             upTo = 6;
             used = UsedUp(upTo);
@@ -152,7 +152,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 2);
+                weights.AddWeightedItem(upTo, 1);
             }
             upTo = 5;
             used = UsedUp(upTo);
@@ -166,7 +166,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 3);
+                weights.AddWeightedItem(upTo, 2);
             }
             upTo = 4;
             used = UsedUp(upTo);
@@ -180,7 +180,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 3);
+                weights.AddWeightedItem(upTo, 2);
             }
             upTo = 3;
             used = UsedUp(upTo);
@@ -194,7 +194,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 4);
+                weights.AddWeightedItem(upTo, 3);
             }
             upTo = 2;
             used = UsedUp(upTo);
@@ -208,19 +208,19 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             }
             else if (used == 2)
             {
-                weights.AddWeightedItem(upTo, 4);
+                weights.AddWeightedItem(upTo, 3);
             }
             upTo = 1;
             used = UsedUp(upTo);
             if (used == 0)
             {
-                weights.AddWeightedItem(upTo, 10);
+                weights.AddWeightedItem(upTo, 14);
             }
             else if (used == 1)
             {
                 weights.AddWeightedItem(upTo, 2);
             }
-            ask = MonopolyDicedGameGameContainer.GlobalRandom.NextBool(70);
+            ask = MonopolyDicedGameGameContainer.GlobalRandom.NextBool(60);
             if (ask)
             {
                 int waterUsed;
@@ -262,21 +262,21 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             int chances = UsedUp(12);
             if (chances == 0)
             {
-                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(30);
+                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(20);
             }
             else
             {
-                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(15);
+                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(10);
             }
             if (ask)
             {
                 if (chances == 0)
                 {
-                    weights.AddWeightedItem(12, 2);
+                    weights.AddWeightedItem(12, 4); //because there is only a 20 percent chance anyways.
                 }
                 else if (chances == 1)
                 {
-                    weights.AddWeightedItem(12, 1);
+                    weights.AddWeightedItem(12, 2);
                 }
             }
             output = weights.GetWeightedList();

@@ -23,12 +23,22 @@ internal static class MiscRollExtensions
         }
         if (rollNumber > 10)
         {
-            ask = randoms.NextBool(70);
+            ask = randoms.NextBool(20);
+            if (ask == true)
+            {
+                return 3; //will reduce as needed anyways.
+            }
+            ask = randoms.NextBool(10);
+            if (ask == true)
+            {
+                return 2;
+            }
+            ask = randoms.NextBool(40);
             if (ask)
             {
                 return 1;
             }
-            return 0; //after roll 10 make it all or nothing for the rest.
+            return 0;
         }
         if (rollNumber > 3)
         {
@@ -155,7 +165,7 @@ internal static class MiscRollExtensions
         bool ask1;
         if (saveRoot.NumberOfCops > 0)
         {
-            ask1 = randoms.NextBool(20);
+            ask1 = randoms.NextBool(10);
             if (ask1)
             {
                 output.Add(EnumMiscType.Free);
