@@ -43,11 +43,6 @@ public class GolfHand : GameBoardObservable<RegularSimpleCard>
     }
     protected override async Task ClickProcessAsync(RegularSimpleCard payLoad)
     {
-        if (IsEnabled == false)
-        {
-            //somehow if it gets through (the gameboard), then disable here.
-            return;
-        }
         int index = ObjectList.IndexOf(payLoad);
         if (_gameContainer.ChangeHandAsync == null)
         {
@@ -55,5 +50,9 @@ public class GolfHand : GameBoardObservable<RegularSimpleCard>
         }
         await _gameContainer.ChangeHandAsync.Invoke(index);
         _gameContainer.Command.UpdateAll(); //try this too.
+    }
+    protected override bool CanExecute(RegularSimpleCard card)
+    {
+        return _gameContainer.SaveRoot.AlreadyDrew;
     }
 }
