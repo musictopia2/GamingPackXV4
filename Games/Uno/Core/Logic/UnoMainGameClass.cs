@@ -359,7 +359,7 @@ public class UnoMainGameClass
             {
                 throw new CustomBasicException("Nobody is handing the choose colors.  Rethink");
             }
-            if (SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+            if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
             {
                 await _delegates.OpenColorAsync.Invoke();
             }
