@@ -429,6 +429,23 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         DeckRegularDict<D>? tempList = default;
         SaveRoot!.PreviousCard = 0;
         _gameContainer.AlreadyDrew = false;
+        bool rets;
+        bool hasTestDiscards;
+        hasTestDiscards = MainContainer.RegistrationExist<ITestCardDiscardSetUp<D>>();
+        D? cardToAddToDiscard = null;
+        if (hasTestDiscards && BasicData.GamePackageMode == EnumGamePackageMode.Production)
+        {
+            throw new CustomBasicException("Cannot have test dicard setups because its in production");
+        }
+        //if (hasTestDiscards && Test!.AutoNearEndOfDeckBeginning)
+        //{
+        //    throw new CustomBasicException("Cannot have both near the end of deck and the test discard setups");
+        //}
+        if (hasTestDiscards)
+        {
+            ITestCardDiscardSetUp<D> tempDiscard = MainContainer.Resolve<ITestCardDiscardSetUp<D>>();
+            cardToAddToDiscard = tempDiscard.GetFirstCardForDiscardPile(_gameContainer.DeckList);
+        }
         if (CardInfo!.NoPass == false)
         {
             if (CardInfo.CardsToPassOut == 0)
@@ -440,6 +457,10 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
                 PlayerList!.AddDummy();
             }
             DeckRegularDict<D> firstList = _gameContainer.DeckList!.ToRegularDeckDict();
+            if (cardToAddToDiscard is not null)
+            {
+                firstList.RemoveObjectByDeck(cardToAddToDiscard.Deck); //remove from deck.
+            }
             CardInfo.PlayerExcludeList.ForEach(items =>
             {
                 if (firstList.ObjectExist(items))
@@ -458,7 +479,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
             }
             if (CardInfo.PassOutAll == false)
             {
-                bool rets;
+                
                 int testCount = 0;
                 rets = MainContainer.RegistrationExist<ITestCardSetUp<D, P>>();
                 if (rets == true)
@@ -546,29 +567,37 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         {
             if (Test!.AutoNearEndOfDeckBeginning == false)
             {
-                var list = CardInfo.DiscardExcludeList(_gameContainer.DeckList);
-                if (list.Count == 0)
+                if (cardToAddToDiscard is not null)
                 {
-                    _model.Pile1.AddCard(_model.Deck1!.DrawCard()); //drawing a card for deck
+                    cardToAddToDiscard.IsUnknown = false;
+                    _model.Pile1.AddCard(cardToAddToDiscard); //i think.
                 }
                 else
                 {
-                    int deck = _model.Deck1.RevealCard().Deck;
-                    if (list.Contains(deck) == false)
+                    var list = CardInfo.DiscardExcludeList(_gameContainer.DeckList);
+                    if (list.Count == 0)
                     {
-                        _model.Pile1.AddCard(_model.Deck1!.DrawCard());
+                        _model.Pile1.AddCard(_model.Deck1!.DrawCard()); //drawing a card for deck
                     }
                     else
                     {
-                        var nextList = _model.Deck1.SavedList();
-                        var temps = nextList.Select(x => x.Deck).ToBasicList();
-                        temps.RemoveGivenList(list);
-                        deck = temps.First();
-                        if (list.Contains(deck))
+                        int deck = _model.Deck1.RevealCard().Deck;
+                        if (list.Contains(deck) == false)
                         {
-                            throw new CustomBasicException("Cannot contain card because on exclude list.  Rethink");
+                            _model.Pile1.AddCard(_model.Deck1!.DrawCard());
                         }
-                        _model.Pile1.AddCard(_model.Deck1!.DrawCard(deck));
+                        else
+                        {
+                            var nextList = _model.Deck1.SavedList();
+                            var temps = nextList.Select(x => x.Deck).ToBasicList();
+                            temps.RemoveGivenList(list);
+                            deck = temps.First();
+                            if (list.Contains(deck))
+                            {
+                                throw new CustomBasicException("Cannot contain card because on exclude list.  Rethink");
+                            }
+                            _model.Pile1.AddCard(_model.Deck1!.DrawCard(deck));
+                        }
                     }
                 }
             }
@@ -577,6 +606,11 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
                 int suggested = _model.Deck1!.CardsLeft() - 2;
                 var flist = _model.Deck1.DrawSeveralCards(suggested);
                 _model.Pile1.AddSeveralCards(flist);
+                if (cardToAddToDiscard is not null)
+                {
+                    cardToAddToDiscard.IsUnknown = false;
+                    _model.Pile1.AddCard(cardToAddToDiscard); //i think.
+                }
             }
         }
         else if (Test!.AutoNearEndOfDeckBeginning)
