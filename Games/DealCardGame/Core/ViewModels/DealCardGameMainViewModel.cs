@@ -404,6 +404,14 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             _toast.ShowUserErrorToast("This is not an action card");
             return false;
         }
+        if (card.ActionCategory == EnumActionCategory.Gos)
+        {
+            if (_mainGame.PlayerList.GetSelf().MainHandList.Count > 6)
+            {
+                _toast.ShowUserErrorToast("You cannot play pass go because you have over 6 cards in hand which could require wasting cards which hurt the game.");
+                return false;
+            }
+        }
         if (card.ActionCategory == EnumActionCategory.DebtCollector
             || card.ActionCategory == EnumActionCategory.Birthday ||
             card.ActionCategory == EnumActionCategory.Gos)
