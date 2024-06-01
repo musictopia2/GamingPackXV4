@@ -90,6 +90,15 @@ public partial class PaymentViewModel : IBasicEnableProcess
                     return;
                 }
             }
+            if (card.ActionCategory == EnumActionCategory.House)
+            {
+                var list = _gameContainer.PersonalInformation.SetData.GetCards(property.Color);
+                if (list.Any(x => x.ActionCategory == EnumActionCategory.Hotel))
+                {
+                    _toast.ShowUserErrorToast("You must remove the hotel before removing the house");
+                    return;
+                }
+            }
             if (card.ClaimedValue == 0)
             {
                 _toast.ShowUserErrorToast("You do not have to use this card to pay because it has no claimed value");

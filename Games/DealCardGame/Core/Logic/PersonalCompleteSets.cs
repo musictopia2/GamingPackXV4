@@ -77,6 +77,14 @@ public class PersonalCompleteSets
                 _toast.ShowUserErrorToast("Unable to add card because don't have a monopoly to even add a house or hotel");
                 return false;
             }
+            if (card.ActionCategory == EnumActionCategory.Hotel)
+            {
+                if (property.HasRequiredHouse() == false)
+                {
+                    _toast.ShowUserErrorToast("Unable to add card because you need a house first");
+                    return false;
+                }
+            }
             return true;
         }
         if (property!.HasRequiredSet())
@@ -97,11 +105,19 @@ public class PersonalCompleteSets
     }
     private bool CanRemoveCard(DealCardGameCardInformation card)
     {
-        if (card.ActionCategory == EnumActionCategory.House || card.ActionCategory == EnumActionCategory.Hotel)
+        if (card.ActionCategory == EnumActionCategory.Hotel)
         {
             return true;
         }
         var property = _gameContainer.PersonalInformation.SetData.GetPropertyFromCard(card.Deck);
+        if (card.ActionCategory == EnumActionCategory.House)
+        {
+            if (property!.HasRequiredHotel())
+            {
+                _toast.ShowUserErrorToast("You must remove the hotel before you can remove the house");
+                return false;
+            }
+        }
         if (property!.HasRequiredSet())
         {
             if (property!.Cards.Any(x => x.ActionCategory == EnumActionCategory.House || x.ActionCategory == EnumActionCategory.Hotel))
@@ -120,6 +136,8 @@ public class PersonalCompleteSets
         {
             _toast.ShowUserErrorToast("You must use all your cards");
         }
+        //has to check other things now.
+
         return rets;
     }
     public void Init()

@@ -17,6 +17,22 @@ public static class PropertiesExtensions
             model.SetData.Add(p);
         }
     }
+    public static bool HasRequiredHotel(this SetPropertiesModel property)
+    {
+        if (property.Cards.Any(x => x.ActionCategory == EnumActionCategory.Hotel))
+        {
+            return true;
+        }
+        return false;
+    }
+    public static bool HasRequiredHouse(this SetPropertiesModel property)
+    {
+        if (property.Cards.Any(x => x.ActionCategory == EnumActionCategory.House))
+        {
+            return true;
+        }
+        return false;
+    }
     public static bool HasRequiredSet(this SetPropertiesModel property)
     {
         var count = property.Cards.Count(x => x.ActionCategory == EnumActionCategory.None);

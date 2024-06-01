@@ -348,6 +348,14 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             _toast.ShowUserErrorToast("You cannot play a house or hotel if you do not have the required sets");
             return false;
         }
+        if (card.ActionCategory == EnumActionCategory.Hotel)
+        {
+            if (property.HasRequiredHouse() == false)
+            {
+                _toast.ShowUserErrorToast("Must have a house before playing a hotel");
+                return false;
+            }
+        }
         return true;
     }
     private async Task PlayHouseOrHotelAsync(DealCardGameCardInformation card, EnumColor color)
