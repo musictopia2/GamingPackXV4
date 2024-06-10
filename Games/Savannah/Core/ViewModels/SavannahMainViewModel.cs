@@ -90,6 +90,7 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
         await _gameContainer.UnselectAllPilesAsync.Invoke(); //hopefully nothing else because the proper one should be done automatically here.
     }
     partial void CreateCommands(CommandContainer command);
+    public bool CanClickPlayerDiscard => CanEnablePlayer;
     [Command(EnumCommandCategory.Game)]
     public async Task ClickPlayerDiscardAsync(SavannahPlayerItem player)
     {
