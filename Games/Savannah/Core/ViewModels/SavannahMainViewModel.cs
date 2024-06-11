@@ -98,10 +98,6 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
         {
             throw new CustomBasicException("There was no player");
         }
-        if (_mainGame.SaveRoot.ChoseOtherPlayer)
-        {
-            return;
-        }
         if (player.DiscardList.Count == 0)
         {
             return; //because they have no cards left.  just in case.
@@ -138,13 +134,17 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
             {
                 return false;
             }
-            if (CommandContainer.IsExecuting)
+            if (VMData.Cup is null)
             {
                 return false;
             }
-            if (CommandContainer.Processing)
+            if (VMData.Cup.DiceList.Count == 0)
             {
                 return false;
+            }
+            if (_mainGame.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+            {
+                return false; //because only self can play obviously.
             }
             return VMData.Cup!.DiceList.First().Value == VMData.Cup.DiceList.Last().Value;
         }
