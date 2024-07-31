@@ -9,7 +9,7 @@
 <StackLayout ItemSpacing="10px" Orientation="EnumOrientation.Horizontal">
     @foreach (var pile in TempPiles.SetList)
     {
-        <StackItem>
+        <StackItem Style="@GetStyle">
             <BaseHandBlazor D="RU" Hand="pile"
                             HandType="EnumHandList.Vertical"
                             AdditionalSpacing="@AdditionalSpacing"

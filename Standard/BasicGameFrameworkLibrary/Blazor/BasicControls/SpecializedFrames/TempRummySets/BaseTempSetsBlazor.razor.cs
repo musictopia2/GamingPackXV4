@@ -23,4 +23,5 @@ public partial class BaseTempSetsBlazor<SU, CO, RU>
         };
         return output;
     }
+    private string GetStyle => $"height: {TargetContainerSize};";
 }
