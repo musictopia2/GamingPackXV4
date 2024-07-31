@@ -39,13 +39,19 @@
             </div>
         </GridItem>
         <GridItem Column="2">
-            @foreach (var player in _players)
-            {
-                <HandBlazor Hand="player.LifeStory"
-                        HandType="EnumHandList.Vertical"
-                        TargetContainerSize="85vh"
-                        Divider="4" />
-            }
+            <StackLayout>
+                @foreach (var player in _players)
+                {
+                    <StackItem>
+                        <HandBlazor Hand="player.LifeStory"
+                                    HandType="EnumHandList.Vertical"
+                                    TargetContainerSize="85vh"
+                                    Divider="4" />
+                    </StackItem>
+                    
+                }
+            </StackLayout>
+            
         </GridItem>
     </GridContainer>
 </CascadingValue>
