@@ -1,3 +1,5 @@
+using BasicGameFrameworkLibrary.Core.NetworkingClasses.Data;
+
 namespace HuseHearts.Core.Logic;
 [SingletonGame]
 public class HuseHeartsMainGameClass
@@ -322,6 +324,7 @@ public class HuseHeartsMainGameClass
         {
             throw new CustomBasicException("Huse Hearts Is A 2 Player Game");
         }
+        SingleInfo = PlayerList.GetWhoPlayer(); //this could be the fix for the problem.
         int points = SaveRoot.BlindList.Sum(xx => xx.HeartPoints);
         SingleInfo!.CurrentScore += points;
         var firstPlayer = PlayerList.First();
