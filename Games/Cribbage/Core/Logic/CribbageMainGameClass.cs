@@ -609,7 +609,6 @@ public class CribbageMainGameClass
         {
             hadFourFlush = true;
             hadFiveFlush = false;
-            //hadFiveFlush = true;
         }
         else
         {
@@ -892,6 +891,7 @@ public class CribbageMainGameClass
     {
         _command.ManuelFinish = true;
         SingleInfo = PlayerList!.GetWhoPlayer();
+        
         if (SingleInfo.CanSendMessage(BasicData!) == true)
         {
             await Network!.SendAllAsync("playcard", thisCard.Deck);
@@ -922,6 +922,8 @@ public class CribbageMainGameClass
         }
         var thisCol = ListComboPointsInPlay(_model.TotalCount, out bool starts, out int nextTurn);
         SaveRoot!.StartOver = starts;
+
+
         if (nextTurn > 0)
         {
             SaveRoot.NewTurn = nextTurn;
@@ -1198,6 +1200,7 @@ public class CribbageMainGameClass
             }
             if (xx > 7)
             {
+                WhoTurn = oldTurn;
                 return 0;
             }
         } while (true);
