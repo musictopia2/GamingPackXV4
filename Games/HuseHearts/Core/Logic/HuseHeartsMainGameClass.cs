@@ -1,5 +1,3 @@
-using BasicGameFrameworkLibrary.Core.NetworkingClasses.Data;
-
 namespace HuseHearts.Core.Logic;
 [SingletonGame]
 public class HuseHeartsMainGameClass
@@ -13,7 +11,9 @@ public class HuseHeartsMainGameClass
     private readonly IToast _toast;
     private readonly IMessageBox _message;
 
+#pragma warning disable IDE0290 // Use primary constructor
     public HuseHeartsMainGameClass(IGamePackageResolver mainContainer,
+#pragma warning restore IDE0290 // Use primary constructor
         IEventAggregator aggregator,
         BasicData basicData,
         TestOptions test,
@@ -331,9 +331,9 @@ public class HuseHeartsMainGameClass
         var lastPlayer = PlayerList.Last();
         firstPlayer.PreviousScore = firstPlayer.CurrentScore;
         lastPlayer.PreviousScore = lastPlayer.CurrentScore;
-        if (firstPlayer.PreviousScore + lastPlayer.PreviousScore != 16)
+        if (firstPlayer.PreviousScore + lastPlayer.PreviousScore != 26)
         {
-            throw new CustomBasicException("The total points for the players has to be 16 points");
+            throw new CustomBasicException("The total points for the players has to be 26 points"); //was 16 but now 26 since the jack of diamonds is no longer -10 points.
         }
         int Shoots = PlayerList!.WhoShotMoon();
         if (Shoots == 0)
@@ -444,8 +444,8 @@ public class HuseHeartsMainGameClass
         var firstPlayer = PlayerList.First();
         var secondPlayer = PlayerList.Last();
         HuseHeartsCardInformation card;
-        DeckRegularDict<HuseHeartsCardInformation> firstList = new();
-        DeckRegularDict<HuseHeartsCardInformation> secondList = new();
+        DeckRegularDict<HuseHeartsCardInformation> firstList = [];
+        DeckRegularDict<HuseHeartsCardInformation> secondList = [];
         firstPlayer.CardsPassed.ForEach(deck =>
         {
             card = _gameContainer.DeckList!.GetSpecificItem(deck);
