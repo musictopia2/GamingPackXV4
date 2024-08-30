@@ -9,10 +9,11 @@ public class HuseHeartsCardInformation : RegularTrickCard, IDeckObject
             {
                 return 1;
             }
-            if (Suit == EnumSuitList.Diamonds && Value == EnumRegularCardValueList.Jack)
-            {
-                return -10;
-            }
+            //decided to not make it where the jack of diamonds is -10 points for huse hearts.  did not work well when its only 2 players
+            //if (Suit == EnumSuitList.Diamonds && Value == EnumRegularCardValueList.Jack)
+            //{
+            //    return -10;
+            //}
             if (Suit == EnumSuitList.Spades && Value == EnumRegularCardValueList.Queen)
             {
                 return 13;
