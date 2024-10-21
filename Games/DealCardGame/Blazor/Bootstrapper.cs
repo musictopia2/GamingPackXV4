@@ -5,7 +5,7 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
     {
         //TestData!.CardsToPass = 10;
         //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
-        //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, TestCards>();
+        GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, RentCards>();
         //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, BirthdayCards>();
         return base.RegisterTestsAsync();
     }
@@ -38,22 +38,44 @@ public class RentCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
         player.StartUpList.Add(card);
         card = deckList.First(x => x.CardType == EnumCardType.PropertyRegular && x.MainColor == EnumColor.Black);
         player.StartUpList.Add(card);
-        var list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
-        player.StartUpList.AddRange(list);
+        card = deckList.First(x => x.ActionCategory == EnumActionCategory.Birthday);
+        player.StartUpList.Add(card); //try first with debt collector and then happy birthday.
+        card = deckList.First(x => x.ActionCategory == EnumActionCategory.DebtCollector);
+        player.StartUpList.Add(card);
+        
+
+        //var list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
+        //player.StartUpList.AddRange(list);
         foreach (var item in playerList)
         {
-            card = deckList.Where(x => x.ActionCategory == EnumActionCategory.JustSayNo).Skip(skip).Take(1).Single();
-            item.StartUpList.Add(card);
-            card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 3).Skip(skip).Take(1).Single();
-            item.StartUpList.Add(card);
-            card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 4).Skip(skip).Take(1).Single();
-            item.StartUpList.Add(card);
+            //card = deckList.Where(x => x.ActionCategory == EnumActionCategory.JustSayNo).Skip(skip).Take(1).Single();
+            //item.StartUpList.Add(card);
+            if (item.PlayerCategory != EnumPlayerCategory.Self)
+            {
+                //each player will have the money ones guaranteed.
+                card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 1).Skip(skip).Take(1).Single();
+                item.StartUpList.Add(card);
+                card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 2).Skip(skip).Take(1).Single();
+                item.StartUpList.Add(card);
+                card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 3).Skip(skip).Take(1).Single();
+                item.StartUpList.Add(card);
+                card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 4).Skip(skip).Take(1).Single();
+                item.StartUpList.Add(card);
+                card = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 5).Skip(skip).Take(1).Single();
+                item.StartUpList.Add(card);
+                skip++;
+                if (skip > 1)
+                {
+                    break;
+                }
+            }
+
 
             //card = deckList.Where(x => x.ActionCategory == EnumActionCategory.Birthday).Skip(skip).Take(1).Single();
             //item.StartUpList.Add(card);
             //card = deckList.Where(x => x.ActionCategory == EnumActionCategory.DebtCollector).Skip(skip).Take(1).Single();
             //item.StartUpList.Add(card);
-            skip++;
+
         }
         return Task.CompletedTask;
     }
