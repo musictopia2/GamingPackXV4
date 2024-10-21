@@ -4,7 +4,7 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
     protected override Task RegisterTestsAsync()
     {
         //TestData!.CardsToPass = 10;
-        //TestData.SaveOption = EnumTestSaveCategory.RestoreOnly;
+        //TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
         GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, RentCards>();
         //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, BirthdayCards>();
         return base.RegisterTestsAsync();
@@ -38,11 +38,13 @@ public class RentCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
         player.StartUpList.Add(card);
         card = deckList.First(x => x.CardType == EnumCardType.PropertyRegular && x.MainColor == EnumColor.Black);
         player.StartUpList.Add(card);
-        card = deckList.First(x => x.ActionCategory == EnumActionCategory.Birthday);
-        player.StartUpList.Add(card); //try first with debt collector and then happy birthday.
-        card = deckList.First(x => x.ActionCategory == EnumActionCategory.DebtCollector);
+        card = deckList.First(x => x.AnyColor == true && x.CardType == EnumCardType.ActionRent);
         player.StartUpList.Add(card);
-        
+        //card = deckList.First(x => x.ActionCategory == EnumActionCategory.Birthday);
+        //player.StartUpList.Add(card); //try first with debt collector and then happy birthday.
+        //card = deckList.First(x => x.ActionCategory == EnumActionCategory.DebtCollector);
+        //player.StartUpList.Add(card);
+
 
         //var list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
         //player.StartUpList.AddRange(list);
@@ -116,7 +118,7 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
         list = deckList.Where(x => x.MainColor == EnumColor.Brown && x.CardType == EnumCardType.PropertyRegular).Take(2);
         player.StartUpList.AddRange(list);
 
-        
+
         //the other player has to play the birthday for testing.
         //player = playerList.GetSelf();
         //return Task.CompletedTask;
@@ -142,10 +144,10 @@ public class TestCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGam
             //player.StartUpList.Add(card);
             list = deckList.Where(x => x.MainColor == EnumColor.DarkBlue).Take(2);
             player.StartUpList.AddRange(list); //needs to have a monopoly so i can test the house and hotel.
-            //list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
-            //player.StartUpList.AddRange(list);
+                                               //list = deckList.Where(x => x.ActionCategory == EnumActionCategory.DoubleRent).Take(2);
+                                               //player.StartUpList.AddRange(list);
 
-            
+
         }
         //var card = deckList.First(x => x.ActionCategory == EnumActionCategory.Gos);
 

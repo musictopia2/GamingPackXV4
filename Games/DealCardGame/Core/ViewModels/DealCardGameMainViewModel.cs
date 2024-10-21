@@ -500,6 +500,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
         {
             await _mainGame.Network!.SendAllAsync("playerchosenfordebt", player.Id);
         }
+        VMData.PlayerPicker.SelectedIndex = 0; //has to reset again.   hopefully doing here is fine.
         await _mainGame.ChosePlayerForDebtAsync(player.Id);
     }
     public bool CanStartOrganizing => IsConfirming() == false;
