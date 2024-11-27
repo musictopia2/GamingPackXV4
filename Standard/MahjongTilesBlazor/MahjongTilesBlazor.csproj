@@ -1,17 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<Version>8.0.1</Version>
+    <Version>9.0.1</Version>
   </PropertyGroup>
-
-
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
-<ItemGroup>
+  <ItemGroup>
     <None Remove="Resources\1.svg" />
     <None Remove="Resources\10.svg" />
     <None Remove="Resources\11.svg" />
@@ -55,7 +53,6 @@
     <None Remove="Resources\8.svg" />
     <None Remove="Resources\9.svg" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Resources\1.svg" />
     <EmbeddedResource Include="Resources\10.svg" />
@@ -101,7 +98,6 @@
     <EmbeddedResource Include="Resources\9.svg" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.1" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.1" />
   </ItemGroup>
-
 </Project>

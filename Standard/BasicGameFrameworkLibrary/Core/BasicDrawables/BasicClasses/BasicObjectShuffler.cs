@@ -7,7 +7,7 @@
 public class BasicObjectShuffler<D>(IDeckDict<D> privateDict, Action<D>? beforePopulate = null) : IDeckShuffler<D>, IAdvancedDIContainer, ISerializable where D : IDeckObject, new()
 {
     private IDeckCount? _deckCount; //maybe needed. to stop overflow exceptions.
-    private readonly IRandomGenerator _rs = RandomHelpers.GetRandomGenerator();
+    private readonly IRandomNumberList _rs = RandomHelpers.GetRandomGenerator();
     public IGamePackageResolver? MainContainer { get; set; }
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
     public bool NeedsToRedo { get; set; }

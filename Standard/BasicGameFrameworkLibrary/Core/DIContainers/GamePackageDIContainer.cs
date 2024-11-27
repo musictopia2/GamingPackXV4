@@ -4,7 +4,7 @@ public class GamePackageDIContainer : IGamePackageResolver, IGamePackageRegister
     private readonly HashSet<ContainerData> _thisSet = new();
     private readonly object _lockObj = new();
     private readonly HashSet<string> _trueList = new();
-    private readonly IRandomGenerator _rans;
+    private readonly IRandomNumberList _rans;
     public GamePackageDIContainer()
     {
         _rans = RandomHelpers.GetRandomGenerator();
