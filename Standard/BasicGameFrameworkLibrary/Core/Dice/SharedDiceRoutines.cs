@@ -12,10 +12,9 @@ public static class SharedDiceRoutines
     {
         BasicList<BasicList<T>> output = new();
         BasicList<T> thisList = new();
-        BasicList<T> otherList = dice.GetPossibleList;
         howManySections.Times(items =>
         {
-            thisList.Add(otherList.GetRandomItem());
+            thisList.Add(dice.GetRandomDiceValue(items == howManySections));
         });
         output.Add(thisList);
         return output;
@@ -23,10 +22,9 @@ public static class SharedDiceRoutines
     public static BasicList<T> GetSingleRolledDice<T>(int howManySections, IGenerateDice<T> dice) where T : IConvertible
     {
         BasicList<T> thisList = new();
-        BasicList<T> otherList = dice.GetPossibleList;
         howManySections.Times(items =>
         {
-            thisList.Add(otherList.GetRandomItem());
+            thisList.Add(dice.GetRandomDiceValue(items == howManySections));
         });
         return thisList;
     }

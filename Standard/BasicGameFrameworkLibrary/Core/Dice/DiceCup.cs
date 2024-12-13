@@ -130,10 +130,9 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
         BasicList<BasicList<D>> output = new();
         AsyncDelayer.SetDelayer(this, ref _delay!);
         IGenerateDice<int> thisG = MainContainer!.Resolve<IGenerateDice<int>>();
-        BasicList<int> possList = thisG.GetPossibleList;
         D tempDice;
         int chosen;
-        howManySections.Times(() =>
+        howManySections.Times((x) =>
         {
             BasicList<D> firsts = new();
             for (int i = 0; i < HowManyDice; i++)
@@ -141,7 +140,7 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
                 tempDice = DiceList[i];
                 if (tempDice.Hold == false)
                 {
-                    chosen = possList.GetRandomItem();
+                    chosen = thisG.GetRandomDiceValue(x == howManySections);
                     tempDice = new()
                     {
                         Index = i + 1

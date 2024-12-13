@@ -9,10 +9,9 @@ public abstract class BaseSpecialStyleDice : IStandardDice, IGenerateDice<int>, 
     public bool IsSelected { get; set; }
     public bool Visible { get; set; } = true;
     public bool IsEnabled { get; set; } = true;
-    [JsonIgnore]
-    public abstract BasicList<int> GetPossibleList { get; }
     public abstract string DotColor { get; set; } //has to be public all the way.  otherwise, autoresume does not work.
     public abstract string FillColor { get; set; }
+    public abstract int GetRandomDiceValue(bool isLastItem);
     public virtual void Populate(int chosen)
     {
         Value = chosen;

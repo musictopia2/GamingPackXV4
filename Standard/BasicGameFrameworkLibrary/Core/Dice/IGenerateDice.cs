@@ -1,5 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
 public interface IGenerateDice<Con> where Con : IConvertible
 {
-    BasicList<Con> GetPossibleList { get; }
+    Con GetRandomDiceValue(bool isLastItem);  // Influenced by isLastItem, but not necessarily always decisive
 }

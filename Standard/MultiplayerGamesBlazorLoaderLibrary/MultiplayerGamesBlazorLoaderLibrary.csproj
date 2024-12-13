@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Version>9.0.1</Version>
+    <RunPostBuildAppCondition Condition="'$(Configuration)' == 'Release'">true</RunPostBuildAppCondition>
+    <FeedType>Public</FeedType>
   </PropertyGroup>
   <ItemGroup>
     <SupportedPlatform Include="browser" />
@@ -15,4 +17,7 @@
     <PackageReference Include="GamePackageSignalRClasses" Version="9.0.1" />
     <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.1" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="C:\VS\OneNet\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net9.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />
+  </Target>
 </Project>

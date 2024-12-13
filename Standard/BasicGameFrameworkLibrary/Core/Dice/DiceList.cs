@@ -59,10 +59,9 @@ public class DiceList<D> : ISimpleList<D>
         SetContainer();
         IDiceContainer<int> thisG = MainContainer!.Resolve<IDiceContainer<int>>();
         thisG.MainContainer = MainContainer;
-        BasicList<int> possList = thisG.GetPossibleList;
-        int Chosen = possList.GetRandomItem();
+        int chosen = thisG.GetRandomDiceValue(true); //in this case, i think just act like its last item.
         D newDice = new();
-        newDice.Populate(Chosen);
+        newDice.Populate(chosen);
         newDice.Index = upTo;
         return newDice;
     }

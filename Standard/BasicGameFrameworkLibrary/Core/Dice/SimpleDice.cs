@@ -11,10 +11,14 @@ public class SimpleDice : IStandardDice, IGenerateDice<int>, ISimpleValueObject<
     public bool IsSelected { get; set; }
     public bool Visible { get; set; } = true;
     public bool IsEnabled { get; set; } = true;
-    BasicList<int> IGenerateDice<int>.GetPossibleList => Enumerable.Range(1, 6).ToBasicList();
     int ISimpleValueObject<int>.ReadMainValue => Value;
-    public virtual void Populate(int Chosen)
+    public virtual void Populate(int chosen)
     {
-        Value = Chosen;
+        Value = chosen;
+    }
+    int IGenerateDice<int>.GetRandomDiceValue(bool isLastItem)
+    {
+        var list = Enumerable.Range(1, 6).ToBasicList();
+        return list.GetRandomItem();
     }
 }
