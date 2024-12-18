@@ -15,7 +15,7 @@ public class SorryCompleteDiceSet(IGamePackageResolver resolver, SorryDicedGameG
         IGenerateDice<int> thisG = MainContainer!.Resolve<IGenerateDice<int>>();
         //thisG.MainContainer = MainContainer;
         BasicList<BasicList<SorryDiceModel>> output = [];
-        howManySections.Times(() =>
+        howManySections.Times(x =>
         {
             GlobalDiceHelpers.HowManyWilds = 0;
             GlobalDiceHelpers.HowManySlides = 0;
@@ -23,8 +23,7 @@ public class SorryCompleteDiceSet(IGamePackageResolver resolver, SorryDicedGameG
             BasicList<SorryDiceModel> tempCol = [];
             3.Times(() =>
             {
-                var list = thisG.GetPossibleList;
-                var item = list.GetRandomItem();
+                var item = thisG.GetRandomDiceValue(x == howManySections);
                 SorryDiceModel dice = new();
                 dice.Populate(item);
                 if (dice.Category == EnumDiceCategory.Sorry)

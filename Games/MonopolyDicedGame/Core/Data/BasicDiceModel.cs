@@ -95,194 +95,6 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
         }
         throw new CustomBasicException("Not Found");
     }
-    public BasicList<int> GetPossibleList
-    {
-        get
-        {
-            //this will show the possibilities.
-            BasicList<int> output;
-            WeightedAverageLists<int> weights = new();
-            int used;
-            int upTo;
-            bool ask;
-            upTo = 8;
-            used = UsedUp(upTo);
-            if (used == 0)
-            {
-                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(60);
-            }
-            else
-            {
-                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(20);
-            }
-            if (ask)
-            {
-                if (used == 0)
-                {
-                    weights.AddWeightedItem(upTo, 3);
-                }
-                else if (used == 1)
-                {
-                    weights.AddWeightedItem(upTo, 2); //want to make it much harder to get what is needed for monopoly.
-                }
-            }
-            upTo = 7;
-            used = UsedUp(upTo);
-            if (used == 0)
-            {
-                weights.AddWeightedItem(upTo, 5);
-            }
-            else if (used == 1)
-            {
-                weights.AddWeightedItem(upTo, 3);
-            }
-            else if (used == 2)
-            {
-                weights.AddWeightedItem(upTo, 1);
-            }
-            upTo = 6;
-            used = UsedUp(upTo);
-            if (used == 0)
-            {
-                weights.AddWeightedItem(upTo, 6);
-            }
-            else if (used == 1)
-            {
-                weights.AddWeightedItem(upTo, 4);
-            }
-            else if (used == 2)
-            {
-                weights.AddWeightedItem(upTo, 1);
-            }
-            upTo = 5;
-            used = UsedUp(upTo);
-            if (used == 0)
-            {
-                weights.AddWeightedItem(upTo, 6);
-            }
-            else if (used == 1)
-            {
-                weights.AddWeightedItem(upTo, 4);
-            }
-            else if (used == 2)
-            {
-                weights.AddWeightedItem(upTo, 2);
-            }
-            upTo = 4;
-            used = UsedUp(upTo);
-            if (used == 0)
-            {
-                weights.AddWeightedItem(upTo, 8);
-            }
-            else if (used == 1)
-            {
-                weights.AddWeightedItem(upTo, 6);
-            }
-            else if (used == 2)
-            {
-                weights.AddWeightedItem(upTo, 2);
-            }
-            upTo = 3;
-            used = UsedUp(upTo);
-            if (used == 0)
-            {
-                weights.AddWeightedItem(upTo, 10);
-            }
-            else if (used == 1)
-            {
-                weights.AddWeightedItem(upTo, 7);
-            }
-            else if (used == 2)
-            {
-                weights.AddWeightedItem(upTo, 3);
-            }
-            upTo = 2;
-            used = UsedUp(upTo);
-            if (used == 0)
-            {
-                weights.AddWeightedItem(upTo, 12);
-            }
-            else if (used == 1)
-            {
-                weights.AddWeightedItem(upTo, 9);
-            }
-            else if (used == 2)
-            {
-                weights.AddWeightedItem(upTo, 3);
-            }
-            upTo = 1;
-            used = UsedUp(upTo);
-            if (used == 0)
-            {
-                weights.AddWeightedItem(upTo, 14);
-            }
-            else if (used == 1)
-            {
-                weights.AddWeightedItem(upTo, 2);
-            }
-            ask = MonopolyDicedGameGameContainer.GlobalRandom.NextBool(60);
-            if (ask)
-            {
-                int waterUsed;
-                int electricUsed;
-                waterUsed = UsedUp(9);
-                electricUsed = UsedUp(10);
-                if (waterUsed == 0 && electricUsed == 0)
-                {
-                    weights.AddWeightedItem(9, 4);
-                    weights.AddWeightedItem(10, 4);
-                }
-                else if (waterUsed > 0 && electricUsed == 0)
-                {
-                    //electric alone.
-                    weights.AddWeightedItem(10, 4);
-                }
-                else if (waterUsed == 0 && electricUsed > 0)
-                {
-                    weights.AddWeightedItem(9, 4);
-                }
-            }
-            int railroads = UsedUp(11);
-            if (railroads == 0)
-            {
-                weights.AddWeightedItem(11, 8);
-            }
-            else if (railroads == 1)
-            {
-                weights.AddWeightedItem(11, 6);
-            }
-            else if (railroads == 2)
-            {
-                weights.AddWeightedItem(11, 4);
-            }
-            else if (railroads == 3)
-            {
-                weights.AddWeightedItem(11, 3);
-            }
-            int chances = UsedUp(12);
-            if (chances == 0)
-            {
-                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(20);
-            }
-            else
-            {
-                ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(10);
-            }
-            if (ask)
-            {
-                if (chances == 0)
-                {
-                    weights.AddWeightedItem(12, 4); //because there is only a 20 percent chance anyways.
-                }
-                else if (chances == 1)
-                {
-                    weights.AddWeightedItem(12, 2);
-                }
-            }
-            output = weights.GetWeightedList();
-            return output;
-        }
-    }
     public void UseUtility(EnumUtilityType utility)
     {
         if (Index > 0)
@@ -338,5 +150,188 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
             return Group.CompareTo(other.Group);
         }
         return WhatDice.CompareTo(other.WhatDice);
+    }
+
+    int IGenerateDice<int>.GetRandomDiceValue(bool isLastItem)
+    {
+        WeightedAverageLists<int> weights = new();
+        int used;
+        int upTo;
+        bool ask;
+        upTo = 8;
+        used = UsedUp(upTo);
+        if (used == 0)
+        {
+            ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(60);
+        }
+        else
+        {
+            ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(20);
+        }
+        if (ask)
+        {
+            if (used == 0)
+            {
+                weights.AddWeightedItem(upTo, 3);
+            }
+            else if (used == 1)
+            {
+                weights.AddWeightedItem(upTo, 2); //want to make it much harder to get what is needed for monopoly.
+            }
+        }
+        upTo = 7;
+        used = UsedUp(upTo);
+        if (used == 0)
+        {
+            weights.AddWeightedItem(upTo, 5);
+        }
+        else if (used == 1)
+        {
+            weights.AddWeightedItem(upTo, 3);
+        }
+        else if (used == 2)
+        {
+            weights.AddWeightedItem(upTo, 1);
+        }
+        upTo = 6;
+        used = UsedUp(upTo);
+        if (used == 0)
+        {
+            weights.AddWeightedItem(upTo, 6);
+        }
+        else if (used == 1)
+        {
+            weights.AddWeightedItem(upTo, 4);
+        }
+        else if (used == 2)
+        {
+            weights.AddWeightedItem(upTo, 1);
+        }
+        upTo = 5;
+        used = UsedUp(upTo);
+        if (used == 0)
+        {
+            weights.AddWeightedItem(upTo, 6);
+        }
+        else if (used == 1)
+        {
+            weights.AddWeightedItem(upTo, 4);
+        }
+        else if (used == 2)
+        {
+            weights.AddWeightedItem(upTo, 2);
+        }
+        upTo = 4;
+        used = UsedUp(upTo);
+        if (used == 0)
+        {
+            weights.AddWeightedItem(upTo, 8);
+        }
+        else if (used == 1)
+        {
+            weights.AddWeightedItem(upTo, 6);
+        }
+        else if (used == 2)
+        {
+            weights.AddWeightedItem(upTo, 2);
+        }
+        upTo = 3;
+        used = UsedUp(upTo);
+        if (used == 0)
+        {
+            weights.AddWeightedItem(upTo, 10);
+        }
+        else if (used == 1)
+        {
+            weights.AddWeightedItem(upTo, 7);
+        }
+        else if (used == 2)
+        {
+            weights.AddWeightedItem(upTo, 3);
+        }
+        upTo = 2;
+        used = UsedUp(upTo);
+        if (used == 0)
+        {
+            weights.AddWeightedItem(upTo, 12);
+        }
+        else if (used == 1)
+        {
+            weights.AddWeightedItem(upTo, 9);
+        }
+        else if (used == 2)
+        {
+            weights.AddWeightedItem(upTo, 3);
+        }
+        upTo = 1;
+        used = UsedUp(upTo);
+        if (used == 0)
+        {
+            weights.AddWeightedItem(upTo, 14);
+        }
+        else if (used == 1)
+        {
+            weights.AddWeightedItem(upTo, 2);
+        }
+        ask = MonopolyDicedGameGameContainer.GlobalRandom.NextBool(60);
+        if (ask)
+        {
+            int waterUsed;
+            int electricUsed;
+            waterUsed = UsedUp(9);
+            electricUsed = UsedUp(10);
+            if (waterUsed == 0 && electricUsed == 0)
+            {
+                weights.AddWeightedItem(9, 4);
+                weights.AddWeightedItem(10, 4);
+            }
+            else if (waterUsed > 0 && electricUsed == 0)
+            {
+                //electric alone.
+                weights.AddWeightedItem(10, 4);
+            }
+            else if (waterUsed == 0 && electricUsed > 0)
+            {
+                weights.AddWeightedItem(9, 4);
+            }
+        }
+        int railroads = UsedUp(11);
+        if (railroads == 0)
+        {
+            weights.AddWeightedItem(11, 8);
+        }
+        else if (railroads == 1)
+        {
+            weights.AddWeightedItem(11, 6);
+        }
+        else if (railroads == 2)
+        {
+            weights.AddWeightedItem(11, 4);
+        }
+        else if (railroads == 3)
+        {
+            weights.AddWeightedItem(11, 3);
+        }
+        int chances = UsedUp(12);
+        if (chances == 0)
+        {
+            ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(20);
+        }
+        else
+        {
+            ask = MonopolyDicedGameGameContainer.GlobalRandom!.NextBool(10);
+        }
+        if (ask)
+        {
+            if (chances == 0)
+            {
+                weights.AddWeightedItem(12, 4); //because there is only a 20 percent chance anyways.
+            }
+            else if (chances == 1)
+            {
+                weights.AddWeightedItem(12, 2);
+            }
+        }
+        return weights.GetRandomWeightedItem();
     }
 }

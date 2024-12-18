@@ -10,50 +10,6 @@ public class RummyDiceInfo : IRummmyObject<EnumColorType, EnumColorType>,
     public bool Visible { get; set; } = true;
     public EnumColorType Color { get; set; }
     public bool IsWild { get; set; }
-    BasicList<int> IGenerateDice<int>.GetPossibleList //decided to make it twice as likely to get 11 or 12 now.  also means we don't need the extra 2 wilds anymore.
-    {
-        get
-        {
-            if (Value == 0)
-            {
-                //because compile problems otherwise.
-            }
-            BasicList<int> output = new();
-            //first 44 is just as likely.
-            var temps = Enumerable.Range(1, 36);
-            output.AddRange(temps);
-            output.AddRange(temps);
-            output.AddRange(temps); //decided to make 1 to 10 most likely.  so a person can get 11 or 12 but less likely.
-
-            temps = Enumerable.Range(37, 4);
-            output.AddRange(temps);
-            output.AddRange(temps);
-
-
-            temps = Enumerable.Range(45, 8);
-
-            output.AddRange(temps);
-
-            temps = Enumerable.Range(41, 4);
-            output.AddRange(temps);
-            output.AddRange(temps);
-            output.AddRange(temps);
-            output.AddRange(temps);
-            output.AddRange(temps);
-
-            temps = Enumerable.Range(81, 12);
-            output.AddRange(temps);
-            output.AddRange(temps);
-
-            temps = Enumerable.Range(81, 4);
-            output.AddRange(temps);
-
-            temps = Enumerable.Range(94, 12);
-            output.AddRange(temps);
-
-            return output;
-        }
-    }
     int IRummmyObject<EnumColorType, EnumColorType>.GetSecondNumber => 0;
     int ISimpleValueObject<int>.ReadMainValue => Value;
     bool IWildObject.IsObjectWild => IsWild;
@@ -69,7 +25,7 @@ public class RummyDiceInfo : IRummmyObject<EnumColorType, EnumColorType>,
         int z = 0;
         for (int x = 1; x <= 4; x++)
         {
-            for (int y = 1; y <= 10; y++)
+            for (int y = 1; y <= 12; y++)
             {
                 z++;
                 if (z == chosen)
@@ -84,15 +40,9 @@ public class RummyDiceInfo : IRummmyObject<EnumColorType, EnumColorType>,
             }
         }
         //1 to 40 is 1 to 10
-        //41 to 44 are the wilds
-        //45 and on are 11 and 12
-        //for(int x = 1; x <=4; x++)
-        //{
-        //    IsWild = true;
-        //    Value = 0;
-        //    Display = "W";
-        //    return;
-        //}
+        //41 to 48 is 11 and 12
+        //49 to 52 are wilds.
+        
         for (int x = 1; x <= 4; x++)
         {
             z++;
@@ -105,41 +55,6 @@ public class RummyDiceInfo : IRummmyObject<EnumColorType, EnumColorType>,
                 return;
             }
         }
-        for (int x = 1; x <= 4; x++)
-        {
-            for (int y = 11; y <= 12; y++)
-            {
-                z++;
-                if (z == chosen)
-                {
-                    Index = chosen;
-                    Color = EnumColorType.FromValue(x);
-                    Value = y;
-                    Display = Value.ToString();
-                    IsWild = false;
-                    return;
-                }
-            }
-        }
-        z = 80;
-        for (int y = 1; y <= 10; y++)
-        {
-            for (int x = 1; x <= 4; x++)
-            {
-                z++;
-                if (z == chosen)
-                {
-                    Index = chosen;
-                    Color = EnumColorType.FromValue(x);
-                    Value = y;
-                    Display = Value.ToString();
-                    IsWild = false;
-                    return;
-
-                }
-            }
-        }
-
         throw new CustomBasicException($"Nothing found for {chosen}");
     }
     int IComparable<RummyDiceInfo>.CompareTo(RummyDiceInfo? other) //probably important to sort the dice this time.
@@ -153,5 +68,36 @@ public class RummyDiceInfo : IRummmyObject<EnumColorType, EnumColorType>,
             return Value.CompareTo(other.Value);
         }
         return Color.CompareTo(other.Color);
+    }
+    int IGenerateDice<int>.GetRandomDiceValue(bool isLastItem)
+    {
+        BasicList<int> list;
+        if (isLastItem == false)
+        {
+            list = Enumerable.Range(1, 52).ToBasicList();
+            return list.GetRandomItem();
+        }
+        WeightedAverageLists<int> weights = new();
+        //first 4 are most likely.
+        // Higher weight for numbers 1-16
+        list = Enumerable.Range(1, 16).ToBasicList();
+        weights.AddWeightedItem(list, 100);
+
+        // Lower weight for 17-28
+        list = Enumerable.Range(17, 12).ToBasicList();
+        weights.AddWeightedItem(list, 80);
+
+        // Even lower weight for 29-40
+        list = Enumerable.Range(29, 12).ToBasicList();
+        weights.AddWeightedItem(list, 50);
+
+        // Even more rare for 41-48
+        list = Enumerable.Range(41, 8).ToBasicList();
+        weights.AddWeightedItem(list, 30);
+
+        // Wilds have the highest weight (more likely to appear)
+        list = Enumerable.Range(49, 4).ToBasicList();
+        weights.AddWeightedItem(list, 200);
+        return weights.GetRandomWeightedItem();
     }
 }

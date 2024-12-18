@@ -72,17 +72,17 @@ public class RummyBoardCP
         {
             newNum = SaveRoot!.Invoke().DiceList.Count;
         }
-        BasicList<BasicList<RummyDiceInfo>> output = new();
+        BasicList<BasicList<RummyDiceInfo>> output = [];
         BasicList<RummyDiceInfo> tempCol;
-        BasicList<int> possibleList = _gens.GetPossibleList;
         RummyDiceInfo thisDice;
         7.Times(x =>
         {
-            tempCol = new();
+            tempCol = [];
             newNum.Times(y =>
             {
+                int item = _gens.GetRandomDiceValue(x == 7);
                 thisDice = new RummyDiceInfo();
-                thisDice.Populate(possibleList.GetRandomItem());
+                thisDice.Populate(item);
                 tempCol.Add(thisDice);
             });
             output.Add(tempCol);

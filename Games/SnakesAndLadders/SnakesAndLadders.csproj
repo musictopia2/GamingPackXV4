@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Version>8.0.4</Version>
     <PackageId>Musictopia.SnakesAndLadders</PackageId>
@@ -10,7 +10,7 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="8.0.19" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.2" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />

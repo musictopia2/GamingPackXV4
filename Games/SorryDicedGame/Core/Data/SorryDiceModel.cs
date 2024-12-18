@@ -25,27 +25,6 @@ public class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>, ISelectableOb
         }
         throw new CustomBasicException("Only 5, 6, 7 for frequency is supported");
     }
-    public BasicList<int> GetPossibleList
-    {
-        get
-        {
-            WeightedAverageLists<int> weights = new();
-            4.Times(x =>
-            {
-                weights.AddWeightedItem(x, 3);
-            });
-            3.Times(x =>
-            {
-                int y = x + 4;
-                int howOften = GetFrequency(y);
-                if (howOften > 0)
-                {
-                    weights.AddWeightedItem(y, howOften);
-                }
-            });
-            return weights.GetWeightedList();
-        }
-    }
     public bool IsSelected { get; set; }
     public void Populate(int chosen)
     {
@@ -77,5 +56,24 @@ public class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>, ISelectableOb
             return;
         }
         throw new CustomBasicException("Only 1 to 7 for dice is supported");
+    }
+
+    int IGenerateDice<int>.GetRandomDiceValue(bool isLastItem)
+    {
+        WeightedAverageLists<int> weights = new();
+        4.Times(x =>
+        {
+            weights.AddWeightedItem(x, 4); //was 3. decided to increase to 4.
+        });
+        3.Times(x =>
+        {
+            int y = x + 4;
+            int howOften = GetFrequency(y);
+            if (howOften > 0)
+            {
+                weights.AddWeightedItem(y, howOften);
+            }
+        });
+        return weights.GetRandomWeightedItem();
     }
 }

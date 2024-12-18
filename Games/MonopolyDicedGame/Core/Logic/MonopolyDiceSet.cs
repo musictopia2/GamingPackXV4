@@ -18,14 +18,13 @@ public class MonopolyDiceSet(IGamePackageResolver resolver, MonopolyDicedGameGam
         thisG.MainContainer = MainContainer;
         GlobalDiceHelpers.OwnedOnBoard = gameContainer.SaveRoot.Owns;
         BasicList<BasicList<BasicDiceModel>> output = [];
-        howManySections.Times(() =>
+        howManySections.Times(x =>
         {
             GlobalDiceHelpers.OwnWhenRolling.Clear();
             BasicList<BasicDiceModel> tempCol = [];
             newNum.Times(() =>
             {
-                var list = thisG.GetPossibleList;
-                var item = list.GetRandomItem();
+                var item = thisG.GetRandomDiceValue(x == howManySections);
                 BasicDiceModel dice = new();
                 dice.Populate(item);
                 OwnedModel owner = new();

@@ -1,7 +1,7 @@
 ﻿namespace BowlingDiceGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class BowlingDiceSet : IRollMultipleDice<bool>, ISerializable
+public class BowlingDiceSet(IGameNetwork thisNet) : IRollMultipleDice<bool>, ISerializable
 {
     public IGamePackageResolver? MainContainer { get; set; }
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
@@ -42,35 +42,32 @@ public class BowlingDiceSet : IRollMultipleDice<bool>, ISerializable
             throw new CustomBasicException("There are no dice to even roll.  Try FirstLoad");
         }
         int counts = DiceList.Count(Items => Items.Value == false);
-        BasicList<BasicList<bool>> output = new();
+        BasicList<BasicList<bool>> output = [];
         AsyncDelayer.SetDelayer(this, ref _delay!);
         IDiceContainer<bool> thisG = MainContainer!.Resolve<IDiceContainer<bool>>();
         thisG.MainContainer = MainContainer;
-        BasicList<bool> possList = thisG.GetPossibleList;
-        howManySections.Times(() =>
+        howManySections.Times(x =>
         {
-            BasicList<bool> firsts = new();
+            BasicList<bool> firsts = [];
             counts.Times(() =>
             {
-                firsts.Add(possList.GetRandomItem());
+                bool lasts = x == howManySections;
+                firsts.Add(thisG.GetRandomDiceValue(lasts));
             });
             output.Add(firsts);
         });
         return output;
     }
-    private readonly IGameNetwork _network;
-    public readonly BasicList<SingleDiceInfo> DiceList = new();
-    public BowlingDiceSet(IGameNetwork thisNet)
-    {
-        _network = thisNet;
-    }
+
+    public readonly BasicList<SingleDiceInfo> DiceList = [];
+
     public async Task SendMessageAsync(BasicList<BasicList<bool>> thisList)
     {
         await SendMessageAsync("rolled", thisList);
     }
     public async Task SendMessageAsync(string category, BasicList<BasicList<bool>> thisList)
     {
-        await _network.SendAllAsync(category, thisList); //i think
+        await thisNet.SendAllAsync(category, thisList); //i think
     }
     public Task ShowRollingAsync(BasicList<BasicList<bool>> thisCol)
     {

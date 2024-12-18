@@ -9,17 +9,14 @@ public class HouseDice(MonopolyDicedGameGameContainer gameContainer) : IComplete
     public EnumMiscType Value { get; set; }
     public int Index { get; set; }
     public bool Visible { get; set; }
-    public BasicList<EnumMiscType> GetPossibleList
+    EnumMiscType IGenerateDice<EnumMiscType>.GetRandomDiceValue(bool isLastItem)
     {
-        get
-        {
-            WeightedAverageLists<EnumMiscType> weights = new();
-            weights.AddWeightedItem(EnumMiscType.RegularHouse, 13)
-                .AddWeightedItem(EnumMiscType.BrokenHouse, 2)
-                .AddWeightedItem(EnumMiscType.Hotel, 3)
-                .AddWeightedItem(EnumMiscType.Free, 4);
-            return weights.GetWeightedList();
-        }
+        WeightedAverageLists<EnumMiscType> weights = new();
+        weights.AddWeightedItem(EnumMiscType.RegularHouse, 13)
+            .AddWeightedItem(EnumMiscType.BrokenHouse, 2)
+            .AddWeightedItem(EnumMiscType.Hotel, 3)
+            .AddWeightedItem(EnumMiscType.Free, 4);
+        return weights.GetRandomWeightedItem();
     }
     public async Task<BasicList<EnumMiscType>> GetDiceList(string content)
     {

@@ -112,18 +112,6 @@ public class CategoriesDice : ICompleteSingleDice<string>, IHoldDice, ISerializa
         Visible = false;
         _gameContainer.SaveRoot!.CategorySelected = -1;
     }
-    public BasicList<string> GetPossibleList
-    {
-        get
-        {
-            WeightedAverageLists<string> thisWeight = new();
-            thisWeight.AddWeightedItem("D", 40, 50).AddWeightedItem("E", 20)
-            .AddWeightedItem("O", 25, 30)
-            .AddWeightedItem("S", 30).AddWeightedItem("H", 5, 10).AddWeightedItem("L", 35, 40);
-            return thisWeight.GetWeightedList();
-        }
-    }
-
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
 
     public async Task ShowRollingAsync(BasicList<string> thisCol)
@@ -155,5 +143,13 @@ public class CategoriesDice : ICompleteSingleDice<string>, IHoldDice, ISerializa
     public void Populate(string chosen)
     {
         Value = chosen;
+    }
+    string IGenerateDice<string>.GetRandomDiceValue(bool isLastItem)
+    {
+        WeightedAverageLists<string> thisWeight = new();
+        thisWeight.AddWeightedItem("D", 40, 50).AddWeightedItem("E", 20)
+        .AddWeightedItem("O", 25, 30)
+        .AddWeightedItem("S", 30).AddWeightedItem("H", 5, 10).AddWeightedItem("L", 35, 40);
+        return thisWeight.GetRandomWeightedItem();
     }
 }
