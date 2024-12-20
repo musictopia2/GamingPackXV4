@@ -9,7 +9,6 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.2" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
@@ -51,5 +50,11 @@
     <EmbeddedResource Include="Resources\MailRecyling.svg" />
     <EmbeddedResource Include="Resources\MailScholarship.svg" />
     <EmbeddedResource Include="Resources\MailWhale.svg" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.2" />
   </ItemGroup>
 </Project>

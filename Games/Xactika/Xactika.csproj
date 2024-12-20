@@ -9,7 +9,6 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.2" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
@@ -21,5 +20,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Cone.svg" />
     <EmbeddedResource Include="Resources\Cube.svg" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.2" />
   </ItemGroup>
 </Project>

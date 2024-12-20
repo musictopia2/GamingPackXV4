@@ -37,7 +37,6 @@
     <EmbeddedResource Include="Resources\Victorian.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.2" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
@@ -46,5 +45,11 @@
     <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
     <PackageReference Include="JsonDeserializeResourceSourceGenerator" Version="1.0.3" PrivateAssets="all" />
     <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.2" />
   </ItemGroup>
 </Project>
