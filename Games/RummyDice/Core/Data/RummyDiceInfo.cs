@@ -42,7 +42,7 @@ public class RummyDiceInfo : IRummmyObject<EnumColorType, EnumColorType>,
         //1 to 40 is 1 to 10
         //41 to 48 is 11 and 12
         //49 to 52 are wilds.
-        
+
         for (int x = 1; x <= 4; x++)
         {
             z++;
@@ -81,23 +81,84 @@ public class RummyDiceInfo : IRummmyObject<EnumColorType, EnumColorType>,
         //first 4 are most likely.
         // Higher weight for numbers 1-16
         list = Enumerable.Range(1, 16).ToBasicList();
-        weights.AddWeightedItem(list, 100);
-
+        if (RummyDiceHandVM.Phase != 7)
+        {
+            weights.AddWeightedItem(list, 100);
+        }
+        else
+        {
+            weights.AddWeightedItem(list, 200);
+        }
         // Lower weight for 17-28
         list = Enumerable.Range(17, 12).ToBasicList();
         weights.AddWeightedItem(list, 80);
 
-        // Even lower weight for 29-40
-        list = Enumerable.Range(29, 12).ToBasicList();
-        weights.AddWeightedItem(list, 50);
 
-        // Even more rare for 41-48
-        list = Enumerable.Range(41, 8).ToBasicList();
-        weights.AddWeightedItem(list, 30);
+        if (RummyDiceHandVM.Phase != 7)
+        {
+            // Even lower weight for 29-40
 
-        // Wilds have the highest weight (more likely to appear)
+            list = Enumerable.Range(29, 12).ToBasicList();
+            weights.AddWeightedItem(list, 50);
+
+            // Even more rare for 41-48
+            list = Enumerable.Range(41, 8).ToBasicList();
+            weights.AddWeightedItem(list, 30);
+
+        }
+        else
+        {
+            list = Enumerable.Range(29, 12).ToBasicList();
+            weights.AddWeightedItem(list, 20);
+
+            // Even more rare for 41-48
+            list = Enumerable.Range(41, 8).ToBasicList();
+            weights.AddWeightedItem(list, 10);
+        }
+
         list = Enumerable.Range(49, 4).ToBasicList();
-        weights.AddWeightedItem(list, 200);
+        weights.AddWeightedItem(list, GetWildWeights());
         return weights.GetRandomWeightedItem();
+    }
+    private static int GetWildWeights()
+    {
+        BasicList<int> list;
+        if (RummyDiceHandVM.Phase == 0)
+        {
+            throw new CustomBasicException("Must specify the phase now");
+        }
+        if (RummyDiceHandVM.Phase == 4)
+        {
+            return 130;
+        }
+        if (RummyDiceHandVM.Phase == 5)
+        {
+            return 140;
+        }
+        if (RummyDiceHandVM.Phase == 6)
+        {
+            return 150;
+        }
+        if (RummyDiceHandVM.Phase == 8)
+        {
+            return 20;
+        }
+        if (RummyDiceHandVM.Phase == 1)
+        {
+            list = Enumerable.Range(20, 60).ToBasicList();
+            return list.GetRandomItem(); //may get lower weight but could get higher weight.
+        }
+        if (RummyDiceHandVM.Phase == 7)
+        {
+            list = Enumerable.Range(40, 70).ToBasicList();
+            return list.GetRandomItem(); //you get a higher chance of wild but could be lower.
+        }
+        if (RummyDiceHandVM.Phase == 10)
+        {
+            list = Enumerable.Range(80, 120).ToBasicList();
+            return list.GetRandomItem();
+        }
+        list = Enumerable.Range(70, 100).ToBasicList();
+        return list.GetRandomItem();
     }
 }

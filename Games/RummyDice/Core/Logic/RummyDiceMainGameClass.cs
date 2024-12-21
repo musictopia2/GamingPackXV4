@@ -272,6 +272,11 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
                 throw new CustomBasicException($"Nothing for status {status}  with the message of {content}");
         }
     }
+    public override Task ContinueTurnAsync()
+    {
+        RummyDiceHandVM.Phase = SingleInfo!.Phase; //i think
+        return base.ContinueTurnAsync();
+    }
     public override async Task StartNewTurnAsync()
     {
         PrepStartTurn();

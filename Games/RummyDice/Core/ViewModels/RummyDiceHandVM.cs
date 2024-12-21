@@ -1,6 +1,7 @@
 ﻿namespace RummyDice.Core.ViewModels;
 public partial class RummyDiceHandVM : SimpleControlObservable
 {
+    public static int Phase { get; set; }
     public ControlCommand? BoardCommand { get; set; }
     public ControlCommand? DiceCommand { get; set; }
 
