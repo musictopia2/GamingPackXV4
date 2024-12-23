@@ -75,6 +75,7 @@ public class RummyBoardCP
         BasicList<BasicList<RummyDiceInfo>> output = [];
         BasicList<RummyDiceInfo> tempCol;
         RummyDiceInfo thisDice;
+        _gens.StartRoll();
         7.Times(x =>
         {
             tempCol = [];

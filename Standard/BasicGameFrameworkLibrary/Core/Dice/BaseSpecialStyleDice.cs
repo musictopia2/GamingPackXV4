@@ -16,4 +16,9 @@ public abstract class BaseSpecialStyleDice : IStandardDice, IGenerateDice<int>, 
     {
         Value = chosen;
     }
+
+    void IGenerateDice<int>.StartRoll()
+    {
+        //nothing needed
+    }
 }

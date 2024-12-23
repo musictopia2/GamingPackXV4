@@ -74,7 +74,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
         {
             return;
         }
-        TempSets = new();
+        TempSets = [];
         bool needsTemps;
         if (SaveRoot!.TempSets.Count == 0)
         {
@@ -91,7 +91,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
             TempSets.Add(thisTemp);
             if (needsTemps == true)
             {
-                SaveRoot.TempSets.Add(new());
+                SaveRoot.TempSets.Add([]);
             }
         });
         CreateSets();
@@ -108,7 +108,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
         PhaseList thisPhase = new();
         thisPhase.Description = "2 Sets of 3";
         SetInfo newSets;
-        PhaseInfo = new();
+        PhaseInfo = [];
         2.Times(x =>
         {
             newSets = new();
@@ -274,7 +274,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
     }
     public override Task ContinueTurnAsync()
     {
-        RummyDiceHandVM.Phase = SingleInfo!.Phase; //i think
+        RummyDistributionClass.CurrentPlayer = SingleInfo;
         return base.ContinueTurnAsync();
     }
     public override async Task StartNewTurnAsync()
@@ -318,6 +318,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
         if (score == 0)
         {
             SingleInfo.HowManyRepeats++;
+            SingleInfo.CurrentRepeats ++;
             if (SaveRoot!.SomeoneFinished == true)
             {
                 SingleInfo.InGame = false;
@@ -330,6 +331,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
             newScore += 40;
         }
         SingleInfo.Phase++;
+        SingleInfo.CurrentRepeats = 0;
         if (phase == 10)
         {
             SaveRoot!.SomeoneFinished = true;
@@ -358,7 +360,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
         output = 0;
         for (int x = 1; x <= 2; x++)
         {
-            thisCollection = new();
+            thisCollection = [];
             tempCollection = TempSets![x - 1].HandList;
             if (tempCollection.Count > 0)
             {
@@ -439,7 +441,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
     }
     public async Task BoardProcessAsync()
     {
-        BasicList<RummyDiceInfo> thisCol = new();
+        BasicList<RummyDiceInfo> thisCol = [];
         TempSets!.ForEach(items =>
         {
             thisCol.AddRange(items.GetSelectedDiceAndRemove());
@@ -449,7 +451,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
     }
     public async Task SetProcessAsync(int whichOne)
     {
-        BasicList<RummyDiceInfo> thisCol = new();
+        BasicList<RummyDiceInfo> thisCol = [];
         thisCol.AddRange(MainBoard1!.GetSelectedList());
         TempSets!.ForConditionalItems(items => items.Index != whichOne, items =>
         {

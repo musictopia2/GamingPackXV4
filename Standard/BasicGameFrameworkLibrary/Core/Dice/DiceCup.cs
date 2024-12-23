@@ -132,6 +132,7 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
         IGenerateDice<int> thisG = MainContainer!.Resolve<IGenerateDice<int>>();
         D tempDice;
         int chosen;
+        thisG.StartRoll(); //just in case. not sure if you need this.  there if you need it.
         howManySections.Times((x) =>
         {
             BasicList<D> firsts = new();

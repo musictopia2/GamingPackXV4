@@ -1,18 +1,13 @@
 //i think this is the most common things i like to do
 namespace RummyDice.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<RummyDiceShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<RummyDiceShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
         Core.DIFinishProcesses.SpecializedRegistrationHelpers.RegisterCommonMultplayerClasses(GetDIContainer);
         Core.DIFinishProcesses.AutoResetClass.RegisterAutoResets();
-        register.RegisterSingleton<IGenerateDice<int>, RummyDiceInfo>();
+        register.RegisterSingleton<IGenerateDice<int>, RummyDistributionClass>();
         return Task.CompletedTask;
     }
 

@@ -45,3 +45,4 @@ global using BasicGameFrameworkLibrary.Core.Extensions;
 global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
 global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using BasicGameFrameworkLibrary.Core.AdvancedRandomSystems;

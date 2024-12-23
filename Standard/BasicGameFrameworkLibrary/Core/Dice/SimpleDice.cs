@@ -21,4 +21,8 @@ public class SimpleDice : IStandardDice, IGenerateDice<int>, ISimpleValueObject<
         var list = Enumerable.Range(1, 6).ToBasicList();
         return list.GetRandomItem();
     }
+    void IGenerateDice<int>.StartRoll()
+    {
+        //not needed
+    }
 }

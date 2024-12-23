@@ -1,86 +1,96 @@
-﻿namespace BasicGameFrameworkLibrary.Core.MiscProcesses;
+﻿namespace BasicGameFrameworkLibrary.Core.AdvancedRandomSystems;
 public class GameTieredDistribution<T>
-    where T : notnull
+        where T : notnull
 {
     private IRandomNumberList? _randomSource;
-    private readonly Dictionary<string, int> _tierProbabilities = [];
-    private readonly Dictionary<string, Dictionary<T, int>> _tieredDistributions = [];
+    private readonly BasicList<Tier<T>> _tiers = [];
+    private Tier<T>? _existingTier;
     public void SendRandoms(IRandomNumberList? rs)
     {
         _randomSource = rs;
     }
+
     private void CaptureRandoms()
     {
         _randomSource ??= RandomHelpers.GetRandomGenerator();
     }
-    // Set up the probabilities for each tier with a more fluent approach.
-    public GameTieredDistribution<T> AddTier(string tierName, int weight)
+
+    public GameTieredDistribution<T> AddTier(string tierName, int lowRange, int highRange)
     {
-        if (_tierProbabilities.ContainsKey(tierName))
+        if (_tiers.Any(x => x.Name == tierName))
         {
             throw new InvalidOperationException($"Tier '{tierName}' already exists.");
         }
-        _tierProbabilities[tierName] = weight;
-        return this; // To allow method chaining.
+        CaptureRandoms();
+        int weight = _randomSource!.GetRandomNumber(highRange, lowRange);
+        _tiers.Add(new(tierName, weight));
+        return this;
     }
-    private string _existingTier = "";
-
+    public bool HasTier(string name)
+    {
+        return _tiers.Any(x => x.Name == name);
+    }
+    public GameTieredDistribution<T> AddTier(string tierName, int weight)
+    {
+        if (_tiers.Any(x => x.Name == tierName))
+        {
+            throw new InvalidOperationException($"Tier '{tierName}' already exists.");
+        }
+        _tiers.Add(new(tierName, weight));
+        return this;
+    }
     public GameTieredDistribution<T> SelectTier(string tierName, Action<GameTieredDistribution<T>> action)
     {
-        _existingTier = tierName;
+        _existingTier = _tiers.Single(x => x.Name == tierName);
         action.Invoke(this);
         return this;
     }
+
     private void CheckTier()
     {
-        if (string.IsNullOrWhiteSpace(_existingTier))
+        if (_existingTier is null)
         {
-            throw new CustomBasicException("No tier was selected  Try calling SelectTier and then using a delegate");
-        }
-        if (!_tierProbabilities.ContainsKey(_existingTier))
-        {
-            throw new InvalidOperationException($"Tier '{_existingTier}' has not been defined. Please define it first.");
-        }
-
-        if (!_tieredDistributions.ContainsKey(_existingTier))
-        {
-            _tieredDistributions[_existingTier] = new();
+            throw new CustomBasicException("No tier was selected. Try calling SelectTier and then using a delegate.");
         }
     }
+
     public GameTieredDistribution<T> AddWeightedItem(BasicList<T> items, int weight)
     {
         CheckTier();
         foreach (var item in items)
         {
-            _tieredDistributions[_existingTier][item] = weight;
+            _existingTier!.AddItem(item, weight);
         }
         return this;
     }
+
     public GameTieredDistribution<T> AddWeightedItem(BasicList<T> items, int lowRange, int highRange)
     {
         CheckTier();
         CaptureRandoms();
-        foreach(var item in items)
+        foreach (var item in items)
         {
             int weight = _randomSource!.GetRandomNumber(highRange, lowRange);
-            _tieredDistributions[_existingTier][item] = weight;
+            _existingTier!.AddItem(item, weight);
         }
         return this;
     }
     public GameTieredDistribution<T> AddWeightedItem(T item, int weight)
     {
-        CheckTier(); 
-        _tieredDistributions[_existingTier][item] = weight;
+        CheckTier();
+        _existingTier!.AddItem(item, weight);
         return this;
     }
+
     public GameTieredDistribution<T> AddWeightedItem(T item, int lowRange, int highRange)
     {
         CheckTier();
         CaptureRandoms();
         int weight = _randomSource!.GetRandomNumber(highRange, lowRange);
-        _tieredDistributions[_existingTier][item] = weight;
+        _existingTier!.AddItem(item, weight);
         return this;
     }
+
     public GameTieredDistribution<T> AddWeightedItemWithChance(T thisItem, int notPassingWeight, int firstWeight, int desiredWeight)
     {
         CheckTier();
@@ -95,22 +105,21 @@ public class GameTieredDistribution<T>
     }
 
     // Randomly select a tier based on the probabilities.
-    private string SelectTier()
+    private Tier<T> SelectTier()
     {
-        int totalWeight = _tierProbabilities.Values.Sum();
+        int totalWeight = _tiers.Sum(x => x.Probability);
         int randomChoice = _randomSource!.GetRandomNumber(totalWeight);
         int cumulativeWeight = 0;
 
-        foreach (var tier in _tierProbabilities)
+        foreach (var tier in _tiers)
         {
-            cumulativeWeight += tier.Value;
+            cumulativeWeight += tier.Probability;
             if (randomChoice <= cumulativeWeight)
             {
-                return tier.Key;
+                return tier;
             }
         }
 
-        // This should never happen if the probabilities sum to a positive number.
         throw new InvalidOperationException("Unable to select a tier.");
     }
 
@@ -118,13 +127,17 @@ public class GameTieredDistribution<T>
     public T GetRandomItem()
     {
         WeightedAverageLists<T> weightedItems = new();
+        Tier<T> selectedTier = SelectTier();
+        //var selectedDistribution = _tieredDistributions[selectedTier];
 
-        string selectedTier = SelectTier();
-        var selectedDistribution = _tieredDistributions[selectedTier];
-        foreach (var item in selectedDistribution)
+        // Add the items and their weights to the weighted items list
+        foreach (var item in selectedTier.Items)
         {
-            weightedItems.AddWeightedItem(item.Key, item.Value);
+            weightedItems.AddWeightedItem(item.Item, item.Weight);
+            //weightedItems.AddWeightedItem(item.Key, item.Value);
         }
+
+        // Get a random weighted item
         return weightedItems.GetRandomWeightedItem();
     }
 }

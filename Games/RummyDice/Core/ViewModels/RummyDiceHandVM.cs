@@ -1,11 +1,10 @@
 ﻿namespace RummyDice.Core.ViewModels;
 public partial class RummyDiceHandVM : SimpleControlObservable
 {
-    public static int Phase { get; set; }
     public ControlCommand? BoardCommand { get; set; }
     public ControlCommand? DiceCommand { get; set; }
 
-    public BasicList<RummyDiceInfo> HandList = new();
+    public BasicList<RummyDiceInfo> HandList = [];
     public int Index { get; set; } //index is needed so it puts to correct one.
     private readonly RummyDiceMainGameClass _mainGame;
     [Command(EnumCommandCategory.Control, Name = nameof(BoardCommand))]
