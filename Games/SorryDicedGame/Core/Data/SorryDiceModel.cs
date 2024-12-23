@@ -76,4 +76,9 @@ public class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>, ISelectableOb
         });
         return weights.GetRandomWeightedItem();
     }
+
+    void IGenerateDice<int>.StartRoll()
+    {
+        
+    }
 }

@@ -13,12 +13,12 @@
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
-    <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
+    <PackageReference Include="FastEnumGenerator" Version="1.0.10" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.2" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.13" />
   </ItemGroup>
 </Project>

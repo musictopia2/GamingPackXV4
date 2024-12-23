@@ -152,4 +152,29 @@ public class CategoriesDice : ICompleteSingleDice<string>, IHoldDice, ISerializa
         .AddWeightedItem("S", 30).AddWeightedItem("H", 5, 10).AddWeightedItem("L", 35, 40);
         return thisWeight.GetRandomWeightedItem();
     }
+
+    Task IRollSingleDice<string>.ShowRollingAsync(CommonBasicLibraries.CollectionClasses.BasicList<string> thisCol)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task IRollSingleDice<string>.SendMessageAsync(string category, CommonBasicLibraries.CollectionClasses.BasicList<string> thisList)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<CommonBasicLibraries.CollectionClasses.BasicList<string>> IRollSingleDice<string>.GetDiceList(string content)
+    {
+        throw new NotImplementedException();
+    }
+
+    CommonBasicLibraries.CollectionClasses.BasicList<string> IRollSingleDice<string>.RollDice(int howManySections)
+    {
+        throw new NotImplementedException();
+    }
+
+    void IGenerateDice<string>.StartRoll()
+    {
+        
+    }
 }

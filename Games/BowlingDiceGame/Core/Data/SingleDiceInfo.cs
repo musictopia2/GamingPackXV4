@@ -38,4 +38,9 @@ public class SingleDiceInfo : IBasicDice<bool>, IDiceContainer<bool>
         //later rethink.
         return rs.NextBool(30);
     }
+
+    void IGenerateDice<bool>.StartRoll()
+    {
+        //eventually will rethink but no time now.
+    }
 }

@@ -334,4 +334,9 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
         }
         return weights.GetRandomWeightedItem();
     }
+
+    void IGenerateDice<int>.StartRoll()
+    {
+        
+    }
 }

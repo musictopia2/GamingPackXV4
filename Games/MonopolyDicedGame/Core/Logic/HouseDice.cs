@@ -45,4 +45,29 @@ public class HouseDice(MonopolyDicedGameGameContainer gameContainer) : IComplete
             await gameContainer.Delay.DelayMilli(30);
         });
     }
+
+    Task IRollSingleDice<EnumMiscType>.ShowRollingAsync(CommonBasicLibraries.CollectionClasses.BasicList<EnumMiscType> thisCol)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task IRollSingleDice<EnumMiscType>.SendMessageAsync(string category, CommonBasicLibraries.CollectionClasses.BasicList<EnumMiscType> thisList)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<CommonBasicLibraries.CollectionClasses.BasicList<EnumMiscType>> IRollSingleDice<EnumMiscType>.GetDiceList(string content)
+    {
+        throw new NotImplementedException();
+    }
+
+    CommonBasicLibraries.CollectionClasses.BasicList<EnumMiscType> IRollSingleDice<EnumMiscType>.RollDice(int howManySections)
+    {
+        throw new NotImplementedException();
+    }
+
+    void IGenerateDice<EnumMiscType>.StartRoll()
+    {
+        
+    }
 }

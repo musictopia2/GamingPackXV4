@@ -71,4 +71,29 @@ public class Multiplier(ThinkTwiceGameContainer gameContainer) : ICompleteSingle
             ;
         return thisWeight.GetRandomWeightedItem();
     }
+
+    Task IRollSingleDice<int>.ShowRollingAsync(CommonBasicLibraries.CollectionClasses.BasicList<int> thisCol)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task IRollSingleDice<int>.SendMessageAsync(string category, CommonBasicLibraries.CollectionClasses.BasicList<int> thisList)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<CommonBasicLibraries.CollectionClasses.BasicList<int>> IRollSingleDice<int>.GetDiceList(string content)
+    {
+        throw new NotImplementedException();
+    }
+
+    CommonBasicLibraries.CollectionClasses.BasicList<int> IRollSingleDice<int>.RollDice(int howManySections)
+    {
+        throw new NotImplementedException();
+    }
+
+    void IGenerateDice<int>.StartRoll()
+    {
+        
+    }
 }

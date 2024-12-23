@@ -14,7 +14,7 @@
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
-    <PackageReference Include="FastEnumGenerator" Version="1.0.9" PrivateAssets="all" />
+    <PackageReference Include="FastEnumGenerator" Version="1.0.10" PrivateAssets="all" />
     <PackageReference Include="JsonDeserializeResourceSourceGenerator" Version="1.0.3" PrivateAssets="all" />
     <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
   </ItemGroup>
@@ -28,6 +28,6 @@
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.2" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.13" />
   </ItemGroup>
 </Project>
