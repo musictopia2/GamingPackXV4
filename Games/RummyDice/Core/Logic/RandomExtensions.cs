@@ -32,34 +32,31 @@ internal static class RandomExtensions
                 Multiplier = 1.1f;
             }
         }
-        else if (phase == 8)
+        else if (phase == 7)
         {
-            Multiplier = 2.0f;
-        }
-        else if (phase == 9)
-        {
-            Multiplier = 2.5f;
+            Multiplier = 1.5f;
             if (repeats > 1)
             {
-                Multiplier = 2f;
+                Multiplier = 1.2f;
+            }
+        }
+        else if (phase == 8 || phase ==9)
+        {
+            Multiplier = 2.0f;
+            if (repeats > 1)
+            {
+                Multiplier = 1.8f;
             }
         }
         else if (phase == 10)
         {
-            Multiplier = 1.8f;
+            Multiplier = 1.6f;
             if (repeats > 1)
             {
-                Multiplier = 1.5f;
+                Multiplier = 1.4f;
             }
         }
-        else if (phase == 7)
-        {
-            Multiplier = 2f;
-            if (repeats > 1)
-            {
-                Multiplier = 1.6f;
-            }
-        }
+        
         return tiers;
     }
 
@@ -213,19 +210,19 @@ internal static class RandomExtensions
             // Adjust wild weight based on the number of repeats (more repeats = better luck)
             if (repeats > 2)
             {
-                wildWeight = 100;  // Maximum wild chance after 2 repeats
+                wildWeight = 200;  // Maximum wild chance after 2 repeats
             }
             else if (repeats == 2)
             {
-                wildWeight = 80;  // Slightly lower than max
+                wildWeight = 180;  // Slightly lower than max
             }
             else if (repeats == 1)
             {
-                wildWeight = 60;  // Moderate chance
+                wildWeight = 160;  // Moderate chance
             }
             else
             {
-                wildWeight = 40;  // Still some chance, but low
+                wildWeight = 140;  // Still some chance, but low
             }
 
             // Add wilds to the distribution (wildWeight is unaffected by the multiplier)
@@ -283,19 +280,19 @@ internal static class RandomExtensions
             // Adjust wild weight based on the number of repeats (more repeats = better luck)
             if (repeats > 2)
             {
-                wildWeight = 80;  // Moderate chance for wilds after 2 repeats
+                wildWeight = 150;  // Moderate chance for wilds after 2 repeats
             }
             else if (repeats == 2)
             {
-                wildWeight = 60;  // Slightly lower wild chance
+                wildWeight = 140;  // Slightly lower wild chance
             }
             else if (repeats == 1)
             {
-                wildWeight = 50;  // Still moderate chance for wilds
+                wildWeight = 130;  // Still moderate chance for wilds
             }
             else
             {
-                wildWeight = 40;  // Lowest chance for wilds
+                wildWeight = 120;  // Lowest chance for wilds
             }
 
             // Add wilds to the distribution (wildWeight is unaffected by the multiplier)
@@ -364,19 +361,19 @@ internal static class RandomExtensions
             // Adjust wild weight based on the number of repeats (more repeats = better luck)
             if (repeats > 2)
             {
-                wildWeight = 70;  // Cap the wild chance at 70 for average luck
+                wildWeight = 140;  // Cap the wild chance at 70 for average luck
             }
             else if (repeats == 2)
             {
-                wildWeight = 50;  // Lower wild chance with fewer repeats
+                wildWeight = 130;  // Lower wild chance with fewer repeats
             }
             else if (repeats == 1)
             {
-                wildWeight = 40;  // Lower wild chance with fewer repeats
+                wildWeight = 120;  // Lower wild chance with fewer repeats
             }
             else
             {
-                wildWeight = 30;  // Very low wild chance for no repeats
+                wildWeight = 100;  // Very low wild chance for no repeats
             }
 
             // Add wilds to the distribution (wildWeight is unaffected by the multiplier)
@@ -444,19 +441,19 @@ internal static class RandomExtensions
             // Adjust wild weight based on the number of repeats (more repeats = better luck)
             if (repeats > 2)
             {
-                wildWeight = 50;  // Still very low wild chance after 2 repeats
+                wildWeight = 100;  // Still very low wild chance after 2 repeats
             }
             else if (repeats == 2)
             {
-                wildWeight = 30;  // Low wild chance
+                wildWeight = 80;  // Low wild chance
             }
             else if (repeats == 1)
             {
-                wildWeight = 20;  // Very low wild chance
+                wildWeight = 60;  // Very low wild chance
             }
             else
             {
-                wildWeight = 10;  // Barely any chance for wilds
+                wildWeight = 30;  // Barely any chance for wilds
             }
 
             // Add wilds to the distribution (wildWeight is unaffected by the multiplier)
