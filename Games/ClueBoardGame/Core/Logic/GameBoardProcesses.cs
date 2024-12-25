@@ -413,6 +413,11 @@ public class GameBoardProcesses
     }
     public bool CanMoveToRoom(int room)
     {
+        var player = _gameContainer.PlayerList!.GetSelf();
+        if (_gameContainer.WhoTurn != player.Id)
+        {
+            return false; //because its not even your turn.
+        }
         if (_gameContainer.Test!.AllowAnyMove)
         {
             return true; //for testing.
