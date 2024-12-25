@@ -326,7 +326,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
             gameOver = PlayerList.All(xx => xx.InGame == false);
             return;
         }
-        if (phase == 5 && newScore > 240)
+        if (phase == 5 && newScore > 250)
         {
             newScore += 40;
         }

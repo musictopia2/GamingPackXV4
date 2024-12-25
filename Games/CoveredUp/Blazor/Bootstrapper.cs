@@ -1,10 +1,7 @@
 //i think this is the most common things i like to do
 namespace CoveredUp.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<CoveredUpShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<CoveredUpShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
 
     //protected override Task RegisterTestsAsync()
     //{

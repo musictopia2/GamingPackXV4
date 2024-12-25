@@ -65,6 +65,11 @@ public class CoveredUpMainViewModel : BasicCardGamesVM<RegularSimpleCard>
         {
             oldDeck = VMData.OtherPile.GetCardInfo().Deck;
         }
+        if (_gameContainer.SaveRoot.WentOut && oldDeck == 0)
+        {
+            _toast.ShowUserErrorToast("Cannot pick up from discard anymore because somebody already went out");
+            return;
+        }
         if (oldDeck == 0)
         {
             await _mainGame!.PickupFromDiscardAsync();
