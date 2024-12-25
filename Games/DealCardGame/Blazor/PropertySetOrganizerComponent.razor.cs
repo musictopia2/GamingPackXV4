@@ -13,7 +13,5 @@ public partial class PropertySetOrganizerComponent
     private BasicGameCommand CancelCommand => DataContext!.CancelCommand!;
     private BasicGameCommand FinishCommand => DataContext!.FinishCommand!;
     private BasicGameCommand PutToTemporaryHandCommand => DataContext!.PutToTemporaryHandCommand!;
-    private static string Columns => gg1.RepeatSpreadOut(5);
-    private static string Rows => gg1.RepeatSpreadOut(2);
     private PropertySetHand GetHand(int index) => DataContext!.VMData.YourCompleteSets.SetList[index];
 }

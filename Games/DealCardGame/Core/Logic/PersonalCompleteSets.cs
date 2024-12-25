@@ -135,10 +135,21 @@ public class PersonalCompleteSets
         if (rets == false)
         {
             _toast.ShowUserErrorToast("You must use all your cards");
+            return false;
         }
-        //has to check other things now.
-
-        return rets;
+        var list = _gameContainer.PersonalInformation.SetData;
+        foreach ( var property in list )
+        {
+            if (property.Cards.Any(x => x.ActionCategory == EnumActionCategory.House))
+            {
+                if (property.HasRequiredSet() == false)
+                {
+                    _toast.ShowUserErrorToast("You no longer have the required set for a house");
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     public void Init()
     {

@@ -5,7 +5,7 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
     {
         //TestData!.CardsToPass = 10;
         //TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
-        GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, RentCards>();
+        //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, RentCards>();
         //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, BirthdayCards>();
         return base.RegisterTestsAsync();
     }
