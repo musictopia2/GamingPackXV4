@@ -1,12 +1,7 @@
 //i think this is the most common things i like to do
 namespace MonopolyDicedGame.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<MonopolyDicedGameShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<MonopolyDicedGameShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
