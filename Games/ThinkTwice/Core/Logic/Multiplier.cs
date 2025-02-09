@@ -61,9 +61,9 @@ public class Multiplier(ThinkTwiceGameContainer gameContainer) : ICompleteSingle
             return list.GetRandomItem();
         }
         WeightedAverageLists<int> thisWeight = new();
-        thisWeight.AddWeightedItem(0, 20, 30)
+        thisWeight.AddWeightedItem(0, 10, 30)
             .AddWeightedItem(1, 35)
-            .AddWeightedItem(2, 20, 25)
+            .AddWeightedItem(2, 20, 40)
             .AddWeightedItem(3, 10, 20)
             .AddWeightedItem(4, 3)
             .AddWeightedItemWithChance(5, 10, 1, 2)
