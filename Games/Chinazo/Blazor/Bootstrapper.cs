@@ -1,14 +1,10 @@
 namespace Chinazo.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<ChinazoShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<ChinazoShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-
     //protected override Task RegisterTestsAsync()
     //{
     //    var container = GetDIContainer;
-    //    //TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
+    //    TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
     //    container.RegisterSingleton<ITestCardSetUp<ChinazoCard, ChinazoPlayerItem>, TestCards>();
     //    return base.RegisterTestsAsync();
     //}

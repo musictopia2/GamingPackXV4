@@ -11,6 +11,8 @@ public class TestCards : ITestCardSetUp<ChinazoCard, ChinazoPlayerItem>
             var nexts = deckList.Where(x => x.Value.Value == i && x.Suit == EnumSuitList.Spades).Take(1);
             self.StartUpList.AddRange(nexts);
         }
+        firsts = deckList.Where(x => x.Value == EnumRegularCardValueList.Joker).Take(1);
+        self.StartUpList.AddRange(firsts);
         return Task.CompletedTask;
     }
 }

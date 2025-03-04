@@ -88,10 +88,10 @@ public class PhaseSet : SetInfo<EnumSuitList, EnumRegularColorList, ChinazoCard,
             tempCol.First().UsedAs = tempCol.First().Value.Value;
         }
         firstNum = tempCol.First().UsedAs;
-        if (firstNum > 12)
-        {
-            throw new CustomBasicException("The first number cannot be higher than 12 for runs.");
-        }
+        //if (firstNum > 12)
+        //{
+        //    throw new CustomBasicException("The first number cannot be higher than 12 for runs.");
+        //}
         tempCol.Last().UsedAs = tempCol.Last().Value.Value;
         int whatFirst = firstNum;
         int lastNum = tempCol.Last().UsedAs;
