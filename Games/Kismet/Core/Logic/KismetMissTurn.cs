@@ -33,8 +33,7 @@ public class KismetMissTurn : IMissTurnClass<YahtzeePlayerItem<KismetDice>>
             && x.HasFilledIn() == false).Take(1).SingleOrDefault()!;
         if (thisItem != null)
         {
-            thisItem.IsRecent = true;
-            thisItem.PointsObtained = 0;
+            _scoreLogic.MarkScore(thisItem);
             if (_thisTest.NoAnimations == false)
             {
                 if (_gameContainer.GetNewScoreAsync == null)
