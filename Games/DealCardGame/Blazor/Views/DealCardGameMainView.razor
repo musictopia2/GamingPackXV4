@@ -5,7 +5,14 @@
 }
 @if (_gameContainer.PersonalInformation.NeedsPayment )
 {
-    <MakePaymentComponent />
+    <StackLayout>
+        <StackItem>
+            <MakePaymentComponent />
+        </StackItem>
+        <StackItem>
+            <CompletePlayerSetsComponent SetCommand=SetChosenCommand Players="GetPlayers()" />
+        </StackItem>
+    </StackLayout>
     return;
 }
 @if (_gameContainer.PersonalInformation.Organizing)
@@ -39,8 +46,8 @@
         </div>
         <div>
             <ScoreBoardBlazor P="DealCardGamePlayerItem"
-                              Columns="_scores"
-                              Players="_gameContainer.SaveRoot.PlayerList" />
+            Columns="_scores"
+            Players="_gameContainer.SaveRoot.PlayerList" />
         </div>
         @if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.ConsiderJustSayNo && _gameContainer.IsJustSayNoSelf)
         {

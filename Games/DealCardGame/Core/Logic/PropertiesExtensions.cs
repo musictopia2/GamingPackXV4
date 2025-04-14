@@ -17,6 +17,96 @@ public static class PropertiesExtensions
             model.SetData.Add(p);
         }
     }
+    public static bool WasHouseOrHotelBanked(this DealCardGamePlayerItem player, DealCardGameCardInformation card)
+    {
+        return player.BankedCards.ObjectExist(card.Deck);
+    }
+    public static bool IsValidState(this PrivateModel model)
+    {
+        foreach (var item in model.SetData)
+        {
+            bool hasHouse = item.Cards.Any(x => x.ActionCategory == EnumActionCategory.House);
+            bool hasHotel = item.Cards.Any(x => x.ActionCategory == EnumActionCategory.Hotel);
+            if (hasHotel == true && hasHouse == false)
+            {
+                return false; //because you need a house before you can have a hotel
+            }
+            if (hasHouse && item.HasRequiredSet() == false)
+            {
+                return false; //because you need a set before you can have a house
+            }
+        }
+        return true;
+    }
+    public static PrivateModel CloneTemporaryModel(this PrivateModel model)
+    {
+        PrivateModel tempModel = new();
+        tempModel.NeedsPayment = model.NeedsPayment;
+        foreach (var item in model.BankedCards)
+        {
+            tempModel.BankedCards.Add(item);
+        }
+        tempModel.SetData = [];
+        foreach (var item in model.SetData)
+        {
+            SetPropertiesModel p = new();
+            p.Color = item.Color;
+            p.Cards = [];
+            foreach (var card in item.Cards)
+            {
+                p.Cards.Add(card);
+            }
+            tempModel.SetData.Add(p);
+        }
+        foreach (var item in model.Payments)
+        {
+            tempModel.Payments.Add(item);
+        }
+
+        return tempModel;
+    }
+    public static void CloneSelectedPropertiesForPayments(this DealCardGamePlayerItem player, PrivateModel model, DeckRegularDict<DealCardGameCardInformation> cardsChosen)
+    {
+        // Ensure model.SetData is initialized if not already
+        model.SetData ??= [];
+
+        foreach (var item in player.SetData)
+        {
+            // Check if the property already exists in the model's SetData
+            var existingProperty = model.SetData.FirstOrDefault(x => x.Color == item.Color);
+
+            if (existingProperty == null)
+            {
+                // If the property doesn't exist, create a new one
+                SetPropertiesModel p = new();
+                p.Color = item.Color;
+
+                // Filter the cards to only include those present in cardsChosen
+                p.Cards = item.Cards
+                    .Where(card => cardsChosen.Any(chosen => chosen.Deck == card.Deck))
+                    .DistinctBy(card => card.Deck) // Ensure no duplicates based on the Deck property
+                    .ToRegularDeckDict();
+
+                model.SetData.Add(p);
+            }
+            else
+            {
+                // If the property exists, merge the cards while avoiding duplicates
+                var filteredCards = item.Cards
+                    .Where(card => cardsChosen.Any(chosen => chosen.Deck == card.Deck))
+                    .DistinctBy(card => card.Deck);
+
+                foreach (var card in filteredCards)
+                {
+                    if (!existingProperty.Cards.ObjectExist(card.Deck))
+                    {
+                        existingProperty.Cards.Add(card); // Add only if the card is not already present
+                    }
+                }
+            }
+        }
+    }
+    
     public static bool HasRequiredHotel(this SetPropertiesModel property)
     {
         if (property.Cards.Any(x => x.ActionCategory == EnumActionCategory.Hotel))

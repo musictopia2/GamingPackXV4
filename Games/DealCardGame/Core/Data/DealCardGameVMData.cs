@@ -1,5 +1,3 @@
-using System.Xml.Linq;
-
 namespace DealCardGame.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
@@ -23,7 +21,7 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public decimal Owed { get; set; }
     [LabelColumn]
     public decimal PaidSoFar { get; set; }
-    public DealCardGameVMData(CommandContainer command, 
+    public DealCardGameVMData(CommandContainer command,
         DealCardGameGameContainer gameContainer, IToast toast, PrivateAutoResumeProcesses privateAutoResume)
     {
         Deck1 = new(command);
@@ -41,14 +39,15 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
         PlayerPicker.IndexMethod = ListViewPicker.EnumIndexMethod.OneBased; //because you have the name.
         Payments = new(gameContainer.Command);
         Payments.Text = "Payments";
-        Payments.AutoSelect = EnumHandAutoType.ShowObjectOnly; //show only.
+        Payments.AutoSelect = EnumHandAutoType.SelectAsMany; //decided to allow all.  this way whatever you chose for payments can put back if you need to.
         Bank = new(gameContainer.Command);
         Bank.Text = "Bank";
         Bank.AutoSelect = EnumHandAutoType.SelectAsMany;
         Bank.HandList.Sort();
         Properties = new(gameContainer.Command);
         Properties.Text = "Properties To Pay With";
-        Properties.AutoSelect = EnumHandAutoType.SelectOneOnly;
+        Properties.AutoSelect = EnumHandAutoType.SelectAsMany;
+        //decided to go ahead and allow a person to choose as many as they want.  will validate now.
         YourCompleteSets = new(gameContainer, toast, privateAutoResume);
     }
     public DeckObservablePile<DealCardGameCardInformation> Deck1 { get; set; }

@@ -15,6 +15,8 @@ public partial class MakePaymentComponent
             ;
         base.OnInitialized();
     }
+    private BasicGameCommand PutSelectedBackCommand => DataContext!.PutSelectedBackCommand!;
+    private BasicGameCommand AddAllCommand => DataContext!.AddAllCommand!;
     private BasicGameCommand AddPaymentsCommand => DataContext!.AddPaymentsCommand!;
     private BasicGameCommand StartOverCommand => DataContext!.StartOverCommand!;
     private BasicGameCommand FinishPaymentCommand => DataContext!.FinishPaymentCommand!;

@@ -726,37 +726,74 @@ public class DealCardGameMainGameClass
     {
         if (currentPlayer.Debt == 0)
         {
-            currentPlayer.AllPlayerStatus = EnumAllPlayerStatus.None; //back to none.
+            currentPlayer.AllPlayerStatus = EnumAllPlayerStatus.None; // back to none.
             return;
         }
-        if (currentPlayer.Money <= owed && currentPlayer.Money > 0)
+
+        var allCards = currentPlayer.BankedCards.ToRegularDeckDict()
+            .Concat(currentPlayer.SetData.SelectMany(set => set.Cards.ToRegularDeckDict()))
+            .Where(card => card.ClaimedValue > 0)
+            .ToList();
+
+        int totalValue = allCards.Sum(card => card.ClaimedValue);
+
+        if (totalValue <= owed)
         {
+            // Automatically use all cards since the total value is less than or equal to the owed amount.
             currentPlayer.Debt = 0;
+            currentPlayer.Payments.Clear();
+
+            foreach (var card in allCards)
+            {
+                currentPlayer.Payments.Add(card.Deck);
+            }
             if (currentPlayer.Money == 0)
             {
-                currentPlayer.AllPlayerStatus = EnumAllPlayerStatus.None; //because they did not have any.
+                currentPlayer.AllPlayerStatus = EnumAllPlayerStatus.None; // because the person had none.
             }
-            currentPlayer.Payments.Clear();
-            foreach (var item in currentPlayer.BankedCards)
+        }
+        else
+        {
+            // Check if the player has enough cards to cover the owed amount without using all their cards.
+            var combinations = GetCardCombinations(allCards);
+            bool canPayWithoutUsingAll = combinations.Any(combination => 
+                combination.Sum(card => card.ClaimedValue) >= owed && combination.Count < allCards.Count);
+
+            if (!canPayWithoutUsingAll)
             {
-                currentPlayer.Payments.Add(item.Deck);
-            }
-            foreach (var item in currentPlayer.SetData)
-            {
-                var list = item.Cards.ToRegularDeckDict();
-                list.RemoveAllOnly(x => x.ClaimedValue == 0);
-                foreach (var card in list)
+                // Automatically use all cards since the player cannot pay without using all their cards.
+                currentPlayer.Debt = 0;
+                currentPlayer.Payments.Clear();
+
+                foreach (var card in allCards)
                 {
                     currentPlayer.Payments.Add(card.Deck);
                 }
+
+                //currentPlayer.AllPlayerStatus = EnumAllPlayerStatus.None; // Payment is complete.
             }
-        }
-        else if (currentPlayer.Money == 0)
-        {
-            currentPlayer.AllPlayerStatus = EnumAllPlayerStatus.None;
-            currentPlayer.Debt = 0;
+            //i don't think i need to change that status (obviously was not none).
         }
     }
+
+// Helper method to generate all possible combinations of cards.
+private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombinations(List<DealCardGameCardInformation> cards)
+{
+    int count = cards.Count;
+    for (int i = 1; i < (1 << count); i++)
+    {
+        var combination = new List<DealCardGameCardInformation>();
+        for (int j = 0; j < count; j++)
+        {
+            if ((i & (1 << j)) != 0)
+            {
+                combination.Add(cards[j]);
+            }
+        }
+        yield return combination;
+    }
+}
+
     public async Task PlayPropertyAsync(int deck, EnumColor color)
     {
         var card = GetPlayerSelectedSingleCard(deck);
