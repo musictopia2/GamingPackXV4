@@ -13,9 +13,9 @@
     <GameButtonComponent Display="Finish Payments" CommandObject="FinishPaymentCommand" />
 </div>
 <div>
-    <GameButtonComponent Display="Add All Cards For Payment" CommandObject="AddAllCommand" />
-    <GameButtonComponent Display="Put Back Selected Cards" CommandObject="PutSelectedBackCommand" />
+    <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
 </div>
 <div>
-    <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+    <GameButtonComponent Display="Add All Cards For Payment" CommandObject="AddAllCommand" />
+    <GameButtonComponent Display="Put Back Selected Cards" CommandObject="PutSelectedBackCommand" />
 </div>
