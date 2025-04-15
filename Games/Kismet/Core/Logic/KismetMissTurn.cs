@@ -1,4 +1,6 @@
-﻿namespace Kismet.Core.Logic;
+﻿using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic;
+
+namespace Kismet.Core.Logic;
 [SingletonGame]
 public class KismetMissTurn : IMissTurnClass<YahtzeePlayerItem<KismetDice>>
 {
@@ -34,6 +36,7 @@ public class KismetMissTurn : IMissTurnClass<YahtzeePlayerItem<KismetDice>>
         if (thisItem != null)
         {
             _scoreLogic.MarkScore(thisItem);
+            player.Points = _scoreLogic.TotalScore; //their total score can change because of getting bonus.
             if (_thisTest.NoAnimations == false)
             {
                 if (_gameContainer.GetNewScoreAsync == null)
