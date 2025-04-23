@@ -722,6 +722,19 @@ public class DealCardGameMainGameClass
         _gameContainer.PersonalInformation.BankedCards = SingleInfo.BankedCards.ToRegularDeckDict();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
     }
+    private static DeckRegularDict<DealCardGameCardInformation> GetAllPossibleCardsForPayment(DealCardGamePlayerItem player)
+    {
+        DeckRegularDict<DealCardGameCardInformation> cards = [];
+        cards.AddRange(player.BankedCards);
+        foreach (var item in player.SetData)
+        {
+            var tempList = item.Cards.ToRegularDeckDict();
+            tempList.RemoveAllAndObtain(x => x.ClaimedValue == 0);
+            cards.AddRange(tempList);
+        }
+        return cards; //i understand this.
+    }
+
     private static void AttemptToAutomatePayment(DealCardGamePlayerItem currentPlayer, int owed)
     {
         if (currentPlayer.Debt == 0)
@@ -729,14 +742,16 @@ public class DealCardGameMainGameClass
             currentPlayer.AllPlayerStatus = EnumAllPlayerStatus.None; // back to none.
             return;
         }
+        var allCards= GetAllPossibleCardsForPayment(currentPlayer);
 
-        var allCards = currentPlayer.BankedCards.ToRegularDeckDict()
-            .Concat(currentPlayer.SetData.SelectMany(set => set.Cards.ToRegularDeckDict()))
-            .Where(card => card.ClaimedValue > 0)
-            .ToList();
 
-        int totalValue = allCards.Sum(card => card.ClaimedValue);
+        //var allCards = currentPlayer.BankedCards.ToRegularDeckDict()
+        //    .Concat(currentPlayer.SetData.SelectMany(set => set.Cards.ToRegularDeckDict()))
+        //    .Where(card => card.ClaimedValue > 0)
+        //    .ToList();
 
+        //int totalValue = allCards.AdvancedSum(card => card.ClaimedValue, 1);
+        int totalValue = allCards.AdvancedSum(x => x.ClaimedValue, 1);
         if (totalValue <= owed)
         {
             // Automatically use all cards since the total value is less than or equal to the owed amount.
@@ -752,28 +767,7 @@ public class DealCardGameMainGameClass
                 currentPlayer.AllPlayerStatus = EnumAllPlayerStatus.None; // because the person had none.
             }
         }
-        else
-        {
-            // Check if the player has enough cards to cover the owed amount without using all their cards.
-            var combinations = GetCardCombinations(allCards);
-            bool canPayWithoutUsingAll = combinations.Any(combination => 
-                combination.Sum(card => card.ClaimedValue) >= owed && combination.Count < allCards.Count);
-
-            if (!canPayWithoutUsingAll)
-            {
-                // Automatically use all cards since the player cannot pay without using all their cards.
-                currentPlayer.Debt = 0;
-                currentPlayer.Payments.Clear();
-
-                foreach (var card in allCards)
-                {
-                    currentPlayer.Payments.Add(card.Deck);
-                }
-
-                //currentPlayer.AllPlayerStatus = EnumAllPlayerStatus.None; // Payment is complete.
-            }
-            //i don't think i need to change that status (obviously was not none).
-        }
+        
     }
 
 // Helper method to generate all possible combinations of cards.

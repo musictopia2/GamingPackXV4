@@ -3,9 +3,11 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
 {
     protected override Task RegisterTestsAsync()
     {
+        TestData!.PlayCategory = EnumTestPlayCategory.NoShuffle;
+        TestData.WhoStarts = 1; //i think
         //TestData!.CardsToPass = 10;
         //TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
-        //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, RentCards>();
+        GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, StartRentCards>();
         //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, BirthdayCards>();
         return base.RegisterTestsAsync();
     }
@@ -101,6 +103,22 @@ public class BirthdayCards : ITestCardSetUp<DealCardGameCardInformation, DealCar
             item.StartUpList.Add(card);
             skip++;
         }
+        return Task.CompletedTask;
+    }
+}
+public class StartRentCards : ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>
+{
+    Task ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>.SetUpTestHandsAsync(PlayerCollection<DealCardGamePlayerItem> playerList, IListShuffler<DealCardGameCardInformation> deckList)
+    {
+        var player = playerList.GetSelf();
+        //needs to have 4 and 3 money cards.
+        var card = deckList.First(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 4);
+        player.StartUpList.Add(card);
+        card = deckList.First(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 3);
+        player.StartUpList.Add(card);
+        player = playerList.GetOnlyOpponent();
+        card = deckList.First(x => x.ActionCategory == EnumActionCategory.DebtCollector);
+        player.StartUpList.Add(card);
         return Task.CompletedTask;
     }
 }

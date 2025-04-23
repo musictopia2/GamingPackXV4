@@ -90,16 +90,12 @@ public partial class PaymentViewModel : IBasicEnableProcess
     private void ProcessInvalidState(string message, decimal soFar, PrivateModel temporaryPersonal)
     {
         VMData.PaidSoFar = soFar;
-        var list = temporaryPersonal.SetData.GetAllCardsFromPlayersSet();
         _gameContainer.PersonalInformation = temporaryPersonal; //back to this now.
-
         VMData.Bank.HandList = _gameContainer.PersonalInformation.BankedCards; //may need to hook up again.
         VMData.Bank.HandList.Sort();
         VMData.Payments.HandList = _gameContainer.PersonalInformation.Payments;
         VMData.Properties.HandList = _gameContainer.PersonalInformation.SetData.GetAllCardsFromPlayersSet();
-        
         _toast.ShowUserErrorToast(message);
-
     }
     [Command(EnumCommandCategory.Game)]
     public async Task AddAllAsync()
