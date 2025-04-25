@@ -752,7 +752,7 @@ public class DealCardGameMainGameClass
 
         //int totalValue = allCards.AdvancedSum(card => card.ClaimedValue, 1);
         int totalValue = allCards.AdvancedSum(x => x.ClaimedValue, 1);
-        if (totalValue <= owed)
+        if (totalValue < owed)
         {
             // Automatically use all cards since the total value is less than or equal to the owed amount.
             currentPlayer.Debt = 0;

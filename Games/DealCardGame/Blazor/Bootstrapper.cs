@@ -111,13 +111,13 @@ public class StartRentCards : ITestCardSetUp<DealCardGameCardInformation, DealCa
     Task ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>.SetUpTestHandsAsync(PlayerCollection<DealCardGamePlayerItem> playerList, IListShuffler<DealCardGameCardInformation> deckList)
     {
         var player = playerList.GetSelf();
-        //needs to have 4 and 3 money cards.
-        var card = deckList.First(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 4);
-        player.StartUpList.Add(card);
-        card = deckList.First(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 3);
+        //needs to have 2 2 dollar money cards.
+        var cards = deckList.Where(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 2).Take(2);
+        player.StartUpList.AddRange(cards);
+        var card = deckList.First(x => x.CardType == EnumCardType.Money && x.ClaimedValue == 1);
         player.StartUpList.Add(card);
         player = playerList.GetOnlyOpponent();
-        card = deckList.First(x => x.ActionCategory == EnumActionCategory.DebtCollector);
+        card = deckList.First(x => x.ActionCategory == EnumActionCategory.Birthday);
         player.StartUpList.Add(card);
         return Task.CompletedTask;
     }
