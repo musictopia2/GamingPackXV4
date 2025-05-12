@@ -3,11 +3,11 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
 {
     protected override Task RegisterTestsAsync()
     {
-        TestData!.PlayCategory = EnumTestPlayCategory.NoShuffle;
-        TestData.WhoStarts = 1; //i think
+        //TestData!.PlayCategory = EnumTestPlayCategory.NoShuffle;
+        //TestData.WhoStarts = 1; //i think
         //TestData!.CardsToPass = 10;
         //TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
-        GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, StartRentCards>();
+       // GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, StartRentCards>();
         //GetDIContainer.RegisterSingleton<ITestCardSetUp<DealCardGameCardInformation, DealCardGamePlayerItem>, BirthdayCards>();
         return base.RegisterTestsAsync();
     }

@@ -1,8 +1,14 @@
-﻿
-<div>
-    <HandBlazor TargetContainerSize="50vw" TargetImageSize=12vh Hand="DataContext!.VMData.YourCompleteSets.TempHand" />
-</div>
-<div>
+﻿<div style="height: 80vh; overflow:hidden;">
+    <div>
+        <HandBlazor TargetContainerSize="50vw" TargetImageSize=12vh Hand="DataContext!.VMData.YourCompleteSets.TempHand" />
+    </div>
+    <div>
+        <GameButtonComponent Display="Cancel" CommandObject="CancelCommand" />
+        <GameButtonComponent Display="Reset" CommandObject="ResetCommand" />
+        <GameButtonComponent Display="Put To Temporary Hand" CommandObject="PutToTemporaryHandCommand" />
+        <GameButtonComponent Display="Finish" CommandObject="FinishCommand" />
+    </div>
+
     <StackLayout Height="60vh" ItemSpacing="20px">
         <SimpleRepeater HowMany="10" Context="index">
             <StackItem>
@@ -14,7 +20,7 @@
                                 AdditionalSpacing="0"
                                 TargetImageSize="12vh"
                                 Divider="1"
-                                TargetContainerSize="60vh"
+                                TargetContainerSize="50vh"
                                 PaddingRight="30"
                                 Context="item">
                     <CardGraphicsBlazor CommandObject="pile.ObjectSingleClickCommand"
@@ -36,10 +42,4 @@
             </GridItem>
         </GridRepeater>
     </GridContainer> *@
-</div>
-<div>
-    <GameButtonComponent Display="Cancel" CommandObject="CancelCommand" />
-    <GameButtonComponent Display="Reset" CommandObject="ResetCommand" />
-    <GameButtonComponent Display="Put To Temporary Hand" CommandObject="PutToTemporaryHandCommand" />
-    <GameButtonComponent Display="Finish" CommandObject="FinishCommand" />
 </div>
