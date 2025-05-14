@@ -41,6 +41,8 @@ public abstract class AbstractHandBlazor<D> : KeyComponentBase
     /// </summary>
     [Parameter]
     public string TargetImageSize { get; set; } = "";
+    [Parameter]
+    public int LegendExtraWidth { get; set; } = 0; // in pixels, default is no extra width
 
     protected string RealHeight()
     {

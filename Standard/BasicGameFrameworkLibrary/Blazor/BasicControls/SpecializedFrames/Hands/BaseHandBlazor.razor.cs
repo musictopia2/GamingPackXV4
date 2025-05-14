@@ -246,6 +246,7 @@ public partial class BaseHandBlazor<D>
         {
             throw new CustomBasicException("Unable to calculate container");
         }
+        string widthValue;
         //TargetContainerSize = "50vw"; //for now.
         if (TargetContainerSize == "")
         {
@@ -257,13 +258,12 @@ public partial class BaseHandBlazor<D>
                 return $"position: relative; overflow-x: auto; overflow-y: hidden; width: {widths}; hidden; margin-right: 10px; height: {realSize}; padding-bottom: 3vh; padding-right: {PaddingRight}px;";
             }
             //iffy now.
-            
+
             string heights = GetHeightWithNoContainerSize();
             if (LegendExtraWidth == 0)
             {
                 return $"position: relative; overflow-x: auto; overflow-y: hidden; height: {heights}; hidden; margin-right: 10px; width: {realSize};  padding-right: {PaddingRight}px;";
             }
-            string widthValue;
             widthValue = $"calc({realSize} + {LegendExtraWidth}px)";
             return $"position: relative; overflow-x: auto; overflow-y: hidden; width: {widthValue}; margin-right: 10px; height: {heights}; padding-bottom: 3vh; padding-right: {PaddingRight}px;";
         }
@@ -275,7 +275,12 @@ public partial class BaseHandBlazor<D>
         {
             if (Rotated == false)
             {
-                return $"position: relative; height: {TargetContainerSize}; width: {realSize}; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
+                if (LegendExtraWidth == 0)
+                {
+                    return $"position: relative; height: {TargetContainerSize}; width: {realSize}; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
+                }
+                widthValue = $"calc({realSize} + {LegendExtraWidth}px)";
+                return $"position: relative; height: {TargetContainerSize}; width: {widthValue}; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
             }
             //iffy now.
             int cardHeight;
@@ -293,7 +298,16 @@ public partial class BaseHandBlazor<D>
                 cardHeight = int.Parse(tempValue);
             }
             cardHeight += 2;
-            return $"position: relative; height: {TargetContainerSize}; width: {cardHeight}vh; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
+            if (LegendExtraWidth == 0)
+            {
+                return $"position: relative; height: {TargetContainerSize}; width: {cardHeight}vh; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
+            }
+            widthValue = $"{cardHeight}vh";
+            if (LegendExtraWidth > 0)
+            {
+                widthValue = $"calc({cardHeight}vh + {LegendExtraWidth}px)";
+            }
+            return $"position: relative; height: {TargetContainerSize}; width: {widthValue}; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
         }
     }
     private string GetCardStyle(int index)
