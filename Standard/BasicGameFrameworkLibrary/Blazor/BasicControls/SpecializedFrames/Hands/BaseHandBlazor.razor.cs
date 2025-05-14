@@ -237,6 +237,10 @@ public partial class BaseHandBlazor<D>
         {
             realSpacing = -1;
         }
+        else if (AdditionalSpacing == 1)
+        {
+            realSpacing = 0;
+        }
         else
         {
             realSpacing = AdditionalSpacing;

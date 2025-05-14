@@ -4,9 +4,9 @@
     return;
 }
 <div>
-    <DeckOfCardsHandBlazor R="RegularRummyCard" TargetContainerSize="95vw" Hand="_vmData.PlayerHand1" />
+    <DeckOfCardsHandBlazor R="RegularRummyCard" AdditionalSpacing="1" TargetContainerSize="95vw" Hand="_vmData.PlayerHand1" />
 </div>
-<GridContainer Rows="@GetFirstRows" Columns="45vw 50vw" RowGap="5px" ColumnGap="5px" Inline="true">
+<GridContainer Rows="@GetFirstRows" Columns="35vw 60vw" RowGap="5px" ColumnGap="5px" Inline="true">
     <GridItem>
         <div>
             <GameButtonComponent CommandObject="InitCommand"
