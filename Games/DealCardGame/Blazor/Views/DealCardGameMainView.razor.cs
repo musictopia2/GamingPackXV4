@@ -1,6 +1,9 @@
 namespace DealCardGame.Blazor.Views;
 public partial class DealCardGameMainView
 {
+
+    private bool _isTesting = false;
+
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
     private readonly BasicList<LabelGridModel> _labels = [];

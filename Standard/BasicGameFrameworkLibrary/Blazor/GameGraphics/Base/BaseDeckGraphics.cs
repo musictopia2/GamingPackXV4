@@ -2,6 +2,8 @@
 public abstract class BaseDeckGraphics<D> : GraphicsCommand
     where D : class, IDeckObject, new()
 {
+    [CascadingParameter]
+    private int ImageHeight { get; set; }
     [Parameter]
     public bool AlwaysUnknown { get; set; }
     [Parameter]
@@ -203,6 +205,15 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         {
             Allow0 = true
         };
+        string realHeight = "";
+        if (ImageHeight > 0 && TargetHeight == "" && TargetSize == "" && TargetWidth == "")
+        {
+            realHeight = $"{ImageHeight}vh";
+        }
+        else if (TargetHeight != "")
+        {
+            realHeight = TargetHeight;
+        }
         if (TargetSize != "")
         {
             if (DefaultSize.Width >= DefaultSize.Height)
@@ -231,15 +242,15 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
             svg.Y = Location.Y.ToString();
             PopulateCustomViewBox(svg);
         }
-        else if (TargetHeight != "")
+        else if (realHeight != "")
         {
             if (DeckObject!.Rotated == false)
             {
-                svg.Height = TargetHeight;
+                svg.Height = realHeight;
             }
             else
             {
-                svg.Width = TargetHeight;
+                svg.Width = realHeight;
             }
             PopulateCustomViewBox(svg);
         }

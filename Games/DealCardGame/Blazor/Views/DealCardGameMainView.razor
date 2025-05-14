@@ -3,6 +3,26 @@
 {
     return;
 }
+@if (_isTesting)
+{
+    <PropertySetOrganizerComponent />
+    return;
+}
+@if (_isTesting)
+{
+    <StackLayout>
+        <StackItem>
+            <HandBlazor HandType = "EnumHandList.Vertical" TargetContainerSize="35vh" Hand="_vmData.PlayerHand1" />
+        </StackItem>
+        <StackItem>
+            <HandBlazor HandType="EnumHandList.Vertical" TargetContainerSize="35vh" Hand="_vmData.PlayerHand1" />
+        </StackItem>
+    </StackLayout>
+    <div>
+        Good Job
+    </div>
+    return;
+}
 @if (_gameContainer.PersonalInformation.NeedsPayment )
 {
     <StackLayout>

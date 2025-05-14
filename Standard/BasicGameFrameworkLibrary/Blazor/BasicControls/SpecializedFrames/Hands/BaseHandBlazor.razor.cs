@@ -2,10 +2,6 @@ namespace BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Hands
 public partial class BaseHandBlazor<D>
     where D : class, IDeckObject, new()
 {
-    protected override bool ShouldRender()
-    {
-        return _points.Count == Hand!.HandList.Count;
-    }
     [Parameter]
     public bool UseKey { get; set; } = true; //allow the possibility of setting to false to see if that helps for a game like payday.
     [Parameter]
@@ -21,7 +17,30 @@ public partial class BaseHandBlazor<D>
     [Parameter]
     public double Divider { get; set; } = 1;
     [Parameter]
-    public double AdditionalSpacing { get; set; } = -5;
+    public double AdditionalSpacing { get; set; } = 0;
+
+    [Parameter]
+    public string FontSizeForFrame { get; set; } = "";
+    [Parameter]
+    public bool Bold { get; set; } = false;
+
+    private string GetLegendStyle()
+    {
+        if (FontSizeForFrame == "" && Bold == false)
+        {
+            return "";
+        }
+        if (Bold == false)
+        {
+            return $"font-size: {FontSizeForFrame};"; //so you can decide how it would be.
+        }
+        if (FontSizeForFrame != "")
+        {
+            return $"font-size: {FontSizeForFrame}; font-weight: bold;";
+        }
+        return "font-weight: bold;";
+    }
+
     //we are doing to do a viewbox.
     /// <summary>
     /// this is where you usually set a percentage which represents how high or wide the container is.
@@ -40,194 +59,246 @@ public partial class BaseHandBlazor<D>
     [CascadingParameter]
     public int TargetImageHeight { get; set; }
     private bool IsDisabled => !Hand!.IsEnabled;
-    private string GetContainerStyle()
-    {
-        if (TargetContainerSize == "")
-        {
-            if (HandType == EnumHandList.Horizontal)
-            {
-                return $"overflow-x: auto; margin-right: 10px;";
-            }
-            return $"overflow-y: auto; margin-bottom: 10px; padding-right: {PaddingRight}px;";
-        }
-        if (HandType == EnumHandList.Horizontal)
-        {
-            return $"width: {TargetContainerSize}; overflow-x: auto;";
-        }
-        return $"height: {TargetContainerSize}; overflow-y: auto; padding-right: {PaddingRight}px;";
-    }
-    private string GetSvgStyle()
-    {
-        if (HandType == EnumHandList.Horizontal && TargetImageHeight > 0)
-        {
-            return $"height: {TargetImageHeight}vh";
-        }
-        if (HandType == EnumHandList.Vertical && TargetImageHeight > 0)
-        {
-            D image = new();
-            SizeF size = image.DefaultSize;
-            var temps = TargetImageHeight * size.Width / size.Height;
-            return $"width: {temps}vh";
-        }
-        if (TargetImageSize == "")
-        {
-            return "";
-        }
-        if (HandType == EnumHandList.Horizontal)
-        {
-
-            return $"height: {TargetImageSize}";
-        }
-        return $"width: {TargetImageSize}";
-    }
-    private async Task BoardClicked()
-    {
-        await Hand!.BoardSingleClickCommand!.ExecuteAsync(null);
-    }
-    private string GetViewBox()
-    {
-        return $"0 0 {_viewBox.Width} {_viewBox.Height}";
-    }
-    private BasicList<PointF> _points = new();
-    private SizeF _viewBox = new();
     private string GetColorStyle()
     {
         if (IsDisabled == false)
         {
             return "";
         }
-        return $"color:{cs1.LightGray.ToWebColor()}; border-color: {cs1.LightGray.ToWebColor()}";
+        return $"color:{cs1.LightGray.ToWebColor()}; border-color: {cs1.LightGray.ToWebColor()};";
     }
-    private void CalculateHandMax()
+    private string GetContainerStyle()
     {
-        var currentPoint = new PointF(0, 0);
-        D card = new();
-        var defaultSize = card.DefaultSize;
-        double extras = 0;
-        for (int i = 0; i < Hand!.Maximum; i++)
+        double widthVH = 0, heightVH = 0;
+
+        if (Hand?.HandList.Count == 0 && TargetContainerSize == "")
         {
-            if (HandType == EnumHandList.Horizontal)
+            if ((Hand?.Maximum ?? 0) == 0)
             {
-                extras = defaultSize.Width / Divider;
-                extras += AdditionalSpacing;
-                currentPoint.X += (float)extras;
+                (widthVH, heightVH) = GetMinimumSize();
             }
             else
             {
-                extras = defaultSize.Height / Divider;
-                extras += AdditionalSpacing;
-                currentPoint.Y += (float)extras;
+                (widthVH, heightVH) = CalculateHandMax();
             }
+        }
+        else if ((Hand?.Maximum ?? 0) > 0)
+        {
+            (widthVH, heightVH) = CalculateHandMax();
+        }
+        // else: let CSS auto-size based on content
+
+        string style = "position: relative; overflow: auto;";
+        if (widthVH == 0 && heightVH == 0)
+        {
+            return GetOldContainerStyle();
         }
         if (HandType == EnumHandList.Horizontal)
         {
-            currentPoint.X += (float)extras;
-            _viewBox = new SizeF(currentPoint.X - defaultSize.Width + 10, defaultSize.Height);
+            if (widthVH > 0)
+            {
+                style += $" width: {widthVH}vh;";
+            }
+
+            if (heightVH > 0)
+            {
+                style += $" height: {heightVH}vh;";
+            }
         }
         else
         {
-            currentPoint.Y += (float)extras;
-            _viewBox = new SizeF(defaultSize.Width, currentPoint.Y);
+            if (heightVH > 0)
+            {
+                style += $" height: {heightVH}vh;";
+            }
+
+            if (widthVH > 0)
+            {
+                style += $" width: {widthVH}vh;";
+            }
         }
+        style += $" padding-right: {PaddingRight}px;";
+        return style;
     }
-    protected override void OnParametersSet()
+    private string GetOldContainerStyle()
     {
-        _points = new();
-        if (Hand!.HandList.Count == 0)
+        string realSize;
+        if (TargetImageSize != "")
         {
-            D image = new();
-            if (Hand.Maximum == 0)
-            {
-                SizeF size = new(image.DefaultSize.Width * 2, image.DefaultSize.Height);
-                _viewBox = size;
-            }
-            else
-            {
-                CalculateHandMax();
-            }
+            realSize = TargetImageSize;
+        }
+        else if (TargetImageHeight > 0)
+        {
+            realSize = $"{TargetImageHeight}vh";
         }
         else
         {
-            PointF currentPoint = new(0, 0);
-            SizeF defaultSize = new();
-            foreach (var hand in Hand.HandList)
+            throw new CustomBasicException("Unable to calculate container");
+        }
+        if (TargetContainerSize == "")
+        {
+            if (HandType == EnumHandList.Horizontal)
             {
-                defaultSize = hand.DefaultSize;
-                PointF nextPoint = new(currentPoint.X, currentPoint.Y);
-                _points.Add(nextPoint);
-                double extras;
-                if (Rotated == false)
-                {
-                    if (HandType == EnumHandList.Horizontal)
-                    {
-                        extras = hand.DefaultSize.Width / Divider;
-                        extras += AdditionalSpacing;
-                        currentPoint.X += (float)extras;
-                    }
-                    else
-                    {
-                        extras = hand.DefaultSize.Height / Divider;
-                        extras += AdditionalSpacing;
-
-                        currentPoint.Y += (float)extras;
-                    }
-                }
-                else
-                {
-                    if (HandType == EnumHandList.Horizontal)
-                    {
-                        extras = hand.DefaultSize.Height / Divider;
-                        extras += AdditionalSpacing;
-                        currentPoint.X += (float)extras;
-                    }
-                    else
-                    {
-                        extras = hand.DefaultSize.Width / Divider;
-                        extras += AdditionalSpacing;
-
-                        currentPoint.Y += (float)extras;
-                    }
-                }
+                return "overflow-x: auto; margin-right: 10px; position: relative";
             }
-            if (Hand.Maximum == 0)
+            return $"overflow-y: auto; margin - bottom: 10px; position: relative; padding-right: {PaddingRight}px; ";
+        }
+        if (HandType == EnumHandList.Horizontal)
+        {
+            return $"position: relative; width: {TargetContainerSize}; padding-bottom: 4vh; height: {realSize}; overflow-x: auto; overflow-y: hidden;";
+        }
+        else
+        {
+            if (Rotated == false)
             {
-                float maxX;
-                if (Hand.HandList.Count == 1)
-                {
-                    maxX = defaultSize.Width;
-                }
-                else
-                {
-                    maxX = _points.Max(x => x.X);
-                }
-                float maxY = _points.Max(x => x.Y);
-                if (Rotated == false)
-                {
-                    if (HandType == EnumHandList.Horizontal)
-                    {
-                        _viewBox = new SizeF(maxX + defaultSize.Width, defaultSize.Height);
-                    }
-                    else
-                    {
-                        _viewBox = new SizeF(defaultSize.Width, maxY + defaultSize.Height);
-                    }
-                }
-                else
-                {
-                    if (HandType == EnumHandList.Horizontal)
-                    {
-                        _viewBox = new SizeF(maxX + defaultSize.Height, defaultSize.Width);
-                    }
-                    else
-                    {
-                        _viewBox = new SizeF(defaultSize.Height, maxY + defaultSize.Width);
-                    }
-                }
+                return $"position: relative; height: {TargetContainerSize}; width: {realSize}; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
+            }
+            //iffy now.
+            int cardHeight;
+            if (TargetImageHeight > 0)
+            {
+                cardHeight = TargetImageHeight;
             }
             else
             {
-                CalculateHandMax();
+                if (TargetImageSize.ToLower().EndsWith("vh") == false)
+                {
+                    throw new CustomBasicException("Must end with view height for now");
+                }
+                string tempValue = TargetImageSize.ToLower().Replace("vh", "");
+                cardHeight = int.Parse(tempValue);
             }
+            cardHeight += 2;
+            return $"position: relative; height: {TargetContainerSize}; width: {cardHeight}vh; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
         }
     }
+    private string GetCardStyle(int index)
+    {
+        //this should not channge.
+        int cardHeight;
+        if (TargetImageHeight > 0)
+        {
+            cardHeight = TargetImageHeight;
+        }
+        else
+        {
+            if (!TargetImageSize.ToLower().EndsWith("vh"))
+            {
+                throw new CustomBasicException("Must end with view height for now");
+            }
+            string tempValue = TargetImageSize.ToLower().Replace("vh", "");
+            cardHeight = int.Parse(tempValue);
+        }
+        double realSpacing;
+        if (AdditionalSpacing <= 0)
+        {
+            realSpacing = -1;
+        }
+        else
+        {
+            realSpacing = AdditionalSpacing;
+        }
+        if (HandType == EnumHandList.Horizontal)
+        {
+            var card = new D();
+            double aspectRatio = card.DefaultSize.Width / card.DefaultSize.Height;
+            double cardWidthVH = cardHeight * aspectRatio;
+
+            double spacingVH = Divider <= 1
+                ? cardWidthVH + realSpacing
+                : (cardWidthVH / Divider) + realSpacing;
+
+            double leftVH = spacingVH * index;
+            return $"position: absolute; top: 0; left: {leftVH}vh; width: {cardWidthVH}vh;";
+        }
+
+        // For vertical layout:
+        double spacingForTopVH;
+
+        if (Rotated)
+        {
+            var card = new D();
+            double aspectRatio = card.DefaultSize.Width / card.DefaultSize.Height;
+            double rotatedHeightVH = cardHeight * aspectRatio;
+
+            spacingForTopVH = Divider <= 1
+                ? rotatedHeightVH + realSpacing
+                : (rotatedHeightVH / Divider) + realSpacing;
+        }
+        else
+        {
+            spacingForTopVH = Divider <= 1
+                ? cardHeight + realSpacing
+                : (cardHeight / Divider) + realSpacing;
+        }
+
+        double topVH = spacingForTopVH * index;
+        return $"position: absolute; top: {topVH}vh; left: 0;";
+    }
+
+    private (double widthVH, double heightVH) CalculateHandMax()
+    {
+        var card = new D();
+        var defaultSize = card.DefaultSize;
+        int max = Hand?.Maximum ?? 0;
+        double divider = Divider <= 0 ? 1 : Divider;
+        double spacing = AdditionalSpacing;
+
+        if (HandType == EnumHandList.Horizontal)
+        {
+            double aspectRatio = defaultSize.Width / defaultSize.Height;
+            double cardHeight = TargetImageHeight > 0
+                ? TargetImageHeight
+                : double.TryParse(TargetImageSize.Replace("vh", ""), out var h) ? h : defaultSize.Height;
+
+            double cardWidth = cardHeight * aspectRatio;
+            double extras = divider <= 1 ? cardWidth + spacing : (cardWidth / divider) + spacing;
+            // The last card's right edge is at extras * (max - 1) + cardWidth
+            double totalWidth = (extras * (max - 1)) + cardWidth;
+            totalWidth += 1;
+            cardHeight += 1;
+            return (totalWidth, cardHeight);
+        }
+        else
+        {
+            double cardHeight = TargetImageHeight > 0
+                ? TargetImageHeight
+                : double.TryParse(TargetImageSize.Replace("vh", ""), out var h) ? h : defaultSize.Height;
+
+            double extras = divider <= 1 ? cardHeight + spacing : (cardHeight / divider) + spacing;
+            // The last card's bottom edge is at extras * (max - 1) + cardHeight
+            double totalHeight = (extras * (max - 1)) + cardHeight;
+            double cardWidth = defaultSize.Width / defaultSize.Height * cardHeight;
+            cardWidth += 1;
+            totalHeight += 1;
+            return (cardWidth, totalHeight);
+        }
+    }
+
+    private (double widthVH, double heightVH) GetMinimumSize()
+    {
+        var card = new D();
+        var defaultSize = card.DefaultSize;
+        double cardHeight = TargetImageHeight > 0
+            ? TargetImageHeight
+            : double.TryParse(TargetImageSize.Replace("vh", ""), out var h) ? h : defaultSize.Height;
+
+        double aspectRatio = defaultSize.Width / defaultSize.Height;
+        double cardWidth = cardHeight * aspectRatio;
+
+        if (HandType == EnumHandList.Horizontal)
+        {
+            return (cardWidth * 2, cardHeight);
+        }
+        else
+        {
+            return (cardWidth, cardHeight * 2);
+        }
+    }
+    private async Task BoardClicked()
+    {
+        await Hand!.BoardSingleClickCommand!.ExecuteAsync(null);
+    }
+    
+    
 }

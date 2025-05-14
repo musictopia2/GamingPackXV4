@@ -46,7 +46,12 @@ public class PersonalCompleteSets
         10.Times(x =>
         {
             set = new(_gameContainer.Command);
+            EnumColor color = EnumColor.FromValue(x);
             set.Text = EnumColor.FromValue(x).ToString(); //so you know which color this represents.
+            if (color == EnumColor.MediumVioletRed)
+            {
+                set.Text = "Light Purple";
+            }
             set.AutoSelect = EnumHandAutoType.None;
             set.ObjectClickedAsync = SelectObjectAsync;
             set.SetClickedAsync = ThisSet_SetClickedAsync; //cannot set maximums.  otherwise, causes too much unnecessary scrolling
