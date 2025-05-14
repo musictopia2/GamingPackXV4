@@ -71,7 +71,7 @@ public partial class BaseHandBlazor<D>
     {
         double widthVH = 0, heightVH = 0;
 
-        if (Hand?.HandList.Count == 0 && TargetContainerSize == "")
+        if (Hand?.HandList.Count <= 2 && TargetContainerSize == "")
         {
             if ((Hand?.Maximum ?? 0) == 0)
             {
@@ -104,6 +104,7 @@ public partial class BaseHandBlazor<D>
             {
                 style += $" height: {heightVH}vh;";
             }
+            style += "padding-bottom: 3vh;";
         }
         else
         {
@@ -120,6 +121,44 @@ public partial class BaseHandBlazor<D>
         style += $" padding-right: {PaddingRight}px;";
         return style;
     }
+    private string GetWidthWithNoContainerSize()
+    {
+        if (Hand == null || Hand.HandList.Count == 0)
+        {
+            return "auto";
+        }
+
+        var card = new D();
+        var defaultSize = card.DefaultSize;
+        double aspectRatio = defaultSize.Width / defaultSize.Height;
+        double cardHeight = TargetImageHeight > 0
+            ? TargetImageHeight
+            : double.TryParse(TargetImageSize.Replace("vh", ""), out var h) ? h : defaultSize.Height;
+
+        double cardWidth = cardHeight * aspectRatio;
+        double spacing = AdditionalSpacing;
+        double divider = Divider <= 0 ? 1 : Divider;
+
+        double extras = divider <= 1 ? cardWidth + spacing : (cardWidth / divider) + spacing;
+        int count = Hand.HandList.Count;
+        double totalWidthVH = (extras * (count - 1)  +10);
+
+        //string widthStyle = $"{totalWidthVH}vh";
+
+        //// Cap at 95vw
+        string widthStyle;
+        if (totalWidthVH > 150)
+        {
+            //for now, set at 150
+            widthStyle = "95vw";
+        }
+        else
+        {
+            widthStyle = $"{totalWidthVH}vh";
+        }
+
+        return widthStyle;
+    }
     private string GetOldContainerStyle()
     {
         string realSize;
@@ -135,13 +174,17 @@ public partial class BaseHandBlazor<D>
         {
             throw new CustomBasicException("Unable to calculate container");
         }
+        //TargetContainerSize = "50vw"; //for now.
         if (TargetContainerSize == "")
         {
             if (HandType == EnumHandList.Horizontal)
             {
-                return "overflow-x: auto; margin-right: 10px; position: relative";
+                //figure out width.
+                string widths = GetWidthWithNoContainerSize();
+                //widths = "50vw";
+                return $"position: relative; overflow-x: auto; overflow-y: hidden; width: {widths}; hidden; margin-right: 10px; height: {realSize}; padding-bottom: 3vh;";
             }
-            return $"overflow-y: auto; margin - bottom: 10px; position: relative; padding-right: {PaddingRight}px; ";
+            return $"overflow-y: auto; margin-bottom: 10px; position: relative; padding-right: {PaddingRight}px; ";
         }
         if (HandType == EnumHandList.Horizontal)
         {
@@ -285,14 +328,14 @@ public partial class BaseHandBlazor<D>
 
         double aspectRatio = defaultSize.Width / defaultSize.Height;
         double cardWidth = cardHeight * aspectRatio;
-
+       
         if (HandType == EnumHandList.Horizontal)
         {
-            return (cardWidth * 2, cardHeight);
+            return (cardWidth * 3, cardHeight);
         }
         else
         {
-            return (cardWidth, cardHeight * 2);
+            return (cardWidth, cardHeight * 3);
         }
     }
     private async Task BoardClicked()
