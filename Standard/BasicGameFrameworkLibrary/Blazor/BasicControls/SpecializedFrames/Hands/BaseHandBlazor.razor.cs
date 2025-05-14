@@ -58,6 +58,13 @@ public partial class BaseHandBlazor<D>
     public string TargetImageSize { get; set; } = "";
     [CascadingParameter]
     public int TargetImageHeight { get; set; }
+
+
+    [Parameter]
+    public int LegendExtraWidth { get; set; } = 0; // in pixels, default is no extra width
+
+    
+
     private bool IsDisabled => !Hand!.IsEnabled;
     private string GetColorStyle()
     {
@@ -97,7 +104,19 @@ public partial class BaseHandBlazor<D>
         {
             if (widthVH > 0)
             {
-                style += $" width: {widthVH}vh;";
+                //double extraWidthVH = 0;
+                if (LegendExtraWidth > 0)
+                {
+                    // If your layout is in vh, convert px to vh based on viewport height
+                    // 1vh = 1% of viewport height, so: px / window.innerHeight * 100
+                    // For simplicity, you can approximate or use JS interop for exact
+                    // Here, just add as px for demonstration
+                    style += $" width: calc({widthVH}vh + {LegendExtraWidth}px);";
+                }
+                else
+                {
+                    style += $" width: {widthVH}vh;";
+                }
             }
 
             if (heightVH > 0)
@@ -120,6 +139,59 @@ public partial class BaseHandBlazor<D>
         }
         style += $" padding-right: {PaddingRight}px;";
         return style;
+    }
+    private string GetHeightWithNoContainerSize()
+    {
+        if (Hand == null || Hand.HandList.Count == 0)
+        {
+            return "auto";
+        }
+
+        var card = new D();
+        var defaultSize = card.DefaultSize;
+        double cardHeight = TargetImageHeight > 0
+            ? TargetImageHeight
+            : double.TryParse(TargetImageSize.Replace("vh", ""), out var h) ? h : defaultSize.Height;
+
+        double aspectRatio = defaultSize.Width / defaultSize.Height;
+        double cardWidth = cardHeight * aspectRatio;
+        double spacing = AdditionalSpacing;
+        double divider = Divider <= 0 ? 1 : Divider;
+
+        double extras;
+        if (Rotated)
+        {
+            // When rotated, the "height" is actually the width of the card
+            extras = divider <= 1 ? cardWidth + spacing : (cardWidth / divider) + spacing;
+        }
+        else
+        {
+            extras = divider <= 1 ? cardHeight + spacing : (cardHeight / divider) + spacing;
+        }
+
+        int count = Hand.HandList.Count;
+        double totalHeightVH;
+        if (Rotated)
+        {
+            totalHeightVH = (extras * (count - 1)) + cardWidth + 1;
+        }
+        else
+        {
+            totalHeightVH = (extras * (count - 1)) + cardHeight + 1;
+        }
+
+        // Cap at 95vh
+        string heightStyle;
+        if (totalHeightVH > 95)
+        {
+            heightStyle = "95vh";
+        }
+        else
+        {
+            heightStyle = $"{totalHeightVH}vh";
+        }
+
+        return heightStyle;
     }
     private string GetWidthWithNoContainerSize()
     {
@@ -182,9 +254,18 @@ public partial class BaseHandBlazor<D>
                 //figure out width.
                 string widths = GetWidthWithNoContainerSize();
                 //widths = "50vw";
-                return $"position: relative; overflow-x: auto; overflow-y: hidden; width: {widths}; hidden; margin-right: 10px; height: {realSize}; padding-bottom: 3vh;";
+                return $"position: relative; overflow-x: auto; overflow-y: hidden; width: {widths}; hidden; margin-right: 10px; height: {realSize}; padding-bottom: 3vh; padding-right: {PaddingRight}px;";
             }
-            return $"overflow-y: auto; margin-bottom: 10px; position: relative; padding-right: {PaddingRight}px; ";
+            //iffy now.
+            
+            string heights = GetHeightWithNoContainerSize();
+            if (LegendExtraWidth == 0)
+            {
+                return $"position: relative; overflow-x: auto; overflow-y: hidden; height: {heights}; hidden; margin-right: 10px; width: {realSize};  padding-right: {PaddingRight}px;";
+            }
+            string widthValue;
+            widthValue = $"calc({realSize} + {LegendExtraWidth}px)";
+            return $"position: relative; overflow-x: auto; overflow-y: hidden; width: {widthValue}; margin-right: 10px; height: {heights}; padding-bottom: 3vh; padding-right: {PaddingRight}px;";
         }
         if (HandType == EnumHandList.Horizontal)
         {
