@@ -14,7 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
-    <PackageReference Include="CommonBasicLibraries" Version="9.0.12" />
+    <PackageReference Include="CommonBasicLibraries" Version="9.0.32" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
@@ -26,6 +26,6 @@
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.13" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.18" />
   </ItemGroup>
 </Project>
