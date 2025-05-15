@@ -5,8 +5,7 @@ public partial class SelfDiscardBlazor
     [Parameter] public SelfDiscardCP? DiscardPile { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; }
-    private static double Divider => 3.5;
-    private static int AdditionalSpacing => 0;
+    private static double Divider => 5;
     private bool IsDisabled => !DiscardPile!.IsEnabled;
     private string GetColorStyle()
     {
@@ -32,17 +31,12 @@ public partial class SelfDiscardBlazor
         double cardHeight = card.DefaultSize.Height;
         double containerWidth;
 
-        containerWidth = (cardWidth / Divider) * 6 + cardWidth / Divider;
+        containerWidth = (cardWidth / Divider) * 6 + cardWidth * 2  / Divider;
 
 
         return $"position: relative; width: {containerWidth}px; height: {TargetHeight}vh; overflow: hidden;";
     }
-    private string GetCardsStyle()
-    {
-        // Apply flexbox to align cards horizontally
-        return $"display: flex; justify-content: flex-start; gap: {AdditionalSpacing}px;";
-    }
-    // Core positioning logic here
+   
     private string GetCardStyle(int index, RegularSimpleCard card)
     {
         double cardWidth = card.DefaultSize.Width;
