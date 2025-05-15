@@ -17,7 +17,7 @@
 <StackLayout ItemSpacing="5px">
     <StackItem Length="1fr">
         <SelfDiscardBlazor DiscardPile="_vmData.SelfDiscard" Context="DeckObject">
-            <DeckOfCardsImageBlazor CommandParameter="DeckObject" DeckObject="DeckObject" CommandObject="_vmData.SelfDiscard!.ObjectSingleClickCommand" R="RegularSimpleCard" />
+            <DeckOfCardsImageBlazor Location="@Location" TargetHeight="@HeightString" CommandParameter="DeckObject" DeckObject="DeckObject" CommandObject="_vmData.SelfDiscard!.ObjectSingleClickCommand" R="RegularSimpleCard" />
         </SelfDiscardBlazor>
     </StackItem>
     <StackItem Length="auto">
@@ -37,7 +37,7 @@
 </StackLayout>
 <StackLayout ItemSpacing="5px">
     <StackItem>
-        <DeckOfCardsHandBlazor R="RegularSimpleCard" Hand="_vmData.PlayerHand1" />
+        <DeckOfCardsHandBlazor TargetImageSize="@HeightString" R="RegularSimpleCard" Hand="_vmData.PlayerHand1" />
     </StackItem>
 
     <StackItem>

@@ -1,23 +1,13 @@
 namespace Savannah.Blazor;
 public partial class SelfDiscardBlazor
 {
-    [Parameter]
-    public RenderFragment<RegularSimpleCard>? ChildContent { get; set; }
-    [Parameter]
-    public SelfDiscardCP? DiscardPile { get; set; }
+    [Parameter] public RenderFragment<RegularSimpleCard>? ChildContent { get; set; }
+    [Parameter] public SelfDiscardCP? DiscardPile { get; set; }
     [CascadingParameter]
-    public int TargetImageHeight { get; set; }
-    private static double Divider => 3.7;
-    private static int AdditionalSpacing => 0; //i can add to it if necessary.
+    public int TargetHeight { get; set; }
+    private static double Divider => 3.5;
+    private static int AdditionalSpacing => 0;
     private bool IsDisabled => !DiscardPile!.IsEnabled;
-    private static string GetContainerStyle() => "overflow-x: auto; margin-right: 10px;";
-    private string GetSvgStyle() => $"height: {TargetImageHeight}vh";
-    private BasicList<PointF> _points = new();
-    private SizeF _viewBox = new();
-    private string GetViewBox()
-    {
-        return $"0 0 {_viewBox.Width} {_viewBox.Height}";
-    }
     private string GetColorStyle()
     {
         if (IsDisabled == false)
@@ -26,21 +16,55 @@ public partial class SelfDiscardBlazor
         }
         return $"color:{cc1.LightGray.ToWebColor()}; border-color: {cc1.LightGray.ToWebColor()}";
     }
-    private void CalculateHandMax()
+    private string GetContainerStyle()
     {
-        var currentPoint = new PointF(0, 0);
-        RegularSimpleCard card = new();
-        var defaultSize = card.DefaultSize;
-        double extras = 0;
-        for (int i = 0; i < DiscardPile!.Maximum; i++)
-        {
-            extras = defaultSize.Width / Divider;
-            extras += AdditionalSpacing;
-            currentPoint.X += (float)extras;
-        }
-        currentPoint.X += (float)extras;
-        _viewBox = new SizeF(currentPoint.X + defaultSize.Width / 2, defaultSize.Height);
+        return "overflow-x: auto; width: 100%; margin-right: 10px;";
     }
+    private string GetCardContainerStyle()
+    {
+        //if (DiscardPile!.HandList.Count == 0)
+        //{
+        //    return "position: relative; width: auto; height: auto;";
+        //}
+
+        var card = new RegularSimpleCard();
+        double cardWidth = card.DefaultSize.Width;
+        double cardHeight = card.DefaultSize.Height;
+        double containerWidth;
+
+        containerWidth = (cardWidth / Divider) * 6 + cardWidth / Divider;
+
+
+        return $"position: relative; width: {containerWidth}px; height: {TargetHeight}vh; overflow: hidden;";
+    }
+    private string GetCardsStyle()
+    {
+        // Apply flexbox to align cards horizontally
+        return $"display: flex; justify-content: flex-start; gap: {AdditionalSpacing}px;";
+    }
+    // Core positioning logic here
+    private string GetCardStyle(int index, RegularSimpleCard card)
+    {
+        double cardWidth = card.DefaultSize.Width;
+        double cardHeight = card.DefaultSize.Height;
+        double leftOffset;
+
+        if (index < DiscardPile!.Maximum)
+        {
+            // Slight overlap
+            leftOffset = index * (cardWidth / Divider);
+        }
+        else
+        {
+            // Stack directly on top of the 4th card
+            leftOffset = (DiscardPile.Maximum - 1) * (cardWidth / Divider); // same as index 3
+        }
+
+        return $"position: absolute; width: {cardWidth}px; height: {cardHeight}px; " +
+               $"left: {leftOffset}px; top: 0px;";
+    }
+
+    
     private async Task ClickAsync()
     {
         if (DiscardPile!.HandList.Count == 0)
@@ -48,29 +72,9 @@ public partial class SelfDiscardBlazor
             await DiscardPile.DiscardEmptyAsync();
         }
     }
+
     protected override void OnParametersSet()
     {
-        _points = new();
-        if (DiscardPile!.HandList.Count == 0)
-        {
-            RegularSimpleCard image = new();
-            SizeF size = new(image.DefaultSize.Width * 2, image.DefaultSize.Height);
-            _viewBox = size;
-        }
-        else
-        {
-            PointF currentPoint = new(0, 0);
-            SizeF defaultSize = DiscardPile.HandList.First().DefaultSize;
-            for (int i = 0; i < DiscardPile!.Maximum; i++)
-            {
-                PointF nextPoint = new(currentPoint.X, currentPoint.Y);
-                _points.Add(nextPoint);
-                double extras;
-                extras = defaultSize.Width / Divider; //hopefuly this works.
-                extras += AdditionalSpacing;
-                currentPoint.X += (float)extras;
-            }
-            CalculateHandMax();
-        }
+        // This will no longer be needed as we’re moving to CSS for layout.
     }
 }

@@ -34,4 +34,5 @@ public partial class SavannahMainView
     }
     private ICustomCommand PlayerCommand => DataContext!.ClickPlayerDiscardCommand!;
     private string HeightString => $"{TargetHeight}vh";
+    private PointF Location => new(10, -300);
 }

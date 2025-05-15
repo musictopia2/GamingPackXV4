@@ -1,4 +1,8 @@
+@inherits AbstractHandBlazor<FlinchCardInformation>
 <BaseHandBlazor D="FlinchCardInformation" Hand="Hand" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
-                HandType="HandType" TargetContainerSize="@TargetContainerSize" TargetImageSize="@TargetImageSize" Context="DeckObject">
-    <CardGraphicsBlazor DeckObject="DeckObject" @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
+                HandType="HandType" 
+                TargetContainerSize="@TargetContainerSize" TargetImageSize="@TargetImageSize" Context="DeckObject">
+    <CardGraphicsBlazor DeckObject="DeckObject" @key="GetKey"
+        TargetHeight="@RealHeight()"
+        CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
 </BaseHandBlazor>
