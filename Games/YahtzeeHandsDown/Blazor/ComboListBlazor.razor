@@ -1,4 +1,9 @@
-﻿<BaseHandBlazor D="ComboCardInfo" Hand="Hand" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
+﻿@inherits AbstractHandBlazor<ComboCardInfo>
+<BaseHandBlazor D="ComboCardInfo" Hand="Hand" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
+                PaddingRight="120"
                 HandType="HandType" TargetContainerSize="@TargetContainerSize" TargetImageSize="@TargetImageSize" Context="DeckObject">
-    <ComboGraphicsBlazor DeckObject="DeckObject" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
+    <ComboGraphicsBlazor DeckObject="DeckObject"
+        CommandParameter="DeckObject"
+        TargetHeight="@RealHeight()"
+        CommandObject="Hand!.ObjectSingleClickCommand" />
 </BaseHandBlazor>

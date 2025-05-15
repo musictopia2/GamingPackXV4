@@ -6,6 +6,7 @@
 <StackLayout ItemSpacing="10px">
     <StackItem>
         <DeckOfCardsHandBlazor Rotated="true"
+                               AdditionalSpacing="1"
                                HandType="EnumHandList.Vertical"
                                Hand="_vmData.Bar1"
                                R="SnagCardGameCardInformation" />
@@ -18,14 +19,20 @@
                                               DataContext="_vmData.TrickArea1" />
         <StackLayout>
             <StackItem>
-                <DeckOfCardsHandBlazor R="SnagCardGameCardInformation" Hand="_vmData.Human1" />
+                <DeckOfCardsHandBlazor R="SnagCardGameCardInformation"
+                    AdditionalSpacing="1"
+                    Hand="_vmData.Human1" />
             </StackItem>
             <StackItem>
-                <DeckOfCardsHandBlazor R="SnagCardGameCardInformation" Hand="_vmData.Opponent1" />
+                <DeckOfCardsHandBlazor R="SnagCardGameCardInformation"
+                    AdditionalSpacing="1"
+                    Hand="_vmData.Opponent1" />
             </StackItem>
         </StackLayout>
         <div>
-            <DeckOfCardsHandBlazor R="SnagCardGameCardInformation" Hand="_vmData.PlayerHand1" />
+            <DeckOfCardsHandBlazor R="SnagCardGameCardInformation"
+                AdditionalSpacing="1"
+                Hand="_vmData.PlayerHand1" />
         </div>
         <div>
             <LabelGridComponent DataContext="_vmData" Labels="_labels" />

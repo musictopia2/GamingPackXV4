@@ -10,5 +10,5 @@ public partial class GamePage
     [CascadingParameter]
     public MultiplayerBasicParentShell? Shell { get; set; }
     private static string GetColor(EnumColorChoice color) => color.Color;
-    private readonly int _targetImageHeight = 13; //can adjust here.
+    private static int TargetHeight => 13;
 }

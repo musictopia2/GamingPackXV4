@@ -52,6 +52,10 @@ public class PersonalCompleteSets
             {
                 set.Text = "Light Purple";
             }
+            if (color == EnumColor.DarkOrange)
+            {
+                set.Text = "Orange";
+            }
             set.AutoSelect = EnumHandAutoType.None;
             set.ObjectClickedAsync = SelectObjectAsync;
             set.SetClickedAsync = ThisSet_SetClickedAsync; //cannot set maximums.  otherwise, causes too much unnecessary scrolling

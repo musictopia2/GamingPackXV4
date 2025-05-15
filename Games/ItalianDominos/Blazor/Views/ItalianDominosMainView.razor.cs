@@ -3,6 +3,8 @@ public partial class ItalianDominosMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
+    [CascadingParameter]
+    public int TargetHeight { get; set; }
     private readonly BasicList<LabelGridModel> _labels = new();
     private readonly BasicList<ScoreColumnModel> _scores = new();
     protected override void OnInitialized()
@@ -29,4 +31,5 @@ public partial class ItalianDominosMainView
             return output;
         }
     }
+    private string RealHeight => $"{TargetHeight}vh";
 }

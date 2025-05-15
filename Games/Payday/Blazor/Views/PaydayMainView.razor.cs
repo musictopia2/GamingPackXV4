@@ -1,6 +1,9 @@
 namespace Payday.Blazor.Views;
 public partial class PaydayMainView
 {
+    [CascadingParameter]
+    public int TargetHeight { get; set; }
+    private string RealHeight => $"{TargetHeight}vh";
     private static string GetColumns => $"{bb1.RepeatMinimum(1)} {bb1.RepeatAuto(1)}";
     private static string RowData => "20vh 52vh 15vh";
     private readonly BasicList<ScoreColumnModel> _scores = new();

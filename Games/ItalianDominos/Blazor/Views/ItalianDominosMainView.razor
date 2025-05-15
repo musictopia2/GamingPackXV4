@@ -3,8 +3,10 @@
     <BasicDominoBlazor D="SimpleDominoInfo" DeckObject="GetDomino" TargetHeight="10vh" />
 </BaseBoneyardPileBlazor>
 <div>
-    <BaseHandBlazor Hand="DataContext.PlayerHand" AdditionalSpacing="0" Context="Domino" D="SimpleDominoInfo">
-        <BasicDominoBlazor D="SimpleDominoInfo" PartOfBoard="true" DeckObject="Domino" CommandObject="DataContext.PlayerHand.ObjectSingleClickCommand" CommandParameter="Domino" />
+    <BaseHandBlazor Hand="DataContext.PlayerHand" TargetContainerSize="95vw" AdditionalSpacing="1" Context="Domino" D="SimpleDominoInfo">
+        <BasicDominoBlazor D="SimpleDominoInfo"
+
+             DeckObject="Domino" PartOfBoard=true CommandObject="DataContext.PlayerHand.ObjectSingleClickCommand" CommandParameter="Domino" />
     </BaseHandBlazor>
 </div>
 <StackLayout>

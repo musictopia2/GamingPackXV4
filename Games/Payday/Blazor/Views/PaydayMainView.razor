@@ -45,6 +45,7 @@
                             <BaseHandBlazor D="DealCard" HandType="EnumHandList.Vertical" UseKey="false" Hand="DataContext.VMData.CurrentDealList" Context="DeckObject">
                                 <PaydayCardBlazor CommandParameter="DeckObject"
                                                   DeckObject="DeckObject"
+                                                  TargetHeight="@RealHeight"
                                                   CommandObject="DataContext.VMData.CurrentDealList.ObjectSingleClickCommand" />
                             </BaseHandBlazor>
                         </StackItem>
