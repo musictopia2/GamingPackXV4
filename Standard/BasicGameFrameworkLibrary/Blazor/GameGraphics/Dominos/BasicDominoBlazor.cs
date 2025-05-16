@@ -19,6 +19,17 @@ public class BasicDominoBlazor<D> : BaseDeckGraphics<D>
     protected override void DrawBacks() { }
     private BasicList<string> _rowList = new();
     private BasicList<string> _columnList = new();
+    protected override Rect StartRectangle()
+    {
+        Rect output = new();
+        output.Width = DefaultSize.Width.ToString();
+        output.Height = DefaultSize.Height.ToString();
+
+        output.RX = RoundedRadius.ToString();
+        output.RY = RoundedRadius.ToString();
+        output.AutoIncrementElement(MainGroup!);
+        return output;
+    }
     protected override void DrawImage()
     {
         Path path = new();

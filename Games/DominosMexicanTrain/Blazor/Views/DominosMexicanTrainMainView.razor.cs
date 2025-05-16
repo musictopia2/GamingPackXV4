@@ -3,8 +3,8 @@ public partial class DominosMexicanTrainMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     protected override void OnInitialized()
     {
         _labels.Clear();

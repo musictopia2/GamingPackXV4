@@ -106,7 +106,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
     protected virtual string GetOpacity => GetLightHighlighter().ToString();
     protected virtual string SelectFillColor => cs1.Red.ToWebColor();
     protected virtual string DrawFillColor => cs1.Lime.ToWebColor();
-    protected Rect StartRectangle()
+    protected virtual Rect StartRectangle()
     {
         Rect output = new();
         if (PartOfBoard == false)

@@ -1,7 +1,7 @@
 namespace DominosMexicanTrain.Blazor;
-public partial class TrainStationBlazor : IHandle<RepaintEventModel>, IDisposable
+[CustomTag("Main")] //later can rethink how to make it easier for strongly typed names.
+public partial class OldTrainStationBlazor : IHandle<RepaintEventModel>, IDisposable
 {
-    private SizeF _size = new(1000, 1000);
     public Action? UpdateAnimation { get; set; }
     [Parameter]
     public TrainStationBoardProcesses? GameBoard { get; set; }
@@ -162,5 +162,4 @@ public partial class TrainStationBlazor : IHandle<RepaintEventModel>, IDisposabl
     //looks like if i set shouldrender to false, then the children don't render no matter what.
     //this means each piece has to be more smart about it now.
     //maybe okay because statehaschanged is only for other anyways.
-
 }
