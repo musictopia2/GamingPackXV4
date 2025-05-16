@@ -1,6 +1,7 @@
 ﻿namespace Sorry.Blazor;
 public class CardGraphicsBlazor : BaseDeckGraphics<CardInfo>
 {
+    protected override bool AlwaysUseSvg => true;
     [Parameter]
     public SorryGameContainer? Container { get; set; }
     public CardGraphicsBlazor()

@@ -33,6 +33,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
     protected abstract bool CanStartDrawing();
     protected abstract void DrawBacks(); //if it needs to draw backs, decided this time, will not even get the rectangle.  they won't necessarily draw a rectangle anyways.
     protected G? MainGroup { get; set; }
+    protected virtual bool AlwaysUseSvg { get; } = false;
     private void PopulateCustomViewBox(ISvg svg)
     {
         if (PartOfBoard == false)
@@ -139,7 +140,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
     }
     public ISvg GetGraphicsToEmbed(RectangleF bounds)
     {
-        ISvg svg = new SVG();
+        SVG svg = new ();
         if (DeckObject == null)
         {
             return svg;
@@ -251,7 +252,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
 
         SvgRenderClass render = new() { Allow0 = true };
 
-        if (PartOfBoard)
+        if (PartOfBoard && AlwaysUseSvg == false)
         {
             // Only render the inner <g> group — no full <svg>
             CreateClick(MainGroup); // ← Create click on the group instead
@@ -260,7 +261,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         else
         {
             // Full SVG rendering
-            ISvg svg = new SVG();
+            SVG svg = new ();
             svg.Children.Add(MainGroup);
 
             string realHeight = "";
@@ -277,13 +278,13 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
             {
                 if (DefaultSize.Width >= DefaultSize.Height)
                 {
-                    svg.Width = DeckObject!.Rotated ? null : TargetSize;
-                    svg.Height = DeckObject!.Rotated ? TargetSize : null;
+                    svg.Width = DeckObject!.Rotated ? null! : TargetSize;
+                    svg.Height = DeckObject!.Rotated ? TargetSize : null!;
                 }
                 else
                 {
-                    svg.Height = DeckObject!.Rotated ? null : TargetSize;
-                    svg.Width = DeckObject!.Rotated ? TargetSize : null;
+                    svg.Height = DeckObject!.Rotated ? null! : TargetSize;
+                    svg.Width = DeckObject!.Rotated ? TargetSize : null!;
                 }
 
                 svg.X = Location.X.ToString();
