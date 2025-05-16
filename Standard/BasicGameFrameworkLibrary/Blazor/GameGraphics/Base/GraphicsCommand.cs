@@ -66,6 +66,13 @@ public abstract class GraphicsCommand : KeyComponentBase, IDisposable
             svg.EventData.ActionClicked = Clicked;
         }
     }
+    public void CreateClick(G group)
+    {
+        if (CommandObject != null)
+        {
+            group.EventData.ActionClicked = Clicked;
+        }
+    }
     private async Task Clicked(object args1, object args2)
     {
         await Submit();

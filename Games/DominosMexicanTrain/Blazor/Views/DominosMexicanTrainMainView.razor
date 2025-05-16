@@ -1,6 +1,6 @@
 @inherits BasicGameView<DominosMexicanTrainMainViewModel>
-<BaseHandBlazor Hand="DataContext!.PlayerHand" AdditionalSpacing="0" TargetContainerSize="99vw" Context="Domino" D="MexicanDomino">
-    <BasicDominoBlazor PartOfBoard="true" D="SimpleDominoInfo" DeckObject="Domino" CommandObject="DataContext.PlayerHand.ObjectSingleClickCommand" CommandParameter="Domino" />
+<BaseHandBlazor Hand="DataContext!.PlayerHand" Divider="1.1" TargetContainerSize="99vw" Context="Domino" D="MexicanDomino">
+    <BasicDominoBlazor D="SimpleDominoInfo" DeckObject="Domino" CommandObject="DataContext.PlayerHand.ObjectSingleClickCommand" CommandParameter="Domino" />
 </BaseHandBlazor>
 <StackLayout ItemSpacing="0px">
     <StackItem>
@@ -23,7 +23,7 @@
     </StackItem>
 </StackLayout>
 <div>
-    <BaseHandBlazor Hand="DataContext.PrivateTrain" TargetContainerSize="99vw" AdditionalSpacing="0" Context="Domino" D="MexicanDomino">
-        <BasicDominoBlazor PartOfBoard="true" D="SimpleDominoInfo" DeckObject="Domino" CommandObject="DataContext.PrivateTrain.ObjectSingleClickCommand" CommandParameter="Domino" />
+    <BaseHandBlazor Hand="DataContext.PrivateTrain" TargetContainerSize="99vw" Divider="1.1" Context="Domino" D="MexicanDomino">
+        <BasicDominoBlazor  D="SimpleDominoInfo" DeckObject="Domino" CommandObject="DataContext.PrivateTrain.ObjectSingleClickCommand" CommandParameter="Domino" />
     </BaseHandBlazor>
 </div>

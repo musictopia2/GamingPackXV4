@@ -26,11 +26,12 @@
                         break;
                     }
                     var card = DataContext.ObjectList[z];
-                    <svg x="@x" y="@y">
-                        <FlexibleDeckRenderComponent D="D" DeckObject="card">
-                            @ChildContent!(card)
-                        </FlexibleDeckRenderComponent>
-                    </svg>
+                    <g transform="translate(@x, @y)">
+                        @ChildContent!(card)
+                        @* <FlexibleDeckRenderComponent D="D" DeckObject="card">
+                            
+                        </FlexibleDeckRenderComponent> *@
+                    </g>
                     x += DefaultSize.Width;
                     z++;
                 }
@@ -52,11 +53,12 @@
                             break;
                         }
                         var card = DataContext.ObjectList[z];
-                        <svg x="@x" y="@y">
-                            <FlexibleDeckRenderComponent D="D" DeckObject="card">
-                                @ChildContent!(card)
-                            </FlexibleDeckRenderComponent>
-                        </svg>
+                        <g transform="translate(@x, @y)">
+                            @ChildContent!(card)
+                            @* <FlexibleDeckRenderComponent D="D" DeckObject="card">
+                                
+                            </FlexibleDeckRenderComponent> *@
+                        </g>
                         x += DefaultSize.Width;
                         z++;
                     }

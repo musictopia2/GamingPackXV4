@@ -12,28 +12,39 @@
             PointF firstPoint = new PointF(0, 0);
             PointF centerPoint = new PointF(size.Width / 2, 0);
             PointF lastPoint = new PointF(size.Width, 0);
+            float width = size.Width;
+            float height = size.Height;
         }
-        <BasicDominoBlazor D="SimpleDominoInfo"
-                           PartOfBoard="true"
-                           @key="GetKey"
-                           DeckObject="DataContext.DominoList[1]"
-                           Location="centerPoint" />
-        <BasicDominoBlazor D="SimpleDominoInfo"
-                           PartOfBoard="true"
-                           ClickBlank="true"
-                           CommandObject="DataContext.DominoCommand"
-                           CommandParameter="DataContext.DominoList.First()"
-                           DeckObject="DataContext.DominoList.First()"
-                           @key="GetKey"
-                           Location="firstPoint" />
-        <BasicDominoBlazor D="SimpleDominoInfo"
-                           PartOfBoard="true"
-                           ClickBlank="true"
-                           CommandObject="DataContext.DominoCommand"
-                           CommandParameter="DataContext.DominoList.Last()"
-                           DeckObject="DataContext.DominoList.Last()"
-                           @key="GetKey"
-                           Location="lastPoint" />
+        
+        <!-- Domino 1 (center) -->
+        <svg width="@width" height="@height" x="@centerPoint.X" y="@centerPoint.Y" viewBox="0 0 @width @height">
+            <BasicDominoBlazor D="SimpleDominoInfo"
+                               PartOfBoard="true"
+                               @key="GetKey"
+                               DeckObject="DataContext.DominoList[1]" />
+        </svg>
+
+        <!-- Domino 2 (left) -->
+        <svg width="@width" height="@height" x="@firstPoint.X" y="@firstPoint.Y" viewBox="0 0 @width @height">
+            <BasicDominoBlazor D="SimpleDominoInfo"
+                               PartOfBoard="true"
+                               ClickBlank="true"
+                               CommandObject="DataContext.DominoCommand"
+                               CommandParameter="DataContext.DominoList.First()"
+                               DeckObject="DataContext.DominoList.First()"
+                               @key="GetKey" />
+        </svg>
+
+        <!-- Domino 3 (right) -->
+        <svg width="@width" height="@height" x="@lastPoint.X" y="@lastPoint.Y" viewBox="0 0 @width @height">
+            <BasicDominoBlazor D="SimpleDominoInfo"
+                               PartOfBoard="true"
+                               ClickBlank="true"
+                               CommandObject="DataContext.DominoCommand"
+                               CommandParameter="DataContext.DominoList.Last()"
+                               DeckObject="DataContext.DominoList.Last()"
+                               @key="GetKey" />
+        </svg>
 
     </svg>
 </BaseFrameBlazor>

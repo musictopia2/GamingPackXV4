@@ -15,14 +15,19 @@
                 return;
             }
             <RefreshComponent CanRender="GameBoard.GetAnimation.AnimationGoing == false">
-                <BasicDominoBlazor @key="GameBoard!.CenterDomino" PartOfBoard="true" D="MexicanDomino" Location="new PointF(300, 349)" LongestSize="@GetLongestSize" DeckObject="GameBoard!.CenterDomino" />
-
+                <!-- Center Domino -->
+                <svg x="300" y="349" width="95"
+                     height="31">
+                    <BasicDominoBlazor @key="GameBoard!.CenterDomino" PartOfBoard="true" D="MexicanDomino" LongestSize="@GetLongestSize" DeckObject="GameBoard!.CenterDomino" />
+                </svg>
                 @foreach (var train in GameBoard.TrainList)
                 {
                     PrivateTrain privateTrain = GameBoard.PrivateList[train.Value.Index];
                     foreach (var domino in train.Value.DominoList)
                     {
-                        <BasicDominoBlazor @key="domino" D="MexicanDomino" PartOfBoard="true" DeckObject="domino" LongestSize="@GetLongestSize" Location="domino.Location" />
+                        <svg x="@domino.Location.X" y="@domino.Location.Y">
+                            <BasicDominoBlazor @key="domino" D="MexicanDomino" PartOfBoard="true" DeckObject="domino" LongestSize="@GetLongestSize" />
+                        </svg>
                     }
                     <TrainPieceBlazor Self="@IsSelf(train.Key)"
                                       PositionInfo="privateTrain"
@@ -39,12 +44,14 @@
             @if (GameBoard.GetAnimation.AnimationGoing)
             {
                 <UpdatePortionBoard>
-                    <BasicDominoBlazor PartOfBoard="true"
-                                       D="MexicanDomino"
-                                       @key="@Guid.NewGuid().ToString()"
-                                       LongestSize="@GetLongestSize"
-                                       Location="GameBoard.GetAnimation.CurrentLocation"
-                                       DeckObject="GameBoard.GetMovingDomino" />
+                    <svg x="@GameBoard.GetAnimation.CurrentLocation.X" y="@GameBoard.GetAnimation.CurrentLocation.Y">
+                        <BasicDominoBlazor PartOfBoard="true"
+                                           D="MexicanDomino"
+                                           @key="@Guid.NewGuid().ToString()"
+                                           LongestSize="@GetLongestSize"
+                                           DeckObject="GameBoard.GetMovingDomino" />
+
+                    </svg>
                 </UpdatePortionBoard>
 
             }

@@ -200,122 +200,11 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
                 return;
             }
         }
-        ISvg svg = new SVG();
-        SvgRenderClass render = new()
-        {
-            Allow0 = true
-        };
-        string realHeight = "";
-        if (ImageHeight > 0 && TargetHeight == "" && TargetSize == "" && TargetWidth == "")
-        {
-            realHeight = $"{ImageHeight}vh";
-        }
-        else if (TargetHeight != "")
-        {
-            realHeight = TargetHeight;
-        }
-        if (TargetSize != "")
-        {
-            if (DefaultSize.Width >= DefaultSize.Height)
-            {
-                if (DeckObject!.Rotated == false)
-                {
-                    svg.Width = TargetSize;
-                }
-                else
-                {
-                    svg.Height = TargetSize;
-                }
-            }
-            else
-            {
-                if (DeckObject!.Rotated == false)
-                {
-                    svg.Height = TargetSize;
-                }
-                else
-                {
-                    svg.Width = TargetSize;
-                }
-            }
-            svg.X = Location.X.ToString();
-            svg.Y = Location.Y.ToString();
-            PopulateCustomViewBox(svg);
-        }
-        else if (realHeight != "")
-        {
-            if (DeckObject!.Rotated == false)
-            {
-                svg.Height = realHeight;
-            }
-            else
-            {
-                svg.Width = realHeight;
-            }
-            PopulateCustomViewBox(svg);
-        }
-        else if (TargetWidth != "")
-        {
-            if (DeckObject!.Rotated == false)
-            {
-                svg.Width = TargetWidth;
-            }
-            else
-            {
-                svg.Height = TargetWidth;
-            }
-            PopulateCustomViewBox(svg);
-        }
-        else
-        {
-            svg.X = Location.X.ToString();
-            svg.Y = Location.Y.ToString();
-            var value = Scale() * DefaultSize.Width;
-            if (DeckObject!.Rotated == false)
-            {
-                svg.Width = value.ToString();
-            }
-            else
-            {
-                svg.Height = value.ToString();
-            }
-            value = Scale() * DefaultSize.Height;
-            if (DeckObject.Rotated == false)
-            {
-                svg.Height = value.ToString();
-            }
-            else
-            {
-                svg.Width = value.ToString();
-            }
-            if (PartOfBoard == false)
-            {
-                value = BorderWidth / 2 * -1;
-                if (DeckObject!.Rotated == false)
-                {
-                    svg.ViewBox = $"{value} {value} {DefaultSize.Width + BorderWidth} {DefaultSize.Height + BorderWidth}";
-                }
-                else
-                {
-                    svg.ViewBox = $"{value} {value} {DefaultSize.Height + BorderWidth} {DefaultSize.Width + BorderWidth}";
-                }
-            }
-            else
-            {
-                if (DeckObject!.Rotated == false)
-                {
-                    svg.ViewBox = $"0 0 {DefaultSize.Width} {DefaultSize.Height}";
-                }
-                else
-                {
-                    svg.ViewBox = $"0 0 {DefaultSize.Height} {DefaultSize.Width}";
-                }
-            }
-        }
+
         MainGroup = new G();
-        svg.Children.Add(MainGroup);
         PopulateRotation();
         Rect rect = StartRectangle();
+
         if (DeckObject!.Deck == 0)
         {
             rect.Fill = cs1.Transparent.ToWebColor();
@@ -331,35 +220,132 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
             BeforeFilling();
             rect.Fill = FillColor.ToWebColor();
         }
+
         MainGroup.Children.Add(rect);
         DrawHighlighters();
+
         if (DeckObject!.Deck >= 0)
         {
-            if (DeckObject!.IsUnknown && NeedsToDrawBacks)
+            if (DeckObject.IsUnknown && NeedsToDrawBacks)
             {
                 DrawBacks();
-                if (DeckObject!.IsSelected)
+                if (DeckObject.IsSelected)
                 {
                     DrawHighlighters();
                 }
             }
-            else if (EmptyBorders && DeckObject!.Deck == 0)
+            else if (EmptyBorders && DeckObject.Deck == 0)
             {
                 rect.PopulateStrokesToStyles(color: cs1.White.ToWebColor(), strokeWidth: (int)BorderWidth);
                 rect.Fill = cs1.Navy.ToWebColor();
             }
-            else if (AlwaysUnknown && DeckObject!.Deck > 0)
+            else if (AlwaysUnknown && DeckObject.Deck > 0)
             {
                 DrawBacks();
             }
-
-            else if (DeckObject!.Deck != 0)
+            else if (DeckObject.Deck != 0)
             {
                 DrawImage();
             }
         }
-        CreateClick(svg);
-        render.RenderSvgTree(svg, builder);
+
+        SvgRenderClass render = new() { Allow0 = true };
+
+        if (PartOfBoard)
+        {
+            // Only render the inner <g> group — no full <svg>
+            CreateClick(MainGroup); // ← Create click on the group instead
+            render.RenderSvgTree(MainGroup, builder);
+        }
+        else
+        {
+            // Full SVG rendering
+            ISvg svg = new SVG();
+            svg.Children.Add(MainGroup);
+
+            string realHeight = "";
+            if (ImageHeight > 0 && TargetHeight == "" && TargetSize == "" && TargetWidth == "")
+            {
+                realHeight = $"{ImageHeight}vh";
+            }
+            else if (TargetHeight != "")
+            {
+                realHeight = TargetHeight;
+            }
+
+            if (TargetSize != "")
+            {
+                if (DefaultSize.Width >= DefaultSize.Height)
+                {
+                    svg.Width = DeckObject!.Rotated ? null : TargetSize;
+                    svg.Height = DeckObject!.Rotated ? TargetSize : null;
+                }
+                else
+                {
+                    svg.Height = DeckObject!.Rotated ? null : TargetSize;
+                    svg.Width = DeckObject!.Rotated ? TargetSize : null;
+                }
+
+                svg.X = Location.X.ToString();
+                svg.Y = Location.Y.ToString();
+                PopulateCustomViewBox(svg);
+            }
+            else if (realHeight != "")
+            {
+                if (DeckObject!.Rotated == false)
+                {
+                    svg.Height = realHeight;
+                }
+                else
+                {
+                    svg.Width = realHeight;
+                }
+
+                PopulateCustomViewBox(svg);
+            }
+            else if (TargetWidth != "")
+            {
+                if (DeckObject!.Rotated == false)
+                {
+                    svg.Width = TargetWidth;
+                }
+                else
+                {
+                    svg.Height = TargetWidth;
+                }
+
+                PopulateCustomViewBox(svg);
+            }
+            else
+            {
+                svg.X = Location.X.ToString();
+                svg.Y = Location.Y.ToString();
+
+                var widthVal = Scale() * DefaultSize.Width;
+                var heightVal = Scale() * DefaultSize.Height;
+
+                svg.Width = DeckObject!.Rotated ? heightVal.ToString() : widthVal.ToString();
+                svg.Height = DeckObject!.Rotated ? widthVal.ToString() : heightVal.ToString();
+
+                if (PartOfBoard == false)
+                {
+                    var value = BorderWidth / 2 * -1;
+                    svg.ViewBox = DeckObject!.Rotated
+                        ? $"{value} {value} {DefaultSize.Height + BorderWidth} {DefaultSize.Width + BorderWidth}"
+                        : $"{value} {value} {DefaultSize.Width + BorderWidth} {DefaultSize.Height + BorderWidth}";
+                }
+                else
+                {
+                    svg.ViewBox = DeckObject!.Rotated
+                        ? $"0 0 {DefaultSize.Height} {DefaultSize.Width}"
+                        : $"0 0 {DefaultSize.Width} {DefaultSize.Height}";
+                }
+            }
+
+            CreateClick(svg); // ← Create click on the full SVG
+            render.RenderSvgTree(svg, builder);
+        }
+
         base.BuildRenderTree(builder);
     }
     protected virtual void BeforeFilling() { }

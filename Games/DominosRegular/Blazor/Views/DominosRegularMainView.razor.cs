@@ -3,8 +3,11 @@ public partial class DominosRegularMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    [CascadingParameter]
+    public int TargetHeight { get; set; } //i like the idea of cascading values here.
+
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     protected override void OnInitialized()
     {
         _labels.Clear();
@@ -26,4 +29,5 @@ public partial class DominosRegularMainView
         }
     }
     private ICustomCommand EndTurnCommand => DataContext!.EndTurnCommand!;
+    private string GetTargetString => TargetHeight.HeightString();
 }

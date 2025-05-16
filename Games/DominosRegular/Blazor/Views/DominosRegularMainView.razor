@@ -6,8 +6,8 @@
     <DominosGameBoardBlazor DataContext="DataContext.GetBoard" />
 </div>
 <div>
-    <BaseHandBlazor TargetContainerSize="95vw" Hand="DataContext.PlayerHand" AdditionalSpacing="0" Context="Domino" D="SimpleDominoInfo">
-        <BasicDominoBlazor PartOfBoard="true" D="SimpleDominoInfo" DeckObject="Domino" CommandObject="DataContext.PlayerHand.ObjectSingleClickCommand" CommandParameter="Domino" />
+    <BaseHandBlazor TargetContainerSize="95vw" Hand="DataContext.PlayerHand" Divider="1.1" Context="Domino" D="SimpleDominoInfo">
+        <BasicDominoBlazor D="SimpleDominoInfo" TargetHeight="@GetTargetString" DeckObject="Domino" CommandObject="DataContext.PlayerHand.ObjectSingleClickCommand" CommandParameter="Domino" />
     </BaseHandBlazor>
 </div>
 <div>
