@@ -3,6 +3,8 @@ public partial class DeckOfCardsMainRummySetsBlazor<RU, SE, T>
         where RU : class, IRummmyObject<EnumSuitList, EnumRegularColorList>, IRegularCard, new()
         where SE : SetInfo<EnumSuitList, EnumRegularColorList, RU, T>
 {
+    [CascadingParameter]
+    public int TargetHeight { get; set; }
     [Parameter]
     public string ContainerWidth { get; set; } = "";
     [Parameter]
