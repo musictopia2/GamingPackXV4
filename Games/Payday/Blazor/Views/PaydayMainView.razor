@@ -42,7 +42,7 @@
                 <GridItem Row="2">
                     <StackLayout>
                         <StackItem>
-                            <BaseHandBlazor D="DealCard" HandType="EnumHandList.Vertical" UseKey="false" Hand="DataContext.VMData.CurrentDealList" Context="DeckObject">
+                            <BaseHandBlazor TargetContainerSize="40vh" D="DealCard" TargetImageSize="19vh" HandType="EnumHandList.Vertical" UseKey="false" Hand="DataContext.VMData.CurrentDealList" Context="DeckObject">
                                 <PaydayCardBlazor CommandParameter="DeckObject"
                                                   DeckObject="DeckObject"
                                                   TargetHeight="@RealHeight"

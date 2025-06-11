@@ -3,6 +3,5 @@ public partial class MailListView
 {
     [CascadingParameter]
     public PaydayVMData? VMData { get; set; }
-    [CascadingParameter]
-    public int TargetHeight { get; set; } = 15;
+    //not overriding this time.
 }
