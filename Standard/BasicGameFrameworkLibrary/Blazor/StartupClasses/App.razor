@@ -1,4 +1,14 @@
-﻿<GameCssStartup AppStyleName="@AppStyleName">
+﻿@using BasicBlazorLibrary.Components.CssManagement
+@using BasicBlazorLibrary.Layouts
+@using Microsoft.AspNetCore.Components.Routing
+@if (string.IsNullOrWhiteSpace(AppStyleName))
+{
+    <div>
+        No app style name
+    </div>
+    return;
+}
+<CssSimpleSetup AppStyleName="@AppStyleName" CssFiles="@_files">
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <RouteView RouteData="@routeData" DefaultLayout="@typeof(BlankLayout)" />
@@ -9,4 +19,4 @@
             </LayoutView>
         </NotFound>
     </Router>
-</GameCssStartup>
+</CssSimpleSetup>
