@@ -1,5 +1,5 @@
 ﻿@page "/"
-<MainPage>
+<GamePackageFullScreen>
     @if (CanStartLoading() == false)
     {
         <div>
@@ -61,4 +61,4 @@
         return;
     }
     @DataContext.GameRendered
-</MainPage>
+</GamePackageFullScreen>
