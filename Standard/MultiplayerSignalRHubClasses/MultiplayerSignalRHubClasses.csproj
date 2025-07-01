@@ -9,7 +9,7 @@
     <FeedType>Public</FeedType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.27" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.28" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.30.3" />
