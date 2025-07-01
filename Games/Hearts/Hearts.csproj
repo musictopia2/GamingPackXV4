@@ -21,6 +21,6 @@
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.28" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.30" />
   </ItemGroup>
 </Project>
