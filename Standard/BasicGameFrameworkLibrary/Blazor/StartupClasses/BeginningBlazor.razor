@@ -1,1 +1,8 @@
-﻿@ChildContent
+﻿@if (_mode == EnumGamePackageMode.Debug)
+{
+    <GamePackageFullScreen>
+        @ChildContent
+    </GamePackageFullScreen>
+    return;
+}
+@ChildContent

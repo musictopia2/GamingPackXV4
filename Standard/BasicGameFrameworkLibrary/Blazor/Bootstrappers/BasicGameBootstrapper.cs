@@ -1,6 +1,7 @@
 ﻿using BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc; //not common enough at this point.
 namespace BasicGameFrameworkLibrary.Blazor.Bootstrappers;
-public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrapper, IHandleAsync<SocketErrorEventModel>,
+public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrapper, ISetGamePackageMode
+    , IHandleAsync<SocketErrorEventModel>,
     IHandleAsync<ClientNewGameEventModel>,
     IHandleAsync<DisconnectEventModel>, IDisposable
     where TViewModel : IMainGPXShellVM //needs generic so its able to do the part to active a screen if any.
@@ -14,6 +15,7 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         _startInfo = starts;
         _mode = mode;
         _aggregator = new EventAggregator();
+        GlobalVariables.SetMode(this);
         InitalizeAsync();
     }
     private partial void Subscribe();
@@ -123,6 +125,9 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     protected abstract Task ConfigureAsync(IGamePackageRegister register);
     private GamePackageDIContainer? _container;
     protected IGamePackageDIContainer GetDIContainer => _container!;
+
+    EnumGamePackageMode ISetGamePackageMode.Mode => _mode;
+
     protected virtual void SetPersonalSettings() { }
     /// <summary>
     /// this will allow source generators to run to finish the dependency injection registrations.
