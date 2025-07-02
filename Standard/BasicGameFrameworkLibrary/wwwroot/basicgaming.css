@@ -1,4 +1,9 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+*, *::before, *::after {
+    box-sizing: content-box !important;
+}
+
 html, body, div {
     font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -69,4 +74,19 @@ legend {
 .multiplepilesabsolute {
     position: absolute;
     left: 2px;
+}
+
+.vertical {
+    display: block;
+    margin-top: -1px;
+    padding-right: 3px; /* slightly less to tighten */
+    line-height: 1;
+    font-weight: normal;
+    user-select: none;
+}
+
+th > div {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
 }
