@@ -6,6 +6,7 @@
 
 html, body, div {
     font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: normal;
 }
 
 .beginning {
