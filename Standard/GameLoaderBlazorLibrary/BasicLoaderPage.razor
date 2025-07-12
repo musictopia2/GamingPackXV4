@@ -31,9 +31,7 @@
                         <StackItem>
                             <GameButtonComponent CustomCallBack="OpenSettings" Display="Show Settings" />
                         </StackItem>
-                        <StackItem>
-                            <GameButtonComponent CustomCallBack="RefreshAsync" Display="Refresh" />
-                        </StackItem>
+                        
                         @if (_previousGame != "")
                         {
                             <StackItem>
@@ -44,8 +42,13 @@
                             <div style="font-size: 3vh; margin-top: 10px;">
                                 Version @GlobalClass.Version
                             </div>
-                            
                         </StackItem>
+                        @if (_updateAvailable)
+                        {
+                            <StackItem>
+                                <GameButtonComponent CustomCallBack="ReloadApp" Display="Update Available - Click to Refresh" />
+                            </StackItem>
+                        }
                     </StackLayout>  
                 }
             </TopContent>

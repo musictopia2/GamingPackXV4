@@ -1,5 +1,5 @@
 namespace GameLoaderBlazorLibrary;
-public partial class BasicLoaderPage : IDisposable
+public partial class BasicLoaderPage : IDisposable, IAsyncDisposable
 {
     [Inject]
     public ILoaderVM? DataContext { get; set; }
@@ -8,9 +8,14 @@ public partial class BasicLoaderPage : IDisposable
     private bool _loadedOnce;
     private bool _showSettings;
     private string _previousGame = "";
-    private async Task RefreshAsync()
+    private ServiceWorkerInterop? _worker;
+    private bool _updateAvailable = false;
+    private async Task ReloadApp()
     {
-        await JS!.Update(); //i think.
+        if (_worker != null)
+        {
+            await _worker.ReloadPageAsync();
+        }
     }
     private async Task<string> GetAutomatedGameToLoadAsync()
     {
@@ -27,8 +32,21 @@ public partial class BasicLoaderPage : IDisposable
         }
         return "";
     }
+    private async Task OnUpdateAvailableAsync()
+    {
+        _updateAvailable = true;
+        // Show a toast or any UI to notify user
+        //maybe no need to show toast this time.
+        //Toast?.ShowInfoToast("A new update is available. Please refresh to get the latest version.");
+        // State has changed because _updateAvailable changed
+        await InvokeAsync(StateHasChanged);
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender && bb1.OS == bb1.EnumOS.Wasm && _worker != null)
+        {
+            await _worker.RegisterAsync(OnUpdateAvailableAsync);
+        }
         if (GlobalClass.Multiplayer == false)
         {
             return;
@@ -135,12 +153,15 @@ public partial class BasicLoaderPage : IDisposable
     {
         _showSettings = true;
     }
-    private bool _disposedValue;
 
     protected override void OnInitialized()
     {
         //no longer a need to change latest game.  because it usually refreshes anyways.
         LoaderGlobalClass.BackToMainDelegate = BackToMain;
+        if (bb1.OS == bb1.EnumOS.Wasm)
+        {
+            _worker = new(JS!);
+        }
         //LoaderGlobalClass.ChangeLatestGame = (string game) =>
         //{
         //    _previousGame = game;
@@ -153,20 +174,49 @@ public partial class BasicLoaderPage : IDisposable
         }
         base.OnInitialized();
     }
+    private bool _disposed;
+
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposedValue)
+        if (_disposed)
         {
-            if (disposing)
-            {
-                DataContext!.StateChanged = null;
-            }
-            _disposedValue = true;
+            return;
         }
+
+        if (disposing)
+        {
+            // Synchronous cleanup
+            DataContext!.StateChanged = null;
+        }
+
+        _disposed = true;
     }
+
     public void Dispose()
     {
         Dispose(disposing: true);
+
+        // Ensure async resources are disposed as well
+        DisposeAsync().AsTask().GetAwaiter().GetResult();
+
+        GC.SuppressFinalize(this);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (_worker is not null)
+        {
+            await _worker.DisposeAsync();
+        }
+
+        // Call Dispose to run synchronous cleanup
+        Dispose(disposing: false);
+
         GC.SuppressFinalize(this);
     }
 }
