@@ -14,7 +14,3 @@ export function registerAndListen(dotNetHelper) {
         });
     }
 }
-
-export function reloadPage() {
-    window.location.reload();
-}

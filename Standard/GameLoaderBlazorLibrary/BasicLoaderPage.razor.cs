@@ -10,12 +10,9 @@ public partial class BasicLoaderPage : IDisposable, IAsyncDisposable
     private string _previousGame = "";
     private ServiceWorkerInterop? _worker;
     private bool _updateAvailable = false;
-    private async Task ReloadApp()
+    private async Task RefreshAsync()
     {
-        if (_worker != null)
-        {
-            await _worker.ReloadPageAsync();
-        }
+        await JS!.RefreshBrowser();
     }
     private async Task<string> GetAutomatedGameToLoadAsync()
     {

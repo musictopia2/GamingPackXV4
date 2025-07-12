@@ -16,6 +16,13 @@
     {
         return;
     }
+    @if (_updateAvailable)
+    {
+        <div>
+            <GameButtonComponent CustomCallBack="RefreshAsync" Display="Update Available - Click to Refresh" />
+        </div>
+        return;
+    }
     @if (DataContext.GameName == "")
     {
         @if (_showSettings)
@@ -31,7 +38,9 @@
                         <StackItem>
                             <GameButtonComponent CustomCallBack="OpenSettings" Display="Show Settings" />
                         </StackItem>
-                        
+                        <StackItem>
+                            <GameButtonComponent CustomCallBack="RefreshAsync" Display="Refresh Manually" />
+                        </StackItem>
                         @if (_previousGame != "")
                         {
                             <StackItem>
@@ -43,12 +52,7 @@
                                 Version @GlobalClass.Version
                             </div>
                         </StackItem>
-                        @if (_updateAvailable)
-                        {
-                            <StackItem>
-                                <GameButtonComponent CustomCallBack="ReloadApp" Display="Update Available - Click to Refresh" />
-                            </StackItem>
-                        }
+                        
                     </StackLayout>  
                 }
             </TopContent>

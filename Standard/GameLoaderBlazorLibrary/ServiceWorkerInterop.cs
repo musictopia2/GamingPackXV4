@@ -10,11 +10,6 @@ internal class ServiceWorkerInterop(IJSRuntime js) : BaseLibraryJavascriptClass(
         _dotNetRef = DotNetObjectReference.Create(this);
         await ModuleTask.InvokeVoidFromClassAsync("registerAndListen", _dotNetRef);
     }
-    public async Task ReloadPageAsync()
-    {
-        await ModuleTask.InvokeVoidFromClassAsync("reloadPage");
-    }
-
     [JSInvokable]
     public async Task NotifyUpdateAvailable()
     {
