@@ -82,6 +82,13 @@ public class AggravationMainGameClass
     {
         if (PlayerList.DidChooseColors())
         {
+            foreach (var player in PlayerList)
+            {
+                if (player.PieceList.Count > 4)
+                {
+                    throw new CustomBasicException("Cannot have more than 4 pieces before ending turn");
+                }
+            }
             if (Test!.DoubleCheck)
             {
                 Test.DoubleCheck = false;
