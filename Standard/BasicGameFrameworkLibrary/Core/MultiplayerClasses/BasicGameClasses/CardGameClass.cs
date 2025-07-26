@@ -1,4 +1,5 @@
-﻿using ps1 = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses; //not common enough.
+﻿using BasicGameFrameworkLibrary.Core.Dice;
+using ps1 = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses; //not common enough.
 namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
 public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMainProcesses<D>,
     IBeginningCards<D, P, S>
@@ -429,7 +430,6 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         DeckRegularDict<D>? tempList = default;
         SaveRoot!.PreviousCard = 0;
         _gameContainer.AlreadyDrew = false;
-        bool rets;
         bool hasTestDiscards;
         hasTestDiscards = MainContainer.RegistrationExist<ITestCardDiscardSetUp<D>>();
         D? cardToAddToDiscard = null;
@@ -480,9 +480,12 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
             if (CardInfo.PassOutAll == false)
             {
                 
-                int testCount = 0;
-                rets = MainContainer.RegistrationExist<ITestCardSetUp<D, P>>();
-                if (rets == true)
+                //int otherCount = 0;
+                bool hasTestSetup = MainContainer.RegistrationExist<ITestCardSetUp<D, P>>();
+
+
+                
+                if (hasTestSetup == true)
                 {
                     if (BasicData!.GamePackageMode == EnumGamePackageMode.Production)
                     {
@@ -490,16 +493,19 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
                     }
                     ITestCardSetUp<D, P> testPass = MainContainer.Resolve<ITestCardSetUp<D, P>>();
                     await testPass.SetUpTestHandsAsync(PlayerList!, _gameContainer.DeckList!);
-                    PlayerList!.ForEach(items =>
-                    {
-                        testCount += items.StartUpList.Count;
-                        items.StartUpList.ForEach(Card =>
-                        {
-                            firstList.RemoveObjectByDeck(Card.Deck); //because its already in hand.
-                        });
-                    });
                 }
-                ps1.CardProcedures.PassOutCards(PlayerList!, firstList, cardsToPassOut, testCount, Test.ComputerNoCards, ref tempList!);
+                bool hasPreDealSetup = MainContainer.RegistrationExist<ICardPreDealSetup<D, P>>();
+                if (hasPreDealSetup)
+                {
+                    ICardPreDealSetup<D, P> preDeals = MainContainer.Resolve<ICardPreDealSetup<D, P>>();
+                    preDeals.SetUpPreDealCards(PlayerList!, _gameContainer.DeckList!);
+                }
+                var assignedCards = PlayerList!.SelectMany(p => p.StartUpList).Select(c => c.Deck).ToHashSet();
+                foreach (var deckNum in assignedCards)
+                {
+                    firstList.RemoveObjectByDeck(deckNum);
+                }
+                ps1.CardProcedures.PassOutCards(PlayerList!, firstList, cardsToPassOut, assignedCards.Count, Test.ComputerNoCards, ref tempList!);
             }
             else
             {
