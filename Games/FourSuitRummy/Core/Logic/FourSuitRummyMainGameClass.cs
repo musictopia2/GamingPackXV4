@@ -314,10 +314,15 @@ public class FourSuitRummyMainGameClass
             {
                 thisCard.Points = 15;
             }
+            else if (thisCard.Value == EnumRegularCardValueList.Joker)
+            {
+                thisCard.Points = 0;
+            }
             else if (thisCard.Value >= EnumRegularCardValueList.Ten)
             {
                 thisCard.Points = 10;
             }
+
             else
             {
                 thisCard.Points = thisCard.Value.Value;
@@ -365,45 +370,61 @@ public class FourSuitRummyMainGameClass
     {
         if (thisCol.Count != 3)
         {
-            return false; //must have 3 cards period to consider for run.
+            return false; // must have exactly 3 cards
         }
-        if (thisCol.DistinctCount(items => items.Suit) != 1)
+
+        // All non-joker cards must be same suit
+        var nonJokers = thisCol.Where(c => c.Value != EnumRegularCardValueList.Joker).ToRegularDeckDict();
+        if (nonJokers.DistinctCount(c => c.Suit) != 1)
         {
-            return false; //must be same suit each time.
+            return false;
         }
-        DeckRegularDict<RegularRummyCard> aceList = thisCol.Where(items => items.Value == EnumRegularCardValueList.LowAce || items.Value == EnumRegularCardValueList.HighAce).ToRegularDeckDict();
-        DeckRegularDict<RegularRummyCard> tempCol = thisCol.Where(items => items.Value != EnumRegularCardValueList.LowAce
-        && items.Value != EnumRegularCardValueList.HighAce).OrderBy(items => items.Value).ToRegularDeckDict();
-        int x = 0;
+
+        // Separate aces and jokers
+        var aceList = nonJokers.Where(c => c.Value == EnumRegularCardValueList.LowAce || c.Value == EnumRegularCardValueList.HighAce).ToRegularDeckDict();
+        var nonWildCards = nonJokers.Where(c => c.Value != EnumRegularCardValueList.LowAce && c.Value != EnumRegularCardValueList.HighAce).OrderBy(c => c.Value).ToRegularDeckDict();
+        var jokerList = thisCol.Where(c => c.Value == EnumRegularCardValueList.Joker).ToRegularDeckDict();
+
         int previousNumber = 0;
-        int currentNumber;
-        int diffs;
-        foreach (var thisCard in tempCol)
+        int x = 0;
+        foreach (var card in nonWildCards)
         {
             x++;
+            int currentNumber = card.Value.Value;
+
             if (x == 1)
             {
-                previousNumber = thisCard.Value.Value;
-                currentNumber = thisCard.Value.Value;
+                previousNumber = currentNumber;
             }
             else
             {
-                currentNumber = thisCard.Value.Value;
-                diffs = currentNumber - previousNumber - 1;
+                int diffs = currentNumber - previousNumber - 1;
                 if (diffs > 0)
                 {
-                    if (aceList.Count < diffs)
+                    int totalWilds = aceList.Count + jokerList.Count;
+                    if (diffs > totalWilds)
                     {
                         return false;
                     }
+
+                    // Use aces first, then jokers to fill gaps
                     for (int y = 1; y <= diffs; y++)
                     {
-                        aceList.RemoveFirstItem();
+                        if (aceList.Count > 0)
+                        {
+                            aceList.RemoveFirstItem();
+                        }
+                        else
+                        {
+                            jokerList.RemoveFirstItem();
+                        }
                     }
                 }
                 previousNumber = currentNumber;
             }
         }
+
+        // If we get here, run is valid
         return true;
     }
     public BasicList<int> SetList()

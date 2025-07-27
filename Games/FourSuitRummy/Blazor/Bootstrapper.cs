@@ -1,4 +1,5 @@
 //i think this is the most common things i like to do
+
 namespace FourSuitRummy.Blazor;
 public class Bootstrapper : MultiplayerBasicBootstrapper<FourSuitRummyShellViewModel>
 {
@@ -9,6 +10,7 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<FourSuitRummyShellViewM
 
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
+        register.RegisterSingleton<IDeckCount, CustomDeck>();
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
         Core.DIFinishProcesses.SpecializedRegistrationHelpers.RegisterCommonMultplayerClasses(GetDIContainer);
         Core.DIFinishProcesses.SpecializedRegularCardHelpers.RegisterRegularDeckOfCardClasses(GetDIContainer);

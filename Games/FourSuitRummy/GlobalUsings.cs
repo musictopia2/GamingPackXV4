@@ -56,3 +56,4 @@ global using BasicGameFrameworkLibrary.Core.DrawableListsObservable;
 global using BasicGameFrameworkLibrary.Core.Extensions;
 global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
+global using FourSuitRummy.Core.Cards;
