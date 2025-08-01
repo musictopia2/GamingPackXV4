@@ -1,31 +1,29 @@
 namespace BowlingDiceGame.Core.Logic;
 [SingletonGame]
-public class BowlingDiceGameMainGameClass : BasicGameClass<BowlingDiceGamePlayerItem, BowlingDiceGameSaveInfo>
+public class BowlingDiceGameMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    BowlingDiceGameVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    BowlingDiceGameGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        ) : BasicGameClass<BowlingDiceGamePlayerItem, BowlingDiceGameSaveInfo>(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     , ICommonMultiplayer<BowlingDiceGamePlayerItem, BowlingDiceGameSaveInfo>
-    , IRolledNM
+    , IRolledNM,
+    IMiscDataNM,
+    ISerializable
 {
-    public BowlingDiceGameMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        BowlingDiceGameVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        BowlingDiceGameGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
-    {
-        _test = test;
-    }
-
-    private readonly TestOptions _test;
+    private readonly TestOptions _test = test;
     public BowlingScoresCP? ScoreSheets;
     public BowlingDiceSet? DiceBoard;
     public override async Task PopulateSaveRootAsync()
     {
         SaveRoot!.DiceData = await DiceBoard!.SaveGameAsync();
+        RollContext.CurrentDistribution = SaveRoot.RollDistribution; //if null, okay.
     }
     public override async Task FinishGetSavedAsync()
     {
@@ -73,6 +71,14 @@ public class BowlingDiceGameMainGameClass : BasicGameClass<BowlingDiceGamePlayer
         ScoreSheets!.ClearBoard();
         DiceBoard!.ClearDice();
         SaveRoot.WhichPart = 1;
+        var list = EnumLuckProfile.CompleteList;
+        list.ShuffleList();
+        foreach (var item in PlayerList)
+        {
+            //item.LuckProfile = EnumLuckProfile.HotestStreak; //has to be hard coded until i fix bugs.
+            item.LuckProfile = list.First();
+            list.RemoveFirstItem();
+        }
         if (FinishUpAsync == null)
         {
             throw new CustomBasicException("The loader never set the finish up code.  Rethink");
@@ -115,8 +121,8 @@ public class BowlingDiceGameMainGameClass : BasicGameClass<BowlingDiceGamePlayer
     {
         PrepStartTurn();
         DiceBoard!.ClearDice();
+        SaveRoot.RollDistribution = null;
         SaveRoot!.WhichPart = 1;
-        SingleDiceInfo.Beginning = true;
         SaveRoot.IsExtended = false;
         await ContinueTurnAsync();
     }
@@ -177,11 +183,35 @@ public class BowlingDiceGameMainGameClass : BasicGameClass<BowlingDiceGamePlayer
         {
             SaveRoot.IsExtended = false;
         }
-        SingleDiceInfo.Beginning = false; //i think.
         await ContinueTurnAsync();
     }
+
+
+    private async Task ProcessDistributionsAsync()
+    {
+        //RollContext.CurrentDistribution = null;
+        int scoreForFrame = ScoreGenerator.GetFrameScoreBasedOnProfile(SingleInfo!.LuckProfile);
+        if (scoreForFrame < 0 || scoreForFrame > 30)
+        {
+            throw new CustomBasicException("Score for frame must be between 0 and 30.  Rethink");
+        }
+        RollContext.CurrentDistribution = BowlingRollFactory.GetRollsForTotal(scoreForFrame);
+        SaveRoot.RollDistribution = RollContext.CurrentDistribution; //so if the host takes their turn, remembers the state.
+        if (SingleInfo!.CanSendMessage(BasicData!))
+        {
+            await Network!.SendAllAsync(nameof(RollDistribution), RollContext.CurrentDistribution);
+        }
+    }
+
     public async Task RollDiceAsync()
     {
+        if (SaveRoot.WhichPart == 1)
+        {
+            //this means to figure out the distribution.
+            await ProcessDistributionsAsync();
+
+        }
+        RollContext.CurrentRollNumber = SaveRoot.WhichPart;
         if (ScoreSheets!.NeedToClear() == true)
         {
             DiceBoard!.ClearDice();
@@ -193,5 +223,16 @@ public class BowlingDiceGameMainGameClass : BasicGameClass<BowlingDiceGamePlayer
             await DiceBoard.SendMessageAsync(thisList);
         }
         await RollDiceAsync(thisList);
+    }
+    async Task IMiscDataNM.MiscDataReceived(string status, string content)
+    {
+        if (status == nameof(RollDistribution))
+        {
+            SaveRoot.RollDistribution = js1.DeserializeObject<RollDistribution>(content) ?? throw new CustomBasicException("Received null distribution from network");
+
+            await ContinueTurnAsync(); //i think needs to continue turn so it can wait for other messages.
+            return;
+        }
+        throw new CustomBasicException("No other status is supported for now.  Rethink");
     }
 }

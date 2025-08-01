@@ -16,7 +16,7 @@ public class BowlingSingleDiceBlazor : ComponentBase
         rect.Height = "50";
         rect.Fill = cc1.White.ToWebColor();
         svg.Children.Add(rect);
-        if (Dice.DidHit == false)
+        if (Dice.DidHit == false && Dice.IsAnimatingHit == false)
         {
             Image image = new();
             image.Width = "50";

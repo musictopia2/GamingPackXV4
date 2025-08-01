@@ -10,7 +10,7 @@ public class BowlingDiceGameDetailClass : IGameInfo
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 6;
-    bool IGameInfo.CanAutoSave => false; //decided to risk no autoresume now.
+    bool IGameInfo.CanAutoSave => false; //somehow autoresume had too many problems now.
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet; //unable to do on phone because of frame details. maybe in new we can do phone (?)
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
 }

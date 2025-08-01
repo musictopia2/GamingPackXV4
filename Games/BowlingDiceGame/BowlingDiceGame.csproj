@@ -13,6 +13,7 @@
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
+	  <PackageReference Include="FastEnumGenerator" Version="1.0.10" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\bowlingdice.svg" />

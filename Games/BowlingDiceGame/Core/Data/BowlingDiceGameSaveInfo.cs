@@ -6,4 +6,6 @@ public class BowlingDiceGameSaveInfo : BasicSavedGameClass<BowlingDiceGamePlayer
     public int WhichPart { get; set; }
     public int WhatFrame { get; set; }
     public string DiceData { get; set; } = "";
+    public RollDistribution? RollDistribution { get; set; }
+    
 }

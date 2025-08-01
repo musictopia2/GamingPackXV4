@@ -1,10 +1,13 @@
 ﻿namespace BowlingDiceGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class BowlingDiceSet(IGameNetwork thisNet) : IRollMultipleDice<bool>, ISerializable
+public class BowlingDiceSet(IGameNetwork thisNet, CommandContainer commandContainer) : IRollMultipleDice<bool>, ISerializable
 {
+
     public IGamePackageResolver? MainContainer { get; set; }
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
+    public Action? UpdateDiceAction { get; set; }
+    public static string CommandActionString { get; set; } = "bowlingcup";
 
     private IAsyncDelayer? _delay;
     public async Task<BasicList<BasicList<bool>>> GetDiceList(string payLoad)
@@ -41,10 +44,12 @@ public class BowlingDiceSet(IGameNetwork thisNet) : IRollMultipleDice<bool>, ISe
         {
             throw new CustomBasicException("There are no dice to even roll.  Try FirstLoad");
         }
-        int counts = DiceList.Count(Items => Items.Value == false);
+        int counts = DiceList.Count(xx => xx.Value == false);
         BasicList<BasicList<bool>> output = [];
         AsyncDelayer.SetDelayer(this, ref _delay!);
         IDiceContainer<bool> thisG = MainContainer!.Resolve<IDiceContainer<bool>>();
+        RollContext.HowManyPins = counts;
+        thisG.StartRoll();
         thisG.MainContainer = MainContainer;
         howManySections.Times(x =>
         {
@@ -69,11 +74,14 @@ public class BowlingDiceSet(IGameNetwork thisNet) : IRollMultipleDice<bool>, ISe
     {
         await thisNet.SendAllAsync(category, thisList); //i think
     }
-    public Task ShowRollingAsync(BasicList<BasicList<bool>> thisCol)
+    public async Task ShowRollingAsync(BasicList<BasicList<bool>> thisCol)
     {
         bool isLast = false;
-        AsyncDelayer.SetDelayer(this, ref _delay!); //has to be here to learn lesson from other dice games.
-        thisCol.ForEach(firstList =>
+        AsyncDelayer.SetDelayer(this, ref _delay!);
+
+        // get a fixed pool of un-hit dice
+
+        await thisCol.ForEachAsync(async firstList =>
         {
             if (thisCol.Last() == firstList)
             {
@@ -81,22 +89,29 @@ public class BowlingDiceSet(IGameNetwork thisNet) : IRollMultipleDice<bool>, ISe
             }
             int x; //this had no animations so should be okay this time.
             x = 0;
+            foreach (var item in DiceList)
+            {
+                item.IsAnimatingHit = item.DidHit;
+            }
             firstList.ForEach(items =>
             {
-                SingleDiceInfo thisDice = FindNextPin(ref x);
-                thisDice.Populate(items);
-                thisDice.Index = DiceList.IndexOf(thisDice) + 1;
-                if (isLast == true)
+                var nextPin = FindNextPin(ref x);
+                nextPin.Populate(items);
+                nextPin.Index = DiceList.IndexOf(nextPin) + 1;
+                nextPin.IsAnimatingHit = items;
+                if (isLast)
                 {
-                    thisDice.DidHit = items;
+                    nextPin.DidHit = items; // only set DidHit if it's the last roll
                 }
             });
+            RefreshDice();
+            await _delay.DelayMilli(10);
         });
-        if (isLast == false)
+
+        if (!isLast)
         {
-            throw new CustomBasicException("Was never last for showing rolling.  Rethink");
+            throw new CustomBasicException("Was never last for showing rolling. Rethink");
         }
-        return Task.CompletedTask;
     }
     public void ClearDice()
     {
@@ -107,8 +122,10 @@ public class BowlingDiceSet(IGameNetwork thisNet) : IRollMultipleDice<bool>, ISe
         DiceList.ForEach(Items =>
         {
             Items.DidHit = false;
+            Items.IsAnimatingHit = false;
             Items.Value = false;
         });
+        RefreshDice();
     }
     public void FirstLoad()
     {
@@ -121,6 +138,20 @@ public class BowlingDiceSet(IGameNetwork thisNet) : IRollMultipleDice<bool>, ISe
     {
         return DiceList.Count(items => items.DidHit == true);
     }
+
+    public void RefreshDice()
+    {
+        if (UpdateDiceAction == null)
+        {
+            commandContainer.UpdateSpecificAction(CommandActionString);
+        }
+        else
+        {
+            UpdateDiceAction.Invoke(); //to accomodate trouble game or other games like it.
+        }
+    }
+
+
     private SingleDiceInfo FindNextPin(ref int previous)
     {
         if (previous > 10)
@@ -135,7 +166,7 @@ public class BowlingDiceSet(IGameNetwork thisNet) : IRollMultipleDice<bool>, ISe
         for (int y = starts; y <= 10; y++)
         {
             var thisDice = DiceList[y - 1];
-            if (thisDice.DidHit == false)
+            if (thisDice.IsAnimatingHit == false)
             {
                 previous = y;
                 return thisDice;

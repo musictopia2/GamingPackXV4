@@ -49,3 +49,4 @@ global using SvgHelper.Blazor.Logic;
 global using SvgHelper.Blazor.Logic.Classes.Interfaces;
 global using SvgHelper.Blazor.Logic.Classes.SubClasses;
 global using System.Drawing;
+global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;

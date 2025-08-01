@@ -42,7 +42,6 @@ public partial class BowlingDiceGameMainViewModel : BasicMultiplayerMainVM
     {
         MainGame.SaveRoot.IsExtended = false;
         _lastTurn = true;
-        SingleDiceInfo.Beginning = true; //can have greater chances again since you got a spare or strike.
         await Task.Delay(10);
         CommandContainer.ManualReport(); //try this.
     }
