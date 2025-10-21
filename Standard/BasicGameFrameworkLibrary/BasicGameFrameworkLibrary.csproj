@@ -27,7 +27,7 @@
     <PackageReference Include="FastEnumGenerator" Version="1.0.10" PrivateAssets="all" />
     <PackageReference Include="BlazorMVVMHelpersLibrary" Version="9.0.1" />
     <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
-    <PackageReference Include="SvgHelper.Blazor" Version="9.0.1" />
+    <PackageReference Include="SvgHelper.Blazor" Version="9.0.2" />
     <PackageReference Include="MappingCloningExtensions" Version="2.0.4" PrivateAssets="all" />
     <PackageReference Include="MessengingHelpers" Version="9.0.1" />
     <PackageReference Include="MVVMFramework" Version="9.0.1" />

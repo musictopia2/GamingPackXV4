@@ -13,7 +13,7 @@
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
-	  <PackageReference Include="FastEnumGenerator" Version="1.0.10" PrivateAssets="all" />
+    <PackageReference Include="FastEnumGenerator" Version="1.0.10" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\bowlingdice.svg" />
@@ -22,6 +22,6 @@
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.30" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.37" />
   </ItemGroup>
 </Project>
