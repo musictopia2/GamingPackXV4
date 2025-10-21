@@ -17,9 +17,9 @@
     <EmbeddedResource Include="Resources\Dice6.svg" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BasicBlazorLibrary" Version="9.0.78" />
+    <PackageReference Include="BasicBlazorLibrary" Version="9.0.99" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
-    <PackageReference Include="CommonBasicLibraries" Version="9.0.49" />
+    <PackageReference Include="CommonBasicLibraries" Version="9.0.76" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
