@@ -9,8 +9,8 @@
     <FeedType>Public</FeedType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BasicBlazorLibrary" Version="9.0.99" />
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.37" />
+    <PackageReference Include="BasicBlazorLibrary" Version="9.0.101" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.40" />
   </ItemGroup>
   <ItemGroup>
     <SupportedPlatform Include="browser" />

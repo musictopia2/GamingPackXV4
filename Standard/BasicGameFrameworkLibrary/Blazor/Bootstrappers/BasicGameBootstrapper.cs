@@ -23,6 +23,7 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     bool _isInitialized;
     private static void ResetGlobals()
     {
+        ff2.ClearFiles();
         MiscDelegates.GetMiscObjectsToReplace = null;
         MiscDelegates.ColorsFinishedAsync = null; //needs to set all to null.  best to just do this way.
         MiscDelegates.ComputerChooseColorsAsync = null;
@@ -102,6 +103,7 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         CommandContainer thisCommand = new();
         _container.RegisterSingleton(thisCommand);
         BasicRegistrations(_container);
+        rr2.Register(); //needs to register this (plus others).
         MiscRegisterFirst(_container);
         _container.RegisterSingleton(_container);
         GameData = new()
@@ -184,10 +186,9 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         await js.SaveClientNewGameAsync(client);
         await js.RefreshBrowser(); //i think.
     }
-#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
     public void Dispose()
-#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
     {
         Unsubscribe();
+        GC.SuppressFinalize(this);
     }   
 }

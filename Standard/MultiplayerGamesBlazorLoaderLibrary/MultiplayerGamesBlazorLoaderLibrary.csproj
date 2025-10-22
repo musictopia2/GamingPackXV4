@@ -12,10 +12,10 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GameLoaderBlazorLibrary" Version="9.0.28" />
+    <PackageReference Include="GameLoaderBlazorLibrary" Version="9.0.29" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
-    <PackageReference Include="GamePackageSignalRClasses" Version="9.0.6" />
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.37" />
+    <PackageReference Include="GamePackageSignalRClasses" Version="9.0.7" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.40" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="C:\VS\OneNet\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net9.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />

@@ -98,3 +98,5 @@ global using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
 global using BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses; //looks like became common enough because transfer to desktop.
 global using BasicGameFrameworkLibrary.Core.StandardImplementations.Settings;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.NewGameClasses;
+global using ff2 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileContentRegistry;
+global using rr2 = BasicGameFrameworkLibrary.Resources.SvgPngImageResource;

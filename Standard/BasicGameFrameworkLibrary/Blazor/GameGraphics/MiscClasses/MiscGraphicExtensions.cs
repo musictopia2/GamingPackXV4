@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-namespace BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
+﻿namespace BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
 public static class MiscGraphicExtensions
 {
     public static void DrawPawnPiece(this IParentGraphic parent, RectangleF rectangle, string customColor)
@@ -38,9 +37,8 @@ public static class MiscGraphicExtensions
     public static void DrawDice(this IParentGraphic parent, RectangleF rectangle, int value)
     {
         Image image = new();
-        Assembly current = Assembly.GetExecutingAssembly(); //needs reflection because of needing assembly for the svg.
         string name = $"Dice{value}.svg";
-        image.PopulateFullExternalImage(current, name);
+        image.PopulateFullExternalImage(name);
         image.PopulateImagePositionings(rectangle);
         parent.Children.Add(image);
     }

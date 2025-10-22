@@ -8,18 +8,9 @@
     <FeedType>Public</FeedType>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\deckofcardback.svg" />
-    <EmbeddedResource Include="Resources\Dice1.svg" />
-    <EmbeddedResource Include="Resources\Dice2.svg" />
-    <EmbeddedResource Include="Resources\Dice3.svg" />
-    <EmbeddedResource Include="Resources\Dice4.svg" />
-    <EmbeddedResource Include="Resources\Dice5.svg" />
-    <EmbeddedResource Include="Resources\Dice6.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="BasicBlazorLibrary" Version="9.0.100" />
+    <PackageReference Include="BasicBlazorLibrary" Version="9.0.101" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
-    <PackageReference Include="CommonBasicLibraries" Version="9.0.76" />
+    <PackageReference Include="CommonBasicLibraries" Version="9.0.78" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
@@ -27,11 +18,14 @@
     <PackageReference Include="FastEnumGenerator" Version="1.0.10" PrivateAssets="all" />
     <PackageReference Include="BlazorMVVMHelpersLibrary" Version="9.0.1" />
     <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
-    <PackageReference Include="SvgHelper.Blazor" Version="9.0.2" />
+    <PackageReference Include="SvgHelper.Blazor" Version="9.0.3" />
     <PackageReference Include="MappingCloningExtensions" Version="2.0.4" PrivateAssets="all" />
     <PackageReference Include="MessengingHelpers" Version="9.0.1" />
     <PackageReference Include="MVVMFramework" Version="9.0.1" />
   </ItemGroup>
+  <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
+    <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />
+  </Target>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="C:\VS\OneNet\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net9.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />
   </Target>

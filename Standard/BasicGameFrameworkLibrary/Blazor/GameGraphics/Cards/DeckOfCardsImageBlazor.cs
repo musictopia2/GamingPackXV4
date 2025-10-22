@@ -21,7 +21,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
     protected override void DrawBacks()
     {
         Image image = new();
-        image.PopulateFullExternalImage(this, "deckofcardback.svg");
+        image.PopulateFullExternalImage("deckofcardback.svg");
         image.Width = "140";
         image.Height = "191";
         image.X = "10";
