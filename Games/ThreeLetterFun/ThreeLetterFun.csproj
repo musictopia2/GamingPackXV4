@@ -29,4 +29,7 @@
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.37" />
   </ItemGroup>
+  <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
+    <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />
+  </Target>
 </Project>
