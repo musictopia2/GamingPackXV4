@@ -102,7 +102,7 @@ public class CandylandCardBlazor : BaseDeckGraphics<CandylandCardData>
     private void DrawOther(string fileName)
     {
         Image image = new();
-        image.PopulateFullExternalImage(this, fileName);
+        image.PopulateFullExternalImage(fileName);
         image.Width = "100%";
         image.Height = "100%";
         MainGroup!.Children.Add(image);

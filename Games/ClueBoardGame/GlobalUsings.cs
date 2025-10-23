@@ -63,3 +63,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.MiscHelpers;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 global using pg1 = ClueBoardGameBlazor.GlobalDetectiveGrid;
+global using rr1 = ClueBoardGame.Resources.SvgPngImageResource;

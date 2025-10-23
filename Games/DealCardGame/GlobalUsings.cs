@@ -62,3 +62,4 @@ global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorStri
 global using gg1 = BasicBlazorLibrary.Components.CssGrids.Helpers;
 global using BasicGameFrameworkLibrary.Core.ChooserClasses;
 global using BasicGameFrameworkLibrary.Core.GamePieceModels;
+global using rr1 = DealCardGame.Resources.SvgPngImageResource;

@@ -38,7 +38,7 @@ public class PaydayCardBlazor : BaseDeckGraphics<CardInformation>
         image.Height = "92%";
         image.X = "0";
         image.Y = "0";
-        image.PopulateFullExternalImage(this, name);
+        image.PopulateFullExternalImage(name);
         MainGroup!.Children.Add(image);
     }
     private void DrawMainMail()
@@ -377,7 +377,7 @@ public class PaydayCardBlazor : BaseDeckGraphics<CardInformation>
     {
         Image image = new();
         image.PopulateImagePositionings(10, 7, 24, 33);
-        image.PopulateFullExternalImage(this, GetDealSvgName);
+        image.PopulateFullExternalImage(GetDealSvgName);
         MainGroup!.Children.Add(image);
         DrawDealLine();
         DrawMoneyDeal("Cost", false, 0, 40, 49, 14);

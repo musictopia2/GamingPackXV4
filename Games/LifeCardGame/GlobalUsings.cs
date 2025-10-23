@@ -61,3 +61,4 @@ global using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Ha
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Cards;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using bb1 = BasicBlazorLibrary.Components.CssGrids.Helpers;
+global using rr1 = LifeCardGame.Resources.SvgPngImageResource;

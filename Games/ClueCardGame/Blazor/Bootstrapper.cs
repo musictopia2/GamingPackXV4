@@ -1,11 +1,6 @@
 namespace ClueCardGame.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<ClueCardGameShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<ClueCardGameShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
@@ -22,5 +17,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<ClueCardGameShellViewMo
         register.RegisterType<ClueCardGameShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+        rr2.Register();
     }
 }

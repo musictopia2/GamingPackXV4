@@ -66,3 +66,4 @@ global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorStri
 global using bb1 = BasicBlazorLibrary.Components.CssGrids.Helpers;
 global using BasicBlazorLibrary.Components.BaseClasses;
 global using BasicGameFrameworkLibrary.Blazor.Views;
+global using rr1 = Fluxx.Resources.SvgPngImageResource;

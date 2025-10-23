@@ -73,7 +73,7 @@ public class RiskCardsBlazor : BaseDeckGraphics<RiskCardInfo>
     private void DrawPiece(RectangleF bounds, string fileName)
     {
         Image image = new();
-        image.PopulateFullExternalImage(this, fileName);
+        image.PopulateFullExternalImage(fileName);
         image.PopulateImagePositionings(bounds);
         MainGroup!.Children.Add(image);
     }

@@ -62,3 +62,4 @@ global using cs1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorStri
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Cards;
+global using rr1 = HitTheDeck.Resources.SvgPngImageResource;

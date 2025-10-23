@@ -17,15 +17,11 @@
     <PackageReference Include="FastEnumGenerator" Version="1.0.10" PrivateAssets="all" />
     <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\cut.png" />
-    <EmbeddedResource Include="Resources\flip.png" />
-  </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.37" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.40" />
   </ItemGroup>
   <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
     <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />

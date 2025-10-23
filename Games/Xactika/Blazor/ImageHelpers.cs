@@ -13,24 +13,24 @@ public static class ImageHelpers
         {
             if (howMany == 3)
             {
-                return new()
-                {
+                return
+                [
                     new PointF(location.X + margins, location.Y + margins),
                     new PointF(location.X + margins, location.Y + margins + heightWidth),
                     new PointF(location.X + margins, location.Y + margins + heightWidth * 2)
-                };
+                ];
             }
             else if (howMany == 1)
             {
-                return new() { new PointF(location.X + margins, location.Y + margins + heightWidth) };
+                return [new PointF(location.X + margins, location.Y + margins + heightWidth)];
             }
             else
             {
-                return new()
-                {
+                return
+                [
                     new PointF(location.X + margins, location.Y + margins + (heightWidth / 2)),
                     new PointF(location.X + margins, location.Y + margins + (heightWidth / 2) + heightWidth)
-                };
+                ];
             }
         }
         float top1;
@@ -63,28 +63,28 @@ public static class ImageHelpers
         }
         if (howMany == 3)
         {
-            return new() { new PointF(newLeft, top1), new PointF(newLeft, top2), new PointF(newLeft, top3) };
+            return [new PointF(newLeft, top1), new PointF(newLeft, top2), new PointF(newLeft, top3)];
         }
         else if (howMany == 1)
         {
-            return new() { new PointF(newLeft, top2) };
+            return [new PointF(newLeft, top2)];
         }
         else
         {
-            return new() { new PointF(newLeft, topFirstHalf), new PointF(newLeft, topLastHalf) };
+            return [new PointF(newLeft, topFirstHalf), new PointF(newLeft, topLastHalf)];
         }
     }
-    public static void DrawCone(this IParentGraphic container, Assembly assembly, RectangleF bounds) // done
+    public static void DrawCone(this IParentGraphic container, RectangleF bounds) // done
     {
         Image image = new();
-        image.PopulateFullExternalImage(assembly, "Cone.svg");
+        image.PopulateFullExternalImage("Cone.svg");
         image.PopulateImagePositionings(bounds);
         container.Children.Add(image);
     }
-    public static void DrawCube(this IParentGraphic container, Assembly assembly, RectangleF bounds)
+    public static void DrawCube(this IParentGraphic container, RectangleF bounds)
     {
         Image image = new();
-        image.PopulateFullExternalImage(assembly, "Cube.svg");
+        image.PopulateFullExternalImage("Cube.svg");
         image.PopulateImagePositionings(bounds);
         container.Children.Add(image);
     }

@@ -6,36 +6,6 @@
     <Version>8.0.4</Version>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Resources\blackelectric.svg" />
-    <None Remove="Resources\blacktrain.svg" />
-    <None Remove="Resources\blackwaterworks.svg" />
-    <None Remove="Resources\brokenhouse.svg" />
-    <None Remove="Resources\chance.svg" />
-    <None Remove="Resources\free.svg" />
-    <None Remove="Resources\go.svg" />
-    <None Remove="Resources\hotel.svg" />
-    <None Remove="Resources\house.svg" />
-    <None Remove="Resources\police.svg" />
-    <None Remove="Resources\whiteelectric.svg" />
-    <None Remove="Resources\whitetrain.svg" />
-    <None Remove="Resources\whitewaterworks.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\blackelectric.svg" />
-    <EmbeddedResource Include="Resources\blacktrain.svg" />
-    <EmbeddedResource Include="Resources\blackwaterworks.svg" />
-    <EmbeddedResource Include="Resources\brokenhouse.svg" />
-    <EmbeddedResource Include="Resources\chance.svg" />
-    <EmbeddedResource Include="Resources\free.svg" />
-    <EmbeddedResource Include="Resources\go.svg" />
-    <EmbeddedResource Include="Resources\hotel.svg" />
-    <EmbeddedResource Include="Resources\house.svg" />
-    <EmbeddedResource Include="Resources\police.svg" />
-    <EmbeddedResource Include="Resources\whiteelectric.svg" />
-    <EmbeddedResource Include="Resources\whitetrain.svg" />
-    <EmbeddedResource Include="Resources\whitewaterworks.svg" />
-  </ItemGroup>
-  <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
@@ -49,7 +19,7 @@
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.37" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.40" />
   </ItemGroup>
   <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
     <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />

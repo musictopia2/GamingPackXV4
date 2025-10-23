@@ -1,12 +1,7 @@
 //i think this is the most common things i like to do
 namespace SnakesAndLadders.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<SnakesAndLaddersShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<SnakesAndLaddersShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
@@ -22,5 +17,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<SnakesAndLaddersShellVi
         register.RegisterType<SnakesAndLaddersShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+        rr1.Register();
     }
 }

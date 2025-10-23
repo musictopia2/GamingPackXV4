@@ -189,7 +189,7 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
                 break;
         }
         Image image = new();
-        image.PopulateFullExternalImage(this, $"{career.Career}.png");
+        image.PopulateFullExternalImage($"{career.Career}.png");
         image.PopulateImagePositionings(pictureRect);
         MainGroup!.Children.Add(image);
         firstRect.Fill = firstColor;
@@ -229,7 +229,7 @@ public class LifeCardBlazor : BaseDeckGraphics<LifeBaseCard>
         Image image = new();
         image.PopulateImagePositionings(20, 8, 40, 40);
         HouseInfo house = (HouseInfo)DeckObject!;
-        image.PopulateFullExternalImage(this, $"{house.HouseCategory}.png");
+        image.PopulateFullExternalImage($"{house.HouseCategory}.png");
         MainGroup!.Children.Add(image);
         Rect firstRect = new();
         firstRect.PopulateRectangle(8, 65, 64, 27);

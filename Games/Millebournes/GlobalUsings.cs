@@ -62,3 +62,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplePilesObservable;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.Misc;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using rr1 = Millebournes.Resources.SvgPngImageResource;

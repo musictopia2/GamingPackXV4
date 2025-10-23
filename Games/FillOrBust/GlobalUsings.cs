@@ -62,3 +62,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelp
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainGameInterfaces;
+global using rr1 = FillOrBust.Resources.SvgPngImageResource;

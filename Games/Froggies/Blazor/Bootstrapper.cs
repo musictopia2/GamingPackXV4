@@ -19,5 +19,6 @@ public class Bootstrapper : SinglePlayerBootstrapper<FroggiesShellViewModel>
     {
         register.RegisterType<FroggiesShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
+        rr1.Register();
     }
 }

@@ -85,7 +85,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MilkRunCardInformation>
             return;
         }
         Image image = new();
-        image.PopulateFullExternalImage(this, fileName);
+        image.PopulateFullExternalImage(fileName);
         image.PopulateImagePositionings(bounds);
         MainGroup.Children.Add(image);
     }

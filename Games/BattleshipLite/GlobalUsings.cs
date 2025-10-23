@@ -50,3 +50,4 @@ global using SvgHelper.Blazor.Logic.Classes.Interfaces;
 global using SvgHelper.Blazor.Logic;
 global using SvgHelper.Blazor.Logic.Classes.SubClasses;
 global using BasicBlazorLibrary.Components.MediaQueries.ParentClasses;
+global using rr1 = BattleshipLite.Resources.SvgPngImageResource;

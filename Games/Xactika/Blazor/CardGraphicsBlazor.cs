@@ -1,4 +1,3 @@
-using System.Reflection; //not common enough.
 namespace Xactika.Blazor;
 public class CardGraphicsBlazor : BaseDeckGraphics<XactikaCardInformation>
 {
@@ -57,7 +56,6 @@ public class CardGraphicsBlazor : BaseDeckGraphics<XactikaCardInformation>
         var otherLocation = new PointF(0, firstRect.Bottom - 7);
         var pointList = ImageHelpers.GetPoints(EnumShapes.Balls, DeckObject.HowManyBalls, otherLocation, false, firstWidth);
         var testSize = new SizeF(firstWidth, firstWidth);
-        Assembly assembly = Assembly.GetAssembly(GetType())!;
         foreach (var thisPoint in pointList)
         {
             var testRect = new RectangleF(thisPoint, testSize);
@@ -67,13 +65,13 @@ public class CardGraphicsBlazor : BaseDeckGraphics<XactikaCardInformation>
         foreach (var thisPoint in pointList)
         {
             var testRect = new RectangleF(thisPoint, testSize);
-            ImageHelpers.DrawCone(MainGroup, assembly, testRect);
+            ImageHelpers.DrawCone(MainGroup, testRect);
         }
         pointList = ImageHelpers.GetPoints(EnumShapes.Cubes, DeckObject.HowManyCubes, otherLocation, false, firstWidth);
         foreach (var thisPoint in pointList)
         {
             var testRect = new RectangleF(thisPoint, testSize);
-            ImageHelpers.DrawCube(MainGroup, assembly, testRect);
+            ImageHelpers.DrawCube(MainGroup, testRect);
         }
         pointList = ImageHelpers.GetPoints(EnumShapes.Stars, DeckObject.HowManyStars, otherLocation, false, firstWidth);
         foreach (var thisPoint in pointList)

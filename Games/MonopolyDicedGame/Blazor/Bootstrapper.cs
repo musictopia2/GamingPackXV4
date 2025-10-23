@@ -18,5 +18,6 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
         register.RegisterType<MonopolyDicedGameShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+        rr1.Register();
     }
 }

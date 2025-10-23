@@ -35,7 +35,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<TeeItUpCardInformation>
     {
         Image image = new();
         RectangleF bounds = new(2, 15, 70, 70);
-        image.PopulateFullExternalImage(this, "GolfBall.svg");
+        image.PopulateFullExternalImage("GolfBall.svg");
         image.PopulateImagePositionings(bounds);
         MainGroup!.Children.Add(image);
     }

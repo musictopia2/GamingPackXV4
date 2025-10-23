@@ -60,3 +60,4 @@ global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 global using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Hands;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using rr1 = TeeItUp.Resources.SvgPngImageResource;

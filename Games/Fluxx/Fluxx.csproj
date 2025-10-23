@@ -20,33 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="Resources\FluxxDescriptions.json" />
-    <EmbeddedResource Include="Resources\Brain.png" />
-    <EmbeddedResource Include="Resources\Bread.png" />
-    <EmbeddedResource Include="Resources\Chocolate.png" />
-    <EmbeddedResource Include="Resources\Cookies.png" />
-    <EmbeddedResource Include="Resources\Death.png" />
-    <EmbeddedResource Include="Resources\Dreams.png" />
-    <EmbeddedResource Include="Resources\Love.png" />
-    <EmbeddedResource Include="Resources\Milk.png" />
-    <EmbeddedResource Include="Resources\Money.png" />
-    <EmbeddedResource Include="Resources\Moon.png" />
-    <EmbeddedResource Include="Resources\NoTV.png" />
-    <EmbeddedResource Include="Resources\NoWar.png" />
-    <EmbeddedResource Include="Resources\Peace.png" />
-    <EmbeddedResource Include="Resources\Rocket.png" />
     <AdditionalFiles Include="Resources\SidePoints.json" />
-    <EmbeddedResource Include="Resources\Sleep.png" />
-    <EmbeddedResource Include="Resources\Sun.png" />
-    <EmbeddedResource Include="Resources\Tank.png" />
-    <EmbeddedResource Include="Resources\Time.png" />
-    <EmbeddedResource Include="Resources\Toaster.png" />
-    <EmbeddedResource Include="Resources\TV.png" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.37" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.40" />
   </ItemGroup>
   <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
     <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />

@@ -6,14 +6,6 @@
     <Version>8.0.6</Version>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Resources\hotel.svg" />
-    <None Remove="Resources\house.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\hotel.svg" />
-    <EmbeddedResource Include="Resources\house.svg" />
-  </ItemGroup>
-  <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
@@ -30,7 +22,7 @@
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.37" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.40" />
   </ItemGroup>
   <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
     <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />

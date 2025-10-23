@@ -6,16 +6,6 @@
     <Version>8.0.7</Version>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Resources\group1.svg" />
-    <None Remove="Resources\group2.svg" />
-    <None Remove="Resources\group3.svg" />
-    <None Remove="Resources\group4.svg" />
-    <None Remove="Resources\group5.svg" />
-    <None Remove="Resources\group6.svg" />
-    <None Remove="Resources\group7.svg" />
-    <None Remove="Resources\group8.svg" />
-  </ItemGroup>
-  <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
@@ -27,68 +17,11 @@
     <PackageReference Include="FastEnumGenerator" Version="1.0.10" PrivateAssets="all" />
     <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\10.svg" />
-    <EmbeddedResource Include="Resources\11.svg" />
-    <EmbeddedResource Include="Resources\12.svg" />
-    <EmbeddedResource Include="Resources\13.svg" />
-    <EmbeddedResource Include="Resources\14.svg" />
-    <EmbeddedResource Include="Resources\15.svg" />
-    <EmbeddedResource Include="Resources\16.svg" />
-    <EmbeddedResource Include="Resources\19.svg" />
-    <EmbeddedResource Include="Resources\20.svg" />
-    <EmbeddedResource Include="Resources\21.svg" />
-    <EmbeddedResource Include="Resources\22.svg" />
-    <EmbeddedResource Include="Resources\23.svg" />
-    <EmbeddedResource Include="Resources\24.svg" />
-    <EmbeddedResource Include="Resources\25.svg" />
-    <EmbeddedResource Include="Resources\26.svg" />
-    <EmbeddedResource Include="Resources\27.svg" />
-    <EmbeddedResource Include="Resources\28.svg" />
-    <EmbeddedResource Include="Resources\29.svg" />
-    <EmbeddedResource Include="Resources\30.svg" />
-    <EmbeddedResource Include="Resources\31.svg" />
-    <EmbeddedResource Include="Resources\32.svg" />
-    <EmbeddedResource Include="Resources\33.svg" />
-    <EmbeddedResource Include="Resources\34.svg" />
-    <EmbeddedResource Include="Resources\35.svg" />
-    <EmbeddedResource Include="Resources\36.svg" />
-    <EmbeddedResource Include="Resources\37.svg" />
-    <EmbeddedResource Include="Resources\38.svg" />
-    <EmbeddedResource Include="Resources\39.svg" />
-    <EmbeddedResource Include="Resources\40.svg" />
-    <EmbeddedResource Include="Resources\41.svg" />
-    <EmbeddedResource Include="Resources\42.svg" />
-    <EmbeddedResource Include="Resources\7.svg" />
-    <EmbeddedResource Include="Resources\8.svg" />
-    <EmbeddedResource Include="Resources\9.svg" />
-    <EmbeddedResource Include="Resources\Car.png" />
-    <EmbeddedResource Include="Resources\Dog.png" />
-    <EmbeddedResource Include="Resources\Electric.png" />
-    <EmbeddedResource Include="Resources\group1.svg" />
-    <EmbeddedResource Include="Resources\group2.svg" />
-    <EmbeddedResource Include="Resources\group3.svg" />
-    <EmbeddedResource Include="Resources\group4.svg" />
-    <EmbeddedResource Include="Resources\group5.svg" />
-    <EmbeddedResource Include="Resources\group6.svg" />
-    <EmbeddedResource Include="Resources\group7.svg" />
-    <EmbeddedResource Include="Resources\group8.svg" />
-    <EmbeddedResource Include="Resources\Hat.png" />
-    <EmbeddedResource Include="Resources\Horse.png" />
-    <EmbeddedResource Include="Resources\House.png" />
-    <EmbeddedResource Include="Resources\Iron.png" />
-    <EmbeddedResource Include="Resources\MrMonopoly.png" />
-    <EmbeddedResource Include="Resources\RailRoad.png" />
-    <EmbeddedResource Include="Resources\Ship.png" />
-    <EmbeddedResource Include="Resources\Token.svg" />
-    <EmbeddedResource Include="Resources\Utility.svg" />
-    <EmbeddedResource Include="Resources\Waterworks.png" />
-  </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.37" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.40" />
   </ItemGroup>
   <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
     <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />

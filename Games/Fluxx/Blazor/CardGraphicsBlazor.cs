@@ -400,14 +400,14 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
         string fileName = $"{firstText}.png";
         Image image = new();
         image.PopulateImagePositionings(firstRect);
-        image.PopulateFullExternalImage(this, fileName);
+        image.PopulateFullExternalImage(fileName);
         MainGroup.Children.Add(image);
         if (!string.IsNullOrEmpty(secondText))
         {
             fileName = $"{secondText}.png";
             image = new Image();
             image.PopulateImagePositionings(secondRect);
-            image.PopulateFullExternalImage(this, fileName);
+            image.PopulateFullExternalImage(fileName);
             MainGroup.Children.Add(image);
         }
     }

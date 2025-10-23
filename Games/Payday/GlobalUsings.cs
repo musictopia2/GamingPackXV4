@@ -65,3 +65,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainGameInterface
 global using SKColors = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using bb1 = BasicBlazorLibrary.Components.CssGrids.Helpers;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
+global using rr1 = Payday.Resources.SvgPngImageResource;

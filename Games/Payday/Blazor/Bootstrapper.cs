@@ -1,12 +1,7 @@
 //i think this is the most common things i like to do
 namespace Payday.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<PaydayShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<PaydayShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
@@ -24,5 +19,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<PaydayShellViewModel>
         register.RegisterType<PaydayShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+        rr1.Register();
     }
 }

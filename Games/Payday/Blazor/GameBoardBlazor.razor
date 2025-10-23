@@ -8,8 +8,7 @@
 <RawGameBoard TargetHeight="@TargetHeight"
               BoardSize="gg1.OriginalSize"
               >
-    <ResourceImage Assembly="GetAssembly"
-                   Width="@gg1.OriginalSize.Width.ToString()"
+    <ResourceImage Width="@gg1.OriginalSize.Width.ToString()"
                    FileName="board.svg"
                    Height="@gg1.OriginalSize.Height.ToString()" />
     @foreach (var space in GraphicsData.GameContainer.PrivateSpaceList)

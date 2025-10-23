@@ -52,3 +52,4 @@ global using System.Collections.Generic;
 global using BasicGameFrameworkLibrary.Core.AnimationClasses;
 global using Trouble.Core.Graphics;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
+global using rr1 = Trouble.Resources.SvgPngImageResource;

@@ -62,3 +62,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelp
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using MonopolyCardGame.Core.TempHandClasses;
+global using rr1 = MonopolyCardGame.Resources.SvgPngImageResource;

@@ -11,66 +11,66 @@ public static class GraphicsExtensions
         container.Children.Add(circle);
         container.DrawText(new(), value, 0, "", true);
     }
-    public static void DrawTrainBoard(this IParentGraphic container, string value, object assembly)
+    public static void DrawTrainBoard(this IParentGraphic container, string value)
     {
         RectangleF bounds = new(10, 22, 28, 28);
-        container.DrawImageDice(assembly, "whitetrain.svg", bounds);
+        container.DrawImageDice("whitetrain.svg", bounds);
         bounds = new(0, -2, 50, 30);
         container.DrawText(bounds, value, 20, "", true); //not sure if that needs to be changed (can be done if necessary)
     }
-    public static void DrawTrainDice(this IParentGraphic container, object assembly)
+    public static void DrawTrainDice(this IParentGraphic container)
     {
-        container.DrawImageDice(assembly, "blacktrain.svg");
+        container.DrawImageDice("blacktrain.svg");
         container.DrawText(new(), "200", 0, "", true);
         //do other things on top of this.
     }
 
-    public static void DrawWaterDice(this IParentGraphic container, object assembly)
+    public static void DrawWaterDice(this IParentGraphic container)
     {
-        container.DrawUtilitiesDice(assembly, "blackwaterworks.svg");
+        container.DrawUtilitiesDice("blackwaterworks.svg");
     }
-    public static void DrawElectricDice(this IParentGraphic container, object assembly)
+    public static void DrawElectricDice(this IParentGraphic container)
     {
-        container.DrawUtilitiesDice(assembly, "blackelectric.svg");
+        container.DrawUtilitiesDice("blackelectric.svg");
     }
-    public static void DrawWaterBoard(this IParentGraphic container, object assembly, string value)
+    public static void DrawWaterBoard(this IParentGraphic container, string value)
     {
-        container.DrawUtilitiesBoard(assembly, "whitewaterworks.svg", value);
+        container.DrawUtilitiesBoard("whitewaterworks.svg", value);
     }
-    public static void DrawElectricBoard(this IParentContainer container, object assembly, string value)
+    public static void DrawElectricBoard(this IParentContainer container, string value)
     {
-        container.DrawUtilitiesBoard(assembly, "whiteelectric.svg", value);
+        container.DrawUtilitiesBoard("whiteelectric.svg", value);
     }
-    private static void DrawUtilitiesBoard(this IParentGraphic container, object assembly, string name, string value)
+    private static void DrawUtilitiesBoard(this IParentGraphic container, string name, string value)
     {
         RectangleF bounds = new(10, 22, 28, 28);
-        container.DrawImageDice(assembly, name, bounds);
+        container.DrawImageDice(name, bounds);
         bounds = new(0, -2, 50, 30);
         container.DrawText(bounds, value, 20, "", true);
     }
-    private static void DrawUtilitiesDice(this IParentGraphic container, object assembly, string name)
+    private static void DrawUtilitiesDice(this IParentGraphic container, string name)
     {
         RectangleF bounds = new(10, 2, 30, 30);
-        container.DrawImageDice(assembly, name, bounds);
+        container.DrawImageDice(name, bounds);
         bounds = new(2, 32, 46, 19);
         container.DrawText(bounds, "100", 18, cc1.Black.ToWebColor(), false);
     }
-    public static void DrawGoDice(this IParentGraphic container, object assembly)
+    public static void DrawGoDice(this IParentGraphic container)
     {
-        container.DrawImageDice(assembly, "go.svg");
+        container.DrawImageDice("go.svg");
     }
-    public static void DrawChanceDice(this IParentGraphic container, object assembly)
+    public static void DrawChanceDice(this IParentGraphic container)
     {
-        container.DrawImageDice(assembly, "chance.svg");
+        container.DrawImageDice("chance.svg");
     }
-    private static void DrawImageDice(this IParentGraphic container, object assembly, string name, RectangleF bounds = new())
+    private static void DrawImageDice(this IParentGraphic container, string name, RectangleF bounds = new())
     {
         if (bounds.Width == 0)
         {
             bounds = new(2, 2, 46, 46);
         }
         Image image = new();
-        image.PopulateFullExternalImage(assembly, name);
+        image.PopulateFullExternalImage(name);
         //RectangleF bounds = new(2, 2, 46, 46);
         image.PopulateImagePositionings(bounds);
         container.Children.Add(image);
@@ -99,30 +99,30 @@ public static class GraphicsExtensions
             text.PopulateStrokesToStyles();
         }
     }
-    public static void DrawBrokenHouse(this IParentGraphic container, object assembly)
+    public static void DrawBrokenHouse(this IParentGraphic container)
     {
-        container.DrawImageDice(assembly, "brokenhouse.svg");
+        container.DrawImageDice("brokenhouse.svg");
     }
-    public static void DrawHouse(this IParentGraphic container, object assembly, int howMany)
+    public static void DrawHouse(this IParentGraphic container, int howMany)
     {
-        container.DrawImageDice(assembly, "house.svg");
+        container.DrawImageDice("house.svg");
         if (howMany > 0)
         {
             container.DrawText(new(), howMany.ToString(), 40, "", true);
         }
     }
-    public static void DrawHotel(this IParentGraphic container, object assembly)
+    public static void DrawHotel(this IParentGraphic container)
     {
-        container.DrawImageDice(assembly, "hotel.svg");
+        container.DrawImageDice("hotel.svg");
     }
-    public static void DrawPolice(this IParentGraphic container, object assembly)
+    public static void DrawPolice(this IParentGraphic container)
     {
-        container.DrawImageDice(assembly, "police.svg");
+        container.DrawImageDice("police.svg");
     }
-    public static void DrawOutOfJailFree(this IParentGraphic container, object assembly)
+    public static void DrawOutOfJailFree(this IParentGraphic container)
     {
         RectangleF bounds = new(10, 2, 30, 30);
-        container.DrawImageDice(assembly, "free.svg", bounds);
+        container.DrawImageDice("free.svg", bounds);
         bounds = new(2, 32, 46, 19);
         container.DrawText(bounds, "Free", 18, cc1.Black.ToWebColor(), false);
     }

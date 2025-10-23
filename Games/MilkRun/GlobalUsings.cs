@@ -61,3 +61,4 @@ global using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Ha
 global using BasicGameFrameworkLibrary.Core.MultiplePilesObservable;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using rr1 = MilkRun.Resources.SvgPngImageResource;

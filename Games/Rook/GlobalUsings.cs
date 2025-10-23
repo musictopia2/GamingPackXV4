@@ -65,3 +65,4 @@ global using BasicGameFrameworkLibrary.Blazor.Views;
 global using BasicGameFrameworkLibrary.Core.GamePieceModels;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Cards;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using rr1 = Rook.Resources.SvgPngImageResource;

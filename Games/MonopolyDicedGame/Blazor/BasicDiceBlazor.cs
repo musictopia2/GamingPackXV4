@@ -16,7 +16,7 @@ public class BasicDiceBlazor : GraphicsCommand
         output.Height = "50";
         return output;
     }
-    private void CreateGrapics(ISvg container)
+    private void CreateGrapics(SVG container)
     {
         if (Dice is null)
         {
@@ -41,26 +41,26 @@ public class BasicDiceBlazor : GraphicsCommand
             }
             if (Dice.WhatDice == EnumBasicType.Chance)
             {
-                container.DrawChanceDice(this);
+                container.DrawChanceDice();
                 return;
             }
             if (Dice.WhatDice == EnumBasicType.Utility)
             {
                 if (Dice.Index == 9)
                 {
-                    container.DrawWaterDice(this);
+                    container.DrawWaterDice();
                     return;
                 }
                 if (Dice.Index == 10)
                 {
-                    container.DrawElectricDice(this);
+                    container.DrawElectricDice();
                     return;
                 }
                 throw new CustomBasicException("Utilities is only 9 or 10");
             }
             if (Dice.WhatDice == EnumBasicType.Railroad)
             {
-                container.DrawTrainDice(this);
+                container.DrawTrainDice();
                 return;
             }
             throw new CustomBasicException("Unable to draw");
@@ -68,19 +68,19 @@ public class BasicDiceBlazor : GraphicsCommand
         //this means be a little different.
         if (Dice.WhatDice == EnumBasicType.Railroad)
         {
-            container.DrawTrainBoard(Dice.GetMonopolyValue().ToString(), this);
+            container.DrawTrainBoard(Dice.GetMonopolyValue().ToString());
             return;
         }
         if (Dice.WhatDice == EnumBasicType.Utility)
         {
             if (Dice.Index == 9)
             {
-                container.DrawWaterBoard(this, Dice.GetMonopolyValue().ToString());
+                container.DrawWaterBoard(Dice.GetMonopolyValue().ToString());
                 return;
             }
             if (Dice.Index == 10)
             {
-                container.DrawElectricBoard(this, Dice.GetMonopolyValue().ToString());
+                container.DrawElectricBoard(Dice.GetMonopolyValue().ToString());
                 return;
             }
         }
@@ -90,7 +90,7 @@ public class BasicDiceBlazor : GraphicsCommand
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         SvgRenderClass render = new();
-        ISvg svg = new SVG();
+        SVG svg = new ();
         svg.Width = TargetHeight;
         svg.Height = TargetHeight;
         svg.ViewBox = "0 0 50 50";

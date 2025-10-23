@@ -159,14 +159,14 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<HitTheDeckCardInformation>
     private void DrawCut(RectangleF rect_Card)
     {
         Image image = new();
-        image.PopulateFullExternalImage(this, "cut.png");
+        image.PopulateFullExternalImage("cut.png");
         image.PopulateImagePositionings(0, 0, rect_Card.Width, rect_Card.Height);
         MainGroup!.Children.Add(image);
     }
     private void DrawFlip(RectangleF rect_Card)
     {
         Image image = new();
-        image.PopulateFullExternalImage(this, "flip.png");
+        image.PopulateFullExternalImage("flip.png");
         image.PopulateImagePositionings(rect_Card);
         MainGroup!.Children.Add(image);
     }

@@ -34,3 +34,4 @@ global using Microsoft.AspNetCore.Components;
 global using BasicGameFrameworkLibrary.Blazor.Extensions;
 global using BasicGameFrameworkLibrary.Blazor.Helpers;
 global using System.Drawing;
+global using rr1 = Froggies.Resources.SvgPngImageResource;

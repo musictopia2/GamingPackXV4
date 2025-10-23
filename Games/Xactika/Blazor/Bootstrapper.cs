@@ -1,11 +1,6 @@
 namespace Xactika.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<XactikaShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<XactikaShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         register.RegisterType<SeveralPlayersTrickObservable<EnumShapes, XactikaCardInformation, XactikaPlayerItem, XactikaSaveInfo>>();
@@ -23,5 +18,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<XactikaShellViewModel>
         register.RegisterType<XactikaShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+        rr1.Register();
     }
 }

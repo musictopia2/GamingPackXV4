@@ -63,3 +63,4 @@ global using Microsoft.AspNetCore.Components.Rendering;
 global using SvgHelper.Blazor.Logic.Classes.Interfaces;
 global using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
 global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
+global using rr1 = LifeBoardGame.Resources.SvgPngImageResource;

@@ -63,3 +63,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelp
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using BasicGameFrameworkLibrary.Core.GamePieceModels;
 global using mm1 = BasicGameFrameworkLibrary.Core.Extensions.CommonMessageStrings;
+global using rr1 = YaBlewIt.Resources.SvgPngImageResource;

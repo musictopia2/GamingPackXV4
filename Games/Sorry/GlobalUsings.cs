@@ -52,3 +52,4 @@ global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 global using SvgHelper.Blazor.Logic.Classes.SubClasses;
 global using SvgHelper.Blazor.Logic;
+global using rr1 = Sorry.Resources.SvgPngImageResource;

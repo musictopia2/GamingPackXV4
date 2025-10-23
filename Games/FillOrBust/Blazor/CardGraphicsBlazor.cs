@@ -168,7 +168,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
         tempRect = new RectangleF(4, 55, 95, 70);
         DrawRectangle(tempRect, cc1.Red);
         Image image = new();
-        image.PopulateFullExternalImage(this, "revenge.png");
+        image.PopulateFullExternalImage("revenge.png");
         image.PopulateImagePositionings(tempRect);
         MainGroup!.Children.Add(image);
     }

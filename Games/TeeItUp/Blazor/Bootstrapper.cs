@@ -1,11 +1,6 @@
 namespace TeeItUp.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<TeeItUpShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<TeeItUpShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
@@ -22,5 +17,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<TeeItUpShellViewModel>
         register.RegisterType<TeeItUpShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+        rr1.Register();
     }
 }

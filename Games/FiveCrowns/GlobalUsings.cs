@@ -62,3 +62,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelp
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
 global using System.Collections;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using rr1 = FiveCrowns.Resources.SvgPngImageResource;

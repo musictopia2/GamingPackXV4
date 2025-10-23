@@ -529,7 +529,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
         }
         var lastRect = new RectangleF(71, 5, 20, 20);
         Image image = new();
-        image.PopulateFullExternalImage(this, name);
+        image.PopulateFullExternalImage(name);
         image.PopulateImagePositionings(lastRect);
         MainGroup.Children.Add(image);
     }
@@ -742,7 +742,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
         }
         Image image = new();
         image.PopulateImagePositionings(topRect);
-        image.PopulateFullExternalImage(this, fileName);
+        image.PopulateFullExternalImage(fileName);
         MainGroup.Children.Add(image);
         float fontSize;
         string entireText;

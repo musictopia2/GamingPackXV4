@@ -52,3 +52,4 @@ global using SvgHelper.Blazor.Logic;
 global using SvgHelper.Blazor.Logic.Classes.SubClasses;
 global using Microsoft.AspNetCore.Components.Rendering;
 global using SvgHelper.Blazor.Logic.Classes.Interfaces;
+global using rr1 = Candyland.Resources.SvgPngImageResource;

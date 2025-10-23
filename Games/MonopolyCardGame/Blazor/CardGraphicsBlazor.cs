@@ -306,7 +306,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MonopolyCardGameCardInformati
     private void DrawPiece(string fileName, RectangleF bounds)
     {
         Image image = new();
-        image.PopulateFullExternalImage(this, fileName);
+        image.PopulateFullExternalImage(fileName);
         image.PopulateImagePositionings(bounds);
         MainGroup!.Children.Add(image);
     }

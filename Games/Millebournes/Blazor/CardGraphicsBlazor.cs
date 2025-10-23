@@ -56,7 +56,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MillebournesCardInformation>
     private void DrawPiece(EnumCompleteCategories category)
     {
         Image image = new();
-        image.PopulateFullExternalImage(this, $"{category}.svg");
+        image.PopulateFullExternalImage($"{category}.svg");
         RectangleF rect = new(0, 0, 55, 72);
         image.PopulateImagePositionings(rect);
         MainGroup!.Children.Add(image);

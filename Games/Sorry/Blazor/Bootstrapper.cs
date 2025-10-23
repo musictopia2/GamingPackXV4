@@ -1,12 +1,7 @@
 //i think this is the most common things i like to do
 namespace Sorry.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<SorryShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<SorryShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
@@ -23,5 +18,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<SorryShellViewModel>
         register.RegisterType<SorryShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+        rr1.Register();
     }
 }

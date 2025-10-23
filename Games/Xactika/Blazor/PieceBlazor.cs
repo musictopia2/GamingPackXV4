@@ -1,5 +1,4 @@
-﻿using System.Reflection; //not common enough.
-namespace Xactika.Blazor;
+﻿namespace Xactika.Blazor;
 public class PieceBlazor : ComponentBase
 {
     [CascadingParameter]
@@ -22,7 +21,6 @@ public class PieceBlazor : ComponentBase
         }
         ISvg svg = MainGraphics!.GetMainSvg(false);
         SvgRenderClass render = new();
-        Assembly assembly = Assembly.GetAssembly(GetType())!;
         var thisHeight = 40;
         var thisSize = new SizeF(thisHeight, thisHeight);
         var pointList = ImageHelpers.GetPoints(ShapeUsed, HowMany, MainGraphics.Location, true, thisHeight); // can always be adjusted.   test on desktop first anyways.
@@ -35,11 +33,11 @@ public class PieceBlazor : ComponentBase
             }
             else if (ShapeUsed == EnumShapes.Cubes)
             {
-                ImageHelpers.DrawCube(svg, assembly, thisRect);
+                ImageHelpers.DrawCube(svg, thisRect);
             }
             else if (ShapeUsed == EnumShapes.Cones)
             {
-                ImageHelpers.DrawCone(svg, assembly, thisRect);
+                ImageHelpers.DrawCone(svg, thisRect);
             }
             else if (ShapeUsed == EnumShapes.Stars)
             {

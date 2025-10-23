@@ -16,40 +16,39 @@ public class MiscDiceBlazor : ComponentBase
         output.Height = "50";
         return output;
     }
-    private void CreateGrapics(ISvg container)
+    private void CreateGrapics(SVG container)
     {
         Rect rect = StartRect();
         rect.Fill = cc1.White.ToWebColor();
         container.Children.Add(rect);
-
         if (Category == EnumMiscType.Police)
         {
-            container.DrawPolice(this);
+            container.DrawPolice();
             return;
         }
         if (Category == EnumMiscType.Free)
         {
-            container.DrawOutOfJailFree(this);
+            container.DrawOutOfJailFree();
             return;
         }
         if (Category == EnumMiscType.RegularHouse)
         {
-            container.DrawHouse(this, NumberOfHouses);
+            container.DrawHouse(NumberOfHouses);
             return;
         }
         if (Category == EnumMiscType.BrokenHouse)
         {
-            container.DrawBrokenHouse(this);
+            container.DrawBrokenHouse();
             return;
         }
         if (Category == EnumMiscType.Hotel)
         {
-            container.DrawHotel(this);
+            container.DrawHotel();
             return;
         }
         if (Category == EnumMiscType.Go)
         {
-            container.DrawGoDice(this);
+            container.DrawGoDice();
             return;
         }
         throw new CustomBasicException("Unable to draw");
@@ -57,7 +56,7 @@ public class MiscDiceBlazor : ComponentBase
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         SvgRenderClass render = new();
-        ISvg svg = new SVG();
+        SVG svg = new();
         svg.Width = TargetHeight;
         svg.Height = TargetHeight;
         svg.ViewBox = "0 0 50 50";

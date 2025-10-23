@@ -1,11 +1,6 @@
 namespace YaBlewIt.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<YaBlewItShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<YaBlewItShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
@@ -24,5 +19,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<YaBlewItShellViewModel>
         register.RegisterSingleton<IGenerateDice<int>, EightSidedDice>();
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+        rr1.Register();
     }
 }

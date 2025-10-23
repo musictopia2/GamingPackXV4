@@ -1,9 +1,9 @@
 ﻿@inherits GraphicsCommand
 <svg @onclick="Submit">
-    <ResourceImage Width="100%" Assembly="GetAssembly" Height="100%" FileName="leaf.png" />
+    <ResourceImage Width="100%"  Height="100%" FileName="leaf.png" />
     @if (Space!.HasFrog)
     {
-        <ResourceImage Width="100%" Assembly="GetAssembly" Height="100%" FileName="frog.png" />
+        <ResourceImage Width="100%" Height="100%" FileName="frog.png" />
     }
     @if (Space.IsSelected || Space.IsTarget)
     {

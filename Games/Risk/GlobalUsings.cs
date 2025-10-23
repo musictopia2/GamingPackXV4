@@ -60,3 +60,4 @@ global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 global using SvgHelper.Blazor.Logic;
 global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
 global using Microsoft.AspNetCore.Components.Rendering;
+global using rr1 = Risk.Resources.SvgPngImageResource;

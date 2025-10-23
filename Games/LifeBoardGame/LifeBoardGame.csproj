@@ -10,31 +10,8 @@
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="Resources\LifeBoardPositions.json" />
-    <EmbeddedResource Include="Resources\Accountant.png" />
     <AdditionalFiles Include="Resources\ArrowMatrix.json" />
-    <EmbeddedResource Include="Resources\arrows.png" />
-    <EmbeddedResource Include="Resources\Artist.png" />
-    <EmbeddedResource Include="Resources\Athlete.png" />
-    <EmbeddedResource Include="Resources\BeachHouse.png" />
-    <EmbeddedResource Include="Resources\ComputerConsultant.png" />
-    <EmbeddedResource Include="Resources\CozyCondo.png" />
-    <EmbeddedResource Include="Resources\Doctor.png" />
-    <EmbeddedResource Include="Resources\DutchColonial.png" />
-    <EmbeddedResource Include="Resources\Entertainer.png" />
-    <EmbeddedResource Include="Resources\FarmHouse.png" />
-    <EmbeddedResource Include="Resources\gameboard.png" />
-    <EmbeddedResource Include="Resources\highspeed1.png" />
-    <EmbeddedResource Include="Resources\highspeed2.png" />
-    <EmbeddedResource Include="Resources\LogCabin.png" />
-    <EmbeddedResource Include="Resources\MobileHome.png" />
-    <EmbeddedResource Include="Resources\PoliceOfficer.png" />
-    <EmbeddedResource Include="Resources\SalesPerson.png" />
-    <EmbeddedResource Include="Resources\spinner.png" />
-    <EmbeddedResource Include="Resources\SplitLevel.png" />
     <EmbeddedResource Include="Resources\star.bmp" />
-    <EmbeddedResource Include="Resources\Teacher.png" />
-    <EmbeddedResource Include="Resources\Tudor.png" />
-    <EmbeddedResource Include="Resources\Victorian.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
@@ -50,7 +27,7 @@
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.37" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.40" />
   </ItemGroup>
   <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
     <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />

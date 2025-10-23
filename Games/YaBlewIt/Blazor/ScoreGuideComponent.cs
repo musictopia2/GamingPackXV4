@@ -37,7 +37,7 @@ public class ScoreGuideComponent : ComponentBase
         RectangleF bounds = new(550, y, 1000, 40);
         Image image = new();
         image.PopulateImagePositionings(bounds);
-        image.PopulateFullExternalImage(this, "DottedLine.svg");
+        image.PopulateFullExternalImage("DottedLine.svg");
         _mains!.Children.Add(image);
     }
     private void DrawHeaders()

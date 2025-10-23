@@ -9,11 +9,8 @@ namespace Rook.Blazor;
 //        return Task.CompletedTask;
 //    }
 //}
-public class Bootstrapper : MultiplayerBasicBootstrapper<RookShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<RookShellViewModel>(starts, mode)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
 
     //protected override Task RegisterTestsAsync()
     //{
@@ -36,5 +33,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<RookShellViewModel>
         register.RegisterType<RookShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+        rr1.Register();
     }
 }

@@ -22,5 +22,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<BattleshipLiteShellView
         register.RegisterType<BattleshipLiteShellViewModel>(); //has to use interface part to make it work with source generators.
         Core.DIFinishProcesses.GlobalDIFinishClass.FinishDIRegistrations(GetDIContainer);
         Core.AutoResumeContexts.GlobalRegistrations.Register();
+        rr1.Register();
     }
 }

@@ -25,7 +25,7 @@ public class SpaceControlBlazor : GraphicsCommand
             Image image = new();
             image.Width = "50";
             image.Height = "50";
-            image.PopulateFullExternalImage(this, "battleshipfire.svg");
+            image.PopulateFullExternalImage("battleshipfire.svg");
             svg.Children.Add(image);
         }
         CreateClick(svg);

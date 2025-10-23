@@ -65,3 +65,4 @@ global using static BasicGameFrameworkLibrary.Core.ChooserClasses.ListViewPicker
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
 global using BasicGameFrameworkLibrary.Blazor.Views;
+global using rr1 = Xactika.Resources.SvgPngImageResource;

@@ -1,8 +1,7 @@
-﻿using System.Reflection; //not common enough.
-namespace Xactika.Blazor;
+﻿namespace Xactika.Blazor;
 public class StatsBoardBlazor : ComponentBase
 {
-    ISvg? _mains;
+    SVG? _mains;
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         _mains = new SVG();
@@ -192,7 +191,6 @@ public class StatsBoardBlazor : ComponentBase
         DrawBorders(thirdRect);
         DrawBorders(fourthRect);
         DrawBorders(fifthRect);
-        Assembly assembly = Assembly.GetAssembly(GetType())!;
         var fontSize = firstRect.Height * 0.28f;
         DrawText("Value", firstRect, fontSize);
         DrawText("Cards", secondRect, fontSize);
@@ -201,19 +199,19 @@ public class StatsBoardBlazor : ComponentBase
         foreach (var thisPoint in pointList)
         {
             var tempRect = new RectangleF(thisPoint, cubeSize);
-            ImageHelpers.DrawCube(_mains, assembly, tempRect);
+            ImageHelpers.DrawCube(_mains, tempRect);
         }
         pointList = ImageHelpers.GetPoints(EnumShapes.Cubes, 2, fourthRect.Location, true, cubeSize.Height);
         foreach (var thisPoint in pointList)
         {
             var tempRect = new RectangleF(thisPoint, cubeSize);
-            ImageHelpers.DrawCube(_mains, assembly, tempRect);
+            ImageHelpers.DrawCube(_mains, tempRect);
         }
         pointList = ImageHelpers.GetPoints(EnumShapes.Cubes, 3, fifthRect.Location, true, cubeSize.Height);
         foreach (var thisPoint in pointList)
         {
             var tempRect = new RectangleF(thisPoint, cubeSize);
-            ImageHelpers.DrawCube(_mains, assembly, tempRect);
+            ImageHelpers.DrawCube(_mains, tempRect);
         }
     }
 }

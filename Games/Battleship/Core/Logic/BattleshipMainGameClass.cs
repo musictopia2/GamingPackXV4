@@ -71,6 +71,10 @@ public class BattleshipMainGameClass : BasicGameClass<BattleshipPlayerItem, Batt
             _model.Status = "Please place your ships by clicking on the ship and cliking on the grid where you want to place them.";
             _command.ManuelFinish = false;
             _command.IsExecuting = false; //at this point, show its done so you can do what you need to do in order to choose ships.
+            if (BasicData.MultiPlayer == false)
+            {
+                return;
+            }
             Network!.IsEnabled = false; //has to show IsEnabled as false so you won't receive the message until after placing ships.
             return;
         }

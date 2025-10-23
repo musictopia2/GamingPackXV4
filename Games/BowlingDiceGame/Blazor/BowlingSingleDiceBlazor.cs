@@ -10,7 +10,7 @@ public class BowlingSingleDiceBlazor : ComponentBase
             return;
         }
         SvgRenderClass render = new();
-        ISvg svg = new SVG();
+        SVG svg = new ();
         Rect rect = new();
         rect.Width = "50";
         rect.Height = "50";
@@ -21,7 +21,7 @@ public class BowlingSingleDiceBlazor : ComponentBase
             Image image = new();
             image.Width = "50";
             image.Height = "50";
-            image.PopulateFullExternalImage(this, "bowlingdice.svg");
+            image.PopulateFullExternalImage("bowlingdice.svg");
             svg.Children.Add(image);
         }
         render.RenderSvgTree(svg, builder);

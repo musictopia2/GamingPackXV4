@@ -3,6 +3,7 @@ global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExte
 global using CommonBasicLibraries.BasicDataSettingsAndProcesses;
 global using static CommonBasicLibraries.BasicDataSettingsAndProcesses.BasicDataFunctions;
 global using CommonBasicLibraries.CollectionClasses;
+global using rr1 = Aggravation.Resources.SvgPngImageResource;
 global using fs1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
 global using js1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings; //just in case i need those 2.
 global using BasicGameFrameworkLibrary.Core.CommonInterfaces;
