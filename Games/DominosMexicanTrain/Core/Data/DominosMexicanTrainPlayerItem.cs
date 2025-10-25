@@ -21,7 +21,7 @@ public partial class DominosMexicanTrainPlayerItem : PlayerSingleHand<MexicanDom
     public void DoInit(IEventAggregator aggregator)
     {
         _aggregator = aggregator;
-        EventAggravatorProcesses.GlobalEventAggravatorClass.ClearSubscriptions(_aggregator); //needs to clear before you can subscribe
+        _aggregator.ClearSingle<UpdateCountEventModel>();
         //this will subscribe as needed.
         Subscribe();
     }

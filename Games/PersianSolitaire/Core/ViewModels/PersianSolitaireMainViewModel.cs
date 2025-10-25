@@ -27,7 +27,8 @@ public partial class PersianSolitaireMainViewModel : SolitaireMainViewModel<Pers
     }
     protected override SolitaireGameClass<PersianSolitaireSaveInfo> GetGame(IGamePackageResolver resolver)
     {
-        EventAggravatorProcesses.GlobalEventAggravatorClass.ClearSubscriptions(Aggregator);
+        //this may be iffy now because you are going to new game.  well see.
+        //if i need to clear something else, has to rethink.
         return resolver.ReplaceObject<PersianSolitaireMainGameClass>();
     }
 }

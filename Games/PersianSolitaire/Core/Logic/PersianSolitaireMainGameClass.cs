@@ -14,6 +14,7 @@ public partial class PersianSolitaireMainGameClass : SolitaireGameClass<PersianS
         : base(solitaireData1, thisState, aggregator, score, command, toast, error)
     {
         _model = (ScoreModel)score;
+        aggregator.ClearSingle<ScoreModel>(); //just in case.
         Subscribe();
     }
     public void Close()
