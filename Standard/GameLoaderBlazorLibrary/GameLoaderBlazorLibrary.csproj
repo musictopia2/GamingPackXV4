@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BasicBlazorLibrary" Version="9.0.101" />
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.40" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.41" />
   </ItemGroup>
   <ItemGroup>
     <SupportedPlatform Include="browser" />
