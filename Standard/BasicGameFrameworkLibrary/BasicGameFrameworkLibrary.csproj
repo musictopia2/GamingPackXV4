@@ -14,14 +14,14 @@
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
-    <PackageReference Include="EventAggregatorGenerator" Version="1.0.13" PrivateAssets="all" />
+    <PackageReference Include="EventAggregatorGenerator" Version="1.0.14" PrivateAssets="all" />
     <PackageReference Include="FastEnumGenerator" Version="1.0.10" PrivateAssets="all" />
-    <PackageReference Include="BlazorMVVMHelpersLibrary" Version="9.0.1" />
+    <PackageReference Include="BlazorMVVMHelpersLibrary" Version="9.0.2" />
     <PackageReference Include="ScoreBoardGenerator" Version="1.0.4" PrivateAssets="all" />
     <PackageReference Include="SvgHelper.Blazor" Version="9.0.3" />
     <PackageReference Include="MappingCloningExtensions" Version="2.0.4" PrivateAssets="all" />
-    <PackageReference Include="MessengingHelpers" Version="9.0.1" />
-    <PackageReference Include="MVVMFramework" Version="9.0.1" />
+    <PackageReference Include="MessengingHelpers" Version="9.0.5" />
+    <PackageReference Include="MVVMFramework" Version="9.0.2" />
   </ItemGroup>
   <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
     <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />

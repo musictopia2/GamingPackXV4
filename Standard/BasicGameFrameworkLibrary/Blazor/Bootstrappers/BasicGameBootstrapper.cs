@@ -41,8 +41,6 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         }
         _error = BlazorUIHelpers.SystemError;
         _message = BlazorUIHelpers.MessageBox;
-        MVVMFramework.EventAggravatorProcesses.GlobalEventAggravatorClass.ClearSubscriptions(_aggregator);
-        EventAggravatorProcesses.GlobalEventAggravatorClass.ClearSubscriptions(_aggregator);
         js1.RequireCustomSerialization = true;
         ResetGlobals();
         _isInitialized = true;

@@ -278,7 +278,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P>(IGamePackageReso
     }
     protected virtual void ClearSubscriptions()
     {
-        Aggregator.Clear<AskEventModel>();
+        Aggregator.ClearSingle<AskEventModel>();
     }
     protected virtual void ReplaceGame()
     {

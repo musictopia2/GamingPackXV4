@@ -16,7 +16,7 @@ public partial class PlayerRummyHand<D> : PlayerSingleHand<D>, IPlayerRummyHand<
     }
     public void DoInit()
     {
-        _aggregator.Clear<UpdateCountEventModel>();
+        _aggregator.ClearSingle<UpdateCountEventModel>();
         Subscribe();
     }
     private partial void Subscribe();
