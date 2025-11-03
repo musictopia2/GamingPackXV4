@@ -1,6 +1,15 @@
-﻿namespace BasicGameFrameworkLibrary.Core.TestUtilities;
+﻿using BasicGameFrameworkLibrary.Core.StandardImplementations.GlobalClasses;
+using ss1 = System.IO.Path; //not common enough.
+
+namespace BasicGameFrameworkLibrary.Core.TestUtilities;
 public class TestOptions
 {
+    public static string GetTestPath()
+    {
+        string tempPath = NativeFileAccessSetUp.GetParentDirectory();
+        string testPath = ss1.Combine(tempPath, "testoptions.json");
+        return testPath;
+    }
     public bool ImmediatelyEndGame { get; set; } //if set to true, then a game can be over nearly right away.  used to easily test new game.
     public bool ComputerNoCards { get; set; } //i think this is a better option.
     public int CardsToPass { get; set; } //if something else is set, a player will get a different number.

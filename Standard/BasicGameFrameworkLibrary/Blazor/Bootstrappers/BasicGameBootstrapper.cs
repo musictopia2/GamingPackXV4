@@ -1,4 +1,6 @@
-﻿using BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc; //not common enough at this point.
+﻿using BasicGameFrameworkLibrary.Core.NetworkingClasses.Misc; //not common enough.
+using ff1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileFunctions;
+using jj2 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
 namespace BasicGameFrameworkLibrary.Blazor.Bootstrappers;
 public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrapper, ISetGamePackageMode
     , IHandleAsync<SocketErrorEventModel>,
@@ -47,7 +49,6 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         await StartRuntimeAsync();
     }
     protected BasicData? GameData;
-    protected TestOptions? TestData;
     private readonly IEventAggregator _aggregator;
 
     /// <summary>
@@ -85,6 +86,25 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     protected virtual Task RegisterTestsAsync() { return Task.CompletedTask; }
     protected abstract bool UseMultiplayerProcesses { get; }
     protected virtual void StartUp() { }
+
+    private bool CanDoFileTestOptions()
+    {
+        if (_mode == EnumGamePackageMode.Production)
+        {
+            return false;
+        }
+        if (OS != EnumOS.WindowsDT)
+        {
+            return false; //only windows desktop can do this.
+        }
+        string path = TestOptions.GetTestPath();
+        if (ff1.FileExists(path) == false)
+        {
+            return false;
+        }
+        return true;
+    }
+
     private void FirstRegister()
     {
         Core.AutoResumeContexts.GlobalRegistrations.Register();
@@ -96,8 +116,18 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         MessengingGlobalClass.Aggregator = thisEvent;
         Subscribe(); //now i can use this.
         _container!.RegisterSingleton(thisEvent);
-        TestData = new TestOptions();
-        _container.RegisterSingleton(TestData);
+        TestOptions testOptions;
+
+        if (CanDoFileTestOptions() == false)
+        {
+            testOptions = new();
+        }
+        else
+        {
+            string testPath = TestOptions.GetTestPath();
+            testOptions = jj2.RetrieveSavedObject<TestOptions>(testPath);
+        }
+        _container.RegisterSingleton(testOptions);
         CommandContainer thisCommand = new();
         _container.RegisterSingleton(thisCommand);
         BasicRegistrations(_container);
@@ -188,5 +218,5 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     {
         Unsubscribe();
         GC.SuppressFinalize(this);
-    }   
+    }
 }
