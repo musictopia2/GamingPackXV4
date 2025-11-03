@@ -30,4 +30,7 @@ public class TestOptions
     public bool AlwaysNewGame { get; set; }
     public bool EndRoundEarly { get; set; } //this is used in cases where you have to end the round early to test new round.
     public bool ShowExtraToastsForDebugging { get; set; } //this can be useful for debugging if running on wasm on tablets since i can't even get log information either.  this gives another option.
+    public bool AdvancedTestOptions { get; set; } //if set to true, then needs to allow nearly anything (to make it get to the state needed).
+    //for this, has to be case by case for the game package library.
+    //useful to track down hidden bugs.
 }

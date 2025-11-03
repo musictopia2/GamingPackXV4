@@ -118,6 +118,10 @@ public abstract partial class BasicMultiplayerShellViewModel<P>(IGamePackageReso
                 {
                     throw new CustomBasicException("Can't end round early because its in production");
                 }
+                if (test.AdvancedTestOptions)
+                {
+                    throw new CustomBasicException("Can't show advanced test options because its in production");
+                }
             }
             await BeforeLoadingOpeningScreenAsync();
             NickName = BasicData.NickName;
