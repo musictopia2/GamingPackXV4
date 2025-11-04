@@ -112,6 +112,7 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         _container.RegisterSingleton(BlazorUIHelpers.Toast);
         _container.RegisterSingleton(_message);
         _container.RegisterSingleton(_error);
+        _container.RegisterSingleton(BlazorUIHelpers.Exit);
         EventAggregator thisEvent = new();
         MessengingGlobalClass.Aggregator = thisEvent;
         Subscribe(); //now i can use this.
@@ -128,7 +129,12 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
             testOptions = jj2.RetrieveSavedObject<TestOptions>(testPath);
         }
         _container.RegisterSingleton(testOptions);
+        //i did not allow a single generic type for now.
+        //forced to attempt it (since later could not find it (wrong).
+        //this did not use interfaces.
         CommandContainer thisCommand = new();
+        //AdvancedTestStateService advances = new()
+
         _container.RegisterSingleton(thisCommand);
         BasicRegistrations(_container);
         rr2.Register(); //needs to register this (plus others).
@@ -144,6 +150,7 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     private static void BasicRegistrations(IGamePackageRegister register)
     {
         register.RegisterType<NewGameViewModel>(false);
+        register.RegisterType<AdvancedTestStateService>(true); //this is singleton.
         register.RegisterSingleton<IAsyncDelayer, AsyncDelayer>();
     }
     protected virtual void MiscRegisterFirst(IGamePackageRegister register) { }

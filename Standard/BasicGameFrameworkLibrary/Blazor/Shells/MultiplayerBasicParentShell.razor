@@ -40,7 +40,10 @@
                                 {
                                     <GameButtonComponent CustomCallBack="aa1.BackToMainDelegate" FontSize="2vh" Display="Back To Main" />
                                 }
-                                <GameButtonComponent CustomCallBack="aa1.BackToMainDelegate" Display="Back To Main" />
+                                else
+                                {
+                                    <GameButtonComponent CustomCallBack="aa1.BackToMainDelegate" Display="Back To Main" />
+                                }
                             }
                             @if (TestData!.ShowNickNameOnShell)
                             {
@@ -65,6 +68,10 @@
                                 <ParentControl VM="RestoreViewModel">
                                     <RestoreView />
                                 </ParentControl>
+                            }
+                            @if (TestData.AdvancedTestOptions && AdvancedState!.CanShowAdvancedButton)
+                            {
+                                <GameButtonComponent CustomCallBack="AdvancedState.CommitAndExitAsync" Display="Commit Test" />
                             }
                             @if (NeedsFullScreen() == true)
                             {

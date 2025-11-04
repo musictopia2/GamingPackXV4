@@ -8,6 +8,7 @@ public partial class MultiplayerBasicParentShell
     public BasicData? BasicData { get; set; }
     public IGameInfo? GameData { get; set; }
     public TestOptions? TestData { get; set; }
+    private AdvancedTestStateService? AdvancedState { get; set; }
     private IToast? Toast { get; set; }
     [Inject]
     private IJSRuntime? JS { get; set; }
@@ -40,6 +41,8 @@ public partial class MultiplayerBasicParentShell
         };
         TestData = Resolver!.Resolve<TestOptions>();
         GameData = Resolver!.Resolve<IGameInfo>();
+        AdvancedState = Resolver!.Resolve<AdvancedTestStateService>();
+        AdvancedState.StateChanged = StateHasChanged;
         Toast = Resolver!.Resolve<IToast>();
         CommandContainer command = Resolver!.Resolve<CommandContainer>();
         command.ParentAction = StateHasChanged;
