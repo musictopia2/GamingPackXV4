@@ -112,6 +112,10 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         _container.RegisterSingleton(BlazorUIHelpers.Toast);
         _container.RegisterSingleton(_message);
         _container.RegisterSingleton(_error);
+        if (BlazorUIHelpers.Exit is null)
+        {
+            throw new CustomBasicException("Exit was not registered.");
+        }
         _container.RegisterSingleton(BlazorUIHelpers.Exit);
         EventAggregator thisEvent = new();
         MessengingGlobalClass.Aggregator = thisEvent;
