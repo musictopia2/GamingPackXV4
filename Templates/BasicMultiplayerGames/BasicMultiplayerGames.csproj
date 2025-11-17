@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
@@ -9,7 +9,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LabelGridGenerator" Version="1.0.2" PrivateAssets="all" />
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="9.0.2" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="10.0.1" />
     <PackageReference Include="CommandsGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.2" PrivateAssets="all" />
