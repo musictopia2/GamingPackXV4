@@ -59,9 +59,9 @@ public partial class GameButtonComponent : IDisposable
     {
         if (IsDisabled())
         {
-            return cs1.Gray.ToWebColor();
+            return cs1.Gray.ToWebColor;
         }
-        return cs1.Navy.ToWebColor();
+        return cs1.Navy.ToWebColor;
     }
     private bool IsDisabled()
     {

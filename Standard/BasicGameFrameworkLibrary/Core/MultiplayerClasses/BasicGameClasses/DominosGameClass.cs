@@ -42,10 +42,10 @@ public abstract class DominosGameClass<D, P, S> : BasicGameClass<P, S>
         {
             throw new CustomBasicException("Cannot have 0 dominos after shuffling");
         }
-        PlayerList!.ForEach(ThisPlayer =>
+        PlayerList!.ForEach(player =>
         {
-            ThisPlayer.MainHandList.ReplaceRange(_model.BoneYard.FirstDraw(DominosToPassOut));
-            if (ThisPlayer.MainHandList.Count == 0)
+            player.MainHandList.ReplaceRange(_model.BoneYard.FirstDraw(DominosToPassOut));
+            if (player.MainHandList.Count == 0)
             {
                 throw new CustomBasicException("Cannot have 0 dominos when passing out");
             }

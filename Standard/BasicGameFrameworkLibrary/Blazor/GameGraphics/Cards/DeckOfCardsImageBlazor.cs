@@ -21,7 +21,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
     protected override void DrawBacks()
     {
         Image image = new();
-        image.PopulateFullExternalImage("deckofcardback.svg");
+        image.PopulateBasicExternalImage("deckofcardback.svg");
         image.Width = "140";
         image.Height = "191";
         image.X = "10";
@@ -104,7 +104,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         {
             color = cs1.Red;
         }
-        text.Fill = color.ToWebColor();
+        text.Fill = color.ToWebColor;
         MainGroup!.Children.Add(text);
 
         MainGroup.DrawCardSuit(suit, 3, 46, _suitSize, _suitSize, color);
@@ -122,7 +122,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         text.Font_Size = fontSize;
         text.X = x;
         text.Y = "43";
-        text.Fill = color.ToWebColor();
+        text.Fill = color.ToWebColor;
         other.Children.Add(text);
         other.DrawCardSuit(suit, 5, 46, _suitSize, _suitSize, color);
     }
@@ -364,7 +364,7 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
         if (DeckObject.CardType == EnumRegularCardTypeList.Continue)
         {
             ellipse = new();
-            ellipse.PopulateStrokesToStyles(cs1.Green.ToWebColor(), 8.25f);
+            ellipse.PopulateStrokesToStyles(cs1.Green.ToWebColor, 8.25f);
             ellipse.CX = "82.5";
             ellipse.CY = "108";
             ellipse.RX = "41.25";
@@ -380,14 +380,14 @@ public class DeckOfCardsImageBlazor<R> : BaseDeckGraphics<R>
             line.Y1 = "66.75";
             line.X2 = "123.75";
             line.Y2 = "149.25";
-            line.PopulateStrokesToStyles(cs1.Red.ToWebColor(), 8.25f);
+            line.PopulateStrokesToStyles(cs1.Red.ToWebColor, 8.25f);
             line = new Line();
             MainGroup.Children.Add(line);
             line.X1 = "41.25";
             line.Y1 = "149.25";
             line.X2 = "123.75";
             line.Y2 = "66.75";
-            line.PopulateStrokesToStyles(cs1.Red.ToWebColor(), 8.25f);
+            line.PopulateStrokesToStyles(cs1.Red.ToWebColor, 8.25f);
         }
     }
 }

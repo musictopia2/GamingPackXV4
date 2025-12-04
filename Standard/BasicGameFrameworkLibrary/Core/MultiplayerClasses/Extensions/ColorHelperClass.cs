@@ -1,24 +1,27 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
 public static class ColorHelperClass
 {
-    public static bool DidChooseColors<P>(this PlayerCollection<P> players)
+    extension <P>(PlayerCollection<P> players)
         where P : class, IPlayerColors, new()
     {
-        foreach (var player in players)
+        public bool DidChooseColors()
         {
-            if (player.DidChooseColor == false && player.InGame)
+            foreach (var player in players)
             {
-                return false;
+                if (player.DidChooseColor == false && player.InGame)
+                {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
-    }
-    public static void EraseColors<P>(this PlayerCollection<P> players)
-        where P : class, IPlayerColors, new()
-    {
-        players!.ForEach(items =>
+        public void EraseColors()
         {
-            items.Clear();
-        });
+            players!.ForEach(items =>
+            {
+                items.Clear();
+            });
+        }
     }
+    
 }

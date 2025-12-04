@@ -11,7 +11,7 @@ public partial class BorderedCommandSpace
     public string FillColor { get; set; } = cs1.Transparent;
     private string ShapeStyle()
     {
-        string output = $"stroke: {BorderColor.ToWebColor()}; stroke-width: {BorderWidth}; stroke-miterlimit:4;";
+        string output = $"stroke: {BorderColor.ToWebColor}; stroke-width: {BorderWidth}; stroke-miterlimit:4;";
         return output;
     }
 }

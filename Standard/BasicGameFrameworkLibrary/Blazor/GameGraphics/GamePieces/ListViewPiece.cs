@@ -42,7 +42,7 @@ public class ListViewPiece : ComponentBase
         render.Allow0 = true;
         Text text = new();
         text.CenterText();
-        text.Fill = TextColor.ToWebColor();
+        text.Fill = TextColor.ToWebColor;
         text.Content = DataContext!.DisplayText;
         svg.Children.Add(text);
         render.RenderSvgTree(svg, builder);

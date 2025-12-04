@@ -22,7 +22,7 @@ public partial class BaseFrameBlazor
         {
             return "";
         }
-        return $"color:{cs1.LightGray.ToWebColor()}; border-color: {cs1.LightGray.ToWebColor()};";
+        return $"color:{cs1.LightGray.ToWebColor}; border-color: {cs1.LightGray.ToWebColor};";
     }
     private string GetContainerStyle()
     {

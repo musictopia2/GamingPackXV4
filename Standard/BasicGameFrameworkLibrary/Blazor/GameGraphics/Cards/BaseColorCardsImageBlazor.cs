@@ -74,7 +74,7 @@ public abstract class BaseColorCardsImageBlazor<C> : BaseDarkCardsBlazor<C>
             tt.CenterText(MainGroup!, thisRect);
             tt.Content = thisText;
             tt.Font_Size = fontSize;
-            tt.Fill = BackFontColor.ToWebColor();
+            tt.Fill = BackFontColor.ToWebColor;
             if (thisText.Length >= 5)
             {
                 tt.PopulateStrokesToStyles(strokeWidth: .5f);
@@ -93,7 +93,7 @@ public abstract class BaseColorCardsImageBlazor<C> : BaseDarkCardsBlazor<C>
         text.CenterText(MainGroup!, rectangle);
         text.Font_Size = fontSize;
         text.Content = valueNeeded;
-        text.Fill = cs1.White.ToWebColor();
+        text.Fill = cs1.White.ToWebColor;
         text.PopulateStrokesToStyles(strokeWidth: 1.4f);
     }
 }

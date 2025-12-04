@@ -1,12 +1,15 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Extensions;
 public static class BasicDataExtensions
 {
-    public static IGameNetwork? GetNetwork(this BasicData basicData)
+    extension (BasicData basicData)
     {
-        if (basicData.MultiPlayer == false)
+        public IGameNetwork? GetNetwork()
         {
-            return null;
+            if (basicData.MultiPlayer == false)
+            {
+                return null;
+            }
+            return Resolver!.Resolve<IGameNetwork>();
         }
-        return Resolver!.Resolve<IGameNetwork>();
-    }
+    }   
 }

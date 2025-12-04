@@ -77,7 +77,7 @@ public class NumberPiece : ComponentBase
             text.Font_Size = 40;
             text.PopulateStrokesToStyles(strokeWidth: 2);
         }
-        text.Fill = TextColor.ToWebColor();
+        text.Fill = TextColor.ToWebColor;
         text.Content = value;
         svg.Children.Add(text);
         render.RenderSvgTree(svg, builder);

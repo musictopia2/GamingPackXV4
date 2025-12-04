@@ -1,14 +1,20 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
 public static class Helpers
 {
-    public static BasicList<ExcludeRCard> AppendExclude(this BasicList<ExcludeRCard> thisList,
-        EnumSuitList suit, int number)
+    extension (BasicList<ExcludeRCard> list)
     {
-        thisList.Add(new ExcludeRCard(suit, number));
-        return thisList;
+        public BasicList<ExcludeRCard> AppendExclude(EnumSuitList suit, int number)
+        {
+            list.Add(new ExcludeRCard(suit, number));
+            return list;
+        }
     }
-    public static BasicList<EnumRegularCardValueList> LoadValuesFromCards<R>(this IDeckDict<R> thisDict) where R : IRegularCard
+   extension<R> (IEnumerable<R> list)
+        where R: IRegularCard
     {
-        return thisDict.DistinctItems(xx => xx.Value);
-    }
+        public BasicList<EnumRegularCardValueList> LoadValuesFromCards()
+        {
+            return list.DistinctItems(xx => xx.Value);
+        }
+    }   
 }

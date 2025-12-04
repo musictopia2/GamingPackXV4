@@ -53,17 +53,17 @@ public class CirclePiece : ComponentBase
                 CY = "50",
                 R = "50"
             };
-            circle.PopulateStrokesToStyles(cs1.Black.ToWebColor(), (int)MainGraphics!.BorderWidth);
-            circle.Fill = cs1.White.ToWebColor();
+            circle.PopulateStrokesToStyles(cs1.Black.ToWebColor, (int)MainGraphics!.BorderWidth);
+            circle.Fill = cs1.White.ToWebColor;
             svg.Children.Add(circle);
             circle = new()
             {
                 CX = "50",
                 CY = "50",
                 R = "33",
-                Fill = MainColor.ToWebColor()
+                Fill = MainColor.ToWebColor
             };
-            circle.PopulateStrokesToStyles(cs1.Black.ToWebColor(), 4);
+            circle.PopulateStrokesToStyles(cs1.Black.ToWebColor, 4);
             svg.Children.Add(circle);
         }
         else
@@ -74,8 +74,8 @@ public class CirclePiece : ComponentBase
                 CY = "50",
                 R = "50"
             };
-            circle.PopulateStrokesToStyles(cs1.Black.ToWebColor(), (int)MainGraphics!.BorderWidth);
-            circle.Fill = MainColor.ToWebColor();
+            circle.PopulateStrokesToStyles(cs1.Black.ToWebColor, (int)MainGraphics!.BorderWidth);
+            circle.Fill = MainColor.ToWebColor;
             svg.Children.Add(circle);
         }
         render.RenderSvgTree(svg, builder);

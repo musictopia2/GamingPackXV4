@@ -1,20 +1,24 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
 public static class MessageHelper
 {
-    public static bool CanSendMessage<P>(this P singleInfo, BasicData thisData) where P : class, IPlayerItem, new()
+    extension <P>(P singleInfo)
+         where P : class, IPlayerItem, new()
     {
-        if (thisData.MultiPlayer == false)
+        public bool CanSendMessage(BasicData thisData)
         {
+            if (thisData.MultiPlayer == false)
+            {
+                return false;
+            }
+            if (singleInfo.PlayerCategory == EnumPlayerCategory.Self)
+            {
+                return true;
+            }
+            if (thisData.Client == false && singleInfo.PlayerCategory == EnumPlayerCategory.Computer)
+            {
+                return true;
+            }
             return false;
         }
-        if (singleInfo.PlayerCategory == EnumPlayerCategory.Self)
-        {
-            return true;
-        }
-        if (thisData.Client == false && singleInfo.PlayerCategory == EnumPlayerCategory.Computer)
-        {
-            return true;
-        }
-        return false;
-    }
+    }   
 }

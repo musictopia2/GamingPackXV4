@@ -56,10 +56,10 @@ public class SimpleTriangle : ComponentBase
         ISvg svg = new SVG();
         BasicList<PointF> points = GetTrianglePoints();
         Polygon poly = points.CreatePolygon();
-        poly.Fill = FillColor.ToWebColor(); //i think.
+        poly.Fill = FillColor.ToWebColor; //i think.
         if (BorderColor != cs1.Transparent)
         {
-            poly.PopulateStrokesToStyles(BorderColor.ToWebColor(), BorderWidth);
+            poly.PopulateStrokesToStyles(BorderColor.ToWebColor, BorderWidth);
         }
         svg.Children.Add(poly);
         render.RenderSvgTree(svg, builder);

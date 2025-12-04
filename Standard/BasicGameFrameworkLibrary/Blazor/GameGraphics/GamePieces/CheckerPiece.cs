@@ -52,7 +52,7 @@ public class CheckerPiece : ComponentBase
             CX = "150",
             CY = "150",
             R = "150",
-            Fill = BlankColor.ToWebColor()
+            Fill = BlankColor.ToWebColor
         };
         svg.Children.Add(circle);
     }
@@ -114,7 +114,7 @@ public class CheckerPiece : ComponentBase
         Ellipse ellipse;
         ellipse = new()
         {
-            Fill = MainColor.ToWebColor(),
+            Fill = MainColor.ToWebColor,
             CX = "150",
             CY = "178.5",
             RX = "150",
@@ -126,21 +126,21 @@ public class CheckerPiece : ComponentBase
             ellipse = new Ellipse();
             PopulateEllipseIncludingStroke(ellipse, svg, GetGradientID, 150, 178.5, 150, 121);
             ellipse = new Ellipse();
-            PopulateEllipseIncludingStroke(ellipse, svg, MainColor.ToWebColor(), 150, 151.5, 150, 121);
+            PopulateEllipseIncludingStroke(ellipse, svg, MainColor.ToWebColor, 150, 151.5, 150, 121);
         }
         if (PieceCategory == EnumCheckerPieceCategory.OnlyPiece)
         {
             ellipse = new Ellipse();
             PopulateEllipseIncludingStroke(ellipse, svg, GetGradientID, 150, 150, 150, 150);
             ellipse = new Ellipse();
-            PopulateEllipseIncludingStroke(ellipse, svg, MainColor.ToWebColor(), 150, 135, 150, 135);
+            PopulateEllipseIncludingStroke(ellipse, svg, MainColor.ToWebColor, 150, 135, 150, 135);
         }
         if (PieceCategory == EnumCheckerPieceCategory.CrownedPiece)
         {
             ellipse = new Ellipse();
             PopulateEllipseIncludingStroke(ellipse, svg, GetGradientID, 150, 148.5, 150, 121);
             ellipse = new Ellipse();
-            PopulateEllipseIncludingStroke(ellipse, svg, MainColor.ToWebColor(), 150, 121.5, 150, 121);
+            PopulateEllipseIncludingStroke(ellipse, svg, MainColor.ToWebColor, 150, 121.5, 150, 121);
         }
     }
     private static string GetGradientID => "url(#gradient_0)";
@@ -148,7 +148,7 @@ public class CheckerPiece : ComponentBase
     {
         var ellipse = new Ellipse
         {
-            Fill = MainColor.ToWebColor(),
+            Fill = MainColor.ToWebColor,
             CX = "150",
             CY = "252.25",
             RX = "150",
@@ -158,7 +158,7 @@ public class CheckerPiece : ComponentBase
         ellipse = new();
         PopulateEllipseIncludingStroke(ellipse, svg, GetGradientID, 150, 252.25, 150, 46);
         Rect rect = new();
-        rect.Fill = MainColor.ToWebColor();
+        rect.Fill = MainColor.ToWebColor;
         rect.Y = "158.75";
         rect.Width = "300";
         rect.Height = "93.5";
@@ -180,7 +180,7 @@ public class CheckerPiece : ComponentBase
         path.D = "M300 158.75 L300 252.25";
         svg.Children.Add(path);
         ellipse = new();
-        PopulateEllipseIncludingStroke(ellipse, svg, MainColor.ToWebColor(), 150, 158.75, 150, 46);
+        PopulateEllipseIncludingStroke(ellipse, svg, MainColor.ToWebColor, 150, 158.75, 150, 46);
     }
     private void PopulateEllipseIncludingStroke(Ellipse ellipse, ISvg svg, string color, double cx, double cy, double rx, double ry)
     {

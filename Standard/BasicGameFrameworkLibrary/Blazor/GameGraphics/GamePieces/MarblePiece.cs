@@ -52,7 +52,7 @@ public class MarblePiece : ComponentBase
         radial.Children.Add(stop);
         stop = new();
         stop.Offset = "100%";
-        stop.Stop_Color = MainColor.ToWebColor();
+        stop.Stop_Color = MainColor.ToWebColor;
         stop.Stop_Opacity = "1";
         radial.Children.Add(stop);
     }

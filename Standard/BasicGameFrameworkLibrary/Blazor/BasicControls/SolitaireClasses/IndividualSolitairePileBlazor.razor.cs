@@ -60,9 +60,9 @@ public partial class IndividualSolitairePileBlazor
     {
         if (SinglePile!.IsSelected)
         {
-            return cs1.Red.ToWebColor();
+            return cs1.Red.ToWebColor;
         }
-        return cs1.Transparent.ToWebColor();
+        return cs1.Transparent.ToWebColor;
     }
     private async Task ClickSinglePile()
     {

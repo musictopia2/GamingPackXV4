@@ -45,7 +45,7 @@ public partial class BorderedSpace
     private float RadiusY => SpaceSize.Height / 2;
     private string ShapeStyle()
     {
-        string output = $"stroke: {BorderColor.ToWebColor()}; stroke-width: {BorderWidth}; stroke-miterlimit:4;";
+        string output = $"stroke: {BorderColor.ToWebColor}; stroke-width: {BorderWidth}; stroke-miterlimit:4;";
         return output;
     }
 }

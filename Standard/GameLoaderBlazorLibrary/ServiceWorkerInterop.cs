@@ -8,7 +8,7 @@ internal class ServiceWorkerInterop(IJSRuntime js) : BaseLibraryJavascriptClass(
     {
         _onUpdateAvailable = onUpdateAvailableCallback;
         _dotNetRef = DotNetObjectReference.Create(this);
-        await ModuleTask.InvokeVoidFromClassAsync("registerAndListen", _dotNetRef);
+        await ModuleTask.InvokeVoidFromClassAsync("registerAndListen", _dotNetRef!);
     }
     [JSInvokable]
     public async Task NotifyUpdateAvailable()

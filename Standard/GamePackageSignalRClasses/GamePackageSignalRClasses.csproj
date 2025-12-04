@@ -9,7 +9,7 @@
     <FeedType>Public</FeedType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="10.0.1" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="10.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.0" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

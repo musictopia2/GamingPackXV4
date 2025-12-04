@@ -82,7 +82,7 @@ public class BasicDominoBlazor<D> : BaseDeckGraphics<D>
             15 => cs1.Silver,
             _ => throw new CustomBasicException("Only 0 to 15 is supported for the paints"),
         };
-        return output.ColorUsed();
+        return output.ColorUsed;
     }
     private void DrawDice(G g, int value)
     {

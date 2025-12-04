@@ -1,71 +1,74 @@
 ﻿namespace BasicGameFrameworkLibrary.Blazor.Extensions;
 public static class SaveRoutines
 {
-    public static async Task UpdatePrivateGameAsync<T>(this IJSRuntime js, string id, string value)
+    extension (IJSRuntime js)
     {
-        if (string.IsNullOrWhiteSpace(id))
+        public async Task UpdatePrivateGameAsync<T>(string id, string value)
         {
-            throw new CustomBasicException("Cannot be blank for gameid");
-        }
-        await js.StorageSetStringAsync(id, value);
-    }
-    public static async Task<string> GetPrivateGameAsync(this IJSRuntime js, string id)
-    {
-        var item = await js.StorageGetStringAsync(id);
-        if (item is null)
-        {
-            return "";
-        }
-        return item;
-    }
-    public static async Task UpdateLocalStorageAsync(this IJSRuntime js, string key, string value)
-    {
-        await js.ClearExceptForCurrentGameAsync(key);
-        await js.StorageSetStringAsync(key, value); //the private autoresume can just use this one.
-    }
-    public static async Task ClearExceptForCurrentGameAsync(this IJSRuntime js, string key)
-    {
-        BasicList<string> saveList = GlobalStartUp.KeysToSave;
-        BasicList<string> keyList = await js.GetKeyListAsync();
-        await keyList.ForEachAsync(async item =>
-        {
-            if (saveList.Any(x => x.Contains(item)) == false && item != key) //does not make sense to delete and add again.
+            if (string.IsNullOrWhiteSpace(id))
             {
-                await js.StorageRemoveItemAsync(item);
+                throw new CustomBasicException("Cannot be blank for gameid");
             }
-        });
-    }
-    public static async Task DeletePrivateGameAsync(this IJSRuntime js, string key)
-    {
-        BasicList<string> keyList = await js.GetKeyListAsync();
-        await keyList.ForEachAsync(async item =>
+            await js.StorageSetStringAsync(id, value);
+        }
+        public async Task<string> GetPrivateGameAsync(string id)
         {
-            if (item.Contains(key))
+            var item = await js.StorageGetStringAsync(id);
+            if (item is null)
             {
-                await js.StorageRemoveItemAsync(key);
+                return "";
             }
-        });
-    }
-    private static async Task<BasicList<string>> GetKeyListAsync(this IJSRuntime js)
-    {
-        var length = await js.GetLengthAsync();
-        BasicList<string> output = new();
-        for (int i = 0; i < length; i++)
+            return item;
+        }
+        public async Task UpdateLocalStorageAsync(string key, string value)
         {
-            int j = i;
-            output.Add(await js.KeyAsync(j));
+            await js.ClearExceptForCurrentGameAsync(key);
+            await js.StorageSetStringAsync(key, value); //the private autoresume can just use this one.
+        }
+        public async Task ClearExceptForCurrentGameAsync(string key)
+        {
+            BasicList<string> saveList = GlobalStartUp.KeysToSave;
+            BasicList<string> keyList = await js.GetKeyListAsync();
+            await keyList.ForEachAsync(async item =>
+            {
+                if (saveList.Any(x => x.Contains(item)) == false && item != key) //does not make sense to delete and add again.
+                {
+                    await js.StorageRemoveItemAsync(item);
+                }
+            });
+        }
+        public async Task DeletePrivateGameAsync(string key)
+        {
+            BasicList<string> keyList = await js.GetKeyListAsync();
+            await keyList.ForEachAsync(async item =>
+            {
+                if (item.Contains(key))
+                {
+                    await js.StorageRemoveItemAsync(key);
+                }
+            });
+        }
+        private async Task<BasicList<string>> GetKeyListAsync()
+        {
+            var length = await js.GetLengthAsync();
+            BasicList<string> output = new();
+            for (int i = 0; i < length; i++)
+            {
+                int j = i;
+                output.Add(await js.KeyAsync(j));
 
+            }
+            return output;
         }
-        return output;
-    }
-    private static async Task<string> KeyAsync(this IJSRuntime js, int index)
-    {
-        string output = await js.InvokeAsync<string>("localStorage.key", index);
-        return output;
-    }
-    private static async Task<int> GetLengthAsync(this IJSRuntime js)
-    {
-        int output = await js.InvokeAsync<int>("eval", "localStorage.length");
-        return output;
-    }
+        private async Task<string> KeyAsync(int index)
+        {
+            string output = await js.InvokeAsync<string>("localStorage.key", index);
+            return output;
+        }
+        private async Task<int> GetLengthAsync()
+        {
+            int output = await js.InvokeAsync<int>("eval", "localStorage.length");
+            return output;
+        }
+    }   
 }

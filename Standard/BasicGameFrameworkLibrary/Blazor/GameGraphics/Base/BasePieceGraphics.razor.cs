@@ -53,21 +53,21 @@ public partial class BasePieceGraphics : GraphicsCommand
     {
         if (NeedsHighlighting == false)
         {
-            return cs1.Transparent.ToWebColor(); //this means won't even do
+            return cs1.Transparent.ToWebColor; //this means won't even do
         }
         if (IsSelected)
         {
-            return cs1.Lime.ToWebColor(); //will be lime
+            return cs1.Lime.ToWebColor; //will be lime
         }
         if (CustomCanDo.Invoke() == false)
         {
-            return cs1.LightGray.ToWebColor();
+            return cs1.LightGray.ToWebColor;
         }
         if (HighlightTransparent)
         {
-            return cs1.Transparent.ToWebColor();
+            return cs1.Transparent.ToWebColor;
         }
-        return FillColor.ToWebColor();
+        return FillColor.ToWebColor;
     }
     private void PopulateCustomViewBox(ISvg svg)
     {

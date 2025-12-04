@@ -40,13 +40,13 @@ public class CenteredTextBlazor : ComponentBase
         text.CenterText();
         if (BorderWidth > 0 && BorderColor != cs1.Transparent)
         {
-            text.PopulateStrokesToStyles(BorderColor.ToWebColor(), BorderWidth, FontFamily);
+            text.PopulateStrokesToStyles(BorderColor.ToWebColor, BorderWidth, FontFamily);
         }
         else
         {
             text.Style = $"font-family: {FontFamily};";
         }
-        text.Fill = TextColor.ToWebColor();
+        text.Fill = TextColor.ToWebColor;
         text.Font_Size = FontSize;
         if (Bold)
         {

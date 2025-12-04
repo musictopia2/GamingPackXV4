@@ -84,7 +84,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         if (ShowDisabledColors == true && DeckObject!.IsEnabled == false)
         {
             Rect temp = StartRectangle();
-            temp.Fill = cs1.Gray.ToWebColor();
+            temp.Fill = cs1.Gray.ToWebColor;
             MainGroup!.Children.Add(temp);
             return;
         }
@@ -105,8 +105,8 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         MainGroup!.Children.Add(rect);
     }
     protected virtual string GetOpacity => GetLightHighlighter().ToString();
-    protected virtual string SelectFillColor => cs1.Red.ToWebColor();
-    protected virtual string DrawFillColor => cs1.Lime.ToWebColor();
+    protected virtual string SelectFillColor => cs1.Red.ToWebColor;
+    protected virtual string DrawFillColor => cs1.Lime.ToWebColor;
     protected virtual Rect StartRectangle()
     {
         Rect output = new();
@@ -187,7 +187,7 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
         Rect rect = StartRectangle();
         rect.PopulateStrokesToStyles(strokeWidth: (int)BorderWidth);
         BeforeFilling();
-        rect.Fill = FillColor.ToWebColor();
+        rect.Fill = FillColor.ToWebColor;
         MainGroup.Children.Add(rect);
         DrawImage();
         return svg;
@@ -208,18 +208,18 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
 
         if (DeckObject!.Deck == 0)
         {
-            rect.Fill = cs1.Transparent.ToWebColor();
+            rect.Fill = cs1.Transparent.ToWebColor;
         }
         else if (DeckObject!.Deck < 0)
         {
-            rect.Fill = cs1.Blue.ToWebColor();
+            rect.Fill = cs1.Blue.ToWebColor;
             rect.Fill_Opacity = "0.0";
         }
         else
         {
             rect.PopulateStrokesToStyles(strokeWidth: (int)BorderWidth);
             BeforeFilling();
-            rect.Fill = FillColor.ToWebColor();
+            rect.Fill = FillColor.ToWebColor;
         }
 
         MainGroup.Children.Add(rect);
@@ -237,8 +237,8 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
             }
             else if (EmptyBorders && DeckObject.Deck == 0)
             {
-                rect.PopulateStrokesToStyles(color: cs1.White.ToWebColor(), strokeWidth: (int)BorderWidth);
-                rect.Fill = cs1.Navy.ToWebColor();
+                rect.PopulateStrokesToStyles(color: cs1.White.ToWebColor, strokeWidth: (int)BorderWidth);
+                rect.Fill = cs1.Navy.ToWebColor;
             }
             else if (AlwaysUnknown && DeckObject.Deck > 0)
             {

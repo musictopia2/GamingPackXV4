@@ -21,7 +21,7 @@ public class MahjongTilesComponent : BaseDeckGraphics<MahjongSolitaireTileInfo>
     protected override void DrawImage() //what makes this one so big is the mahjong tiles.
     {
         Image image = new();
-        image.PopulateFullExternalImage($"{DeckObject!.Index}.svg");
+        image.PopulateBasicExternalImage($"{DeckObject!.Index}.svg");
         PopulateImage(image);
         MainGroup!.Children.Add(image); //hopefully this simple.
     }

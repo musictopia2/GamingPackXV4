@@ -1,259 +1,287 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Extensions;
 public static class SelectEnableDeckExtensions
 {
-    public static string GetColorFromEnum<E>(this BasicPickerData<E> piece) where E : struct, IFastEnumColorSimple
+    extension(string data)
     {
-        return piece.EnumValue.Color;
-    }
-    public static void SelectUnselectItem(this ISelectableObject thisItem)
-    {
-        thisItem.IsSelected = !thisItem.IsSelected;
-    }
-    public static void SelectUnselectItem<S>(this ISimpleList<S> thisList, int index) //has to be generics or casting problems.
-        where S : ISelectableObject
-    {
-        int i = 0;
-        foreach (var item in thisList)
+        public async Task<BasicList<int>> GetSavedIntegerListAsync()
         {
-            if (i == index)
-            {
-                item.SelectUnselectItem();
-                return;
-            }
-            i++;
+            return await js1.DeserializeObjectAsync<BasicList<int>>(data);
         }
-        throw new ArgumentOutOfRangeException(nameof(index));
-    }
-    public static void SelectSpecificItem<S, V>(this ISimpleList<S> thisList, Func<S, V> selector, V value)
-        where S : ISelectableObject
-    {
-        thisList.ForEach(items =>
+        public async Task<DeckRegularDict<D>> GetNewObjectListFromDeckListAsync<D>(IDeckLookUp<D> thisBase) where D : IDeckObject
         {
-            if (selector(items)!.Equals(value)) //has to be this way still.
-            {
-                items.IsSelected = true;
-            }
-            else
-            {
-                items.IsSelected = false;
-            }
-        });
-    }
-    public static void SelectSeveralItems<S, V>(this ISimpleList<S> thisList, Func<S, V> selector,
-        ISimpleList<V> valuelist) where S : ISelectableObject
-    {
-        thisList.UnselectAllObjects(); 
-
-        valuelist.ForEach(value =>
-        {
+            DeckRegularDict<D> output = new();
+            BasicList<int> thisList = await js1.DeserializeObjectAsync<BasicList<int>>(data);
             thisList.ForEach(items =>
             {
-                if (selector(items)!.Equals(value))
+                output.Add(thisBase.GetSpecificItem(items));
+            });
+            return output;
+        }
+    }
+    extension <E>(BasicPickerData<E> piece)
+        where E : struct, IFastEnumColorSimple
+    {
+        public string ColorFromEnum => piece.EnumValue.Color;
+    }
+    extension (ISelectableObject thisItem)
+    {
+        public void SelectUnselectItem()
+        {
+            thisItem.IsSelected = !thisItem.IsSelected;
+        }
+    }
+    extension <S>(ISimpleList<S> list)
+        where S : ISelectableObject
+    {
+        public void SelectUnselectItem(int index) //has to be generics or casting problems.
+        {
+            int i = 0;
+            foreach (var item in list)
+            {
+                if (i == index)
+                {
+                    item.SelectUnselectItem();
+                    return;
+                }
+                i++;
+            }
+            throw new ArgumentOutOfRangeException(nameof(index));
+        }
+        public void SelectSpecificItem<V>(Func<S, V> selector, V value)
+        {
+            list.ForEach(items =>
+            {
+                if (selector(items)!.Equals(value)) //has to be this way still.
                 {
                     items.IsSelected = true;
                 }
+                else
+                {
+                    items.IsSelected = false;
+                }
             });
-        });
-    }
-    public static BasicList<S> GetSelectedItems<S>(this ISimpleList<S> thisList)
-        where S : ISelectableObject => thisList.Where(items =>
-        items.IsSelected == true).ToBasicList();
-    //this was still needed for games like blades of steele.
-    public static DeckRegularDict<D> GetSelectedItems<D>(this IDeckDict<D> thisList)
-       where D : IDeckObject => thisList.Where(items =>
-       items.IsSelected == true).ToRegularDeckDict();
+        }
+        public void SelectSeveralItems<V>(Func<S, V> selector,
+            ISimpleList<V> valuelist)
+        {
+            list.UnselectAllObjects();
 
-    public static int HowManySelectedItems<S>(this ISimpleList<S> thisList) where S : ISelectableObject
-    {
-        return thisList.Count(items => items.IsSelected);
-    }
-    public static void UnselectAllObjects<S>(this ISimpleList<S> thisList) where S : ISelectableObject
-    {
-        thisList.ForEach(items => items.IsSelected = false);
-    }
-    public static void SetEnabled<E>(this ISimpleList<E> thisList, bool isEnabled) where E : IEnabledObject
-    {
-        thisList.ForEach(items => items.IsEnabled = isEnabled);
-    }
-    public static async Task<BasicList<int>> GetSavedIntegerListAsync(this string data)
-    {
-        return await js1.DeserializeObjectAsync<BasicList<int>>(data);
-    }
-    public static DeckRegularDict<D> ToRegularDeckDict<D>(this IEnumerable<D> thisList) where D : IDeckObject
-    {
-        return new DeckRegularDict<D>(thisList);
-    }
-    public static void SelectMaxOne<D>(this IDeckDict<D> thisList, D thisItem) where D : IDeckObject
-    {
-        if (thisItem.IsSelected == true)
-        {
-            thisItem.IsSelected = false;
-            return;
+            valuelist.ForEach(value =>
+            {
+                list.ForEach(items =>
+                {
+                    if (selector(items)!.Equals(value))
+                    {
+                        items.IsSelected = true;
+                    }
+                });
+            });
         }
-        thisList.ForEach(items => items.IsSelected = false);
-        thisItem.IsSelected = true;
-    }
-    public static void UnhighlightObjects<D>(this IDeckDict<D> thisList) where D : IDeckObject
-    {
-        thisList.ForEach(items =>
+        public BasicList<S> GetSelectedItems()
+            => list.Where(items =>
+            items.IsSelected == true).ToBasicList();
+        public int HowManySelectedItems => list.Count(items => items.IsSelected);
+        public void UnselectAllObjects()
         {
-            items.IsSelected = false;
-            items.Drew = false;
-        });
-    }
-    public static void RemoveSelectedItems<D>(this IDeckDict<D> thisList) where D : IDeckObject
-    {
-        thisList.RemoveAllOnly(items => items.IsSelected == true);
-    }
-    public static void RemoveSelectedItems<D>(this IDeckDict<D> thisList, IDeckDict<D> itemsSelected) where D : IDeckObject
-    {
-        itemsSelected.ForEach(thisItem =>
-        {
-            thisList.RemoveObjectByDeck(thisItem.Deck); // i think.
-        });
-    }
-    public static void SelectAllObjects<D>(this IDeckDict<D> thisList) where D : IDeckObject
-    {
-        thisList.ForEach(items => items.IsSelected = true);
-    }
-    public static bool HasSelectedObject<D>(this IDeckDict<D> thisList) where D : IDeckObject
-    {
-        return thisList.Any(items => items.IsSelected == true);
-    }
-    public static bool HasUnselectedObject<D>(this IDeckDict<D> thisList) where D : IDeckObject
-    {
-        return thisList.Any(items => items.IsSelected == false);
-    }
-    public static void MakeAllObjectsVisible<D>(this IDeckDict<D> thisList) where D : IDeckObject
-    {
-        thisList.ForEach(items => items.Visible = true);
-    }
-    public static void MakeAllObjectsKnown<D>(this IDeckDict<D> thisList) where D : IDeckObject
-    {
-        thisList.ForEach(items => items.IsUnknown = false);
-    }
-    public static D GetLastObjectDrawn<D>(this IDeckDict<D> thisList) where D : IDeckObject
-    {
-        return thisList.FindLast(items => items.Drew == true)!;
-    }
-    public static DeckRegularDict<D> GetObjectsFromList<D>(this BasicList<int> thisList
-        , IDeckDict<D> ListToRemove) where D : IDeckObject
-    {
-        DeckRegularDict<D> output = new();
-        thisList.ForEach(items =>
-        {
-            output.Add(ListToRemove.GetSpecificItem(items));
-        });
-        ListToRemove.RemoveGivenList(output);
-        return output;
-    }
-    public static async Task<DeckRegularDict<D>> GetObjectsFromDataAsync<D>(this string body
-        , IDeckDict<D> ListToRemove) where D : IDeckObject
-    {
-        var temps = await js1.DeserializeObjectAsync<BasicList<int>>(body);
-        return temps.GetObjectsFromList(ListToRemove);
-    }
-    public static int ObjectsLeft(this IDeckDict<IDeckObject> thisList)
-    {
-        return thisList.Count(items => items.Visible == true);
-    }
-    public static int FindIndexByDeck<D>(this IDeckDict<D> thisList, int deck) where D : IDeckObject
-    {
-        D thisCard = thisList.GetSpecificItem(deck);
-        return thisList.IndexOf(thisCard);
-    }
-    public static void ReplaceCardPlusRemove<D>(this DeckRegularDict<D> thisList, int oldDeck, int newDeck) where D : IDeckObject
-    {
-        int firstIndex = thisList.FindIndexByDeck(oldDeck);
-        int secondIndex = thisList.FindIndexByDeck(newDeck);
-        D thisCard = thisList.RemoveObjectByDeck(newDeck); //that one will disappear because its going somewhere else
-        if (secondIndex > firstIndex)
-        {
-            thisList[firstIndex] = thisCard;
+            list.ForEach(items => items.IsSelected = false);
         }
-        else
-        {
-            thisList[firstIndex - 1] = thisCard;
-        }
-        thisList.ReplaceDictionary(oldDeck, newDeck, thisCard);
     }
-    public static D GetLastObject<D>(this IDeckDict<D> thisList, bool alsoRemove) where D : IDeckObject
+    extension<D>(IEnumerable<D> list)
+        where D : IDeckObject
     {
-        D output = thisList.Last();
-        if (alsoRemove == true)
+        public DeckRegularDict<D> ToRegularDeckDict()
         {
-            thisList.RemoveSpecificItem(output);
+            return new DeckRegularDict<D>(list);
         }
-        return output;
-    }
-    public static D GetFirstObject<D>(this IDeckDict<D> thisList, bool alsoRemove) where D : IDeckObject
-    {
-        D output = thisList.First();
-        if (alsoRemove == true)
+        //this was still needed for games like blades of steele.
+        public DeckRegularDict<D> GetSelectedItems()
+            => list.Where(items =>
+           items.IsSelected == true).ToRegularDeckDict();
+        public void SelectMaxOne(D thisItem)
         {
-            thisList.RemoveSpecificItem(output);
+            if (thisItem.IsSelected == true)
+            {
+                thisItem.IsSelected = false;
+                return;
+            }
+            list.ForEach(items => items.IsSelected = false);
+            thisItem.IsSelected = true;
         }
-        return output;
+        public void UnhighlightObjects()
+        {
+            list.ForEach(items =>
+            {
+                items.IsSelected = false;
+                items.Drew = false;
+            });
+        }
+        public void SelectAllObjects()
+        {
+            list.ForEach(items => items.IsSelected = true);
+        }
+        public bool HasSelectedObject()
+        {
+            return list.Any(items => items.IsSelected == true);
+        }
+        public bool HasUnselectedObject()
+        {
+            return list.Any(items => items.IsSelected == false);
+        }
+        public void MakeAllObjectsVisible()
+        {
+            list.ForEach(items => items.Visible = true);
+        }
+        public void MakeAllObjectsKnown()
+        {
+            list.ForEach(items => items.IsUnknown = false);
+        }
+        public int ObjectsLeft => list.Count(items => items.Visible == true);
+        
     }
-    public static BasicList<int> GetDeckListFromObjectList<D>(this IDeckDict<D> thisList) where D : IDeckObject
+    extension<D>(IDeckDict<D> list)
+        where D : IDeckObject
     {
-        return thisList.Select(Items => Items.Deck).ToBasicList();
+        public void RemoveSelectedItems(IDeckDict<D> itemsSelected)
+        {
+            itemsSelected.ForEach(thisItem =>
+            {
+                list.RemoveObjectByDeck(thisItem.Deck); // i think.
+            });
+        }
+        public D GetLastObjectDrawn()
+        {
+            return list.FindLast(items => items.Drew == true)!;
+        }
+        public void RemoveSelectedItems()
+        {
+            list.RemoveAllOnly(items => items.IsSelected == true);
+        }
+        public int FindIndexByDeck(int deck)
+        {
+            D thisCard = list.GetSpecificItem(deck);
+            return list.IndexOf(thisCard);
+        }
+        public D GetLastObject(bool alsoRemove)
+        {
+            D output = list.Last();
+            if (alsoRemove == true)
+            {
+                list.RemoveSpecificItem(output);
+            }
+            return output;
+        }
+        public D GetFirstObject(bool alsoRemove)
+        {
+            D output = list.First();
+            if (alsoRemove == true)
+            {
+                list.RemoveSpecificItem(output);
+            }
+            return output;
+        }
+        public BasicList<int> GetDeckListFromObjectList()
+        {
+            return list.Select(Items => Items.Deck).ToBasicList();
+        }
     }
-    public static DeckRegularDict<D> GetNewObjectListFromDeckList<D>(this BasicList<int> thisList,
+    extension<D>(DeckRegularDict<D> list)
+        where D : IDeckObject
+    {
+        public void ReplaceCardPlusRemove(int oldDeck, int newDeck)
+        {
+            int firstIndex = list.FindIndexByDeck(oldDeck);
+            int secondIndex = list.FindIndexByDeck(newDeck);
+            D thisCard = list.RemoveObjectByDeck(newDeck); //that one will disappear because its going somewhere else
+            if (secondIndex > firstIndex)
+            {
+                list[firstIndex] = thisCard;
+            }
+            else
+            {
+                list[firstIndex - 1] = thisCard;
+            }
+            list.ReplaceDictionary(oldDeck, newDeck, thisCard);
+        }
+    }
+
+    extension <E>(ISimpleList<E> list)
+        where E : IEnabledObject
+    {
+        public void SetEnabled(bool isEnabled)
+        {
+            list.ForEach(items => items.IsEnabled = isEnabled);
+        }
+    }
+    extension (BasicList<int> list)
+    {
+        public DeckRegularDict<D> GetObjectsFromList<D>(IDeckDict<D> ListToRemove)
+            where D : IDeckObject
+        {
+            DeckRegularDict<D> output = new();
+            list.ForEach(items =>
+            {
+                output.Add(ListToRemove.GetSpecificItem(items));
+            });
+            ListToRemove.RemoveGivenList(output);
+            return output;
+        }
+        public DeckRegularDict<D> GetNewObjectListFromDeckList<D>(
         IDeckLookUp<D> deckBase) where D : IDeckObject
-    {
-        DeckRegularDict<D> output = new();
-        thisList.ForEach(items =>
         {
-            output.Add(deckBase.GetSpecificItem(items));
-        });
-        return output;
+            DeckRegularDict<D> output = new();
+            list.ForEach(items =>
+            {
+                output.Add(deckBase.GetSpecificItem(items));
+            });
+            return output;
+        }
     }
-    public static async Task<DeckRegularDict<D>> GetNewObjectListFromDeckListAsync<D>(this string data,
-        IDeckLookUp<D> thisBase) where D : IDeckObject
+    extension (string body)
     {
-        DeckRegularDict<D> output = new();
-
-        BasicList<int> thisList = await js1.DeserializeObjectAsync<BasicList<int>>(data);
-        thisList.ForEach(items =>
+        public async Task<DeckRegularDict<D>> GetObjectsFromDataAsync<D>(IDeckDict<D> ListToRemove)
+            where D : IDeckObject
         {
-            output.Add(thisBase.GetSpecificItem(items));
-        });
-        return output;
+            var temps = await js1.DeserializeObjectAsync<BasicList<int>>(body);
+            return temps.GetObjectsFromList(ListToRemove);
+        }
     }
-    public static int TotalPoints<P>(this IDeckDict<P> thisList)
+    extension<P>(IEnumerable<P> list)
         where P : IDeckObject, IPointsObject
     {
-        return thisList.Sum(items => items.GetPoints);
+        public int TotalPoints => list.Sum(items => items.GetPoints);
     }
-    public static DeckRegularDict<D> CardsFromAllPlayers<D, P>(this PlayerCollection<P> playerList)
+    extension <D, P>(PlayerCollection<P> players)
         where D : IDeckObject, new()
         where P : class, IPlayerSingleHand<D>, new()
     {
-        DeckRegularDict<D> output = new();
-        playerList.ForEach(thisPlayer => output.AddRange(thisPlayer.MainHandList));
-        return output;
-    }
-    public static int WhoHasCardFromDeck<D, P>(this PlayerCollection<P> playerList, int deck)
-        where D : IDeckObject, new()
-        where P : class, IPlayerSingleHand<D>, new()
-    {
-        foreach (var thisPlayer in playerList)
+        public DeckRegularDict<D> CardsFromAllPlayers()
         {
-            if (thisPlayer.MainHandList.ObjectExist(deck))
-            {
-                return thisPlayer.Id;
-            }
+            DeckRegularDict<D> output = new();
+            players.ForEach(thisPlayer => output.AddRange(thisPlayer.MainHandList));
+            return output;
         }
-        throw new CustomBasicException($"Nobody had deck of {deck}");
+        public int WhoHasCardFromDeck(int deck)
+        {
+            foreach (var thisPlayer in players)
+            {
+                if (thisPlayer.MainHandList.ObjectExist(deck))
+                {
+                    return thisPlayer.Id;
+                }
+            }
+            throw new CustomBasicException($"Nobody had deck of {deck}");
+        }
     }
-    public static EnumSuitList GetRegularSuit<E>(this E value)
+    extension<E>(E value)
         where E : IFastEnumSimple
     {
-        if (value is EnumSuitList suit)
+        public EnumSuitList GetRegularSuit()
         {
-            return suit;
+            if (value is EnumSuitList suit)
+            {
+                return suit;
+            }
+            throw new CustomBasicException("Invalid cast when getting regular suit");
         }
-        throw new CustomBasicException("Invalid cast when getting regular suit");
-    }
+    }       
 }

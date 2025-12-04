@@ -152,7 +152,7 @@ public abstract class BasicGameClass<P, S> :
     }
     public virtual async Task ShowTieAsync() //because board games has to also do something else.
     {
-        this.ProtectedShowTiec();
+        this.ProtectedShowTie();
         await this.ProtectedGameOverNextAsync();
     }
     protected async Task ShowLossAsync() //for games like old maid.
