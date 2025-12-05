@@ -1,25 +1,37 @@
 ﻿namespace ThreeLetterFun.Core.Logic;
 internal static class Extensions
 {
-    public static void RemoveTiles(this IDeckDict<ThreeLetterFunCardData> thisList)
+    extension (IDeckDict<ThreeLetterFunCardData> list)
     {
-        foreach (var thisCard in thisList)
-            thisCard.ClearTiles();
-    }
-    public static void RemoveTiles(this BasicList<TileInformation> thisList, ThreeLetterFunVMData model)
-    {
-        thisList.RemoveRange(0, 2);
-        model.TileBoard1!.UpdateBoard(); //i think
-    }
-    public static void RemoveTiles(this BasicList<TileInformation> thisList)
-    {
-        thisList.RemoveRange(0, 2);
-    }
-    public static void TakeTurns(this PlayerCollection<ThreeLetterFunPlayerItem> playerList)
-    {
-        playerList.ForEach(player =>
+        public void RemoveTiles()
         {
-            player.ClearTurn();
-        });
+            foreach (var thisCard in list)
+            {
+                thisCard.ClearTiles();
+            }
+        }
     }
+    extension (BasicList<TileInformation> list)
+    {
+        public void RemoveTiles(ThreeLetterFunVMData model)
+        {
+            list.RemoveRange(0, 2);
+            model.TileBoard1!.UpdateBoard(); //i think
+        }
+        public void RemoveTiles()
+        {
+            list.RemoveRange(0, 2);
+        }
+    }
+    extension (PlayerCollection<ThreeLetterFunPlayerItem> players)
+    {
+        public void TakeTurns()
+        {
+            players.ForEach(player =>
+            {
+                player.ClearTurn();
+            });
+        }
+    }
+    
 }

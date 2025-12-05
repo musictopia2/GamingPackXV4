@@ -19,7 +19,7 @@ public class LotteryProcesses : ILotteryProcesses
         BasicList<int> thisList = Enumerable.Range(1, 6).ToBasicList();
         thisList.RemoveAllOnly(yy => _gameContainer.PlayerList!.Any(xx => xx.ChoseNumber == yy));
         thisList.InsertBeginning(0);
-        BasicList<string> tempList = thisList.CastIntegerListToStringList();
+        BasicList<string> tempList = thisList.CastNumberListToStringList();
         _model.AddPopupLists(tempList);
     }
     async Task ILotteryProcesses.ProcessLotteryAsync()

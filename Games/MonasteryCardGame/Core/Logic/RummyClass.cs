@@ -24,7 +24,7 @@ public class RummyClass
             return false; //must have at least 3 cards to even be considered for this.
         }
         int counts = thisCol.Count;
-        if (counts.IsNumberOdd() == true)
+        if (counts.IsNumberOdd == true)
         {
             return false; //has to be even number to even be considered.
         }
@@ -283,11 +283,11 @@ public class RummyClass
             return true; //if you somehow was able to get 9 aces, then its okay.
         }
         int thisValue = tempCol.First().Value.Value;
-        bool isOdd = thisValue.IsNumberOdd();
+        bool isOdd = thisValue.IsNumberOdd;
         return tempCol.All(items =>
         {
             thisValue = items.Value.Value;
-            return thisValue.IsNumberOdd() == isOdd;
+            return thisValue.IsNumberOdd == isOdd;
         });
     }
     public static bool IsSuit(DeckRegularDict<MonasteryCardInfo> thisCol, int required)

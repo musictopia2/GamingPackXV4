@@ -13,7 +13,7 @@ public partial class SelfDiscardBlazor
         {
             return "";
         }
-        return $"color:{cc1.LightGray.ToWebColor()}; border-color: {cc1.LightGray.ToWebColor()}";
+        return $"color:{cc1.LightGray.ToWebColor}; border-color: {cc1.LightGray.ToWebColor}";
     }
     private string GetContainerStyle()
     {

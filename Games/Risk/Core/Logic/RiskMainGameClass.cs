@@ -354,7 +354,7 @@ public class RiskMainGameClass
             SingleInfo!.MainHandList.RemoveObjectByDeck(card); //hopefully this simple.
         });
         SaveRoot.SetsReturned++;
-        SingleInfo!.ReinforcementsGained = _container.RiskCardsReturnedExtraReenforcements();
+        SingleInfo!.ReinforcementsGained = _container.RiskCardsReturnedExtraReenforcements;
         SaveRoot.Stage = EnumStageList.Place;
         ReenforcementProcesses();
         await ContinueTurnAsync(); //hopefully this simple.

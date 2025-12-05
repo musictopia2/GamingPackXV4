@@ -33,7 +33,7 @@
                         var point = triangle.Value.Locations[2];
                         var bounds = new RectangleF(point, new SizeF(100, 50));
                         <RawRectangle Rectangle="bounds">
-                            <CenteredSvgText Text="@triangle.Value.NumberOfTiles.ToString()" TextColor="@color.ToWebColor()" FontSize="45" />
+                            <CenteredSvgText Text="@triangle.Value.NumberOfTiles.ToString()" TextColor="@color.ToWebColor" FontSize="45" />
                         </RawRectangle>
                     }
                 }

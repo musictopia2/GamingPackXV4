@@ -193,7 +193,7 @@ public class LifeBoardGameMainGameClass
                 {
                     throw new CustomBasicException("The second possible position cannot be 0.  Otherwise, should have made move automatically");
                 }
-                BasicList<int> posList = new() { firstNumber, secondNumber };
+                BasicList<int> posList = [firstNumber, secondNumber];
                 int numberChosen;
                 if (Test.DoubleCheck)
                 {
@@ -478,7 +478,7 @@ public class LifeBoardGameMainGameClass
     private int WonSoFar(out int secondPlayer)
     {
         secondPlayer = 0;
-        var tempList = PlayerList.Where(items => items.LastMove == EnumFinal.MillionaireEstates).OrderByDescending(items => items.NetIncome()).Take(3).ToBasicList();
+        var tempList = PlayerList.Where(items => items.LastMove == EnumFinal.MillionaireEstates).OrderByDescending(items => items.NetIncome).Take(3).ToBasicList();
         if (tempList.Count == 0)
         {
             return 0;
@@ -487,19 +487,19 @@ public class LifeBoardGameMainGameClass
         {
             return tempList.Single().Id;
         }
-        if (tempList.First().NetIncome() > tempList[1].NetIncome())
+        if (tempList.First().NetIncome > tempList[1].NetIncome)
         {
             return tempList.First().Id;
         }
         if (tempList.Count > 2)
         {
-            if (tempList.First().NetIncome() == tempList.Last().NetIncome())
+            if (tempList.First().NetIncome == tempList.Last().NetIncome)
             {
                 return 0; //if 3 way tie, nobody gets.
             }
             tempList.RemoveLastItem();
         }
-        if (tempList.First().NetIncome() != tempList.Last().NetIncome())
+        if (tempList.First().NetIncome != tempList.Last().NetIncome)
         {
             throw new CustomBasicException("Does not reconcile");
         }

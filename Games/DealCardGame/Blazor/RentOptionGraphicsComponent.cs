@@ -35,8 +35,8 @@ public class RentOptionGraphicsComponent : ComponentBase
         text.CenterText(svg, bounds);
 
         text.Font_Size = 75;
-        text.Content = category.ToString().TextWithSpaces();
-        text.Fill = cc1.Aqua.ToWebColor();
+        text.Content = category.ToString().TextWithSpaces;
+        text.Fill = cc1.Aqua.ToWebColor;
         text.PopulateStrokesToStyles("black", 3);
         render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);

@@ -116,7 +116,7 @@ public class FluxxGameContainer : CardGameContainer<FluxxCardInformation, FluxxP
         firstList.ForEach(thisIndex =>
         {
             EnumKeeper thisKeep = thisIndex.ToEnum<EnumKeeper>();
-            output.Add(thisKeep.ToString().TextWithSpaces());
+            output.Add(thisKeep.ToString().TextWithSpaces);
         });
         output.Sort();
         return output;

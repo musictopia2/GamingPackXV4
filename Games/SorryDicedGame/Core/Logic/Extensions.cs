@@ -1,8 +1,8 @@
 ﻿namespace SorryDicedGame.Core.Logic;
 public static class Extensions
 {
-    public static SorryDiceModel? GetSelectedDice(this BasicList<SorryDiceModel> list)
+    extension (BasicList<SorryDiceModel> list)
     {
-        return list.GetSelectedItems().FirstOrDefault();
+        public SorryDiceModel? SelectedDice => list.GetSelectedItems().FirstOrDefault();
     }
 }

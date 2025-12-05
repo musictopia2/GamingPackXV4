@@ -452,7 +452,7 @@ public class HeartsMainGameClass
         {
             player.PreviousScore = player.CurrentScore;
         }
-        int Shoots = PlayerList!.WhoShotMoon();
+        int Shoots = PlayerList!.WhoShotMoon;
         if (Shoots == 0)
         {
             await FinishEndAsync();

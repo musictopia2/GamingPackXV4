@@ -48,7 +48,7 @@ public class MailProcesses : IMailProcesses
         {
             _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
             bool toreshuffle;
-            toreshuffle = _gameContainer.ShouldReshuffle();
+            toreshuffle = _gameContainer.ShouldReshuffle;
             if (toreshuffle == false)
             {
                 _gameContainer.Network!.IsEnabled = true;

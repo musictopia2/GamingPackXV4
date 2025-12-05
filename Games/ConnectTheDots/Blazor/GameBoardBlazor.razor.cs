@@ -11,17 +11,17 @@ public partial class GameBoardBlazor
     {
         if (line.Equals(Container!.PreviousLine))
         {
-            return cc1.Green.ToWebColor();
+            return cc1.Green.ToWebColor;
         }
-        return cc1.Brown.ToWebColor();
+        return cc1.Brown.ToWebColor;
     }
     private static string SquareColor(SquareInfo square)
     {
         if (square.Color == 1)
         {
-            return cc1.Blue.ToWebColor();
+            return cc1.Blue.ToWebColor;
         }
-        return cc1.Red.ToWebColor();
+        return cc1.Red.ToWebColor;
     }
     private async Task MakeMoveAsync(int index)
     {

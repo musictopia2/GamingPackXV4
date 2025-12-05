@@ -17,6 +17,6 @@ public partial class RummyGraphicsBlazor
     }
     private static string GetBorderColor()
     {
-        return cc1.White.ToWebColor();
+        return cc1.White.ToWebColor;
     }
 }

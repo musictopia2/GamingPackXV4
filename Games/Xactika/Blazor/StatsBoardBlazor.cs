@@ -9,7 +9,7 @@ public class StatsBoardBlazor : ComponentBase
         Rect rect = new();
         rect.Width = "100%";
         rect.Height = "100%";
-        rect.Fill = cc1.White.ToWebColor();
+        rect.Fill = cc1.White.ToWebColor;
         _mains.Children.Add(rect);
         DrawTopRow();
         int x;
@@ -41,7 +41,7 @@ public class StatsBoardBlazor : ComponentBase
                 {
                     rect = new Rect();
                     rect.PopulateRectangle(bounds);
-                    rect.Fill = cc1.LightGray.ToWebColor();
+                    rect.Fill = cc1.LightGray.ToWebColor;
                     _mains.Children.Add(rect);
                 }
                 DrawBorders(bounds);
@@ -171,7 +171,7 @@ public class StatsBoardBlazor : ComponentBase
         Text text = new();
         text.Content = content;
         text.CenterText(_mains, bounds);
-        text.Fill = cc1.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor;
         text.Font_Size = fontSize;
         text.Font_Weight = "bold";
     }

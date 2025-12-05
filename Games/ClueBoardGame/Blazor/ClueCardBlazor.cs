@@ -13,7 +13,7 @@ public class ClueCardBlazor : BaseDeckGraphics<CardInfo>
         int tempValue = (int)DeckObject!.CardValue;
         string fileName = $"card{tempValue}.png";
         Image image = new();
-        image.PopulateFullExternalImage(fileName);
+        image.PopulateBasicExternalImage(fileName);
         image.PopulateImagePositionings(5, 5, 45, 45);
         MainGroup!.Children.Add(image);
         Text text = new();

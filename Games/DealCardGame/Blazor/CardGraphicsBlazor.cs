@@ -65,9 +65,9 @@ public class CardGraphicsBlazor : BaseDeckGraphics<DealCardGameCardInformation>
         text.Y = "19";
         MainGroup!.Children.Add(text);
         //text.CenterText(MainGroup!, bounds);
-        text.Fill = cc1.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor;
         text.Font_Size = 21;
-        text.PopulateStrokesToStyles(cc1.White.ToWebColor(), .5f);
+        text.PopulateStrokesToStyles(cc1.White.ToWebColor, .5f);
         text.Content = DeckObject!.ClaimedValue.ToString();
     }
     private void DrawActionStandard()
@@ -76,7 +76,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<DealCardGameCardInformation>
         RectangleF bounds = new(6, 18, 38, 38);
         Circle circle = new();
         circle.PopulateCircle(bounds, cc1.White);
-        circle.PopulateStrokesToStyles(cc1.Black.ToWebColor(), 1);
+        circle.PopulateStrokesToStyles(cc1.Black.ToWebColor, 1);
         MainGroup!.Children.Add(circle);
         if (DeckObject!.SecondActionText == "")
         {
@@ -138,7 +138,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<DealCardGameCardInformation>
         RectangleF bounds = new(10, 19, 30, 30);
         Circle circle = new();
         circle.PopulateCircle(bounds, cc1.White);
-        circle.PopulateStrokesToStyles(cc1.Black.ToWebColor(), 1);
+        circle.PopulateStrokesToStyles(cc1.Black.ToWebColor, 1);
         MainGroup!.Children.Add(circle);
         AddBoldText(bounds, "Rent", 8);
         DrawSimpleClaimValue();
@@ -153,7 +153,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<DealCardGameCardInformation>
         bounds = new(6, 18, 38, 38);
         Circle circle = new();
         circle.PopulateCircle(bounds, cc1.White);
-        circle.PopulateStrokesToStyles(cc1.Black.ToWebColor(), 1);
+        circle.PopulateStrokesToStyles(cc1.Black.ToWebColor, 1);
         MainGroup!.Children.Add(circle);
         AddBoldText(bounds, "Property", 7);
         DrawSimpleClaimValue();
@@ -189,16 +189,16 @@ public class CardGraphicsBlazor : BaseDeckGraphics<DealCardGameCardInformation>
         Text text = new();
         text.Content = "W";
         text.Font_Size = 21;
-        text.Fill = cc1.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor;
         text.CenterText(MainGroup!, bounds);
-        text.PopulateStrokesToStyles(cc1.White.ToWebColor(), 1);
+        text.PopulateStrokesToStyles(cc1.White.ToWebColor, 1);
     }
     private void PopulateStandardRectangle(RectangleF bounds, EnumColor color)
     {
         string toUse;
         if (color == EnumColor.None)
         {
-            toUse = cc1.LightGray.ToWebColor();
+            toUse = cc1.LightGray.ToWebColor;
         }
         else
         {
@@ -218,27 +218,27 @@ public class CardGraphicsBlazor : BaseDeckGraphics<DealCardGameCardInformation>
         rect.PopulateRectangle(bounds);
         if (DeckObject!.ClaimedValue == 10)
         {
-            rect.Fill = cc1.DarkOrange.ToWebColor();
+            rect.Fill = cc1.DarkOrange.ToWebColor;
         }
         if (DeckObject.ClaimedValue == 5)
         {
-            rect.Fill = cc1.DarkOrchid.ToWebColor();
+            rect.Fill = cc1.DarkOrchid.ToWebColor;
         }
         if (DeckObject.ClaimedValue == 4)
         {
-            rect.Fill = cc1.DeepSkyBlue.ToWebColor();
+            rect.Fill = cc1.DeepSkyBlue.ToWebColor;
         }
         if (DeckObject.ClaimedValue == 3)
         {
-            rect.Fill = cc1.LightGreen.ToWebColor();
+            rect.Fill = cc1.LightGreen.ToWebColor;
         }
         if (DeckObject.ClaimedValue == 2)
         {
-            rect.Fill = cc1.NavajoWhite.ToWebColor();
+            rect.Fill = cc1.NavajoWhite.ToWebColor;
         }
         if (DeckObject.ClaimedValue == 1)
         {
-            rect.Fill = cc1.LemonChiffon.ToWebColor();
+            rect.Fill = cc1.LemonChiffon.ToWebColor;
         }
         MainGroup!.Children.Add(rect);
     }
@@ -249,8 +249,8 @@ public class CardGraphicsBlazor : BaseDeckGraphics<DealCardGameCardInformation>
         Text text = new();
         text.Content = DeckObject!.ClaimedValue.ToString();
         text.Font_Size = 32;
-        text.Fill = cc1.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor;
         text.CenterText(MainGroup!, bounds);
-        text.PopulateStrokesToStyles(cc1.White.ToWebColor(), 1);
+        text.PopulateStrokesToStyles(cc1.White.ToWebColor, 1);
     }
 }

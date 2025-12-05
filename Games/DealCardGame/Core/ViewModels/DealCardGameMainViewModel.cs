@@ -226,7 +226,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     {
         var player = _mainGame.PlayerList[model.PlayerId];
         SetPropertiesModel property = player.SetData.Single(x => x.Color == model.Color);
-        if (property.HasRequiredSet() == true)
+        if (property.HasRequiredSet == true)
         {
             _toast.ShowUserErrorToast("Cannot steal because this is already a complete set");
             return false;
@@ -242,7 +242,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     {
         var player = _mainGame.PlayerList[model.PlayerId];
         SetPropertiesModel property = player.SetData.Single(x => x.Color == model.Color);
-        if (property.HasRequiredSet() == true)
+        if (property.HasRequiredSet == true)
         {
             _toast.ShowUserErrorToast("Cannot trade because this is already a complete set");
             return false;
@@ -296,7 +296,7 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
     {
         var player = _mainGame.PlayerList[model.PlayerId];
         SetPropertiesModel property = player.SetData.Single(x => x.Color == model.Color);
-        if (property.HasRequiredSet() == false)
+        if (property.HasRequiredSet == false)
         {
             _toast.ShowUserErrorToast("Cannot steal the set because the player did not even have a complete set");
             return false;
@@ -343,14 +343,14 @@ public partial class DealCardGameMainViewModel : BasicCardGamesVM<DealCardGameCa
             _toast.ShowUserErrorToast("You cannot play a house or hotel for railroads or utilities type of properties which are black and lime");
             return false;
         }
-        if (property.HasRequiredSet() == false)
+        if (property.HasRequiredSet == false)
         {
             _toast.ShowUserErrorToast("You cannot play a house or hotel if you do not have the required sets");
             return false;
         }
         if (card.ActionCategory == EnumActionCategory.Hotel)
         {
-            if (property.HasRequiredHouse() == false)
+            if (property.HasRequiredHouse == false)
             {
                 _toast.ShowUserErrorToast("Must have a house before playing a hotel");
                 return false;

@@ -289,7 +289,7 @@ public class Phase10MainGameClass
         int scores;
         PlayerList.ForEach(tempPlayer =>
         {
-            scores = tempPlayer.MainHandList.TotalPoints();
+            scores = tempPlayer.MainHandList.TotalPoints;
             tempPlayer.TotalScore += scores;
             if (tempPlayer.Completed == true)
             {
@@ -368,7 +368,7 @@ public class Phase10MainGameClass
     }
     public bool IsCardSelected()
     {
-        if (SingleInfo!.MainHandList.HowManySelectedItems() > 0)
+        if (SingleInfo!.MainHandList.HowManySelectedItems > 0)
         {
             return true;
         }

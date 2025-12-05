@@ -1,53 +1,62 @@
 ﻿namespace CoveredUp.Core.Logic;
 public static class Extensions
 {
-    public static int Points(this RegularSimpleCard card)
+    extension (RegularSimpleCard card)
     {
-        if (card.IsUnknown)
+        public int Points
         {
-            return 0; //because not known.
+            get
+            {
+                if (card.IsUnknown)
+                {
+                    return 0; //because not known.
+                }
+                if (card.Value == EnumRegularCardValueList.Jack)
+                {
+                    return 10;
+                }
+                if (card.Value == EnumRegularCardValueList.Queen)
+                {
+                    return 10;
+                }
+                if (card.Value == EnumRegularCardValueList.King)
+                {
+                    return 0;
+                }
+                if (card.Value == EnumRegularCardValueList.Joker)
+                {
+                    return -5;
+                }
+                return card.Value.Value;
+            }
+            
         }
-        if (card.Value == EnumRegularCardValueList.Jack)
+        public string DisplayValue
         {
-            return 10;
+            get
+            {
+                if (card.IsUnknown)
+                {
+                    return "U"; //i think blank is fine (because not sure yet).
+                }
+                if (card.Value.Value <= 10)
+                {
+                    return card.Value.Value.ToString();
+                }
+                if (card.Value == EnumRegularCardValueList.Jack)
+                {
+                    return "Jack";
+                }
+                if (card.Value == EnumRegularCardValueList.Queen)
+                {
+                    return "Q";
+                }
+                if (card.Value == EnumRegularCardValueList.King)
+                {
+                    return "K";
+                }
+                return "-5"; //try -5 to represent a joker.
+            }            
         }
-        if (card.Value == EnumRegularCardValueList.Queen)
-        {
-            return 10;
-        }
-        if (card.Value == EnumRegularCardValueList.King)
-        {
-            return 0;
-        }
-        if (card.Value == EnumRegularCardValueList.Joker)
-        {
-            return -5;
-        }
-        return card.Value.Value;
-    }
-    public static string DisplayValue(this RegularSimpleCard card)
-    {
-        if (card.IsUnknown)
-        {
-            return "U"; //i think blank is fine (because not sure yet).
-        }
-        if (card.Value.Value <= 10)
-        {
-            return card.Value.Value.ToString();
-        }
-        if (card.Value == EnumRegularCardValueList.Jack)
-        {
-            return "Jack";
-        }
-        if (card.Value == EnumRegularCardValueList.Queen)
-        {
-            return "Q";
-        }
-        if (card.Value == EnumRegularCardValueList.King)
-        {
-            return "K";
-        }
-        return "-5"; //try -5 to represent a joker.
-        //return card.Value.ToString();
     }
 }

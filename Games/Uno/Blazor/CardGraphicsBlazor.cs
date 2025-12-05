@@ -85,7 +85,7 @@ public class CardGraphicsBlazor : BaseColorCardsImageBlazor<UnoCardInformation>
     {
         Rect r = new();
         r.PopulateRectangle(newRect);
-        r.Fill = color.ToWebColor();
+        r.Fill = color.ToWebColor;
         MainGroup!.Children.Add(r);
     }
 }

@@ -38,7 +38,7 @@ public class PaydayCardBlazor : BaseDeckGraphics<CardInformation>
         image.Height = "92%";
         image.X = "0";
         image.Y = "0";
-        image.PopulateFullExternalImage(name);
+        image.PopulateBasicExternalImage(name);
         MainGroup!.Children.Add(image);
     }
     private void DrawMainMail()
@@ -241,19 +241,19 @@ public class PaydayCardBlazor : BaseDeckGraphics<CardInformation>
                 line.PopulateStrokesToStyles(SKColors.Red);
                 MainGroup.Children.Add(line);
             }
-            text.Fill = SKColors.Red.ToWebColor();
+            text.Fill = SKColors.Red.ToWebColor;
             text.Content = "Bill";
         }
         else if (str_Type == "Neighbor")
         {
             text.X = "21.989468";
-            text.Fill = SKColors.Blue.ToWebColor();
+            text.Fill = SKColors.Blue.ToWebColor;
             text.Content = "Pay A Neighbor";
         }
         else if (str_Type == "MadMoney")
         {
             text.X = "31.816467";
-            text.Fill = SKColors.Green.ToWebColor();
+            text.Fill = SKColors.Green.ToWebColor;
             text.Content = "Mad Money";
         }
         if ((str_Type == "MoveAhead") | (str_Type == "Neighbor"))
@@ -317,7 +317,7 @@ public class PaydayCardBlazor : BaseDeckGraphics<CardInformation>
             text = new();
             text.Font_Size = fontSize;
             text.Font_Weight = "bold";
-            text.Fill = clr_Current.ToWebColor();
+            text.Fill = clr_Current.ToWebColor;
             text.Content = str_Current;
             text.CenterText(MainGroup, rect.X, rect.Y, rect.Width, rect.Height);
         }
@@ -337,7 +337,7 @@ public class PaydayCardBlazor : BaseDeckGraphics<CardInformation>
         var fontSize = bounds.Height * .17;
         Text text = new();
         text.Content = "Monster Charge";
-        text.Fill = SKColors.Red.ToWebColor();
+        text.Fill = SKColors.Red.ToWebColor;
         text.Font_Weight = "bold";
         text.Font_Size = fontSize;
         text.CenterText(MainGroup, rect_Top.X, rect_Top.Y, rect_Top.Width, rect_Top.Height);
@@ -377,7 +377,7 @@ public class PaydayCardBlazor : BaseDeckGraphics<CardInformation>
     {
         Image image = new();
         image.PopulateImagePositionings(10, 7, 24, 33);
-        image.PopulateFullExternalImage(GetDealSvgName);
+        image.PopulateBasicExternalImage(GetDealSvgName);
         MainGroup!.Children.Add(image);
         DrawDealLine();
         DrawMoneyDeal("Cost", false, 0, 40, 49, 14);

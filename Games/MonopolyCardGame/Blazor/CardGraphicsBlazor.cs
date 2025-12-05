@@ -306,7 +306,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MonopolyCardGameCardInformati
     private void DrawPiece(string fileName, RectangleF bounds)
     {
         Image image = new();
-        image.PopulateFullExternalImage(fileName);
+        image.PopulateBasicExternalImage(fileName);
         image.PopulateImagePositionings(bounds);
         MainGroup!.Children.Add(image);
     }
@@ -315,7 +315,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MonopolyCardGameCardInformati
         Text text = new();
         text.Content = content;
         text.CenterText(MainGroup!, bounds);
-        text.Fill = color.ToWebColor();
+        text.Fill = color.ToWebColor;
         text.Font_Size = fontSize;
         text.Font_Weight = "bold";
         if (hasBorders)

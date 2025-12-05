@@ -15,9 +15,9 @@ public class GameBoardProcesses
         TerritoryModel territory = _gameContainer.GetTerritory(id);
         if (territory.Owns != _gameContainer.WhoTurn)
         {
-            return new();
+            return [];
         }
-        BasicList<int> output = new();
+        BasicList<int> output = [];
         GetConnectedTerritoryListR(territory, ref output);
         output.RemoveAllAndObtain(xx => xx == id);
         return output;
@@ -294,7 +294,7 @@ public class GameBoardProcesses
     }
     public bool ContinentControlled(EnumContinent continent)
     {
-        var list = _gameContainer.SaveRoot.TerritoryList.Where(xx => xx.GetContinent() == continent).ToBasicList();
+        var list = _gameContainer.SaveRoot.TerritoryList.Where(xx => xx.Continent == continent).ToBasicList();
         return list.All(xx => xx.Owns == _gameContainer.WhoTurn); //hopefully this simple.
     }
 }

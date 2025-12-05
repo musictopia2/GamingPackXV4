@@ -144,7 +144,7 @@ public class ScoreLogic
     }
     private static int MaxKinds(BasicList<int> thisCol, out bool receiveMults)
     {
-        int counts = thisCol.MaximumDuplicates();
+        int counts = thisCol.MaximumDuplicates;
         if (counts == 6)
         {
             receiveMults = true;

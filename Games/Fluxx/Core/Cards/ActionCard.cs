@@ -25,7 +25,7 @@ public class ActionCard : FluxxCardInformation
             EnumActionMain.Draw3Play2OfThem => "Draw 3, Play 2 Of Them",
             EnumActionMain.DiscardDraw => "Discard & Draw",
             EnumActionMain.LetsSimplify => "Let's Simplify",
-            _ => Deck.ToString().TextWithSpaces(),
+            _ => Deck.ToString().TextWithSpaces,
         };
     }
     public override void Populate(int chosen)

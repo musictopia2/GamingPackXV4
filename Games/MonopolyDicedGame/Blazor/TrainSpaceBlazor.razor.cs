@@ -35,7 +35,7 @@ public partial class TrainSpaceBlazor
     //public int Owned { get; set; }
     [Parameter]
     public EventCallback OnClicked { get; set; } //you can click on these.
-    private static string Color => cc1.DarkGray.ToWebColor();
+    private static string Color => cc1.DarkGray.ToWebColor;
     private BasicList<OwnedModel> GetOwnedTrains()
     {
         //must return 4 items.

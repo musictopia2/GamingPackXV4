@@ -77,7 +77,7 @@ public class MineSquareBlazor : GraphicsCommand
                 Text text = new();
                 text.CenterText();
                 text.Font_Size = 75;
-                text.Fill = cc1.Aqua.ToWebColor();
+                text.Fill = cc1.Aqua.ToWebColor;
                 text.PopulateStrokesToStyles(strokeWidth: 4, fontFamily: "Verdana");
                 text.Content = Square.NeighborMines.ToString();
                 svg.Children.Add(text);

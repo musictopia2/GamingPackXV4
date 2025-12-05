@@ -95,11 +95,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<YaBlewItCardInformation>
         Text text = new();
         if (DeckObject!.CardCategory == EnumCardCategory.Fire)
         {
-            text.Fill = cc1.White.ToWebColor();
+            text.Fill = cc1.White.ToWebColor;
         }
         else
         {
-            text.Fill = cc1.Black.ToWebColor();
+            text.Fill = cc1.Black.ToWebColor;
         }
         text.CenterText(MainGroup!, rectangle);
         text.Content = content;
@@ -110,7 +110,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<YaBlewItCardInformation>
         Text text = new();
         if (color == EnumColors.Wild)
         {
-            text.Fill = cc1.Black.ToWebColor();
+            text.Fill = cc1.Black.ToWebColor;
         }
         else
         {
@@ -178,7 +178,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<YaBlewItCardInformation>
         bounds = new(8, 18, 40, 20);
         Text text = new();
         text.CenterText(MainGroup!, bounds);
-        text.Fill = cc1.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor;
         text.Content = "W";
         text.Font_Size = 12;
         DrawNumbers($"{DeckObject!.FirstNumber}/{DeckObject.SecondNumber}", DeckObject.CardColor);

@@ -33,7 +33,7 @@ public class RuleCard : FluxxCardInformation
     public override string Text()
     {
 
-        return Deck.ToString().TextWithSpaces();
+        return Deck.ToString().TextWithSpaces;
     }
     public bool IsLimit() => Category == EnumRuleCategory.Hand || Category == EnumRuleCategory.Keeper;
     public override void Populate(int Chosen)

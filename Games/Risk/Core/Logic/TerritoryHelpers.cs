@@ -92,290 +92,7 @@ public static class TerritoryHelpers
         { "Western Australia", 41 },
         { "Eastern Australia", 42 }
     };
-    public static PointF GetLabelLocation(this TerritoryModel territory) => _territoryLabels[territory.Name];
-    public static EnumContinent GetContinent(this TerritoryModel territory)
-    {
-        int id = territory.Id;
-        return id switch
-        {
-            < 10 => EnumContinent.NorthAmerica,
-            < 14 => EnumContinent.SouthAmerica,
-            < 21 => EnumContinent.Europe,
-            < 27 => EnumContinent.Africa,
-            < 39 => EnumContinent.Asia,
-            _ => EnumContinent.Austrailia
-        };
-    }
-    private static IBasicList<EnumColorChoice> GetRandomColors(this PlayerCollection<RiskPlayerItem> playerList)
-    {
-        int x = 0;
-        int y = 0;
-        BasicList<EnumColorChoice> output = new();
-        do
-        {
-            y++;
-            x++;
-            if (y > 42)
-            {
-                break;
-            }
-            if (x > playerList.Count)
-            {
-                x = 1;
-            }
-            output.Add(playerList[x].Color);
-
-        } while (true);
-        return output.GetRandomList(); //hopefully this works.
-    }
-    public static BasicList<TerritoryModel> GetSelectedTerritories(this BasicList<TerritoryModel> territories, RiskGameContainer container)
-    {
-        BasicList<TerritoryModel> output = new();
-        var saveRoot = container.SaveRoot;
-        if (saveRoot.PreviousTerritory > 0)
-        {
-            output.Add(territories.Single(xx => xx.Id == saveRoot.PreviousTerritory));
-        }
-        if (saveRoot.CurrentTerritory > 0)
-        {
-            output.Add(territories.Single(xx => xx.Id == saveRoot.CurrentTerritory));
-        }
-        return output;
-    }
-    public static BasicList<TerritoryModel> GetUnselectedTerritories(this BasicList<TerritoryModel> territories, RiskGameContainer container)
-    {
-        var output = territories.ToBasicList();
-        var temps = territories.GetSelectedTerritories(container);
-        output.RemoveGivenList(temps);
-        return output;
-    }
-    public static string GetBorderColor(this TerritoryModel territory, RiskGameContainer container)
-    {
-        if (territory.Id == container.SaveRoot.PreviousTerritory)
-        {
-            return cc1.LimeGreen.ToWebColor();
-        }
-        if (territory.Id == container.SaveRoot.CurrentTerritory)
-        {
-            return cc1.Purple.ToWebColor();
-        }
-        EnumContinent continent = territory.GetContinent();
-        return continent switch
-        {
-            EnumContinent.SouthAmerica => cc1.Tomato.ToWebColor(),
-            EnumContinent.NorthAmerica => cc1.Aqua.ToWebColor(),
-            EnumContinent.Africa => cc1.SaddleBrown.ToWebColor(),
-            EnumContinent.Europe => cc1.DodgerBlue.ToWebColor(),
-            EnumContinent.Asia => cc1.Black.ToWebColor(),
-            EnumContinent.Austrailia => cc1.Indigo.ToWebColor(),
-            _ => cc1.Indigo.ToWebColor()
-        };
-    }
-    private static int ArmiesToBeginWith(this PlayerCollection<RiskPlayerItem> players)
-    {
-        if (players.Any(xx => xx.InGame == false))
-        {
-            return 40;
-        }
-        int reduces = players.Count - 3;
-        int firstAmount = 35;
-        int mults = reduces * 5;
-        return firstAmount - mults;
-    }
-    private static void SetUpBeginningArmies(this PlayerCollection<RiskPlayerItem> playerList)
-    {
-        int armies = playerList.ArmiesToBeginWith();
-        playerList.ForEach(player => player.ArmiesToBegin = armies);
-    }
-    public static void PopulateTerritories(this BasicList<TerritoryModel> territories, PlayerCollection<RiskPlayerItem> players)
-    {
-        players.ForEach(player =>
-        {
-            BasicList<int> ownList = territories.Where(xx => xx.Owns == player.Id).Select(xx => xx.Id).ToBasicList();
-            int remaining = player.ArmiesToBegin;
-            remaining.Times(xx =>
-            {
-                int id = ownList.GetRandomItem();
-                var territory = territories.Single(xx => xx.Id == id);
-                territory.Armies++;
-            });
-        });
-    }
-    public static BasicList<TerritoryModel> GetTerritories(this PlayerCollection<RiskPlayerItem> playerList)
-    {
-        playerList.SetUpBeginningArmies();
-        BasicList<TerritoryModel> output = new();
-        IBasicList<EnumColorChoice> colors = playerList.GetRandomColors();
-        if (colors.Count is not 42)
-        {
-            throw new CustomBasicException("Must have 42 items chosen");
-        }
-        for (int i = 1; i <= 42; i++)
-        {
-            TerritoryModel territory = new();
-            EnumColorChoice color = colors[i - 1];
-            RiskPlayerItem player = playerList.Single(xx => xx.Color == color);
-            territory.Owns = player.Id;
-            player.ArmiesToBegin--; //because needs at least one in the claimed areas.
-            territory.Armies++;
-            territory.Color = color.WebColor;
-            territory.Id = i;
-            territory.Name = _territoryIds.Where(xx => xx.Value == i).Select(xx => xx.Key).Single();
-            output.Add(territory);
-            switch (i)
-            {
-                case 1:
-                    AddNeighbors(territory, "2,4,30");
-                    break;
-                case 2:
-                    AddNeighbors(territory, "1,3,4,5");
-                    break;
-                case 3:
-                    AddNeighbors(territory, "2,5,6,14");
-                    break;
-                case 4:
-                    AddNeighbors(territory, "1,2,5,7");
-                    break;
-                case 5:
-                    AddNeighbors(territory, "4,2,3,6,7,8");
-                    break;
-                case 6:
-                    AddNeighbors(territory, "3,5,8");
-                    break;
-                case 7:
-                    AddNeighbors(territory, "4,5,8,9");
-                    break;
-                case 8:
-                    AddNeighbors(territory, "5,6,7,9");
-                    break;
-                case 9:
-                    AddNeighbors(territory, "7,8,10");
-                    break;
-                case 10:
-                    AddNeighbors(territory, "9,11,12");
-                    break;
-                case 11:
-                    AddNeighbors(territory, "10,12,13");
-                    break;
-                case 12:
-                    AddNeighbors(territory, "10,11,13,21");
-                    break;
-                case 13:
-                    AddNeighbors(territory, "11,12");
-                    break;
-                case 14:
-                    AddNeighbors(territory, "3,17,15");
-                    break;
-                case 15:
-                    AddNeighbors(territory, "14,17,16,18");
-                    break;
-                case 16:
-                    AddNeighbors(territory, "15,18,20,36,32,27,28");
-                    break;
-                case 17:
-                    AddNeighbors(territory, "14,15,18,19");
-                    break;
-                case 18:
-                    AddNeighbors(territory, "17,15,19,20,16");
-                    break;
-                case 19:
-                    AddNeighbors(territory, "17,18,20,21");
-                    break;
-                case 20:
-                    AddNeighbors(territory, "19,18,16,36,21,22");
-                    break;
-                case 21:
-                    AddNeighbors(territory, "12,19,22,24,23,20");
-                    break;
-                case 22:
-                    AddNeighbors(territory, "21,20,24,36");
-                    break;
-                case 23:
-                    AddNeighbors(territory, "21,24,25");
-                    break;
-                case 24:
-                    AddNeighbors(territory, "21,22,36,23,25,26");
-                    break;
-                case 25:
-                    AddNeighbors(territory, "23,24,26");
-                    break;
-                case 26:
-                    AddNeighbors(territory, "24,25");
-                    break;
-                case 27:
-                    AddNeighbors(territory, "16,32,28,33");
-                    break;
-                case 28:
-                    AddNeighbors(territory, "27,33,29,31,34");
-                    break;
-                case 29:
-                    AddNeighbors(territory, "28,31,30");
-                    break;
-                case 30:
-                    AddNeighbors(territory, "1, 29,31,34,35");
-                    break;
-                case 31:
-                    AddNeighbors(territory, "28,34,30,29");
-                    break;
-                case 32:
-                    AddNeighbors(territory, "36,16,27,33,37");
-                    break;
-                case 33:
-                    AddNeighbors(territory, "38,37,32,27,28,34");
-                    break;
-                case 34:
-                    AddNeighbors(territory, "33,28,31,30,35");
-                    break;
-                case 35:
-                    AddNeighbors(territory, "34,30");
-                    break;
-                case 36:
-                    AddNeighbors(territory, "24,22,20,16,32,37");
-                    break;
-                case 37:
-                    AddNeighbors(territory, "36,32,33,38");
-                    break;
-                case 38:
-                    AddNeighbors(territory, "37,33,39");
-                    break;
-                case 39:
-                    AddNeighbors(territory, "38,40,41");
-                    break;
-                case 40:
-                    AddNeighbors(territory, "39,42,41");
-                    break;
-                case 41:
-                    AddNeighbors(territory, "39,40,42");
-                    break;
-                case 42:
-                    AddNeighbors(territory, "41,40");
-                    break;
-                default:
-                    break;
-            }
-        }
-        return output;
-    }
-    private static void AddNeighbors(TerritoryModel territory, string list)
-    {
-        list = list.Replace(" ", "");
-        BasicList<string> tempList = list.Split(",").ToBasicList();
-        territory.Neighbors.Clear();
-        tempList.ForEach(tt =>
-        {
-            territory.Neighbors.Add(int.Parse(tt));
-        });
-    }
-    private static Dictionary<string, string> _territoryPaths = new();
-    public static string GetPath(this string territoryName) => _territoryPaths[territoryName];
-    public static int BorderWidth(this TerritoryModel territory, RiskGameContainer container)
-    {
-        if (container.SaveRoot.PreviousTerritory == territory.Id || container.SaveRoot.CurrentTerritory == territory.Id)
-        {
-            return 4;
-        }
-        return 2;
-    }
+    private static Dictionary<string, string> _territoryPaths = [];
     public static async Task PopulateTerritoriesAsync()
     {
         if (_territoryPaths.Count > 0)
@@ -384,5 +101,314 @@ public static class TerritoryHelpers
         }
         _territoryPaths = await Resources.TerritoriesData.GetResourceAsync<Dictionary<string, string>>();
     }
-    public static TerritoryModel GetTerritory(this RiskGameContainer container, int id) => container.SaveRoot.TerritoryList.Single(xx => xx.Id == id);
+    extension (RiskGameContainer container)
+    {
+        public TerritoryModel GetTerritory(int id) => container.SaveRoot.TerritoryList.Single(xx => xx.Id == id);
+    }
+    extension (TerritoryModel territory)
+    {
+        public PointF LabelLocation => _territoryLabels[territory.Name];
+        public EnumContinent Continent
+        {
+            get
+            {
+                int id = territory.Id;
+                return id switch
+                {
+                    < 10 => EnumContinent.NorthAmerica,
+                    < 14 => EnumContinent.SouthAmerica,
+                    < 21 => EnumContinent.Europe,
+                    < 27 => EnumContinent.Africa,
+                    < 39 => EnumContinent.Asia,
+                    _ => EnumContinent.Austrailia
+                };
+            }
+        }
+        public int BorderWidth(RiskGameContainer container)
+        {
+            if (container.SaveRoot.PreviousTerritory == territory.Id || container.SaveRoot.CurrentTerritory == territory.Id)
+            {
+                return 4;
+            }
+            return 2;
+        }
+    }
+    
+    extension (PlayerCollection<RiskPlayerItem> players)
+    {
+        internal IBasicList<EnumColorChoice> GetRandomColors()
+        {
+            int x = 0;
+            int y = 0;
+            BasicList<EnumColorChoice> output = new();
+            do
+            {
+                y++;
+                x++;
+                if (y > 42)
+                {
+                    break;
+                }
+                if (x > players.Count)
+                {
+                    x = 1;
+                }
+                output.Add(players[x].Color);
+
+            } while (true);
+            return output.GetRandomList(); //hopefully this works.
+        }
+        internal int ArmiesToBeginWith
+        {
+            get
+            {
+                if (players.Any(xx => xx.InGame == false))
+                {
+                    return 40;
+                }
+                int reduces = players.Count - 3;
+                int firstAmount = 35;
+                int mults = reduces * 5;
+                return firstAmount - mults;
+            }
+            
+        }
+        internal void SetUpBeginningArmies()
+        {
+            int armies = players.ArmiesToBeginWith;
+            players.ForEach(player => player.ArmiesToBegin = armies);
+        }
+        public BasicList<TerritoryModel> GetTerritories()
+        {
+            players.SetUpBeginningArmies();
+            BasicList<TerritoryModel> output = [];
+            IBasicList<EnumColorChoice> colors = players.GetRandomColors();
+            if (colors.Count is not 42)
+            {
+                throw new CustomBasicException("Must have 42 items chosen");
+            }
+            for (int i = 1; i <= 42; i++)
+            {
+                TerritoryModel territory = new();
+                EnumColorChoice color = colors[i - 1];
+                RiskPlayerItem player = players.Single(xx => xx.Color == color);
+                territory.Owns = player.Id;
+                player.ArmiesToBegin--; //because needs at least one in the claimed areas.
+                territory.Armies++;
+                territory.Color = color.WebColor;
+                territory.Id = i;
+                territory.Name = _territoryIds.Where(xx => xx.Value == i).Select(xx => xx.Key).Single();
+                output.Add(territory);
+                switch (i)
+                {
+                    case 1:
+                        AddNeighbors(territory, "2,4,30");
+                        break;
+                    case 2:
+                        AddNeighbors(territory, "1,3,4,5");
+                        break;
+                    case 3:
+                        AddNeighbors(territory, "2,5,6,14");
+                        break;
+                    case 4:
+                        AddNeighbors(territory, "1,2,5,7");
+                        break;
+                    case 5:
+                        AddNeighbors(territory, "4,2,3,6,7,8");
+                        break;
+                    case 6:
+                        AddNeighbors(territory, "3,5,8");
+                        break;
+                    case 7:
+                        AddNeighbors(territory, "4,5,8,9");
+                        break;
+                    case 8:
+                        AddNeighbors(territory, "5,6,7,9");
+                        break;
+                    case 9:
+                        AddNeighbors(territory, "7,8,10");
+                        break;
+                    case 10:
+                        AddNeighbors(territory, "9,11,12");
+                        break;
+                    case 11:
+                        AddNeighbors(territory, "10,12,13");
+                        break;
+                    case 12:
+                        AddNeighbors(territory, "10,11,13,21");
+                        break;
+                    case 13:
+                        AddNeighbors(territory, "11,12");
+                        break;
+                    case 14:
+                        AddNeighbors(territory, "3,17,15");
+                        break;
+                    case 15:
+                        AddNeighbors(territory, "14,17,16,18");
+                        break;
+                    case 16:
+                        AddNeighbors(territory, "15,18,20,36,32,27,28");
+                        break;
+                    case 17:
+                        AddNeighbors(territory, "14,15,18,19");
+                        break;
+                    case 18:
+                        AddNeighbors(territory, "17,15,19,20,16");
+                        break;
+                    case 19:
+                        AddNeighbors(territory, "17,18,20,21");
+                        break;
+                    case 20:
+                        AddNeighbors(territory, "19,18,16,36,21,22");
+                        break;
+                    case 21:
+                        AddNeighbors(territory, "12,19,22,24,23,20");
+                        break;
+                    case 22:
+                        AddNeighbors(territory, "21,20,24,36");
+                        break;
+                    case 23:
+                        AddNeighbors(territory, "21,24,25");
+                        break;
+                    case 24:
+                        AddNeighbors(territory, "21,22,36,23,25,26");
+                        break;
+                    case 25:
+                        AddNeighbors(territory, "23,24,26");
+                        break;
+                    case 26:
+                        AddNeighbors(territory, "24,25");
+                        break;
+                    case 27:
+                        AddNeighbors(territory, "16,32,28,33");
+                        break;
+                    case 28:
+                        AddNeighbors(territory, "27,33,29,31,34");
+                        break;
+                    case 29:
+                        AddNeighbors(territory, "28,31,30");
+                        break;
+                    case 30:
+                        AddNeighbors(territory, "1, 29,31,34,35");
+                        break;
+                    case 31:
+                        AddNeighbors(territory, "28,34,30,29");
+                        break;
+                    case 32:
+                        AddNeighbors(territory, "36,16,27,33,37");
+                        break;
+                    case 33:
+                        AddNeighbors(territory, "38,37,32,27,28,34");
+                        break;
+                    case 34:
+                        AddNeighbors(territory, "33,28,31,30,35");
+                        break;
+                    case 35:
+                        AddNeighbors(territory, "34,30");
+                        break;
+                    case 36:
+                        AddNeighbors(territory, "24,22,20,16,32,37");
+                        break;
+                    case 37:
+                        AddNeighbors(territory, "36,32,33,38");
+                        break;
+                    case 38:
+                        AddNeighbors(territory, "37,33,39");
+                        break;
+                    case 39:
+                        AddNeighbors(territory, "38,40,41");
+                        break;
+                    case 40:
+                        AddNeighbors(territory, "39,42,41");
+                        break;
+                    case 41:
+                        AddNeighbors(territory, "39,40,42");
+                        break;
+                    case 42:
+                        AddNeighbors(territory, "41,40");
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return output;
+        }
+    }
+    extension (BasicList<TerritoryModel> territories)
+    {
+        public BasicList<TerritoryModel> GetSelectedTerritories(RiskGameContainer container)
+        {
+            BasicList<TerritoryModel> output = [];
+            var saveRoot = container.SaveRoot;
+            if (saveRoot.PreviousTerritory > 0)
+            {
+                output.Add(territories.Single(xx => xx.Id == saveRoot.PreviousTerritory));
+            }
+            if (saveRoot.CurrentTerritory > 0)
+            {
+                output.Add(territories.Single(xx => xx.Id == saveRoot.CurrentTerritory));
+            }
+            return output;
+        }
+        public BasicList<TerritoryModel> GetUnselectedTerritories(RiskGameContainer container)
+        {
+            var output = territories.ToBasicList();
+            var temps = territories.GetSelectedTerritories(container);
+            output.RemoveGivenList(temps);
+            return output;
+        }
+        public void PopulateTerritories(PlayerCollection<RiskPlayerItem> players)
+        {
+            players.ForEach(player =>
+            {
+                BasicList<int> ownList = territories.Where(xx => xx.Owns == player.Id).Select(xx => xx.Id).ToBasicList();
+                int remaining = player.ArmiesToBegin;
+                remaining.Times(xx =>
+                {
+                    int id = ownList.GetRandomItem();
+                    var territory = territories.Single(xx => xx.Id == id);
+                    territory.Armies++;
+                });
+            });
+        }
+    }
+    extension (TerritoryModel territory)
+    {
+        public string GetBorderColor(RiskGameContainer container)
+        {
+            if (territory.Id == container.SaveRoot.PreviousTerritory)
+            {
+                return cc1.LimeGreen.ToWebColor;
+            }
+            if (territory.Id == container.SaveRoot.CurrentTerritory)
+            {
+                return cc1.Purple.ToWebColor;
+            }
+            EnumContinent continent = territory.Continent;
+            return continent switch
+            {
+                EnumContinent.SouthAmerica => cc1.Tomato.ToWebColor,
+                EnumContinent.NorthAmerica => cc1.Aqua.ToWebColor,
+                EnumContinent.Africa => cc1.SaddleBrown.ToWebColor,
+                EnumContinent.Europe => cc1.DodgerBlue.ToWebColor,
+                EnumContinent.Asia => cc1.Black.ToWebColor,
+                EnumContinent.Austrailia => cc1.Indigo.ToWebColor,
+                _ => cc1.Indigo.ToWebColor
+            };
+        }
+        internal void AddNeighbors(string list)
+        {
+            list = list.Replace(" ", "");
+            BasicList<string> tempList = list.Split(",").ToBasicList();
+            territory.Neighbors.Clear();
+            tempList.ForEach(tt =>
+            {
+                territory.Neighbors.Add(int.Parse(tt));
+            });
+        }
+    }
+    extension (string territoryName)
+    {
+        public string Path => _territoryPaths[territoryName];
+    }
 }

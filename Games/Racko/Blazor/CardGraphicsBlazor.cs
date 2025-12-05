@@ -54,7 +54,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<RackoCardInformation>
         text.Text_Anchor = "middle";
         MainGroup!.Children.Add(text);
         text.Font_Size = fontSize;
-        text.Fill = cc1.Red.ToWebColor();
+        text.Fill = cc1.Red.ToWebColor;
         text.Content = DeckObject!.Value.ToString();
     }
 }

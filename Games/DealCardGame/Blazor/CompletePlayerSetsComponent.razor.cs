@@ -26,21 +26,21 @@ public partial class CompletePlayerSetsComponent
         EnumColor color = GetColor(column);
         DealCardGamePlayerItem playerUsed = Players[playerId - 1]; //because 0 based.
         var list = playerUsed.SetData.GetCards(color);
-        return list.HasHotel();
+        return list.HasHotel;
     }
     private bool HasHouse(int column, int playerId)
     {
         EnumColor color = GetColor(column);
         DealCardGamePlayerItem playerUsed = Players[playerId - 1]; //because 0 based.
         var list = playerUsed.SetData.GetCards(color);
-        return list.HasHouse();
+        return list.HasHouse;
     }
     private int SetsCompleted(int column, int playerId)
     {
         EnumColor color = GetColor(column);
         DealCardGamePlayerItem playerUsed = Players[playerId - 1]; //because 0 based.
         var list = playerUsed.SetData.GetCards(color);
-        return list.HowManyCompleted();
+        return list.HowManyCompleted;
     }
     private int RentOwed(int column, int playerId, bool hasHouse, bool hasHotel)
     {
@@ -50,15 +50,4 @@ public partial class CompletePlayerSetsComponent
         return list.RentForSet(color, hasHouse, hasHotel);
     }
     private int GetPlayerId(int row) => Players[row - 1].Id;
-
-
-    //private static bool HasTestHotelOrHouse(int column)
-    //{
-    //    EnumColor color = GetColor(column);
-    //    if (color == EnumColor.Black || color == EnumColor.Lime)
-    //    {
-    //        return false;
-    //    }
-    //    return true;
-    //}
 }

@@ -33,8 +33,8 @@ public class TileCardBlazor : BaseDeckGraphics<TileInformation>
         text.CenterText();
         string letter = DeckObject!.Letter.ToString().ToUpper();
         text.Content = letter;
-        string color = letter.GetColorOfLetter();
-        text.Fill = color.ToWebColor();
+        string color = letter.ColorOfLetter;
+        text.Fill = color.ToWebColor;
         text.Font_Size = 18;
         MainGroup!.Children.Add(text);
     }

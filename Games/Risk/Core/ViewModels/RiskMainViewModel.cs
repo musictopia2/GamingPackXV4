@@ -115,7 +115,7 @@ public partial class RiskMainViewModel : BasicMultiplayerMainVM
     public async Task ReturnRiskCardsAsync()
     {
         var list = VMData.PlayerHand1.ListSelectedObjects();
-        if (list.CanReturnRiskCards() == false)
+        if (list.CanReturnRiskCards == false)
         {
             _toast.ShowUserErrorToast("Unable to return risk cards");
             return;

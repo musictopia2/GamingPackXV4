@@ -10,7 +10,7 @@ internal static class PopulatePlayerProcesses
         var career1 = CareerChosen(thisPlayer, out string career2);
         thisPlayer.Career1 = career1;
         thisPlayer.Career2 = career2;
-        thisPlayer.HouseName = thisPlayer.GetHouseName();
+        thisPlayer.HouseName = thisPlayer.HouseName;
     }
     public static string CareerChosen(LifeBoardGamePlayerItem thisPlayer, out string secondCareer)
     {

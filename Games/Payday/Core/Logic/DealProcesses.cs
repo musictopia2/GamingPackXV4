@@ -103,7 +103,7 @@ public class DealProcesses : IDealProcesses
         {
             throw new CustomBasicException("Should not have ran the processes for reshuffling because not needed");
         }
-        bool rets = _gameContainer.ShouldReshuffle();
+        bool rets = _gameContainer.ShouldReshuffle;
         if (rets == false)
         {
             _gameContainer.Network!.IsEnabled = true;

@@ -87,7 +87,7 @@ public class MoveProcesses : IMoveProcesses, ITwinProcesses
                     }
                     else if (thisSpace.WhatInsurance == EnumInsuranceType.NeedHouse)
                     {
-                        if (thisPlayer.HouseIsInsured || thisPlayer.GetHouseName() == "")
+                        if (thisPlayer.HouseIsInsured || thisPlayer.HouseName == "")
                         {
                             _model!.GameDetails = $"{_model.GameDetails}{Constants.VBCrLf} Pay nothing because the player had house insurance or had no house";
                         }
@@ -195,7 +195,7 @@ public class MoveProcesses : IMoveProcesses, ITwinProcesses
                     throw new CustomBasicException("Only accountants can show up for paying taxes");
                 }
                 newPlayer = _gameContainer.WhoHadCareerName(EnumCareerType.Accountant);
-                newAmount = _gameContainer.SingleInfo!.TaxesDue();
+                newAmount = _gameContainer.SingleInfo!.TaxesDue;
                 if (newPlayer == _gameContainer.WhoTurn)
                 {
                     _model!.GameDetails = "Owe no taxes because the player is the accountant";
@@ -347,7 +347,7 @@ public class MoveProcesses : IMoveProcesses, ITwinProcesses
         _gameContainer.SingleInfo.Salary = 0;
         RepayLoans();
         PopulatePlayerProcesses.FillInfo(_gameContainer.SingleInfo);
-        if (_gameContainer.SingleInfo.GetHouseName() == "")
+        if (_gameContainer.SingleInfo.HouseName == "")
         {
             _gameContainer.GameStatus = EnumWhatStatus.NeedChooseRetirement;
         }

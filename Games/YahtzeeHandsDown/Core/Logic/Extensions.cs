@@ -1,10 +1,12 @@
 ﻿namespace YahtzeeHandsDown.Core.Logic;
 public static class Extensions
 {
-    public static BasicList<ICard> GetInterfaceList(this IDeckDict<YahtzeeHandsDownCardInformation> thisList)
+    extension (IList<YahtzeeHandsDownCardInformation> list)
     {
-        BasicList<ICard> output = new();
-        output.AddRange(thisList);
-        return output;
-    }
+        public BasicList<ICard> GetInterfaceList()
+        {
+            BasicList<ICard> output = [.. list];
+            return output;
+        }
+    }   
 }

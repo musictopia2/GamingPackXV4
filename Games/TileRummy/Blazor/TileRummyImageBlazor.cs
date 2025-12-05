@@ -17,7 +17,7 @@ public class TileRummyImageBlazor : BaseDeckGraphics<TileInfo>
         {
             if (DeckObject!.WhatDraw == EnumDrawType.FromSet)
             {
-                return cc1.Purple.ToWebColor();
+                return cc1.Purple.ToWebColor;
             }
             return base.DrawFillColor;
         }

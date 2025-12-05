@@ -31,7 +31,7 @@ public class WeaponBlazor : ComponentBase
         SvgRenderClass render = new ();
         Image image = new ();
         image.AutoIncrementElement(svg); //try this way (?)
-        image.PopulateFullExternalImage(GetFileName);
+        image.PopulateBasicExternalImage(GetFileName);
         svg.Children.Add(image);
         render.RenderSvgTree(svg, builder);
         base.BuildRenderTree(builder);

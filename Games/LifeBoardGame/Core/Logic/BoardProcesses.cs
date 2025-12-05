@@ -169,7 +169,7 @@ public class BoardProcesses(LifeBoardGameVMData model, LifeBoardGameGameContaine
         {
             await gameContainer.Network!.SendAllAsync("purchasedhouseinsurance");
         }
-        decimal amountToPay = gameContainer.SingleInfo!.InsuranceCost();
+        decimal amountToPay = gameContainer.SingleInfo!.InsuranceCost;
         gameContainer.TakeOutExpense(amountToPay);
         model.GameDetails = "Paid $5,000 for car insurance.  Now you owe nothing for car damages or car accidents";
         gameContainer.SingleInfo!.HouseIsInsured = true;

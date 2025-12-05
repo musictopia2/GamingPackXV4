@@ -7,10 +7,10 @@
     <SpaceBlazor OnClicked="PossibleClick" Column="item.Column" Row="item.Row">
         @if (item.Own.Group != Group)
         {
-            <ColorSpaceComponent Color="@Group.GetColor()"
+            <ColorSpaceComponent Color="@Group.Color"
                 TargetImageHeight="@TargetHeight"
             >
-                <ValueSpaceComponent TargetHeight="@TargetHeight" Value="@Group.GetMonopolyValue()" />
+                <ValueSpaceComponent TargetHeight="@TargetHeight" Value="@Group.MonopolyValue" />
             </ColorSpaceComponent>
             return;
         }

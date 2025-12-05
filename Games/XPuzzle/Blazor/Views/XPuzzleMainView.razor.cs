@@ -8,7 +8,7 @@ public partial class XPuzzleMainView
     }
     private async Task ClickedAsync(XPuzzleSpaceInfo space)
     {
-        if (DataContext!.CommandContainer.CanExecuteBasics() == false)
+        if (DataContext!.CommandContainer.CanExecuteBasics == false)
         {
             return;
         }

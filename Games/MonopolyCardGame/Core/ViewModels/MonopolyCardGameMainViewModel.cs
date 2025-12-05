@@ -210,7 +210,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
                 _toast.ShowUserErrorToast("You cannot go out because you have cards left in your hand that is not a go or mr. monopoly");
                 return;
             }
-            if (_model.HasAllValidMonopolies() == false)
+            if (_model.HasAllValidMonopolies == false)
             {
                 _toast.ShowUserErrorToast("You cannot go out one of the sets was either not a valid monopoly or improperly placed houses or hotels");
                 return;
@@ -252,7 +252,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         bool rets;
         if (_test.EndRoundEarly == false)
         {
-            if (MainGame.SingleInfo!.HasMonopolyInHand())
+            if (MainGame.SingleInfo!.HasMonopolyInHand)
             {
                 _toast.ShowUserErrorToast("You have at least one monopoly in hand to play.  You must play them manually");
                 return;
@@ -285,7 +285,7 @@ public partial class MonopolyCardGameMainViewModel : BasicCardGamesVM<MonopolyCa
         }
         if (_test.EndRoundEarly == false)
         {
-            rets = _model.HasAnyMonopolyPlayed();
+            rets = _model.HasAnyMonopolyPlayed;
             if (rets)
             {
                 if (_model.TempHand1.HandList.Any(x => x.WhatCard == EnumCardType.IsToken))

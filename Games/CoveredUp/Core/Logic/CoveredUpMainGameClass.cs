@@ -90,7 +90,7 @@ public class CoveredUpMainGameClass
             }
             var fins = player.MainHandList[4]; //has to be the fourth one because how the cards are laid out.
             fins.IsUnknown = false;
-            player.PointsSoFar = fins.Points();
+            player.PointsSoFar = fins.Points;
         }
         return base.LastPartOfSetUpBeforeBindingsAsync();
     }

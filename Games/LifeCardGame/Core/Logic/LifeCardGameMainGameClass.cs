@@ -86,7 +86,7 @@ public class LifeCardGameMainGameClass
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
     {
-        if (PlayerList!.HasYears())
+        if (PlayerList!.HasYears)
         {
             throw new CustomBasicException("Players cannot have years");
         }

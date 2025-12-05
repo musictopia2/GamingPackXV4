@@ -35,7 +35,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<XactikaCardInformation>
         text.Content = value;
         text.CenterText(MainGroup!, bounds);
         text.Font_Size = fontSize;
-        text.Fill = cc1.Aqua.ToWebColor();
+        text.Fill = cc1.Aqua.ToWebColor;
         text.PopulateStrokesToStyles();
     }
     private void DrawValue(RectangleF bounds)

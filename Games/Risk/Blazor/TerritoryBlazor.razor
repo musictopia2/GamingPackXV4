@@ -3,12 +3,12 @@
     return;
 }
 <path style="opacity: 1; fill: @Territory.Color; fill-opacity: 1; stroke-width: @Territory.BorderWidth(_gameContainer); stroke: @Territory.GetBorderColor(_gameContainer); "
-      d="@Territory.Name.GetPath()"
+      d="@Territory.Name.Path"
       @onclick="PrivateClick" />
 <BorderedSpace FillColor="@cc1.LightGray"
                ShapeCategory="BorderedSpace.EnumShapeCategory.Oval"
                SpaceSize="GetSize"
-               SpaceLocation="@Territory.GetLabelLocation()"
+               SpaceLocation="@Territory.LabelLocation"
                BorderColor="@cc1.Black"
                BorderWidth="2">
     <CenteredTextBlazor BorderWidth="0" BorderColor="@cc1.Transparent" TextColor="@cc1.Black" FontSize="12" Text="@Territory.Armies.ToString()" />

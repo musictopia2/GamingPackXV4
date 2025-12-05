@@ -1,5 +1,4 @@
-﻿using System.Reflection; //not common enough
-namespace Xactika.Blazor;
+﻿namespace Xactika.Blazor;
 public static class ImageHelpers
 {
     public static BasicList<PointF> GetPoints(EnumShapes shape, int howMany, PointF location, bool manually, float heightWidth)
@@ -74,29 +73,33 @@ public static class ImageHelpers
             return [new PointF(newLeft, topFirstHalf), new PointF(newLeft, topLastHalf)];
         }
     }
-    public static void DrawCone(this IParentGraphic container, RectangleF bounds) // done
+    extension (IParentContainer container)
     {
-        Image image = new();
-        image.PopulateFullExternalImage("Cone.svg");
-        image.PopulateImagePositionings(bounds);
-        container.Children.Add(image);
+        public void DrawCone(RectangleF bounds)
+        {
+            Image image = new();
+            image.PopulateBasicExternalImage("Cone.svg");
+            image.PopulateImagePositionings(bounds);
+            container.Children.Add(image);
+        }
+        public void DrawCube(RectangleF bounds)
+        {
+            Image image = new();
+            image.PopulateBasicExternalImage("Cube.svg");
+            image.PopulateImagePositionings(bounds);
+            container.Children.Add(image);
+        }
+        public void DrawBall(RectangleF bounds)
+        {
+            Circle circle = new();
+            circle.PopulateCircle(bounds, cc1.Red);
+            circle.PopulateStrokesToStyles();
+            container.Children.Add(circle);
+        }
+        public void DrawStar(RectangleF bounds)
+        {
+            container.DrawStar(bounds, cc1.Yellow, cc1.Black, 1);
+        }
     }
-    public static void DrawCube(this IParentGraphic container, RectangleF bounds)
-    {
-        Image image = new();
-        image.PopulateFullExternalImage("Cube.svg");
-        image.PopulateImagePositionings(bounds);
-        container.Children.Add(image);
-    }
-    public static void DrawBall(this IParentGraphic container, RectangleF bounds)
-    {
-        Circle circle = new();
-        circle.PopulateCircle(bounds, cc1.Red);
-        circle.PopulateStrokesToStyles();
-        container.Children.Add(circle);
-    }
-    public static void DrawStar(this IParentContainer container, RectangleF bounds)
-    {
-        container.DrawStar(bounds, cc1.Yellow, cc1.Black, 1);
-    }
+    
 }

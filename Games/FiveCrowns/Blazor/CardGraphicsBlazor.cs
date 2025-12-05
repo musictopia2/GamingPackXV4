@@ -23,7 +23,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
     protected override void DrawBacks()
     {
         Image image = new();
-        image.PopulateFullExternalImage("deckofcardback.svg");
+        image.PopulateBasicExternalImage("deckofcardback.svg");
         image.Width = "140";
         image.Height = "191";
         image.X = "10";
@@ -214,8 +214,8 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
         text.X = x;
         text.Y = "43";
         string color = GetColor;
-        text.Fill = color.ToWebColor(); //try this.
-        if (text.Fill == cc1.Yellow.ToWebColor())
+        text.Fill = color.ToWebColor; //try this.
+        if (text.Fill == cc1.Yellow.ToWebColor)
         {
             text.PopulateStrokesToStyles(strokeWidth: 2); //try this way.
         }
@@ -230,8 +230,8 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
         text.Font_Size = fontSize;
         text.X = x;
         text.Y = "43";
-        text.Fill = color.ToWebColor();
-        if (text.Fill == cc1.Yellow.ToWebColor())
+        text.Fill = color.ToWebColor;
+        if (text.Fill == cc1.Yellow.ToWebColor)
         {
             text.PopulateStrokesToStyles(strokeWidth: 2);
         }
@@ -307,7 +307,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
         RectangleF firstRect = new(0, 5, 160, 55);
         var fontSize = firstRect.Height;
         Text text = new();
-        text.Fill = cc1.Black.ToWebColor();
+        text.Fill = cc1.Black.ToWebColor;
         text.Content = "Joker";
         text.Font_Size = fontSize;
         text.CenterText(MainGroup, firstRect);

@@ -335,7 +335,7 @@ public class HuseHeartsMainGameClass
         {
             throw new CustomBasicException("The total points for the players has to be 26 points"); //was 16 but now 26 since the jack of diamonds is no longer -10 points.
         }
-        int Shoots = PlayerList!.WhoShotMoon();
+        int Shoots = PlayerList!.WhoShotMoon;
         if (Shoots == 0)
         {
             await FinishEndAsync();

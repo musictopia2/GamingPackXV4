@@ -19,7 +19,7 @@ public class KeeperCard : FluxxCardInformation
     public override string Text()
     {
 
-        return Deck.ToString().TextWithSpaces();
+        return Deck.ToString().TextWithSpaces;
     }
     public override void Populate(int chosen)
     {

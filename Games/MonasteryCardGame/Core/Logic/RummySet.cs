@@ -59,7 +59,7 @@ public class RummySet : SetInfo<EnumSuitList, EnumRegularColorList, MonasteryCar
         if (_setType == EnumMonasterySets.EvenOdd)
         {
             var temps = thisCard.Value.Value;
-            bool isOdd = temps.IsNumberOdd();
+            bool isOdd = temps.IsNumberOdd;
             output.AddRange(entireList.Where(items =>
             {
                 if (items.Value == EnumRegularCardValueList.HighAce || items.Value == EnumRegularCardValueList.LowAce)
@@ -67,7 +67,7 @@ public class RummySet : SetInfo<EnumSuitList, EnumRegularColorList, MonasteryCar
                     return true;
                 }
                 var xx = items.Value.Value;
-                return xx.IsNumberOdd() == isOdd;
+                return xx.IsNumberOdd == isOdd;
             }));
             return output;
         }
@@ -174,7 +174,7 @@ public class RummySet : SetInfo<EnumSuitList, EnumRegularColorList, MonasteryCar
         if (_setType == EnumMonasterySets.EvenOdd)
         {
             int nums = tempCard.Value.Value;
-            if (nums.IsNumberOdd())
+            if (nums.IsNumberOdd)
             {
                 return thisCard;
             }
@@ -187,7 +187,7 @@ public class RummySet : SetInfo<EnumSuitList, EnumRegularColorList, MonasteryCar
         if (_setType == EnumMonasterySets.DoubleRun)
         {
             int nums = HandList.Count;
-            if (nums.IsNumberOdd())
+            if (nums.IsNumberOdd)
             {
                 if (tempCard.Value == EnumRegularCardValueList.LowAce || tempCard.Value == EnumRegularCardValueList.HighAce)
                 {

@@ -126,7 +126,7 @@ public class SorryDicedGameMainGameClass
                 return;
             }
             FigureOutAnyProperMovesFromDice();
-            var dice = SaveRoot.DiceList.GetSelectedDice();
+            var dice = SaveRoot.DiceList.SelectedDice;
             if (dice is not null)
             {
                 PopulateDiceInstructions(dice);

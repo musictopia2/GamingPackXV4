@@ -17,9 +17,9 @@ public class BingoSpaceBlazor : GraphicsCommand
         float fontSize;
         if (_space.IsEnabled == true)
         {
-            rect.Fill = cc1.White.ToWebColor();
+            rect.Fill = cc1.White.ToWebColor;
             rect.PopulateStrokesToStyles(strokeWidth: 4);
-            textColor = cc1.Black.ToWebColor();
+            textColor = cc1.Black.ToWebColor;
             if (_space.Text == "")
             {
 
@@ -35,9 +35,9 @@ public class BingoSpaceBlazor : GraphicsCommand
         }
         else
         {
-            rect.Fill = cc1.Black.ToWebColor();
+            rect.Fill = cc1.Black.ToWebColor;
             rect.PopulateStrokesToStyles(color: cc1.White, 4);
-            textColor = cc1.White.ToWebColor();
+            textColor = cc1.White.ToWebColor;
             fontSize = 80;
         }
         svg.Children.Add(rect);

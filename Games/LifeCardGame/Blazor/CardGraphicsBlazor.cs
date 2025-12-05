@@ -14,7 +14,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
     {
         Rect rect = new();
         rect.PopulateRectangle(bounds);
-        rect.Fill = color.ToWebColor();
+        rect.Fill = color.ToWebColor;
         if (borderSize > 0)
         {
             rect.PopulateStrokesToStyles();
@@ -26,7 +26,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
         Text text = new();
         text.Content = content;
         text.CenterText(MainGroup!, bounds);
-        text.Fill = color.ToWebColor();
+        text.Fill = color.ToWebColor;
         text.Font_Size = fontSize;
         if (borderSize > 0)
         {
@@ -529,7 +529,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
         }
         var lastRect = new RectangleF(71, 5, 20, 20);
         Image image = new();
-        image.PopulateFullExternalImage(name);
+        image.PopulateBasicExternalImage(name);
         image.PopulateImagePositionings(lastRect);
         MainGroup.Children.Add(image);
     }
@@ -742,7 +742,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<LifeCardGameCardInformatio
         }
         Image image = new();
         image.PopulateImagePositionings(topRect);
-        image.PopulateFullExternalImage(fileName);
+        image.PopulateBasicExternalImage(fileName);
         MainGroup.Children.Add(image);
         float fontSize;
         string entireText;

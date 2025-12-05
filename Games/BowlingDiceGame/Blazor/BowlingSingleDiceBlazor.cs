@@ -14,14 +14,14 @@ public class BowlingSingleDiceBlazor : ComponentBase
         Rect rect = new();
         rect.Width = "50";
         rect.Height = "50";
-        rect.Fill = cc1.White.ToWebColor();
+        rect.Fill = cc1.White.ToWebColor;
         svg.Children.Add(rect);
         if (Dice.DidHit == false && Dice.IsAnimatingHit == false)
         {
             Image image = new();
             image.Width = "50";
             image.Height = "50";
-            image.PopulateFullExternalImage("bowlingdice.svg");
+            image.PopulateBasicExternalImage("bowlingdice.svg");
             svg.Children.Add(image);
         }
         render.RenderSvgTree(svg, builder);

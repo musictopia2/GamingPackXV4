@@ -25,7 +25,7 @@ public class CompleteFrameBlazor : ComponentBase
                 Height = "50",
                 X = x.ToString()
             };
-            rect.PopulateStrokesToStyles(cc1.White.ToWebColor(), borderSize);
+            rect.PopulateStrokesToStyles(cc1.White.ToWebColor, borderSize);
             svg.Children.Add(rect);
             RectangleF r = new(x, 0, 50, 50);
             svg.DrawCenteredText(r, 20, section.Value.Score, cc1.White);
@@ -39,7 +39,7 @@ public class CompleteFrameBlazor : ComponentBase
             X = f.X.ToString(),
             Y = f.Y.ToString()
         };
-        rect.PopulateStrokesToStyles(cc1.White.ToWebColor(), borderSize);
+        rect.PopulateStrokesToStyles(cc1.White.ToWebColor, borderSize);
         svg.Children.Add(rect);
         string score;
         if (Frame.Score == -1)

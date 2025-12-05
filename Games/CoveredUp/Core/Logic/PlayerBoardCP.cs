@@ -57,7 +57,7 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
         int index = ObjectList.IndexOf(card);
         int takes = _gameContainer.SaveRoot.UpTo + 2;
         var temps = _orders.Take(takes);
-        return temps.Contains(index);
+        return temps.Contains(index); //i think this needs to be resolved.
     }
     //could eventually decide to put this into global as well.  since its a common requirement.
     private int _tempDeck = -1;
@@ -244,7 +244,7 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
     {
         RegularSimpleCard topCard = GetObject(1, column);
         RegularSimpleCard bottomCard = GetObject(2, column);
-        int output = topCard.Points() + bottomCard.Points();
+        int output = topCard.Points + bottomCard.Points;
         return output;
     }
     public void EndTurn()

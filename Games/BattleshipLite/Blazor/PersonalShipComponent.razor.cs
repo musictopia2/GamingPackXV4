@@ -10,8 +10,8 @@ public partial class PersonalShipComponent
         var opponent = DataContext!.OpponentShip(ship);
         if (opponent.ShipStatus == EnumShipStatus.Hit)
         {
-            return cs1.Red.ToWebColor();
+            return cs1.Red.ToWebColor;
         }
-        return cs1.Gray.ToWebColor();
+        return cs1.Gray.ToWebColor;
     }
 }

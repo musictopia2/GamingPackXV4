@@ -52,7 +52,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<YahtzeeHandsDownCardInform
             return;
         }
         var tempRect = GetStartingRect(rect_Card);
-        MainGroup.DrawNormalRectangle(tempRect, DeckObject.Color.ToColor());
+        MainGroup.DrawNormalRectangle(tempRect, DeckObject.Color.ToColor);
         var otherRect = GetCenterDiceRect();
         var tempSize = 3;
         MainGroup.DrawRoundedRectangle(otherRect, cc1.White, tempSize, 3);
@@ -62,7 +62,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<YahtzeeHandsDownCardInform
     private void Draw2Numbers(RectangleF rect_Card)
     {
         var tempRect = GetStartingRect(rect_Card);
-        MainGroup!.DrawNormalRectangle(tempRect, DeckObject!.Color.ToColor());
+        MainGroup!.DrawNormalRectangle(tempRect, DeckObject!.Color.ToColor);
         tempRect = new RectangleF(11, 4, 30, 30);
         float width;
         float diffs = 0;
@@ -135,7 +135,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<YahtzeeHandsDownCardInform
             return;
         }
         var tempRect = GetStartingRect(rect_Card);
-        MainGroup.DrawNormalRectangle(tempRect, DeckObject.Color.ToColor());
+        MainGroup.DrawNormalRectangle(tempRect, DeckObject.Color.ToColor);
         var otherRect = GetCenterDiceRect();
         MainGroup.DrawDice(otherRect, DeckObject.FirstValue);
     }

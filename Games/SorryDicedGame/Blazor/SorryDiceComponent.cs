@@ -23,17 +23,17 @@ public class SorryDiceComponent : GraphicsCommand
         Rect rect = StartRect();
         if (Dice.IsEnabled)
         {
-            rect.Fill = cc1.Black.ToWebColor();
+            rect.Fill = cc1.Black.ToWebColor;
         }
         else
         {
-            rect.Fill = cc1.DarkGray.ToWebColor();
+            rect.Fill = cc1.DarkGray.ToWebColor;
         }
         container.Children.Add(rect);
         if (Dice.IsSelected)
         {
             rect = StartRect();
-            rect.Fill = cc1.Red.ToWebColor();
+            rect.Fill = cc1.Red.ToWebColor;
             rect.Fill_Opacity = ".5";
             container.Children.Add(rect);
         }
@@ -60,7 +60,7 @@ public class SorryDiceComponent : GraphicsCommand
             Rect slide = new();
             RectangleF fins = new(2, 25, 36, 10);
             slide.PopulateRectangle(fins);
-            slide.Fill = cc1.Red.ToWebColor();
+            slide.Fill = cc1.Red.ToWebColor;
             container.Children.Add(slide);
             fins = new(2, 2, 36, 20);
             Text text = new();
@@ -69,11 +69,11 @@ public class SorryDiceComponent : GraphicsCommand
             text.CenterText(container, fins);
             if (Dice.IsEnabled)
             {
-                text.Fill = cc1.White.ToWebColor();
+                text.Fill = cc1.White.ToWebColor;
             }
             else
             {
-                text.Fill = cc1.Black.ToWebColor();
+                text.Fill = cc1.Black.ToWebColor;
             }
             return;
         }
@@ -84,8 +84,8 @@ public class SorryDiceComponent : GraphicsCommand
             text.Font_Size = 40;
             text.Content = "S";
             text.CenterText(container, sorryRect);
-            text.Fill = cc1.Black.ToWebColor();
-            text.PopulateStrokesToStyles(cc1.White.ToWebColor(), 1);
+            text.Fill = cc1.Black.ToWebColor;
+            text.PopulateStrokesToStyles(cc1.White.ToWebColor, 1);
             return;
         }
     }

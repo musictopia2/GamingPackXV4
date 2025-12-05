@@ -33,7 +33,7 @@ public partial class ChessMainView
         }
         return tempIndex;
     }
-    private string GetPreviousColor => GameContainer!.SaveRoot.PreviousMove.PlayerColor.ToWebColor();
+    private string GetPreviousColor => GameContainer!.SaveRoot.PreviousMove.PlayerColor.ToWebColor;
     private static EnumPieceType GetCategory(CheckerChessPieceCP<EnumColorChoice> piece)
     {
         PieceCP output = (PieceCP)piece;

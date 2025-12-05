@@ -20,7 +20,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<A8RoundRummyCardInformation>
     private void DrawText(RectangleF rectangle, string content, string color, double fontSize)
     {
         Text text = new();
-        text.Fill = color.ToWebColor();
+        text.Fill = color.ToWebColor;
         text.CenterText(MainGroup!, rectangle);
         text.Content = content;
         text.Font_Size = fontSize;
@@ -56,7 +56,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<A8RoundRummyCardInformation>
     }
     private void DrawRegular()
     {
-        string color = DeckObject!.Color.ToColor();
+        string color = DeckObject!.Color.ToColor;
         var shapeRect = new RectangleF(13, 5, 30, 30);
         if (DeckObject!.Shape == EnumCardShape.Circle)
         {
@@ -69,7 +69,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<A8RoundRummyCardInformation>
         {
             Rect rect = new();
             rect.PopulateRectangle(shapeRect);
-            rect.Fill = color.ToWebColor();
+            rect.Fill = color.ToWebColor;
             rect.PopulateStrokesToStyles(strokeWidth: 2);
             MainGroup!.Children.Add(rect);
         }
@@ -84,7 +84,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<A8RoundRummyCardInformation>
         Text text = new();
         text.CenterText(MainGroup, textRect);
         text.Font_Size = fontSize;
-        text.Fill = color.ToWebColor();
+        text.Fill = color.ToWebColor;
         text.PopulateStrokesToStyles();
         text.Content = DeckObject.Value.ToString();
     }

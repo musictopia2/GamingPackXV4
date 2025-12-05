@@ -79,7 +79,7 @@ public partial class PaymentViewModel : IBasicEnableProcess
             }
         }
         player.CloneSelectedPropertiesForPayments(_gameContainer.PersonalInformation, properties);
-        if (_gameContainer.PersonalInformation.IsValidState() == false)
+        if (_gameContainer.PersonalInformation.IsValidState == false)
         {
             ProcessInvalidState("Cannot choose these to put back because houses/hotels would be corrupted", soFar, temporaryPersonal);
             return;
@@ -161,7 +161,7 @@ public partial class PaymentViewModel : IBasicEnableProcess
         _gameContainer.PersonalInformation.BankedCards.RemoveSelectedItems();
         bankedCards.UnselectAllObjects();
         _gameContainer.PersonalInformation.Payments.AddRange(bankedCards);
-        if (_gameContainer.PersonalInformation.IsValidState() == false)
+        if (_gameContainer.PersonalInformation.IsValidState == false)
         {
             ProcessInvalidState("Cannot add the cards for payments because did not follow the rules for houses/hotels", soFar, temporaryPersonal);
             return;

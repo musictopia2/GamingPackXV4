@@ -18,7 +18,7 @@
             @if (VBCompat.AscW(item) > 0)
             {
                 string letter = item.ToString().ToUpper();
-                <CenteredSvgText FontSize="18" TextColor="@letter.GetColorOfLetter().ToWebColor()" Text="@letter" />
+                <CenteredSvgText FontSize="18" TextColor="@letter.ColorOfLetter.ToWebColor" Text="@letter" />
             }
             @{
                 x++;

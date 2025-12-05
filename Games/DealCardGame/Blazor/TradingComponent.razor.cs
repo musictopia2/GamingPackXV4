@@ -56,7 +56,7 @@ public partial class TradingComponent
         output.IsEnabled = true;
         foreach (var item in player.SetData)
         {
-            if (item.HasRequiredSet() == false)
+            if (item.HasRequiredSet == false)
             {
                 output.HandList.AddRange(item.Cards);
             }

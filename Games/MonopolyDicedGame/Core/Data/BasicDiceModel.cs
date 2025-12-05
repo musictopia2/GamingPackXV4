@@ -12,7 +12,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
     {
         if (WhatDice == EnumBasicType.Railroad || WhatDice == EnumBasicType.Utility)
         {
-            return WhatDice.GetMonopolyValue();
+            return WhatDice.MonopolyValue;
         }
         if (WhatDice == EnumBasicType.Chance)
         {
@@ -22,7 +22,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
         {
             throw new CustomBasicException("Unable to get the monopoly value");
         }
-        return Group.GetMonopolyValue();
+        return Group.MonopolyValue;
     }
     public int GetRegularValue()
     {
@@ -54,7 +54,7 @@ public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer
     }
     public string GetColor()
     {
-        return Group.GetColor();
+        return Group.Color;
     }
     public IGamePackageResolver? MainContainer { get; set; }
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }

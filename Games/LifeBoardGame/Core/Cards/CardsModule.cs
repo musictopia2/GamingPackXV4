@@ -103,7 +103,7 @@ public static class CardsModule
                     thisCard.HousePrice = 140000;
                     thisCard.InsuranceCost = 35000;
                     var tempList = new BasicList<decimal>() { 100000, 100000, 130000, 130000, 130000, 130000, 130000, 130000, 150000, 150000 };
-                    thisCard.SellingPrices = tempList.GetSellingPrices();
+                    thisCard.SellingPrices = tempList.SellingPrices;
                     thisCard.Title = "High Winds Realty";
                     thisCard.Description = "Only 50 yeards from Monsoon Beach.  Sun deck, boat deck, hurricane wall.  Hurry while it lasts!";
                     break;
@@ -116,7 +116,7 @@ public static class CardsModule
                     thisCard.HousePrice = 100000;
                     thisCard.InsuranceCost = 25000;
                     var tempList = new BasicList<decimal>() { 90000, 90000, 90000, 90000, 110000, 110000, 110000, 110000, 125000, 125000 };
-                    thisCard.SellingPrices = tempList.GetSellingPrices();
+                    thisCard.SellingPrices = tempList.SellingPrices;
                     break;
                 }
             case 12:
@@ -127,7 +127,7 @@ public static class CardsModule
                     thisCard.HousePrice = 120000;
                     thisCard.InsuranceCost = 30000;
                     var TempList = new BasicList<decimal>() { 100000, 100000, 130000, 130000, 130000, 130000, 130000, 130000, 150000, 150000 };
-                    thisCard.SellingPrices = TempList.GetSellingPrices();
+                    thisCard.SellingPrices = TempList.SellingPrices;
                     break;
                 }
             case 13:
@@ -138,7 +138,7 @@ public static class CardsModule
                     thisCard.HousePrice = 160000;
                     thisCard.InsuranceCost = 40000;
                     var tempList = new BasicList<decimal>() { 140000, 140000, 180000, 180000, 180000, 180000, 180000, 200000, 200000, 200000 };
-                    thisCard.SellingPrices = tempList.GetSellingPrices();
+                    thisCard.SellingPrices = tempList.SellingPrices;
                     break;
                 }
             case 14:
@@ -149,7 +149,7 @@ public static class CardsModule
                     thisCard.HousePrice = 80000;
                     thisCard.InsuranceCost = 20000;
                     var templist = new BasicList<decimal>() { 70000, 70000, 70000, 80000, 80000, 80000, 80000, 80000, 100000, 100000 };
-                    thisCard.SellingPrices = templist.GetSellingPrices();
+                    thisCard.SellingPrices = templist.SellingPrices;
                     break;
                 }
             case 15:
@@ -160,7 +160,7 @@ public static class CardsModule
                     thisCard.HousePrice = 60000;
                     thisCard.InsuranceCost = 15000;
                     var tempList = new BasicList<decimal>() { 30000, 30000, 30000, 60000, 60000, 60000, 60000, 80000, 80000, 80000 };
-                    thisCard.SellingPrices = tempList.GetSellingPrices();
+                    thisCard.SellingPrices = tempList.SellingPrices;
                     break;
                 }
             case 16:
@@ -171,7 +171,7 @@ public static class CardsModule
                     thisCard.HousePrice = 40000;
                     thisCard.InsuranceCost = 10000;
                     var tempList = new BasicList<decimal>() { 20000, 20000, 20000, 20000, 40000, 40000, 40000, 40000, 60000, 60000 };
-                    thisCard.SellingPrices = tempList.GetSellingPrices();
+                    thisCard.SellingPrices = tempList.SellingPrices;
                     break;
                 }
 
@@ -183,7 +183,7 @@ public static class CardsModule
                     thisCard.HousePrice = 180000;
                     thisCard.InsuranceCost = 45000;
                     var tempList = new BasicList<decimal>() { 170000, 170000, 215000, 215000, 215000, 215000, 215000, 215000, 215000, 250000 };
-                    thisCard.SellingPrices = tempList.GetSellingPrices();
+                    thisCard.SellingPrices = tempList.SellingPrices;
                     break;
                 }
             case 18:
@@ -194,7 +194,7 @@ public static class CardsModule
                     thisCard.HousePrice = 200000;
                     thisCard.InsuranceCost = 50000;
                     var tempList = new BasicList<decimal>() { 180000, 180000, 225000, 225000, 225000, 225000, 225000, 225000, 300000, 300000 };
-                    thisCard.SellingPrices = tempList.GetSellingPrices();
+                    thisCard.SellingPrices = tempList.SellingPrices;
                     break;
                 }
             default:

@@ -80,7 +80,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
         Text text = new();
         text.Content = content;
         text.CenterText(MainGroup!, rect);
-        text.Fill = fillColor.ToWebColor();
+        text.Fill = fillColor.ToWebColor;
         text.Font_Size = fontSize;
         if (hasBorders)
         {
@@ -95,10 +95,10 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
     {
         Rect output = new();
         output.PopulateRectangle(rect);
-        output.Fill = fillcolor.ToWebColor();
+        output.Fill = fillcolor.ToWebColor;
         if (hasBorders)
         {
-            output.PopulateStrokesToStyles(strokeWidth: 5, color: cc1.Aqua.ToWebColor());
+            output.PopulateStrokesToStyles(strokeWidth: 5, color: cc1.Aqua.ToWebColor);
         }
         MainGroup!.Children.Add(output);
     }
@@ -168,7 +168,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
         tempRect = new RectangleF(4, 55, 95, 70);
         DrawRectangle(tempRect, cc1.Red);
         Image image = new();
-        image.PopulateFullExternalImage("revenge.png");
+        image.PopulateBasicExternalImage("revenge.png");
         image.PopulateImagePositionings(tempRect);
         MainGroup!.Children.Add(image);
     }
@@ -180,7 +180,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
         var lastRect = new RectangleF(23, 59, 60, 60);
         Circle circle = new();
         circle.PopulateCircle(lastRect, "");
-        circle.PopulateStrokesToStyles(strokeWidth: 7, color: cc1.Red.ToWebColor());
+        circle.PopulateStrokesToStyles(strokeWidth: 7, color: cc1.Red.ToWebColor);
         MainGroup!.Children.Add(circle);
         PointF point = new(lastRect.Left + (lastRect.Size.Width / 4), lastRect.Top + (lastRect.Size.Height / 4));
         SizeF size = new(34, 34);
@@ -190,7 +190,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FillOrBustCardInformation>
         PointF firstPoint = new(lastRect.Left + 10, lastRect.Top + 10);
         PointF lastPoint = new(lastRect.Right - 10, lastRect.Bottom - 10);
         line.PopulateLine(firstPoint, lastPoint);
-        line.PopulateStrokesToStyles(strokeWidth: 7, color: cc1.Red.ToWebColor(), opacity: .5);
+        line.PopulateStrokesToStyles(strokeWidth: 7, color: cc1.Red.ToWebColor, opacity: .5);
         MainGroup.Children.Add(line);
     }
 }

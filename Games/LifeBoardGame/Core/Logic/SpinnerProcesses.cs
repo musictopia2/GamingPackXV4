@@ -159,7 +159,7 @@ public class SpinnerProcesses : ISpinnerProcesses
     }
     private async Task SoldHouseAsync(int numberRolled)
     {
-        var thisHouse = _gameContainer.SingleInfo!.GetHouseCard();
+        var thisHouse = _gameContainer.SingleInfo!.HouseCard;
         decimal moneyEarned = thisHouse.SellingPrices[numberRolled];
         _gameContainer.SingleInfo!.HouseIsInsured = false;
         _model.GameDetails = $"House sold for {moneyEarned.ToCurrency(0)}";

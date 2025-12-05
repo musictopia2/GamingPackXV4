@@ -18,7 +18,7 @@ public class CardGraphicsBlazor : BaseColorCardsImageBlazor<RookCardInformation>
         {
             //rethink the bird.  its a black bird (the background would be white.
             Image image = new();
-            image.PopulateFullExternalImage("RookBird.svg");
+            image.PopulateBasicExternalImage("RookBird.svg");
             RectangleF bounds = new(5, 5, 40, 62);
             image.PopulateImagePositionings(bounds);
             MainGroup!.Children.Add(image);

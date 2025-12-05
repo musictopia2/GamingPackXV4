@@ -1,182 +1,227 @@
 ﻿namespace LifeBoardGame.Core.Logic;
 public static class Extensions
 {
-    public static DeckRegularDict<T> GetCardsLeft<T>(this IDeckDict<T> thisList, PlayerCollection<LifeBoardGamePlayerItem> playerList) where T : LifeBaseCard
+    extension <T>(IDeckDict<T> list)
+        where T: LifeBaseCard
     {
-        var newList = thisList.ToRegularDeckDict();
-        playerList.ForEach(thisPlayer =>
+        public DeckRegularDict<T> GetCardsLeft(PlayerCollection<LifeBoardGamePlayerItem> playerList)
         {
-            thisPlayer.Hand.ForEach(thisCard =>
+            var newList = list.ToRegularDeckDict();
+            playerList.ForEach(thisPlayer =>
             {
-                if (newList.ObjectExist(thisCard.Deck))
+                thisPlayer.Hand.ForEach(thisCard =>
                 {
-                    newList.RemoveObjectByDeck(thisCard.Deck);
-                }
+                    if (newList.ObjectExist(thisCard.Deck))
+                    {
+                        newList.RemoveObjectByDeck(thisCard.Deck);
+                    }
+                });
             });
-        });
-        return newList;
-    }
-    public static DeckRegularDict<T> GetLoadedCards<T>(this IDeckDict<T> thisList, PlayerCollection<LifeBoardGamePlayerItem> playerList)
-        where T : LifeBaseCard, new()
-    {
-        var tempList = thisList.GetCardsLeft(playerList);
-        tempList.ForEach(thisCard => thisCard.IsUnknown = true);
-        tempList.ShuffleList();
-        return tempList;
-    }
-    public static Dictionary<int, decimal> GetSellingPrices(this BasicList<decimal> thisList)
-    {
-        if (thisList.Count != 10)
-        {
-            throw new CustomBasicException("Must have 10 items; not " + thisList.Count);
+            return newList;
         }
-        Dictionary<int, decimal> newList = new();
-        foreach (var thisItem in thisList)
+        public DeckRegularDict<T> GetLoadedCards(PlayerCollection<LifeBoardGamePlayerItem> playerList)
         {
-            newList.Add(newList.Count + 1, thisItem);
+            var tempList = list.GetCardsLeft(playerList);
+            tempList.ForEach(thisCard => thisCard.IsUnknown = true);
+            tempList.ShuffleList();
+            return tempList;
         }
-        return newList;
     }
-    public static string GetColor(this EnumGender thisGender)
+    extension (BasicList<decimal> list)
     {
-        if (thisGender.Value == EnumGender.Boy.Value)
+        public Dictionary<int, decimal> SellingPrices
         {
-            return cc1.Blue;
-        }
-        if (thisGender.Value == EnumGender.Girl.Value)
-        {
-            return cc1.DeepPink;
-        }
-        throw new Exception("Must be boy or girl for this");
-    }
-    public static DeckRegularDict<CareerInfo> GetCareerList(this LifeBoardGamePlayerItem thisPlayer)
-    {
-        var tempList = thisPlayer.Hand.Where(items => items.Deck <= 9).Select(items => items.Deck).ToBasicList();
-        DeckRegularDict<CareerInfo> output = new();
-        foreach (var thisItem in tempList)
-        {
-            output.Add(CardsModule.GetCareerCard(thisItem));
-        }
-        return output;
-    }
-    public static string GetHouseName(this LifeBoardGamePlayerItem thisPlayer)
-    {
-        HouseInfo thisCard;
-        thisCard = (HouseInfo)thisPlayer.Hand.Where(items => items.Deck >= 10 && items.Deck <= 18).SingleOrDefault()!;
-        if (thisCard == null || thisCard!.Deck == 0)
-        {
-            return "";
-        }
-        return thisCard.HouseCategory.ToString();
-    }
-    public static HouseInfo GetHouseCard(this LifeBoardGamePlayerItem thisPlayer)
-    {
-        HouseInfo thisCard;
-        thisCard = (HouseInfo)thisPlayer.Hand.Where(items => items.Deck >= 10 && items.Deck <= 18).SingleOrDefault()!;
-        return thisCard;
-    }
-    public static decimal NetIncome(this LifeBoardGamePlayerItem thisPlayer)
-    {
-        return thisPlayer.MoneyEarned - thisPlayer.Loans;
-    }
-    public static LifeBaseCard GetBaseHouseCard(this LifeBoardGamePlayerItem thisPlayer)
-    {
-        return (from Items in thisPlayer.Hand
-                where Items.Deck >= 10 && Items.Deck <= 18
-                select Items).SingleOrDefault()!;
-    }
-    public static decimal InsuranceCost(this LifeBoardGamePlayerItem thisPlayer)
-    {
-        HouseInfo thisCard;
-        thisCard = thisPlayer.GetHouseCard();
-        if (thisCard == null)
-        {
-            return 0;
-        }
-        return thisCard.InsuranceCost;
-    }
-    public static SalaryInfo GetSalaryCard(this LifeBoardGamePlayerItem thisPlayer)
-    {
-        SalaryInfo thisCard;
-        thisCard = (SalaryInfo)thisPlayer.Hand.Where(items => items.Deck >= 19 && items.Deck <= 27).SingleOrDefault()!;
-        return thisCard;
-    }
-    public static BasicList<string> GetSalaryList(this BasicList<LifeBoardGamePlayerItem> tempList)
-    {
-        BasicList<string> output = new();
-        tempList.ForConditionalItems(items => items.Salary > 0, thisPlayer => output.Add(thisPlayer.NickName));
-        return output;
-    }
-    public static DeckRegularDict<SalaryInfo> GetSalaryList(this BasicList<int> tempList, PlayerCollection<LifeBoardGamePlayerItem> playerList)
-    {
-        DeckRegularDict<SalaryInfo> newList = new();
-        foreach (var thisItem in tempList)
-        {
-            if (thisItem.SomeoneHasCard(playerList) == false)
+            get
             {
-                newList.Add(CardsModule.GetSalaryCard(thisItem));
-                newList.Last().IsUnknown = true;
+                if (list.Count != 10)
+                {
+                    throw new CustomBasicException("Must have 10 items; not " + list.Count);
+                }
+                Dictionary<int, decimal> newList = [];
+                foreach (var thisItem in list)
+                {
+                    newList.Add(newList.Count + 1, thisItem);
+                }
+                return newList;
+            }
+            
+        }
+    }
+    extension (EnumGender gender)
+    {
+        public string GetColor
+        {
+            get
+            {
+                if (gender.Value == EnumGender.Boy.Value)
+                {
+                    return cc1.Blue;
+                }
+                if (gender.Value == EnumGender.Girl.Value)
+                {
+                    return cc1.DeepPink;
+                }
+                throw new CustomBasicException("Must be boy or girl for this");
+            }
+            
+        }
+    }
+    extension (LifeBoardGamePlayerItem player)
+    {
+        public DeckRegularDict<CareerInfo> GetCareerList()
+        {
+            var tempList = player.Hand.Where(items => items.Deck <= 9).Select(items => items.Deck).ToBasicList();
+            DeckRegularDict<CareerInfo> output = new();
+            foreach (var thisItem in tempList)
+            {
+                output.Add(CardsModule.GetCareerCard(thisItem));
+            }
+            return output;
+        }
+        public string HouseName
+        {
+            get
+            {
+                HouseInfo thisCard;
+                thisCard = (HouseInfo)player.Hand.Where(items => items.Deck >= 10 && items.Deck <= 18).SingleOrDefault()!;
+                if (thisCard == null || thisCard!.Deck == 0)
+                {
+                    return "";
+                }
+                return thisCard.HouseCategory.ToString();
+            }   
+        }
+        public HouseInfo HouseCard
+        {
+            get
+            {
+                HouseInfo thisCard;
+                thisCard = (HouseInfo)player.Hand.Where(items => items.Deck >= 10 && items.Deck <= 18).SingleOrDefault()!;
+                return thisCard;
             }
         }
-        return newList;
-    }
-    public static decimal TaxesDue(this LifeBoardGamePlayerItem thisPlayer)
-    {
-        try
+        public decimal NetIncome => player.MoneyEarned - player.Loans;
+        public LifeBaseCard GetBaseHouseCard()
+        {
+            return (from Items in player.Hand
+                    where Items.Deck >= 10 && Items.Deck <= 18
+                    select Items).SingleOrDefault()!;
+        }
+        public decimal InsuranceCost
+        {
+            get
+            {
+                HouseInfo thisCard;
+                thisCard = player.HouseCard;
+                if (thisCard == null)
+                {
+                    return 0;
+                }
+                return thisCard.InsuranceCost;
+            }
+           
+        }
+        public SalaryInfo GetSalaryCard()
         {
             SalaryInfo thisCard;
-            thisCard = (SalaryInfo)thisPlayer.Hand.Where(items => items.Deck >= 19 && items.Deck <= 27).SingleOrDefault()!;
-            return thisCard.TaxesDue;
+            thisCard = (SalaryInfo)player.Hand.Where(items => items.Deck >= 19 && items.Deck <= 27).SingleOrDefault()!;
+            return thisCard;
         }
-        catch (Exception)
+        public decimal TaxesDue
         {
-            throw new CustomBasicException("Must have a salary to pay taxes");
-        }
-    }
-    public static bool SomeoneHasCard(this int deck, PlayerCollection<LifeBoardGamePlayerItem> playerList)
-    {
-        foreach (var thisPlayer in playerList)
-        {
-            if (thisPlayer.Hand.ObjectExist(deck) == true)
+            get
             {
-                return true;
-            }
-        }
-        return false;
-    }
-    public static int PlayerHasCard(this int deck, PlayerCollection<LifeBoardGamePlayerItem> playerList)
-    {
-        foreach (var thisPlayer in playerList)
-        {
-            if (thisPlayer.Hand.ObjectExist(deck) == true)
-            {
-                return thisPlayer.Id;
-            }
-        }
-        return 0;
-    }
-    public static DeckRegularDict<HouseInfo> GetHouseList(this BasicList<int> tempList, PlayerCollection<LifeBoardGamePlayerItem> playerList)
-    {
-        DeckRegularDict<HouseInfo> newList = new();
-        foreach (var thisItem in tempList)
-        {
-            if (thisItem.SomeoneHasCard(playerList) == false)
-            {
-                newList.Add(CardsModule.GetHouseCard(thisItem));
-                if (newList.Count == 2)
+                try
                 {
-                    return newList;
+                    SalaryInfo thisCard;
+                    thisCard = (SalaryInfo)player.Hand.Where(items => items.Deck >= 19 && items.Deck <= 27).SingleOrDefault()!;
+                    return thisCard.TaxesDue;
+                }
+                catch (Exception)
+                {
+                    throw new CustomBasicException("Must have a salary to pay taxes");
+                }
+            }   
+        }
+        public LifeBaseCard GetStockCard(int stockNumber)
+        {
+            int deck;
+            deck = 27 + stockNumber;
+            return (from items in player.Hand
+                    where items.Deck == deck
+                    select items).Single();
+        }
+    }
+    extension (BasicList<LifeBoardGamePlayerItem> list)
+    {
+        public BasicList<string> GetSalaryList()
+        {
+            BasicList<string> output = [];
+            list.ForConditionalItems(items => items.Salary > 0, thisPlayer => output.Add(thisPlayer.NickName));
+            return output;
+        }
+    }
+    extension (BasicList<int> list)
+    {
+        public DeckRegularDict<SalaryInfo> GetSalaryList(PlayerCollection<LifeBoardGamePlayerItem> playerList)
+        {
+            DeckRegularDict<SalaryInfo> newList = new();
+            foreach (var thisItem in list)
+            {
+                if (thisItem.SomeoneHasCard(playerList) == false)
+                {
+                    newList.Add(CardsModule.GetSalaryCard(thisItem));
+                    newList.Last().IsUnknown = true;
                 }
             }
+            return newList;
         }
-        throw new CustomBasicException("Has to find 2 cards to choose from for house");
     }
-    public static LifeBaseCard GetStockCard(this LifeBoardGamePlayerItem thisPlayer, int stockNumber)
+    extension (int deck)
     {
-        int deck;
-        deck = 27 + stockNumber;
-        return (from items in thisPlayer.Hand
-                where items.Deck == deck
-                select items).Single();
+        public int PlayerHasCard(PlayerCollection<LifeBoardGamePlayerItem> playerList)
+        {
+            foreach (var thisPlayer in playerList)
+            {
+                if (thisPlayer.Hand.ObjectExist(deck) == true)
+                {
+                    return thisPlayer.Id;
+                }
+            }
+            return 0;
+        }
+        public bool SomeoneHasCard(PlayerCollection<LifeBoardGamePlayerItem> playerList)
+        {
+            foreach (var thisPlayer in playerList)
+            {
+                if (thisPlayer.Hand.ObjectExist(deck) == true)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
+    extension(BasicList<int> list)
+    {
+        public DeckRegularDict<HouseInfo> GetHouseList(PlayerCollection<LifeBoardGamePlayerItem> playerList)
+        {
+            DeckRegularDict<HouseInfo> newList = new();
+            foreach (var thisItem in list)
+            {
+                if (thisItem.SomeoneHasCard(playerList) == false)
+                {
+                    newList.Add(CardsModule.GetHouseCard(thisItem));
+                    if (newList.Count == 2)
+                    {
+                        return newList;
+                    }
+                }
+            }
+            throw new CustomBasicException("Has to find 2 cards to choose from for house");
+        }
+    }
+    
+    
+    
 }

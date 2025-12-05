@@ -30,7 +30,7 @@
        @foreach (var player in DataContext.Players)
        {
            <TextCardBoardBlazor D="RegularSimpleCard" DataContext="player.PlayerBoard!" Context="card">
-               @card.DisplayValue()
+               @card.DisplayValue
            </TextCardBoardBlazor>
        }
     </StackItem>

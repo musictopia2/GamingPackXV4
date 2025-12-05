@@ -19,7 +19,7 @@ public partial class GameBoardBlazor
         }
         await BoardData!.MakeMoveAsync(number);
     }
-    private static string LineColor(NumberInfo number) => number.IsCrossed ? cc1.Red.ToWebColor() : cc1.LimeGreen.ToWebColor();
+    private static string LineColor(NumberInfo number) => number.IsCrossed ? cc1.Red.ToWebColor : cc1.LimeGreen.ToWebColor;
     private static string FrameText => GameBoardGraphicsCP.FrameText;
     private static SizeF OriginalSize => GameBoardGraphicsCP.OriginalSize;
 }

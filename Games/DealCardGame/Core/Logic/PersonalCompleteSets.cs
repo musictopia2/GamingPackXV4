@@ -81,14 +81,14 @@ public class PersonalCompleteSets
         var property = _gameContainer.PersonalInformation.SetData.Single(x => x.Color == color);
         if (card.ActionCategory == EnumActionCategory.House || card.ActionCategory == EnumActionCategory.Hotel)
         {
-            if (property!.HasRequiredSet() == false)
+            if (property!.HasRequiredSet == false)
             {
                 _toast.ShowUserErrorToast("Unable to add card because don't have a monopoly to even add a house or hotel");
                 return false;
             }
             if (card.ActionCategory == EnumActionCategory.Hotel)
             {
-                if (property.HasRequiredHouse() == false)
+                if (property.HasRequiredHouse == false)
                 {
                     _toast.ShowUserErrorToast("Unable to add card because you need a house first");
                     return false;
@@ -96,7 +96,7 @@ public class PersonalCompleteSets
             }
             return true;
         }
-        if (property!.HasRequiredSet())
+        if (property!.HasRequiredSet)
         {
             _toast.ShowUserErrorToast("You already have a monopoly");
             return false;
@@ -121,13 +121,13 @@ public class PersonalCompleteSets
         var property = _gameContainer.PersonalInformation.SetData.GetPropertyFromCard(card.Deck);
         if (card.ActionCategory == EnumActionCategory.House)
         {
-            if (property!.HasRequiredHotel())
+            if (property!.HasRequiredHotel)
             {
                 _toast.ShowUserErrorToast("You must remove the hotel before you can remove the house");
                 return false;
             }
         }
-        if (property!.HasRequiredSet())
+        if (property!.HasRequiredSet)
         {
             if (property!.Cards.Any(x => x.ActionCategory == EnumActionCategory.House || x.ActionCategory == EnumActionCategory.Hotel))
             {
@@ -151,7 +151,7 @@ public class PersonalCompleteSets
         {
             if (property.Cards.Any(x => x.ActionCategory == EnumActionCategory.House))
             {
-                if (property.HasRequiredSet() == false)
+                if (property.HasRequiredSet == false)
                 {
                     _toast.ShowUserErrorToast("You no longer have the required set for a house");
                     return false;

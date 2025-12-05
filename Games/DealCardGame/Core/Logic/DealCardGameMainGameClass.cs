@@ -488,7 +488,7 @@ public class DealCardGameMainGameClass
             if (OtherTurn == 0)
             {
                 GetPlayerToContinueTurn();
-                if (SingleInfo!.HowManyMonopolies() > 2)
+                if (SingleInfo!.HowManyMonopolies > 2)
                 {
                     await ShowWinAsync();
                     return; //because you win period.
@@ -797,7 +797,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
             card.MainColor = color;
         }
         SingleInfo!.AddSingleCardToPlayerPropertySet(card, color);
-        SingleInfo!.Monopolies = SingleInfo.HowManyMonopolies();
+        SingleInfo!.Monopolies = SingleInfo.HowManyMonopolies;
         SingleInfo!.Money += card.ClaimedValue; //because this can be used in order to pay other players.
         await ShowCardTemporarilyAsync(card);
         await ContinueTurnAsync();
@@ -933,7 +933,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         }
         foreach (var player in PlayerList)
         {
-            player.Monopolies = player.HowManyMonopolies(); //double check since they may break up some properties
+            player.Monopolies = player.HowManyMonopolies; //double check since they may break up some properties
         }
         SaveRoot.GameStatus = EnumGameStatus.ConfirmPayment;
         await ContinueTurnAsync();
@@ -1155,8 +1155,8 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         SingleInfo.Money -= transferMoney;
         playerChosen.AddSingleCardToPlayerPropertySet(tradeReceive, trade.YourColor);
         SingleInfo.SetData.RemoveCardFromPlayerSet(trade.YourCard, trade.YourColor);
-        playerChosen.Monopolies = playerChosen.HowManyMonopolies();
-        SingleInfo.Monopolies = SingleInfo.HowManyMonopolies();
+        playerChosen.Monopolies = playerChosen.HowManyMonopolies;
+        SingleInfo.Monopolies = SingleInfo.HowManyMonopolies;
         await ContinueTurnAsync();
     }
     public async Task PossibleStealingPropertyAsync(StealPropertyModel steal)
@@ -1214,7 +1214,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         GetPlayerToContinueTurn();
         SingleInfo!.Money += transferMoney;
         SingleInfo.AddSingleCardToPlayerPropertySet(cardStolen, steal.Color);
-        SingleInfo.Monopolies = SingleInfo.HowManyMonopolies();
+        SingleInfo.Monopolies = SingleInfo.HowManyMonopolies;
         await ContinueTurnAsync();
     }
     public async Task FinishOrganizingSetsAsync(BasicList<SetPropertiesModel> setData)
@@ -1234,7 +1234,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
             var froms = setData.Single(x => x.Color == item.Color);
             item.Cards.ReplaceRange(froms.Cards);
         }
-        SingleInfo.Monopolies = SingleInfo.HowManyMonopolies();
+        SingleInfo.Monopolies = SingleInfo.HowManyMonopolies;
         await ContinueTurnAsync();
     }
     public override async Task DiscardAsync(DealCardGameCardInformation thisCard)

@@ -1,21 +1,28 @@
 ﻿namespace MonopolyCardGame.Core.Logic;
 public static class ClonedExtensions
 {
-    public static MonopolyCardGameCardInformation GetClonedCard(this MonopolyCardGameCardInformation card)
+    extension(MonopolyCardGameCardInformation card)
+    {
+        public MonopolyCardGameCardInformation GetClonedCard()
     {
         MonopolyCardGameCardInformation output = new();
         output.Populate(card.Deck);
         return output;
     }
-    public static BasicList<MonopolyCardGameCardInformation> GetClonedCards(this BasicList<MonopolyCardGameCardInformation> list)
-    {
-        BasicList<MonopolyCardGameCardInformation> output = [];
-        foreach (var item in list)
-        {
-            MonopolyCardGameCardInformation cloned = new();
-            cloned.Populate(item.Deck);
-            output.Add(cloned);
-        }
-        return output;
     }
+    extension (BasicList<MonopolyCardGameCardInformation> cards)
+    {
+        public BasicList<MonopolyCardGameCardInformation> GetClonedCards()
+        {
+            BasicList<MonopolyCardGameCardInformation> output = [];
+            foreach (var item in cards)
+            {
+                MonopolyCardGameCardInformation cloned = new();
+                cloned.Populate(item.Deck);
+                output.Add(cloned);
+            }
+            return output;
+        }
+    }
+    
 }

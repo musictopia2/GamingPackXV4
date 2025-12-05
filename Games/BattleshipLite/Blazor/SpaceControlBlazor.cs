@@ -9,7 +9,7 @@ public class SpaceControlBlazor : GraphicsCommand
         {
             return;
         }
-        string color = Ship.FillColor().ToWebColor();
+        string color = Ship.FillColor().ToWebColor;
         ISvg svg = new SVG();
         SvgRenderClass render = new();
         Rect rect = new();
@@ -23,7 +23,7 @@ public class SpaceControlBlazor : GraphicsCommand
             Image image = new();
             image.Width = "50";
             image.Height = "50";
-            image.PopulateFullExternalImage("battleshipfire.svg");
+            image.PopulateBasicExternalImage("battleshipfire.svg");
             svg.Children.Add(image);
         }
         CreateClick(svg);

@@ -105,7 +105,7 @@ public class LoadActionProcesses : ILoadActionProcesses
         else
         {
             _actionContainer.Rule1!.SelectionMode = ListViewPicker.EnumSelectionMode.MultipleItems;
-            _actionContainer.RulesToDiscard = tempList.RulesThatCanBeDiscarded();
+            _actionContainer.RulesToDiscard = tempList.RulesThatCanBeDiscarded;
         }
         _actionContainer.Rule1.LoadTextList(tempList);
     }

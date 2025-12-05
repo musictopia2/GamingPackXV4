@@ -183,6 +183,10 @@ public static class SelectEnableDeckExtensions
         {
             return list.Select(Items => Items.Deck).ToBasicList();
         }
+        //somehow gave casting errors when doing in blades of steels.
+        public DeckRegularDict<D> GetSelectedItems()
+            => list.Where(items =>
+            items.IsSelected == true).ToRegularDeckDict();
     }
     extension<D>(DeckRegularDict<D> list)
         where D : IDeckObject
@@ -202,6 +206,7 @@ public static class SelectEnableDeckExtensions
             }
             list.ReplaceDictionary(oldDeck, newDeck, thisCard);
         }
+        
     }
 
     extension <E>(ISimpleList<E> list)

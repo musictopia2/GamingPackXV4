@@ -70,8 +70,8 @@ public partial class UtilitySpaceComponent
         return output;
     }
 
-    private static string GetUtilityColor => cc1.Black.ToWebColor();
-    private static string GetUtilityBorder => cc1.White.ToWebColor();
+    private static string GetUtilityColor => cc1.Black.ToWebColor;
+    private static string GetUtilityBorder => cc1.White.ToWebColor;
 
 
 }

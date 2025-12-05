@@ -95,14 +95,14 @@ public class CandylandCardBlazor : BaseDeckGraphics<CandylandCardData>
         draw.Y = rect.Y.ToString();
         draw.Width = rect.Width.ToString();
         draw.Height = rect.Height.ToString();
-        draw.Fill = color.ToWebColor();
+        draw.Fill = color.ToWebColor;
         draw.PopulateStrokesToStyles(strokeWidth: 2); //hopefully this simple.
         MainGroup!.Children.Add(draw);
     }
     private void DrawOther(string fileName)
     {
         Image image = new();
-        image.PopulateFullExternalImage(fileName);
+        image.PopulateBasicExternalImage(fileName);
         image.Width = "100%";
         image.Height = "100%";
         MainGroup!.Children.Add(image);

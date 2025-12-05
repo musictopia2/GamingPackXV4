@@ -45,7 +45,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         text.Content = content;
         text.CenterText(MainGroup!, bounds);
         text.Font_Size = fontSize;
-        text.Fill = color.ToWebColor();
+        text.Fill = color.ToWebColor;
         if (bold)
         {
             text.Font_Weight = "bold";
@@ -281,7 +281,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
     {
         Rect rect = new();
         rect.PopulateRectangle(bounds);
-        rect.Fill = color.ToWebColor();
+        rect.Fill = color.ToWebColor;
         rect.RX = "3";
         rect.RY = "3";
         MainGroup!.Children.Add(rect);

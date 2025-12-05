@@ -7,7 +7,7 @@
     </StackItem>
     <StackItem Style="background-color: brown;">
         <EnumPickerBlazor E="EnumColorPossibilities" Context="Piece" Rows="10" TargetSize="11vh" ListPicker="DataContext!.Color1">
-            <CirclePiece MainColor="@Piece.GetColorFromEnum()" />
+            <CirclePiece MainColor="@Piece.ColorFromEnum" />
         </EnumPickerBlazor>
     </StackItem>
     <StackItem>

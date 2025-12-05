@@ -25,12 +25,12 @@ public class BasicDiceBlazor : GraphicsCommand
         if (OnBoardNotOwned == false)
         {
             Rect rect = StartRect();
-            rect.Fill = cc1.White.ToWebColor();
+            rect.Fill = cc1.White.ToWebColor;
             container.Children.Add(rect);
             if (Dice.IsSelected)
             {
                 rect = StartRect();
-                rect.Fill = cc1.Red.ToWebColor();
+                rect.Fill = cc1.Red.ToWebColor;
                 rect.Fill_Opacity = ".1";
                 container.Children.Add(rect);
             }

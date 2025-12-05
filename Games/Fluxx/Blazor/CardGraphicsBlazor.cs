@@ -12,16 +12,16 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
         var bounds = new RectangleF(5, 5, 60, 100);
         Rect rect = new()
         {
-            Fill = cc1.Black.ToWebColor()
+            Fill = cc1.Black.ToWebColor
         };
         rect.PopulateRectangle(bounds);
         if (DeckObject!.IsSelected)
         {
-            rect.PopulateStrokesToStyles(cc1.Aqua.ToWebColor(), strokeWidth: 4);
+            rect.PopulateStrokesToStyles(cc1.Aqua.ToWebColor, strokeWidth: 4);
         }
         else
         {
-            rect.PopulateStrokesToStyles(cc1.Red.ToWebColor(), strokeWidth: 4);
+            rect.PopulateStrokesToStyles(cc1.Red.ToWebColor, strokeWidth: 4);
         }
         MainGroup!.Children.Add(rect);
     }
@@ -306,7 +306,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
         }
         Rect rect = new()
         {
-            Fill = sideColor.ToWebColor(),
+            Fill = sideColor.ToWebColor,
             Width = "98",
             Height = "14",
             X = "3",
@@ -332,7 +332,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
         var fins = location.Y + 2;
         text.Y = fins.ToString();
         text.Font_Size = fontSize;
-        text.Fill = textColor.ToWebColor();
+        text.Fill = textColor.ToWebColor;
         text.Transform = transform;
         MainGroup.Children.Add(text);
     }
@@ -357,7 +357,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
                 Font_Size = fontSize
             };
             text.CenterText(MainGroup, textRect);
-            text.Fill = textColor.ToWebColor();
+            text.Fill = textColor.ToWebColor;
             tops += 15;
         }
         var secondList = secondText.Split("|").ToBasicList();
@@ -372,7 +372,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
                 Font_Size = fontSize
             };
             text.CenterText(MainGroup, textRect);
-            text.Fill = textColor.ToWebColor();
+            text.Fill = textColor.ToWebColor;
             tops += 12;
         }
     }
@@ -400,14 +400,14 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
         string fileName = $"{firstText}.png";
         Image image = new();
         image.PopulateImagePositionings(firstRect);
-        image.PopulateFullExternalImage(fileName);
+        image.PopulateBasicExternalImage(fileName);
         MainGroup.Children.Add(image);
         if (!string.IsNullOrEmpty(secondText))
         {
             fileName = $"{secondText}.png";
             image = new Image();
             image.PopulateImagePositionings(secondRect);
-            image.PopulateFullExternalImage(fileName);
+            image.PopulateBasicExternalImage(fileName);
             MainGroup.Children.Add(image);
         }
     }

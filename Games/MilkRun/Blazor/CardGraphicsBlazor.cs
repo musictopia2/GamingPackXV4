@@ -15,7 +15,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MilkRunCardInformation>
     {
         Text text = new();
         text.Content = content;
-        text.Fill = color.ToWebColor();
+        text.Fill = color.ToWebColor;
         text.CenterText(MainGroup!, bounds);
         text.Font_Size = fontSize;
         text.PopulateStrokesToStyles();
@@ -24,7 +24,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MilkRunCardInformation>
     {
         Rect rect = new();
         rect.PopulateRectangle(bounds);
-        rect.Fill = color.ToWebColor();
+        rect.Fill = color.ToWebColor;
         MainGroup!.Children.Add(rect);
     }
     protected override void DrawBacks()
@@ -85,7 +85,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MilkRunCardInformation>
             return;
         }
         Image image = new();
-        image.PopulateFullExternalImage(fileName);
+        image.PopulateBasicExternalImage(fileName);
         image.PopulateImagePositionings(bounds);
         MainGroup.Children.Add(image);
     }
@@ -93,7 +93,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MilkRunCardInformation>
     {
         Ellipse ellipse = new();
         ellipse.PopulateEllipse(bounds);
-        ellipse.Fill = color.ToWebColor();
+        ellipse.Fill = color.ToWebColor;
         MainGroup!.Children.Add(ellipse);
     }
     protected override void DrawImage()

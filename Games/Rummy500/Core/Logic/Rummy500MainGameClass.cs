@@ -213,7 +213,7 @@ public class Rummy500MainGameClass
         PlayerList!.ForEach(thisPlayer =>
         {
             var thisPoint = CalculatePoints(thisPlayer.Id);
-            int negs = thisPlayer.MainHandList.Sum(xx => xx.NegativePoints());
+            int negs = thisPlayer.MainHandList.Sum(xx => xx.NegativePoints);
             thisPlayer.CurrentScore = thisPoint.Points + negs; //this will already be negative.
             thisPlayer.TotalScore += thisPlayer.CurrentScore;
         });

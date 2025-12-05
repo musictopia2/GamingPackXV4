@@ -24,7 +24,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<TeeItUpCardInformation>
         Text text = new();
         text.Content = content;
         text.CenterText(MainGroup!, bounds);
-        text.Fill = color.ToWebColor();
+        text.Fill = color.ToWebColor;
         text.Font_Size = fontSize;
         if (hasBorders)
         {
@@ -35,7 +35,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<TeeItUpCardInformation>
     {
         Image image = new();
         RectangleF bounds = new(2, 15, 70, 70);
-        image.PopulateFullExternalImage("GolfBall.svg");
+        image.PopulateBasicExternalImage("GolfBall.svg");
         image.PopulateImagePositionings(bounds);
         MainGroup!.Children.Add(image);
     }

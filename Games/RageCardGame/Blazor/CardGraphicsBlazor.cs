@@ -19,7 +19,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<RageCardGameCardInformatio
         text.Content = content;
         RectangleF bounds = new(0, -3, DefaultSize.Width, DefaultSize.Height);
         text.CenterText(MainGroup!, bounds);
-        text.Fill = textColor.ToWebColor();
+        text.Fill = textColor.ToWebColor;
         text.Font_Size = fontSize;
         text.PopulateStrokesToStyles();
     }
@@ -27,7 +27,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<RageCardGameCardInformatio
     {
         Text text = new();
         text.Content = content;
-        text.Fill = textColor.ToWebColor();
+        text.Fill = textColor.ToWebColor;
         text.Font_Size = fontSize;
         text.CenterText(MainGroup!, bounds);
     }
@@ -66,7 +66,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<RageCardGameCardInformatio
     {
         Rect rect = new();
         rect.PopulateRectangle(bounds);
-        rect.Fill = cc1.White.ToWebColor();
+        rect.Fill = cc1.White.ToWebColor;
         MainGroup!.Children.Add(rect);
     }
     protected override void DrawImage()

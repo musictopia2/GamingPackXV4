@@ -1,13 +1,21 @@
 ﻿namespace Hearts.Core.Logic;
 public static class Extensions
 {
-    public static int WhoShotMoon(this PlayerCollection<HeartsPlayerItem> thisList)
+    extension (PlayerCollection<HeartsPlayerItem> list)
     {
-        var firstList = thisList.Where(xx => xx.HadPoints == true).ToBasicList();
-        if (firstList.Count == 1)
+        public int WhoShotMoon
         {
-            return firstList.Single().Id;
+            get
+            {
+                var firstList = list.Where(xx => xx.HadPoints == true).ToBasicList();
+                if (firstList.Count == 1)
+                {
+                    return firstList.Single().Id;
+                }
+                return 0;
+            }
+            
         }
-        return 0;
     }
+    
 }

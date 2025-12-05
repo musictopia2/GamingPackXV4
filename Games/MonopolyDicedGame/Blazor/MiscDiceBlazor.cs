@@ -19,7 +19,7 @@ public class MiscDiceBlazor : ComponentBase
     private void CreateGrapics(SVG container)
     {
         Rect rect = StartRect();
-        rect.Fill = cc1.White.ToWebColor();
+        rect.Fill = cc1.White.ToWebColor;
         container.Children.Add(rect);
         if (Category == EnumMiscType.Police)
         {

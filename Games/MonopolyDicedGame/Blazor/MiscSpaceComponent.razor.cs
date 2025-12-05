@@ -18,7 +18,7 @@ public partial class MiscSpaceComponent
         }
         return MiscList[index -1];
     }
-    private static string GetActionColor => cc1.Yellow.ToWebColor();
+    private static string GetActionColor => cc1.Yellow.ToWebColor;
     private static Vector GetSpaceInfo(int index)
     {
         return new(5, index + 2);
