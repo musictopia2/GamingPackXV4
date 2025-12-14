@@ -244,7 +244,7 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
     {
         RegularSimpleCard topCard = GetObject(1, column);
         RegularSimpleCard bottomCard = GetObject(2, column);
-        int output = topCard.Points + bottomCard.Points;
+        int output = topCard.ComputedPoints + bottomCard.ComputedPoints;
         return output;
     }
     public void EndTurn()

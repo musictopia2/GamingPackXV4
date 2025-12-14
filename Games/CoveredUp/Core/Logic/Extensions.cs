@@ -3,7 +3,7 @@ public static class Extensions
 {
     extension (RegularSimpleCard card)
     {
-        public int Points
+        public int ComputedPoints
         {
             get
             {
