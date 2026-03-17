@@ -2,27 +2,30 @@
     <SimpleRepeater HowMany="Players.Count" Context="x">
         <GridItem Row="@x" Column="1" ColumnSpan="10">
             <BaseFrameBlazor Text="@Players[x - 1].NickName" TargetWidth="100%" TargetHeight="100%">
-                <GridContainer Width="100%" ColumnGap="2px" RowGap="2px"
-                               Columns="repeat(10, 1fr)" Rows="1fr">
-                    <SimpleRepeater HowMany="10" Context="col">
-                        <GridItem Row="1" Column="@col">
-                            @{
-                                bool hasHotel = HasHotel(col, x);
-                                bool hasHouse = HasHouse(col, x);
-                                int rentOwed = RentOwed(col, x, hasHouse, hasHotel);
-                                int completed = SetsCompleted(col, x);
-                            }
+                <div style="padding-right: 10px;">
+                    <GridContainer Width="100%" ColumnGap="2px" RowGap="2px"
+                                   Columns="repeat(10, 1fr)" Rows="1fr">
+                        <SimpleRepeater HowMany="10" Context="col">
+                            <GridItem Row="1" Column="@col">
+                                @{
+                                    bool hasHotel = HasHotel(col, x);
+                                    bool hasHouse = HasHouse(col, x);
+                                    int rentOwed = RentOwed(col, x, hasHouse, hasHotel);
+                                    int completed = SetsCompleted(col, x);
+                                }
                             
-                            <ReadOnlyPlayerSetComponent Color="@GetColor(col)"
-                                                        OnSetClicked="PrivateSetClicked"
-                                                        HasHotel="hasHotel"
-                                                        HasHouse="hasHouse"
-                                                        Rent="rentOwed"
-                                                        Completed="completed"
-                                                        PlayerId="@GetPlayerId(x)" />
-                        </GridItem>
-                    </SimpleRepeater>
-                </GridContainer>
+                                <ReadOnlyPlayerSetComponent Color="@GetColor(col)"
+                                                            OnSetClicked="PrivateSetClicked"
+                                                            HasHotel="hasHotel"
+                                                            HasHouse="hasHouse"
+                                                            Rent="rentOwed"
+                                                            Completed="completed"
+                                                            PlayerId="@GetPlayerId(x)" />
+                            </GridItem>
+                        </SimpleRepeater>
+                    </GridContainer>
+                </div>
+                
             </BaseFrameBlazor>
         </GridItem>
     </SimpleRepeater>
