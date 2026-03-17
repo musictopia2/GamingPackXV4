@@ -14,7 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandsGenerator" Version="1.0.6" PrivateAssets="all" />
-    <PackageReference Include="CommonBasicLibraries" Version="10.0.15" />
+    <PackageReference Include="CommonBasicLibraries" Version="10.0.33" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.4" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.4" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.4" PrivateAssets="all" />
@@ -26,7 +26,7 @@
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="BasicGameFrameworkLibrary" Version="10.0.15" />
+    <PackageReference Include="BasicGameFrameworkLibrary" Version="10.0.20" />
   </ItemGroup>
   <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
     <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />

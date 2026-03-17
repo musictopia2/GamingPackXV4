@@ -144,15 +144,9 @@ public class ScoreLogic
     }
     private static int MaxKinds(BasicList<int> thisCol, out bool receiveMults)
     {
-        int counts = thisCol.MaximumDuplicates;
-        if (counts == 6)
-        {
-            receiveMults = true;
-        }
-        else
-        {
-            receiveMults = false;
-        }
+        // compute max number of equal items using LINQ to avoid ambiguous extension resolution
+        int counts = thisCol.GroupBy(x => x).Max(g => g.Count());
+        receiveMults = counts == 6;
         return counts;
     }
     private int MultiToUse(bool sameCategory)

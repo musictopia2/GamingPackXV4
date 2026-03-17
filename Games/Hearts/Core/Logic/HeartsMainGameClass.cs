@@ -261,20 +261,19 @@ public class HeartsMainGameClass
     }
     internal async Task GiveEverybodyElsePointsAsync()
     {
-        int newPlayer;
-        if (WhoTurn == 1)
-        {
-            newPlayer = 2;
-        }
-        else
-        {
-            newPlayer = 1;
-        }
-        var thisPlayer = PlayerList![newPlayer];
         SingleInfo!.CurrentScore -= 26;
         SingleInfo.PreviousScore = SingleInfo.CurrentScore;
-        thisPlayer.CurrentScore += 26;
-        thisPlayer.PreviousScore = thisPlayer.CurrentScore;
+
+        var list = PlayerList.AllPlayersExceptForCurrent();
+        foreach (var thisPlayer in list)
+        {
+            thisPlayer.CurrentScore += 26;
+            thisPlayer.PreviousScore = thisPlayer.CurrentScore;
+        }
+
+
+
+        
         _command.UpdateAll();
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.OtherHuman)
         {

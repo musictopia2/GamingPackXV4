@@ -5,7 +5,6 @@ public class Bootstrapper : MultiplayerBasicBootstrapper<HeartsShellViewModel>
     {
     }
     
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         
