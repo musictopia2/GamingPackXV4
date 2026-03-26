@@ -80,7 +80,6 @@ public partial class LifeCompleteGameBoardBlazor
         }
         BoardProcesses!.SpaceDescription(space);
     }
-    private Assembly GetAssembly => Assembly.GetAssembly(GetType())!;
     private BasicList<ButtonInfo> GetMainButtons()
     {
         return GraphicsData!.GetMainActions();

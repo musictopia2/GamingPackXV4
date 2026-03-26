@@ -5,17 +5,17 @@
 }
 @if (DataContext.GameContainer.HighSpeedPhase == 0)
 {
-    <ResourceImage ID="arrow1" Fixed="false" FileName="arrows.png" Assembly="GetAssembly" Width="78" Height="360" Transform="@_matrixs[DataContext.GameContainer.SpinnerPosition]" />
+    <ResourceImage ID="arrow1" Fixed="false" FileName="arrows.png" Width="78" Height="360" Transform="@_matrixs[DataContext.GameContainer.SpinnerPosition]" />
 }
 else
 {
     if (DataContext.GameContainer.HighSpeedPhase % 2 == 0)
     {
-        <ResourceImage FileName="highspeed1.png" Assembly="GetAssembly" Height="100%" Width="100%" />
+        <ResourceImage FileName="highspeed1.png" Height="100%" Width="100%" />
     }
     else
     {
-        <ResourceImage FileName="highspeed2.png" Assembly="GetAssembly" Height="100%" Width="100%" />
+        <ResourceImage FileName="highspeed2.png" Height="100%" Width="100%" />
     }
 }
 @if (DataContext.CommandContainer.IsExecuting || DataContext.GameContainer.CanSpin == false)
