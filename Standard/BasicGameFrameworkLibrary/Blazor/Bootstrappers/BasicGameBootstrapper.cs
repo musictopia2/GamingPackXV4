@@ -20,6 +20,11 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         GlobalVariables.SetMode(this);
         InitalizeAsync();
     }
+    protected void ConfigureTestOptions(Action<TestOptions> configure)
+    {
+        TestOptions options = GetDIContainer.Resolve<TestOptions>();
+        configure(options);
+    }
     private partial void Subscribe();
     private partial void Unsubscribe();
     bool _isInitialized;
