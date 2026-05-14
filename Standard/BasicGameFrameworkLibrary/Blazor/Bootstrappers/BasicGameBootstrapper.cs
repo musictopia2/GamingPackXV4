@@ -12,6 +12,7 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     private readonly EnumGamePackageMode _mode;
     private ISystemError? _error;
     private IMessageBox? _message;
+    private TestOptions? _testOptions;
     public BasicGameBootstrapper(IStartUp starts, EnumGamePackageMode mode)
     {
         _startInfo = starts;
@@ -22,8 +23,11 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     }
     protected void ConfigureTestOptions(Action<TestOptions> configure)
     {
-        TestOptions options = GetDIContainer.Resolve<TestOptions>();
-        configure(options);
+        if (_testOptions is null)
+        {
+            throw new CustomBasicException("Test options was not created.  Cannot configure.");
+        }
+        configure(_testOptions);
     }
     private partial void Subscribe();
     private partial void Unsubscribe();
@@ -126,18 +130,18 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         MessengingGlobalClass.Aggregator = thisEvent;
         Subscribe(); //now i can use this.
         _container!.RegisterSingleton(thisEvent);
-        TestOptions testOptions;
+        //TestOptions testOptions;
 
         if (CanDoFileTestOptions() == false)
         {
-            testOptions = new();
+            _testOptions = new();
         }
         else
         {
             string testPath = TestOptions.GetTestPath();
-            testOptions = jj2.RetrieveSavedObject<TestOptions>(testPath);
+            _testOptions = jj2.RetrieveSavedObject<TestOptions>(testPath);
         }
-        _container.RegisterSingleton(testOptions);
+        _container.RegisterSingleton(_testOptions);
         //i did not allow a single generic type for now.
         //forced to attempt it (since later could not find it (wrong).
         //this did not use interfaces.

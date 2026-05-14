@@ -198,7 +198,7 @@ public class LifeStoryHand : HandObservable<LifeCardGameCardInformation>
         thisCard.Drew = false;
         HandList.Add(thisCard);
     }
-    protected override async Task ProcessObjectClickedAsync(LifeCardGameCardInformation ThisObject, int Index)
+    protected override async Task ProcessObjectClickedAsync(LifeCardGameCardInformation payLoad, int index)
     {
         if (_didProcess)
         {
@@ -210,6 +210,12 @@ public class LifeStoryHand : HandObservable<LifeCardGameCardInformation>
     private async Task PlayerClickedAsync()
     {
         if (GetPlayerIndex == _myID)
+        {
+            return;
+        }
+        var actionCard = _model.CurrentPile.GetCardInfo();
+        var player = _gameContainer.PlayerList![GetPlayerIndex];
+        if (player.CanChoosePlayer(actionCard) == false)
         {
             return;
         }

@@ -1,6 +1,114 @@
 ﻿namespace LifeCardGame.Core.Logic;
 public static class Extensions
 {
+    private static bool HasValidTargetCard(
+    LifeCardGamePlayerItem player,
+    LifeCardGameCardInformation actionCard)
+    {
+        return actionCard.Action switch
+        {
+            EnumAction.DonateToCharity =>
+                player.LifeStory!.HandList.Any(x =>
+                    x.Category == EnumFirstCardCategory.Wealth &&
+                    x.Points > 5 &&
+                    x.SpecialCategory != EnumSpecialCardCategory.Passport),
+
+            EnumAction.Lawsuit =>
+                player.LifeStory!.HandList.Any(x =>
+                    x.Points >= 30 &&
+                    x.SpecialCategory != EnumSpecialCardCategory.Marriage),
+
+            EnumAction.AdoptBaby =>
+                player.LifeStory!.HandList.Any(x =>
+                    x.SwitchCategory == EnumSwitchCategory.Baby),
+
+            EnumAction.LongLostRelative =>
+                player.LifeStory!.HandList.Any(x =>
+                    x.Category == EnumFirstCardCategory.Family &&
+                    x.SpecialCategory != EnumSpecialCardCategory.Marriage &&
+                    x.Points > 5),
+
+            EnumAction.SecondChance =>
+                player.LifeStory!.HandList.Any(x =>
+                    x.Points >= 10 &&
+                    x.Points <= 30 &&
+                    x.SpecialCategory != EnumSpecialCardCategory.Passport),
+
+            EnumAction.YourStory =>
+                player.LifeStory!.HandList.Any(x =>
+                    x.Category == EnumFirstCardCategory.Adventure &&
+                    x.Points > 5),
+
+            EnumAction.LostPassport =>
+                player.LifeStory!.HandList.Any(x =>
+                    x.SpecialCategory == EnumSpecialCardCategory.Passport),
+
+            EnumAction.IMTheBoss or EnumAction.YoureFired =>
+                player.LifeStory!.HandList.Any(x => x.IsPayday()),
+
+            // These only need an opponent selected, not a specific card.
+            EnumAction.MidlifeCrisis or EnumAction.LifeSwap =>
+                true,
+
+            _ => true
+        };
+    }
+    extension(LifeCardGamePlayerItem player)
+    {
+        public bool CanChoosePlayer(LifeCardGameCardInformation actionCard)
+        {
+            if (player.PlayerCategory == EnumPlayerCategory.Self)
+            {
+                return false;
+            }
+
+            return actionCard.Action switch
+            {
+                EnumAction.DonateToCharity =>
+                    player.LifeStory!.HandList.Any(x =>
+                        x.Category == EnumFirstCardCategory.Wealth &&
+                        x.Points > 5 &&
+                        x.SpecialCategory != EnumSpecialCardCategory.Passport),
+
+                EnumAction.Lawsuit =>
+                    player.LifeStory!.HandList.Any(x =>
+                        x.Points >= 30 &&
+                        x.SpecialCategory != EnumSpecialCardCategory.Marriage),
+
+                EnumAction.AdoptBaby =>
+                    player.LifeStory!.HandList.Any(x => x.SwitchCategory == EnumSwitchCategory.Baby),
+
+                EnumAction.LongLostRelative =>
+                    player.LifeStory!.HandList.Any(x =>
+                        x.Category == EnumFirstCardCategory.Family &&
+                        x.SpecialCategory != EnumSpecialCardCategory.Marriage &&
+                        x.Points > 5),
+
+                EnumAction.SecondChance =>
+                    player.LifeStory!.HandList.Any(x =>
+                        x.Points >= 10 &&
+                        x.Points <= 30 &&
+                        x.SpecialCategory != EnumSpecialCardCategory.Passport),
+
+                EnumAction.YourStory =>
+                    player.LifeStory!.HandList.Any(x =>
+                        x.Category == EnumFirstCardCategory.Adventure &&
+                        x.Points > 5),
+
+                EnumAction.LostPassport =>
+                    player.LifeStory!.HandList.Any(x =>
+                        x.SpecialCategory == EnumSpecialCardCategory.Passport),
+
+                EnumAction.IMTheBoss or EnumAction.YoureFired =>
+                    player.LifeStory!.HandList.Any(x => x.IsPayday()),
+
+                EnumAction.MidlifeCrisis or EnumAction.LifeSwap =>
+                    true,
+
+                _ => true
+            };
+        }
+    }
     extension(PlayerCollection<LifeCardGamePlayerItem> list)
     {
         public DeckRegularDict<LifeCardGameCardInformation> OpponentStory()
@@ -124,7 +232,10 @@ public static class Extensions
                 }
             }
             if (enables == false)
+            {
                 newEnables = false;
+            }
+
             if (newEnables == false)
             {
                 list.ForEach(thisPlayer =>
@@ -144,39 +255,26 @@ public static class Extensions
             }
             list.ForEach(player =>
             {
-                if (thisCard.Action == EnumAction.AdoptBaby || thisCard.Action == EnumAction.IMTheBoss || thisCard.Action == EnumAction.LifeSwap || thisCard.Action == EnumAction.LongLostRelative || thisCard.Action == EnumAction.LostPassport || thisCard.Action == EnumAction.MidlifeCrisis || thisCard.Action == EnumAction.SecondChance || thisCard.Action == EnumAction.YoureFired || thisCard.Action == EnumAction.YourStory)
+
+                if (thisCard.Action == EnumAction.AdoptBaby ||
+                    thisCard.Action == EnumAction.IMTheBoss ||
+                    thisCard.Action == EnumAction.LifeSwap ||
+                    thisCard.Action == EnumAction.LongLostRelative ||
+                    thisCard.Action == EnumAction.LostPassport ||
+                    thisCard.Action == EnumAction.MidlifeCrisis ||
+                    thisCard.Action == EnumAction.SecondChance ||
+                    thisCard.Action == EnumAction.YoureFired ||
+                    thisCard.Action == EnumAction.YourStory ||
+                    thisCard.Action == EnumAction.Lawsuit && mainGame.OtherTurn == 0 ||
+                    thisCard.Action == EnumAction.DonateToCharity && mainGame.OtherTurn == 0)
                 {
-                    if (player.PlayerCategory != EnumPlayerCategory.Self)
-                    {
-                        newEnables = true;
-                    }
-                    else
-                    {
-                        newEnables = false;
-                    }
+                    newEnables =
+                        player.PlayerCategory != EnumPlayerCategory.Self &&
+                        HasValidTargetCard(player, thisCard);
                 }
-                else if (thisCard.Action == EnumAction.Lawsuit && mainGame.OtherTurn == 0)
-                {
-                    if (player.PlayerCategory != EnumPlayerCategory.Self)
-                    {
-                        newEnables = true;
-                    }
-                    else
-                    {
-                        newEnables = false;
-                    }
-                }
-                else if (thisCard.Action == EnumAction.DonateToCharity && mainGame.OtherTurn == 0)
-                {
-                    if (player.PlayerCategory != EnumPlayerCategory.Self)
-                    {
-                        newEnables = true;
-                    }
-                    else
-                    {
-                        newEnables = false;
-                    }
-                }
+
+
+                
                 else if (thisCard.Action == EnumAction.DonateToCharity)
                 {
                     if (player.PlayerCategory == EnumPlayerCategory.Self)
