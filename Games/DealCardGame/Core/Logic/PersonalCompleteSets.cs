@@ -81,9 +81,15 @@ public class PersonalCompleteSets
         var property = _gameContainer.PersonalInformation.SetData.Single(x => x.Color == color);
         if (card.ActionCategory == EnumActionCategory.House || card.ActionCategory == EnumActionCategory.Hotel)
         {
+            //if (property.)
             if (property!.HasRequiredSet == false)
             {
                 _toast.ShowUserErrorToast("Unable to add card because don't have a monopoly to even add a house or hotel");
+                return false;
+            }
+            if (property.Color == EnumColor.Black || property.Color == EnumColor.Lime)
+            {
+                _toast.ShowUserErrorToast("You cannot play a house or hotel for railroads or utilities type of properties which are black and lime");
                 return false;
             }
             if (card.ActionCategory == EnumActionCategory.Hotel)
