@@ -15,4 +15,5 @@ public partial class SorryMainView
         base.OnInitialized();
     }
     private ICustomCommand EndCommand => DataContext!.EndTurnCommand!;
+    private ICustomCommand LockCardCommand => DataContext!.LockDrawCardCommand!;
 }

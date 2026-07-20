@@ -13,6 +13,12 @@
                 @DataContext!.VMData.CardDetails
             </div>
         </div>
+        @if (TestData!.AdvancedTestOptions && DataContext!.DidDraw == false)
+        {
+            <div>
+                <GameButtonComponent Display="Lock Draw Card" CommandObject="LockCardCommand" />
+            </div>
+        }
     </StackItem>
     <StackItem>
         <GameBoardBlazor GraphicsData="_graphics" TargetHeight="88vh" />

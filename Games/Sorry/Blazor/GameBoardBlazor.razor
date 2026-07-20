@@ -11,7 +11,7 @@
     <BasePieceGraphics LongestSize="80" Location="new PointF(GraphicsData.DiscardLocation.Left, GraphicsData.DiscardLocation.Bottom + 5)">
         <PawnPiece MainColor="@GetColor(GraphicsData.Container.SingleInfo)" />
     </BasePieceGraphics>
-    @if (GraphicsData.Container.SaveRoot.DidDraw)
+    @if (GraphicsData.Container.SaveRoot.DidDraw || GraphicsData.Container.SaveRoot.AdvancedCardPreview)
     {
        
         <RefreshComponent CanRender="CanRenderBeginnings()">

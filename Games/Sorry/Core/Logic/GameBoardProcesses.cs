@@ -1394,4 +1394,35 @@ public class GameBoardProcesses
         _gameContainer.SaveRoot.PreviousSplit = thisMove.SpaceTo;
         await LastMovesAsync(thisMove);
     }
+
+    public bool CanAdvancedPlace(
+    SorryPlayerItem player,
+    int destination)
+    {
+        SpaceInfo space = _spaceList![destination];
+
+        // Cannot stack on any existing pawn.
+        if (space.Player != 0)
+        {
+            return false;
+        }
+
+        if (space.WhatBoard == EnumBoardStatus.OnBoard)
+        {
+            return true;
+        }
+
+        if (space.WhatBoard == EnumBoardStatus.IsStart)
+        {
+            return space.ColorOwner == player.Color;
+        }
+
+        if (space.WhatBoard == EnumBoardStatus.IsSafety)
+        {
+            return space.ColorOwner == player.Color;
+        }
+
+        return false;
+    }
+
 }

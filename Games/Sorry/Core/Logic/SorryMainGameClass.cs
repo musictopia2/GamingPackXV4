@@ -16,6 +16,7 @@ public class SorryMainGameClass
         SorryGameContainer gameContainer,
         DrawShuffleClass<CardInfo, SorryPlayerItem> shuffle,
         GameBoardProcesses gameBoard,
+        SorryGameContainer container,
         ISystemError error,
         IToast toast
         ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
@@ -24,6 +25,7 @@ public class SorryMainGameClass
         _command = command;
         _shuffle = shuffle;
         _gameBoard = gameBoard;
+        _container = container;
         _shuffle.AfterDrawingAsync = AfterDrawingAsync;
         _shuffle.CurrentPlayer = () => SingleInfo!;
         _shuffle.AfterFirstShuffle = TestCardOnTop;
@@ -40,6 +42,8 @@ public class SorryMainGameClass
     private readonly CommandContainer _command;
     private readonly DrawShuffleClass<CardInfo, SorryPlayerItem> _shuffle;
     private readonly GameBoardProcesses _gameBoard;
+    private readonly SorryGameContainer _container;
+
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -154,10 +158,20 @@ public class SorryMainGameClass
         }
         await base.ContinueTurnAsync();
     }
+
+
     public override async Task MakeMoveAsync(int space)
     {
+        
         await _gameBoard.MakeMoveAsync(space);
     }
+
+    
+
+    //public override async Task MakeMoveAsync(int space)
+    //{
+    //    await _gameBoard.MakeMoveAsync(space);
+    //}
     public override async Task EndTurnAsync()
     {
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
@@ -171,6 +185,17 @@ public class SorryMainGameClass
     private async Task AfterDrawingAsync()
     {
         _gameBoard.ShowDraw();
+        if (Test!.AdvancedTestOptions)
+        {
+            SaveRoot.DidDraw = false; //mark as false after all since you can draw as many times as you want.
+            SaveRoot.AdvancedCardPreview = true;
+
+            _model.CardDetails = SaveRoot.CurrentCard!.Details;
+
+
+            await ContinueTurnAsync(); //try this too (?)
+            return;
+        }
         await _gameBoard.GetValidMovesAsync();
     }
     protected override async Task ShowHumanCanPlayAsync()
@@ -178,4 +203,13 @@ public class SorryMainGameClass
         await base.ShowHumanCanPlayAsync();
         _command.UpdateAll();
     }
+
+
+    
+
+
+
+
+
+
 }

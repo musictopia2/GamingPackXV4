@@ -12,7 +12,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<CardInfo>
     protected override bool NeedsToDrawBacks => false;
     protected override bool CanStartDrawing()
     {
-        return Container!.SaveRoot.DidDraw;
+        return Container!.SaveRoot.DidDraw || Container.SaveRoot.AdvancedCardPreview;
     }
     protected override void DrawBacks()
     {

@@ -49,6 +49,8 @@ public class SorrySaveInfo : BasicSavedGameClass<SorryPlayerItem>, ISavedCardLis
             }
         }
     }
+    public bool AdvancedCardPreview { get; set; }
+
     public CardInfo? CurrentCard { get; set; }
     public DeckRegularDict<CardInfo> CardList { get; set; } = new(); //i think.
 }

@@ -2,6 +2,21 @@
 namespace Sorry.Blazor;
 public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<SorryShellViewModel>(starts, mode)
 {
+
+    protected override Task RegisterTestsAsync()
+    {
+        ConfigureTestOptions(options =>
+        {
+            options.SaveOption = EnumTestSaveCategory.RestoreOnly;
+            // Do not reactivate advanced mode after Commit Test
+            // changes the session to RestoreOnly.
+            //if (options.SaveOption != EnumTestSaveCategory.RestoreOnly)
+            //{
+            //    options.AdvancedTestOptions = true;
+            //}
+        });
+        return base.RegisterTestsAsync();
+    }
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
