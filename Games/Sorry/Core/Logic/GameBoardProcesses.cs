@@ -661,6 +661,112 @@ public class GameBoardProcesses
         });
         _gameContainer.RepaintBoard();
     }
+
+    private bool SlideWouldRemovePiece(
+    int destination,
+    int otherPiecePosition)
+    {
+        if (destination <= 0 || destination >= 100)
+        {
+            return false;
+        }
+
+        SpaceInfo destinationSpace = _spaceList![destination];
+
+        // No slide begins here.
+        if (destinationSpace.SpaceDesc != EnumSpaceType.StartSlide)
+        {
+            return false;
+        }
+
+        // A player does not slide on their own color.
+        if (destinationSpace.ColorOwner == OurColor)
+        {
+            return false;
+        }
+
+        int index = destination;
+
+        do
+        {
+            // The piece at the slide's starting space is also knocked away.
+            if (index == otherPiecePosition)
+            {
+                return true;
+            }
+
+            index++;
+
+            if (index == 77)
+            {
+                index = 17;
+            }
+
+            SpaceInfo space = _spaceList[index];
+
+            if (index == otherPiecePosition)
+            {
+                return true;
+            }
+
+            if (space.SpaceDesc != EnumSpaceType.ContinueSlide)
+            {
+                break;
+            }
+        }
+        while (true);
+
+        return false;
+    }
+
+    private int GetFinalSplitPosition(int destination)
+    {
+        // Home.
+        if (destination >= 100)
+        {
+            return 100;
+        }
+
+        SpaceInfo destinationSpace = _spaceList![destination];
+
+        // The piece does not slide unless it lands at the start of
+        // another player's slide.
+        if (destinationSpace.SpaceDesc != EnumSpaceType.StartSlide)
+        {
+            return destination;
+        }
+
+        EnumColorChoice currentColor =
+            _gameContainer.SingleInfo!.Color;
+
+        // You do not slide on your own color.
+        if (destinationSpace.ColorOwner == currentColor)
+        {
+            return destination;
+        }
+
+        int index = destination;
+
+        do
+        {
+            index++;
+
+            if (index == 77)
+            {
+                index = 17;
+            }
+
+            SpaceInfo space = _spaceList[index];
+
+            if (space.SpaceDesc != EnumSpaceType.ContinueSlide)
+            {
+                return index;
+            }
+        }
+        while (true);
+    }
+
+
     private async Task MoveSlideAsync(SpaceInfo newSpace)
     {
         await MoveSlideAsync(newSpace, _gameContainer.WhoTurn);
@@ -824,6 +930,7 @@ public class GameBoardProcesses
         {
             await MoveSlideAsync(newSpace);
         }
+
     }
     private async Task LastMovesAsync(MoveInfo thisMove)
     {
@@ -1052,21 +1159,61 @@ public class GameBoardProcesses
                     {
                         nextSpace2 = 0;
                     }
-                    if (nextSpace1 > 0)
+
+                    bool firstThenSecondValid =
+                        nextSpace1 > 0 &&
+                        nextSpace2 > 0 &&
+                        SlideWouldRemovePiece(
+                            nextSpace1,
+                            secondSpace.Index) == false;
+
+                    bool secondThenFirstValid =
+                        nextSpace2 > 0 &&
+                        nextSpace1 > 0 &&
+                        SlideWouldRemovePiece(
+                            nextSpace2,
+                            firstSpace.Index) == false;
+
+                    // A split is valid only when both halves can be completed.
+                    if (nextSpace1 > 0 && nextSpace2 > 0)
                     {
-                        thisMove = new ();
-                        thisMove.SpaceFrom = firstSpace.Index;
-                        thisMove.NumberUsed = x;
-                        thisMove.SpaceTo = nextSpace1;
-                        MoveList.Add(thisMove);
-                    }
-                    if (nextSpace2 > 0)
-                    {
-                        thisMove = new ();
-                        thisMove.SpaceFrom = secondSpace.Index;
-                        thisMove.NumberUsed = y;
-                        thisMove.SpaceTo = nextSpace2;
-                        MoveList.Add(thisMove);
+
+
+                        if (firstThenSecondValid)
+                        {
+                            thisMove = new()
+                            {
+                                SpaceFrom = firstSpace.Index,
+                                NumberUsed = x,
+                                SpaceTo = nextSpace1
+                            };
+
+                            MoveList.Add(thisMove);
+                        }
+
+                        if (secondThenFirstValid)
+                        {
+                            thisMove = new()
+                            {
+                                SpaceFrom = secondSpace.Index,
+                                NumberUsed = y,
+                                SpaceTo = nextSpace2
+                            };
+
+                            MoveList.Add(thisMove);
+                        }
+
+                        //thisMove = new();
+                        //thisMove.SpaceFrom = firstSpace.Index;
+                        //thisMove.NumberUsed = x;
+                        //thisMove.SpaceTo = nextSpace1;
+                        //MoveList.Add(thisMove);
+
+                        //thisMove = new();
+                        //thisMove.SpaceFrom = secondSpace.Index;
+                        //thisMove.NumberUsed = y;
+                        //thisMove.SpaceTo = nextSpace2;
+                        //MoveList.Add(thisMove);
                     }
                     if (nextSpace2 == 100 && newCombos.Count == 1)
                     {
@@ -1381,17 +1528,32 @@ public class GameBoardProcesses
             return;
         }
         _gameContainer.SaveRoot.MovesMade++;
-        await ResumeMoveAsync(thisMove.NumberUsed, thisSpace, thisMove);
+
+        // Determine the first piece's final location, including any slide.
+        int finalSplitPosition =
+            GetFinalSplitPosition(thisMove.SpaceTo);
+
+        await ResumeMoveAsync(
+            thisMove.NumberUsed,
+            thisSpace,
+            thisMove);
+
         if (_gameContainer.SaveRoot.MovesMade == 2)
         {
             await EndMoveAsync();
             return;
         }
+
         if (_gameContainer.SaveRoot.MovesMade > 2)
         {
-            throw new CustomBasicException("Only 2 moves can be made.  This means there is a problem.  Find out what happened");
+            throw new CustomBasicException(
+                "Only 2 moves can be made. This means there is a problem.");
         }
-        _gameContainer.SaveRoot.PreviousSplit = thisMove.SpaceTo;
+
+        // Exclude the first piece at its actual location after sliding.
+        _gameContainer.SaveRoot.PreviousSplit =
+            finalSplitPosition;
+
         await LastMovesAsync(thisMove);
     }
 

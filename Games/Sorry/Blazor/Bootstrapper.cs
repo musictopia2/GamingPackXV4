@@ -7,8 +7,12 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : Multiplay
     {
         ConfigureTestOptions(options =>
         {
-            options.SaveOption = EnumTestSaveCategory.RestoreOnly;
-            options.DoubleCheck = true;
+            //here is where i do test options (if needed).
+
+
+            //options.AdvancedTestOptions = true;
+            //options.SaveOption = EnumTestSaveCategory.RestoreOnly;
+            //options.DoubleCheck = true;
             // Do not reactivate advanced mode after Commit Test
             // changes the session to RestoreOnly.
             //if (options.SaveOption != EnumTestSaveCategory.RestoreOnly)
