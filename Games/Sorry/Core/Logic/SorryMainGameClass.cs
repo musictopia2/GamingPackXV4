@@ -44,7 +44,7 @@ public class SorryMainGameClass
     private readonly GameBoardProcesses _gameBoard;
     private readonly SorryGameContainer _container;
 
-    public override Task FinishGetSavedAsync()
+    public override async Task FinishGetSavedAsync()
     {
         LoadControls();
         BoardGameSaved();
@@ -54,9 +54,16 @@ public class SorryMainGameClass
         {
             throw new CustomBasicException("Our color was not populated.");
         }
+        if (Test!.DoubleCheck && SaveRoot.DidDraw)
+        {
+            // MoveList is derived state. Do not trust the saved version.
+            SaveRoot.MoveList.Clear();
+            SaveRoot.HighlightList.Clear();
+
+            await _gameBoard.GetValidMovesAsync();
+        }
         HookMod();
         Aggregator.RepaintBoard();
-        return Task.CompletedTask;
     }
     private void HookMod()
     {
