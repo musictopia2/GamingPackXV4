@@ -1,4 +1,5 @@
 ﻿namespace Sorry.Core.Logic;
+
 [SingletonGame]
 [AutoReset]
 public class GameBoardProcesses
@@ -92,7 +93,7 @@ public class GameBoardProcesses
             for (y = 1; y <= 4; y++)
             {
                 q += 1;
-                thisSpace = new ();
+                thisSpace = new();
                 thisSpace.ColorOwner = EnumColorChoice.FromValue(z);
                 thisSpace.Index = q;
                 thisSpace.SpaceDesc = EnumSpaceType.None;
@@ -110,7 +111,7 @@ public class GameBoardProcesses
         for (x = 17; x <= 76; x++)
         {
             y += 1;
-            thisSpace = new ();
+            thisSpace = new();
             thisSpace.Index = x;
             thisSpace.WhatBoard = EnumBoardStatus.OnBoard;
             thisSpace.SpaceNumber = y;
@@ -246,7 +247,7 @@ public class GameBoardProcesses
             for (y = 1; y <= 5; y++)
             {
                 q += 1;
-                thisSpace = new ();
+                thisSpace = new();
                 thisSpace.ColorOwner = EnumColorChoice.FromValue(z);
                 thisSpace.SpaceNumber = y;
                 thisSpace.Index = q;
@@ -282,7 +283,9 @@ public class GameBoardProcesses
         {
             return MoveList.Any(items => items.SpaceFrom == index);
         }
-        return MoveList.Any(items => items.SpaceTo == index);
+        return MoveList.Any(items =>
+            items.SpaceFrom == PreviousPiece &&
+            items.SpaceTo == index);
     }
     private async Task NoMovesEndTurnAsync()
     {
@@ -969,14 +972,14 @@ public class GameBoardProcesses
                 }
                 else
                 {
-                    newSpace = new ();
+                    newSpace = new();
                     newPlayer = 0;
                 }
                 if (newSpace.Player != thisSpace.Player || newSpace.Player == 0)
                 {
                     if (thisSpace.Index != _gameContainer!.SaveRoot!.PreviousSplit)
                     {
-                        output = new ();
+                        output = new();
                         output.SpaceFrom = thisSpace.Index;
                         if (newSpace.Index > 0)
                         {
@@ -1157,72 +1160,71 @@ public class GameBoardProcesses
                     }
                     else
                     {
-                        lastSpace2 = new ();
+                        lastSpace2 = new();
                         newPlayer2 = 0;
                     }
-                    if (lastSpace1.Player == firstSpace.Player)
-                    {
-                        nextSpace1 = 0;
-                    }
-                    if (lastSpace2.Player == secondSpace.Player)
-                    {
-                        nextSpace2 = 0;
-                    }
+                    // Validate each split in the order it would actually be played.
+                    // The second move is allowed to land on the first piece's original
+                    // space because that space has been vacated by then.  Looking only
+                    // at the unchanged board incorrectly removes valid split-7 moves.
+                    bool firstMoveOpen =
+                        nextSpace1 > 0 &&
+                        (lastSpace1.Player != firstSpace.Player || lastSpace1.Player == 0);
+
+                    bool secondMoveOpenAfterFirst =
+                        nextSpace2 > 0 &&
+                        (lastSpace2.Player != secondSpace.Player ||
+                         lastSpace2.Player == 0 ||
+                         nextSpace2 == firstSpace.Index);
+
+                    bool secondMoveOpen =
+                        nextSpace2 > 0 &&
+                        (lastSpace2.Player != secondSpace.Player || lastSpace2.Player == 0);
+
+                    bool firstMoveOpenAfterSecond =
+                        nextSpace1 > 0 &&
+                        (lastSpace1.Player != firstSpace.Player ||
+                         lastSpace1.Player == 0 ||
+                         nextSpace1 == secondSpace.Index);
 
                     bool firstThenSecondValid =
-                        nextSpace1 > 0 &&
-                        nextSpace2 > 0 &&
+                        firstMoveOpen &&
+                        secondMoveOpenAfterFirst &&
                         SlideWouldRemovePiece(
                             nextSpace1,
-                            secondSpace.Index) == false;
+                            secondSpace.Index) == false &&
+                        GetFinalSplitPosition(nextSpace1) != nextSpace2;
 
                     bool secondThenFirstValid =
-                        nextSpace2 > 0 &&
-                        nextSpace1 > 0 &&
+                        secondMoveOpen &&
+                        firstMoveOpenAfterSecond &&
                         SlideWouldRemovePiece(
                             nextSpace2,
-                            firstSpace.Index) == false;
+                            firstSpace.Index) == false &&
+                        GetFinalSplitPosition(nextSpace2) != nextSpace1;
 
-                    // A split is valid only when both halves can be completed.
-                    if (nextSpace1 > 0 && nextSpace2 > 0)
+                    if (firstThenSecondValid)
                     {
-
-
-                        if (firstThenSecondValid)
+                        thisMove = new()
                         {
-                            thisMove = new()
-                            {
-                                SpaceFrom = firstSpace.Index,
-                                NumberUsed = x,
-                                SpaceTo = nextSpace1
-                            };
+                            SpaceFrom = firstSpace.Index,
+                            NumberUsed = x,
+                            SpaceTo = nextSpace1
+                        };
 
-                            MoveList.Add(thisMove);
-                        }
+                        MoveList.Add(thisMove);
+                    }
 
-                        if (secondThenFirstValid)
+                    if (secondThenFirstValid)
+                    {
+                        thisMove = new()
                         {
-                            thisMove = new()
-                            {
-                                SpaceFrom = secondSpace.Index,
-                                NumberUsed = y,
-                                SpaceTo = nextSpace2
-                            };
+                            SpaceFrom = secondSpace.Index,
+                            NumberUsed = y,
+                            SpaceTo = nextSpace2
+                        };
 
-                            MoveList.Add(thisMove);
-                        }
-
-                        //thisMove = new();
-                        //thisMove.SpaceFrom = firstSpace.Index;
-                        //thisMove.NumberUsed = x;
-                        //thisMove.SpaceTo = nextSpace1;
-                        //MoveList.Add(thisMove);
-
-                        //thisMove = new();
-                        //thisMove.SpaceFrom = secondSpace.Index;
-                        //thisMove.NumberUsed = y;
-                        //thisMove.SpaceTo = nextSpace2;
-                        //MoveList.Add(thisMove);
+                        MoveList.Add(thisMove);
                     }
                     if (nextSpace2 == 100 && newCombos.Count == 1)
                     {
@@ -1255,11 +1257,13 @@ public class GameBoardProcesses
         {
             return false;
         }
-        if (MoveList.Any(items => items.SpaceTo == 100))
+        if (PreviousPiece == 0)
         {
-            return PreviousPiece > 0;
+            return false;
         }
-        return false;
+        return MoveList.Any(items =>
+            items.SpaceFrom == PreviousPiece &&
+            items.SpaceTo == 100);
     }
     private CardInfo CurrentCard => _gameContainer.SaveRoot!.CurrentCard!;
     public async Task GetValidMovesAsync()
@@ -1355,7 +1359,7 @@ public class GameBoardProcesses
                         }
                         if (newSpace.Player != thisSpace.Player || newSpace.Player == 0)
                         {
-                            thisMove = new ();
+                            thisMove = new();
                             thisMove.SpaceFrom = thisSpace.Index;
                             thisMove.SpaceTo = newSpace.Index;
                             if (howMany < 0)
@@ -1367,7 +1371,7 @@ public class GameBoardProcesses
                     }
                     else
                     {
-                        thisMove = new ();
+                        thisMove = new();
                         thisMove.SpaceFrom = thisSpace.Index;
                         thisMove.SpaceTo = 100;
                         MoveList.Add(thisMove);
@@ -1390,7 +1394,7 @@ public class GameBoardProcesses
                         }
                         if (newSpace.Player != thisSpace.Player || newSpace.Player == 0)
                         {
-                            thisMove = new ();
+                            thisMove = new();
                             thisMove.SpaceFrom = thisSpace.Index;
                             thisMove.SpaceTo = newSpace.Index;
                             thisMove.IsBackwards = true;
@@ -1402,7 +1406,7 @@ public class GameBoardProcesses
                 {
                     tempList.ForConditionalItems(items => items.WhatBoard == EnumBoardStatus.OnBoard, finalSpace =>
                     {
-                        thisMove = new ();
+                        thisMove = new();
                         thisMove.SpaceFrom = thisSpace.Index;
                         thisMove.SpaceTo = finalSpace.Index;
                         thisMove.IsOptional = true;
