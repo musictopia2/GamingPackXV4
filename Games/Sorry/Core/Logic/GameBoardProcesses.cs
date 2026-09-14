@@ -46,6 +46,15 @@ public class GameBoardProcesses
             _gameContainer.SaveRoot!.PreviousPiece = value;
         }
     }
+    //this is to help on testing.
+    public int PiecesAtStartForCurrentPlayer()
+    {
+        int currentPlayer = _gameContainer.SingleInfo!.Id;
+        return _spaceList!.Count(x => x.Value.Player == currentPlayer && x.Value.WhatBoard == EnumBoardStatus.IsStart);
+    }
+    //if i cannot get this to pass, i have no hope anymore to have unit tests to prevent regression bugs.
+
+
     public void StartTurn()
     {
         OurColor = _gameContainer.SingleInfo!.Color;
