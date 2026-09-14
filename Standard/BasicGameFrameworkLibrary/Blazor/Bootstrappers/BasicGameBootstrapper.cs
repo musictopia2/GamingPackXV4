@@ -126,10 +126,9 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
             throw new CustomBasicException("Exit was not registered.");
         }
         _container.RegisterSingleton(BlazorUIHelpers.Exit);
-        EventAggregator thisEvent = new();
-        MessengingGlobalClass.Aggregator = thisEvent;
+        MessengingGlobalClass.Aggregator = _aggregator;
         Subscribe(); //now i can use this.
-        _container!.RegisterSingleton(thisEvent);
+        _container!.RegisterSingleton(_aggregator);
         //TestOptions testOptions;
 
         if (CanDoFileTestOptions() == false)
