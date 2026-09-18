@@ -63,7 +63,7 @@ public class SecondSourceGenerator : IIncrementalGenerator
     private void Execute(Compilation compilation, ImmutableArray<ClassDeclarationSyntax> list, SourceProductionContext context)
     {
         var others = list.Distinct();
-        ParserAttributesClass parses = new(compilation);
+        ParserAttributesClass parses = new(compilation, context);
         var results = parses.GetResults(others);
         EmitClass emits = new(context, compilation, results);
         emits.EmitLifetimeAttributes();
