@@ -110,11 +110,18 @@ public class FourthSourceGenerator : IIncrementalGenerator
             });
             if (symbol.Name != "IBeginningDice")
             {
-                w.WriteLine("public static void RegisterStandardDice(global::BasicGameFrameworkLibrary.Core.DIContainers.IGamePackageDIContainer container)")
-                .WriteCodeBlock(w =>
+                var simpleDice = compilation.GetTypeByMetadataName(
+                    "BasicGameFrameworkLibrary.Core.Dice.SimpleDice");
+
+                if (simpleDice is not null)
                 {
-                    w.PopulateStandardDiceMethod(compilation, symbol);
-                });
+                    w.WriteLine(
+                        "public static void RegisterStandardDice(global::BasicGameFrameworkLibrary.Core.DIContainers.IGamePackageDIContainer container)")
+                    .WriteCodeBlock(w =>
+                    {
+                        w.PopulateStandardDiceMethod(compilation, symbol);
+                    });
+                }
             }
             w.PopulateReplaceBoardGameColorClasses();
             //if i have a third one, will do.
