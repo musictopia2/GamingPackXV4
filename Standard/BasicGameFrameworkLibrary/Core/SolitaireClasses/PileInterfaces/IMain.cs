@@ -19,4 +19,5 @@ public interface IMain
     void AddCards(IDeckDict<SolitaireCard> list);
     bool HasCard(int pile);
     int StartNumber();
+    //void UpdatePiles();
 }

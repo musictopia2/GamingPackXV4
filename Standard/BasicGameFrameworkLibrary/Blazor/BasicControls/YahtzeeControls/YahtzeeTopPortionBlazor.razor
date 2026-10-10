@@ -10,12 +10,15 @@
                 <YahtzeeHeader />
                 @foreach (var row in TopList)
                 {
-                    <YahtzeeRowBlazor RowNumber="@GetRow(row)"
-                                      Highlighted="row.IsRecent"
-                                      Header="@row.Description"
-                                      Possible="@row.RenderPointsPossible()"
-                                      Obtained="@row.RenderPointsObtained()"
-                                      RowClicked="() => RowClicked.InvokeAsync(row)" />
+                    <StateContentView DataContext="row">
+                        <YahtzeeRowBlazor RowNumber="@GetRow(row)"
+                                          Highlighted="row.IsRecent"
+                                          Header="@row.Description"
+                                          Possible="@row.RenderPointsPossible()"
+                                          Obtained="@row.RenderPointsObtained()"
+                                          RowClicked="() => RowClicked.InvokeAsync(row)" />
+                    </StateContentView>
+                    
                 }
                 <YahtzeeRowBlazor Header="Bonus"
                                   RowNumber="8"

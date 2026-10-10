@@ -29,7 +29,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         }
         await GlobalHelpers.LoadGameScreenAsync.Invoke();
         await Step1FinishAsync(isBeginning);
-        command.UpdateAll();
+        //command.UpdateAll();
         await FinishStartAsync();
     }
     private async Task Step1FinishAsync(bool isBeginning)
@@ -64,7 +64,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         _gameSetUp.PlayerList = _gameSetUp.SaveRoot.PlayerList;
         _gameSetUp.PlayerList.FixNetworkedPlayers(basic.NickName);
         await FinishGetSavedAsync();
-        command.UpdateAll();
+        //command.UpdateAll();
         await FinishStartAsync();
         command.Processing = false;
     }
@@ -101,6 +101,10 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
             _gameSetUp.SingleInfo = _gameSetUp.PlayerList.GetWhoPlayer();
         }
         _gameSetUp.ShowTurn();
+
+
+        await aggregator.PublishAsync(
+            new RefreshScoreBoardEventModel<P>(_gameSetUp!.PlayerList!));
         if (_gameSetUp.SaveRoot!.ImmediatelyStartTurn)
         {
             await _gameSetUp.StartNewTurnAsync();
@@ -189,7 +193,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         {
             await _gameSetUp!.Network!.SendLoadGameMessageAsync(_gameSetUp.SaveRoot!);
         }
-        command.UpdateAll();
+        //command.UpdateAll();
         await FinishStartAsync();
         command.Processing = false;
     }
@@ -198,51 +202,14 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         SetGame();
         command.ManuelFinish = true;
         command.Processing = true;
+        await _gameSetUp!.PrepareNewGameAsync();
         if (gameInfo.GameType == EnumGameType.Rounds)
         {
             IStartNewGame temps = resolver.Resolve<IStartNewGame>();
             await temps.ResetAsync();
         }
-        if (gameInfo.SinglePlayerChoice == EnumPlayerChoices.Solitaire)
-        {
-            await FinishLoadingAsync(false);
-            command.Processing = false;
-            return;
-        }
-        foreach (var item in _gameSetUp!.PlayerList)
-        {
-            item.InGame = true;
-        }
-        _gameSetUp!.SaveRoot.PlayOrder.IsReversed = false; //can be marked to false now because its a brand new game.
-        _gameSetUp.SaveRoot.PlayOrder.WhoTurn = _gameSetUp.SaveRoot.PlayOrder.WhoStarts; //this is like before for who starts again for new game
-        _gameSetUp.SaveRoot.PlayOrder.WhoTurn = await _gameSetUp.SaveRoot.PlayerList.CalculateWhoTurnAsync();
-        _gameSetUp.SaveRoot.PlayOrder.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoTurn;
-        RawGameHost data = new();
-        data.WhoStarts = _gameSetUp.SaveRoot.PlayOrder.WhoStarts;
-        if (data.WhoStarts == 0)
-        {
-            toast!.ShowUserErrorToast("WhoStarts cannot be 0.  This means new game will not work");
-            return;
-        }
-        data.GameName = gameInfo.GameName;
-        data.Multiplayer = basic.MultiPlayer; //i think
-        foreach (var item in _gameSetUp.PlayerList)
-        {
-            RawPlayer player = new()
-            {
-                Id = item.Id,
-                NickName = item.NickName,
-                PlayerCategory = item.PlayerCategory,
-                IsHost = item.IsHost,
-            };
-            data.Players.Add(player);
-        }
-        if (NewGameDelegates.NewGameHostStep1 is null)
-        {
-            toast.ShowInfoToast("So far, nobody is handling new game.  Means its stuck for now");
-            return;
-        }
-        await NewGameDelegates.NewGameHostStep1?.Invoke(data)!;
+        await FinishLoadingAsync(false);
+        command.Processing = false;
     }
     async Task IRequestNewGameRound.RequestNewRoundAsync()
     {
@@ -268,7 +235,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
             await GlobalDelegates.ClearExceptForCurrentGame(_gameSetUp.SaveRoot.GameID); //delete anything that is not the key.
         }
         await FinishGetSavedAsync();
-        command.UpdateAll();
+        //command.UpdateAll();
         await FinishStartAsync();
         command.Processing = false;
     }
@@ -282,7 +249,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         {
             await _gameSetUp!.Network!.SendRestoreGameAsync(_gameSetUp.SaveRoot!);
         }
-        command.UpdateAll();
+        //command.UpdateAll();
         await FinishStartAsync();
     }
     async Task IClientUpdateGame.UpdateGameAsync(string payload)
@@ -303,6 +270,7 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         }
         if (isBeginning == false)
         {
+            //not sure about this (?)
             if (basic.MultiPlayer)
             {
                 await _gameSetUp.Network!.SendAllAsync("newround", _gameSetUp.SaveRoot.GameID);

@@ -1,5 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplePilesObservable;
-public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D : IDeckObject, new()
+public partial class BasicMultiplePilesCP<D> : SimpleControlObservable, IStateChanged where D : IDeckObject, new()
 {
     public EnumMultiplePilesStyleList Style { get; set; } = EnumMultiplePilesStyleList.None;
     public int Rows { get; set; }
@@ -7,6 +7,10 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
     public bool HasFrame { get; set; }
     public bool HasText { get; set; } = true;
     public bool DisableWhenNoneLeft { get; set; }
+    protected void OnStateChanged()
+    {
+        StateChanged?.Invoke();
+    }
     protected override bool CanEnableFirst()
     {
         if (DisableWhenNoneLeft == false)
@@ -74,6 +78,9 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
     public ControlCommand? PileCommand { get; set; }
 
     public ControlCommand? ExtraCommand;
+
+    public event Action? StateChanged;
+
     protected virtual async Task OnPileClickedAsync(int index, BasicPileInfo<D> thisPile)
     {
         if (thisPile.IsEnabled == false)
@@ -111,6 +118,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
             throw new CustomBasicException("Must have more than " + howMany + " in order to remove the first discard piles");
         }
         PileList.RemoveRange(0, howMany);
+        StateChanged?.Invoke();
     }
     public void RemoveLastDiscardPiles(int howMany)
     {
@@ -125,6 +133,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
         }
         var startAt = PileList.Count - howMany;
         PileList.RemoveRange(startAt, howMany);
+        StateChanged?.Invoke();
     }
     public void RemoveSpecificDiscardPiles(BasicList<int> indexList)
     {
@@ -138,6 +147,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
             PileList!.RemoveSpecificItem(thisPile);
         });
         _discardsRemoved = indexList.Count;
+        StateChanged?.Invoke();
     }
     public void LoadBoard()
     {
@@ -178,6 +188,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
         if (thisPile.IsSelected == true)
         {
             thisPile.IsSelected = false;
+            StateChanged?.Invoke();
             return;
         }
         foreach (var temps in PileList)
@@ -186,6 +197,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
         }
         thisPile = PileList[index];
         thisPile.IsSelected = true;
+        
     }
     public virtual void SelectPile(int index)
     {
@@ -195,7 +207,12 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
         {
             throw new CustomBasicException("Sorry; the pile " + index + " is not visible");
         }
+        if (thisPile.IsSelected)
+        {
+            return;
+        }
         thisPile.IsSelected = true;
+        StateChanged?.Invoke();
     }
     public void UnselectPile(int index)
     {
@@ -205,7 +222,12 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
         {
             throw new CustomBasicException("Sorry; the pile " + index + " is not visible");
         }
+        if (thisPile.IsSelected == false)
+        {
+            return;
+        }
         thisPile.IsSelected = false;
+        StateChanged?.Invoke();
     }
     public int SinglePileSelected()
     {
@@ -237,6 +259,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
         {
             thisPile.ObjectList.Add(thisCard);
         }
+        StateChanged?.Invoke();
     }
     protected virtual void PossiblePileChangeWhenClearingBoard(BasicPileInfo<D> thisPile) { }
     protected virtual bool CanClearCardsAutomatically()
@@ -263,6 +286,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
             }
             thisPile.IsSelected = false;
         }
+        StateChanged?.Invoke();
     }
     public void MoveSingleCard(int previousPile, int newPile)
     {
@@ -288,6 +312,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
             }
             thisPile.ObjectList.RemoveLastItem();
             AfterRemoveCardFromPile(thisPile);
+            StateChanged?.Invoke();
             return;
         }
         if (thisPile.ThisObject.Deck == 0)
@@ -295,6 +320,7 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
             throw new CustomBasicException("The card is already blank.  Therefore cannot remove");
         }
         thisPile.ThisObject = new D();
+        StateChanged?.Invoke();
     }
     protected virtual void AfterRemoveCardFromPile(BasicPileInfo<D> thisPile) { }
     public bool HasCard(int index)
@@ -381,5 +407,4 @@ public partial class BasicMultiplePilesCP<D> : SimpleControlObservable where D :
         PileCommand!.ReportCanExecuteChange(); //you do need this though.
         ExtraCommand?.ReportCanExecuteChange(); //this is used for games like millebournes where you don't inherit from this.
     }
-    protected override void PrivateEnableAlways() { }
 }

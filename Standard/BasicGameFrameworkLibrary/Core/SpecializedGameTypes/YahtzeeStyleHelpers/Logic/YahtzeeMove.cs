@@ -13,7 +13,7 @@ public class YahtzeeMove<D>(ScoreContainer scoreContainer,
         scoreLogic.MarkScore(row);
         gameContainer.SingleInfo!.Points = scoreLogic.TotalScore;
         gameContainer.SingleInfo.RowList = scoreContainer.RowList.ToBasicList();
-        gameContainer.Command.UpdateAll();
+        gameContainer.Command.UpdateSpecificAction(YahtzeeActions.Scoresheet);
         if (gameContainer.Test.NoAnimations == false)
         {
             await gameContainer.Delay.DelaySeconds(1);

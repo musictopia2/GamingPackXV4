@@ -1,4 +1,5 @@
-﻿namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.BasicVMInterfaces;
+﻿
+namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.BasicVMInterfaces;
 public interface IBasicSolitaireVM
 {
     DeckObservablePile<SolitaireCard> DeckPile { get; set; }

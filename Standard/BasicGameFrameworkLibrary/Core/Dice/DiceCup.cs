@@ -1,16 +1,16 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
-public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> where D :
+[UseStateChanged]
+public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D>, IDisposable where D :
     IStandardDice, new()
 {
     public IGamePackageResolver? MainContainer { get; set; }
     private IAsyncDelayer? _delay;
     public Func<D, Task>? DiceClickedAsync { get; set; }
     public string CommandActionString { get; set; } = "dicecup";
-    public bool Visible { get; set; }
+    [StateProperty]
+    public partial bool Visible { get; set; }
     [Command(EnumCommandCategory.Control)]
-#pragma warning disable IDE0051 // Remove unused private members must use because its part of source generators
     private async Task PrivateDiceClickAsync(D dice)
-#pragma warning restore IDE0051 // Remove unused private members
     {
         if (DiceClickedAsync == null)
         {
@@ -40,17 +40,26 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
     private IGameNetwork? _network;
     private void Init(IGamePackageResolver resolver)
     {
+        DiceList.StateChanged += OnDiceListStateChanged;
+
         BasicData thisData = resolver.Resolve<BasicData>();
         MainContainer = resolver;
         DiceList.MainContainer = MainContainer;
         CreateCommands();
-        if (thisData.MultiPlayer == true)
+
+        if (thisData.MultiPlayer)
         {
             _network = resolver.Resolve<IGameNetwork>();
         }
     }
+
+    private void OnDiceListStateChanged()
+    {
+        OnStateChanged();
+    }
     partial void CreateCommands();
-    public bool CanShowDice { get; set; }
+    [StateProperty]
+    public partial bool CanShowDice { get; set; }
     public int TotalDiceValue => DiceList.Sum(Items => Items.Value);
     public DiceList<D> DiceList { get; }
     int _originalNumber;
@@ -249,5 +258,9 @@ public partial class DiceCup<D> : SimpleControlObservable, IRollMultipleDice<D> 
     {
         DiceCommand.ReportCanExecuteChange();
     }
-    protected override void PrivateEnableAlways() { }
+    public void Dispose()
+    {
+        DiceList.StateChanged -= OnDiceListStateChanged;
+        GC.SuppressFinalize(this);
+    }
 }

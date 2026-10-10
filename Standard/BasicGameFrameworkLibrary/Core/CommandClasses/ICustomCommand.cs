@@ -1,7 +1,6 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
 public interface ICustomCommand : IAsyncCommand
 {
-    Action? UpdateBlazor { get; set; }
+    event Action? CanExecuteChanged;
     void ReportCanExecuteChange();
-    object Context { get; }
 }

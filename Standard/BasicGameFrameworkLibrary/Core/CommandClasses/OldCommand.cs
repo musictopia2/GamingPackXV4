@@ -14,7 +14,7 @@ public class OldCommand : ParentCommand, ICustomCommand
     }
     public bool CanExecute(object? parameter)
     {
-        if (InProgressHelpers.Reconnecting)
+        if (InProgressHelpers.Reconnecting || InProgressHelpers.Starting)
         {
             return false;
         }
@@ -23,5 +23,10 @@ public class OldCommand : ParentCommand, ICustomCommand
             return false;
         }
         return ParentCanExecute(parameter);
+    }
+    protected override void ExecutingChanged()
+    {
+        ReportCanExecuteChanged();
+        base.ExecutingChanged();
     }
 }

@@ -27,7 +27,6 @@ public partial class MultiplayerBasicParentShell
     }
     protected override void OnInitialized()
     {
-        NewGameDelegates.NewGameHostStep1 = NewGameHostStep1Async;
         BasicData = Resolver!.Resolve<BasicData>();
         BasicData.DoFullScreen = async () =>
         {
@@ -44,8 +43,8 @@ public partial class MultiplayerBasicParentShell
         AdvancedState = Resolver!.Resolve<AdvancedTestStateService>();
         AdvancedState.StateChanged = StateHasChanged;
         Toast = Resolver!.Resolve<IToast>();
-        CommandContainer command = Resolver!.Resolve<CommandContainer>();
-        command.ParentAction = StateHasChanged;
+        //CommandContainer command = Resolver!.Resolve<CommandContainer>();
+        //command.ParentAction = StateHasChanged;
         IStartUp starts = Resolver!.Resolve<IStartUp>();
         starts.StartVariables(BasicData);
         if (BasicData.NickName != "")
@@ -54,33 +53,6 @@ public partial class MultiplayerBasicParentShell
             _loading = false;
         }
         base.OnInitialized();
-    }
-    private async Task NewGameHostStep1Async(RawGameHost game)
-    {
-        await JS!.SaveHostNewGameAsync(game);
-        var item = OS;
-        if (item == EnumOS.Wasm)
-        {
-            await JS!.RefreshBrowser(); //this cannot care what happens next.
-            return;
-        }
-        if (item == EnumOS.WindowsDT)
-        {
-            if (NewGameDelegates.ReloadOnWPF is null)
-            {
-                Toast!.ShowUserErrorToast("Nobody is reloading on WPF.  Rethink");
-                return;
-            }
-            NewGameDelegates.ReloadOnWPF.Invoke();
-            return;
-        }
-        throw new CustomBasicException("Only wasm and windows desktop is supported");
-        //there is a good chance i cannot even support maui anymore.
-        //maui cannot even go back to main either.
-
-
-
-        //Toast!.ShowInfoToast("Parent Shell Is Starting To Handle New Game");
     }
     private async Task ManuallyOpenCloseFullScreenAsync()
     {

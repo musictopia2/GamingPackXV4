@@ -11,12 +11,15 @@
                     <YahtzeeHeader />
                     @foreach (var row in BottomList)
                     {
-                        <YahtzeeRowBlazor RowNumber="@GetRow(row)"
-                                          Header="@row.Description"
-                                          Possible="@row.RenderPointsPossible()"
-                                          Obtained="@row.RenderPointsObtained()"
-                                          Highlighted="row.IsRecent"
-                                          RowClicked="() => RowClicked.InvokeAsync(row)" />
+                        <StateContentView DataContext="row">
+                            <YahtzeeRowBlazor RowNumber="@GetRow(row)"
+                                              Header="@row.Description"
+                                              Possible="@row.RenderPointsPossible()"
+                                              Obtained="@row.RenderPointsObtained()"
+                                              Highlighted="row.IsRecent"
+                                              RowClicked="() => RowClicked.InvokeAsync(row)" />
+                        </StateContentView>
+                        
                     }
                     <YahtzeeFooter Text="Total Bottom Portion"
                                    RowNumber="@GetBottomRow"

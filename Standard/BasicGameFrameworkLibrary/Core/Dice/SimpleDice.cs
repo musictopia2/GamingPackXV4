@@ -1,16 +1,26 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
-public class SimpleDice : IStandardDice, IGenerateDice<int>, ISimpleValueObject<int>
+[UseStateChanged]
+public partial class SimpleDice : IStandardDice, IGenerateDice<int>, ISimpleValueObject<int>
 {
     public int HeightWidth { get; } = 60;
-    public string DotColor { get; set; } = cs1.Black; //you have to make it public.  otherwise, you can't save the color which is needed for games like kismet.
-    public string FillColor { get; set; } = cs1.White;
-    public int Value { get; set; }
-    public int Index { get; set; }
+    [StateProperty]
+    public partial string DotColor { get; set; } = cs1.Black; //you have to make it public.  otherwise, you can't save the color which is needed for games like kismet.
+    [StateProperty]
+    public partial string FillColor { get; set; } = cs1.White;
+    [StateProperty]
+    public partial int Value { get; set; }
+    [StateProperty]
+    public partial int Index { get; set; }
+
     public EnumDiceStyle Style { get; } = EnumDiceStyle.Regular;
-    public bool Hold { get; set; }
-    public bool IsSelected { get; set; }
-    public bool Visible { get; set; } = true;
-    public bool IsEnabled { get; set; } = true;
+    [StateProperty]
+    public partial bool Hold { get; set; }
+    [StateProperty]
+    public partial bool IsSelected { get; set; }
+    [StateProperty]
+    public partial bool Visible { get; set; } = true;
+    [StateProperty]
+    public partial bool IsEnabled { get; set; } = true;
     int ISimpleValueObject<int>.ReadMainValue => Value;
     public virtual void Populate(int chosen)
     {

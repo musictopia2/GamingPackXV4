@@ -1,0 +1,9 @@
+﻿@typeparam VM
+@inherits KeyComponentBase
+@if (_dataContext == null)
+{
+    return;
+}
+<CascadingValue Value="_dataContext">
+    @ChildContent
+</CascadingValue>

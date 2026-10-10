@@ -1,54 +1,45 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.MainClasses;
-public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
+[UseLabelGrid]
+public abstract partial class SolitaireMainViewModel<S>(IEventAggregator aggregator, CommandContainer command,
+        IGamePackageResolver resolver) : IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>,
     IBasicSolitaireVM,
     IBasicEnableProcess,
-    IBlankGameVM,
-    IAggregatorContainer,
     IHandle<IScoreData>
     where S : SolitaireSavedClass, new()
 {
+    private partial void Subscribe();
+    private partial void Unsubscribe();
     private SolitaireGameClass<S>? _mainGame;
-    private int _score;
+    //private int _score;
     [LabelColumn]
-    public int Score
+    public partial int Score { get; set; }
+    partial void OnScoreChanged(int value)
     {
-        get { return _score; }
-        set
+        if (_mainGame!.SaveRoot == null)
         {
-            if (SetProperty(ref _score, value))
-            {
-                if (_mainGame!.SaveRoot == null)
-                {
-                    return;
-                }
-                _mainGame.SaveRoot.Score = value;
-            }
+            return;
         }
+        _mainGame.SaveRoot.Score = value;
     }
     public bool CanEnableBasics()
     {
         return true;
     }
     public bool CanStartNewGameImmediately { get; set; } = true;
-    public DeckObservablePile<SolitaireCard> DeckPile { get; set; }
-    public SingleObservablePile<SolitaireCard> MainDiscardPile { get; set; }
-    public IMain MainPiles1 { get; set; }
-    public IWaste WastePiles1 { get; set; }
-    public CommandContainer CommandContainer { get; set; }
-    private readonly BasicData _basicData;
-    public SolitaireMainViewModel(IEventAggregator aggregator, CommandContainer command,
-        IGamePackageResolver resolver
-        ) : base(aggregator)
+    public DeckObservablePile<SolitaireCard> DeckPile { get; set; } = null!;
+    public SingleObservablePile<SolitaireCard> MainDiscardPile { get; set; } = null!;
+    public IMain MainPiles1 { get; set; } = null!;
+    public IWaste WastePiles1 { get; set; } = null!;
+    private BasicData _basicData = null!;
+    void IMainGameVM.Initialize()
     {
-
-        CommandContainer = command;
-        _resolver = resolver;
+        Subscribe();
         _ = resolver.ReplaceObject<IScoreData>();
-        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
+        command.ExecutingChanged = CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SolitaireCard>>();
         DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
-        _basicData = _resolver.Resolve<BasicData>();
+        _basicData = resolver.Resolve<BasicData>();
         DeckPile.SendEnableProcesses(this, () =>
         {
             if (_mainGame!.GameGoing == false)
@@ -72,7 +63,11 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
         MainPiles1.PileSelectedAsync = MainPiles1_PileSelectedAsync;
         WastePiles1.PileSelectedAsync = WastePiles1_PileSelectedAsync;
         WastePiles1.DoubleClickAsync = WastePiles1_DoubleClickAsync;
-        CreateCommands(CommandContainer);
+        CreateCommands(command);
+        AdditionalInitialize();
+    }
+    protected virtual void AdditionalInitialize()
+    {
     }
     partial void CreateCommands(CommandContainer container);
     private async Task DeckPile_DeckClickedAsync()
@@ -94,23 +89,12 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
     {
         await _mainGame!.MakeAutoMovesToMainPilesAsync();
     }
-    protected override async Task ActivateAsync()
-    {
-        _basicData.GameDataLoading = true;
-        _mainGame = GetGame(_resolver);
-        _mainGame.LinkData(this);
-        await _mainGame.InitAsync(this);
-        CommandContainer.ManualReport();
-        CommandContainer.UpdateAll();
-        _basicData.GameDataLoading = false;
-    }
     protected abstract SolitaireGameClass<S> GetGame(IGamePackageResolver resolver);
     private async Task MainPiles1_PileSelectedAsync(int index)
     {
         await _mainGame!.MainPileSelectedAsync(index);
     }
     private bool _didDoubleClick;
-    private readonly IGamePackageResolver _resolver;
     private async Task WastePiles1_DoubleClickAsync(int Index)
     {
         _didDoubleClick = true;
@@ -132,7 +116,7 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
     }
     private async void CommandContainer_ExecutingChanged()
     {
-        if (CommandContainer!.IsExecuting)
+        if (command!.IsExecuting)
         {
             return;
         }
@@ -148,5 +132,19 @@ public abstract partial class SolitaireMainViewModel<S> : ScreenViewModel,
     void IHandle<IScoreData>.Handle(IScoreData message)
     {
         Score = message.Score;
+    }
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
+    {
+        _basicData.GameDataLoading = true;
+        _mainGame = GetGame(resolver);
+        _mainGame.LinkData(this);
+        await _mainGame.InitAsync(this);
+        _basicData.GameDataLoading = false;
+    }
+
+    async Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        Unsubscribe();
+        command.ExecutingChanged = null;
     }
 }

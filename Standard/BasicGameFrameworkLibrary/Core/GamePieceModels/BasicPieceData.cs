@@ -4,10 +4,17 @@
 /// decided to try using the new enums.
 /// </summary>
 /// <typeparam name="E"></typeparam>
-public class BasicPickerData<E> //i think this may have to go to a different namespace.  will do for next version.
+[UseStateChanged]
+public partial class BasicPickerData<E> //i think this may have to go to a different namespace.  will do for next version.
    where E : IFastEnumSimple
 {
+
+    //only iffy is enumvalue (hopefully the risk pays off to not track this).
+
+    //[StateProperty]
     public E? EnumValue { get; set; } //if color, may still work because of generics (?)
-    public bool IsEnabled { get; set; }
-    public bool IsSelected { get; set; }
+    [StateProperty]
+    public partial bool IsEnabled { get; set; }
+    [StateProperty]
+    public partial bool IsSelected { get; set; }
 }

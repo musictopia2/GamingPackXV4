@@ -1,14 +1,16 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses;
-public class SimplePlayer : IPlayerItem, IEquatable<SimplePlayer>
+
+[UseScoreboard]
+public partial class SimplePlayer : IPlayerItem, IEquatable<SimplePlayer>
 {
     public int Id { get; set; }
     [ScoreColumn]
-    public string NickName { get; set; } = "";
+    public partial string NickName { get; set; } = "";
     [ScoreColumn] //there can be games where it needs to display who is out of the game.
-    public bool InGame { get; set; }
+    public partial bool InGame { get; set; }
     public bool IsReady { get; set; }
     [ScoreColumn]
-    public bool MissNextTurn { get; set; }
+    public partial bool MissNextTurn { get; set; }
     public EnumPlayerCategory PlayerCategory { get; set; }
     public bool IsHost { get; set; }
     public virtual bool CanStartInGame => true; //clue will have exceptions.

@@ -1,4 +1,5 @@
-﻿namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.PileInterfaces;
+﻿
+namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.PileInterfaces;
 public interface IWaste
 {
     void FirstLoad(bool isKlondike, IDeckDict<SolitaireCard> cardList);
@@ -27,4 +28,5 @@ public interface IWaste
     void RemoveSingleCard();
     void AddSingleCard(int whichOne, SolitaireCard thisCard);
     SolitaireCard GetCard(int whichOne);
+    void UpdatePiles();
 }

@@ -1,7 +1,7 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
 public class BeginningColorProcessorClass<E, P, S> : IBeginningColorProcesses<E>, IChoosePieceNM
     where E : struct, IFastEnumColorList<E>
-    where P : class, IPlayerBoardGame<E>, new()
+    where P : class, IPlayerWithColor<E>, new()
     where S : BasicSavedGameClass<P>, new()
 {
     private readonly BeginningColorModel<E, P> _model;
@@ -39,7 +39,6 @@ public class BeginningColorProcessorClass<E, P, S> : IBeginningColorProcesses<E>
         var tempList = _model.ColorChooser.ItemList.Select(x => x.EnumValue).ToBasicList();
         tempList.RemoveSpecificItem(colorChosen);
         _model.ColorChooser.ChooseItem(colorChosen);
-        _gameContainer.Command.UpdateAll();
         if (_gameContainer.Test.NoAnimations == false)
         {
             await _gameContainer.Delay.DelaySeconds(.5);
@@ -90,6 +89,8 @@ public class BeginningColorProcessorClass<E, P, S> : IBeginningColorProcesses<E>
             SetInstructions.Invoke($"Waiting for {_gameContainer.SingleInfo.NickName} to choose color");
         }
         SetTurn(_gameContainer.SingleInfo.NickName);
+        _model.ColorChooser.IsEnabled =
+            _gameContainer.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self;
         await Task.CompletedTask;
     }
     public Task InitAsync()

@@ -1,2 +1,6 @@
 ﻿@inherits KeyComponentBase
-<GameButtonComponent @key="GetKey" AfterChange="@StateHasChanged" CommandObject="DataContext!.StartNewGameCommand" Display="Start New Game" FontSize="3vh" />
+@if (_dataContext == null)
+{
+    return;
+}
+<GameButtonComponent @key="GetKey" CommandObject="_dataContext.StartNewGameCommand" Display="Start New Game" FontSize="3vh" />

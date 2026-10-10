@@ -8,7 +8,7 @@ public class TCPDirectSpecificIP(ITCPInfo thisTCP,
         ) : IGameNetwork, IServerMessage
 {
     private readonly Queue<SentMessage> _messages = new();
-    private readonly object _synLock = new();
+    private readonly Lock _synLock = new();
     private BasicGameClientTCP? _client1;
     public bool HasServer => true;
     public Task InitAsync()

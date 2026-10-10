@@ -169,7 +169,7 @@ public class CheckerPiece : ComponentBase
         rect.Width = "300";
         rect.Height = "93.5";
         svg.Children.Add(rect);
-        Path path = new();
+        pp1 path = new();
         path.Fill = "none";
         path.PopulateStrokesToStyles(strokeWidth: (int)MainGraphics!.BorderWidth);
         path.D = "M0 158.75 L0 252.25";

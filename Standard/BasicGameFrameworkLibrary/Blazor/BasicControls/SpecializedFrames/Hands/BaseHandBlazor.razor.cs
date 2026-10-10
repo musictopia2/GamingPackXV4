@@ -23,7 +23,6 @@ public partial class BaseHandBlazor<D>
     public string FontSizeForFrame { get; set; } = "";
     [Parameter]
     public bool Bold { get; set; } = false;
-
     private string GetLegendStyle()
     {
         if (FontSizeForFrame == "" && Bold == false)
@@ -441,6 +440,4 @@ public partial class BaseHandBlazor<D>
     {
         await Hand!.BoardSingleClickCommand!.ExecuteAsync(null);
     }
-    
-    
 }

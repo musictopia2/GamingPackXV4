@@ -1,3 +1,7 @@
 ﻿@typeparam VM
 @inherits KeyComponentBase
-<GameButtonComponent @key="GetKey" AfterChange="@StateHasChanged" CommandObject="Command" Display=@GetText FontSize="@FontSize" />
+@if (DataContext is null)
+{
+    return;
+}
+<GameButtonComponent @key="GetKey" CommandObject="Command" Display=@GetText FontSize="@FontSize" />

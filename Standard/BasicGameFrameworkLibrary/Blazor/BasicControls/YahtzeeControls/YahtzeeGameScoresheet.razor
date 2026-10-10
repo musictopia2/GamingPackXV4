@@ -1,14 +1,16 @@
 ﻿@typeparam D
-@if (ScoreContainer == null || CommandContainer == null || DataContext == null)
-{
-    return;
-}
-<CascadingValue Value="BottomDescriptionWidth">
-    <YahtzeeTopPortionBlazor RowClicked="ProcessRowClickedAsync"
-                             BonusInfo="GetBonus()"
-                             TopList="GetTopList()"
-                             TopScore="GetTopScore()" />
-    <YahtzeeBottomPortionBlazor RowClicked="ProcessRowClickedAsync"
-                                BottomScore="GetBottomScore()"
-                                BottomList="GetBottomList()" />
-</CascadingValue>
+<ActionContentView Key="@YahtzeeActions.Scoresheet">
+    @if (ScoreContainer == null || CommandContainer == null || DataContext == null)
+    {
+        return;
+    }
+    <CascadingValue Value="BottomDescriptionWidth">
+        <YahtzeeTopPortionBlazor RowClicked="ProcessRowClickedAsync"
+                                 BonusInfo="GetBonus()"
+                                 TopList="GetTopList()"
+                                 TopScore="GetTopScore()" />
+        <YahtzeeBottomPortionBlazor RowClicked="ProcessRowClickedAsync"
+                                    BottomScore="GetBottomScore()"
+                                    BottomList="GetBottomList()" />
+    </CascadingValue>
+</ActionContentView>

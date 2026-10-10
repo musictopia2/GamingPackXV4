@@ -58,4 +58,9 @@ public class BasicGameCommand : ParentCommand, IGameCommand
     {
         CommandContainer.StopExecuting();
     }
+
+    void IAsyncCommand.ReportCanExecuteChanged()
+    {
+        ReportCanExecuteChanged();
+    }
 }

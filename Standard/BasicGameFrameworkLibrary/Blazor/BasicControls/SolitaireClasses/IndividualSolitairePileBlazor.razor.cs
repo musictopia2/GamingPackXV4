@@ -14,6 +14,7 @@ public partial class IndividualSolitairePileBlazor
     [Parameter]
     public PileInfoCP? SinglePile { get; set; }
     private readonly BasicList<PointF> _points = new();
+
     protected override void OnParametersSet()
     {
         RecalculatePositions();

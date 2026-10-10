@@ -14,12 +14,12 @@ public partial class YahtzeeMainView<D>
         _labels.Clear();
         IYahtzeeStyle yahtzeeStyle = Resolver!.Resolve<IYahtzeeStyle>();
         _bottomDescriptionWidth = yahtzeeStyle.BottomDescriptionWidth;
-        _labels.AddLabel("Turn", nameof(YahtzeeVMData<D>.NormalTurn))
-            .AddLabel("Roll", nameof(YahtzeeVMData<D>.RollNumber))
-            .AddLabel("Status", nameof(YahtzeeVMData<D>.Status))
-            .AddLabel("Turn #", nameof(YahtzeeVMData<D>.Round));
+        _labels.AddLabel("Turn", nameof(YahtzeeVMData<>.NormalTurn))
+            .AddLabel("Roll", nameof(YahtzeeVMData<>.RollNumber))
+            .AddLabel("Status", nameof(YahtzeeVMData<>.Status))
+            .AddLabel("Turn #", nameof(YahtzeeVMData<>.Round));
         _scores.Clear();
-        _scores.AddColumn("Points", false, nameof(YahtzeePlayerItem<D>.Points));
+        _scores.AddColumn("Points", false, nameof(YahtzeePlayerItem<>.Points));
         base.OnInitialized();
     }
     private ICustomCommand RollCommand => DataContext!.RollDiceCommand!;

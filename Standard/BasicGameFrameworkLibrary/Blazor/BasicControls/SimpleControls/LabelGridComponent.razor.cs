@@ -2,8 +2,10 @@ namespace BasicGameFrameworkLibrary.Blazor.BasicControls.SimpleControls;
 public partial class LabelGridComponent
 {
     [Parameter]
+    [EditorRequired]
     public BasicList<LabelGridModel> Labels { get; set; } = new();
     [Parameter]
+    [EditorRequired]
     public ILabelGrid? DataContext { get; set; }
     [Parameter]
     public string Width { get; set; } = "";

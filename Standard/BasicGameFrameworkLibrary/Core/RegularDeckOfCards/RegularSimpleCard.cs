@@ -1,5 +1,7 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
-public class RegularSimpleCard : SimpleDeckObject, IRegularCard
+
+[UseStateChanged]
+public partial class RegularSimpleCard : SimpleDeckObject, IRegularCard
 {
     public RegularSimpleCard()
     {
@@ -7,8 +9,10 @@ public class RegularSimpleCard : SimpleDeckObject, IRegularCard
     }
     public EnumRegularCardValueList Value { get; set; }
     public EnumSuitList Suit { get; set; }
-    public EnumSuitList DisplaySuit { get; set; } = EnumSuitList.None;
-    public EnumRegularCardValueList DisplayNumber { get; set; } = EnumRegularCardValueList.None;
+    [StateProperty]
+    public partial EnumSuitList DisplaySuit { get; set; } = EnumSuitList.None;
+    [StateProperty]
+    public partial EnumRegularCardValueList DisplayNumber { get; set; } = EnumRegularCardValueList.None;
     public EnumRegularCardTypeList CardType { get; set; }
     public EnumRegularColorList Color { get; set; }
     public int Points { get; set; }

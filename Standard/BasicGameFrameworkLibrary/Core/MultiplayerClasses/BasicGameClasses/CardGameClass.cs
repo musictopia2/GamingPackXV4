@@ -1,5 +1,4 @@
-﻿using BasicGameFrameworkLibrary.Core.Dice;
-using ps1 = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses; //not common enough.
+﻿using ps1 = BasicGameFrameworkLibrary.Core.BasicDrawables.MiscClasses; //not common enough.
 namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
 public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMainProcesses<D>,
     IBeginningCards<D, P, S>
@@ -50,11 +49,6 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
     }
     public bool DoDraw { get; set; }
     public ICardInfo<D> CardInfo { get; }
-    protected override async Task ShowHumanCanPlayAsync()
-    {
-        await base.ShowHumanCanPlayAsync();
-        _model.PlayerHand1.ReportCanExecuteChange();
-    }
     public override Task FinishGetSavedAsync()
     {
         _gameContainer.DeckList!.ClearObjects();
@@ -173,7 +167,6 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         {
             _model.OtherPile.ClearCards();
         }
-        _gameContainer.Command.UpdateAll();
         if (Test!.NoAnimations == false)
         {
             await Aggregator.AnimatePlayAsync(thisCard, finalAction: () =>
@@ -203,9 +196,12 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
     {
         return Task.CompletedTask;
     }
+
+    protected virtual bool BlockDrawing => false;
+
     public virtual async Task DrawAsync()
     {
-        if (_model.Deck1.IsCutting)
+        if (BlockDrawing)
         {
             return;
         }
@@ -323,7 +319,6 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
     }
     protected virtual async Task PlayerReceivesNoCardsAfterDrawingAsync(D thisCard)
     {
-        _gameContainer.Command.UpdateAll();
         await Aggregator.AnimatePlayAsync(thisCard, () =>
         {
             if (_model.Pile1!.Visible == true)
@@ -437,10 +432,6 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
         {
             throw new CustomBasicException("Cannot have test dicard setups because its in production");
         }
-        //if (hasTestDiscards && Test!.AutoNearEndOfDeckBeginning)
-        //{
-        //    throw new CustomBasicException("Cannot have both near the end of deck and the test discard setups");
-        //}
         if (hasTestDiscards)
         {
             ITestCardDiscardSetUp<D> tempDiscard = MainContainer.Resolve<ITestCardDiscardSetUp<D>>();
@@ -631,7 +622,7 @@ public abstract class CardGameClass<D, P, S> : BasicGameClass<P, S>, ICardGameMa
     protected virtual void SetUpSelfHand() { }
     protected virtual void SetHand()
     {
-        _model.PlayerHand1!.HandList = SingleInfo!.MainHandList;
+        _model.PlayerHand1!.ReplaceHandList(SingleInfo!.MainHandList);
     }
     protected virtual Task LastPartOfSetUpBeforeBindingsAsync() { return Task.CompletedTask; }
     private ISortObjects<D>? _thisSort;

@@ -1,12 +1,20 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-public partial class HandObservable<D> : SimpleControlObservable where D : IDeckObject, new()
+[UseStateChanged]
+public partial class HandObservable<D> : SimpleControlObservable, IDisposable where D : IDeckObject, new()
 {
-    public bool Visible { get; set; } = true;
+    [StateProperty]
+    public partial bool Visible { get; set; } = true;
     public ControlCommand? ObjectSingleClickCommand { get; set; } //one parameter.
     public ControlCommand? BoardSingleClickCommand { get; set; }
     public HandObservable(CommandContainer command) : base(command)
     {
         CreateCommands();
+        HandList.StateChanged += OnStateChanged;
+    }
+    public void Dispose()
+    {
+        HandList.StateChanged -= OnStateChanged;
+        GC.SuppressFinalize(this);
     }
     partial void CreateCommands();
     public EnumHandAutoType AutoSelect { get; set; } = EnumHandAutoType.SelectOneOnly;
@@ -15,13 +23,29 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
     {
         return true;
     }
-    public string Text { get; set; } = "";
-    public int Maximum { get; set; }
+    [StateProperty]
+    public partial string Text { get; set; } = "";
+    [StateProperty]
+    public partial int Maximum { get; set; }
     public int SectionClicked { get; set; }
     public virtual bool HasSections => false;
     public bool IgnoreMaxRules { get; set; }
+    public DeckRegularDict<D> HandList { get; private set; } = [];
+    public void ReplaceHandList(DeckRegularDict<D> handList)
+    {
+        if (ReferenceEquals(HandList, handList))
+        {
+            return;
+        }
 
-    public DeckRegularDict<D> HandList = [];
+        HandList.StateChanged -= OnStateChanged;
+
+        HandList = handList;
+
+        HandList.StateChanged += OnStateChanged;
+        OnStateChanged();
+    }
+
     private readonly DeckRegularDict<D> _orderOfObjectsSelectedList = [];
     public DeckRegularDict<D> GetObjectsInOrderSelected(bool alsoRemove)
     {
@@ -253,16 +277,16 @@ public partial class HandObservable<D> : SimpleControlObservable where D : IDeck
         }
         await BoardClickedAsync.Invoke();
     }
-    protected override void EnableChange() { }
+    protected override void EnableChange()
+    {
+        StateChanged?.Invoke();
+    }
     protected override bool CanEnableFirst()
     {
         return CanEverEnable();
     }
-    protected override void PrivateEnableAlways()
-    {
-        BoardSingleClickCommand!.BusyCategory = EnumCommandBusyCategory.Limited;
-        ObjectSingleClickCommand!.BusyCategory = EnumCommandBusyCategory.Limited;
-    }
+
+   
 
     public Func<D, int, Task>? ObjectClickedAsync { get; set; }
     public Func<Task>? AutoSelectedOneCompletedAsync { get; set; }

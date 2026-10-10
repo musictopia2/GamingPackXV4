@@ -57,7 +57,7 @@ public abstract class SimpleBoardGameClass<P, S, E, M>(IGamePackageResolver main
     }
     public override bool CanMakeMainOptionsVisibleAtBeginning => PlayerList.DidChooseColors();
     protected bool CanPrepTurnOnSaved { get; set; } = true;
-    protected void BoardGameSaved()
+    protected void GameSaved()
     {
         if (CanPrepTurnOnSaved)
         {
@@ -113,4 +113,13 @@ public abstract class SimpleBoardGameClass<P, S, E, M>(IGamePackageResolver main
     /// </summary>
     /// <returns></returns>
     public abstract Task AfterChoosingColorsAsync();
+
+    //most times this simple.
+    public override Task PrepareNewGameAsync()
+    {
+        //hopefully this is all that is needed.
+        EraseColors();
+        return Task.CompletedTask;
+    }
+
 }

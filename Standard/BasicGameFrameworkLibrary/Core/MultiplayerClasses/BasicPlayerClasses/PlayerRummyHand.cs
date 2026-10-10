@@ -13,6 +13,7 @@ public partial class PlayerRummyHand<D> : PlayerSingleHand<D>, IPlayerRummyHand<
     public void Handle(UpdateCountEventModel message)
     {
         _tempCards = message.ObjectCount;
+        MainHandListChanged();
     }
     public void DoInit()
     {

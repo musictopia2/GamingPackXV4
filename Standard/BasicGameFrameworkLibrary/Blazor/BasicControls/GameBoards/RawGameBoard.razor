@@ -1,9 +1,20 @@
-﻿@if (ChildContent == null)
+﻿@inherits RenderVersionProviderComponentBase
+@if (ChildContent == null && VersionedChildContent == null)
 {
     return;
 }
+
 <CascadingValue Value="this">
-    <svg x="@X" y="@Y" style="@GetSvgStyle()" viewBox="@GetViewBox()">
-        @ChildContent
+    <svg x="@X" y="@Y"
+         style="@GetSvgStyle()"
+         viewBox="@GetViewBox()">
+        @if (VersionedChildContent != null)
+        {
+            @VersionedChildContent(RenderVersion)
+        }
+        else
+        {
+            @ChildContent
+        }
     </svg>
 </CascadingValue>

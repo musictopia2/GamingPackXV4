@@ -1,37 +1,45 @@
-﻿@inherits KeyComponentBase
+﻿@using BasicGameFrameworkLibrary.Blazor.Views
+@inherits KeyComponentBase
 @typeparam D
-@if (Hand == null || Hand.Visible == false )
+@if (Hand == null)
 {
     return;
 }
 <CascadingValue Value="this">
-    @if (Hand.HasFrame)
-    {
-        <fieldset @key="Hand" @onclick="BoardClicked" style="@GetContainerStyle() @GetColorStyle();" disabled="@IsDisabled">
-            <legend style="float:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; max-width:100%; @GetLegendStyle()">@Hand.Text</legend>
-            @for (int i = 0; i < Hand.HandList.Count; i++)
-            {
-                D card = Hand.HandList[i];
-                <div style="@GetCardStyle(i)">
-                    <FlexibleDeckRenderComponent D="D" DeckObject="card" UseKey="UseKey">
-                        @ChildContent!(card)
-                    </FlexibleDeckRenderComponent>
-                </div>
-            }
-        </fieldset>
-    }
-    else
-    {
-        <div @key="Hand" @onclick="BoardClicked" style="@GetContainerStyle() display:inline-block; margin: 0px;">
-            @for (int i = 0; i < Hand.HandList.Count; i++)
-            {
-                D card = Hand.HandList[i];
-                <div style="@GetCardStyle(i)">
-                    <FlexibleDeckRenderComponent D="D" DeckObject="card" UseKey="UseKey">
-                        @ChildContent!(card)
-                    </FlexibleDeckRenderComponent>
-                </div>
-            }
-        </div>
-    }
+
+    <SimpleControlView DataContext="Hand">
+        @if (Hand.Visible == false)
+        {
+            return;
+        }
+        @if (Hand.HasFrame)
+        {
+            <fieldset @key="Hand" @onclick="BoardClicked" style="@GetContainerStyle() @GetColorStyle();" disabled="@IsDisabled">
+                <legend style="float:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; max-width:100%; @GetLegendStyle()">@Hand.Text</legend>
+                @for (int i = 0; i < Hand.HandList.Count; i++)
+                {
+                    D card = Hand.HandList[i];
+                    <div style="@GetCardStyle(i)">
+                        <FlexibleDeckRenderComponent D="D" DeckObject="card" UseKey="UseKey">
+                            @ChildContent!(card)
+                        </FlexibleDeckRenderComponent>
+                    </div>
+                }
+            </fieldset>
+        }
+        else
+        {
+            <div @key="Hand" @onclick="BoardClicked" style="@GetContainerStyle() display:inline-block; margin: 0px;">
+                @for (int i = 0; i < Hand.HandList.Count; i++)
+                {
+                    D card = Hand.HandList[i];
+                    <div style="@GetCardStyle(i)">
+                        <FlexibleDeckRenderComponent D="D" DeckObject="card" UseKey="UseKey">
+                            @ChildContent!(card)
+                        </FlexibleDeckRenderComponent>
+                    </div>
+                }
+            </div>
+        }
+    </SimpleControlView>
 </CascadingValue>

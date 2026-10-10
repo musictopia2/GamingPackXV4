@@ -1,20 +1,20 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Containers;
 [UseLabelGrid]
-public sealed partial class YahtzeeVMData<D>(CommandContainer command, IGamePackageResolver resolver) : IBasicDiceGamesData<D>
+public partial class YahtzeeVMData<D>(CommandContainer command, IGamePackageResolver resolver) : IBasicDiceGamesData<D>
     where D : SimpleDice, new()
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public int RollNumber { get; set; }
+    public partial int RollNumber { get; set; }
     [LabelColumn]
-    public int Round { get; set; }
+    public partial int Round { get; set; }
     [LabelColumn]
-    public int Score { get; set; }
+    public partial int Score { get; set; }
     [LabelColumn]
-    public string CategoryChosen { get; set; } = "None";
+    public partial string CategoryChosen { get; set; } = "None";
     public DiceCup<D>? Cup { get; set; }
     public void LoadCup(ISavedDiceList<D> saveRoot, bool autoResume)
     {

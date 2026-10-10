@@ -1,5 +1,6 @@
 ﻿@typeparam P
-@if (Players == null || Columns == null || Players.Count == 0 || Columns.Count == 0)
+@if (CurrentPlayers == null || Columns == null ||
+    CurrentPlayers.Count == 0 || Columns.Count == 0)
 {
     return;
 }
@@ -35,12 +36,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var p in Players)
+            @foreach (var p in CurrentPlayers)
             {
                 <tr>
                     @foreach (var c in Columns)
                     {
-                        <td style="margin-left: 2px; margin-right: 2px;">@TextToDisplay(p, c)</td>
+                        <td style="margin-left: 2px; margin-right: 2px;">
+                            @p.TextToDisplay(c, UseAbbreviationForTrueFalse)
+                        </td>
                     }
                 </tr>
             }

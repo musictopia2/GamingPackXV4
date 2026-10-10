@@ -45,6 +45,7 @@ where D : SimpleDice, new()
             await _gameContainer.GetNewScoreAsync.Invoke();
         }
         _scoreLogic.StartTurn();
+        CommandContainer.UpdateSpecificAction(YahtzeeActions.Scoresheet);
         ProtectedStartTurn();
     }
     private void LoadGame()

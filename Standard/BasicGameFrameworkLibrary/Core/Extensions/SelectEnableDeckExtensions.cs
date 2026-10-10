@@ -1,6 +1,10 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Extensions;
 public static class SelectEnableDeckExtensions
 {
+    extension <T>(IEnumerable<T> list)
+    {
+        public StateList<T> ToStateList => new(list);
+    }
     extension(string data)
     {
         public async Task<BasicList<int>> GetSavedIntegerListAsync()

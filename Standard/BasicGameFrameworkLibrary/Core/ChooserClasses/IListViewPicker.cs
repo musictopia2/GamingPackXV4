@@ -3,4 +3,5 @@ public interface IListViewPicker
 {
     ICustomCommand ItemSelectedCommand { get; }
     BasicList<ListPieceModel> TextList { get; }
+    Action? EnabledChanged { get; set; }
 }

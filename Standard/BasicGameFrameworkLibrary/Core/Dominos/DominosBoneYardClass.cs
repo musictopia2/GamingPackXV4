@@ -63,5 +63,4 @@ public class DominosBoneYardClass<D> : ScatteringPiecesObservable<D, DominosBasi
         }
         await _model.DrewDominoAsync.Invoke(RemainingList.GetSpecificItem(deck)); //i think
     }
-    protected override void PrivateEnableAlways() { }
 }

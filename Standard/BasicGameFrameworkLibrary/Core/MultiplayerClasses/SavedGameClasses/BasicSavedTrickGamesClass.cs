@@ -13,10 +13,7 @@ public class BasicSavedTrickGamesClass<S, T, P> : BasicSavedCardClass<P, T>
         {
             if (SetProperty(ref _trumpSuit, value))
             {
-                if (TrickMod != null)
-                {
-                    TrickMod.TrumpSuit = value!;
-                }
+                TrickMod?.TrumpSuit = value!;
             }
         }
     }

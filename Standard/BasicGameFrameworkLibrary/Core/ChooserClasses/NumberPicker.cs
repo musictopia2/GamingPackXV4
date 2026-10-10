@@ -2,7 +2,7 @@
 public partial class NumberPicker : SimpleControlObservable
 {
     private readonly ItemChooserClass<NumberModel> _privateChoose;
-    public readonly BasicList<NumberModel> NumberList = new();
+    public readonly StateList<NumberModel> NumberList = [];
     public ControlCommand? NumberPickedCommand { get; set; }
     public Func<int, Task>? ChangedNumberValueAsync { get; set; }
     [Command(EnumCommandCategory.Control)]
@@ -30,7 +30,6 @@ public partial class NumberPicker : SimpleControlObservable
     {
         NumberList.UnselectAllObjects();
     }
-    protected override void PrivateEnableAlways() { }
     protected override void EnableChange()
     {
         NumberList.SetEnabled(IsEnabled);

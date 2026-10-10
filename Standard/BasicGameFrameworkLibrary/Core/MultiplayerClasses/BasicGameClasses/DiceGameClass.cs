@@ -39,12 +39,16 @@ public abstract class DiceGameClass<D, P, S> : BasicGameClass<P, S>,
     {
         _model = currentMod;
         Roller = roller;
+        Roller.CupModel = currentMod;
         Roller.CurrentPlayer = () => SingleInfo!;
         Roller.AfterRollingAsync = AfterRollingAsync;
         Roller.AfterSelectUnselectDiceAsync = AfterSelectUnselectDiceAsync;
+        Roller.CanShowRolling = () => CanShowRolling;
     }
     public DiceCup<D>? Cup => _model.Cup;
     protected virtual bool ShowDiceUponAutoSave => true;
+    protected virtual bool HideHideUponNewTurn => true;
+    protected virtual bool CanShowRolling => true;
     protected void LoadMod()
     {
         SaveRoot.LoadMod(_model);
@@ -55,9 +59,22 @@ public abstract class DiceGameClass<D, P, S> : BasicGameClass<P, S>,
         SaveRoot!.RollNumber = 1;
         SaveRoot.DiceList.MainContainer = MainContainer;
     }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        _model.Cup?.ReportCanExecuteChange();
+    }
     protected void ProtectedStartTurn()
     {
         SaveRoot!.RollNumber = 1;
+    }
+    protected override void PrepStartTurn()
+    {
+        if (HideHideUponNewTurn)
+        {
+            _model.Cup!.CanShowDice = false; //try this.
+        }
+        base.PrepStartTurn();
     }
     protected StandardRollProcesses<D, P> Roller { get; }
     protected void AfterRestoreDice()

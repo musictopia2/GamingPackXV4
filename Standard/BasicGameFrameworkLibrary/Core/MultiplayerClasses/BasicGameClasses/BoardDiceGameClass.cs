@@ -35,9 +35,11 @@ public abstract class BoardDiceGameClass<P, S, E, M> : SimpleBoardGameClass<P, S
     {
         _model = currentMod;
         Roller = roller;
+        Roller.CupModel = currentMod;
         Roller.AfterRollingAsync = AfterRollingAsync;
         Roller.AfterSelectUnselectDiceAsync = AfterSelectUnselectDiceAsync;
         Roller.CurrentPlayer = () => SingleInfo!;
+        Roller.CanShowRolling = () => true;
     }
     public DiceCup<SimpleDice>? Cup => _model.Cup;
     protected StandardRollProcesses<SimpleDice, P> Roller { get; }
@@ -51,21 +53,28 @@ public abstract class BoardDiceGameClass<P, S, E, M> : SimpleBoardGameClass<P, S
         LoadCup(false);
         SaveRoot.DiceList.MainContainer = MainContainer;
     }
-    protected virtual bool ShowDiceUponAutoSave => true;
+    
+
+    protected void SetDiceVisible(bool visible)
+    {
+        SaveRoot.DiceVisible = visible;
+
+        _model.Cup!.CanShowDice = visible;
+        _model.Cup.Visible = visible;
+    }
+
     protected void AfterRestoreDice()
     {
         LoadCup(true);
-        SaveRoot!.DiceList.MainContainer = MainContainer;
-        if (ShowDiceUponAutoSave == true)
+        if (SaveRoot.DiceVisible)
         {
-            _model.Cup!.CanShowDice = true;
-            _model.Cup.ShowDiceListAlways = true;
-            _model.Cup.Visible = true;
+            SetDiceVisible(true);
         }
         else
         {
-            _model.Cup!.CanShowDice = false;
+            SetDiceVisible(false);
         }
+        SaveRoot!.DiceList.MainContainer = MainContainer;
     }
     protected virtual void LoadCup(bool autoResume)
     {

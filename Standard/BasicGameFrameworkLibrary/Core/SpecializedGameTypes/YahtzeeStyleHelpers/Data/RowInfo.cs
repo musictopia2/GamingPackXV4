@@ -1,13 +1,18 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Data;
-public class RowInfo
+
+[UseStateChanged]
+public partial class RowInfo
 {
     public string Description { get; set; } = "";
     public int RowNumber { get; set; }
     public EnumRow RowSection { get; set; }
     public bool IsTop { get; set; }
-    public bool IsRecent { get; set; }
-    public int? Possible { get; set; }
-    public int? PointsObtained { get; set; }
+    [StateProperty]
+    public partial bool IsRecent { get; set; }
+    [StateProperty]
+    public partial int? Possible { get; set; }
+    [StateProperty]
+    public partial int? PointsObtained { get; set; }
     internal bool IsAllFive()
     {
         if (Description == "Kismet (5 Of A Kind)" || Description == "Yahtzee")

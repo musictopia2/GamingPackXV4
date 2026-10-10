@@ -1,9 +1,17 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
+
+[UseStateChanged]
 public partial class DeckObservablePile<D> : SimpleControlObservable where D : IDeckObject, new()
 {
+
+
+    // VNext TODO:
+    // Old deck had a special feature required by one game.
+    // Re-evaluate when Commands are implemented.
+
     private readonly DeckRegularDict<D> _objectList;
     public Func<Task>? DeckClickedAsync { get; set; }
-    public bool IsCutting { get; set; }
+    //public bool IsCutting { get; set; }
     private void CommandChanges()
     {
         DeckObjectClickedCommand!.ReportCanExecuteChange();
@@ -26,55 +34,43 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
         CreateCommands();
     }
     partial void CreateCommands();
-    private EnumDeckPileStyle _deckStyle = EnumDeckPileStyle.Unknown;
-    public EnumDeckPileStyle DeckStyle
-    {
-        get { return _deckStyle; }
-        set
-        {
-            if (SetProperty(ref _deckStyle, value))
-            {
-                _objectList.ForEach(x =>
-                {
-                    if (value == EnumDeckPileStyle.AlwaysKnown)
-                    {
-                        x.IsUnknown = false;
-                    }
-                    else
-                    {
-                        x.IsUnknown = true;
-                    }
-                });
-            }
-        }
-    }
-    public string TextToAppear { get; private set; } = "";
-    public D CurrentCard { get; private set; } = new D();
 
-    private bool _isSelected;
-    public bool IsSelected
+    [StateProperty]
+    public partial EnumDeckPileStyle DeckStyle { get; set; } = EnumDeckPileStyle.Unknown;
+    partial void OnDeckStyleChanged(EnumDeckPileStyle value)
     {
-        get
+        _objectList.ForEach(x =>
         {
-            return _isSelected;
-        }
-        set
-        {
-            if (SetProperty(ref _isSelected, value) == true)
+            if (value == EnumDeckPileStyle.AlwaysKnown)
             {
-                CurrentCard.IsSelected = value;
+                x.IsUnknown = false;
             }
-        }
+            else
+            {
+                x.IsUnknown = true;
+            }
+        });
     }
-    public bool NeverAutoDisable { get; set; }
-    public bool CanCutDeck()
+    [StateProperty]
+    public partial string TextToAppear { get; private set; } = "";
+
+    public D CurrentCard { get; private set; } = new D();
+    [StateProperty]
+    public partial bool IsSelected { get; set; }
+    partial void OnIsSelectedChanged(bool value)
     {
-        return _objectList.Count >= 5;
+        CurrentCard.IsSelected = value;
     }
-    public bool CanFlipDeck()
-    {
-        return _objectList.Count > 1;
-    }
+    [StateProperty]
+    public partial bool NeverAutoDisable { get; set; }
+    //public bool CanCutDeck()
+    //{
+    //    return _objectList.Count >= 5;
+    //}
+    //public bool CanFlipDeck()
+    //{
+    //    return _objectList.Count > 1;
+    //}
     public bool IsEndOfDeck()
     {
         return _objectList.Count == 0;
@@ -154,10 +150,10 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
     }
     public D DrawCard()
     {
-        if (IsCutting)
-        {
-            throw new CustomBasicException("You cannot draw a card because you are cutting");
-        }
+        //if (IsCutting)
+        //{
+        //    throw new CustomBasicException("You cannot draw a card because you are cutting");
+        //}
         if (_objectList.Count == 0)
         {
             throw new CustomBasicException("Cannot draw a card because there are no more cards left");
@@ -194,43 +190,43 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
         _objectList.Add(thisCard);
         UpdateCards();
     }
-    public void PutInMiddle(D thisCard)
-    {
-        int index;
-        index = _objectList.Count / 2;
-        if (DeckStyle == EnumDeckPileStyle.Unknown)
-        {
-            thisCard.IsUnknown = true;
-        }
-        else
-        {
-            thisCard.IsUnknown = false;
-        }
-        _objectList.InsertMiddle(index, thisCard);
-        UpdateCards();
-    }
-    public D CutTheDeck()
-    {
-        D thisCard;
-        int index;
-        index = _objectList.Count / 2;
-        thisCard = _objectList[index];
-        _objectList.RemoveSpecificItem(thisCard);
-        UpdateCards();
-        return thisCard;
-    }
+    //public void PutInMiddle(D thisCard)
+    //{
+    //    int index;
+    //    index = _objectList.Count / 2;
+    //    if (DeckStyle == EnumDeckPileStyle.Unknown)
+    //    {
+    //        thisCard.IsUnknown = true;
+    //    }
+    //    else
+    //    {
+    //        thisCard.IsUnknown = false;
+    //    }
+    //    _objectList.InsertMiddle(index, thisCard);
+    //    UpdateCards();
+    //}
+    //public D CutTheDeck()
+    //{
+    //    D thisCard;
+    //    int index;
+    //    index = _objectList.Count / 2;
+    //    thisCard = _objectList[index];
+    //    _objectList.RemoveSpecificItem(thisCard);
+    //    UpdateCards();
+    //    return thisCard;
+    //}
     public BasicList<int> GetCardIntegers()
     {
         return (from Items in _objectList
                 select Items.Deck).ToBasicList();
     }
-    public DeckRegularDict<D> FlipCardList()
-    {
-        _objectList.Reverse();
-        DeckRegularDict<D> TempList = _objectList.ToRegularDeckDict();
-        ClearCards();
-        return TempList;
-    }
+    //public DeckRegularDict<D> FlipCardList()
+    //{
+    //    _objectList.Reverse();
+    //    DeckRegularDict<D> TempList = _objectList.ToRegularDeckDict();
+    //    ClearCards();
+    //    return TempList;
+    //}
     public D RevealCard()
     {
         if (_objectList.Count == 0)
@@ -264,7 +260,8 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
             TextToAppear = _objectList.Count.ToString();
         }
     }
-    public bool DrawInCenter { get; set; }
+    [StateProperty]
+    public partial bool DrawInCenter { get; set; }
     public void OriginalList(IEnumerableDeck<D> thisList)
     {
         _objectList.ReplaceRange(thisList); // i think
@@ -293,5 +290,4 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
     {
         CommandChanges();
     }
-    protected override void PrivateEnableAlways() { }
 }

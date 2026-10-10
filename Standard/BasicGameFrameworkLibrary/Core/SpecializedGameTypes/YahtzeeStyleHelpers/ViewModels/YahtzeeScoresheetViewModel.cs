@@ -1,8 +1,9 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
-public partial class YahtzeeScoresheetViewModel<D> : ScreenViewModel, IBlankGameVM, IHandleAsync<SelectionChosenEventModel>, IScoresheetAction
+public partial class YahtzeeScoresheetViewModel<D> : IHandleAsync<SelectionChosenEventModel>, IScoresheetAction
     where D : SimpleDice, new()
 {
     private readonly ScoreContainer _scoreContainer;
+    private readonly IEventAggregator _aggregator;
     private readonly YahtzeeGameContainer<D> _gameContainer;
     private readonly IYahtzeeMove _yahtzeeMove;
     private RowInfo? _privateChosen;
@@ -12,14 +13,19 @@ public partial class YahtzeeScoresheetViewModel<D> : ScreenViewModel, IBlankGame
         IEventAggregator aggregator,
         YahtzeeGameContainer<D> gameContainer,
         IYahtzeeMove yahtzeeMove
-        ) : base(aggregator)
+        )
     {
         CommandContainer = commandContainer;
         _scoreContainer = scoreContainer;
+        _aggregator = aggregator;
         _gameContainer = gameContainer;
         _yahtzeeMove = yahtzeeMove;
         CreateCommands(CommandContainer);
+        Unsubscribe(); //just in case.
+        Subscribe();
     }
+    private partial void Subscribe();
+    private partial void Unsubscribe();
     partial void CreateCommands(CommandContainer command);
     public CommandContainer CommandContainer { get; set; }
     public async Task HandleAsync(SelectionChosenEventModel message)
@@ -62,7 +68,7 @@ public partial class YahtzeeScoresheetViewModel<D> : ScreenViewModel, IBlankGame
         {
             WarningEventModel warn = new();
             warn.Message = "Are you sure you want to mark off " + row.Description;
-            await Aggregator.PublishAsync(warn);
+            await _aggregator.PublishAsync(warn);
             return;
         }
         await ProcessMoveAsync(row);

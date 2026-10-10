@@ -23,12 +23,24 @@ public abstract class SolitaireGameClass<S>(ISolitaireData solitaireData1,
     protected bool HadWaste;
     protected ISolitaireData SolitaireData1 = solitaireData1;
     internal bool GameGoing { get; set; }
+    protected IScoreData Score => score;
+    protected IToast Toast => toast;
     protected abstract S CloneSavedGame();
     public async Task OpenSavedGameAsync()
     {
         _opened = true;
         DeckList.OrderedObjects();
-        SaveRoot = await thisState.RetrieveSinglePlayerGameAsync<S>();
+        try
+        {
+            SaveRoot = await thisState.RetrieveSinglePlayerGameAsync<S>();
+        }
+        catch (Exception)
+        {
+            await thisState.DeleteSinglePlayerGameAsync();
+            ShuffleCards();
+            return;
+        }
+        
         S tempRoot = CloneSavedGame();
         score.Score = SaveRoot.Score;
         SaveRoot = tempRoot;
@@ -155,6 +167,10 @@ public abstract class SolitaireGameClass<S>(ISolitaireData solitaireData1,
         }
         AfterInit();
     }
+    protected void UpdateWastePiles()
+    {
+        _thisMod?.WastePiles1.UpdatePiles();
+    }
     protected void AfterShuffle(IDeckDict<SolitaireCard> mainList)
     {
         _thisMod!.MainPiles1!.ClearBoard(mainList);
@@ -220,13 +236,16 @@ public abstract class SolitaireGameClass<S>(ISolitaireData solitaireData1,
         }
         else
         {
-            Command.UpdateAll();
+            _thisMod.WastePiles1.UpdatePiles(); //try this.
+            //_thisMod.MainPiles1.UpdatePiles();
         }
     }
     protected async Task FinishAddingToMainPileAsync() => await FinishAddingToMainPileAsync(0, new SolitaireCard());
     private async Task FinishedAsync()
     {
         int scores = score!.Score;
+        _thisMod?.WastePiles1.UpdatePiles();
+        //_thisMod?.MainPiles1.UpdatePiles();
         if (HasWon(scores))
         {
             await ShowWinAsync();
@@ -235,7 +254,7 @@ public abstract class SolitaireGameClass<S>(ISolitaireData solitaireData1,
     }
     protected async Task ShowWinAsync()
     {
-        Command.UpdateAll();
+        Aggregator.PublishAll(new BeforeGameOverEventModel()); //i think this should be done automatically now.
         toast.ShowSuccessToast("Congratulations, you won");
         await Task.Delay(2000);
         GameGoing = false;
@@ -466,6 +485,7 @@ public abstract class SolitaireGameClass<S>(ISolitaireData solitaireData1,
             {
                 _thisMod.WastePiles1.AddSingleCard(whichOne, _thisMod.DeckPile.DrawCard());
                 _thisMod.DeckPile.IsSelected = false;
+                _thisMod.WastePiles1.UpdatePiles();
                 return;
             }
             if (ones != whichOne && ones > 0)
@@ -477,11 +497,13 @@ public abstract class SolitaireGameClass<S>(ISolitaireData solitaireData1,
                 return;
             }
             _thisMod.WastePiles1.SelectUnselectPile(whichOne);
+            _thisMod.WastePiles1.UpdatePiles();
             return;
         }
         if (_thisMod.MainDiscardPile!.CardSelected() == 0 && ones == -1 || ones == whichOne)
         {
             _thisMod.WastePiles1.SelectUnselectPile(whichOne);
+            _thisMod.WastePiles1.UpdatePiles();
             return;
         }
         if (_thisMod.MainDiscardPile.CardSelected() > 0)
@@ -492,6 +514,8 @@ public abstract class SolitaireGameClass<S>(ISolitaireData solitaireData1,
             }
             _thisMod.WastePiles1.AddSingleCard(whichOne, _thisMod.MainDiscardPile.GetCardInfo());
             _thisMod.MainDiscardPile.RemoveFromPile();
+            _thisMod.WastePiles1.UpdatePiles();
+            //_thisMod.MainPiles1.UpdatePiles();
             return;
         }
         if (SolitaireData1.MoveColumns == EnumSolitaireMoveType.CantMove)
@@ -505,6 +529,7 @@ public abstract class SolitaireGameClass<S>(ISolitaireData solitaireData1,
                 return;
             }
             _thisMod.WastePiles1.MoveCards(whichOne, lasts);
+            _thisMod.WastePiles1.UpdatePiles();
             await AfterMovingCardsAsync(whichOne);
             return;
         }
@@ -513,6 +538,7 @@ public abstract class SolitaireGameClass<S>(ISolitaireData solitaireData1,
             return;
         }
         _thisMod.WastePiles1.MoveSingleCard(whichOne);
+        _thisMod.WastePiles1.UpdatePiles();
         AfterMoveSingleCard();
     }
 }

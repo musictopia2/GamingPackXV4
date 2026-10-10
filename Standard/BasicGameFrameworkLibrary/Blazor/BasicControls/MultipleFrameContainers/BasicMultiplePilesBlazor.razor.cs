@@ -1,7 +1,7 @@
 namespace BasicGameFrameworkLibrary.Blazor.BasicControls.MultipleFrameContainers;
 [CustomTag("", AlsoNoTags = true)]
 public partial class BasicMultiplePilesBlazor<D> : IDisposable, IHandleAsync<AnimateCardInPileEventModel<D>>, IHandle<ResetCardsEventModel>
-    where D : class, IDeckObject, new()
+    where D : class, IDeckObject, IStateChanged, new()
 {
     private enum EnumLocation
     {

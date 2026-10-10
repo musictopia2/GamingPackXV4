@@ -77,8 +77,17 @@ public class StandardRollProcesses<D, P> : IRolledNM, ISelectDiceNM, IStandardRo
     public Func<Task>? BeforeRollingAsync { get; set; }
     public Func<Task>? AfterRollingAsync { get; set; }
     public Func<P>? CurrentPlayer { get; set; }
+    public Func<bool>? CanShowRolling { get; set; }
     private async Task RollDiceAsync(BasicList<BasicList<D>> list)
     {
+        if (CanShowRolling is not null)
+        {
+            if (CanShowRolling.Invoke())
+            {
+                CupModel.Cup!.Visible = true;
+                CupModel.Cup.CanShowDice = true;
+            }
+        }
         await CupModel.Cup!.ShowRollingAsync(list);
         if (AfterRollingAsync == null)
         {

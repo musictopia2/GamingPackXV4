@@ -160,9 +160,9 @@ public partial class ListViewPicker : SimpleControlObservable, IListViewPicker
     protected override void EnableChange()
     {
         TextList.SetEnabled(IsEnabled);
-        CommandContainer.UpdateAll();
+        
+        //CommandContainer.UpdateAll();
     }
-    protected override void PrivateEnableAlways() { }
     public int ItemToChoose(bool requiredToChoose = true, bool useHalf = true)
     {
         return _privateChoose.ItemToChoose(requiredToChoose, useHalf);

@@ -1,52 +1,42 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
-public partial class YahtzeeMainViewModel<D> : DiceGamesVM<D>
-    where D : SimpleDice, new()
-{
-    public YahtzeeVMData<D> VMData { get; set; }
-    public YahtzeeMainViewModel(
-        CommandContainer commandContainer,
+public partial class YahtzeeMainViewModel<D>(CommandContainer commandContainer,
         IHoldUnholdProcesses mainGame,
         YahtzeeVMData<D> viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses rollProcesses,
         YahtzeeGameContainer<D> gameContainer,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, rollProcesses, aggregator)
+        IEventAggregator aggregator) : DiceGamesVM<D>(commandContainer, mainGame, viewModel, basicData, resolver, rollProcesses, aggregator)
+    where D : SimpleDice, new()
+{
+    public YahtzeeVMData<D> VMData { get; set; } = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _resolver = resolver;
-        _gameContainer = gameContainer;
-        _gameContainer.GetNewScoreAsync = LoadNewScoreAsync;
-        VMData = viewModel;
         IBasicDiceGamesData<D>.NeedsRollIncrement = false;
-        CreateCommands(commandContainer);
+        gameContainer.GetNewScoreAsync = LoadNewScoreAsync;
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
+    }
+    protected override async Task OpenAsync()
+    {
+        await LoadNewScoreAsync();
+        await base.OpenAsync();
     }
     partial void CreateCommands(CommandContainer command);
-    protected override async Task ActivateAsync()
-    {
-        await base.ActivateAsync();
-        await LoadNewScoreAsync();
-    }
     public YahtzeeScoresheetViewModel<D>? CurrentScoresheet { get; set; }
     private async Task LoadNewScoreAsync()
     {
         await ClosePossibleScoresheetAsync();
-        CurrentScoresheet = _resolver.Resolve<YahtzeeScoresheetViewModel<D>>();
-        await LoadScreenAsync(CurrentScoresheet);
+        CurrentScoresheet = Resolver.Resolve<YahtzeeScoresheetViewModel<D>>();
+        CommandContainer.UpdateSpecificAction(YahtzeeActions.Scoresheet);
+    }
+    protected override async Task CloseAsync()
+    {
+        await ClosePossibleScoresheetAsync();
     }
     private async Task ClosePossibleScoresheetAsync()
     {
-        if (CurrentScoresheet != null)
-        {
-            await CloseSpecificChildAsync(CurrentScoresheet);
-        }
-    }
-    protected override async Task TryCloseAsync()
-    {
-        await ClosePossibleScoresheetAsync();
-        await base.TryCloseAsync();
+        CurrentScoresheet = null; //hopefully this stimple.
     }
     public override bool CanRollDice()
     {
@@ -56,9 +46,7 @@ public partial class YahtzeeMainViewModel<D> : DiceGamesVM<D>
     {
         return CanRollDice();
     }
-    private readonly IGamePackageResolver _resolver;
-    private readonly YahtzeeGameContainer<D> _gameContainer;
 
-    public PlayerCollection<YahtzeePlayerItem<D>> PlayerList => _gameContainer.PlayerList!;
+    public PlayerCollection<YahtzeePlayerItem<D>> PlayerList => gameContainer.PlayerList!;
     public DiceCup<D> GetCup => VMData.Cup!;
 }

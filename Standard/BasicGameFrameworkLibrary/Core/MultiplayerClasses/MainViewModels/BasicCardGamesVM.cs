@@ -1,59 +1,52 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
-public abstract class BasicCardGamesVM<D> : BasicMultiplayerMainVM
-    where D : IDeckObject, new()
-{
-    private readonly ICardGameMainProcesses<D> _mainGame;
-    private readonly IBasicCardGamesData<D> _model;
-    private readonly BasicData _basicData;
-    private readonly IToast _toast;
-    public BasicCardGamesVM(CommandContainer commandContainer,
+public abstract class BasicCardGamesVM<D>(CommandContainer commandContainer,
         ICardGameMainProcesses<D> mainGame,
         IBasicCardGamesData<D> viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         IToast toast
-        ) : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        ) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+    where D : IDeckObject, new()
+{
+    protected IToast Toast { get; private set; } = toast;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _basicData = basicData;
-        _toast = toast;
-        _model.Deck1.DeckClickedAsync = Deck1_DeckClickedAsync;
-        _model.Pile1.PileClickedAsync = ProcessDiscardClickedAsync;
-        _model.Deck1.SendEnableProcesses(this, CanEnableDeck);
-        _model.Pile1.SendEnableProcesses(this, CanEnablePile1);
+        viewModel.Deck1.DeckClickedAsync = Deck1_DeckClickedAsync;
+        viewModel.Pile1.PileClickedAsync = ProcessDiscardClickedAsync;
+        viewModel.Deck1.SendEnableProcesses(this, CanEnableDeck);
+        viewModel.Pile1.SendEnableProcesses(this, CanEnablePile1);
         if (AlwaysEnableHand() == false)
         {
-            _model.PlayerHand1.SendEnableProcesses(this, CanEnableHand);
-            _model.PlayerHand1.IsEnabled = false;
+            viewModel.PlayerHand1.SendEnableProcesses(this, CanEnableHand);
+            viewModel.PlayerHand1.IsEnabled = false;
         }
         else
         {
-            _model.PlayerHand1.SendAlwaysEnable(this);
+            viewModel.PlayerHand1.SendAlwaysEnable(this);
         }
-        _model.PlayerHand1.Text = "Your Cards";
-        _model.PlayerHand1.ObjectClickedAsync = ProcessHandClickedAsync;
-        _model.PlayerHand1.ConsiderSelectOneAsync = OnConsiderSelectOneCardAsync;
-        _model.PlayerHand1.BeforeAutoSelectObjectAsync = BeforeUnselectCardFromHandAsync;
-        _model.PlayerHand1.AutoSelectedOneCompletedAsync = OnAutoSelectedHandAsync;
+        viewModel.PlayerHand1.Text = "Your Cards";
+        viewModel.PlayerHand1.ObjectClickedAsync = ProcessHandClickedAsync;
+        viewModel.PlayerHand1.ConsiderSelectOneAsync = OnConsiderSelectOneCardAsync;
+        viewModel.PlayerHand1.BeforeAutoSelectObjectAsync = BeforeUnselectCardFromHandAsync;
+        viewModel.PlayerHand1.AutoSelectedOneCompletedAsync = OnAutoSelectedHandAsync;
     }
+
     protected bool CanSendDrawMessage = true; // for games like dutch blitz, cannot send the message for drawing card.
     private async Task Deck1_DeckClickedAsync()
     {
-        if (_model.PlayerHand1!.HasSelectedObject())
+        if (viewModel.PlayerHand1!.HasSelectedObject())
         {
-            _toast.ShowUserErrorToast("You have to unselect all cards before drawing to prevent drawing by mistake");
+            Toast.ShowUserErrorToast("You have to unselect all cards before drawing to prevent drawing by mistake");
             return;
         }
-        if (_basicData!.MultiPlayer == true && CanSendDrawMessage == true)
+        if (BasicData.MultiPlayer == true && CanSendDrawMessage == true)
         {
-            await _mainGame.Network!.SendAllAsync("drawcard");
+            await mainGame.Network!.SendAllAsync("drawcard");
         }
-        _mainGame.PlayerDraws = 0;
-        _mainGame.LeftToDraw = 0;
-        await _mainGame.DrawAsync();
+        mainGame.PlayerDraws = 0;
+        mainGame.LeftToDraw = 0;
+        await mainGame.DrawAsync();
     }
     protected abstract bool CanEnableDeck();
     protected abstract bool CanEnablePile1();

@@ -36,14 +36,14 @@ public static class ShowLabelHelpers
         {
             game.CurrentMod.NormalTurn = "None";
             game.CurrentMod.Status = "Game Over.  It was a tie";
+            game.Aggregator.PublishAll(new BeforeGameOverEventModel());
             game.Toast.ShowInfoToast("It was a tie");
         }
         public void ProtectedShowWin()
         {
             game.CurrentMod.NormalTurn = "None";
             game.CurrentMod.Status = $"Game over.  {game.SingleInfo!.NickName} has won";
-            CommandContainer command = Resolver!.Resolve<CommandContainer>();
-            command.UpdateAll();
+            game.Aggregator.PublishAll(new BeforeGameOverEventModel()); //i think this is where it fits since there is no more updateall.
             if (game.BasicData!.MultiPlayer == false)
             {
                 game.Toast.ShowInfoToast($"{game.SingleInfo.NickName} has won");
@@ -61,12 +61,14 @@ public static class ShowLabelHelpers
         {
             game.CurrentMod.NormalTurn = "None";
             game.CurrentMod.Status = $"Game Over.  {playersWonMessage} has won"; //this time, no messagebox.
+            game.Aggregator.PublishAll(new BeforeGameOverEventModel());
         }
         public void ProtectedShowLoss() //this is for games like old maid.
         {
             game.CurrentMod.NormalTurn = "None";
             game.CurrentMod.Status = $"Game over.  {game.SingleInfo!.NickName} has lost";
             game.Toast.ShowInfoToast($"{game.SingleInfo.NickName} is a loser");
+            game.Aggregator.PublishAll(new BeforeGameOverEventModel());
         }
     }
     

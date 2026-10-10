@@ -1,8 +1,8 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ChooserClasses;
-public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
+public partial class SimpleEnumPickerVM<E> : SimpleControlObservable, IStateChanged, IDisposable
     where E : IFastEnumSimple
 {
-    public BasicList<BasicPickerData<E>> ItemList = new();
+    public StateList<BasicPickerData<E>> ItemList { get; private set; } = [];
     public EnumAutoSelectCategory AutoSelectCategory { get; set; }
     private E? _itemChosen;
     public E? ItemChosen
@@ -44,6 +44,9 @@ public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
         ItemList.ReplaceRange(firstList);
     }
     private readonly IEnumListClass<E> _thisChoice;
+
+    public event Action? StateChanged;
+
     public ControlCommand? EnumChosenCommand { get; set; }
     [Command(EnumCommandCategory.Control)]
 #pragma warning disable IDE0051 // Remove unused private members cannot remove because part of source generators.
@@ -68,12 +71,14 @@ public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
         _thisChoice = thisChoice;
         LoadEntireList();
         CreateCommands();
+        ItemList.StateChanged += OnItemListChanged;
+    }
+    private void OnItemListChanged()
+    {
+        StateChanged?.Invoke();
     }
     partial void CreateCommands();
-    protected override bool CanEnableFirst()
-    {
-        return AutoSelectCategory == EnumAutoSelectCategory.AutoEvent || AutoSelectCategory == EnumAutoSelectCategory.AutoSelect;
-    }
+    
     protected override void EnableChange()
     {
         EnumChosenCommand!.ReportCanExecuteChange();
@@ -117,5 +122,10 @@ public partial class SimpleEnumPickerVM<E> : SimpleControlObservable
     {
         return ItemList.GetRandomItem().EnumValue!;
     }
-    protected override void PrivateEnableAlways() { }
+
+    void IDisposable.Dispose()
+    {
+        ItemList.StateChanged -= OnItemListChanged;
+        GC.SuppressFinalize(this);
+    }
 }

@@ -1,10 +1,9 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.BasicDrawables.Interfaces;
-public interface IDeckObject : ICommonObject, IPopulateObject<int>
+public interface IDeckObject : ICommonObject, IPopulateObject<int>, IStateChanged
 {
     int Deck { get; set; }
     bool Drew { get; set; }
     bool IsUnknown { get; set; }
-    Action? ChangeSelectAction { get; set; }
     bool Rotated { get; set; }
     SizeF DefaultSize { get; set; }
     void Reset(); //sometimes needs to be reset.  everything can need it.

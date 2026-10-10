@@ -1,11 +1,13 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-public partial class NewRoundViewModel : ScreenViewModel, INewRoundVM, IBlankGameVM
+public partial class NewRoundViewModel
 {
+    private readonly IEventAggregator _aggregator;
     private readonly BasicData _basicData;
     public CommandContainer CommandContainer { get; set; }
-    public NewRoundViewModel(CommandContainer command, IEventAggregator aggregator, BasicData basicData) : base(aggregator)
+    public NewRoundViewModel(CommandContainer command, IEventAggregator aggregator, BasicData basicData)
     {
         CommandContainer = command;
+        _aggregator = aggregator;
         _basicData = basicData;
         CreateCommands();
     }
@@ -24,6 +26,6 @@ public partial class NewRoundViewModel : ScreenViewModel, INewRoundVM, IBlankGam
     [Command(EnumCommandCategory.Old)]
     public Task StartNewRoundAsync()
     {
-        return Aggregator.PublishAsync(new NewRoundEventModel()); 
+        return _aggregator.PublishAsync(new NewRoundEventModel());
     }
 }

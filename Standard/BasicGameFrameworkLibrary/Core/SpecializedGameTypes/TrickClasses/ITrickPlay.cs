@@ -2,4 +2,5 @@
 public interface ITrickPlay
 {
     Task PlayCardAsync(int deck);
+    void ReportCanExecuteChange();
 }

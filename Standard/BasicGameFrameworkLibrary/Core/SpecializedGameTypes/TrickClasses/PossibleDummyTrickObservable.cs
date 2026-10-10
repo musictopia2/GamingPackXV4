@@ -40,7 +40,6 @@ public abstract class PossibleDummyTrickObservable<SU, T, P, SA>(TrickGameContai
         TradeCard(index, newCard);
         int nums;
         nums = GetMaxCount();
-        gameContainer.Command.UpdateAll();
         if (OrderList.Count == nums)
         {
             await gameContainer.EndTrickAsync!.Invoke();

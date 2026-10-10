@@ -1,13 +1,34 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
-public class MainSetsObservable<SU, CO, RU, SE, T>(CommandContainer command) : SimpleControlObservable(command)
+[UseStateChanged]
+public partial class MainSetsObservable<SU, CO, RU, SE, T>(CommandContainer command) : SimpleControlObservable(command), IDisposable
     where SU : IFastEnumSimple
     where CO : IFastEnumColorSimple
     where RU : IRummmyObject<SU, CO>, IDeckObject, new()
     where SE : SetInfo<SU, CO, RU, T>
 {
-    public bool HasFrame { get; set; } = false; 
-    public string Text { get; set; } = "Main Sets";
-    public BasicList<SE> SetList = new();
+    [StateProperty]
+    public partial bool HasFrame { get; set; } = false;
+    [StateProperty]
+    public partial string Text { get; set; } = "Main Sets";
+    private StateList<SE>? _setList;
+
+    public StateList<SE> SetList
+    {
+        get
+        {
+            if (_setList is null)
+            {
+                _setList = [];
+                _setList.StateChanged += OnSetListChanged;
+            }
+            return _setList;
+        }
+    }
+
+    private void OnSetListChanged()
+    {
+        StateChanged?.Invoke();
+    }
     public Func<int, int, int, Task>? SetClickedAsync { get; set; }
     public virtual BasicList<T> SavedSets()
     {
@@ -43,7 +64,7 @@ public class MainSetsObservable<SU, CO, RU, SE, T>(CommandContainer command) : S
         thisSet.AutoSelect = EnumHandAutoType.None;
         if (_useSpecial)
         {
-            thisSet.SendEnableProcesses(_networkProcess!, _customFunction!);
+            thisSet.SendEnableProcesses(_enableProcess!, _customFunction!);
         }
         SetList.Add(thisSet);
     }
@@ -105,6 +126,13 @@ public class MainSetsObservable<SU, CO, RU, SE, T>(CommandContainer command) : S
     {
         return SetList[index - 1];
     }
-    protected override void EnableChange() { }
-    protected override void PrivateEnableAlways() { }
+    protected override void EnableChange()
+    {
+        StateChanged?.Invoke();
+    }
+    void IDisposable.Dispose()
+    {
+        SetList.StateChanged -= OnSetListChanged;
+        GC.SuppressFinalize(this);
+    }
 }

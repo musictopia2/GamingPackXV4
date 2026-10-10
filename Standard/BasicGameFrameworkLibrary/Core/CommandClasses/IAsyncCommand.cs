@@ -3,4 +3,6 @@ public interface IAsyncCommand
 {
     bool CanExecute(object? parameter);
     Task ExecuteAsync(object? parameter);
+    void ReportCanExecuteChanged();
+    //event Action? CanExecuteChanged;
 }

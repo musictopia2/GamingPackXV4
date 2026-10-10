@@ -25,7 +25,7 @@ public static class MiscGraphicExtensions
     {
         public void DrawPawnPiece(string customColor)
         {
-            Path path = new()
+            pp1 path = new()
             {
                 Fill = customColor.ToWebColor,
                 D = "M50 12.5L33.3333 72.7273L0 87.5L100 87.5L66.6667 72.7273L50 12.5Z"
@@ -57,7 +57,7 @@ public static class MiscGraphicExtensions
             svg.PopulateSVGStartingPoint(bounds);
             svg.ViewBox = "0 0 51 48";
             parent.Children.Add(svg);
-            Path path = new();
+            pp1 path = new();
             path.AutoIncrementElement(parent);
             path.D = "m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z";
             path.Fill = solidColor.ToWebColor;
@@ -80,7 +80,7 @@ public static class MiscGraphicExtensions
             ellipse.PopulateStrokesToStyles(borderColor.ToWebColor, (int)borderSize);
             parent.Children.Add(ellipse);
             var firstPoint = new PointF(rectangle.Location.X + rectangle.Width * 0.1f, rectangle.Location.Y + rectangle.Height * 4 / 7);
-            Path path = new();
+            pp1 path = new();
             PointF secondPoint;
             PointF thirdPoint;
             secondPoint = new PointF(rectangle.Location.X + rectangle.Width / 2, rectangle.Location.Y + rectangle.Height * 1.1f);

@@ -1,139 +1,148 @@
-﻿using System.Reflection; //not common enough.
-namespace BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
+﻿namespace BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 public abstract class GraphicsCommand : KeyComponentBase, IDisposable
 {
     private bool _disposedValue;
-    /// <summary>
-    /// this is the view model being used.  can be main view model, deck, etc.  this is not the card, etc.
-    /// </summary>
+    private ICustomCommand? _subscribedCommand;
+
     [Parameter]
     public object? CommandParameter { get; set; }
-    [Parameter]
-    public Action? AfterChange { get; set; }
+
     [Parameter]
     public bool Fixed { get; set; }
-    protected Assembly GetAssembly => Assembly.GetAssembly(GetType())!; //needs reflection namespace for the images.  decided to not attempt to string based on problems i ran across.
+
     [Parameter]
-    public ICustomCommand? CommandObject { get; set; } //you always need this now.
-    private CommandContainer? _commandContainer;
-    protected override bool ShouldRender() //allow the possibility of any graphics command to be fixed to help with performance.  in this case, then needs to ensure nothing changes (any changes would not be rerendered automatically).
-    {
-        return Fixed == false;
-    }
-    private void RunProcess()
-    {
-        if (AfterChange is not null)
-        {
-            AfterChange.Invoke();
-            return;
-        }
-        StateHasChanged();
-    }
-    protected override void OnInitialized()
-    {
-        if (CommandObject is not null)
-        {
-            _commandContainer = Resolver!.Resolve<CommandContainer>();
-            CommandObject.UpdateBlazor = RunProcess;
-            if (CommandObject is IGameCommand game)
-            {
-                _commandContainer.AddCommand(game);
-            }
-        }
-        base.OnInitialized();
-    }
+    public ICustomCommand? CommandObject { get; set; }
+
     public GraphicsCommand()
     {
         CustomCanDo = PrivateTo;
     }
-    private bool PrivateTo() => CanProcess;
+
     public Func<bool> CustomCanDo { get; set; }
+
     public bool CanProcess
     {
         get
         {
-            if (CommandObject == null)
+            if (CommandObject is null)
             {
                 return false;
             }
+
             return CommandObject.CanExecute(CommandParameter);
         }
     }
+    protected override bool ShouldRender()
+    {
+        return Fixed == false;
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (ReferenceEquals(_subscribedCommand, CommandObject) == false)
+        {
+            UnsubscribeCommand();
+            _subscribedCommand = CommandObject;
+            _subscribedCommand?.CanExecuteChanged += Command_CanExecuteChanged;
+        }
+
+        base.OnParametersSet();
+    }
+    private void Command_CanExecuteChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private bool PrivateTo()
+    {
+        return CanProcess;
+    }
+
     public void CreateClick(ISvg svg)
     {
-        if (CommandObject != null)
+        if (CommandObject is not null)
         {
             svg.EventData.ActionClicked = Clicked;
         }
     }
+
     public void CreateClick(G group)
     {
-        if (CommandObject != null)
+        if (CommandObject is not null)
         {
             group.EventData.ActionClicked = Clicked;
         }
     }
+
     private async Task Clicked(object args1, object args2)
     {
         await Submit();
     }
+
     protected virtual async Task Submit()
     {
         try
         {
-            if (CommandObject == null)
+            if (CommandObject is null)
             {
                 return;
             }
+
             if (CommandObject.CanExecute(CommandParameter) == false)
             {
                 return;
             }
+
             await CommandObject.ExecuteAsync(CommandParameter);
+
+            // The command may have changed the model represented
+            // by this graphics component.
+            //await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
         {
             string partialTrace;
+
             if (ex.StackTrace is not null)
             {
-                string trace = ex.StackTrace;
-                if (trace.Length < 1000)
-                {
-                    partialTrace = trace;
-                }
-                else
-                {
-                    partialTrace = ex.StackTrace.Substring(0, 1000);
-                }
+                partialTrace = ex.StackTrace.Length < 1000
+                    ? ex.StackTrace
+                    : ex.StackTrace.Substring(0, 1000);
             }
             else
             {
                 partialTrace = "";
             }
-            await BlazorUIHelpers.MessageBox!.ShowMessageAsync($"There was an error.  The error was {ex.Message}.  Stack Trace Was {partialTrace}");
+
+            await BlazorUIHelpers.MessageBox!.ShowMessageAsync(
+                $"There was an error.  The error was {ex.Message}.  " +
+                $"Stack Trace Was {partialTrace}");
         }
     }
+    private void UnsubscribeCommand()
+    {
+        _subscribedCommand?.CanExecuteChanged -= Command_CanExecuteChanged;
+        _subscribedCommand = null;
+    }
+
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposedValue)
+        if (_disposedValue)
         {
-            if (disposing)
-            {
-                if (_commandContainer is null)
-                {
-                    return;
-                }
-                if (CommandObject is IGameCommand other)
-                {
-                    _commandContainer!.RemoveCommand(other);
-                }
-            }
-            _disposedValue = true;
+            return;
         }
+
+        if (disposing)
+        {
+            UnsubscribeCommand();
+        }
+
+        _disposedValue = true;
     }
+
     public virtual void Dispose()
     {
-        Dispose(disposing: true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 }

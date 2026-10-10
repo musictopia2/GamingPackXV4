@@ -2,7 +2,8 @@ namespace BasicGameFrameworkLibrary.Blazor.Views;
 public abstract partial class BasicSubmitView<VM>
     where VM : class, ISubmitText
 {
-    [CascadingParameter]
+    [Parameter]
+    [EditorRequired]
     public VM? DataContext { get; set; }
     private string GetText => DataContext!.Text;
     [Parameter]

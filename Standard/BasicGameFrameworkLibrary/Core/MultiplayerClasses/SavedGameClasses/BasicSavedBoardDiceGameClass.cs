@@ -2,5 +2,6 @@
 public class BasicSavedBoardDiceGameClass<P> : BasicSavedGameClass<P>, ISavedDiceList<SimpleDice>
     where P : class, IPlayerItem, new()
 {
-    public DiceList<SimpleDice> DiceList { get; set; } = new DiceList<SimpleDice>();
+    public DiceList<SimpleDice> DiceList { get; set; } = [];
+    public bool DiceVisible { get; set; }
 }

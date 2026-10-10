@@ -1,4 +1,5 @@
-﻿namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.PileObservable;
+﻿
+namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.PileObservable;
 public abstract class WastePilesCP : IWaste, ISerializable
 {
     public WastePilesCP(CommandContainer command)
@@ -344,5 +345,13 @@ public abstract class WastePilesCP : IWaste, ISerializable
             return;
         }
         throw new CustomBasicException("Think about how to deal out cards when its not the discard piles");
+    }
+
+    void IWaste.UpdatePiles()
+    {
+        Piles.PileList.ForEach(pile =>
+        {
+            pile.RefreshPile();
+        });
     }
 }

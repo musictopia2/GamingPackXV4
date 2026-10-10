@@ -57,7 +57,6 @@ public class BasicGameContainer<P, S>
     {
         Command.StartExecuting();
         await action.Invoke(argument);
-
         Command.StopExecuting();
     }
     public async Task ProcessCustomCommandAsync(Func<Task> action)

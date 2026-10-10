@@ -1,47 +1,34 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
-public abstract partial class DiceGamesVM<D> : BasicMultiplayerMainVM
-    where D : IStandardDice, new()
-{
-    public DiceGamesVM(CommandContainer commandContainer,
+public abstract partial class DiceGamesVM<D>(CommandContainer commandContainer,
         IHoldUnholdProcesses mainGame,
         IBasicDiceGamesData<D> viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses rollProcesses,
-        IEventAggregator aggregator
-        ) : base(commandContainer,
-            mainGame,
-            basicData,
-            test,
-            resolver,
-            aggregator
-            )
+        IEventAggregator aggregator) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+    where D : IStandardDice, new()
+{   
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _rollProcesses = rollProcesses;
-        if (_model.Cup == null)
+        if (viewModel.Cup == null)
         {
             throw new CustomBasicException("There was no cup.  Rethink");
         }
-        _model.Cup.SendEnableProcesses(this, CanEnableDice);
-        _model.Cup.DiceClickedAsync = Cup_DiceClickedAsync;
-        CreateCommands(commandContainer);
+        viewModel.Cup.SendEnableProcesses(this, CanEnableDice);
+        viewModel.Cup.DiceClickedAsync = Cup_DiceClickedAsync;
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
-    private readonly IHoldUnholdProcesses _mainGame;
-    private readonly IBasicDiceGamesData<D> _model;
-    private readonly IStandardRollProcesses _rollProcesses;
     private async Task Cup_DiceClickedAsync(D arg)
     {
-        if (_model.Cup!.ShowHold)
+        if (viewModel.Cup!.ShowHold)
         {
-            await _mainGame.HoldUnholdDiceAsync(arg.Index);
+            await mainGame.HoldUnholdDiceAsync(arg.Index);
         }
         else
         {
-            await _rollProcesses.SelectUnSelectDiceAsync(arg.Index);
+            await rollProcesses.SelectUnSelectDiceAsync(arg.Index);
         }
     }
     public virtual bool CanRollDice()
@@ -51,7 +38,7 @@ public abstract partial class DiceGamesVM<D> : BasicMultiplayerMainVM
     [Command(EnumCommandCategory.Game)]
     public async Task RollDiceAsync()
     {
-        await _rollProcesses.RollDiceAsync();
+        await rollProcesses.RollDiceAsync();
     }
     protected abstract bool CanEnableDice();
 }

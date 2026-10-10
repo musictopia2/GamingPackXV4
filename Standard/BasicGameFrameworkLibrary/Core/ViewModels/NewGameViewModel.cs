@@ -1,24 +1,25 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
-public sealed partial class NewGameViewModel : ScreenViewModel, INewGameVM, IBlankGameVM
+public partial class NewGameViewModel
 {
     private readonly BasicData _basicData;
-    public CommandContainer CommandContainer { get; set; }
-    public NewGameViewModel(CommandContainer command, BasicData basicData, IEventAggregator aggregator) : base(aggregator)
+    private readonly IEventAggregator _aggregator;
+    public NewGameViewModel(
+        BasicData basicData,
+        IEventAggregator aggregator)
     {
-        CommandContainer = command;
         _basicData = basicData;
+        _aggregator = aggregator;
         CreateCommands();
     }
-    protected override Task TryCloseAsync()
-    {
-        return base.TryCloseAsync();
-    }
     partial void CreateCommands();
-    public bool CanStartNewGame() => _basicData.MultiPlayer == false || _basicData.Client == false;
+    public bool CanStartNewGame() =>
+        _basicData.MultiPlayer == false ||
+        _basicData.Client == false;
+
     [Command(EnumCommandCategory.Old)]
     public Task StartNewGameAsync()
     {
         _basicData.GameDataLoading = true;
-        return Aggregator.PublishAsync(new NewGameEventModel());
+        return _aggregator.PublishAsync(new NewGameEventModel());
     }
 }

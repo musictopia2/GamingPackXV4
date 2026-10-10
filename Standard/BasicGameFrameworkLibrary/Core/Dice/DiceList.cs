@@ -1,8 +1,8 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.Dice;
-public class DiceList<D> : ISimpleList<D>
+public class DiceList<D> : ISimpleList<D>, IStateChanged
     where D : IStandardDice, new()
 {
-    private readonly BasicList<D> _privateList = new();
+    private readonly StateList<D> _privateList = new();
     public D this[int index]
     {
         get { return _privateList[index]; }
@@ -33,11 +33,21 @@ public class DiceList<D> : ISimpleList<D>
         _thisSort.IsDescending = descending;
         _privateList.Sort(comparer: _thisSort);
     }
-    public DiceList() { }
-    public DiceList(IEnumerable<D> tempList)
+    public DiceList()
+    {
+        _privateList.StateChanged += OnListStateChanged;
+    }
+
+    public DiceList(IEnumerable<D> tempList) : this()
     {
         _privateList.ReplaceRange(tempList);
     }
+
+    private void OnListStateChanged()
+    {
+        StateChanged?.Invoke();
+    }
+
     public void Clear(int howMany)
     {
         SetContainer();
@@ -46,6 +56,9 @@ public class DiceList<D> : ISimpleList<D>
     public IGamePackageResolver? MainContainer { get; set; }
     public int Count => _privateList.Count;
     private readonly SortBasicDice<D> _thisSort = new();
+
+    public event Action? StateChanged;
+
     private void SetContainer()
     {
         if (MainContainer != null)

@@ -1,5 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
-public class TempSetsObservable<S, C, R>(CommandContainer command, IGamePackageResolver resolver)
+public class TempSetsObservable<S, C, R>(CommandContainer command, IGamePackageResolver resolver) : IStateChanged
     where S : IFastEnumSimple
     where C : IFastEnumColorSimple
     where R : IDeckObject, IRummmyObject<S, C>, new()
@@ -12,8 +12,9 @@ public class TempSetsObservable<S, C, R>(CommandContainer command, IGamePackageR
     {
         return SetList[index - 1].HandList;
     }
-
     private IEventAggregator? _thisE;
+
+    public event Action? StateChanged;
 
     public void ReportCanExecuteChange()
     {
@@ -38,6 +39,7 @@ public class TempSetsObservable<S, C, R>(CommandContainer command, IGamePackageR
             thisSet.SetClickedAsync = ThisSet_SetClickedAsync;
             SetList.Add(thisSet);
         }
+        StateChanged?.Invoke();
     }
     private async Task ThisSet_SetClickedAsync(RummyHandObservable<S, C, R> thisSet)
     {

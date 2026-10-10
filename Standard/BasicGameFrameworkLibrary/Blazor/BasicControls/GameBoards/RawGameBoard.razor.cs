@@ -30,6 +30,11 @@ public partial class RawGameBoard : IDisposable, IHandle<RepaintEventModel>
     public SizeF BoardSize { get; set; }
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+
+    [Parameter]
+    public RenderFragment<int>? VersionedChildContent { get; set; }
+
     private string GetSvgStyle()
     {
         if (TargetHeight == "" && TargetWidth == "")

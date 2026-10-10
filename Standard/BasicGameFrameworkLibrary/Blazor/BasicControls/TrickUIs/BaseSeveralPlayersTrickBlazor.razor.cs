@@ -53,19 +53,53 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
     }
     protected override void OnInitialized()
     {
-        Aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
+        Aggregator = Resolver!.Resolve<IEventAggregator>();
         Subscribe();
         base.OnInitialized();
     }
     private partial void Subscribe();
     private partial void Unsubscribe(); 
     private int GetCardIndex(T card) => DataContext!.CardList.IndexOf(card);
+
+
+    private DeckRegularDict<T>? _subscribedCards;
+
+    private void TrickCardsChanged()
+    {
+        _ = InvokeAsync(() =>
+        {
+            if (DataContext?.ViewList is not null)
+            {
+                foreach (var card in DataContext.CardList)
+                {
+                    card.Location = GetStartingPoint(GetCardIndex(card));
+                }
+            }
+
+            StateHasChanged();
+        });
+    }
     protected override void OnParametersSet()
     {
-        foreach (var card in DataContext!.CardList)
+        var cards = DataContext?.CardList;
+
+        if (ReferenceEquals(_subscribedCards, cards) == false)
         {
-            card.Location = GetStartingPoint(GetCardIndex(card));
+            _subscribedCards?.StateChanged -= TrickCardsChanged;
+
+            _subscribedCards = cards;
+
+            _subscribedCards?.StateChanged += TrickCardsChanged;
         }
+
+        if (DataContext?.ViewList is not null)
+        {
+            foreach (var card in DataContext.CardList)
+            {
+                card.Location = GetStartingPoint(GetCardIndex(card));
+            }
+        }
+
         base.OnParametersSet();
     }
     private readonly int _marginLeft = 10;
@@ -175,6 +209,8 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
             if (disposing)
             {
                 Unsubscribe();
+                _subscribedCards?.StateChanged -= TrickCardsChanged;
+                _subscribedCards = null;
             }
             _disposedValue = true;
         }

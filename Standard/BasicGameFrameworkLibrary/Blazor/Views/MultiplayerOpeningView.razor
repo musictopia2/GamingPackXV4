@@ -1,122 +1,135 @@
 ﻿@typeparam P
 @inherits JavascriptComponentBase
-@if (DataContext == null || GameData == null)
+@if (DataContext is null)
 {
-    <div>Help</div>
     return;
 }
-@if (_realLoad == false)
-{
-    return; //because has to wait to decide what to do next.
-}
-@if (_clientNewGameInfo is not null)
-{
-    <div>
-        @_clientNewGameInfo.GameName was chosen for client
-    </div>
-    return; //for now.
-}
-<div>
-    
-    @if (DataContext.OpeningStatus == EnumOpeningStatus.WaitingForHost)
-    {
-        <div>Either wait for host to start or cancel</div>
+<StateContentView DataContext="DataContext">
+    @{
+        Refresh();
     }
-    else if (DataContext.OpeningStatus == EnumOpeningStatus.WaitingForOtherPlayersForNewGame)
+    @if (GameData == null)
+    {
+        <div>Help</div>
+        return;
+    }
+    @if (_realLoad == false)
+    {
+        return; //because has to wait to decide what to do next.
+    }
+    @if (_clientNewGameInfo is not null)
     {
         <div>
-            Waiting for others players to join for new game.
+            @_clientNewGameInfo.GameName was chosen for client
         </div>
-        <div>
-            <LabelGridComponent DataContext="DataContext" Labels="_labels" />
-        </div>
+        return; //for now.
     }
-    else
-    {
-        EnumPlayerMode mode = GetPlayerMode();
-        @if (GameData.CanAutoSave)
-        {
-            @if (DataContext.HostCanStart)
+
+    <CascadingValue Value="DataContext">
+
+        <div>
+
+            @if (DataContext.OpeningStatus == EnumOpeningStatus.WaitingForHost)
             {
-                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeMultiplayerGameCommand" Display="Auto Resume Networked Game"  />
+                <div>Either wait for host to start or cancel</div>
             }
-            @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.HostOnly)
+            else if (DataContext.OpeningStatus == EnumOpeningStatus.WaitingForOtherPlayersForNewGame)
             {
-                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.RejoinMultiplayerGameCommand" Display="Host rejoin Multiplayer Game" />
+                <div>
+                    Waiting for others players to join for new game.
+                </div>
+                <div>
+                    <LabelGridComponent DataContext="DataContext" Labels="_labels" />
+                </div>
             }
-            @if (DataContext.CanShowTransferToDesktop())
+            else
             {
-                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.TransferToDesktopCommand" Display="Transfer To Desktop" />
-            }
-            @if (mode == EnumPlayerMode.Any)
-            {
-                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeSinglePlayerCommand" Display="Auto Resume Local Game" />
-            }
-        }
-        @if (DataContext.HasServer)
-        {
-            @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.HostOnly)
-            {
-                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.HostCommand" Display="Start Network Game (Host)"  />
-            }
-            @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.JoinOnly)
-            {
-                <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ConnectCommand" Display="Join Network Game" />
-            }
-        }
-        
-        @if (GameData.MinPlayers == 2 && DataContext.HostCanStart)
-        {
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game With No Extra Players" />
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
-        }
-        if (GameData.MinPlayers > 2 && DataContext.ExtraOptionsVisible == false)
-        {
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game With No Extra Players" />
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
-        }
-        @if (GameData.MinPlayers == 4 && DataContext.HostCanStart)
-        {
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game" />
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
-        }
-        @if (DataContext.HostCanStart)
-        {
-            <LabelGridComponent DataContext="DataContext" Labels="_labels" />
-        }
-        @if (GameData!.CanHaveExtraComputerPlayers)
-        {
-            <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerExtra" />
-        }
-        @if (mode == EnumPlayerMode.Any)
-        {
-            @if (DataContext.CanShowSingleOptions)
-            {
-                @if (_canComputer && _canHuman)
+                EnumPlayerMode mode = GetPlayerMode();
+                @if (GameData.CanAutoSave)
                 {
-                    <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="10px">
-                        <StackItem>
-                            <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerLocal" />
-                        </StackItem>
-                        <StackItem>
+                    @if (DataContext.HostCanStart)
+                    {
+                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeMultiplayerGameCommand" Display="Auto Resume Networked Game" />
+                    }
+                    @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.HostOnly)
+                    {
+                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.RejoinMultiplayerGameCommand" Display="Host rejoin Multiplayer Game" />
+                    }
+                    @if (DataContext.CanShowTransferToDesktop())
+                    {
+                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.TransferToDesktopCommand" Display="Transfer To Desktop" />
+                    }
+                    @if (mode == EnumPlayerMode.Any)
+                    {
+                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeSinglePlayerCommand" Display="Auto Resume Local Game" />
+                    }
+                }
+                @if (DataContext.HasServer)
+                {
+                    @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.HostOnly)
+                    {
+                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.HostCommand" Display="Start Network Game (Host)" />
+                    }
+                    @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.JoinOnly)
+                    {
+                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ConnectCommand" Display="Join Network Game" />
+                    }
+                }
+
+                @if (GameData.MinPlayers == 2 && DataContext.HostCanStart)
+                {
+                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game With No Extra Players" />
+                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
+                }
+                if (GameData.MinPlayers > 2 && DataContext.ExtraOptionsVisible == false)
+                {
+                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game With No Extra Players" />
+                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
+                }
+                @if (GameData.MinPlayers == 4 && DataContext.HostCanStart)
+                {
+                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game" />
+                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
+                }
+                @if (DataContext.HostCanStart)
+                {
+                    <LabelGridComponent DataContext="DataContext" Labels="_labels" />
+                }
+                @if (GameData!.CanHaveExtraComputerPlayers)
+                {
+                    <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerExtra" />
+                }
+                @if (mode == EnumPlayerMode.Any)
+                {
+                    @if (DataContext.CanShowSingleOptions)
+                    {
+                        @if (_canComputer && _canHuman)
+                        {
+                            <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="10px">
+                                <StackItem>
+                                    <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerLocal" />
+                                </StackItem>
+                                <StackItem>
+                                    <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.HumanLocal" />
+                                </StackItem>
+                            </StackLayout>
+                        }
+                        else if (_canHuman)
+                        {
                             <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.HumanLocal" />
-                        </StackItem>
-                    </StackLayout>
-                }
-                else if (_canHuman)
-                {
-                    <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.HumanLocal" />
-                }
-                else if (_canComputer)
-                {
-                    <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerLocal" />
-                }
-                else if (GameData.SinglePlayerChoice == EnumPlayerChoices.Solitaire)
-                {
-                    <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.Solitaire" />
+                        }
+                        else if (_canComputer)
+                        {
+                            <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerLocal" />
+                        }
+                        else if (GameData.SinglePlayerChoice == EnumPlayerChoices.Solitaire)
+                        {
+                            <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.Solitaire" />
+                        }
+                    }
                 }
             }
-        }
-    }
-    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.CancelConnectionCommand" Display="Cancel Selection" />
-</div>
+            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.CancelConnectionCommand" Display="Cancel Selection" />
+        </div>
+    </CascadingValue>
+</StateContentView>

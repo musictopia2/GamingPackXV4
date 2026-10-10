@@ -57,8 +57,30 @@ public class ControlCommand : ParentCommand, IGameCommand
         {
             return;
         }
+
         StartExecuting();
-        await base.ExecuteAsync(parameter);
-        StopExecuting();
+
+        try
+        {
+
+           //CommandContainer.UpdateAllControls();
+           //await Task.Delay(100);
+           await base.ExecuteAsync(parameter);
+        }
+        finally
+        {
+            StopExecuting();
+
+            // Do not force all controls to update here.
+            // WASM updates correctly without it.
+            // If a future control requires an explicit refresh,
+            // reconsider CommandContainer.UpdateAllControls().
+
+
+            //CommandContainer.UpdateAllControls();
+            //await Task.Yield();
+            //await Task.Delay(100);
+        }
     }
+    
 }

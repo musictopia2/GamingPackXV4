@@ -64,7 +64,6 @@ public partial class PlayerBoardObservable<TR> : SimpleControlObservable
     {
         CardCommand!.ReportCanExecuteChange();
     }
-    protected override void PrivateEnableAlways() { }
     public void ClearBoard(IDeckDict<TR> thisList)
     {
         if (Game == EnumPlayerBoardGameList.None)

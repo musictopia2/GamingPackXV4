@@ -35,7 +35,6 @@ public static class BasicGameProcesses
                 command.IsExecuting = true;
                 InProgressHelpers.MoveInProgress = false;
             }
-            command.UpdateAll();
         }
         public void ShowConnected()
         {

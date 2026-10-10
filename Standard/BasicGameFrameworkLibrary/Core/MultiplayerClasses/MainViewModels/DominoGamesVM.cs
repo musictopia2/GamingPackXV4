@@ -8,20 +8,16 @@ public abstract class DominoGamesVM<D> : BasicMultiplayerMainVM
         IDominoDrawProcesses<D> mainGame,
         IDominoGamesData<D> viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator
-        ) : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        ) : base(commandContainer, mainGame, basicData, resolver, aggregator)
     {
         _model = viewModel;
         _mainGame = mainGame;
         _model.DrewDominoAsync = DrewDominoAsync;
         if (AlwaysEnableHand() == false)
         {
-            _model.PlayerHand1.SendEnableProcesses(this, () =>
-            {
-                return CanEnableHand();
-            });
+            _model.PlayerHand1.SendEnableProcesses(this, CanEnableHand);
         }
         else
         {

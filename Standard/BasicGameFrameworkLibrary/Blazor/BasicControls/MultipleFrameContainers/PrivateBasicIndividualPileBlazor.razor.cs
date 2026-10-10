@@ -1,6 +1,6 @@
 namespace BasicGameFrameworkLibrary.Blazor.BasicControls.MultipleFrameContainers;
 public partial class PrivateBasicIndividualPileBlazor<D>
-    where D : class, IDeckObject, new()
+    where D : class, IDeckObject, IStateChanged, new()
 {
     [CascadingParameter]
     public BasicMultiplePilesBlazor<D>? MainGroup { get; set; }

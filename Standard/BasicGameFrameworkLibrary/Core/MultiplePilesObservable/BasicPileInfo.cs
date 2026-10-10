@@ -1,10 +1,21 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplePilesObservable;
-public class BasicPileInfo<D> where D : IDeckObject, new()
+
+[UseStateChanged]
+public partial class BasicPileInfo<D> where D : IDeckObject, new()
 {
     public BasicPileInfo() { }
-    public bool IsSelected { get; set; }
-    public bool IsEnabled { get; set; } = true;
-    public string Text { get; set; } = "";
+    [StateProperty]
+    public partial bool IsSelected { get; set; }
+
+    partial void OnIsSelectedChanged(bool value)
+    {
+        ThisObject.IsSelected = value;
+    }
+
+    [StateProperty]
+    public partial bool IsEnabled { get; set; } = true;
+    [StateProperty]
+    public partial string Text { get; set; } = "";
     public DeckRegularDict<D> ObjectList { get; set; } = new();
     public DeckRegularDict<D> TempList = new();
     public bool Rotated { get; set; }

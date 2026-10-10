@@ -1,10 +1,8 @@
 ﻿@using aa1 = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
-@using BlazorMVVMHelpersLibrary;
 @using BasicGameFrameworkLibrary.Blazor.Views
 <CascadingValue Value="BasicData">
     @if (BasicData.GameDataLoading)
     {
-        <div>Game Data Is Loading</div>
         return;
     }
     <LeftOverLayout>
@@ -17,9 +15,8 @@
                 <span style="font-size: 5vh">
                     @GameInfo.GameName
                 </span>
-                <ParentControl VM="NewGameViewModel">
-                    <NewGameView />
-                </ParentControl>
+                <NewGameView />
+                
             </div>
         </TopContent>
         <MainContent>

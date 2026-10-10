@@ -4,5 +4,17 @@ public class PlayerTrick<S, T> : PlayerSingleHand<T>, IPlayerTrick<S, T>
     where T : ITrickCard<S>, new()
 {
     [ScoreColumn]
-    public int TricksWon { get; set; }
+    public int TricksWon
+    {
+        get;
+        set
+        {
+            if (field == value)
+            {
+                return;
+            }
+            field = value;
+            OnScoreValueChanged(nameof(TricksWon));
+        }
+    }
 }

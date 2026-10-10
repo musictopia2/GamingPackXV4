@@ -1,5 +1,8 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
 public interface IScoreBoard
 {
-    string TextToDisplay(ScoreColumnModel column, bool useAbbreviationForTrueFalse);
+    event Action<string>? ScoreValueChanged;
+    string TextToDisplay(
+        ScoreColumnModel column,
+        bool useAbbreviationForTrueFalse);
 }

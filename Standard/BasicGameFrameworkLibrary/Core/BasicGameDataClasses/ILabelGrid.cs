@@ -2,4 +2,5 @@
 public interface ILabelGrid
 {
     string GetValue(string propertyName, int decimalPlaces);
+    event Action<string>? LabelValueChanged;
 }

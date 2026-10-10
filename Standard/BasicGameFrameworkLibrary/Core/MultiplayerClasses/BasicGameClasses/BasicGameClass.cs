@@ -1,4 +1,5 @@
-﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
+﻿
+namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicGameClasses;
 public abstract class BasicGameClass<P, S> :
     IGameSetUp<P, S>
     , ICommonMultiplayer<P, S>
@@ -54,6 +55,7 @@ public abstract class BasicGameClass<P, S> :
     public IGamePackageResolver MainContainer { get; set; }
     public IAsyncDelayer? Delay;
     private readonly CommandContainer _command;
+    protected CommandContainer CommandContainer => _command;
     private readonly BasicGameContainer<P, S> _gameContainer;
     public S SaveRoot
     {
@@ -62,6 +64,8 @@ public abstract class BasicGameClass<P, S> :
     }
     protected bool IsLoaded; //so when loaded, then can act differently.
     public PlayerCollection<P> PlayerList { get; set; }
+
+
     protected IMultiplayerSaveState State;
     //games like three letter fun needed to know the information about it.
     public BasicData BasicData { private set; get; } //this way others can access this data.
@@ -128,7 +132,6 @@ public abstract class BasicGameClass<P, S> :
         _command.IsExecuting = false;
         _command.ManuelFinish = false;
         _command.Processing = false;
-        _command.ManualReport();
         await Task.CompletedTask;
     }
     public async Task SaveStateAsync()
@@ -190,7 +193,6 @@ public abstract class BasicGameClass<P, S> :
                     await EndTurnAsync();
                     return;
                 }
-                _command.UpdateAll();
                 await ComputerTurnAsync();
                 return;
             }
@@ -209,7 +211,6 @@ public abstract class BasicGameClass<P, S> :
         }
         _command.IsExecuting = true;
         InProgressHelpers.MoveInProgress = false;
-        _command.UpdateAll();
     }
     public virtual async Task EndTurnReceivedAsync(string data)
     {
@@ -222,4 +223,8 @@ public abstract class BasicGameClass<P, S> :
         this.ShowTurn();
     }
     public abstract Task StartNewTurnAsync(); //decided to make it abstract this time.
+    public virtual Task PrepareNewGameAsync()
+    {
+        return Task.CompletedTask; //default to nothing.
+    }
 }

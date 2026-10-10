@@ -1,43 +1,46 @@
-﻿@typeparam SU
+﻿@using BasicGameFrameworkLibrary.Blazor.Views
+@typeparam SU
 @typeparam CO
 @typeparam RU
 @typeparam SE
 @typeparam T
-@if (DataContext == null || ChildContent == null)
-{
-    return;
-}
-@if (ContainerHeight == "" && ContainerWidth == "")
-{
-    return;
-}
-<CascadingValue Value="this">
-    @if (DataContext.HasFrame)
+<StateContentView DataContext="DataContext">
+    @if (DataContext == null || ChildContent == null)
     {
-        <fieldset style="@GetContainerStyle()" disabled="@IsDisabled">
-            <legend>@DataContext.Text</legend>
-            <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
-                @foreach (var set in DataContext.SetList)
-                {
-                    <StackItem>
-                        @ChildContent(set)
-                    </StackItem>
-                }
-            </StackLayout>
-        </fieldset>
+        return;
     }
-    else
+    @if (ContainerHeight == "" && ContainerWidth == "")
     {
-        //no frame
-        <div style="@GetContainerStyle()">
-            <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
-                @foreach (var set in DataContext.SetList)
-                {
-                    <StackItem>
-                        @ChildContent(set)
-                    </StackItem>
-                }
-            </StackLayout>
-        </div>
+        return;
     }
-</CascadingValue>
+    <CascadingValue Value="this">
+        @if (DataContext.HasFrame)
+        {
+            <fieldset style="@GetContainerStyle()" disabled="@IsDisabled">
+                <legend>@DataContext.Text</legend>
+                <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
+                    @foreach (var set in DataContext.SetList)
+                    {
+                        <StackItem>
+                            @ChildContent(set)
+                        </StackItem>
+                    }
+                </StackLayout>
+            </fieldset>
+        }
+        else
+        {
+            //no frame
+            <div style="@GetContainerStyle()">
+                <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
+                    @foreach (var set in DataContext.SetList)
+                    {
+                        <StackItem>
+                            @ChildContent(set)
+                        </StackItem>
+                    }
+                </StackLayout>
+            </div>
+        }
+    </CascadingValue>
+</StateContentView>

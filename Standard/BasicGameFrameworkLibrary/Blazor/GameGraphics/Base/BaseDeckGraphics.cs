@@ -34,7 +34,53 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
     protected abstract void DrawBacks(); //if it needs to draw backs, decided this time, will not even get the rectangle.  they won't necessarily draw a rectangle anyways.
     protected G? MainGroup { get; set; }
     protected virtual bool AlwaysUseSvg { get; } = false;
-    private void PopulateCustomViewBox(ISvg svg)
+
+
+    private IStateChanged? _subscribedCard;
+
+    protected override void OnParametersSet()
+    {
+        var card = DeckObject as IStateChanged;
+
+        if (ReferenceEquals(_subscribedCard, card) == false)
+        {
+            UnsubscribeCard();
+            _subscribedCard = card;
+
+            if (_subscribedCard is not null)
+            {
+                _subscribedCard.StateChanged += CardChanged;
+            }
+        }
+
+        base.OnParametersSet();
+    }
+
+    private void CardChanged()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void UnsubscribeCard()
+    {
+        if (_subscribedCard is not null)
+        {
+            _subscribedCard.StateChanged -= CardChanged;
+            _subscribedCard = null;
+        }
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            UnsubscribeCard();
+        }
+
+        base.Dispose(disposing);
+    }
+
+    private void PopulateCustomViewBox(SVG svg)
     {
         if (PartOfBoard == false)
         {

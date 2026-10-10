@@ -5,7 +5,9 @@ public class SavedScatteringPieces<D> where D : IDeckObject, new()
     public bool ClearedOut { get; set; }
     public DeckRegularDict<D> RemainingList { get; set; } = new();
 }
-public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlObservable where D : ILocationDeck, new()
+[UseStateChanged]
+public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlObservable, IDisposable
+    where D : ILocationDeck, new()
     where L : class, IScatterList<D>, new()
 {
     protected abstract Task ClickedPieceAsync(int Deck); // deck is the card number (needs to be deck so each one can use the function to return the proper card
@@ -14,7 +16,7 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
     private bool _clearedOut;
     protected L? ObjectList;
     protected string ProtectedText = ""; // text would already be given when doing this
-    public DeckRegularDict<D> RemainingList = new();
+    public DeckRegularDict<D> RemainingList { get; private set; } = [];
     public ControlCommand? ObjectCommand { get; set; } // needs the commands
     public ControlCommand? BoardCommand { get; set; }
     private bool _privateObjectClicked;
@@ -45,11 +47,15 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
         _rs = resolver.Resolve<IRandomGenerator>();
         _thisE = resolver.Resolve<IEventAggregator>();
         CreateCommands();
+        RemainingList.StateChanged += OnRemainingListChanged;
     }
     partial void CreateCommands();
     public SizeF MaxSize { get; set; }
-    public string TextToAppear { get; set; } = "";
-    public bool CanDraw { get; set; } = true;
+    [StateProperty]
+    public partial string TextToAppear { get; set; } = "";
+    [StateProperty]
+    public partial bool CanDraw { get; set; } = true;
+    
     public void LoadPlayerPieces(IDeckDict<D> thisList, ref DeckRegularDict<D> hand, bool isFirst)
     {
         hand.ReplaceRange(thisList);
@@ -217,5 +223,17 @@ public abstract partial class ScatteringPiecesObservable<D, L> : SimpleControlOb
         }
         return true;
     }
-    protected override void EnableChange() { }
+    protected override void EnableChange()
+    {
+        StateChanged?.Invoke();
+    }
+    private void OnRemainingListChanged()
+    {
+        StateChanged?.Invoke();
+    }
+    public void Dispose()
+    {
+        RemainingList.StateChanged -= OnRemainingListChanged;
+        GC.SuppressFinalize(this);
+    }
 }

@@ -1,31 +1,37 @@
 ﻿@using BasicGameFrameworkLibrary.Blazor.BasicControls.YahtzeeControls
 @using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels
 @using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Data
-@using BlazorMVVMHelpersLibrary;
 @using aa1 = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 @using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Containers
 @typeparam D
-@inherits BasicGameView<YahtzeeMainViewModel<D>>
+@inherits CascadingGameView<YahtzeeMainViewModel<D>>
 @{ 
     _scoreContainer = aa1.Resolver!.Resolve<ScoreContainer>();
 }
-<ParentControl VM="YahtzeeScoresheetViewModel<D>">
-    <StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
-        <RefreshComponent CanRender="_scoreContainer.RowList.Count > 0">
-            <YahtzeeGameScoresheet D="D"
-                                   CommandContainer="DataContext!.CommandContainer"
-                                   ScoreContainer="GetContainer()"
-                                   BottomDescriptionWidth="_bottomDescriptionWidth" />
-        </RefreshComponent>
-        <StackItem>
-            <div>
-                <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
-            </div>
-            <div>
-                <ScoreBoardBlazor P="YahtzeePlayerItem<D>" Columns="@_scores" Players="@DataContext!.PlayerList" />
-            </div>
-            <GameButtonComponent CommandObject="RollCommand" StartOnNewLine="true" Display="Roll Dice" />
-            <DiceListConrolBlazor D="D" Cup="@DataContext!.GetCup" TargetHeight="14vh" />
-        </StackItem>
-    </StackLayout>
-</ParentControl>
+@if (DataContext is null)
+{
+    return;
+}
+@if (DataContext.CurrentScoresheet is null)
+{
+    return;
+}
+<StackLayout Orientation="EnumOrientation.Horizontal" ItemSpacing="5px">
+    <RefreshComponent CanRender="_scoreContainer.RowList.Count > 0">
+        <YahtzeeGameScoresheet D="D"
+                               CommandContainer="DataContext!.CommandContainer"
+                               DataContext="DataContext.CurrentScoresheet"
+                               ScoreContainer="GetContainer()"
+                               BottomDescriptionWidth="_bottomDescriptionWidth" />
+    </RefreshComponent>
+    <StackItem>
+        <div>
+            <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        </div>
+        <div>
+            <ScoreBoardBlazor P="YahtzeePlayerItem<D>" Columns="@_scores" Players="@DataContext!.PlayerList" />
+        </div>
+        <GameButtonComponent CommandObject="RollCommand" StartOnNewLine="true" Display="Roll Dice" />
+        <DiceListConrolBlazor D="D" Cup="@DataContext!.GetCup" TargetHeight="14vh" />
+    </StackItem>
+</StackLayout>

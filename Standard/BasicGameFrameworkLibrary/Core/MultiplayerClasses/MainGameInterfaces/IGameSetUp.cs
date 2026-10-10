@@ -11,4 +11,5 @@ public interface IGameSetUp<P, S> : IBasicGameProcesses<P>
     bool ComputerEndsTurn { set; }
     Task ContinueTurnAsync();
     Task FinishGetSavedAsync();
+    Task PrepareNewGameAsync();
 }

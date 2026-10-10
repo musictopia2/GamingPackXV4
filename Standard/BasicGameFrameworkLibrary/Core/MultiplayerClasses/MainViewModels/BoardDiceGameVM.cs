@@ -1,18 +1,15 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.MainViewModels;
-public abstract partial class BoardDiceGameVM : BasicMultiplayerMainVM
-{
-    private readonly IStandardRollProcesses _rollProcesses;
-    public BoardDiceGameVM(CommandContainer commandContainer,
+public abstract partial class BoardDiceGameVM(CommandContainer commandContainer,
         IEndTurn mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses rollProcesses,
-        IEventAggregator aggregator
-        ) : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        IEventAggregator aggregator) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+    protected override void AdditionalInitialize()
     {
-        _rollProcesses = rollProcesses;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     public virtual bool CanRollDice()
@@ -22,6 +19,6 @@ public abstract partial class BoardDiceGameVM : BasicMultiplayerMainVM
     [Command(EnumCommandCategory.Game)]
     public virtual async Task RollDiceAsync()
     {
-        await _rollProcesses.RollDiceAsync();
+        await rollProcesses.RollDiceAsync();
     }
 }

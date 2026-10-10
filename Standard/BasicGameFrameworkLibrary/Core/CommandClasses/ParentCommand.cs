@@ -1,7 +1,7 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
 public abstract class ParentCommand
 {
-    public Action? CanExecuteChanged { get; set; } = delegate { };
+    public event Action? CanExecuteChanged;
     protected readonly object _model;
     protected readonly Func<Task>? _simpleAsync1;
     protected readonly Func<object?, Task>? _simpleAsync2;
@@ -14,9 +14,7 @@ public abstract class ParentCommand
     protected bool _hasMethodParameters;
     protected bool _hasCanParameters;
     protected bool _isAsync;
-    public object Context => _model;
     protected virtual void AddCommand() { }
-    public Action? UpdateBlazor { get; set; }
     public ParentCommand(object model,
         Func<Task>? simpleAsync1 = null, Func<object?, Task>? simpleAsync2 = null,
         Action? simpleAction1 = null, Action<object?>? simpleAction2 = null,
@@ -88,26 +86,26 @@ public abstract class ParentCommand
         {
             return;
         }
-        if (_model is INotifyCanExecuteChanged notifier)
-        {
-            notifier.CanExecuteChanged += Notifier_CanExecuteChanged;
-        }
+        //if (_model is INotifyCanExecuteChanged notifier)
+        //{
+        //    notifier.CanExecuteChanged += Notifier_CanExecuteChanged;
+        //}
     }
     public void ReportCanExecuteChange()
     {
         CanExecuteChanged?.Invoke();
     }
-    private void Notifier_CanExecuteChanged(object sender, CanExecuteChangedEventArgs e)
-    {
-        if (_functionName == "")
-        {
-            throw new CustomBasicException("No canexecute function was found.  Should not have raised this.  Rethink");
-        }
-        if (e.Name == _functionName)
-        {
-            ReportCanExecuteChange();
-        }
-    }
+    //private void Notifier_CanExecuteChanged(object sender, CanExecuteChangedEventArgs e)
+    //{
+    //    if (_functionName == "")
+    //    {
+    //        throw new CustomBasicException("No canexecute function was found.  Should not have raised this.  Rethink");
+    //    }
+    //    if (e.Name == _functionName)
+    //    {
+    //        ReportCanExecuteChange();
+    //    }
+    //}
     protected bool ParentCanExecute(object? parameter)
     {
         if (_canExecute1 is not null)
@@ -120,6 +118,9 @@ public abstract class ParentCommand
         }
         return true;
     }
+    protected virtual void ExecutingChanged()
+    {
+    }
     public async virtual Task ExecuteAsync(object? parameter)
     {
         if (ParentCanExecute(parameter) == false)
@@ -127,7 +128,8 @@ public abstract class ParentCommand
             return;
         }
         _isExecuting = true;
-        await ChangeBlazorStateAsync();
+        ExecutingChanged();
+        await Task.Yield();
         if (_isAsync == false)
         {
             if (_hasMethodParameters == false)
@@ -151,14 +153,13 @@ public abstract class ParentCommand
             }
         }
         _isExecuting = false;
-        await ChangeBlazorStateAsync();
+        ExecutingChanged();
+        await Task.Yield();
     }
-    protected async Task ChangeBlazorStateAsync()
+    
+
+    public void ReportCanExecuteChanged()
     {
-        if (UpdateBlazor is not null)
-        {
-            UpdateBlazor.Invoke();
-            await Task.Delay(1);
-        }
+        CanExecuteChanged?.Invoke();
     }
 }

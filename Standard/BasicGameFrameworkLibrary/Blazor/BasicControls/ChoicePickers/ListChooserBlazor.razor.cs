@@ -1,5 +1,5 @@
 namespace BasicGameFrameworkLibrary.Blazor.BasicControls.ChoicePickers;
-public partial class ListChooserBlazor
+public partial class ListChooserBlazor : IPiecePicker
 {
     /// <summary>
     /// should be defined by view height.  if 5 is set, then no matter what, 20 would be displayed vertically.
@@ -16,6 +16,17 @@ public partial class ListChooserBlazor
     public string TextColor { get; set; } = cs1.Navy;
     [Parameter]
     public bool CanHighlight { get; set; } = true;
+    float IPiecePicker.TextWidth => TextWidth;
+    float IPiecePicker.ViewBoxHeight => 18;
+    protected override void OnInitialized()
+    {
+        //ListPicker?.StateChanged = Refresh;
+        base.OnInitialized();
+    }
+    //private void Refresh()
+    //{
+    //    InvokeAsync(StateHasChanged);
+    //}
     private int DisplayColumns()
     {
         if (TotalColumns == 0)

@@ -5,18 +5,22 @@ public partial class BeginningBlazor
 {
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+
     [Inject]
-    public IJSRuntime? JS { get; set; }
-    private EnumGamePackageMode _mode;
-    protected override void OnInitialized()
+    public IJSRuntime? JsRuntime { get; set; }
+
+    private EnumGamePackageMode? _mode;
+
+    protected override async Task OnInitializedAsync()
     {
-        GlobalStartUp.JsRuntime = JS;
+        GlobalStartUp.JsRuntime = JsRuntime;
         if (GlobalStartUp.StartBootStrap == null)
         {
             throw new CustomBasicException("There was nothing to start up the bootstrap");
         }
-        GlobalStartUp.StartBootStrap.Invoke();
+        await GlobalStartUp.StartBootStrap.Invoke();
+        //_mode = EnumGamePackageMode.Debug;
         _mode = GlobalVariables.GetGamePackageMode;
-        base.OnInitialized();
     }
 }

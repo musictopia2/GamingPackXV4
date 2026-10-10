@@ -1,0 +1,8 @@
+﻿@typeparam VM
+@if (_dataContext == null)
+{
+    return;
+}
+<CascadingValue Value="_dataContext">
+    @ChildContent
+</CascadingValue>

@@ -1,17 +1,20 @@
 ﻿@typeparam D
 @using BasicBlazorLibrary.Components.RenderHelpers
+@using BasicGameFrameworkLibrary.Blazor.Views
 @if (DeckObject == null)
 {
     return; //i think if setting as nothing, go ahead and dispose everything afterall.
 }
-@if (UseKey == false)
-{
-    @ChildContent
-}
-else
-{
-    <RefreshComponent CanRender="@CanRender"
-                  Key="DeckObject.GetKey()">
+<StateContentView DataContext="DeckObject">
+    @if (UseKey == false)
+    {
         @ChildContent
-    </RefreshComponent>
-}
+    }
+    else
+    {
+        <RefreshComponent CanRender="@CanRender"
+                          Key="DeckObject.GetKey()">
+            @ChildContent
+        </RefreshComponent>
+    }
+</StateContentView>

@@ -1,13 +1,15 @@
-﻿<CascadingValue Value="this">
-    @if (NumberPicker == null)
-    {
-        return;
-    }
-    else
-    {
-        int rows = TotalRows();
-        int columns = TotalColumns();
-        int index = 0;
+﻿@using BasicGameFrameworkLibrary.Blazor.Views
+@if (NumberPicker is null)
+{
+    return;
+}
+<StateContentView DataContext="NumberPicker.NumberList">
+    <CascadingValue Value="this">
+        @{
+            int rows = TotalRows();
+            int columns = TotalColumns();
+            int index = 0;
+        }
         @for (int r = 0; r < rows; r++)
         {
             <div>
@@ -16,13 +18,15 @@
                     if (index < NumberPicker.NumberList.Count)
                     {
                         var piece = NumberPicker.NumberList[index];
-                        <BasePieceGraphics IsSelected="@piece.IsSelected" CommandParameter="@piece" CommandObject="@NumberPicker.NumberPickedCommand">
-                            <NumberPiece DataContext="piece" TextColor="@TextColor" CanHighlight="@CanHighlight" />
-                        </BasePieceGraphics>
+                        <StateContentView DataContext="piece">
+                            <BasePieceGraphics IsSelected="@piece.IsSelected" CommandParameter="@piece" CommandObject="@NumberPicker.NumberPickedCommand">
+                                <NumberPiece DataContext="piece" TextColor="@TextColor" CanHighlight="@CanHighlight" />
+                            </BasePieceGraphics>
+                        </StateContentView>
                         index++;
                     }
                 }
             </div>
         }
-    }
-</CascadingValue>
+    </CascadingValue>
+</StateContentView>

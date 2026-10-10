@@ -9,9 +9,25 @@ public partial class GameButtonComponent : IDisposable
     public ICustomCommand? CommandObject { get; set; }
     [Parameter]
     public object? CommandParameter { get; set; }
-    [Parameter]
-    public Action? AfterChange { get; set; }
     private CommandContainer? _commandContainer;
+    private bool? _lastCanExecute;
+    private bool GetCanExecute()
+    {
+        if (CustomCallBack.HasDelegate || CommandObject is null)
+        {
+            return true;
+        }
+
+        return CommandObject.CanExecute(CommandParameter);
+    }
+
+    protected override void OnParametersSet()
+    {
+
+        _lastCanExecute = GetCanExecute();
+        base.OnParametersSet();
+    }
+
     protected override void OnInitialized()
     {
         if (Resolver is null)
@@ -19,10 +35,10 @@ public partial class GameButtonComponent : IDisposable
             return;
         }
         _commandContainer = Resolver!.Resolve<CommandContainer>();
+        CommandObject?.CanExecuteChanged += Command_CanExecuteChanged;
         if (CommandObject is not null)
         {
-
-            CommandObject.UpdateBlazor = RunProcess;
+            bool rets = CommandObject.CanExecute(CommandParameter);
             if (CommandObject is IGameCommand game)
             {
                 _commandContainer.AddCommand(game);
@@ -30,14 +46,17 @@ public partial class GameButtonComponent : IDisposable
         }
         base.OnInitialized();
     }
-    private void RunProcess()
+    private void Command_CanExecuteChanged()
     {
-        if (AfterChange is not null)
+        bool current = GetCanExecute();
+
+        if (_lastCanExecute == current)
         {
-            AfterChange.Invoke();
             return;
         }
-        StateHasChanged();
+
+        _lastCanExecute = current;
+        InvokeAsync(StateHasChanged);
     }
     [Parameter]
     public string FontSize { get; set; } = "3vh";
@@ -104,6 +123,11 @@ public partial class GameButtonComponent : IDisposable
                 {
                     _commandContainer!.RemoveCommand(other);
                 }
+                CommandObject?.CanExecuteChanged -= Command_CanExecuteChanged;
+                //if (CommandObject is OldCommand old)
+                //{
+                //    old.CanExecuteChanged -= Command_CanExecuteChanged;
+                //}
             }
             _disposedValue = true;
         }

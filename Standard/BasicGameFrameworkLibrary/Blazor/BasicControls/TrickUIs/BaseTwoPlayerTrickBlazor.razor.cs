@@ -15,6 +15,21 @@ public partial class BaseTwoPlayerTrickBlazor<S, T> : IHandleAsync<AnimateTrickE
 #pragma warning restore IDE0052 // Remove unread private members
     private SizeF _tempSize;
     private bool _disposedValue;
+    private void TrickCardsChanged()
+    {
+        _ = InvokeAsync(() =>
+        {
+            if (DataContext is not null)
+            {
+                foreach (var card in DataContext.CardList)
+                {
+                    card.Location = GetStartingPoint(GetCardIndex(card));
+                }
+            }
+
+            StateHasChanged();
+        });
+    }
     public BaseTwoPlayerTrickBlazor()
     {
         _animates = new ();
@@ -45,12 +60,28 @@ public partial class BaseTwoPlayerTrickBlazor<S, T> : IHandleAsync<AnimateTrickE
             return lefts;
         }
     }
+    private DeckRegularDict<T>? _subscribedCards;
     protected override void OnParametersSet()
     {
-        foreach (var card in DataContext!.CardList)
+        var cards = DataContext?.CardList;
+
+        if (ReferenceEquals(_subscribedCards, cards) == false)
         {
-            card.Location = GetStartingPoint(GetCardIndex(card));
+            _subscribedCards?.StateChanged -= TrickCardsChanged;
+
+            _subscribedCards = cards;
+
+            _subscribedCards?.StateChanged += TrickCardsChanged;
         }
+
+        if (DataContext is not null)
+        {
+            foreach (var card in DataContext.CardList)
+            {
+                card.Location = GetStartingPoint(GetCardIndex(card));
+            }
+        }
+
         base.OnParametersSet();
     }
     private PointF GetStartingPoint(int index)
@@ -65,7 +96,7 @@ public partial class BaseTwoPlayerTrickBlazor<S, T> : IHandleAsync<AnimateTrickE
     }
     protected override void OnInitialized()
     {
-        Aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
+        Aggregator = Resolver!.Resolve<IEventAggregator>();
         Subscribe();
         base.OnInitialized();
     }
@@ -124,6 +155,8 @@ public partial class BaseTwoPlayerTrickBlazor<S, T> : IHandleAsync<AnimateTrickE
         {
             if (disposing)
             {
+                _subscribedCards?.StateChanged -= TrickCardsChanged;
+                _subscribedCards = null;
                 Unsubscribe();
             }
             _disposedValue = true;

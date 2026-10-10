@@ -3,12 +3,10 @@
     <table>
         @foreach (var item in Labels)
         {
-            <tr>
-                <th>@item.Header:</th>
-                <td style="padding-right:10px;">
-                    @GetValue(item)
-                </td>
-            </tr>
+            <LabelItemComponent DataContext="DataContext"
+                Model="item"
+                DecimalPlaces="DecimalPlaces"
+                />
         }
     </table>
     return;
@@ -17,12 +15,9 @@
     <table>
         @foreach (var item in Labels)
         {
-            <tr>
-                <th>@item.Header:</th>
-                <td style="padding-right:10px;">
-                    @GetValue(item)
-                </td>
-            </tr>
+            <LabelItemComponent DataContext="DataContext"
+                                Model="item"
+                                DecimalPlaces="DecimalPlaces" />
         }
     </table>
 </div>

@@ -1,10 +1,13 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
+
+[UseStateChanged]
 public partial class SingleObservablePile<D> : SimpleControlObservable where D : IDeckObject, new()
 {
     private readonly DeckRegularDict<D> _objectList;
     public Func<Task>? PileClickedAsync { get; set; }
     public ControlCommand? PileObjectClickedCommand { get; set; }
-    public bool Visible { get; set; } = true;
+    [StateProperty]
+    public partial bool Visible { get; set; } = true;
     [Command(EnumCommandCategory.Control)]
 #pragma warning disable IDE0051 // Remove unused private members
     private async Task PrivatePileClickedAsync()
@@ -22,10 +25,27 @@ public partial class SingleObservablePile<D> : SimpleControlObservable where D :
         CreateCommands();
     }
     partial void CreateCommands();
-    public D CurrentCard { get; private set; } = new();
+    //has to do manually because of generics.
+    private D _currentCard = new();
+
+    public D CurrentCard
+    {
+        get => _currentCard;
+        private set
+        {
+            if (ReferenceEquals(_currentCard, value))
+            {
+                return;
+            }
+
+            _currentCard = value;
+            OnStateChanged();
+        }
+    }
     private int _previousNum;
     private bool _isFirst;
-    public string Text { get; set; } = "Discard";
+    [StateProperty]
+    public partial string Text { get; set; } = "Discard";
     private void NotifyCommands()
     {
         PileObjectClickedCommand!.ReportCanExecuteChange();
@@ -53,14 +73,14 @@ public partial class SingleObservablePile<D> : SimpleControlObservable where D :
     {
         CurrentCard.IsUnknown = false;
     }
-    public bool CanCutDiscard()
-    {
-        if (_objectList.Count < 4)
-        {
-            return false;
-        }
-        return true;
-    }
+    //public bool CanCutDiscard()
+    //{
+    //    if (_objectList.Count < 4)
+    //    {
+    //        return false;
+    //    }
+    //    return true;
+    //}
     public void NewList(IDeckDict<D> whatList)
     {
         if (whatList.Count == 0)
@@ -121,14 +141,14 @@ public partial class SingleObservablePile<D> : SimpleControlObservable where D :
         }
         return _objectList.Count + 1;
     }
-    public DeckRegularDict<D> FlipCardList()
-    {
-        DeckRegularDict<D> tempList = _objectList.ToRegularDeckDict();
-        tempList.Reverse();
-        tempList.Add(CurrentCard);
-        ClearCards();
-        return tempList;
-    }
+    //public DeckRegularDict<D> FlipCardList()
+    //{
+    //    DeckRegularDict<D> tempList = _objectList.ToRegularDeckDict();
+    //    tempList.Reverse();
+    //    tempList.Add(CurrentCard);
+    //    ClearCards();
+    //    return tempList;
+    //}
     public int HowManyInDiscard()
     {
         return _objectList.Count;
@@ -214,21 +234,21 @@ public partial class SingleObservablePile<D> : SimpleControlObservable where D :
         CurrentCard.Drew = false;
         _previousNum = 0;
     }
-    public void CutDeck()
-    {
-        if (_objectList.Count < 4)
-        {
-            throw new CustomBasicException("Cannot cut deck because there are less then 4 cards left");
-        }
-        int index;
-        index = _objectList.Count / 2;
-        if (_objectList.ObjectExist(CurrentCard.Deck))
-        {
-            _objectList.RemoveObjectByDeck(CurrentCard.Deck);
-        }
-        _objectList.InsertMiddle(index, CurrentCard);
-        RemoveFromPile();
-    }
+    //public void CutDeck()
+    //{
+    //    if (_objectList.Count < 4)
+    //    {
+    //        throw new CustomBasicException("Cannot cut deck because there are less then 4 cards left");
+    //    }
+    //    int index;
+    //    index = _objectList.Count / 2;
+    //    if (_objectList.ObjectExist(CurrentCard.Deck))
+    //    {
+    //        _objectList.RemoveObjectByDeck(CurrentCard.Deck);
+    //    }
+    //    _objectList.InsertMiddle(index, CurrentCard);
+    //    RemoveFromPile();
+    //}
     public void AddRestOfDeck(IDeckDict<D> currentList)
     {
         if (currentList.ObjectExist(_objectList.First().Deck))
@@ -333,6 +353,5 @@ public partial class SingleObservablePile<D> : SimpleControlObservable where D :
     {
         NotifyCommands();
     }
-    protected override void PrivateEnableAlways() { }
     public bool CurrentOnly { get; set; }
 }

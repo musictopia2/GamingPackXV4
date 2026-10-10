@@ -4,7 +4,8 @@ public partial class YahtzeeGameScoresheet<D>
 {
     [Parameter]
     public ScoreContainer? ScoreContainer { get; set; }
-    [CascadingParameter]
+    [Parameter]
+    [EditorRequired]
     public YahtzeeScoresheetViewModel<D>? DataContext { get; set; }
     [Parameter]
     public CommandContainer? CommandContainer { get; set; }

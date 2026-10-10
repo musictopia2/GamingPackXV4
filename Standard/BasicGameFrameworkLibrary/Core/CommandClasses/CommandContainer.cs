@@ -1,38 +1,84 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.CommandClasses;
 public class CommandContainer
 {
-    private readonly BasicList<IGameCommand> _commandList = new();
-    private readonly BasicList<IGameCommand> _openList = new();
-    public Action? ExecutingChanged { get; set; }
-    private readonly BasicList<IControlObservable> _controlList = new();
-    private readonly Dictionary<string, Action> _specialActions = new();
-    public Action? ParentAction { get; set; }
-    public event Action? CustomStateHasChanged;
-    public void ResetCustomStates()
+    //start out with no open list.
+    private readonly BasicList<IGameCommand> _commands = [];
+    private readonly BasicList<IControlObservable> _controls = new();
+    private readonly BasicList<IGameCommand> _opens = new();
+
+    //public static void UpdateScreen(string key)
+    //{
+    //    CommandContainer container = Resolver!.Resolve<CommandContainer>();
+    //    container.UpdateSpecificAction(key);
+    //}
+
+    private readonly HashSet<string> _pendingRefreshes = [];
+    public void QueueRefreshAfterCommand(string key)
     {
-        CustomStateHasChanged = null; //to avoid memory leaks (just in case i forget to unsubscribe.
-        //this is needed to avoid memory leaks.
+        _pendingRefreshes.Add(key);
     }
-    public CommandContainer()
+    private void RefreshPendingActions()
     {
-        IsExecuting = true;
-    }
-    public void UpdateAll()
-    {
-        ParentAction?.Invoke();
-        CustomStateHasChanged?.Invoke();
-    }
-    public void UpdateSpecificAction(string key)
-    {
-        if (_specialActions.ContainsKey(key) == false)
+        if (_pendingRefreshes.Count == 0)
         {
             return;
         }
-        _specialActions[key].Invoke();
+
+        var keys = _pendingRefreshes.ToArray();
+        _pendingRefreshes.Clear();
+
+        foreach (var key in keys)
+        {
+            UpdateSpecificAction(key);
+        }
     }
+
+    private readonly Dictionary<string, Action> _specificActions = [];
+
+    public void AddSpecificAction(string key, Action action)
+    {
+        _specificActions.TryAdd(key, action);
+    }
+
+    public void RemoveSpecificAction(string key)
+    {
+        _specificActions.Remove(key);
+    }
+
+    public void UpdateSpecificAction(string key)
+    {
+        if (_specificActions.TryGetValue(key, out Action? action))
+        {
+            action.Invoke();
+        }
+    }
+
+    private bool _openBusy;
+    public bool OpenBusy
+    {
+        get => _openBusy;
+        set
+        {
+            if (_openBusy == value)
+            {
+                return;
+            }
+
+            _openBusy = value;
+            ReportOpen();
+        }
+    }
+
+    private void ReportOpen() //may not need this public (not sure yet)
+    {
+        _opens.ForEach(x => x.ReportCanExecuteChange());
+    }
+
+    //public event Action? StateChanged;
+    public Action? ExecutingChanged { get; set; }
     public bool CanExecuteManually()
     {
-        return !IsExecuting;
+        return IsExecuting == false;
     }
     public void StartExecuting()
     {
@@ -44,18 +90,6 @@ public class CommandContainer
         IsExecuting = true;
         Processing = true;
     }
-    public async Task ProcessCustomCommandAsync<T>(Func<T, Task> action, T argument)
-    {
-        StartExecuting();
-        await action.Invoke(argument);
-        StopExecuting();
-    }
-    public async Task ProcessCustomCommandAsync(Func<Task> action)
-    {
-        StartExecuting();
-        await action.Invoke();
-        StopExecuting();
-    }
     public void StopExecuting()
     {
         if (ManuelFinish == false)
@@ -63,12 +97,53 @@ public class CommandContainer
             IsExecuting = false;
         }
         Processing = false;
+        RefreshPendingActions();
+    }
+    public async Task ProcessCustomCommandAsync<T>(
+    Func<T, Task> action,
+    T argument)
+    {
+        StartExecuting();
+
+        try
+        {
+            await action(argument);
+        }
+        finally
+        {
+            StopExecuting();
+        }
+    }
+
+    //risk no updateallcontrols.  if needed again, rethink.
+
+    //public void UpdateAllControls()
+    //{
+    //    foreach (var control in _controls)
+    //    {
+    //        control.ReportCanExecuteChange();
+    //        //await Task.Yield();
+    //    }
+    //}
+    public async Task ProcessCustomCommandAsync(Func<Task> action)
+    {
+        StartExecuting();
+
+        try
+        {
+            await action();
+        }
+        finally
+        {
+            StopExecuting();
+        }
     }
     public void ClearLists()
     {
-        _commandList.Clear();
-        _openList.Clear();
-        _controlList.Clear();
+        _commands.Clear();
+        _controls.Clear();
+        _opens.Clear();
+        _specificActions.Clear();
     }
     private bool _executing;
     /// <summary>
@@ -92,31 +167,13 @@ public class CommandContainer
                 return;
             }
             _executing = value;
-            ReportAll();
+            ReportNormalExecutionChanged();
         }
     }
-    private bool _openBusy;
-    public bool OpenBusy
-    {
-        get
-        {
-            return _openBusy;
-        }
-        set
-        {
-            if (value == _openBusy)
-            {
-                return;
-            }
-            _openBusy = value;
-            ReportOpen();
-        }
-    }
-    public void ReportOpen()
-    {
-        _openList.ForEach(x => x.ReportCanExecuteChange());
-        UpdateAll();
-    }
+
+
+
+
     /// <summary>
     /// the purpose of this one is if a move is in progress, then even if being rejoined, then has to wait until move is not in progress anymore.
     /// </summary>
@@ -132,66 +189,59 @@ public class CommandContainer
                 return;
             }
             _processing = value;
-            ReportLimited();
+            ReportLimitedExecutionChanged();
+            //ReportLimited();
         }
     }
-    public void ReportLimited()
+    public void ReportLimitedExecutionChanged()
     {
         ReportItems(EnumCommandBusyCategory.Limited);
-        UpdateAll();
     }
-    public bool ManuelFinish { get; set; } = false;
-    public void ManualReport()
-    {
-        _commandList.ForEach(x => x.ReportCanExecuteChange());
-        _controlList.ForEach(x => x.ReportCanExecuteChange());
-    }
-    public void RemoveOldItems(object payLoad)
-    {
-        _commandList.RemoveAllOnly(x => x.Context == payLoad);
-    }
-    public void ReportAll()
+    public void ReportNormalExecutionChanged()
     {
         ReportItems(EnumCommandBusyCategory.None);
-        ExecutingChanged?.Invoke(); //i don't think there is a need for more than one process to subscribe.  since its possible to have many timimg issues for maui.
-        UpdateAll();
+        ExecutingChanged?.Invoke();
     }
-    private void ReportItems(EnumCommandBusyCategory thisBusy)
+    public void ReportAllCommandStates()
     {
-        _commandList.ForConditionalItems(items => items.BusyCategory == thisBusy
-        , items => items.ReportCanExecuteChange());
-        _controlList.ForConditionalItems(items => items.BusyCategory == thisBusy
-        , items => items.ReportCanExecuteChange());
+        _commands.ForEach(x => x.ReportCanExecuteChange());
+        _controls.ForEach(x => x.ReportCanExecuteChange());
     }
-    public void AddOpen(IGameCommand thisOpen)
-    {
-        _openList.Add(thisOpen);
-    }
+
+    public bool ManuelFinish { get; set; } = false;
     public void AddCommand(IGameCommand command)
     {
-        _commandList.Add(command);
-    }
-    public void AddControl(IControlObservable thisControl)
-    {
-        _controlList.Add(thisControl);
-    }
-    public void AddAction(Action action, string key)
-    {
-        if (_specialActions.ContainsKey(key) == false)
-        {
-            _specialActions.Add(key, action);
-        }
+        _commands.Add(command);
     }
     public void RemoveCommand(IGameCommand command)
     {
-        _commandList.RemoveSpecificItem(command);
+        _commands.RemoveSpecificItem(command);
     }
-    public void RemoveAction(string key)
+
+
+    private void ReportItems(EnumCommandBusyCategory thisBusy)
     {
-        if (_specialActions.ContainsKey(key) == false)
-        {
-            return;
-        }
-        _specialActions.Remove(key);
+        _commands.ForConditionalItems(
+            x => x.BusyCategory == thisBusy,
+            x => x.ReportCanExecuteChange());
+
+        _controls.ForConditionalItems(
+            x => x.BusyCategory == thisBusy,
+            x => x.ReportCanExecuteChange());
+    }
+
+
+    //public void ReportCommandStateChanged()
+    //{
+    //    _controls.ForEach(x => x.ReportCanExecuteChange());
+    //    //start with no stage changed here (requires rethinking for now).
+
+
+
+    //    //StateChanged?.Invoke();
+    //}
+    public void AddControl(IControlObservable thisControl)
+    {
+        _controls.Add(thisControl);
     }
 }

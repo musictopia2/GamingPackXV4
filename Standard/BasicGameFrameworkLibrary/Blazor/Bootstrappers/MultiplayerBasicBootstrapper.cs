@@ -1,5 +1,6 @@
 ﻿namespace BasicGameFrameworkLibrary.Blazor.Bootstrappers;
-public abstract class MultiplayerBasicBootstrapper<TViewModel>(IStartUp starts, EnumGamePackageMode mode) : BasicGameBootstrapper<TViewModel>(starts, mode)
+public abstract class MultiplayerBasicBootstrapper<TViewModel>(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : BasicGameBootstrapper<TViewModel>(starts, mode, globalTestOptionsUrl)
     where TViewModel : IMainGPXShellVM
 {
     protected override void MiscRegisterFirst(IGamePackageRegister register)

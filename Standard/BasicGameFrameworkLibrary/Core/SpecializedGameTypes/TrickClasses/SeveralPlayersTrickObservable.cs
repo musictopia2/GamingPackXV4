@@ -191,7 +191,6 @@ public class SeveralPlayersTrickObservable<SU, T, P, SA>(TrickGameContainer<T, P
         newCard.Visible = true;
         OrderList.Add(newCard);
         TradeCard(index, newCard);
-        gameContainer.Command.UpdateAll();
         await AfterPlayCardAsync(thisCard);
     }
     protected virtual async Task AfterPlayCardAsync(T thisCard)

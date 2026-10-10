@@ -1,9 +1,24 @@
+
 namespace BasicGameFrameworkLibrary.Blazor.Views;
-public partial class MultiplayerOpeningView<P>
+public partial class MultiplayerOpeningView<P> : IHandle<OpenMultiplayerOpeningEventModel<P>>,
+    IHandle<CloseMultiplayerOpeningEventModel<P>>, IDisposable
      where P : class, IPlayerItem, new()
 {
-    [CascadingParameter]
-    public MultiplayerOpeningViewModel<P>? DataContext { get; set; }
+
+    private MultiplayerOpeningViewModel<P>? DataContext { get; set; }
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    private readonly IEventAggregator _aggregator;
+    public MultiplayerOpeningView()
+    {
+        _aggregator = Resolver!.Resolve<IEventAggregator>();
+        Subscribe();
+    }
+    void IDisposable.Dispose()
+    {
+        Unsubscribe();
+        GC.SuppressFinalize(this);
+    }
     [CascadingParameter]
     public IGameInfo? GameData { get; set; }
     private bool _canHuman;
@@ -14,12 +29,13 @@ public partial class MultiplayerOpeningView<P>
     private bool _realLoad;
     protected override void OnInitialized()
     {
+        _aggregator.Publish(new AskMultiplayerOpeningEventModel<P>());
         _labels.Clear();
-        _labels.AddLabel("Players Connected", nameof(IMultiplayerOpeningViewModel.ClientsConnected))
-            .AddLabel("Previous Players", nameof(IMultiplayerOpeningViewModel.PreviousNonComputerNetworkedPlayers));
+        _labels.AddLabel("Players Connected", nameof(IMultiplayerOpeningDisplayVM.ClientsConnected))
+            .AddLabel("Previous Players", nameof(IMultiplayerOpeningDisplayVM.PreviousNonComputerNetworkedPlayers));
         base.OnInitialized();
     }
-    protected override void OnParametersSet()
+    private void Refresh()
     {
         if (DataContext == null || GameData == null)
         {
@@ -27,6 +43,11 @@ public partial class MultiplayerOpeningView<P>
         }
         _canHuman = OpenPlayersHelper.CanHuman(GameData);
         _canComputer = OpenPlayersHelper.CanComputer(GameData);
+    }
+    protected override void OnParametersSet()
+    {
+        Refresh();
+        
         base.OnParametersSet();
     }
     private static EnumPlayerMode GetPlayerMode()
@@ -67,5 +88,17 @@ public partial class MultiplayerOpeningView<P>
             }
             StateHasChanged(); //has to reload the state now.
         }
+    }
+
+    void IHandle<OpenMultiplayerOpeningEventModel<P>>.Handle(OpenMultiplayerOpeningEventModel<P> message)
+    {
+        DataContext = message.DataContext;
+        InvokeAsync(StateHasChanged);
+    }
+
+    void IHandle<CloseMultiplayerOpeningEventModel<P>>.Handle(CloseMultiplayerOpeningEventModel<P> message)
+    {
+        DataContext = null;
+        InvokeAsync(StateHasChanged);
     }
 }

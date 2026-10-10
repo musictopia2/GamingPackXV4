@@ -86,6 +86,7 @@ public partial class IndividualClockBlazor : IDisposable, IHandle<CurrentCardEve
             {
                 _currentCard.Populate(DataContext!.CurrentCard!.Deck);
             }
+            InvokeAsync(StateHasChanged);
         }
     }
     private void UpdateClock(int current)
@@ -115,6 +116,7 @@ public partial class IndividualClockBlazor : IDisposable, IHandle<CurrentCardEve
             return;
         }
         UpdateClock(0);
+        InvokeAsync(StateHasChanged);
     }
     protected virtual void Dispose(bool disposing)
     {

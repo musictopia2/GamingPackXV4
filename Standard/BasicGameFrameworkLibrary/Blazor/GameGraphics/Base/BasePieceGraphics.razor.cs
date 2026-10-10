@@ -15,9 +15,9 @@ public partial class BasePieceGraphics : GraphicsCommand
     //won't worry about pickers for now.  has to change later though.
 
     [CascadingParameter]
-    public ListChooserBlazor? ListPicker { get; set; }
-    [CascadingParameter]
-    public NumberChooserBlazor? NumberPicker { get; set; }
+    public IPiecePicker? CustomPicker { get; set; }
+    //[CascadingParameter]
+    //public NumberChooserBlazor? NumberPicker { get; set; }
     [Parameter]
     public string TargetSize { get; set; } = ""; //this is for the target that is longest.
     [Parameter]
@@ -49,13 +49,25 @@ public partial class BasePieceGraphics : GraphicsCommand
         }
         return LongestSize / OriginalSize.Width;
     }
+
+
+    private bool GetIsSelected()
+    {
+        if (CommandParameter is ListPieceModel piece)
+        {
+            return piece.IsSelected;
+        }
+
+        return IsSelected;
+    }
+
     private string GetHighlightColor()
     {
         if (NeedsHighlighting == false)
         {
             return cs1.Transparent.ToWebColor; //this means won't even do
         }
-        if (IsSelected)
+        if (GetIsSelected())
         {
             return cs1.Lime.ToWebColor; //will be lime
         }
@@ -69,14 +81,14 @@ public partial class BasePieceGraphics : GraphicsCommand
         }
         return FillColor.ToWebColor;
     }
-    private void PopulateCustomViewBox(ISvg svg)
+    private void PopulateCustomViewBox(SVG svg)
     {
         var value = BorderWidth / 2 * -1;
         svg.ViewBox = $"{value} {value} {OriginalSize.Width + BorderWidth} {OriginalSize.Height + BorderWidth}";
     }
     public ISvg GetMainSvg(bool? controlhighlight = null)
     {
-        ISvg output = new SVG();
+        SVG output = new ();
         if (TargetSize != "")
         {
             if (controlhighlight == null || controlhighlight == true)
@@ -106,20 +118,14 @@ public partial class BasePieceGraphics : GraphicsCommand
             output.Style = "margin: .2vw;";
             PopulateCustomViewBox(output);
         }
-        else if (ListPicker != null) //could do interfaces.  if so, then the interface can determine the text size.
+        //the list will have view box height of 18 and number picker will have view box height of 40
+        else if (CustomPicker != null) //could do interfaces.  if so, then the interface can determine the text size.
         {
-            NeedsHighlighting = ListPicker.CanHighlight; //hopefully this simple this time.
-            output.Height = ListPicker.TextHeight;
+            NeedsHighlighting = CustomPicker.CanHighlight; //hopefully this simple this time.
+            output.Height = CustomPicker.TextHeight;
             output.Style = "margin-right: .2vw; margin-bottom: .2vw; margin-left: .2vw;";
 
-            output.ViewBox = $"0 0 {ListPicker.TextWidth} 18";
-        }
-        else if (NumberPicker != null)
-        {
-            NeedsHighlighting = NumberPicker.CanHighlight;
-            output.Height = NumberPicker.TextHeight;
-            output.Style = "margin-right: .2vw; margin-bottom: .2vw; margin-left: .2vw;";
-            output.ViewBox = $"0 0 {NumberPicker!.TextWidth} 40"; //can rethink if necessary.
+            output.ViewBox = $"0 0 {CustomPicker.TextWidth} {CustomPicker.ViewBoxHeight}";
         }
         else
         {

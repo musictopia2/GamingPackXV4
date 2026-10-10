@@ -17,7 +17,7 @@ public partial class BaseBoneyardPileBlazor<D, LI> : IDisposable
     protected override void OnInitialized()
     {
         CommandContainer command = Resolver!.Resolve<CommandContainer>();
-        command.AddAction(ShowChange, "bone");
+        command.AddSpecificAction("bone", ShowChange);
         base.OnInitialized();
     }
     [Parameter]
@@ -37,7 +37,7 @@ public partial class BaseBoneyardPileBlazor<D, LI> : IDisposable
             if (disposing)
             {
                 CommandContainer command = Resolver!.Resolve<CommandContainer>();
-                command.RemoveAction("bone");
+                command.RemoveSpecificAction("bone");
             }
             _disposedValue = true;
         }

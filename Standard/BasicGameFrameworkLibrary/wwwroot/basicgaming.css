@@ -91,3 +91,7 @@ th > div {
     padding: 0;
     line-height: 1;
 }
+
+.trick-area-relative {
+    position: relative;
+}

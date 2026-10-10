@@ -1,7 +1,5 @@
-﻿@using BlazorMVVMHelpersLibrary
-@using BasicGameFrameworkLibrary.Blazor.Views
+﻿@using BasicGameFrameworkLibrary.Blazor.Views
 @using aa1 = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
-@using BasicGameFrameworkLibrary.Core.TestUtilities
 @using BasicBlazorLibrary.Components.MediaQueries.ParentClasses
 @if (BasicData == null || GameData == null)
 {
@@ -54,21 +52,9 @@
                             <span style="font-size: 5vh">
                                 @GameData.GameName
                             </span>
-                            <ParentControl VM="NewGameViewModel">
-                                <NewGameView />
-                            </ParentControl>
-                            @if (GameData.GameType == EnumGameType.Rounds)
-                            {
-                                <ParentControl VM="NewRoundViewModel">
-                                    <NewRoundView />
-                                </ParentControl>
-                            }
-                            @if (TestData!.SaveOption == EnumTestSaveCategory.RestoreOnly)
-                            {
-                                <ParentControl VM="RestoreViewModel">
-                                    <RestoreView />
-                                </ParentControl>
-                            }
+                            <NewGameView />
+                            <NewRoundView />
+                            <RestoreView />
                             @if (TestData.AdvancedTestOptions && AdvancedState!.CanShowAdvancedButton)
                             {
                                 <GameButtonComponent CustomCallBack="AdvancedState.CommitAndExitAsync" Display="Commit Test" />

@@ -8,7 +8,7 @@ public class BasicGameServerTCP : ISerializable
     private TcpListener? _mainListen;
     private readonly Dictionary<string, ClientInfo> _playerList = new();
     private string _hostName = "";
-    private readonly object _syncLock = new();
+    private readonly Lock _syncLock = new();
     public void StartServer()
     {
         _mainListen = new TcpListener(IPAddress.Any, 8010); //decided to use 8010 this time.

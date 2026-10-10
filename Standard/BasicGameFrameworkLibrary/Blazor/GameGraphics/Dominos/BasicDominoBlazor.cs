@@ -32,7 +32,7 @@ public class BasicDominoBlazor<D> : BaseDeckGraphics<D>
     }
     protected override void DrawImage()
     {
-        Path path = new();
+        pp1 path = new();
         path.PopulateStrokesToStyles(strokeWidth: 4);
         path.Fill = "none";
         path.D = "M47.5 0L47.5 31";

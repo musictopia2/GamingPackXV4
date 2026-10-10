@@ -1,5 +1,5 @@
 namespace BasicGameFrameworkLibrary.Blazor.BasicControls.ChoicePickers;
-public partial class NumberChooserBlazor
+public partial class NumberChooserBlazor : IPiecePicker
 {
     [Parameter]
     public string TextHeight { get; set; } = "15vh"; //default to 15 now.  could change if necessary.
@@ -15,6 +15,13 @@ public partial class NumberChooserBlazor
     public string TextColor { get; set; } = cs1.Navy;
     [Parameter]
     public NumberPicker? NumberPicker { get; set; }
+    float IPiecePicker.TextWidth => TextWidth;
+    float IPiecePicker.ViewBoxHeight => 40;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
     private int TotalRows()
     {
         if (Columns == 0 && Rows == 1)

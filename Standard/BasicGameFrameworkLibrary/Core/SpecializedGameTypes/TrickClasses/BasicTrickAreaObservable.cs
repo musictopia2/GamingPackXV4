@@ -40,7 +40,6 @@ public abstract partial class BasicTrickAreaObservable<S, T> : SimpleControlObse
     partial void CreateCommands();
     public DeckRegularDict<T> CardList = new();
     public T? WinCard;
-    protected override void PrivateEnableAlways() { }
     public void TradeCard(int index, T newCard)
     {
         PointF oldLocation;

@@ -53,7 +53,7 @@ public class SimpleTriangle : ComponentBase
             return;
         }
         SvgRenderClass render = new();
-        ISvg svg = new SVG();
+        SVG svg = new ();
         BasicList<PointF> points = GetTrianglePoints();
         Polygon poly = points.CreatePolygon();
         poly.Fill = FillColor.ToWebColor; //i think.

@@ -1,14 +1,19 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.DrawableListsObservable;
-public abstract partial class GameBoardObservable<D> : IPlainObservable, IControlObservable where D : IDeckObject, new()
+[UseStateChanged]
+public abstract partial class GameBoardObservable<D> : 
+    IPlainObservable, IControlObservable, IDisposable where D : IDeckObject, new()
 {
-    public DeckRegularDict<D> ObjectList = new();
+    public DeckRegularDict<D> ObjectList { get; private set; } = new();
     public int Columns { get; set; }
     public int Rows { get; set; }
     public int MaxCards { get; set; } = 0;
-    public string Text { get; set; } = "";
+    [StateProperty]
+    public partial string Text { get; set; } = "";
     public bool HasFrame { get; set; } = true;
-    public bool IsEnabled { get; set; }
-    public bool Visible { get; set; } = true;
+    [StateProperty]
+    public partial bool IsEnabled { get; set; }
+    [StateProperty]
+    public partial bool Visible { get; set; } = true;
     protected virtual void ChangeEnabled() { }
     public void LoadSavedGame(IDeckDict<D> list)
     {
@@ -133,6 +138,27 @@ public abstract partial class GameBoardObservable<D> : IPlainObservable, IContro
         CommandContainer = container;
         CreateCommands(container);
         CommandContainer.AddControl(this);
+        ObjectList.StateChanged += OnStateChanged;
     }
+    public void ReplaceObjectList(DeckRegularDict<D> list)
+    {
+        if (ReferenceEquals(ObjectList, list))
+        {
+            return;
+        }
+
+        ObjectList.StateChanged -= OnStateChanged;
+
+        ObjectList = list;
+
+        ObjectList.StateChanged += OnStateChanged;
+        OnStateChanged();
+    }
+    public void Dispose()
+    {
+        ObjectList.StateChanged -= OnStateChanged;
+        GC.SuppressFinalize(this);
+    }
+
     partial void CreateCommands(CommandContainer container);
 }

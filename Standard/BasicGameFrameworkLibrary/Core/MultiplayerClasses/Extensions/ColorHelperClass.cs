@@ -2,7 +2,7 @@
 public static class ColorHelperClass
 {
     extension <P>(PlayerCollection<P> players)
-        where P : class, IPlayerColors, new()
+        where P : class, IPlayerColorChoice, new()
     {
         public bool DidChooseColors()
         {

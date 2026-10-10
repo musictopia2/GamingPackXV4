@@ -26,12 +26,9 @@ public class YahtzeeShellViewModel<D>(IGamePackageResolver mainContainer,
     }
     protected override void ClearSubscriptions()
     {
+        IEventAggregator temp = Resolver!.Resolve<IEventAggregator>();
+        temp.ClearSingle<SelectionChosenEventModel>();
         base.ClearSubscriptions();
-        Aggregator.ClearSingle<SelectionChosenEventModel>();
     }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<YahtzeeMainViewModel<D>>();
-        return model;
-    }
+
 }

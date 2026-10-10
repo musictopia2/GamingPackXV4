@@ -1,4 +1,5 @@
-﻿@if (DataContext == null || DataContext.ClockList == null)
+﻿@using BasicGameFrameworkLibrary.Blazor.Views
+@if (DataContext == null || DataContext.ClockList == null)
 {
     return;
 }
@@ -14,6 +15,7 @@
         {
             <div class="mainclockabsolute" style=" @GetPositionStyle(clock) ">
                 <IndividualClockBlazor SingleClock="clock" />
+
             </div>
         }
     </div>

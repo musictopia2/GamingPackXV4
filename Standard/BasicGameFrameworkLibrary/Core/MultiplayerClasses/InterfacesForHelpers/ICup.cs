@@ -1,4 +1,5 @@
-﻿namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
+﻿
+namespace BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
 public interface ICup<D>
     where D : IStandardDice, new()
 {

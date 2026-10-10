@@ -1,50 +1,40 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModels;
 [UseLabelGrid]
-public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGameVM, IOpeningMessenger, IReadyNM, IMultiplayerOpeningViewModel where P : class, IPlayerItem, new()
+public partial class MultiplayerOpeningViewModel<P>
+    (CommandContainer commandContainer,
+        IMultiplayerSaveState state,
+        BasicData data,
+        IGameNetwork nets,
+        TestOptions test,
+        IGameInfo game,
+        IEventAggregator aggregator,
+        IMessageBox message)
+    : IMultiplayerOpeningVM<P>,
+    IMultiplayerOpeningDisplayVM, IReadyNM,
+    IOpeningMessenger,
+    IHandleAsync<OpenMultiplayerOpeningEventModel<P>>,
+    IHandleAsync<CloseMultiplayerOpeningEventModel<P>>,
+    IStateChanged
+
+    where P : class, IPlayerItem, new()
 {
-    private readonly IMultiplayerSaveState _state;
-    private readonly BasicData _data;
-    private readonly IGameNetwork _nets;
-    private readonly TestOptions _test;
-    private readonly IGameInfo _game;
-    private readonly IMessageBox _message;
     private EnumRestoreCategory _singleRestore;
     private EnumRestoreCategory _multiRestore;
     private PlayerCollection<P> _playerList = new();
     private PlayerCollection<P>? _saveList;
     private bool _disconnectedClients;
     private bool _rejoin;
-    public MultiplayerOpeningViewModel(CommandContainer commandContainer,
-        IMultiplayerSaveState thisState,
-        BasicData data,
-        IGameNetwork nets,
-        TestOptions test,
-        IGameInfo game,
-        IEventAggregator aggregator,
-        IMessageBox message
-        ) : base(aggregator)
-    {
-        CommandContainer = commandContainer;
-        CommandContainer.OpenBusy = true;
-        _state = thisState;
-        _data = data;
-        _nets = nets;
-        _test = test;
-        _game = game;
-        _message = message;
-        CreateCommands(commandContainer);
-    }
-    public bool HasServer => _nets.HasServer;
+    private partial void Subscribe();
+    private partial void Unsubscribe();
     partial void CreateCommands(CommandContainer container);
-    private string _savedData = "";
-    protected override async Task ActivateAsync()
+    async Task IHandleAsync<OpenMultiplayerOpeningEventModel<P>>.HandleAsync(OpenMultiplayerOpeningEventModel<P> message)
     {
-        _singleRestore = await _state.SinglePlayerRestoreCategoryAsync();
-        _multiRestore = await _state.MultiplayerRestoreCategoryAsync();
+        _singleRestore = await state.SinglePlayerRestoreCategoryAsync();
+        _multiRestore = await state.MultiplayerRestoreCategoryAsync();
         if (_multiRestore != EnumRestoreCategory.NoRestore)
         {
             IRetrieveSavedPlayers<P> rr = Resolver!.Resolve<IRetrieveSavedPlayers<P>>();
-            _savedData = await _state.TempMultiSavedAsync();
+            _savedData = await state.TempMultiSavedAsync();
             if (_savedData != "")
             {
                 _saveList = await rr.GetPlayerListAsync(_savedData);
@@ -53,16 +43,33 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         }
         OpeningStatus = EnumOpeningStatus.None;
         ShowOtherChangesBecauseOfNetworkChange();
-        await base.ActivateAsync();
-        CommandContainer.OpenBusy = false;
+        commandContainer.OpenBusy = false;
+        StateChanged?.Invoke();
     }
-    public CommandContainer CommandContainer { get; set; }
+
+    async Task IHandleAsync<CloseMultiplayerOpeningEventModel<P>>.HandleAsync(CloseMultiplayerOpeningEventModel<P> message)
+    {
+        Unsubscribe();
+    }
+
+    void IMultiplayerOpeningVM<P>.Initialize()
+    {
+        Subscribe();
+        commandContainer.OpenBusy = true;
+        CreateCommands(commandContainer);
+    }
+    public bool HasServer => nets.HasServer;
+    private string _savedData = "";
+
+    public event Action? StateChanged;
+
     public EnumOpeningStatus OpeningStatus { get; set; } = EnumOpeningStatus.None;
     private void Reset()
     {
-        CommandContainer.OpenBusy = false;
+        commandContainer.OpenBusy = false;
         OpeningStatus = EnumOpeningStatus.None;
         ShowOtherChangesBecauseOfNetworkChange();
+        StateChanged?.Invoke();
     }
     #region "Command Options"
     public bool CanResumeSinglePlayer
@@ -90,8 +97,9 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     {
         _playerList.DisconnectEverybody();
         OpeningStatus = EnumOpeningStatus.HostingWaitingForAtLeastOnePlayer;
-        await _nets.DisconnectEverybodyAsync();
-        CommandContainer.OpenBusy = false;
+        await nets.DisconnectEverybodyAsync();
+        commandContainer.OpenBusy = false;
+        StateChanged?.Invoke();
     }
     public bool CanRejoinMultiplayerGame()
     {
@@ -116,11 +124,11 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     {
         TransferAutoResumeModel payLoad = new()
         {
-            GameDisplayName = _game.GameName,
+            GameDisplayName = game.GameName,
             Content = _savedData
         };
         await GlobalDelegates.TransferToDesktop!.Invoke(payLoad);
-        await _state.DeleteMultiplayerGameAsync();
+        await state.DeleteMultiplayerGameAsync();
     }
     public bool CanResumeMultiplayerGame
     {
@@ -145,7 +153,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     [Command(EnumCommandCategory.Open)]
     public async Task ResumeMultiplayerGameAsync()
     {
-        _data.MultiPlayer = true;
+        data.MultiPlayer = true;
         await StartSavedGameAsync();
     }
     public bool CanStartComputerSinglePlayerGame(int howMany)
@@ -162,7 +170,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         {
             return false;
         }
-        return OpenPlayersHelper.CanComputer(_game);
+        return OpenPlayersHelper.CanComputer(game);
     }
 
     [Command(EnumCommandCategory.Open)]
@@ -170,7 +178,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     {
         StartSingle();
         bool rets;
-        if (_test.PlayCategory == EnumTestPlayCategory.Reverse)
+        if (test.PlayCategory == EnumTestPlayCategory.Reverse)
         {
             rets = true;
         }
@@ -195,7 +203,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         {
             return false;
         }
-        return OpenPlayersHelper.CanHuman(_game);
+        return OpenPlayersHelper.CanHuman(game);
     }
     [Command(EnumCommandCategory.Open)]
     public async Task StartPassAndPlayGameAsync(int howManyHumanPlayers)
@@ -216,28 +224,28 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         {
             return false;
         }
-        if (howManyExtra > 0 && _game.CanHaveExtraComputerPlayers == false)
+        if (howManyExtra > 0 && game.CanHaveExtraComputerPlayers == false)
         {
             return false;
         }
         if (howManyExtra > 0)
         {
-            if (howManyExtra + tempCount > _game.MaxPlayers)
+            if (howManyExtra + tempCount > game.MaxPlayers)
             {
                 return false;
             }
-            if (howManyExtra + tempCount < _game.MinPlayers)
+            if (howManyExtra + tempCount < game.MinPlayers)
             {
                 return false;
             }
-            if (howManyExtra + tempCount == _game.NoPlayers)
+            if (howManyExtra + tempCount == game.NoPlayers)
             {
                 return false;
             }
         }
         if (howManyExtra == 0)
         {
-            if (tempCount < _game.MinPlayers)
+            if (tempCount < game.MinPlayers)
             {
                 return false; //because not enough players.
             }
@@ -251,7 +259,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
         {
             _playerList.LoadPlayers(0, howManyExtra);
         }
-        _data.MultiPlayer = true;
+        data.MultiPlayer = true;
         await StartNewGameAsync();
     }
     public bool CanHost => OpeningStatus == EnumOpeningStatus.None;
@@ -259,10 +267,10 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     [Command(EnumCommandCategory.Open)]
     public async Task HostAsync()
     {
-        bool rets = await _nets.InitNetworkMessagesAsync(_data.NickName, false);
+        bool rets = await nets.InitNetworkMessagesAsync(data.NickName, false);
         if (rets == false)
         {
-            await _message.ShowMessageAsync("Failed To Connect To Server");
+            await message.ShowMessageAsync("Failed To Connect To Server");
             Reset();
             return;
         }
@@ -271,20 +279,20 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     [Command(EnumCommandCategory.Open)]
     public async Task ConnectAsync()
     {
-        CommandContainer.OpenBusy = true;
-        CommandContainer.UpdateAll();
+        commandContainer.OpenBusy = true;
         await Task.Delay(20);
-        bool rets = await _nets.InitNetworkMessagesAsync(_data.NickName, true);
+        bool rets = await nets.InitNetworkMessagesAsync(data.NickName, true);
         if (rets == false)
         {
-            await _message.ShowMessageAsync("Failed To Connect To Server");
+            await message.ShowMessageAsync("Failed To Connect To Server");
             Reset();
             return;
         }
-        _data.DoFullScreen?.Invoke();
-        await _nets.ConnectToHostAsync();
+        data.DoFullScreen?.Invoke();
+        await nets.ConnectToHostAsync();
+        StateChanged?.Invoke();
     }
-    public bool CanSolitaire => _game.SinglePlayerChoice == EnumPlayerChoices.Solitaire && OpeningStatus == EnumOpeningStatus.None;
+    public bool CanSolitaire => game.SinglePlayerChoice == EnumPlayerChoices.Solitaire && OpeningStatus == EnumOpeningStatus.None;
     [Command(EnumCommandCategory.Open)]
     public async Task SolitaireAsync()
     {
@@ -297,25 +305,29 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     {
         OpeningStatus = EnumOpeningStatus.None;
         PrivateClose();
-        CommandContainer.OpenBusy = false;
+        commandContainer.OpenBusy = false;
+        StateChanged?.Invoke();
         return Task.CompletedTask;
     }
     private async void PrivateClose()
     {
-        await _nets.CloseConnectionAsync();
+        await nets.CloseConnectionAsync();
     }
     #endregion
     private void ShowOtherChangesBecauseOfNetworkChange()
     {
         if (OpeningStatus == EnumOpeningStatus.HostingReadyToStart)
         {
-            ExtraOptionsVisible = _game.CanHaveExtraComputerPlayers;
+            ExtraOptionsVisible = game.CanHaveExtraComputerPlayers;
         }
         else
         {
             ExtraOptionsVisible = false;
         }
     }
+
+
+
     #region "Properties"
     public bool ExtraOptionsVisible { get; set; }
     [LabelColumn]
@@ -345,7 +357,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     }
     public bool CanShowSingleOptions => OpeningStatus == EnumOpeningStatus.None;
     [LabelColumn]
-    public int PreviousNonComputerNetworkedPlayers { get; set; }
+    public partial int PreviousNonComputerNetworkedPlayers { get; set; }
     #endregion
     private void LoadNewGamePlayers()
     {
@@ -385,37 +397,38 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     }
     private void StartSingle()
     {
-        _data.MultiPlayer = false;
+        data.MultiPlayer = false;
         _playerList = new PlayerCollection<P>();
     }
     private async Task StartNewGameAsync()
     {
-        await _state.DeleteGameAsync();
-        await Aggregator.PublishAsync(new StartMultiplayerGameEventModel<P>(_playerList));
+        await state.DeleteGameAsync();
+        await aggregator.PublishAsync(new StartMultiplayerGameEventModel<P>(_playerList));
     }
     private async Task StartSavedGameAsync()
     {
-        await Aggregator.PublishAsync(new StartAutoresumeMultiplayerGameEventModel());
+        await aggregator.PublishAsync(new StartAutoresumeMultiplayerGameEventModel());
     }
     async Task IOpeningMessenger.ConnectedToHostAsync(IGameNetwork network, string hostName)
     {
-        await _nets!.SendReadyMessageAsync(network.NickName, hostName);
+        await nets.SendReadyMessageAsync(network.NickName, hostName);
         await FinishWaitingForHostAsync(network);
     }
     private async Task FinishWaitingForHostAsync(IGameNetwork thisCheck)
     {
         OpeningStatus = EnumOpeningStatus.ConnectedToHost;
-        _data.Client = true;
-        _data.MultiPlayer = true;
-        _data.NickName = thisCheck.NickName;
+        data.Client = true;
+        data.MultiPlayer = true;
+        data.NickName = thisCheck.NickName;
         thisCheck.IsEnabled = true;
         ShowOtherChangesBecauseOfNetworkChange();
-        await Aggregator.PublishAsync(new WaitForHostEventModel());
-        CommandContainer.UpdateAll();
+        await aggregator.PublishAsync(new WaitForHostEventModel());
+        StateChanged?.Invoke();
+        //commandContainer.UpdateAll();
     }
     async Task IOpeningMessenger.HostConnectedAsync(IGameNetwork network)
     {
-        _data.Client = false;
+        data.Client = false;
         if (_rejoin)
         {
             await ResumeMultiplayerGameAsync();
@@ -430,12 +443,13 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
             PreviousNonComputerNetworkedPlayers = _saveList.Count - 1;
         }
         OpeningStatus = EnumOpeningStatus.HostingWaitingForAtLeastOnePlayer;
-        CommandContainer.OpenBusy = false;
+        commandContainer.OpenBusy = false;
+        StateChanged?.Invoke();
     }
     private void AddHostPlayer()
     {
         P thisPlayer = new();
-        thisPlayer.NickName = _data.NickName;
+        thisPlayer.NickName = data.NickName;
         thisPlayer.IsHost = true;
         thisPlayer.Id = 1;
         thisPlayer.InGame = true;
@@ -444,7 +458,7 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     }
     async Task IReadyNM.ProcessReadyAsync(string nickName)
     {
-        CommandContainer.OpenBusy = true;
+        commandContainer.OpenBusy = true;
         P thisPlayer = new();
         thisPlayer.NickName = nickName;
         thisPlayer.IsHost = false;
@@ -460,17 +474,17 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
             {
                 if (_disconnectedClients == false)
                 {
-                    await _nets.NewGameAsync();
+                    await nets.NewGameAsync();
                     _disconnectedClients = true;
                     _playerList.ClearTempPlayers();
                     AddHostPlayer();
                     OpeningStatus = EnumOpeningStatus.WaitingForOtherPlayersForNewGame; //try this way.
                     ShowOtherChangesBecauseOfNetworkChange();
-                    _nets.IsEnabled = true;
-                    CommandContainer.OpenBusy = false;
+                    nets.IsEnabled = true;
+                    commandContainer.OpenBusy = false;
                     return; //well see.
                 }
-                _data.MultiPlayer = true; //try this too.
+                data.MultiPlayer = true; //try this too.
                 _playerList.ClearTempPlayers(); //i think.  so this can reload in the proper order.
                 LoadNewGamePlayers();
                 await StartNewGameAsync();
@@ -483,8 +497,9 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
             OpeningStatus = EnumOpeningStatus.HostingReadyToStart;
         }
         ShowOtherChangesBecauseOfNetworkChange();
-        _nets.IsEnabled = true; //try this.
-        CommandContainer.OpenBusy = false;
+        nets.IsEnabled = true; //try this.
+        commandContainer.OpenBusy = false;
+        StateChanged?.Invoke(); //try this too.
     }
     Task IOpeningMessenger.WaitingForHostAsync(IGameNetwork network)
     {
@@ -493,17 +508,18 @@ public partial class MultiplayerOpeningViewModel<P> : ScreenViewModel, IBlankGam
     private Task ClientChangeStatus(EnumOpeningStatus status, IGameNetwork network)
     {
         ShowOtherChangesBecauseOfNetworkChange();
-        _data.Client = true;
-        _data.MultiPlayer = true;
-        _data.NickName = network.NickName;
+        data.Client = true;
+        data.MultiPlayer = true;
+        data.NickName = network.NickName;
         network.IsEnabled = true;
-        CommandContainer.OpenBusy = false;
+        commandContainer.OpenBusy = false;
         OpeningStatus = status;
-        CommandContainer.UpdateAll();
+        StateChanged?.Invoke();
         return Task.CompletedTask;
     }
     Task IOpeningMessenger.WaitForGameAsync(IGameNetwork network)
     {
         return FinishWaitingForHostAsync(network);
     }
+
 }

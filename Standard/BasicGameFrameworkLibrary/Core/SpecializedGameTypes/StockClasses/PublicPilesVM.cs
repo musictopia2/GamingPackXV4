@@ -2,14 +2,13 @@
 public abstract partial class PublicPilesVM<D> : SimpleControlObservable
     where D : IDeckObject, new()
 {
-    public BasicList<BasicPileInfo<D>> PileList = new();
+    public StateList<BasicPileInfo<D>> PileList { get; private set; } = new();
     protected override void EnableChange()
     {
         PileCommand!.ReportCanExecuteChange();
         NewCommand!.ReportCanExecuteChange();
     }
     protected abstract int MaximumAllowed { get; }
-    protected override void PrivateEnableAlways() { }
     public int NextNumberNeeded(int index)
     {
         var thisPile = PileList[index];

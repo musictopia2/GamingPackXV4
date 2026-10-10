@@ -1,2 +1,2 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.ViewModelInterfaces;
-public interface ISimpleGame : IBlankGameVM, IEnableAlways, IBasicEnableProcess { }
+public interface ISimpleGame : IEnableAlways, IBasicEnableProcess { }

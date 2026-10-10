@@ -35,12 +35,20 @@ public abstract class TrickGameClass<SU, T, P, SA> : CardGameClass<T, P, SA>, IT
         _gameContainer.ContinueTrickAsync = ContinueTrickAsync;
         _gameContainer.EndTrickAsync = EndTrickAsync;
     }
+    protected ITrickPlay TrickPlay => _trickPlay;
     public virtual bool CanEnableTrickAreas => true; //has to be overridable because some trick games, you can't enable in some situations like when bidding.
     protected virtual void LoadVM()
     {
         var thisA = _gameContainer.Resolver.Resolve<IAdvancedTrickProcesses>();
         thisA.FirstLoad();
         SaveRoot!.LoadTrickVM(_model);
+    }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        //_gameContainer.
+        _trickPlay.ReportCanExecuteChange();
+        CommandContainer.ReportAllCommandStates(); //temporary workaround
     }
     private bool HeartsValidMove(int deck)
     {

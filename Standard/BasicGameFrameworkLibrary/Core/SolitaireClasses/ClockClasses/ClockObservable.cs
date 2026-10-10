@@ -103,7 +103,7 @@ public partial class ClockObservable : IPlainObservable
     }
     public virtual void LoadSavedClocks(BasicList<ClockInfo> thisList)
     {
-        ClockList = new(thisList);
+        ClockList = [.. thisList];
         SolitaireCard tempCard = new();
         _individualSize = tempCard.DefaultSize;
         PositionClock();
@@ -214,6 +214,8 @@ public partial class ClockObservable : IPlainObservable
     }
     protected IClockVM ThisMod;
     private readonly IEventAggregator _aggregator;
+
+
     [Command(EnumCommandCategory.Plain, Name = nameof(ClockCommand), Can = nameof(CanPrivateClick))]
     private async Task PrivateClickAsync(SolitaireCard card)
     {

@@ -1,4 +1,5 @@
-﻿namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.PileObservable;
+﻿
+namespace BasicGameFrameworkLibrary.Core.SolitaireClasses.PileObservable;
 public class MainPilesCP : IMain, ISerializable
 {
     public int CardsNeededToBegin { get; set; }
@@ -11,6 +12,9 @@ public class MainPilesCP : IMain, ISerializable
     public Func<int, Task>? PileSelectedAsync { get; set; }
     public BasicMultiplePilesCP<SolitaireCard> Piles;
     protected IRegularDeckInfo DeckContents;
+
+    protected IScoreData Score => _score;
+
     private readonly IScoreData _score;
     public MainPilesCP(IScoreData thisMod, CommandContainer command, IGamePackageResolver resolver)
     {
