@@ -1,5 +1,5 @@
 namespace GameLoaderBlazorLibrary;
-public partial class BasicLoaderPage : IDisposable, IAsyncDisposable
+public partial class BasicLoaderPage : IAsyncDisposable
 {
     [Inject]
     public ILoaderVM? DataContext { get; set; }
@@ -115,25 +115,8 @@ public partial class BasicLoaderPage : IDisposable, IAsyncDisposable
         }
         return false; //because if its not web assembly, then only single player games can now do loaders for quite a while.
     }
-    private static bool CanRefreshManually()
-    {
-        if (LoaderViewModel.IsSinglePlayerOnly)
-        {
-            return false; //because those games never had issues to begin with.
-        }
-        if (bb1.OS == bb1.EnumOS.Wasm)
-        {
-            return true;
-        }
-        return false;
-    }
     private async void BackToMain()
     {
-        if (CanRefreshManually())
-        {
-            await JS!.RefreshBrowser();
-            return;
-        } //if its refreshing, then no need to communicate anymore because old would have been disposed (i think).
         if (aa1.Resolver!.RegistrationExist<IGameNetwork>())
         {
             IGameNetwork nets = aa1.Resolver!.Resolve<IGameNetwork>();
@@ -172,33 +155,6 @@ public partial class BasicLoaderPage : IDisposable, IAsyncDisposable
         base.OnInitialized();
     }
     private bool _disposed;
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        if (disposing)
-        {
-            // Synchronous cleanup
-            DataContext!.StateChanged = null;
-        }
-
-        _disposed = true;
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-
-        // Ensure async resources are disposed as well
-        DisposeAsync().AsTask().GetAwaiter().GetResult();
-
-        GC.SuppressFinalize(this);
-    }
-
     public async ValueTask DisposeAsync()
     {
         if (_disposed)
@@ -206,14 +162,15 @@ public partial class BasicLoaderPage : IDisposable, IAsyncDisposable
             return;
         }
 
+        _disposed = true;
+
+        DataContext?.StateChanged = null;
+
         if (_worker is not null)
         {
             await _worker.DisposeAsync();
+            _worker = null;
         }
-
-        // Call Dispose to run synchronous cleanup
-        Dispose(disposing: false);
-
         GC.SuppressFinalize(this);
     }
 }

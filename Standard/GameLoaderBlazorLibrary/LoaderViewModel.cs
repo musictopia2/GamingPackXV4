@@ -14,9 +14,11 @@ public abstract class LoaderViewModel : ILoaderVM
         Starts = starts;
         GenerateGameList();
         Mode = EnumGamePackageMode.Production;
-        GlobalStartUp.StartBootStrap = () =>
+        GlobalStartUp.StartBootStrap = async () =>
         {
-            IGameBootstrapper _ = ChooseGame();
+            IGameBootstrapper bootstrapper = ChooseGame();
+            await bootstrapper.InitializationTask;
+            
         };
     }
     protected abstract void GenerateGameList();
