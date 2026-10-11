@@ -16,7 +16,7 @@
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.4" PrivateAssets="all" />
     <PackageReference Include="MappingCloningExtensions" Version="2.0.8" PrivateAssets="all" />
     <PackageReference Include="ScoreBoardGenerator" Version="1.0.7" PrivateAssets="all" />
-    <PackageReference Include="GamePackageObservableGenerator" Version="1.0.31" />
+    <PackageReference Include="GamePackageObservableGenerator" Version="1.0.31" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />

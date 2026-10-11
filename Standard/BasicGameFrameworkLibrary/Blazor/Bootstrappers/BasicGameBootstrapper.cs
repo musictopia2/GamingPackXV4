@@ -106,7 +106,10 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     private async Task<TestOptions?> LoadGlobalTestOptionsAsync()
     {
         // Replace with the address used to open your WASM test app.
-
+        if (string.IsNullOrWhiteSpace(_globalTestOptionsUrl))
+        {
+            return null;
+        }
 
         using HttpClient client = new();
         using HttpRequestMessage request = new(HttpMethod.Get, _globalTestOptionsUrl);

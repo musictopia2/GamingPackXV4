@@ -1,5 +1,5 @@
 ﻿namespace BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
-public partial class YahtzeeScoresheetViewModel<D> : IHandleAsync<SelectionChosenEventModel>, IScoresheetAction
+public partial class YahtzeeScoresheetViewModel<D> : IHandleAsync<SelectionChosenEventModel>, IScoresheetAction, IDisposable
     where D : SimpleDice, new()
 {
     private readonly ScoreContainer _scoreContainer;
@@ -21,7 +21,6 @@ public partial class YahtzeeScoresheetViewModel<D> : IHandleAsync<SelectionChose
         _gameContainer = gameContainer;
         _yahtzeeMove = yahtzeeMove;
         CreateCommands(CommandContainer);
-        Unsubscribe(); //just in case.
         Subscribe();
     }
     private partial void Subscribe();
@@ -85,5 +84,11 @@ public partial class YahtzeeScoresheetViewModel<D> : IHandleAsync<SelectionChose
             await _gameContainer.Network!.SendMoveAsync(_scoreContainer.RowList.IndexOf(row));
         }
         await _yahtzeeMove.MakeMoveAsync(row);
+    }
+
+    public void Dispose()
+    {
+        Unsubscribe();
+        GC.SuppressFinalize(this);
     }
 }

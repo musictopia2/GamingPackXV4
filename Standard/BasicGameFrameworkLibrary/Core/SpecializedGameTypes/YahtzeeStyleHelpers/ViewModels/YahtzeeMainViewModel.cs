@@ -24,18 +24,30 @@ public partial class YahtzeeMainViewModel<D>(CommandContainer commandContainer,
     }
     partial void CreateCommands(CommandContainer command);
     public YahtzeeScoresheetViewModel<D>? CurrentScoresheet { get; set; }
-    private async Task LoadNewScoreAsync()
+
+
+    private Task LoadNewScoreAsync()
     {
-        await ClosePossibleScoresheetAsync();
-        CurrentScoresheet = Resolver.Resolve<YahtzeeScoresheetViewModel<D>>();
+        CurrentScoresheet ??=
+            Resolver.Resolve<YahtzeeScoresheetViewModel<D>>();
+
         CommandContainer.UpdateSpecificAction(YahtzeeActions.Scoresheet);
+        return Task.CompletedTask;
     }
+
+    //private async Task LoadNewScoreAsync()
+    //{
+    //    await ClosePossibleScoresheetAsync();
+    //    CurrentScoresheet = Resolver.Resolve<YahtzeeScoresheetViewModel<D>>();
+    //    CommandContainer.UpdateSpecificAction(YahtzeeActions.Scoresheet);
+    //}
     protected override async Task CloseAsync()
     {
         await ClosePossibleScoresheetAsync();
     }
     private async Task ClosePossibleScoresheetAsync()
     {
+        CurrentScoresheet?.Dispose();
         CurrentScoresheet = null; //hopefully this stimple.
     }
     public override bool CanRollDice()

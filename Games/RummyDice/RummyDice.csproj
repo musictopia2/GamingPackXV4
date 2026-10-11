@@ -13,14 +13,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandsGenerator" Version="1.0.6" PrivateAssets="all" />
-    <PackageReference Include="CommonBasicLibraries" Version="10.0.33" />
     <PackageReference Include="GamePackageDIGenerator" Version="1.0.6" PrivateAssets="all" />
     <PackageReference Include="GamePackageSerializeGenerator" Version="1.0.4" PrivateAssets="all" />
     <PackageReference Include="LabelGridGenerator" Version="1.0.5" PrivateAssets="all" />
     <PackageReference Include="EventAggregatorGenerator" Version="1.0.29" PrivateAssets="all" />
     <PackageReference Include="FastEnumGenerator" Version="1.0.13" PrivateAssets="all" />
     <PackageReference Include="ScoreBoardGenerator" Version="1.0.7" PrivateAssets="all" />
-    <PackageReference Include="GamePackageObservableGenerator" Version="1.0.31" />
+    <PackageReference Include="GamePackageObservableGenerator" Version="1.0.31" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
