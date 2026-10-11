@@ -3,14 +3,14 @@ public partial class CheckersMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private GameBoardGraphicsCP? GameBoard { get; set; }
     private CheckersGameContainer? GameContainer { get; set; }
     //private bool CanRenderSpace => GameContainer!.PlayerList!.First().Color != EnumColorChoice.None;
     protected override void OnInitialized()
     {
-        GameBoard = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
-        GameContainer = aa1.Resolver.Resolve<CheckersGameContainer>();
+        GameBoard = Resolver!.Resolve<GameBoardGraphicsCP>();
+        GameContainer = Resolver.Resolve<CheckersGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(CheckersVMData.NormalTurn))
                 .AddLabel("Instructions", nameof(CheckersVMData.Instructions))

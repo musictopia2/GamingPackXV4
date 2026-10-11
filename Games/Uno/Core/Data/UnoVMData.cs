@@ -5,11 +5,11 @@ namespace Uno.Core.Data;
 public partial class UnoVMData : IBasicCardGamesData<UnoCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string NextPlayer { get; set; } = "";
+    public partial string NextPlayer { get; set; } = "";
     public UnoVMData(CommandContainer command)
     {
         Deck1 = new(command);

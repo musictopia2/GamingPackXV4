@@ -28,7 +28,7 @@ public class LifeBoardGameGameContainer : BasicGameContainer<LifeBoardGamePlayer
     public GameSpace? MillionSpace { get; set; }
     public GameSpace? ExtraSpace { get; set; }
     public EnumViewCategory CurrentView { get; set; } = EnumViewCategory.StartGame;
-    public BasicList<SpaceInfo> SpaceList { get; set; } = new();
+    public BasicList<SpaceInfo> SpaceList { get; set; } = [];
     public int SpinnerPosition { get; set; }
     public int HighSpeedPhase { get; set; }
     public Action? RefreshSpinner { get; set; }

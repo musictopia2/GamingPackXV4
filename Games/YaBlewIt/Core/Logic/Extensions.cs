@@ -5,7 +5,7 @@ public static class Extensions
     {
         public BasicList<int> GetContainedNumbers()
         {
-            HashSet<int> output = new();
+            HashSet<int> output = [];
             foreach (var card in list)
             {
                 if (card.FirstNumber > 0)
@@ -115,7 +115,7 @@ public static class Extensions
     }
     private static BasicList<CountClass> GetCountGroup(BasicList<IGrouping<EnumColors, YaBlewItCardInformation>> groups)
     {
-        BasicList<CountClass> output = new();
+        BasicList<CountClass> output = [];
         foreach (var group in groups)
         {
             int count = CardCount(group);

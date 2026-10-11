@@ -1,14 +1,14 @@
 namespace Flinch.Blazor.Views;
 public partial class FlinchMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private FlinchVMData? _vmData;
     private FlinchGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<FlinchVMData>();
-        _gameContainer = aa1.Resolver.Resolve<FlinchGameContainer>();
+        _vmData = Resolver!.Resolve<FlinchVMData>();
+        _gameContainer = Resolver.Resolve<FlinchGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(FlinchVMData.NormalTurn))
            .AddLabel("Status", nameof(FlinchVMData.Status))

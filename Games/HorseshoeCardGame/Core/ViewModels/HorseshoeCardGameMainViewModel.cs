@@ -1,28 +1,22 @@
 namespace HorseshoeCardGame.Core.ViewModels;
 [InstanceGame]
-public class HorseshoeCardGameMainViewModel : BasicCardGamesVM<HorseshoeCardGameCardInformation>
-{
-    private readonly HorseshoeCardGameMainGameClass _mainGame; //if we don't need, delete.
-    private readonly HorseshoeCardGameVMData _model;
-    public HorseshoeCardGameMainViewModel(CommandContainer commandContainer,
+public class HorseshoeCardGameMainViewModel(CommandContainer commandContainer,
         HorseshoeCardGameMainGameClass mainGame,
         HorseshoeCardGameVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<HorseshoeCardGameCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _model.Deck1.NeverAutoDisable = true;
+        viewModel.Deck1.NeverAutoDisable = true;
         LoadPlayerControls();
+        base.AdditionalInitialize();
     }
     private void LoadPlayerControls()
     {
-        _mainGame!.PlayerList!.ForEach(thisPlayer =>
+        mainGame!.PlayerList!.ForEach(thisPlayer =>
         {
             if (thisPlayer.TempHand == null)
             {
@@ -44,11 +38,11 @@ public class HorseshoeCardGameMainViewModel : BasicCardGamesVM<HorseshoeCardGame
     }
     private void TempHand_SelectedCard()
     {
-        _model.PlayerHand1!.UnselectAllObjects();
+        viewModel.PlayerHand1!.UnselectAllObjects();
     }
     protected override Task OnAutoSelectedHandAsync()
     {
-        HorseshoeCardGamePlayerItem thisPlayer = _mainGame!.PlayerList!.GetSelf();
+        HorseshoeCardGamePlayerItem thisPlayer = mainGame!.PlayerList!.GetSelf();
         thisPlayer.TempHand!.UnselectAllCards();
         return base.OnAutoSelectedHandAsync();
     }

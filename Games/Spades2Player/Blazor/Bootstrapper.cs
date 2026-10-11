@@ -1,11 +1,7 @@
 namespace Spades2Player.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<Spades2PlayerShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<Spades2PlayerShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         //change view model for area if not using 2 player.

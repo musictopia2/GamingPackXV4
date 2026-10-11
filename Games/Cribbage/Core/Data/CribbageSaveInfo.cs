@@ -7,9 +7,9 @@ public class CribbageSaveInfo : BasicSavedCardClass<CribbagePlayerItem, Cribbage
     public int NewTurn { get; set; }
     public int Dealer { get; set; }
     public bool IsCorrect { get; set; }
-    public DeckRegularDict<CribbageCard> CribList { get; set; } = new();
-    public DeckRegularDict<CribbageCard> MainList { get; set; } = new();
-    public DeckRegularDict<CribbageCard> MainFrameList { get; set; } = new();
+    public DeckRegularDict<CribbageCard> CribList { get; set; } = [];
+    public DeckRegularDict<CribbageCard> MainList { get; set; } = [];
+    public DeckRegularDict<CribbageCard> MainFrameList { get; set; } = [];
     private CribbageVMData? _model;
     private EnumGameStatus _whatStatus;
     public EnumGameStatus WhatStatus

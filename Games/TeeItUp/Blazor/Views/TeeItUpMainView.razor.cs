@@ -1,15 +1,15 @@
 namespace TeeItUp.Blazor.Views;
 public partial class TeeItUpMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private TeeItUpVMData? _vmData;
     private TeeItUpGameContainer? _gameContainer;
-    private BasicList<TeeItUpPlayerItem> _players = new();
+    private BasicList<TeeItUpPlayerItem> _players = [];
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<TeeItUpVMData>();
-        _gameContainer = aa1.Resolver.Resolve<TeeItUpGameContainer>();
+        _vmData = Resolver!.Resolve<TeeItUpVMData>();
+        _gameContainer = Resolver.Resolve<TeeItUpGameContainer>();
         if (_gameContainer.BasicData.MultiPlayer)
         {
             _players = _gameContainer!.PlayerList!.GetAllPlayersStartingWithSelf();

@@ -1,4 +1,4 @@
-@inherits BasicGameView<LifeCardGameMainViewModel>
+@inherits CascadingGameView<LifeCardGameMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -22,9 +22,7 @@
                                      Display="Years Passed" />
                 <GameButtonComponent CommandObject="PlayCardCommand"
                                      Display="Play Card" />
-                <ParentControl VM="OtherViewModel">
-                    <OtherView />
-                </ParentControl>
+                <OtherView DataContext="DataContext.OtherScreen" />
             </div>
             <div>
                 <HandBlazor AdditionalSpacing="1" Hand="_vmData.PlayerHand1" />

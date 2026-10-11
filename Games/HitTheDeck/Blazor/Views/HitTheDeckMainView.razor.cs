@@ -1,14 +1,14 @@
 namespace HitTheDeck.Blazor.Views;
 public partial class HitTheDeckMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private HitTheDeckVMData? _vmData;
     private HitTheDeckGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<HitTheDeckVMData>();
-        _gameContainer = aa1.Resolver.Resolve<HitTheDeckGameContainer>();
+        _vmData = Resolver!.Resolve<HitTheDeckVMData>();
+        _gameContainer = Resolver.Resolve<HitTheDeckGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(HitTheDeckVMData.NormalTurn))
             .AddLabel("Next", nameof(HitTheDeckVMData.NextPlayer))

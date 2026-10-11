@@ -28,33 +28,33 @@ public partial class FluxxVMData : IBasicCardGamesData<FluxxCardInformation>
     public HandObservable<FluxxCardInformation> PlayerHand1 { get; set; }
     public SingleObservablePile<FluxxCardInformation>? OtherPile { get; set; }
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public int PlaysLeft { get; set; }
+    public partial int PlaysLeft { get; set; }
     [LabelColumn]
-    public int HandLimit { get; set; }
+    public partial int HandLimit { get; set; }
     [LabelColumn]
-    public int KeeperLimit { get; set; }
+    public partial int KeeperLimit { get; set; }
     [LabelColumn]
-    public int PlayLimit { get; set; }
+    public partial int PlayLimit { get; set; }
     [LabelColumn]
-    public bool AnotherTurn { get; set; }
+    public partial bool AnotherTurn { get; set; }
     [LabelColumn]
-    public int DrawBonus { get; set; }
+    public partial int DrawBonus { get; set; }
     [LabelColumn]
-    public int PlayBonus { get; set; }
+    public partial int PlayBonus { get; set; }
     [LabelColumn]
-    public int CardsDrawn { get; set; }
+    public partial int CardsDrawn { get; set; }
     [LabelColumn]
-    public int DrawRules { get; set; }
+    public partial int DrawRules { get; set; }
     [LabelColumn]
-    public int PreviousBonus { get; set; }
+    public partial int PreviousBonus { get; set; }
     [LabelColumn]
-    public int CardsPlayed { get; set; }
+    public partial int CardsPlayed { get; set; }
     [LabelColumn]
-    public string OtherTurn { get; set; } = "";
+    public partial string OtherTurn { get; set; } = "";
     private readonly TestOptions _test;
     private readonly IAsyncDelayer _delayer;
     public async Task ShowPlayCardAsync(FluxxCardInformation card)

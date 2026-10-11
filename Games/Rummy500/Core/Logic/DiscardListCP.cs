@@ -23,7 +23,7 @@ public class DiscardListCP : HandObservable<RegularRummyCard>
         {
             throw new CustomBasicException("Deck cannot be 0 for the discard selected.  Rethink");
         }
-        DeckRegularDict<RegularRummyCard> output = new();
+        DeckRegularDict<RegularRummyCard> output = [];
         bool didStart = false;
         HandList.ForEach(thisCard =>
         {
@@ -44,7 +44,7 @@ public class DiscardListCP : HandObservable<RegularRummyCard>
     }
     public void RemoveFromPoint(int deck)
     {
-        DeckRegularDict<RegularRummyCard> output = new();
+        DeckRegularDict<RegularRummyCard> output = [];
         foreach (var thisCard in HandList)
         {
             if (thisCard.Deck == deck)

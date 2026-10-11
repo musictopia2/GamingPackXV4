@@ -1,20 +1,14 @@
 namespace BlockElevenSolitaire.Core.Logic;
 [SingletonGame]
-public class BlockElevenSolitaireMainGameClass : SolitaireGameClass<BlockElevenSolitaireSaveInfo>
+public class BlockElevenSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<BlockElevenSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    private readonly IScoreData _score;
-    public BlockElevenSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-        _score = score;
-    }
     public override Task NewGameAsync()
     {
         _thisMod!.MainPiles1!.SetSavedScore(0);
@@ -27,7 +21,7 @@ public class BlockElevenSolitaireMainGameClass : SolitaireGameClass<BlockElevenS
     }
     protected override void AfterMoveSingleCard()
     {
-        _score.Score += 2; //try this way.
+        Score.Score += 2; //try this way.
     }
     protected override SolitaireCard CardPlayed()
     {

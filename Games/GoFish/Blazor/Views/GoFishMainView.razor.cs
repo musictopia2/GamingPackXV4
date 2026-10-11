@@ -1,14 +1,14 @@
 namespace GoFish.Blazor.Views;
 public partial class GoFishMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private GoFishVMData? _vmData;
     private GoFishGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<GoFishVMData>();
-        _gameContainer = aa1.Resolver.Resolve<GoFishGameContainer>();
+        _vmData = Resolver!.Resolve<GoFishVMData>();
+        _gameContainer = Resolver.Resolve<GoFishGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(GoFishVMData.NormalTurn))
             .AddLabel("Status", nameof(GoFishVMData.Status));

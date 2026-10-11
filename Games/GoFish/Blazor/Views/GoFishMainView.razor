@@ -1,4 +1,4 @@
-@inherits BasicGameView<GoFishMainViewModel>
+@inherits CascadingGameView<GoFishMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -28,7 +28,7 @@
     <div>
         <DeckOfCardsHandBlazor AdditionalSpacing="1" R="RegularSimpleCard" Hand="_vmData.PlayerHand1" />
     </div>
-    <ParentControl VM="AskViewModel">
-        <AskView />
-    </ParentControl>
+    <StateContentView DataContext="DataContext">
+        <AskView DataContext="DataContext.AskScreen" />
+    </StateContentView>
 </CascadingValue>

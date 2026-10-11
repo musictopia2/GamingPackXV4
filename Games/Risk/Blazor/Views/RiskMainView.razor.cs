@@ -3,12 +3,12 @@ public partial class RiskMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private readonly RiskGameContainer _container;
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     public RiskMainView()
     {
-        _container = aa1.Resolver!.Resolve<RiskGameContainer>();
+        _container = Resolver!.Resolve<RiskGameContainer>();
     }
     protected override void OnInitialized()
     {

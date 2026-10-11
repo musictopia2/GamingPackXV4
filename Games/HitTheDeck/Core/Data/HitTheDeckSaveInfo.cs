@@ -12,10 +12,7 @@ public class HitTheDeckSaveInfo : BasicSavedCardClass<HitTheDeckPlayerItem, HitT
         {
             if (SetProperty(ref _nextPlayer, value))
             {
-                if (_model != null)
-                {
-                    _model.NextPlayer = value;
-                }
+                _model?.NextPlayer = value;
             }
         }
     }

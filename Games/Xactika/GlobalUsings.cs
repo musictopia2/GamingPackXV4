@@ -14,7 +14,6 @@ global using CommonBasicLibraries.BasicUIProcesses;
 global using BasicGameFrameworkLibrary.Core.CommandClasses;
 global using BasicGameFrameworkLibrary.Core.ViewModels;
 global using BasicGameFrameworkLibrary.Core.ViewModelInterfaces;
-global using MVVMFramework.ViewModels;
 global using Xactika.Core.Logic;
 global using BasicGameFrameworkLibrary.Core.MiscProcesses;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.MapHelpers;
@@ -66,3 +65,5 @@ global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorStri
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.MiscClasses;
 global using BasicGameFrameworkLibrary.Blazor.Views;
 global using rr1 = Xactika.Resources.SvgPngImageResource;
+global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;

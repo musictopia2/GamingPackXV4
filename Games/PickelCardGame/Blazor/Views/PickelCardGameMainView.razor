@@ -1,8 +1,11 @@
-@inherits BasicGameView<PickelCardGameMainViewModel>
+@inherits CascadingGameView<PickelCardGameMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
 }
+
+
+
 <div>
     <DeckOfCardsTwoPlayerTrickBlazor T="PickelCardGameCardInformation" DataContext="_vmData.TrickArea1" />
 </div>

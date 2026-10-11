@@ -1,1 +1,6 @@
-﻿<BasicPlayerPicker B="TradeSalaryViewModel" />
+﻿@inherits ParameterGameView<TradeSalaryViewModel>
+@if (DataContext is null)
+{
+    return;
+}
+<BasicPlayerPicker B="TradeSalaryViewModel" DataContext="DataContext" />

@@ -1,8 +1,8 @@
-﻿@inherits BasicGameView<MastermindOpeningViewModel>
+﻿@inherits CascadingGameView<MastermindOpeningViewModel>
 Choose Level:
 <div>
     <ListChooserBlazor ListPicker="DataContext!.LevelPicker" />
 </div>
 <div>
-    <GameButtonComponent Display="Level Information" CommandObject="DataContext.LevelInformationCommand" AfterChange="ShowChange" />
+    <GameButtonComponent Display="Level Information" CommandObject="DataContext.LevelInformationCommand" />
 </div>

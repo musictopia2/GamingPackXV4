@@ -1,6 +1,7 @@
 //i think this is the most common things i like to do
 namespace RummyDice.Blazor;
-public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<RummyDiceShellViewModel>(starts, mode)
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<RummyDiceShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {

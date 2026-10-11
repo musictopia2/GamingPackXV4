@@ -1,14 +1,14 @@
 namespace Xactika.Blazor.Views;
 public partial class XactikaMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private XactikaVMData? _vmData;
     private XactikaGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<XactikaVMData>();
-        _gameContainer = aa1.Resolver.Resolve<XactikaGameContainer>();
+        _vmData = Resolver!.Resolve<XactikaVMData>();
+        _gameContainer = Resolver.Resolve<XactikaGameContainer>();
         _labels.AddLabel("Turn", nameof(XactikaVMData.NormalTurn))
              .AddLabel("Status", nameof(XactikaVMData.Status))
              .AddLabel("Round", nameof(XactikaVMData.RoundNumber))

@@ -1,29 +1,23 @@
 namespace YachtRace.Core.Logic;
 [SingletonGame]
-public class YachtRaceMainGameClass
-    : DiceGameClass<SimpleDice, YachtRacePlayerItem, YachtRaceSaveInfo>
+public class YachtRaceMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    YachtRaceVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    YachtRaceGameContainer gameContainer,
+    StandardRollProcesses<SimpleDice, YachtRacePlayerItem> roller,
+    ISystemError error,
+    IToast toast
+        )
+        : DiceGameClass<SimpleDice, YachtRacePlayerItem, YachtRaceSaveInfo>(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
     , IMiscDataNM, ISerializable
 {
-    private readonly YachtRaceVMData _model;
-    private readonly CommandContainer _command;
     internal bool HasRolled { get; set; }
-    public YachtRaceMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        YachtRaceVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        YachtRaceGameContainer gameContainer,
-        StandardRollProcesses<SimpleDice, YachtRacePlayerItem> roller,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-    }
+
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -47,7 +41,7 @@ public class YachtRaceMainGameClass
         this.ShowTurn();
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
         {
-            _model.Stops.Reset();
+            currentMod.Stops.Reset();
         }
     }
     protected override async Task ComputerTurnAsync()
@@ -89,8 +83,8 @@ public class YachtRaceMainGameClass
     }
     public override async Task EndTurnAsync()
     {
-        _model.Cup!.UnholdDice();
-        _command.ManuelFinish = true;
+        currentMod.Cup!.UnholdDice();
+        CommandContainer.ManuelFinish = true;
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync(true);
         if (WhoTurn == WhoStarts)
         {

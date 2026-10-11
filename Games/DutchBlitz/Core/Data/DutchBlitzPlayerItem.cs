@@ -3,9 +3,9 @@ namespace DutchBlitz.Core.Data;
 public partial class DutchBlitzPlayerItem : PlayerSingleHand<DutchBlitzCardInformation>
 {
     [ScoreColumn]
-    public int StockLeft { get; set; }
+    public partial int StockLeft { get; set; }
     [ScoreColumn]
-    public int PointsRound { get; set; }
+    public partial int PointsRound { get; set; }
     [ScoreColumn]
-    public int PointsGame { get; set; }
+    public partial int PointsGame { get; set; }
 }

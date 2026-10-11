@@ -9,7 +9,6 @@ public class GameBoard : GameBoardObservable<ThreeLetterFunCardData>
     private readonly TestOptions _test;
     private readonly IMessageBox _message;
     private readonly IListShuffler<ThreeLetterFunCardData> _deck;
-    private readonly CommandContainer _container;
     private readonly IAsyncDelayer _delay;
     public GameBoard(CommandContainer container,
         IAsyncDelayer delay,
@@ -21,7 +20,6 @@ public class GameBoard : GameBoardObservable<ThreeLetterFunCardData>
         IListShuffler<ThreeLetterFunCardData> deck
         ) : base(container)
     {
-        _container = container;
         _delay = delay;
         _global = global;
         _model = model;
@@ -42,11 +40,13 @@ public class GameBoard : GameBoardObservable<ThreeLetterFunCardData>
     {
         SetUpBoard();
         if (SaveRoot!.Invoke().Level != EnumLevel.Easy)
+        {
             ObjectList.ReplaceRange(SaveRoot!.Invoke().SavedList);
+        }
         else
         {
             SetSelf!.Invoke();
-            ObjectList = SingleInfo!.Invoke().MainHandList;
+            ReplaceObjectList(SingleInfo!.Invoke().MainHandList);
         }
         ObjectList.ForEach(Items => Items.ReloadSaved());
     }
@@ -112,7 +112,6 @@ public class GameBoard : GameBoardObservable<ThreeLetterFunCardData>
         }
         thisObject.HiddenValue++;
         _global.PauseContinueTimer();
-        _container.UpdateAll(); //try this.
         return Task.CompletedTask;
     }
     public void ClearBoard(IDeckDict<ThreeLetterFunCardData> thisList)

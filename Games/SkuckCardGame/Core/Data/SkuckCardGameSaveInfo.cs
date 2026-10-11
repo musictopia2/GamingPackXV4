@@ -10,10 +10,7 @@ public class SkuckCardGameSaveInfo : BasicSavedTrickGamesClass<EnumSuitList, Sku
         {
             if (SetProperty(ref _roundNumber, value))
             {
-                if (_model != null)
-                {
-                    _model.RoundNumber = value;
-                }
+                _model?.RoundNumber = value;
             }
         }
     }
@@ -25,10 +22,7 @@ public class SkuckCardGameSaveInfo : BasicSavedTrickGamesClass<EnumSuitList, Sku
         {
             if (SetProperty(ref _whatStatus, value))
             {
-                if (_model != null)
-                {
-                    _model.GameStatus = WhatStatus;
-                }
+                _model?.GameStatus = WhatStatus;
             }
         }
     }

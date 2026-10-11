@@ -1,8 +1,8 @@
-﻿@if (SorryDicedGameGameContainer.CanStart == false)
-{
-    return;
-}
-<RefreshComponent CanRender=_canRender>
+﻿<StateContentView DataContext="BoardList">
+    @if (SorryDicedGameGameContainer.CanStart == false)
+    {
+        return;
+    }
     <GridTwoByTwo ColumnGap="5px" ColumnLength="@Columns">
         <GridRepeater TotalColumns="2" TotalRows="2" Context="item">
             @if (Players.Count >= item.index + 1)
@@ -17,4 +17,7 @@
             }
         </GridRepeater>
     </GridTwoByTwo>
-</RefreshComponent>
+    <RefreshComponent CanRender=_canRender>
+        
+    </RefreshComponent>
+</StateContentView>

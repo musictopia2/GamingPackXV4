@@ -5,11 +5,11 @@ namespace LifeCardGame.Core.Data;
 public partial class LifeCardGameVMData : IBasicCardGamesData<LifeCardGameCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string OtherText { get; set; } = "";
+    public partial string OtherText { get; set; } = "";
     public LifeCardGameVMData(CommandContainer command)
     {
         Deck1 = new(command);

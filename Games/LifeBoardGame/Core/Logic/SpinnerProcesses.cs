@@ -1,39 +1,28 @@
 ﻿namespace LifeBoardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class SpinnerProcesses : ISpinnerProcesses
+public class SpinnerProcesses(LifeBoardGameVMData model,
+    LifeBoardGameGameContainer gameContainer,
+    GameBoardProcesses gameBoard,
+    IToast toast
+        ) : ISpinnerProcesses
 {
-    private readonly LifeBoardGameVMData _model;
-    private readonly LifeBoardGameGameContainer _gameContainer;
-    private readonly GameBoardProcesses _gameBoard;
-    private readonly IToast _toast;
-
-    public SpinnerProcesses(LifeBoardGameVMData model,
-        LifeBoardGameGameContainer gameContainer,
-        GameBoardProcesses gameBoard,
-        IToast toast
-        )
-    {
-        _model = model;
-        _gameContainer = gameContainer;
-        _gameBoard = gameBoard;
-        _toast = toast;
-    }
     public async Task StartSpinningAsync(SpinnerPositionData position)
     {
-        if (_gameContainer.CardVisible!.Invoke())
+        if (gameContainer.CardVisible!.Invoke())
         {
-            await _gameContainer.HideCardAsync!.Invoke();
+            await gameContainer.HideCardAsync!.Invoke();
         }
-        if (_gameContainer.SaveRoot!.GameStatus == EnumWhatStatus.NeedChooseHouse || _gameContainer.SaveRoot.GameStatus == EnumWhatStatus.NeedSellBuyHouse)
+        if (gameContainer.SaveRoot!.GameStatus == EnumWhatStatus.NeedChooseHouse || gameContainer.SaveRoot.GameStatus == EnumWhatStatus.NeedSellBuyHouse)
         {
-            _gameContainer.SaveRoot.GameStatus = EnumWhatStatus.NeedToSpin;
+            gameContainer.SaveRoot.GameStatus = EnumWhatStatus.NeedToSpin;
         }
-        await SpinnerAnimationClass.AnimateSpinAsync(position, _gameContainer);
-        var thisNumber = LifeBoardGameGameContainer.GetNumberSpun(_gameContainer.SpinnerPosition);
-        _gameContainer.SaveRoot.SpinPosition = _gameContainer.SpinnerPosition;
-        _gameContainer.SaveRoot.ChangePosition = 0;
-        _gameContainer.SaveRoot.NumberRolled = thisNumber;
+        gameContainer.Command.UpdateSpecificAction(LifeActionKeys.Spinner);
+        await SpinnerAnimationClass.AnimateSpinAsync(position, gameContainer);
+        var thisNumber = LifeBoardGameGameContainer.GetNumberSpun(gameContainer.SpinnerPosition);
+        gameContainer.SaveRoot.SpinPosition = gameContainer.SpinnerPosition;
+        gameContainer.SaveRoot.ChangePosition = 0;
+        gameContainer.SaveRoot.NumberRolled = thisNumber;
         await ResumeSpinnerCompletedAsync(); //forgor this part.
     }
     private void EarnProcessFromRoll(int rolled)
@@ -50,11 +39,11 @@ public class SpinnerProcesses : ISpinnerProcesses
             {
                 careerNeeded = EnumCareerType.PoliceOfficer;
             }
-            whoHad = _gameContainer.WhoHadCareerName(careerNeeded);
-            if (whoHad > 0 && whoHad != _gameContainer.WhoTurn)
+            whoHad = gameContainer.WhoHadCareerName(careerNeeded);
+            if (whoHad > 0 && whoHad != gameContainer.WhoTurn)
             {
-                _gameContainer.TakeOutExpense(10000);
-                _gameContainer.CollectMoney(whoHad, 10000);
+                gameContainer.TakeOutExpense(10000);
+                gameContainer.CollectMoney(whoHad, 10000);
             }
             if (rolled == 10)
             {
@@ -64,7 +53,7 @@ public class SpinnerProcesses : ISpinnerProcesses
         whoHad = WhoHadStock(rolled);
         if (whoHad > 0)
         {
-            _gameContainer.CollectMoney(whoHad, 10000);
+            gameContainer.CollectMoney(whoHad, 10000);
         }
     }
     private int WhoHadStock(int whatNum)
@@ -73,7 +62,7 @@ public class SpinnerProcesses : ISpinnerProcesses
         {
             return 0;
         }
-        var thisPlayer = _gameContainer.PlayerList!.SingleOrDefault(items => items.FirstStock == whatNum || items.SecondStock == whatNum);
+        var thisPlayer = gameContainer.PlayerList!.SingleOrDefault(items => items.FirstStock == whatNum || items.SecondStock == whatNum);
         if (thisPlayer == null)
         {
             return 0;
@@ -82,46 +71,46 @@ public class SpinnerProcesses : ISpinnerProcesses
     }
     private async Task ResumeSpinnerCompletedAsync()
     {
-        _gameContainer.SaveRoot!.SpinList.Add(_gameBoard.NumberRolled);
-        EarnProcessFromRoll(_gameBoard.NumberRolled);
-        if (_gameContainer.Test!.NoAnimations == false)
+        gameContainer.SaveRoot!.SpinList.Add(gameBoard.NumberRolled);
+        EarnProcessFromRoll(gameBoard.NumberRolled);
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(1);
+            await gameContainer.Delay!.DelaySeconds(1);
         }
-        if (_gameContainer.GameStatus == EnumWhatStatus.NeedToSpin)
+        if (gameContainer.GameStatus == EnumWhatStatus.NeedToSpin)
         {
-            _gameContainer.GameStatus = EnumWhatStatus.LastSpin;
+            gameContainer.GameStatus = EnumWhatStatus.LastSpin;
         }
-        if (_gameBoard.NumberRolled == 0)
+        if (gameBoard.NumberRolled == 0)
         {
             BetweenNumbers();
-            if (_gameContainer.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+            if (gameContainer.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
             {
-                _toast.ShowInfoToast("Spin again because it landed between two numbers");
+                toast.ShowInfoToast("Spin again because it landed between two numbers");
             }
-            if (_gameContainer.GameStatus == EnumWhatStatus.LastSpin)
+            if (gameContainer.GameStatus == EnumWhatStatus.LastSpin)
             {
-                _gameContainer.GameStatus = EnumWhatStatus.NeedToSpin;
+                gameContainer.GameStatus = EnumWhatStatus.NeedToSpin;
             }
-            await _gameContainer.ContinueTurnAsync!.Invoke();
+            await gameContainer.ContinueTurnAsync!.Invoke();
             return;
         }
         await FinishSpinProcessAsync();
-        if (_gameContainer.CanTradeForBig(false))
+        if (gameContainer.CanTradeForBig(false))
         {
-            _toast.ShowInfoToast("Current Player Is Getting The $100,000 for 2 8s, 9s or 10s spinned in a row for a lucky break for being entertainer");
-            await _gameContainer.TradeForBigAsync();
+            toast.ShowInfoToast("Current Player Is Getting The $100,000 for 2 8s, 9s or 10s spinned in a row for a lucky break for being entertainer");
+            await gameContainer.TradeForBigAsync();
             return;
         }
-        IMoveProcesses move = _gameContainer.Resolver.Resolve<IMoveProcesses>();
+        IMoveProcesses move = gameContainer.Resolver.Resolve<IMoveProcesses>();
         await move.PossibleAutomateMoveAsync();
     }
     private void BetweenNumbers()
     {
-        int whoHad = _gameContainer.WhoHadCareerName(EnumCareerType.ComputerConsultant);
-        if (whoHad > 0 && whoHad != _gameContainer.WhoTurn)
+        int whoHad = gameContainer.WhoHadCareerName(EnumCareerType.ComputerConsultant);
+        if (whoHad > 0 && whoHad != gameContainer.WhoTurn)
         {
-            _gameContainer.CollectMoney(whoHad, 50000);
+            gameContainer.CollectMoney(whoHad, 50000);
         }
     }
     private SpinnerPositionData GetSpinData
@@ -129,54 +118,54 @@ public class SpinnerProcesses : ISpinnerProcesses
         get
         {
             SpinnerPositionData output = new();
-            output.CanBetween = _gameContainer.Random.NextBool(3); //decided to decrease to 3
-            output.HighSpeedUpTo = _gameContainer.Random.GetRandomNumber(30, 15);
-            output.ChangePositions = _gameContainer.Random.GetRandomNumber(120, 60);
-            output.SpinnerPosition = _gameContainer.SpinnerPosition; //try this way.
+            output.CanBetween = gameContainer.Random.NextBool(3); //decided to decrease to 3
+            output.HighSpeedUpTo = gameContainer.Random.GetRandomNumber(30, 15);
+            output.ChangePositions = gameContainer.Random.GetRandomNumber(120, 60);
+            output.SpinnerPosition = gameContainer.SpinnerPosition; //try this way.
             return output;
         }
     }
     public async Task StartSpinningAsync()
     {
         var spin = GetSpinData;
-        if (_gameContainer.CanSendMessage())
+        if (gameContainer.CanSendMessage())
         {
-            await _gameContainer.Network!.SendAllAsync("spin", spin);
+            await gameContainer.Network!.SendAllAsync("spin", spin);
         }
         await StartSpinningAsync(spin);
     }
     private async Task FinishSpinProcessAsync()
     {
-        if (_gameContainer.GameStatus == EnumWhatStatus.LastSpin)
+        if (gameContainer.GameStatus == EnumWhatStatus.LastSpin)
         {
-            _gameContainer.RepaintBoard();
+            gameContainer.RepaintBoard();
         }
-        else if (_gameContainer.GameStatus == EnumWhatStatus.NeedFindSellPrice || _gameContainer.GameStatus == EnumWhatStatus.NeedSellHouse)
+        else if (gameContainer.GameStatus == EnumWhatStatus.NeedFindSellPrice || gameContainer.GameStatus == EnumWhatStatus.NeedSellHouse)
         {
-            await SoldHouseAsync(_gameBoard.NumberRolled);
+            await SoldHouseAsync(gameBoard.NumberRolled);
         }
         //may not matter.  hopefully becomes obvious if it does matter.
     }
     private async Task SoldHouseAsync(int numberRolled)
     {
-        var thisHouse = _gameContainer.SingleInfo!.HouseCard;
+        var thisHouse = gameContainer.SingleInfo!.HouseCard;
         decimal moneyEarned = thisHouse.SellingPrices[numberRolled];
-        _gameContainer.SingleInfo!.HouseIsInsured = false;
-        _model.GameDetails = $"House sold for {moneyEarned.ToCurrency(0)}";
-        _gameContainer.CollectMoney(_gameContainer.WhoTurn, moneyEarned);
-        if (_gameContainer.Test.NoAnimations == false)
+        gameContainer.SingleInfo!.HouseIsInsured = false;
+        model.GameDetails = $"House sold for {moneyEarned.ToCurrency(0)}";
+        gameContainer.CollectMoney(gameContainer.WhoTurn, moneyEarned);
+        if (gameContainer.Test.NoAnimations == false)
         {
-            await _gameContainer.Delay.DelaySeconds(1);
+            await gameContainer.Delay.DelaySeconds(1);
         }
-        _gameContainer.SingleInfo.Hand.RemoveSpecificItem(thisHouse);
-        PopulatePlayerProcesses.FillInfo(_gameContainer.SingleInfo);
-        if (_gameContainer.GameStatus == EnumWhatStatus.NeedFindSellPrice)
+        gameContainer.SingleInfo.Hand.RemoveSpecificItem(thisHouse);
+        PopulatePlayerProcesses.FillInfo(gameContainer.SingleInfo);
+        if (gameContainer.GameStatus == EnumWhatStatus.NeedFindSellPrice)
         {
-            _gameContainer.GameStatus = EnumWhatStatus.NeedChooseHouse;
+            gameContainer.GameStatus = EnumWhatStatus.NeedChooseHouse;
         }
         else
         {
-            _gameContainer.GameStatus = EnumWhatStatus.NeedChooseRetirement;
+            gameContainer.GameStatus = EnumWhatStatus.NeedChooseRetirement;
         }
     }
 }

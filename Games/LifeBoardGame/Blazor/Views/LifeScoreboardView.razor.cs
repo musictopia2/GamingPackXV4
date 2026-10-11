@@ -1,7 +1,7 @@
 namespace LifeBoardGame.Blazor.Views;
 public partial class LifeScoreboardView
 {
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     [CascadingParameter]
     public LifeBoardGameGameContainer? GameContainer { get; set; }
     protected override void OnInitialized()

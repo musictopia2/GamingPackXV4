@@ -28,7 +28,7 @@ public partial class OpponentPropertiesComponent
         output.ObjectClickedAsync = ChoseCardAsync;
         output.Text = $"{PlayerChosen!.NickName} Properties";
         var list = PlayerChosen.SetData.GetCards(Color);
-        output.HandList = list.ToRegularDeckDict();
+        output.ReplaceHandList(list);
         output.IsEnabled = true;
         return output;
     }

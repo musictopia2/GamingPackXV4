@@ -14,16 +14,12 @@
     }
     return;
 }
-<ParentControl VM="RiskMainViewModel">
+<MainScreen>
     <CascadingValue Value="TargetHeight">
         <RiskMainView />
     </CascadingValue>
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<RiskPlayerItem>">
-    <MultiplayerOpeningView P="RiskPlayerItem" />
-</ParentControl>
-<ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, RiskPlayerItem>">
-    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="RiskPlayerItem">
-        <ArmyColorComponent MainColor="@GetColor(Piece.EnumValue)" />
-    </BeginningChooseColorView>
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="RiskPlayerItem" />
+<BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="RiskPlayerItem">
+    <ArmyColorComponent MainColor="@GetColor(Piece.EnumValue)" />
+</BeginningChooseColorView>

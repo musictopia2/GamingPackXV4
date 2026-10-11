@@ -1,12 +1,7 @@
 namespace Skipbo.Core.Data;
 [SingletonGame]
-public class SkipboDetailClass : IGameInfo, ICardInfo<SkipboCardInformation>
+public class SkipboDetailClass(SkipboDelegates delegates) : IGameInfo, ICardInfo<SkipboCardInformation>
 {
-    private readonly SkipboDelegates _delegates;
-    public SkipboDetailClass(SkipboDelegates delegates)
-    {
-        _delegates = delegates;
-    }
     EnumGameType IGameInfo.GameType => EnumGameType.NewGame;
     bool IGameInfo.CanHaveExtraComputerPlayers => true;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
@@ -22,11 +17,11 @@ public class SkipboDetailClass : IGameInfo, ICardInfo<SkipboCardInformation>
     {
         get
         {
-            if (_delegates.GetPlayerCount == null)
+            if (delegates.GetPlayerCount == null)
             {
                 throw new CustomBasicException("Nobody is getting player count.  Rethink");
             }
-            int count = _delegates.GetPlayerCount.Invoke();
+            int count = delegates.GetPlayerCount.Invoke();
             if (count == 2)
             {
                 return 30;
@@ -34,7 +29,7 @@ public class SkipboDetailClass : IGameInfo, ICardInfo<SkipboCardInformation>
             return 20;
         }
     }
-    BasicList<int> ICardInfo<SkipboCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<SkipboCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<SkipboCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<SkipboCardInformation>.ReshuffleAllCardsFromDiscard => true;
     bool ICardInfo<SkipboCardInformation>.ShowMessageWhenReshuffling => true;
@@ -42,11 +37,11 @@ public class SkipboDetailClass : IGameInfo, ICardInfo<SkipboCardInformation>
     bool ICardInfo<SkipboCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<SkipboCardInformation>.NoPass => false;
     bool ICardInfo<SkipboCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<SkipboCardInformation> ICardInfo<SkipboCardInformation>.DummyHand { get; set; } = new DeckRegularDict<SkipboCardInformation>();
+    DeckRegularDict<SkipboCardInformation> ICardInfo<SkipboCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<SkipboCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<SkipboCardInformation>.CanSortCardsToBeginWith => false;
     BasicList<int> ICardInfo<SkipboCardInformation>.DiscardExcludeList(IListShuffler<SkipboCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

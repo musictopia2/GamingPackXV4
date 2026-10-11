@@ -7,11 +7,11 @@ public partial class HorseshoeCardGameVMData : ITrickCardGamesData<HorseshoeCard
 {
     private readonly HorseshoeCardGameGameContainer _gameContainer;
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumSuitList TrumpSuit { get; set; }
+    public partial EnumSuitList TrumpSuit { get; set; }
     public HorseshoeCardGameVMData(CommandContainer command,
             HorseshoeTrickAreaCP trickArea1,
             HorseshoeCardGameGameContainer gameContainer

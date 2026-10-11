@@ -4,8 +4,11 @@ public partial class PropertySetOrganizerComponent
     private YourOrganizerViewModel? DataContext { get; set; }
     protected override void OnInitialized()
     {
-        DataContext = aa1.Resolver!.Resolve<YourOrganizerViewModel>();
-        DataContext.AddAction(StateHasChanged);
+        DataContext = Resolver!.Resolve<YourOrganizerViewModel>();
+
+
+
+        //DataContext.AddAction(StateHasChanged);
         DataContext.VMData.YourCompleteSets.Init(); //i think.
         base.OnInitialized();
     }

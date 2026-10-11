@@ -1,40 +1,29 @@
 ﻿namespace Fluxx.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class EmptyTrashProcesses : IEmptyTrashProcesses
+public class EmptyTrashProcesses(FluxxGameContainer gameContainer, FluxxVMData model, IAnalyzeProcesses processes, IToast toast) : IEmptyTrashProcesses
 {
-    private readonly FluxxGameContainer _gameContainer;
-    private readonly FluxxVMData _model;
-    private readonly IAnalyzeProcesses _processes;
-    private readonly IToast _toast;
-    public EmptyTrashProcesses(FluxxGameContainer gameContainer, FluxxVMData model, IAnalyzeProcesses processes, IToast toast)
-    {
-        _gameContainer = gameContainer;
-        _model = model;
-        _processes = processes;
-        _toast = toast;
-    }
     public async Task EmptyTrashAsync()
     {
-        _toast.ShowInfoToast("Empty the trash was played.  Therefore; the cards are being reshuffled");
-        if (_gameContainer.BasicData!.MultiPlayer && _gameContainer.SingleInfo!.CanSendMessage(_gameContainer.BasicData) == false)
+        toast.ShowInfoToast("Empty the trash was played.  Therefore; the cards are being reshuffled");
+        if (gameContainer.BasicData!.MultiPlayer && gameContainer.SingleInfo!.CanSendMessage(gameContainer.BasicData) == false)
         {
-            _gameContainer.Network!.IsEnabled = true;
+            gameContainer.Network!.IsEnabled = true;
             return;
         }
-        var thisList = _model.Pile1!.DiscardList();
-        thisList.AddRange(_model.Deck1!.DeckList());
+        var thisList = model.Pile1!.DiscardList();
+        thisList.AddRange(model.Deck1!.DeckList());
         thisList.ShuffleList();
-        if (_gameContainer.BasicData.MultiPlayer)
+        if (gameContainer.BasicData.MultiPlayer)
         {
-            await _gameContainer.Network!.SendAllAsync("emptytrash", thisList.GetDeckListFromObjectList());
+            await gameContainer.Network!.SendAllAsync("emptytrash", thisList.GetDeckListFromObjectList());
         }
         await FinishEmptyTrashAsync(thisList);
     }
     public async Task FinishEmptyTrashAsync(IEnumerableDeck<FluxxCardInformation> cardList)
     {
-        _model!.Deck1!.OriginalList(cardList);
-        _model.Pile1!.CardsReshuffled();
-        await _processes.AnalyzeQueAsync();
+        model!.Deck1!.OriginalList(cardList);
+        model.Pile1!.CardsReshuffled();
+        await processes.AnalyzeQueAsync();
     }
 }

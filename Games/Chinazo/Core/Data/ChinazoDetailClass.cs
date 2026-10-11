@@ -1,13 +1,8 @@
 namespace Chinazo.Core.Data;
 [SingletonGame]
-public class ChinazoDetailClass : IGameInfo, ICardInfo<ChinazoCard>,
+public class ChinazoDetailClass(ChinazoDelegates delegates) : IGameInfo, ICardInfo<ChinazoCard>,
     IBeginningRegularCards<ChinazoCard>
 {
-    private readonly ChinazoDelegates _delegates;
-    public ChinazoDetailClass(ChinazoDelegates delegates)
-    {
-        _delegates = delegates;
-    }
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
@@ -19,8 +14,8 @@ public class ChinazoDetailClass : IGameInfo, ICardInfo<ChinazoCard>,
     bool IGameInfo.CanAutoSave => true;
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
-    int ICardInfo<ChinazoCard>.CardsToPassOut => _delegates.CardsToPassOut!.Invoke();
-    BasicList<int> ICardInfo<ChinazoCard>.PlayerExcludeList => new();
+    int ICardInfo<ChinazoCard>.CardsToPassOut => delegates.CardsToPassOut!.Invoke();
+    BasicList<int> ICardInfo<ChinazoCard>.PlayerExcludeList => [];
     bool ICardInfo<ChinazoCard>.AddToDiscardAtBeginning => true;
     bool ICardInfo<ChinazoCard>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<ChinazoCard>.ShowMessageWhenReshuffling => true;
@@ -28,12 +23,12 @@ public class ChinazoDetailClass : IGameInfo, ICardInfo<ChinazoCard>,
     bool ICardInfo<ChinazoCard>.PlayerGetsCards => true;
     bool ICardInfo<ChinazoCard>.NoPass => false;
     bool ICardInfo<ChinazoCard>.NeedsDummyHand => false;
-    DeckRegularDict<ChinazoCard> ICardInfo<ChinazoCard>.DummyHand { get; set; } = new DeckRegularDict<ChinazoCard>();
+    DeckRegularDict<ChinazoCard> ICardInfo<ChinazoCard>.DummyHand { get; set; } = [];
     bool ICardInfo<ChinazoCard>.HasDrawAnimation => true;
     bool ICardInfo<ChinazoCard>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<ChinazoCard>.DiscardExcludeList(IListShuffler<ChinazoCard> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<ChinazoCard>.AceLow => false;
     bool IBeginningRegularCards<ChinazoCard>.CustomDeck => true;

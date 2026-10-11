@@ -15,7 +15,7 @@ public class HorseshoeCardGameDetailClass : IGameInfo, ICardInfo<HorseshoeCardGa
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<HorseshoeCardGameCardInformation>.CardsToPassOut => 6;
-    BasicList<int> ICardInfo<HorseshoeCardGameCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<HorseshoeCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<HorseshoeCardGameCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<HorseshoeCardGameCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<HorseshoeCardGameCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,7 +23,7 @@ public class HorseshoeCardGameDetailClass : IGameInfo, ICardInfo<HorseshoeCardGa
     bool ICardInfo<HorseshoeCardGameCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<HorseshoeCardGameCardInformation>.NoPass => false;
     bool ICardInfo<HorseshoeCardGameCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<HorseshoeCardGameCardInformation> ICardInfo<HorseshoeCardGameCardInformation>.DummyHand { get; set; } = new DeckRegularDict<HorseshoeCardGameCardInformation>();
+    DeckRegularDict<HorseshoeCardGameCardInformation> ICardInfo<HorseshoeCardGameCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<HorseshoeCardGameCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<HorseshoeCardGameCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -35,7 +35,7 @@ public class HorseshoeCardGameDetailClass : IGameInfo, ICardInfo<HorseshoeCardGa
     bool ITrickData.HasDummy => true;
     BasicList<int> ICardInfo<HorseshoeCardGameCardInformation>.DiscardExcludeList(IListShuffler<HorseshoeCardGameCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<HorseshoeCardGameCardInformation>.AceLow => false;
     bool IBeginningRegularCards<HorseshoeCardGameCardInformation>.CustomDeck => false;

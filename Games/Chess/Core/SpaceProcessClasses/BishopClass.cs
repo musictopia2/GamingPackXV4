@@ -18,7 +18,7 @@ public class BishopClass : IChessMan
         SpaceCP? c;
         UpdateChecker();
         // up processes
-        BasicList<CheckersChessVector> finalList = new();
+        BasicList<CheckersChessVector> finalList = [];
         do
         {
             checkRow -= 1;
@@ -77,7 +77,9 @@ public class BishopClass : IChessMan
             // can add to list
             finalList.Add(new CheckersChessVector(checkRow, checkColumn));
             if (c.PlayerOwns > 0)
+            {
                 break;
+            }
         }
         while (true); // because its after the ends// can't go further
         UpdateChecker();

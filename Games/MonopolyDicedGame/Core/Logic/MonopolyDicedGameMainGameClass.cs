@@ -56,12 +56,43 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
     }
     public override async Task SetUpGameAsync(bool isBeginning)
     {
-        LoadControls();
-        SaveRoot.RollNumber = 1;
         if (FinishUpAsync == null)
         {
-            throw new CustomBasicException("The loader never set the finish up code.  Rethink");
+            throw new CustomBasicException(
+                "The loader never set the finish up code.  Rethink");
         }
+
+        LoadControls();
+
+        PlayerList.ForEach(player =>
+        {
+            player.CurrentScore = 0;
+            player.TotalScore = 0;
+        });
+
+        SaveRoot.RollNumber = 1;
+        SaveRoot.NumberOfCops = 0;
+        SaveRoot.TotalGos = 0;
+        SaveRoot.NumberOfHouses = 0;
+        SaveRoot.HasAtLeastOnePropertyMonopoly = false;
+        SaveRoot.HasHotel = false;
+        SaveRoot.CurrentScore = 0;
+        SaveRoot.DiceList.Clear();
+        SaveRoot.Owns.Clear();
+
+        _model.OtherActions.Clear();
+        _model.RollNumber = 1;
+        _model.CurrentScore = 0;
+
+        _houseDice.Value = EnumMiscType.None;
+        _houseDice.Visible = false;
+
+        GlobalDiceHelpers.OwnWhenRolling.Clear();
+        GlobalDiceHelpers.OwnedOnBoard = SaveRoot.Owns;
+
+        SaveRoot.ImmediatelyStartTurn = true;
+        SaveRoot.UpdateBoard();
+
         await FinishUpAsync(isBeginning);
     }
     async Task IMiscDataNM.MiscDataReceived(string status, string content)
@@ -78,7 +109,7 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
                 Network!.IsEnabled = true;
                 return;
             case "possiblecops":
-                var cops = await js1.DeserializeObjectAsync<BasicList<EnumMiscType>>(content);
+                var cops = await js1.DeserializeObjectAsync<StateList<EnumMiscType>>(content);
                 ShowCopResults(cops);
                 Network!.IsEnabled = true;
                 return;
@@ -89,12 +120,15 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
             case "utilitychosen":
                 var utility = await js1.DeserializeObjectAsync<EnumUtilityType>(content);
                 await ChoseUtilityAsync(utility);
+                SaveRoot.UpdateBoard();
                 return;
             case "trainchosen":
                 await ChoseTrainAsync();
+                SaveRoot.UpdateBoard();
                 return;
             case "propertychosen":
                 await ChosePropertyAsync(int.Parse(content));
+                SaveRoot.UpdateBoard();
                 return;
             case "finishroll":
                 await FinishRollingAsync();
@@ -137,6 +171,7 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
         SaveRoot.DiceList.Clear();
         SaveRoot.Owns.Clear();
         _model.OtherActions.Clear();
+        SaveRoot.UpdateBoard();
         await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
     }
     public async Task SelectOneMainAsync(int whichOne)
@@ -196,9 +231,9 @@ public class MonopolyDicedGameMainGameClass : BasicGameClass<MonopolyDicedGamePl
         }
         await ContinueTurnAsync();
     }
-    private void ShowCopResults(BasicList<EnumMiscType> cops)
+    private void ShowCopResults(StateList<EnumMiscType> cops)
     {
-        _model.OtherActions = cops;
+        _model.OtherActions.ReplaceRange(cops);
         if (_model.OtherActions.Any(x => x == EnumMiscType.Free))
         {
             SaveRoot.NumberOfCops--;

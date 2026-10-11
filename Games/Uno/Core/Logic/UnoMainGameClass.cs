@@ -11,7 +11,6 @@ public class UnoMainGameClass
     private readonly IChooseColorProcesses _colorProcesses;
     private readonly ISayUnoProcesses _sayUnoProcesses;
     private readonly UnoColorsDelegates _delegates;
-    private readonly IToast _toast;
     private bool _playerDrew;
     private bool _finishPlay;
     private UnoCardInformation CurrentObject => _model!.Pile1!.CurrentCard;
@@ -40,7 +39,6 @@ public class UnoMainGameClass
         _colorProcesses = colorProcesses;
         _sayUnoProcesses = sayUnoProcesses;
         _delegates = delegates;
-        _toast = toast;
         _gameContainer.CanPlay = CanPlay;
         _gameContainer.DoFinishAsync = DoFinishAsync;
     }

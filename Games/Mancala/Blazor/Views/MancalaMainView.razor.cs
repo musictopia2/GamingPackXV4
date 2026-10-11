@@ -3,7 +3,7 @@ public partial class MancalaMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private GameBoardVM? OtherModel { get; set; }
     protected override void OnInitialized()
     {

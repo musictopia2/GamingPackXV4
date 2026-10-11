@@ -145,7 +145,6 @@ public class SinisterSixMainGameClass
     public override async Task EndTurnAsync()
     {
         SingleInfo!.Score = _model.Cup!.DiceList.Sum(xx => xx.Value);
-        _command.UpdateAll();
         if (_wasAuto == true && Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(1); //if auto is done, needs to see what happened.

@@ -1,14 +1,14 @@
 namespace Skipbo.Blazor.Views;
 public partial class SkipboMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private SkipboVMData? _vmData;
     private SkipboGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<SkipboVMData>();
-        _gameContainer = aa1.Resolver.Resolve<SkipboGameContainer>();
+        _vmData = Resolver!.Resolve<SkipboVMData>();
+        _gameContainer = Resolver.Resolve<SkipboGameContainer>();
         _labels.AddLabel("Turn", nameof(SkipboVMData.NormalTurn))
            .AddLabel("Status", nameof(SkipboVMData.Status))
            .AddLabel("RS Cards", nameof(SkipboVMData.CardsToShuffle));

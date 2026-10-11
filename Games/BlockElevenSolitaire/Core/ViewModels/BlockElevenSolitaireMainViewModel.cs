@@ -16,7 +16,7 @@ public partial class BlockElevenSolitaireMainViewModel : SolitaireMainViewModel<
         return resolver.ReplaceObject<BlockElevenSolitaireMainGameClass>();
     }
     [LabelColumn]
-    public int CardsLeft { get; set; }
+    public partial int CardsLeft { get; set; }
     protected override void CommandExecutingChanged()
     {
         CardsLeft = DeckPile!.CardsLeft();

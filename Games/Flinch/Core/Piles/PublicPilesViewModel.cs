@@ -1,7 +1,7 @@
 ﻿namespace Flinch.Core.Piles;
 public partial class PublicPilesViewModel : SimpleControlObservable, ISerializable
 {
-    public BasicList<BasicPileInfo<FlinchCardInformation>> PileList = new();
+    public BasicList<BasicPileInfo<FlinchCardInformation>> PileList = [];
     public int NextNumberNeeded(int index)
     {
         var thisPile = PileList[index];
@@ -97,5 +97,4 @@ public partial class PublicPilesViewModel : SimpleControlObservable, ISerializab
     {
         PileCommand!.ReportCanExecuteChange();
     }
-    protected override void PrivateEnableAlways() { }
 }

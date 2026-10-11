@@ -1,4 +1,4 @@
-﻿namespace ClueBoardGameBlazor;
+﻿namespace ClueBoardGame.Blazor;
 public static class GlobalDetectiveGrid
 {
     public static int RoomWidth { get; set; } = 100;

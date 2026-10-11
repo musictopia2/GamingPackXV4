@@ -1,33 +1,26 @@
 namespace SorryCardGame.Core.Logic;
 [SingletonGame]
-public class SorryCardGameMainGameClass
-    : CardGameClass<SorryCardGameCardInformation, SorryCardGamePlayerItem, SorryCardGameSaveInfo>
+public class SorryCardGameMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    SorryCardGameVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<SorryCardGameCardInformation> cardInfo,
+    CommandContainer command,
+    SorryCardGameGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        )
+        : CardGameClass<SorryCardGameCardInformation, SorryCardGamePlayerItem, SorryCardGameSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IBeginningComboCardsColors<EnumColorChoices, SorryCardGameCardInformation, SorryCardGamePlayerItem, SorryCardGameSaveInfo>
     , IMiscDataNM, IAfterColorProcesses, ISerializable
 {
-    private readonly SorryCardGameVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly SorryCardGameGameContainer _gameContainer; //if we don't need it, take it out.
-    private readonly IToast _toast;
-    public SorryCardGameMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        SorryCardGameVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<SorryCardGameCardInformation> cardInfo,
-        CommandContainer command,
-        SorryCardGameGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _toast = toast;
-    }
+    private readonly SorryCardGameVMData _model = currentMod;
+    private readonly SorryCardGameGameContainer _gameContainer = gameContainer; //if we don't need it, take it out.
+    private readonly IToast _toast = toast;
+
     public override bool CanMakeMainOptionsVisibleAtBeginning => PlayerList.DidChooseColors();
     private bool _wasNew;
     private bool _didPlay;
@@ -63,7 +56,7 @@ public class SorryCardGameMainGameClass
     }
     private void LoadControls() //has to do no matter what now.
     {
-        PlayerList!.ForEach(thisPlayer => thisPlayer.Load(this, _command));
+        PlayerList!.ForEach(thisPlayer => thisPlayer.Load(this, CommandContainer));
     }
     protected override async Task LoadPossibleOtherScreensAsync()
     {
@@ -293,7 +286,7 @@ public class SorryCardGameMainGameClass
                     thisPlayer.OtherTurn = false;
                 });
                 SingleInfo.OtherTurn = true;
-                _command.ManuelFinish = true;
+                CommandContainer.ManuelFinish = true;
                 await ContinueTurnAsync();
                 return;
             }
@@ -320,7 +313,7 @@ public class SorryCardGameMainGameClass
             await ShowWinAsync();
             return;
         }
-        _command.ManuelFinish = true; //could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
@@ -417,7 +410,6 @@ public class SorryCardGameMainGameClass
     async Task IAfterColorProcesses.AfterChoosingColorsAsync()
     {
         WhoTurn = WhoStarts;
-        _command.UpdateAll();
         await StartNewTurnAsync();
     }
     public async Task SorryPlayerAsync(int player)
@@ -434,7 +426,7 @@ public class SorryCardGameMainGameClass
         }
         tempPlayer.HowManyAtHome--;
         SaveRoot.LastSorry = EnumSorry.Regular;
-        _command.ManuelFinish = true;
+        CommandContainer.ManuelFinish = true;
         if (BasicData!.MultiPlayer == false)
         {
             if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Computer)
@@ -499,7 +491,6 @@ public class SorryCardGameMainGameClass
                 tempPlayer.MainHandList.RemoveObjectByDeck(thisCard.Deck);
             }
         }
-        _command.UpdateAll();
         await Aggregator.AnimateCardAsync(thisCard, EnumAnimcationDirection.StartDownToCard, "otherpile", finalAction: () => _model!.OtherPile!.AddCard(thisCard));
     }
     public async Task PlaySorryCardAsync(SorryCardGameCardInformation thisCard, int player)
@@ -523,7 +514,7 @@ public class SorryCardGameMainGameClass
             }
         }
         SorryCardGamePlayerItem tempPlayer;
-        _command.ManuelFinish = true; //because you can't go automatically now.
+        CommandContainer.ManuelFinish = true; //because you can't go automatically now.
         if (thisCard.Sorry == EnumSorry.At21)
         {
             if (BasicData!.MultiPlayer == false)
@@ -578,7 +569,7 @@ public class SorryCardGameMainGameClass
         {
             throw new CustomBasicException("Can't choose player to sorry and play the cards");
         }
-        _command.ManuelFinish = true;
+        CommandContainer.ManuelFinish = true;
         if (thisList.Count == 1)
         {
             var tempCard = thisList.First();

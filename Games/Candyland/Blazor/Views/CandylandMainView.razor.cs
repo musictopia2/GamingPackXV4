@@ -3,7 +3,7 @@ public partial class CandylandMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private GameBoardVM? BoardModel { get; set; }
     protected override void OnInitialized()
     {

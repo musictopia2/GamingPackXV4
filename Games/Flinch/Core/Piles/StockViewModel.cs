@@ -1,7 +1,6 @@
 ﻿namespace Flinch.Core.Piles;
-public class StockViewModel : StockPileVM<FlinchCardInformation>
+public class StockViewModel(CommandContainer command) : StockPileVM<FlinchCardInformation>(command)
 {
-    public StockViewModel(CommandContainer command) : base(command) { }
     public override string NextCardInStock()
     {
         if (DidGoOut() == true)

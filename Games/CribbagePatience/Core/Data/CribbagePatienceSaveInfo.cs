@@ -2,10 +2,10 @@ namespace CribbagePatience.Core.Data;
 [SingletonGame]
 public class CribbagePatienceSaveInfo : IMappable
 {
-    public BasicList<int> DeckList { get; set; } = new();
-    public BasicList<int> ScoreList { get; set; } = new();
+    public BasicList<int> DeckList { get; set; } = [];
+    public BasicList<int> ScoreList { get; set; } = [];
     public SavedDiscardPile<CribbageCard>? StartCard { get; set; }
-    private BasicList<ScoreHandCP> _handScores = new();
+    private BasicList<ScoreHandCP> _handScores = [];
     public BasicList<ScoreHandCP> HandScores
     {
         get { return _handScores; }

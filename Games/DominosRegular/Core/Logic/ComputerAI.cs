@@ -6,7 +6,7 @@ public static class ComputerAI
         public int Deck;
         public int WhichOne;
         public int Points;
-        int IComparable<MoveInfo>.CompareTo(MoveInfo other)
+        readonly int IComparable<MoveInfo>.CompareTo(MoveInfo other)
         {
             return other.Points.CompareTo(Points); //to sort descending.
         }
@@ -14,7 +14,7 @@ public static class ComputerAI
     public static int DominoToPlay(out int whichOne, DominosRegularMainGameClass mainGame, GameBoardCP gameboard)
     {
         whichOne = 0; //until proven otherwise.
-        BasicList<MoveInfo> moveList = new();
+        BasicList<MoveInfo> moveList = [];
         mainGame.SingleInfo!.MainHandList.ForEach(thisDomino =>
         {
             for (int x = 1; x <= 2; x++)

@@ -1,4 +1,4 @@
-@inherits BasicGameView<CribbageMainViewModel>
+@inherits CascadingGameView<CribbageMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -36,7 +36,10 @@
             <LabelGridComponent DataContext="_vmData" Labels="_labels" />
         </div>
         <div>
-            <DeckOfCardsHandBlazor R="CribbageCard" Hand="_vmData.CribFrame" />
+            <StateContentView DataContext="_vmData.CribFrame">
+                <DeckOfCardsHandBlazor R="CribbageCard"
+                                       Hand="_vmData.CribFrame" />
+            </StateContentView>
         </div>
     </GridItem>
     <GridItem Column="2">

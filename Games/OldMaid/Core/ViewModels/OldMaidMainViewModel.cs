@@ -1,35 +1,28 @@
 namespace OldMaid.Core.ViewModels;
 [InstanceGame]
-public class OldMaidMainViewModel : BasicCardGamesVM<RegularSimpleCard>
-{
-    private readonly OldMaidMainGameClass _mainGame;
-    private readonly OldMaidVMData _model;
-    private readonly IGamePackageResolver _resolver;
-    private readonly IToast _toast;
-    public OldMaidMainViewModel(CommandContainer commandContainer,
+[UseStateChanged]
+public partial class OldMaidMainViewModel(CommandContainer commandContainer,
         OldMaidMainGameClass mainGame,
         OldMaidVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         OldMaidGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<RegularSimpleCard>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _resolver = resolver;
-        _toast = toast;
-        _model.Deck1.NeverAutoDisable = false;
-        _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
+        CreateCommands(CommandContainer);
+        viewModel.Deck1.NeverAutoDisable = false;
+        viewModel.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
         gameContainer.ShowOtherCardsAsync = LoadOpponentScreenAsync;
+        base.AdditionalInitialize();
     }
-    protected override async Task ActivateAsync()
+    partial void CreateCommands(CommandContainer container);
+    protected override async Task OpenAsync()
     {
-        await base.ActivateAsync();
-        if (_mainGame.SaveRoot.RemovePairs == false)
+        if (mainGame.SaveRoot.RemovePairs == false)
         {
             await LoadOpponentScreenAsync();
         }
@@ -40,19 +33,15 @@ public class OldMaidMainViewModel : BasicCardGamesVM<RegularSimpleCard>
         {
             return;
         }
-        OpponentScreen = _resolver.Resolve<OpponentCardsViewModel>();
-        await LoadScreenAsync(OpponentScreen);
+        OpponentScreen = Resolver.Resolve<OpponentCardsViewModel>();
     }
-    protected override async Task TryCloseAsync()
+    protected override Task CloseAsync()
     {
-        if (OpponentScreen != null)
-        {
-            await CloseSpecificChildAsync(OpponentScreen);
-            OpponentScreen = null;
-        }
-        await base.TryCloseAsync();
+        OpponentScreen = null;
+        return base.CloseAsync();
     }
-    public OpponentCardsViewModel? OpponentScreen { get; set; }
+    [StateProperty]
+    public partial OpponentCardsViewModel? OpponentScreen { get; set; }
     protected override bool CanEnableDeck()
     {
         return false;
@@ -63,21 +52,46 @@ public class OldMaidMainViewModel : BasicCardGamesVM<RegularSimpleCard>
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
-        var thisCol = _model.PlayerHand1!.ListSelectedObjects();
+        var thisCol = viewModel.PlayerHand1!.ListSelectedObjects();
         if (thisCol.Count != 2)
         {
-            _toast.ShowUserErrorToast("Must select 2 cards to throw away");
+            Toast.ShowUserErrorToast("Must select 2 cards to throw away");
             return;
         }
         if (OldMaidMainGameClass.IsValidMove(thisCol) == false)
         {
-            _toast.ShowUserErrorToast("Illegal move");
+            Toast.ShowUserErrorToast("Illegal move");
             return;
         }
-        await _mainGame.ProcessPlayAsync(thisCol.First().Deck, thisCol.Last().Deck);
+        await mainGame.ProcessPlayAsync(thisCol.First().Deck, thisCol.Last().Deck);
     }
     public override bool CanEnableAlways()
     {
         return true;
+    }
+    public bool CanRemoveAllPairs => mainGame.SaveRoot.RemovePairs;
+    [Command(EnumCommandCategory.Game)]
+    public async Task RemoveAllPairsAsync()
+    {
+        var pairs = new List<(int Card1, int Card2)>();
+
+        foreach (var group in viewModel.PlayerHand1.HandList
+            .GroupBy(card => card.Value))
+        {
+            var cards = group.ToList();
+
+            for (int i = 0; i + 1 < cards.Count; i += 2)
+            {
+                pairs.Add((cards[i].Deck, cards[i + 1].Deck));
+            }
+        }
+
+        viewModel.PlayerHand1.UnselectAllObjects();
+
+        foreach (var (Card1, Card2) in pairs)
+        {
+            await mainGame.ProcessPlayAsync(Card1, Card2, false);
+        }
+        await mainGame.ContinueTurnAsync();
     }
 }

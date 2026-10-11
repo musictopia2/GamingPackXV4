@@ -1,42 +1,32 @@
 ﻿namespace Payday.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class DealProcesses : IDealProcesses
-{
-    private readonly PaydayGameContainer _gameContainer;
-    private readonly PaydayVMData _model;
-    private readonly IToast _toast;
-    public DealProcesses(PaydayGameContainer gameContainer
+public class DealProcesses(PaydayGameContainer gameContainer
         , PaydayVMData model
-        , IToast toast)
-    {
-        _gameContainer = gameContainer;
-        _model = model;
-        _toast = toast;
-    }
+        , IToast toast) : IDealProcesses
+{
     async Task IDealProcesses.ChoseWhetherToPurchaseDealAsync()
     {
-        await _gameContainer.StartProcessPopUpAsync(_model);
-        if (_model.PopUpChosen == "Yes")
+        await gameContainer.StartProcessPopUpAsync(model);
+        if (model.PopUpChosen == "Yes")
         {
             //you chose to purchase deal.
-            var thisDeal = _model.DealPile!.GetCardInfo();
-            _gameContainer.SingleInfo!.ReduceFromPlayer(Math.Abs(thisDeal.Cost));
-            _gameContainer.SingleInfo!.Hand.Add(thisDeal);
-            _gameContainer.PopulateDeals(_model);
-            _gameContainer.Command.UpdateAll();
-            if (_gameContainer.Test.NoAnimations == false)
+            var thisDeal = model.DealPile!.GetCardInfo();
+            gameContainer.SingleInfo!.ReduceFromPlayer(Math.Abs(thisDeal.Cost));
+            gameContainer.SingleInfo!.Hand.Add(thisDeal);
+            gameContainer.PopulateDeals(model);
+            if (gameContainer.Test.NoAnimations == false)
             {
-                await _gameContainer.Delay!.DelaySeconds(2);
+                await gameContainer.Delay!.DelaySeconds(2);
             }
         }
         else
         {
-            _gameContainer.SaveRoot.OutCards.Add(_gameContainer.SaveRoot.CurrentDeal!);
+            gameContainer.SaveRoot.OutCards.Add(gameContainer.SaveRoot.CurrentDeal!);
         }
-        _gameContainer.SaveRoot.CurrentDeal = new DealCard();
-        _gameContainer.SaveRoot.GameStatus = EnumStatus.EndingTurn;
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.SaveRoot.CurrentDeal = new DealCard();
+        gameContainer.SaveRoot.GameStatus = EnumStatus.EndingTurn;
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     async Task IDealProcesses.ContinueDealProcessesAsync()
     {
@@ -44,41 +34,41 @@ public class DealProcesses : IDealProcesses
     }
     private async Task ContinueDealProcessesAsync()
     {
-        var thisDeal = _gameContainer.SaveRoot!.DealListLeft.First();
-        _gameContainer.SaveRoot.DealListLeft.RemoveFirstItem();
+        var thisDeal = gameContainer.SaveRoot!.DealListLeft.First();
+        gameContainer.SaveRoot.DealListLeft.RemoveFirstItem();
         string description = thisDeal.Business.Replace("|", " ");
-        _gameContainer.SaveRoot.Instructions = $"Do you want to buy {description} for {thisDeal.Cost.ToCurrency(0)}?  The value is {thisDeal.Value.ToCurrency(0)}";
-        _gameContainer.SaveRoot.CurrentDeal = thisDeal;
-        _model.DealPile!.AddCard(thisDeal);
-        _gameContainer.SaveRoot.GameStatus = EnumStatus.ChooseDeal;
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.SaveRoot.Instructions = $"Do you want to buy {description} for {thisDeal.Cost.ToCurrency(0)}?  The value is {thisDeal.Value.ToCurrency(0)}";
+        gameContainer.SaveRoot.CurrentDeal = thisDeal;
+        model.DealPile!.AddCard(thisDeal);
+        gameContainer.SaveRoot.GameStatus = EnumStatus.ChooseDeal;
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     void IDealProcesses.PopulateDeals()
     {
-        var tempList = _gameContainer.SingleInfo!.Hand.GetMailOrDealList<DealCard>(EnumCardCategory.Deal);
-        _model!.CurrentDealList!.HandList.ReplaceRange(tempList);
+        var tempList = gameContainer.SingleInfo!.Hand.GetMailOrDealList<DealCard>(EnumCardCategory.Deal);
+        model!.CurrentDealList!.HandList.ReplaceRange(tempList);
     }
     async Task IDealProcesses.ProcessDealAsync(bool isYardSale)
     {
         if (isYardSale == true)
         {
-            decimal yardSale = _model!.Cup!.TotalDiceValue * 100;
-            _gameContainer.SingleInfo!.ReduceFromPlayer(yardSale);
-            var thisDeal = _gameContainer.SaveRoot!.YardSaleDealCard;
-            _gameContainer.SingleInfo!.Hand.Add(thisDeal!);
-            _model.DealPile.AddCard(thisDeal!);
+            decimal yardSale = model!.Cup!.TotalDiceValue * 100;
+            gameContainer.SingleInfo!.ReduceFromPlayer(yardSale);
+            var thisDeal = gameContainer.SaveRoot!.YardSaleDealCard;
+            gameContainer.SingleInfo!.Hand.Add(thisDeal!);
+            model.DealPile.AddCard(thisDeal!);
             string business = thisDeal!.Business.Replace("|", " ");
-            _gameContainer.SaveRoot.Instructions = $"Yard sale.  You received {business} for {yardSale.ToCurrency(0)}";
-            _gameContainer.SaveRoot.GameStatus = EnumStatus.ViewYardSale;
-            _gameContainer.Command.UpdateAll();
-            if (_gameContainer.Test.NoAnimations == false)
+            gameContainer.SaveRoot.Instructions = $"Yard sale.  You received {business} for {yardSale.ToCurrency(0)}";
+            gameContainer.SaveRoot.GameStatus = EnumStatus.ViewYardSale;
+            gameContainer.Command.UpdateSpecificAction(PaydayActions.Yardsale);
+            if (gameContainer.Test.NoAnimations == false)
             {
-                await _gameContainer.Delay.DelaySeconds(2);
+                await gameContainer.Delay.DelaySeconds(2);
             }
-            _gameContainer.SaveRoot.GameStatus = EnumStatus.EndingTurn;
+            gameContainer.SaveRoot.GameStatus = EnumStatus.EndingTurn;
             return;
         }
-        if (_gameContainer.SaveRoot!.DealListLeft.Count == 0)
+        if (gameContainer.SaveRoot!.DealListLeft.Count == 0)
         {
             bool rets;
             rets = await ProcessShuffleDealsAsync();
@@ -86,9 +76,9 @@ public class DealProcesses : IDealProcesses
             {
                 return;
             }
-            if (_gameContainer.BasicData.MultiPlayer)
+            if (gameContainer.BasicData.MultiPlayer)
             {
-                await _gameContainer.Network!.SendAllAsync("continuedealprocesses");
+                await gameContainer.Network!.SendAllAsync("continuedealprocesses");
             }
         }
         await ContinueDealProcessesAsync();
@@ -99,14 +89,14 @@ public class DealProcesses : IDealProcesses
     }
     private async Task<bool> ProcessShuffleDealsAsync()
     {
-        if (_gameContainer.SaveRoot!.DealListLeft.Count != 0)
+        if (gameContainer.SaveRoot!.DealListLeft.Count != 0)
         {
             throw new CustomBasicException("Should not have ran the processes for reshuffling because not needed");
         }
-        bool rets = _gameContainer.ShouldReshuffle;
+        bool rets = gameContainer.ShouldReshuffle;
         if (rets == false)
         {
-            _gameContainer.Network!.IsEnabled = true;
+            gameContainer.Network!.IsEnabled = true;
             return false;
         }
         await ReshuffleDealsAsync();
@@ -114,19 +104,19 @@ public class DealProcesses : IDealProcesses
     }
     private async Task ReshuffleDealsAsync()
     {
-        var thisList = _gameContainer.SaveRoot!.OutCards.GetMailOrDealList<DealCard>(EnumCardCategory.Deal);
+        var thisList = gameContainer.SaveRoot!.OutCards.GetMailOrDealList<DealCard>(EnumCardCategory.Deal);
         thisList.ShuffleList();
-        if (_gameContainer.BasicData!.MultiPlayer == true)
+        if (gameContainer.BasicData!.MultiPlayer == true)
         {
-            await _gameContainer.Network!.SendAllAsync("reshuffledeallist", thisList.GetDeckListFromObjectList());
+            await gameContainer.Network!.SendAllAsync("reshuffledeallist", thisList.GetDeckListFromObjectList());
         }
         ReshuffleDeals(thisList);
     }
     private void ReshuffleDeals(DeckRegularDict<DealCard> list)
     {
-        _toast.ShowInfoToast("Deal is being reshuffled");
-        _gameContainer.SaveRoot!.DealListLeft = list;
-        _gameContainer.SaveRoot.OutCards.RemoveAllOnly(items => items.Deck <= 24);
+        toast.ShowInfoToast("Deal is being reshuffled");
+        gameContainer.SaveRoot!.DealListLeft = list;
+        gameContainer.SaveRoot.OutCards.RemoveAllOnly(items => items.Deck <= 24);
     }
     void IDealProcesses.ReshuffleDeals(DeckRegularDict<DealCard> list)
     {
@@ -134,22 +124,22 @@ public class DealProcesses : IDealProcesses
     }
     void IDealProcesses.SetUpDeal()
     {
-        var list = _gameContainer.Random.GenerateRandomList(24);
+        var list = gameContainer.Random.GenerateRandomList(24);
         if (list.Count != 24)
         {
             throw new CustomBasicException($"Must have 24 deal cards, not {list.Count} cards");
         }
-        if (_gameContainer.Test.AutoNearEndOfDeckBeginning)
+        if (gameContainer.Test.AutoNearEndOfDeckBeginning)
         {
             list = list.Take(4).ToBasicList();
         }
-        _gameContainer.SaveRoot!.DealListLeft.Clear();
+        gameContainer.SaveRoot!.DealListLeft.Clear();
         list.ForEach(index =>
         {
             DealCard thisCard = (DealCard)PaydayGameContainer.GetCard(index);
-            _gameContainer.SaveRoot.DealListLeft.Add(thisCard);
+            gameContainer.SaveRoot.DealListLeft.Add(thisCard);
         });
-        _gameContainer.SaveRoot.YardSaleDealCard = _gameContainer.SaveRoot.DealListLeft.First();
-        _gameContainer.SaveRoot.DealListLeft.RemoveFirstItem();
+        gameContainer.SaveRoot.YardSaleDealCard = gameContainer.SaveRoot.DealListLeft.First();
+        gameContainer.SaveRoot.DealListLeft.RemoveFirstItem();
     }
 }

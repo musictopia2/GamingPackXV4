@@ -1,5 +1,5 @@
 ﻿namespace BladesOfSteel.Core.CustomPiles;
-public class PlayerAttackCP : HandObservable<RegularSimpleCard>
+public class PlayerAttackCP(CommandContainer command) : HandObservable<RegularSimpleCard>(command)
 {
     private EnumPlayerCategory PlayerCategory { get; set; }
     protected override bool CanEverEnable()
@@ -9,10 +9,9 @@ public class PlayerAttackCP : HandObservable<RegularSimpleCard>
     public void LoadBoard(BladesOfSteelPlayerItem thisPlayer)
     {
         PlayerCategory = thisPlayer.PlayerCategory;
-        HandList = thisPlayer.AttackList;
+        ReplaceHandList(thisPlayer.AttackList);
         Maximum = 3;
         AutoSelect = EnumHandAutoType.None;
         Text = thisPlayer.NickName + " Attack";
     }
-    public PlayerAttackCP(CommandContainer command) : base(command) { }
 }

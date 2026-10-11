@@ -1,6 +1,13 @@
 ﻿namespace BowlingDiceGame.Core.Data;
-public class FrameInfoCP
+
+[UseStateChanged]
+public partial class FrameInfoCP
 {
-    public Dictionary<int, SectionInfoCP> SectionList { get; set; } = new();
-    public int Score { get; set; } = -1;
+    public Dictionary<int, SectionInfoCP> SectionList { get; set; } = [];
+    [StateProperty]
+    public partial int Score { get; set; } = -1;
+    public void Update()
+    {
+        StateChanged?.Invoke();
+    }
 }

@@ -3,7 +3,7 @@ public class TileShuffler : IDeckShuffler<TileInfo>, IScatterList<TileInfo>,
      IAdvancedDIContainer, ISimpleList<TileInfo>, IListShuffler<TileInfo>
 {
     private readonly BasicObjectShuffler<TileInfo> _thisShuffle;
-    private readonly DeckRegularDict<TileInfo> _objectList = new();
+    private readonly DeckRegularDict<TileInfo> _objectList = [];
     public int Count => _objectList.Count;
     public bool NeedsToRedo { get => _thisShuffle.NeedsToRedo; set => _thisShuffle.NeedsToRedo = value; }
     public IGamePackageResolver? MainContainer { get => _thisShuffle.MainContainer; set => _thisShuffle.MainContainer = value; }

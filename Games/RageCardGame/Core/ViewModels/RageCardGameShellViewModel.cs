@@ -1,6 +1,7 @@
 namespace RageCardGame.Core.ViewModels;
 public class RageCardGameShellViewModel : BasicTrickShellViewModel<RageCardGamePlayerItem>
 {
+    private EnumScreenCategory _category = EnumScreenCategory.None;
     public RageCardGameShellViewModel(IGamePackageResolver mainContainer,
         CommandContainer container,
         IGameInfo gameData,
@@ -17,54 +18,48 @@ public class RageCardGameShellViewModel : BasicTrickShellViewModel<RageCardGameP
         delgates.LoadBidScreenAsync = LoadBidScreenAsync;
         delgates.CloseColorScreenAsync = CloseColorScreenAsync;
         delgates.LoadColorScreenAsync = LoadColorScreenAsync;
+        delgates.GetCategory = GetCategory;
     }
-    protected override IMainScreen GetMainViewModel()
+    private EnumScreenCategory GetCategory() => _category;
+    private async Task LoadColorScreenAsync()
     {
-        var model = MainContainer.Resolve<RageCardGameMainViewModel>();
-        return model;
-    }
-    public async Task LoadColorScreenAsync()
-    {
-        if (ColorScreen != null)
+        if (_category == EnumScreenCategory.Color)
         {
             return;
         }
-        //await CloseMainAsync("Already closed main to load colors.  Rethink");
-        await CloseMainAsync("");
-        ColorScreen = MainContainer.Resolve<RageColorViewModel>();
-        await LoadScreenAsync(ColorScreen);
+        await CloseMainAsync();
+        _category = EnumScreenCategory.Color;
+        await OpenPromptAsync();
     }
     public async Task CloseColorScreenAsync()
     {
-        if (ColorScreen == null)
+        if (_category != EnumScreenCategory.Color)
         {
             return;
         }
-        await CloseSpecificChildAsync(ColorScreen);
-        ColorScreen = null;
-        await StartNewGameAsync();
+        ClosePrompt();
+        _category = EnumScreenCategory.None;
+        await LoadMainAsync();
     }
-    public async Task LoadBidScreenAsync()
+    private async Task LoadBidScreenAsync()
     {
-        if (BidScreen != null)
+        if (_category == EnumScreenCategory.Bid)
         {
             return;
         }
-        //await CloseMainAsync("Already closed main to load bidding.  Rethink");
-        await CloseMainAsync("");//try to make it ignore if main screen is closed out already.
-        BidScreen = MainContainer.Resolve<RageBiddingViewModel>();
-        await LoadScreenAsync(BidScreen);
+        await CloseMainAsync();
+        _category = EnumScreenCategory.Bid;
+        await OpenPromptAsync();
     }
-    public async Task CloseBidScreenAsync()
+    private async Task CloseBidScreenAsync()
     {
-        if (BidScreen == null)
+        if (_category != EnumScreenCategory.Bid)
         {
             return;
         }
-        await CloseSpecificChildAsync(BidScreen);
-        BidScreen = null;
-        await StartNewGameAsync();
+        ClosePrompt();
+        _category = EnumScreenCategory.None;
+
+        await LoadMainAsync();
     }
-    public RageColorViewModel? ColorScreen { get; set; }
-    public RageBiddingViewModel? BidScreen { get; set; }
 }

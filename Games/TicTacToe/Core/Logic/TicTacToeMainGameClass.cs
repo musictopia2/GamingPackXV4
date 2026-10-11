@@ -1,25 +1,20 @@
 namespace TicTacToe.Core.Logic;
 [SingletonGame]
-public class TicTacToeMainGameClass : BasicGameClass<TicTacToePlayerItem, TicTacToeSaveInfo>
+public class TicTacToeMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    TicTacToeVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    TicTacToeGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        ) : BasicGameClass<TicTacToePlayerItem, TicTacToeSaveInfo>(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     , ICommonMultiplayer<TicTacToePlayerItem, TicTacToeSaveInfo>
     , IMoveNM, ISerializable
 {
-    public TicTacToeMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        TicTacToeVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        TicTacToeGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
-    {
-        _command = command;
-    }
-    private readonly CommandContainer _command;
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -58,7 +53,7 @@ public class TicTacToeMainGameClass : BasicGameClass<TicTacToePlayerItem, TicTac
     }
     public override async Task EndTurnAsync()
     {
-        _command.ManuelFinish = true;
+        CommandContainer.ManuelFinish = true;
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }

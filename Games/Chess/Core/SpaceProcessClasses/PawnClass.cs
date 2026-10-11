@@ -10,7 +10,7 @@ public class PawnClass : IChessMan
     {
         SpaceCP? c;
         SpaceCP c2;
-        BasicList<CheckersChessVector> thisList = new();
+        BasicList<CheckersChessVector> thisList = [];
         if (IsReversed == false)
         {
             // diagonal left

@@ -4,8 +4,6 @@ public partial class KeeperBaseView<K>
 {
     [CascadingParameter]
     public CompleteContainerClass? CompleteContainer { get; set; }
-    [CascadingParameter]
-    public K? DataContext { get; set; }
     private string GetRowsText
     {
         get
@@ -42,7 +40,7 @@ public partial class KeeperBaseView<K>
             }
         }
     }
-    private BasicList<FluxxPlayerItem> _players = new();
+    private BasicList<FluxxPlayerItem> _players = [];
     protected override void OnInitialized()
     {
         _players = CompleteContainer!.GameContainer.PlayerList!.GetAllPlayersStartingWithSelf();

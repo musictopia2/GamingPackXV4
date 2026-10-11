@@ -1,7 +1,6 @@
 ﻿namespace FiveCrowns.Core.Logic;
-public class PhaseSet : SetInfo<EnumSuitList, EnumColorList, FiveCrownsCardInformation, SavedSet>
+public class PhaseSet(CommandContainer command) : SetInfo<EnumSuitList, EnumColorList, FiveCrownsCardInformation, SavedSet>(command)
 {
-    public PhaseSet(CommandContainer command) : base(command) { }
     public override void LoadSet(SavedSet payLoad)
     {
         HandList.ReplaceRange(payLoad.CardList);

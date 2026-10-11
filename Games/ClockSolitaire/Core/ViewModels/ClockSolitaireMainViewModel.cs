@@ -1,29 +1,28 @@
 namespace ClockSolitaire.Core.ViewModels;
 [InstanceGame]
-public partial class ClockSolitaireMainViewModel : ScreenViewModel,
-        IBasicEnableProcess,
-        IBlankGameVM,
-        IAggregatorContainer,
+[UseStateChanged]
+public partial class ClockSolitaireMainViewModel(CommandContainer commandContainer,
+
+    IEventAggregator aggregator,
+    IGamePackageResolver resolver,
+        BasicData basicData,
+        IToast toast
+        ) : IBasicEnableProcess,
+    IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>,
         IClockVM,
         IHandle<CardsLeftEventModel>
 {
-    private readonly BasicData _basicData;
-    private readonly IToast _toast;
-    private readonly ClockSolitaireMainGameClass _mainGame;
-    public int CardsLeft { get; set; }
-    public DeckObservablePile<SolitaireCard> DeckPile { get; set; }
+    private ClockSolitaireMainGameClass _mainGame = null!;
+    [StateProperty]
+    public partial int CardsLeft { get; set; }
+    public DeckObservablePile<SolitaireCard> DeckPile { get; set; } = null!;
     public ClockBoard? Clock1;
-    public ClockSolitaireMainViewModel(IEventAggregator aggregator,
-        CommandContainer commandContainer,
-        IGamePackageResolver resolver,
-        BasicData basicData,
-        IToast toast
-        ) : base(aggregator)
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    void IMainGameVM.Initialize()
     {
-        CommandContainer = commandContainer;
-        _basicData = basicData;
-        _toast = toast;
-        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
+        Subscribe();
+        commandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SolitaireCard>>();
         DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
@@ -32,7 +31,19 @@ public partial class ClockSolitaireMainViewModel : ScreenViewModel,
             return false; //i think.
         });
         _mainGame = resolver.ReplaceObject<ClockSolitaireMainGameClass>();
-        Clock1 = new ClockBoard(this, _mainGame, commandContainer, Aggregator);
+        Clock1 = new ClockBoard(this, _mainGame, commandContainer, aggregator);
+    }
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
+    {
+
+        basicData.GameDataLoading = true;
+        await _mainGame.NewGameAsync(this);
+        basicData.GameDataLoading = false;
+    }
+
+    async Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        Unsubscribe();
     }
     private async Task DeckPile_DeckClickedAsync()
     {
@@ -40,7 +51,7 @@ public partial class ClockSolitaireMainViewModel : ScreenViewModel,
     }
     private async void CommandContainer_ExecutingChanged()
     {
-        if (CommandContainer.IsExecuting)
+        if (commandContainer.IsExecuting)
         {
             return;
         }
@@ -49,24 +60,15 @@ public partial class ClockSolitaireMainViewModel : ScreenViewModel,
             await _mainGame.SaveStateAsync();
         }
     }
-    public CommandContainer CommandContainer { get; set; }
     public bool CanEnableBasics()
     {
         return true; //because maybe you can't enable it.
-    }
-    protected override async Task ActivateAsync()
-    {
-        _basicData.GameDataLoading = true;
-        await base.ActivateAsync();
-        await _mainGame.NewGameAsync(this);
-        CommandContainer.UpdateAll();
-        _basicData.GameDataLoading = false;
     }
     async Task IClockVM.ClockClickedAsync(int index)
     {
         if (Clock1!.IsValidMove(index) == false)
         {
-            _toast.ShowUserErrorToast("Illegal Move");
+            toast.ShowUserErrorToast("Illegal Move");
             return;
         }
         Clock1.MakeMove(index);
@@ -83,5 +85,5 @@ public partial class ClockSolitaireMainViewModel : ScreenViewModel,
     void IHandle<CardsLeftEventModel>.Handle(CardsLeftEventModel message)
     {
         CardsLeft = message.CardsLeft;
-    }
+    }   
 }

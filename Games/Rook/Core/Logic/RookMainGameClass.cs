@@ -228,7 +228,7 @@ public class RookMainGameClass
     {
         if (PlayerList.Count == 2)
         {
-            DeckRegularDict<RookCardInformation> dummyList = new();
+            DeckRegularDict<RookCardInformation> dummyList = [];
             12.Times(x =>
             {
                 dummyList.Add(_model!.Deck1!.DrawCard());
@@ -509,7 +509,6 @@ public class RookMainGameClass
                     cats.AddToString(thisPlayer.NickName, ",");
                 });
                 await ShowWinAsync(cats.GetInfo());
-                _command.UpdateAll(); //may fix the problem with not showing the ui for the win.
             }
             return;
         }

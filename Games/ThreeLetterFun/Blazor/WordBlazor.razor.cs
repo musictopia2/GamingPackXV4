@@ -13,7 +13,7 @@ public partial class WordBlazor
         }
         return cc1.DarkOrange.ToWebColor;
     }
-    private readonly BasicList<int> _lefts = new() { 3, 25, 47 };
+    private readonly BasicList<int> _lefts = [3, 25, 47];
     private async Task WordClickedAsync(EnumClickPosition position)
     {
         if (MainGame!.GameBoard.ObjectCommand!.CanExecute(DataContext) == false)

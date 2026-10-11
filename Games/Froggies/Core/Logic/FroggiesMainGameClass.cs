@@ -1,33 +1,26 @@
 namespace Froggies.Core.Logic;
 [SingletonGame]
-public class FroggiesMainGameClass : IAggregatorContainer
+public class FroggiesMainGameClass(
+    IEventAggregator aggregator,
+    IRandomGenerator rs,
+    IToast toast
+        ) : IAggregatorContainer
 {
-    private readonly IRandomGenerator _rs;
-    private readonly IToast _toast;
-    public FroggiesMainGameClass(
-        IEventAggregator aggregator,
-        IRandomGenerator rs,
-        IToast toast
-        )
-    {
-        Aggregator = aggregator;
-        _rs = rs;
-        _toast = toast;
-    }
     private Dictionary<string, LilyPadModel>? _col_Pads;
-    private Dictionary<string, LilyPadModel>? _col_TargetPads = new();
+    private Dictionary<string, LilyPadModel>? _col_TargetPads = [];
     private BasicList<LilyPadModel>? _col_RedoPads;
     private LilyPadModel? _obj_SelectedPad;
+
     public BasicList<LilyPadModel> GetCompleteLilyList()
     {
         if (_col_Pads is null)
         {
-            return new(); //try this.
+            return []; //try this.
         }
         return (from items in _col_Pads
                 select items.Value).ToBasicList();
     }
-    public IEventAggregator Aggregator { get; }
+    public IEventAggregator Aggregator { get; } = aggregator;
     public Task NewGameAsync(FroggiesMainViewModel model)
     {
         CreateLilyPads(model);
@@ -57,8 +50,8 @@ public class FroggiesMainGameClass : IAggregatorContainer
         int int_NewY2 = 0;
         bool bln_Pad1OK;
         bool bln_Pad2OK;
-        _col_Pads = new Dictionary<string, LilyPadModel>();
-        _col_TargetPads = new Dictionary<string, LilyPadModel>();
+        _col_Pads = [];
+        _col_TargetPads = [];
         _obj_SelectedPad = null;
         int_ColCount = 4;
         int_RowCount = 4;
@@ -129,7 +122,9 @@ public class FroggiesMainGameClass : IAggregatorContainer
                     {
                         obj_TempPad1 = _col_Pads[int_NewX + ", " + int_NewY];
                         if (!obj_TempPad1.HasFrog)
+                        {
                             bln_Pad1OK = true;
+                        }
                     }
                     else
                     {
@@ -141,7 +136,9 @@ public class FroggiesMainGameClass : IAggregatorContainer
                     {
                         obj_TempPad2 = _col_Pads[int_NewX2 + ", " + int_NewY2];
                         if (!obj_TempPad2.HasFrog)
+                        {
                             bln_Pad2OK = true;
+                        }
                     }
                     else
                     {
@@ -183,7 +180,7 @@ public class FroggiesMainGameClass : IAggregatorContainer
             if (int_TryCount >= 1000)
             {
                 _col_Pads.Clear();
-                _col_Pads = new Dictionary<string, LilyPadModel>();
+                _col_Pads = [];
                 obj_CurrentPad = new LilyPadModel(4, 4, true);
                 _col_Pads.Add(int_ColCount + ", " + int_RowCount, obj_CurrentPad);
                 int_FrogCount = 1;
@@ -201,7 +198,7 @@ public class FroggiesMainGameClass : IAggregatorContainer
         }
         else
         {
-            int_RandomInteger = _rs.GetRandomNumber(int_Span, 0); //because its 0 based.  try this way.  taking a risk.  hopefully this way works.
+            int_RandomInteger = rs.GetRandomNumber(int_Span, 0); //because its 0 based.  try this way.  taking a risk.  hopefully this way works.
         }
         return int_RandomInteger;
     }
@@ -334,7 +331,7 @@ public class FroggiesMainGameClass : IAggregatorContainer
         _obj_SelectedPad.IsTarget = false;
         obj_Target.HasFrog = true;
         _obj_SelectedPad = null;
-        _col_TargetPads = new Dictionary<string, LilyPadModel>();
+        _col_TargetPads = [];
         //await NeedsToDrawAsync();
         model.MovesLeft = NumberOfMoves();
         // *** Check if won
@@ -345,7 +342,7 @@ public class FroggiesMainGameClass : IAggregatorContainer
         }
         else if (MovesLeft() == 0)
         {
-            _toast.ShowWarningToast("No Moves Left");
+            toast.ShowWarningToast("No Moves Left");
             await NewGameAsync(model);
             model.MovesLeft = NumberOfMoves();
         }
@@ -371,7 +368,7 @@ public class FroggiesMainGameClass : IAggregatorContainer
             await LeapFrogAsync(obj_TempPad, model);
             return;
         }
-        _col_TargetPads = new Dictionary<string, LilyPadModel>();
+        _col_TargetPads = [];
         // *** Find the target pads
         if (!(_obj_SelectedPad == null))
         {
@@ -440,7 +437,7 @@ public class FroggiesMainGameClass : IAggregatorContainer
     }
     private void CopyToRedo()
     {
-        _col_RedoPads = new();
+        _col_RedoPads = [];
         _col_RedoPads.Clear();
         IEnumerator enum_Pads;
         LilyPadModel obj_TempPad;
@@ -469,7 +466,7 @@ public class FroggiesMainGameClass : IAggregatorContainer
             obj_TempPad = (LilyPadModel)enum_Pads.Current; //hopefully this works.
             _col_Pads.Add(obj_TempPad.Column + ", " + obj_TempPad.Row, new LilyPadModel(obj_TempPad.Column, obj_TempPad.Row, obj_TempPad.StartedWithFrog));
         }
-        _col_TargetPads = new Dictionary<string, LilyPadModel>();
+        _col_TargetPads = [];
         _obj_SelectedPad = null;
         return Task.CompletedTask;
     }

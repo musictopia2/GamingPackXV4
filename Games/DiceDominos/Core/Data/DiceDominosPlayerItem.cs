@@ -3,5 +3,5 @@ namespace DiceDominos.Core.Data;
 public partial class DiceDominosPlayerItem : SimplePlayer
 {
     [ScoreColumn]
-    public int DominosWon { get; set; }
+    public partial int DominosWon { get; set; }
 }

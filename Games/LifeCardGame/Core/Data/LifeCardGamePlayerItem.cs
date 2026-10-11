@@ -3,7 +3,7 @@ namespace LifeCardGame.Core.Data;
 public partial class LifeCardGamePlayerItem : PlayerSingleHand<LifeCardGameCardInformation>
 {
     [ScoreColumn]
-    public int Points { get; set; }
+    public partial int Points { get; set; }
     public string LifeString { get; set; } = "";
     [JsonIgnore]
     public LifeStoryHand? LifeStory { get; set; }

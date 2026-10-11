@@ -1,4 +1,4 @@
-@inherits BasicGameView<FlinchMainViewModel>
+@inherits CascadingGameView<FlinchMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -27,8 +27,6 @@
         <HandBlazor Hand="_vmData.PlayerHand1" />
     </div>
     <div>
-        <ParentControl VM="PlayerPilesViewModel">
-            <PlayerPilesView />
-        </ParentControl>
+        <PlayerPilesView DataContext="DataContext.PlayerPilesScreen" />
     </div>
 </CascadingValue>

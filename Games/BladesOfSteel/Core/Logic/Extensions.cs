@@ -23,14 +23,14 @@ public static class Extensions
                 mins = 1;
             }
             int x;
-            BasicList<int> firstList = new();
+            BasicList<int> firstList = [];
             var loopTo = maxs;
             for (x = mins; x <= loopTo; x++)
             {
                 firstList.Add(x);
             }
             var newList = thisList.Where(items => items.Color == whatColor).ToBasicList();
-            BasicList<BasicList<RegularSimpleCard>> fullList = new();
+            BasicList<BasicList<RegularSimpleCard>> fullList = [];
             firstList.ForEach(y =>
             {
                 var thisCombo = newList.GetCombinations(y);

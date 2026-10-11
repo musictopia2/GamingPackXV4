@@ -4,9 +4,9 @@ namespace BowlingDiceGame.Core.Data;
 public partial class BowlingDiceGameVMData : IViewModelData
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     private BowlingDiceGameSaveInfo? _saves;
     private void GetSaves()
     {
@@ -14,7 +14,7 @@ public partial class BowlingDiceGameVMData : IViewModelData
         {
             return;
         }
-        _saves = aa1.Resolver!.Resolve<BowlingDiceGameSaveInfo>();
+        _saves = Resolver!.Resolve<BowlingDiceGameSaveInfo>();
     }
     public BowlingDiceGameVMData()
     {
@@ -43,5 +43,9 @@ public partial class BowlingDiceGameVMData : IViewModelData
             GetSaves();
             return _saves!.WhatFrame;
         }
+    }
+    public void UpdateFrame()
+    {
+        OnLabelValueChanged(nameof(WhatFrame));
     }
 }

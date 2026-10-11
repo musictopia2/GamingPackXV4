@@ -1,56 +1,47 @@
 ﻿namespace Sorry.Core.Logic;
-
 [SingletonGame]
 [AutoReset]
-public class GameBoardProcesses
+public class GameBoardProcesses(SorryGameContainer gameContainer, GameBoardGraphicsCP graphicsBoard, SorryVMData model)
 {
-    private readonly SorryGameContainer _gameContainer;
-    private readonly GameBoardGraphicsCP _graphicsBoard;
-    private readonly SorryVMData _model;
     private Dictionary<int, SpaceInfo>? _spaceList;
-    public GameBoardProcesses(SorryGameContainer gameContainer, GameBoardGraphicsCP graphicsBoard, SorryVMData model)
-    {
-        _gameContainer = gameContainer;
-        _graphicsBoard = graphicsBoard;
-        _model = model;
-    }
+
     private BasicList<MoveInfo> MoveList
     {
         get
         {
-            return _gameContainer.SaveRoot!.MoveList;
+            return gameContainer.SaveRoot!.MoveList;
         }
         set
         {
-            _gameContainer.SaveRoot!.MoveList = value;
+            gameContainer.SaveRoot!.MoveList = value;
         }
     }
     private EnumColorChoice OurColor
     {
         get
         {
-            return _gameContainer.SaveRoot!.OurColor;
+            return gameContainer.SaveRoot!.OurColor;
         }
         set
         {
-            _gameContainer.SaveRoot!.OurColor = value;
+            gameContainer.SaveRoot!.OurColor = value;
         }
     }
     private int PreviousPiece
     {
         get
         {
-            return _gameContainer.SaveRoot!.PreviousPiece;
+            return gameContainer.SaveRoot!.PreviousPiece;
         }
         set
         {
-            _gameContainer.SaveRoot!.PreviousPiece = value;
+            gameContainer.SaveRoot!.PreviousPiece = value;
         }
     }
     //this is to help on testing.
     public int PiecesAtStartForCurrentPlayer()
     {
-        int currentPlayer = _gameContainer.SingleInfo!.Id;
+        int currentPlayer = gameContainer.SingleInfo!.Id;
         return _spaceList!.Count(x => x.Value.Player == currentPlayer && x.Value.WhatBoard == EnumBoardStatus.IsStart);
     }
     //if i cannot get this to pass, i have no hope anymore to have unit tests to prevent regression bugs.
@@ -58,22 +49,22 @@ public class GameBoardProcesses
 
     public void StartTurn()
     {
-        OurColor = _gameContainer.SingleInfo!.Color;
-        _gameContainer.MovePlayer = 0;
-        _gameContainer.SaveRoot!.MovesMade = 0;
-        _gameContainer.SaveRoot.SpacesLeft = 0;
-        MoveList = new();
-        _gameContainer.SaveRoot.HighlightList = new();
+        OurColor = gameContainer.SingleInfo!.Color;
+        gameContainer.MovePlayer = 0;
+        gameContainer.SaveRoot!.MovesMade = 0;
+        gameContainer.SaveRoot.SpacesLeft = 0;
+        MoveList = [];
+        gameContainer.SaveRoot.HighlightList = [];
         PreviousPiece = 0;
-        _gameContainer.SaveRoot.DidDraw = false;
-        _gameContainer.SaveRoot.CurrentCard = new CardInfo();
-        _gameContainer.SaveRoot.PreviousSplit = 0;
-        OurColor = _gameContainer.SingleInfo.Color;
-        _gameContainer.RepaintBoard();
+        gameContainer.SaveRoot.DidDraw = false;
+        gameContainer.SaveRoot.CurrentCard = new CardInfo();
+        gameContainer.SaveRoot.PreviousSplit = 0;
+        OurColor = gameContainer.SingleInfo.Color;
+        gameContainer.RepaintBoard();
     }
     public void LoadBoard()
     {
-        _gameContainer.Animates.LongestTravelTime = 200;
+        gameContainer.Animates.LongestTravelTime = 200;
         PopulateSpaces();
     }
     private void PopulateSpaces()
@@ -82,7 +73,7 @@ public class GameBoardProcesses
         {
             return;
         }
-        _spaceList = new System.Collections.Generic.Dictionary<int, SpaceInfo>();
+        _spaceList = [];
         int x;
         int y;
         int q = 0;
@@ -264,7 +255,7 @@ public class GameBoardProcesses
         {
             thisSpace.Player = 0;
         }
-        _gameContainer.PlayerList!.ForEach(thisPlayer =>
+        gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.PieceList.ForEach(thisPiece =>
             {
@@ -289,25 +280,25 @@ public class GameBoardProcesses
     }
     private async Task NoMovesEndTurnAsync()
     {
-        _gameContainer.SaveRoot!.Instructions = "No moves.  End turn.";
-        if (_gameContainer.Test!.NoAnimations == false)
+        gameContainer.SaveRoot!.Instructions = "No moves.  End turn.";
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(.5);
+            await gameContainer.Delay!.DelaySeconds(.5);
         }
-        await _gameContainer.EndTurnAsync!.Invoke();
+        await gameContainer.EndTurnAsync!.Invoke();
     }
     private async Task DoEndTurnAsync()
     {
-        _gameContainer.SaveRoot!.Instructions = "Move was made successfully";
-        if (_gameContainer.Test!.NoAnimations == false)
+        gameContainer.SaveRoot!.Instructions = "Move was made successfully";
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(.5);
+            await gameContainer.Delay!.DelaySeconds(.5);
         }
-        await _gameContainer.EndTurnAsync!.Invoke();
+        await gameContainer.EndTurnAsync!.Invoke();
     }
     private int FindPlayer(EnumColorChoice thisColor)
     {
-        var thisPlayer = _gameContainer.PlayerList!.SingleOrDefault(items => items.Color == thisColor);
+        var thisPlayer = gameContainer.PlayerList!.SingleOrDefault(items => items.Color == thisColor);
         if (thisPlayer == null)
         {
             return 0;
@@ -316,7 +307,7 @@ public class GameBoardProcesses
     }
     private void ErrorCheckPlayers()
     {
-        _gameContainer.PlayerList!.ForEach(thisPlayer =>
+        gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
             if (thisPlayer.HowManyHomePieces + thisPlayer.PieceList.Count != 4)
             {
@@ -336,7 +327,7 @@ public class GameBoardProcesses
         var tempList = _spaceList!.Values.Where(item => item.Player != 0).ToBasicList();
         tempList.ForEach(item =>
         {
-            SorryPlayerItem player = _gameContainer.PlayerList[item.Player];
+            SorryPlayerItem player = gameContainer.PlayerList[item.Player];
             if (player.PieceList.Any(piece => piece == item.Index) == false)
             {
                 throw new CustomBasicException("Player does not have the piece that is in the space list.  Possible slide problem.  Rethink");
@@ -345,7 +336,7 @@ public class GameBoardProcesses
     }
     public void ClearBoard()
     {
-        _gameContainer.PlayerList!.ForEach(thisPlayer =>
+        gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.PieceList.Clear();
             thisPlayer.HowManyHomePieces = 0;
@@ -357,7 +348,7 @@ public class GameBoardProcesses
                 thisSpace.Player = FindPlayer(thisSpace.ColorOwner);
                 if (thisSpace.Player > 0)
                 {
-                    var tempPlayer = _gameContainer.PlayerList[thisSpace.Player];
+                    var tempPlayer = gameContainer.PlayerList[thisSpace.Player];
                     tempPlayer.PieceList.Add(thisSpace.Index);
                 }
             }
@@ -367,27 +358,27 @@ public class GameBoardProcesses
             }
         }
         ErrorCheckPlayers();
-        _gameContainer.RepaintBoard();
+        gameContainer.RepaintBoard();
     }
     private bool IsGameOver
     {
         get
         {
-            if (_gameContainer.SingleInfo!.HowManyHomePieces == 4)
+            if (gameContainer.SingleInfo!.HowManyHomePieces == 4)
             {
                 return true;
             }
-            if (_gameContainer.SingleInfo.HowManyHomePieces > 4)
+            if (gameContainer.SingleInfo.HowManyHomePieces > 4)
             {
                 throw new CustomBasicException("Can never have more than 4 pieces at home.  Rethink");
             }
             return false;
         }
     }
-    private bool OtherPlayersOnBoard => _spaceList!.Values.Any(items => items.WhatBoard == EnumBoardStatus.OnBoard && items.Player > 0 && items.Player != _gameContainer.WhoTurn);
+    private bool OtherPlayersOnBoard => _spaceList!.Values.Any(items => items.WhatBoard == EnumBoardStatus.OnBoard && items.Player > 0 && items.Player != gameContainer.WhoTurn);
     private BasicList<SpaceInfo> OpponentSpaces()
     {
-        return _spaceList!.Values.Where(items => items.WhatBoard == EnumBoardStatus.OnBoard && items.Player > 0 && items.Player != _gameContainer.WhoTurn).ToBasicList();
+        return _spaceList!.Values.Where(items => items.WhatBoard == EnumBoardStatus.OnBoard && items.Player > 0 && items.Player != gameContainer.WhoTurn).ToBasicList();
     }
     private int CalculateSafety(SpaceInfo thisSpace, int lefts, bool willStart) //well see.
     {
@@ -481,7 +472,7 @@ public class GameBoardProcesses
     }
     private int FindStartSpace(int whatPlayer)
     {
-        var tempPlayer = _gameContainer.PlayerList![whatPlayer];
+        var tempPlayer = gameContainer.PlayerList![whatPlayer];
         var thisCol = _spaceList!.Values.Where(items => items.WhatBoard == EnumBoardStatus.IsStart && items.ColorOwner == tempPlayer.Color && items.Player == 0).ToBasicList();
         if (thisCol.Count == 0)
         {
@@ -492,15 +483,15 @@ public class GameBoardProcesses
     private async Task BackToStartAsync(int oldSpace, int oldPlayer)
     {
         int thisStart = FindStartSpace(oldPlayer);
-        _gameContainer.PlayerGoingBack = oldPlayer;
-        _gameContainer.Animates.LocationFrom = _graphicsBoard.LocationOfSpace(oldSpace);
-        _gameContainer.Animates.LocationTo = _graphicsBoard.LocationOfSpace(thisStart);
-        var tempPlayer = _gameContainer.PlayerList![oldPlayer];
+        gameContainer.PlayerGoingBack = oldPlayer;
+        gameContainer.Animates.LocationFrom = graphicsBoard.LocationOfSpace(oldSpace);
+        gameContainer.Animates.LocationTo = graphicsBoard.LocationOfSpace(thisStart);
+        var tempPlayer = gameContainer.PlayerList![oldPlayer];
         tempPlayer.PieceList.RemoveSpecificItem(oldSpace);
-        _gameContainer.RepaintBoard();
+        gameContainer.RepaintBoard();
         await Task.Delay(10);
-        await _gameContainer.Animates.DoAnimateAsync();
-        _gameContainer.PlayerGoingBack = 0;
+        await gameContainer.Animates.DoAnimateAsync();
+        gameContainer.PlayerGoingBack = 0;
         var thisSpace = _spaceList![thisStart];
         thisSpace.Player = oldPlayer;
         tempPlayer.PieceList.Add(thisStart); //you are now at start.
@@ -508,11 +499,11 @@ public class GameBoardProcesses
         {
             throw new CustomBasicException("After going back to start, needs 4 pieces");
         }
-        _gameContainer.RepaintBoard();
+        gameContainer.RepaintBoard();
     }
     private async Task SlideAnimationAsync(int startSpace, SpaceInfo endSpace, int slidePlayer)
     {
-        var playerObj = _gameContainer.PlayerList![slidePlayer];
+        var playerObj = gameContainer.PlayerList![slidePlayer];
         playerObj.PieceList.RemoveSpecificItem(startSpace);
         SpaceInfo oldSpace = _spaceList![startSpace];
         if (oldSpace.Player == 0)
@@ -522,19 +513,19 @@ public class GameBoardProcesses
         int tempPlayer = oldSpace.Player;
         oldSpace.Player = 0;
         int newPlayer = endSpace.Player;
-        _gameContainer.PlayerGoingBack = slidePlayer;
-        _gameContainer.Animates.LocationFrom = _graphicsBoard.LocationOfSpace(oldSpace.Index);
-        _gameContainer.Animates.LocationTo = _graphicsBoard.LocationOfSpace(endSpace.Index);
-        _gameContainer.RepaintBoard();
-        await _gameContainer.Animates.DoAnimateAsync();
-        _gameContainer.PlayerGoingBack = 0;
+        gameContainer.PlayerGoingBack = slidePlayer;
+        gameContainer.Animates.LocationFrom = graphicsBoard.LocationOfSpace(oldSpace.Index);
+        gameContainer.Animates.LocationTo = graphicsBoard.LocationOfSpace(endSpace.Index);
+        gameContainer.RepaintBoard();
+        await gameContainer.Animates.DoAnimateAsync();
+        gameContainer.PlayerGoingBack = 0;
         playerObj.PieceList.Add(endSpace.Index);
         if (newPlayer != 0)
         {
             await BackToStartAsync(endSpace.Index, newPlayer);
         }
         endSpace.Player = tempPlayer;
-        _gameContainer.RepaintBoard();
+        gameContainer.RepaintBoard();
     }
     private int CalculateNewSpace(SpaceInfo thisSpace, int numberToUse, bool fromValids)
     {
@@ -594,7 +585,7 @@ public class GameBoardProcesses
                 return CalculateSafety(thisSpace, numberToUse - x, false);
             }
             nextSpace = thisCol.Single(items => items.SpaceNumber == newNum);
-            if (nextSpace.Player == _gameContainer.WhoTurn && x == finalNums && fromValids)
+            if (nextSpace.Player == gameContainer.WhoTurn && x == finalNums && fromValids)
             {
                 return 0;
             }
@@ -604,13 +595,13 @@ public class GameBoardProcesses
     }
     private BasicList<SpaceInfo> OnBoardList()
     {
-        return _spaceList!.Values.Where(items => items.WhatBoard != EnumBoardStatus.IsStart && items.Player == _gameContainer.WhoTurn).ToBasicList();
+        return _spaceList!.Values.Where(items => items.WhatBoard != EnumBoardStatus.IsStart && items.Player == gameContainer.WhoTurn).ToBasicList();
     }
     private async Task AnimateTradeAsync(int spaceFrom, int spaceTo, int oldPlayer, int newPlayer, bool removeOld = true)
     {
-        _gameContainer.PlayerGoingBack = oldPlayer;
-        _gameContainer.Animates.LocationFrom = _graphicsBoard.LocationOfSpace(spaceFrom);
-        _gameContainer.Animates.LocationTo = _graphicsBoard.LocationOfSpace(spaceTo);
+        gameContainer.PlayerGoingBack = oldPlayer;
+        gameContainer.Animates.LocationFrom = graphicsBoard.LocationOfSpace(spaceFrom);
+        gameContainer.Animates.LocationTo = graphicsBoard.LocationOfSpace(spaceTo);
         SorryPlayerItem playerObj;
         if (removeOld)
         {
@@ -619,22 +610,22 @@ public class GameBoardProcesses
             {
                 throw new CustomBasicException("No player there");
             }
-            playerObj = _gameContainer.PlayerList![oldPlayer];
+            playerObj = gameContainer.PlayerList![oldPlayer];
             playerObj.PieceList.RemoveSpecificItem(oldSpace.Index);
             oldSpace.Player = 0;
         }
-        _gameContainer.RepaintBoard();
-        await _gameContainer.Animates.DoAnimateAsync();
-        _gameContainer.PlayerGoingBack = 0;
+        gameContainer.RepaintBoard();
+        await gameContainer.Animates.DoAnimateAsync();
+        gameContainer.PlayerGoingBack = 0;
         var newSpace = _spaceList![spaceTo];
         newSpace.Player = newPlayer;
-        playerObj = _gameContainer.PlayerList![newPlayer];
+        playerObj = gameContainer.PlayerList![newPlayer];
         playerObj.PieceList.Add(newSpace.Index);
     }
     private async Task MoveSlideAsync(SpaceInfo newSpace, int newPlayer)
     {
-        var tempPlayer = _gameContainer.PlayerList![newPlayer];
-        _gameContainer.RepaintBoard();
+        var tempPlayer = gameContainer.PlayerList![newPlayer];
+        gameContainer.RepaintBoard();
         if (newSpace.SpaceDesc != EnumSpaceType.StartSlide)
         {
             return;
@@ -643,7 +634,7 @@ public class GameBoardProcesses
         {
             return;
         }
-        BasicList<SpaceInfo> slideList = new();
+        BasicList<SpaceInfo> slideList = [];
         SpaceInfo tempSpace;
         int x = newSpace.Index;
         do
@@ -671,7 +662,7 @@ public class GameBoardProcesses
                 finSpace.Player = 0;
             }
         });
-        _gameContainer.RepaintBoard();
+        gameContainer.RepaintBoard();
     }
 
     private bool SlideWouldRemovePiece(
@@ -749,7 +740,7 @@ public class GameBoardProcesses
         }
 
         EnumColorChoice currentColor =
-            _gameContainer.SingleInfo!.Color;
+            gameContainer.SingleInfo!.Color;
 
         // You do not slide on your own color.
         if (destinationSpace.ColorOwner == currentColor)
@@ -781,7 +772,7 @@ public class GameBoardProcesses
 
     private async Task MoveSlideAsync(SpaceInfo newSpace)
     {
-        await MoveSlideAsync(newSpace, _gameContainer.WhoTurn);
+        await MoveSlideAsync(newSpace, gameContainer.WhoTurn);
     }
     private async Task TradePlacesAsync(int spaceFrom, int spaceTo)
     {
@@ -791,12 +782,12 @@ public class GameBoardProcesses
         int lastPlayer = lastSpace.Player;
         int nextPlayer = nextSpace.Player;
         await AnimateTradeAsync(lastSpace.Index, spaceTo, lastPlayer, lastPlayer);
-        var thisPlayer = _gameContainer.PlayerList![nextPlayer];
+        var thisPlayer = gameContainer.PlayerList![nextPlayer];
         thisPlayer.PieceList.RemoveSpecificItem(spaceTo);
-        _gameContainer.RepaintBoard();
-        if (_gameContainer.Test!.NoAnimations == false)
+        gameContainer.RepaintBoard();
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelayMilli(200);
+            await gameContainer.Delay!.DelayMilli(200);
         }
         await AnimateTradeAsync(nextSpace.Index, spaceFrom, nextPlayer, nextPlayer, false);
         await MoveSlideAsync(lastSpace);
@@ -807,7 +798,7 @@ public class GameBoardProcesses
     {
         var thisSpace = _spaceList![thisMove.SpaceTo];
         int player = thisSpace.Player;
-        await AnimateTradeAsync(thisMove.SpaceFrom, thisMove.SpaceTo, _gameContainer.WhoTurn, _gameContainer.WhoTurn);
+        await AnimateTradeAsync(thisMove.SpaceFrom, thisMove.SpaceTo, gameContainer.WhoTurn, gameContainer.WhoTurn);
         await BackToStartAsync(thisMove.SpaceTo, player);
         PreviousPiece = 0;
         await MoveSlideAsync(thisSpace);
@@ -848,26 +839,26 @@ public class GameBoardProcesses
     }
     private async Task EndMoveAsync()
     {
-        _gameContainer.SaveRoot!.SpacesLeft = 0;
-        _gameContainer.RepaintBoard();
+        gameContainer.SaveRoot!.SpacesLeft = 0;
+        gameContainer.RepaintBoard();
         ErrorCheckPlayers();
-        if (_gameContainer.StartNewTurnAsync == null)
+        if (gameContainer.StartNewTurnAsync == null)
         {
             throw new CustomBasicException("Nobody is handling the startnewturn.  Rethink");
         }
-        if (IsGameOver || _gameContainer.Test.ImmediatelyEndGame)
+        if (IsGameOver || gameContainer.Test.ImmediatelyEndGame)
         {
-            await _gameContainer.ShowWinAsync!.Invoke();
+            await gameContainer.ShowWinAsync!.Invoke();
             return;
         }
-        if (_gameContainer.SaveRoot!.CurrentCard!.AnotherTurn)
+        if (gameContainer.SaveRoot!.CurrentCard!.AnotherTurn)
         {
-            _gameContainer.SaveRoot.Instructions = "Will get another turn";
-            if (_gameContainer.Test!.NoAnimations == false)
+            gameContainer.SaveRoot.Instructions = "Will get another turn";
+            if (gameContainer.Test!.NoAnimations == false)
             {
-                await _gameContainer.Delay!.DelaySeconds(.5);
+                await gameContainer.Delay!.DelaySeconds(.5);
             }
-            await _gameContainer.StartNewTurnAsync();
+            await gameContainer.StartNewTurnAsync();
             return;
         }
         await DoEndTurnAsync();
@@ -883,7 +874,7 @@ public class GameBoardProcesses
         {
             newSpace = new SpaceInfo();
         }
-        _gameContainer.SingleInfo!.PieceList.RemoveSpecificItem(thisMove.SpaceFrom);
+        gameContainer.SingleInfo!.PieceList.RemoveSpecificItem(thisMove.SpaceFrom);
         thisSpace.Player = 0;
         if (thisSpace.WhatBoard == EnumBoardStatus.IsStart)
         {
@@ -891,13 +882,13 @@ public class GameBoardProcesses
             {
                 await BackToStartAsync(newSpace.Index, newSpace.Player);
             }
-            newSpace.Player = _gameContainer.WhoTurn;
-            _gameContainer.SingleInfo.PieceList.Add(newSpace.Index);
-            _gameContainer.RepaintBoard();
+            newSpace.Player = gameContainer.WhoTurn;
+            gameContainer.SingleInfo.PieceList.Add(newSpace.Index);
+            gameContainer.RepaintBoard();
             return;
         }
         bool isBackwards = howMany < 0;
-        _gameContainer.RepaintBoard();
+        gameContainer.RepaintBoard();
         await Task.Delay(10);
         int newNum;
         int nextMove;
@@ -912,30 +903,30 @@ public class GameBoardProcesses
                 newNum = x;
             }
             nextMove = CalculateNewSpace(thisSpace, newNum, false);
-            _gameContainer.MovePlayer = nextMove;
-            _gameContainer.RepaintBoard();
-            if (_gameContainer.Test!.NoAnimations == false)
+            gameContainer.MovePlayer = nextMove;
+            gameContainer.RepaintBoard();
+            if (gameContainer.Test!.NoAnimations == false)
             {
-                await _gameContainer.Delay!.DelaySeconds(.1);
+                await gameContainer.Delay!.DelaySeconds(.1);
             }
         }
-        _gameContainer.MovePlayer = 0;
+        gameContainer.MovePlayer = 0;
         if (newSpace.Player != 0)
         {
-            _gameContainer.SingleInfo.PieceList.Add(newSpace.Index);
+            gameContainer.SingleInfo.PieceList.Add(newSpace.Index);
             await BackToStartAsync(newSpace.Index, newSpace.Player);
-            newSpace.Player = _gameContainer.WhoTurn;
+            newSpace.Player = gameContainer.WhoTurn;
         }
         else
         {
-            newSpace.Player = _gameContainer.WhoTurn;
+            newSpace.Player = gameContainer.WhoTurn;
             if (newSpace.Index > 0)
             {
-                _gameContainer.SingleInfo.PieceList.Add(newSpace.Index);
+                gameContainer.SingleInfo.PieceList.Add(newSpace.Index);
             }
             else
             {
-                _gameContainer.SingleInfo.HowManyHomePieces++;
+                gameContainer.SingleInfo.HowManyHomePieces++;
             }
         }
         if (newSpace.Index > 0)
@@ -947,7 +938,7 @@ public class GameBoardProcesses
     private async Task LastMovesAsync(MoveInfo thisMove)
     {
         int howMany = 7 - thisMove.NumberUsed;
-        MoveList = new();
+        MoveList = [];
         var tempList = OnBoardList();
         int nextSpace1;
         SpaceInfo newSpace;
@@ -977,7 +968,7 @@ public class GameBoardProcesses
                 }
                 if (newSpace.Player != thisSpace.Player || newSpace.Player == 0)
                 {
-                    if (thisSpace.Index != _gameContainer!.SaveRoot!.PreviousSplit)
+                    if (thisSpace.Index != gameContainer!.SaveRoot!.PreviousSplit)
                     {
                         output = new();
                         output.SpaceFrom = thisSpace.Index;
@@ -999,23 +990,23 @@ public class GameBoardProcesses
         {
             throw new CustomBasicException("There are no moves for part 2 of the split.  Find out what happened");
         }
-        _gameContainer!.SaveRoot!.SpacesLeft = howMany;
-        _gameContainer.RepaintBoard();
+        gameContainer!.SaveRoot!.SpacesLeft = howMany;
+        gameContainer.RepaintBoard();
         int ourID = 0;
-        if (_gameContainer.BasicData!.MultiPlayer)
+        if (gameContainer.BasicData!.MultiPlayer)
         {
-            ourID = _gameContainer.PlayerList!.GetSelf().Id;
+            ourID = gameContainer.PlayerList!.GetSelf().Id;
         }
-        if (_gameContainer.BasicData.MultiPlayer == false || _gameContainer.WhoTurn != ourID)
+        if (gameContainer.BasicData.MultiPlayer == false || gameContainer.WhoTurn != ourID)
         {
-            _gameContainer.SaveRoot.Instructions = $"Waiting for {_gameContainer.SingleInfo!.NickName} to make a move";
+            gameContainer.SaveRoot.Instructions = $"Waiting for {gameContainer.SingleInfo!.NickName} to make a move";
         }
         else
         {
-            _gameContainer.SaveRoot.Instructions = "Choose a piece to move";
+            gameContainer.SaveRoot.Instructions = "Choose a piece to move";
         }
         ErrorCheckPlayers();
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     private int DistanceToHome(SpaceInfo thisSpace)
     {
@@ -1070,9 +1061,9 @@ public class GameBoardProcesses
     {
         if (maxs < 2)
         {
-            return new(); //needs at least 2.
+            return []; //needs at least 2.
         }
-        BasicList<PointF> output = new();
+        BasicList<PointF> output = [];
         int x;
         int y;
         for (x = 1; x <= maxs; x++)
@@ -1085,14 +1076,14 @@ public class GameBoardProcesses
         }
         return output;
     }
-    private void GetValidSplits(IBasicList<SpaceInfo> thisCol)
+    private void GetValidSplits(BasicList<SpaceInfo> thisCol)
     {
         var comboList = GetComboList(thisCol.Count);
         SpaceInfo firstSpace;
         SpaceInfo secondSpace;
         int newLeft1;
         int newLeft2;
-        BasicList<PointF> newCombos = new();
+        BasicList<PointF> newCombos = [];
         comboList.ForEach(thisPoint =>
         {
             firstSpace = thisCol[(int)thisPoint.X - 1];
@@ -1238,7 +1229,7 @@ public class GameBoardProcesses
     {
         get
         {
-            if (!_gameContainer.SaveRoot!.DidDraw)
+            if (!gameContainer.SaveRoot!.DidDraw)
             {
                 return true; //you have not drawn yet
             }
@@ -1247,9 +1238,9 @@ public class GameBoardProcesses
     }
     public void ShowDraw()
     {
-        _gameContainer.SaveRoot!.DidDraw = true;
-        _model.CardDetails = _gameContainer.SaveRoot.CurrentCard!.Details;
-        _gameContainer.RepaintBoard();
+        gameContainer.SaveRoot!.DidDraw = true;
+        model.CardDetails = gameContainer.SaveRoot.CurrentCard!.Details;
+        gameContainer.RepaintBoard();
     }
     public bool CanGoHome(EnumColorChoice color)
     {
@@ -1265,20 +1256,20 @@ public class GameBoardProcesses
             items.SpaceFrom == PreviousPiece &&
             items.SpaceTo == 100);
     }
-    private CardInfo CurrentCard => _gameContainer.SaveRoot!.CurrentCard!;
+    private CardInfo CurrentCard => gameContainer.SaveRoot!.CurrentCard!;
     public async Task GetValidMovesAsync()
     {
         if (CurrentCard.Deck == 0)
         {
             return; //because you did not draw yet.
         }
-        MoveList = new();
-        BasicList<int> firstCol = _gameContainer.SingleInfo!.PieceList.ToBasicList();
+        MoveList = [];
+        BasicList<int> firstCol = gameContainer.SingleInfo!.PieceList.ToBasicList();
         if (firstCol.Count > 4)
         {
             throw new CustomBasicException("The player must have 4 pieces at the most");
         }
-        BasicList<int> thisCol = new();
+        BasicList<int> thisCol = [];
         if (CurrentCard.CanTakeFromStart || CurrentCard.Sorry && OtherPlayersOnBoard)
         {
             thisCol = firstCol;
@@ -1300,7 +1291,7 @@ public class GameBoardProcesses
         }
         else
         {
-            tempList = new();
+            tempList = [];
         }
         SpaceInfo thisSpace;
         MoveInfo thisMove;
@@ -1425,19 +1416,19 @@ public class GameBoardProcesses
         }
         if (MoveList.Count == 0)
         {
-            if (_gameContainer.StartNewTurnAsync == null)
+            if (gameContainer.StartNewTurnAsync == null)
             {
                 throw new CustomBasicException("Nobody is handling the start new turn.  Rethink");
             }
             ErrorCheckPlayers();
             if (CurrentCard.AnotherTurn)
             {
-                _gameContainer.SaveRoot!.Instructions = "No moves.  Will get another turn.";
-                if (_gameContainer.Test!.NoAnimations == false)
+                gameContainer.SaveRoot!.Instructions = "No moves.  Will get another turn.";
+                if (gameContainer.Test!.NoAnimations == false)
                 {
-                    await _gameContainer.Delay!.DelaySeconds(.5);
+                    await gameContainer.Delay!.DelaySeconds(.5);
                 }
-                await _gameContainer.StartNewTurnAsync(); //i think
+                await gameContainer.StartNewTurnAsync(); //i think
                 return;
             }
             await NoMovesEndTurnAsync();
@@ -1448,29 +1439,29 @@ public class GameBoardProcesses
     private async Task OurContinueTurnAsync()
     {
         int ourID = 0;
-        if (_gameContainer.BasicData!.MultiPlayer)
+        if (gameContainer.BasicData!.MultiPlayer)
         {
-            ourID = _gameContainer.PlayerList!.GetSelf().Id;
+            ourID = gameContainer.PlayerList!.GetSelf().Id;
         }
-        if (_gameContainer.BasicData.MultiPlayer == false || _gameContainer.WhoTurn != ourID)
+        if (gameContainer.BasicData.MultiPlayer == false || gameContainer.WhoTurn != ourID)
         {
-            _gameContainer.SaveRoot!.Instructions = $"Waiting for {_gameContainer.SingleInfo!.NickName} to make a move";
+            gameContainer.SaveRoot!.Instructions = $"Waiting for {gameContainer.SingleInfo!.NickName} to make a move";
         }
         else
         {
-            _gameContainer.SaveRoot!.Instructions = "Choose a piece to move";
+            gameContainer.SaveRoot!.Instructions = "Choose a piece to move";
         }
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     public async Task MakeMoveAsync(int Space)
     {
         var tempList1 = MoveList;
-        _gameContainer.SaveRoot!.HighlightList = new();
+        gameContainer.SaveRoot!.HighlightList = [];
         SpaceInfo thisSpace;
         if (PreviousPiece == Space) //means changing your mind.
         {
             PreviousPiece = 0;
-            _gameContainer.RepaintBoard();
+            gameContainer.RepaintBoard();
             await OurContinueTurnAsync();
             return;
         }
@@ -1490,11 +1481,11 @@ public class GameBoardProcesses
             if (tempList.Count > 1)
             {
                 PreviousPiece = Space;
-                _gameContainer.SaveRoot.HighlightList.Add(PreviousPiece);
-                _gameContainer.SaveRoot.HighlightList.AddRange(tempList.Select(items => items.SpaceTo));
-                _gameContainer.RepaintBoard();
-                _gameContainer.SaveRoot.Instructions = "This is a multiple part move.  Continue making your move";
-                await _gameContainer.ContinueTurnAsync!.Invoke();
+                gameContainer.SaveRoot.HighlightList.Add(PreviousPiece);
+                gameContainer.SaveRoot.HighlightList.AddRange(tempList.Select(items => items.SpaceTo));
+                gameContainer.RepaintBoard();
+                gameContainer.SaveRoot.Instructions = "This is a multiple part move.  Continue making your move";
+                await gameContainer.ContinueTurnAsync!.Invoke();
                 return;
             }
             if (tempList.Count == 0)
@@ -1540,7 +1531,7 @@ public class GameBoardProcesses
             await EndMoveAsync();
             return;
         }
-        _gameContainer.SaveRoot.MovesMade++;
+        gameContainer.SaveRoot.MovesMade++;
 
         // Determine the first piece's final location, including any slide.
         int finalSplitPosition =
@@ -1551,20 +1542,20 @@ public class GameBoardProcesses
             thisSpace,
             thisMove);
 
-        if (_gameContainer.SaveRoot.MovesMade == 2)
+        if (gameContainer.SaveRoot.MovesMade == 2)
         {
             await EndMoveAsync();
             return;
         }
 
-        if (_gameContainer.SaveRoot.MovesMade > 2)
+        if (gameContainer.SaveRoot.MovesMade > 2)
         {
             throw new CustomBasicException(
                 "Only 2 moves can be made. This means there is a problem.");
         }
 
         // Exclude the first piece at its actual location after sliding.
-        _gameContainer.SaveRoot.PreviousSplit =
+        gameContainer.SaveRoot.PreviousSplit =
             finalSplitPosition;
 
         await LastMovesAsync(thisMove);

@@ -1,11 +1,7 @@
 namespace MonasteryCardGame.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<MonasteryCardGameShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<MonasteryCardGameShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

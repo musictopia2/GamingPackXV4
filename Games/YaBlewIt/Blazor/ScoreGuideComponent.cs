@@ -1,7 +1,7 @@
 ﻿namespace YaBlewIt.Blazor;
 public class ScoreGuideComponent : ComponentBase
 {
-    ISvg? _mains;
+    SVG? _mains;
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         _mains = new SVG

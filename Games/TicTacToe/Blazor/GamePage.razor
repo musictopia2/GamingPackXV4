@@ -14,9 +14,7 @@
     }
     return;
 }
-<ParentControl VM="TicTacToeMainViewModel">
+<MainScreen>
     <TicTacToeMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<TicTacToePlayerItem>">
-    <MultiplayerOpeningView P="TicTacToePlayerItem" />
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="TicTacToePlayerItem" />

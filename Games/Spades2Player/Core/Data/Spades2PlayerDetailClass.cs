@@ -15,7 +15,7 @@ public class Spades2PlayerDetailClass : IGameInfo, ICardInfo<Spades2PlayerCardIn
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<Spades2PlayerCardInformation>.CardsToPassOut => 7;
-    BasicList<int> ICardInfo<Spades2PlayerCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<Spades2PlayerCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<Spades2PlayerCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<Spades2PlayerCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<Spades2PlayerCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,7 +23,7 @@ public class Spades2PlayerDetailClass : IGameInfo, ICardInfo<Spades2PlayerCardIn
     bool ICardInfo<Spades2PlayerCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<Spades2PlayerCardInformation>.NoPass => true;
     bool ICardInfo<Spades2PlayerCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<Spades2PlayerCardInformation> ICardInfo<Spades2PlayerCardInformation>.DummyHand { get; set; } = new DeckRegularDict<Spades2PlayerCardInformation>();
+    DeckRegularDict<Spades2PlayerCardInformation> ICardInfo<Spades2PlayerCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<Spades2PlayerCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<Spades2PlayerCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -35,7 +35,7 @@ public class Spades2PlayerDetailClass : IGameInfo, ICardInfo<Spades2PlayerCardIn
     bool ITrickData.HasDummy => false;
     BasicList<int> ICardInfo<Spades2PlayerCardInformation>.DiscardExcludeList(IListShuffler<Spades2PlayerCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<Spades2PlayerCardInformation>.AceLow => false;
     bool IBeginningRegularCards<Spades2PlayerCardInformation>.CustomDeck => false;

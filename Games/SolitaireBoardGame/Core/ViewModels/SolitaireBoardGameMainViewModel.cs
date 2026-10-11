@@ -1,34 +1,44 @@
-
 namespace SolitaireBoardGame.Core.ViewModels;
 [InstanceGame]
-public partial class SolitaireBoardGameMainViewModel : ScreenViewModel, IBasicEnableProcess, IBlankGameVM, IAggregatorContainer
+public partial class SolitaireBoardGameMainViewModel(IEventAggregator aggregator,
+    CommandContainer commandContainer, 
+    IGamePackageResolver resolver,
+    BasicData basicData
+    ) : IBasicEnableProcess, IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>
 {
-    private readonly SolitaireBoardGameMainGameClass _mainGame;
-    private readonly BasicData _basicData;
-    public SolitaireBoardGameMainViewModel(IEventAggregator aggregator,
-        CommandContainer commandContainer,
-        IGamePackageResolver resolver,
-        BasicData basicData) : base(aggregator)
-    {
-        CommandContainer = commandContainer;
-        _basicData = basicData;
-        _mainGame = resolver.ReplaceObject<SolitaireBoardGameMainGameClass>();
-        CreateCommands(commandContainer);
-    }
-    partial void CreateCommands(CommandContainer command);
-    public CommandContainer CommandContainer { get; set; }
-    IEventAggregator IAggregatorContainer.Aggregator => Aggregator;
+    private SolitaireBoardGameMainGameClass _mainGame = null !;
+    public CommandContainer CommandContainer { get; set; } = commandContainer;
+
     public bool CanEnableBasics()
     {
         return true;
     }
-    protected override async Task ActivateAsync()
+
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    void IMainGameVM.Initialize()
     {
-        _basicData.GameDataLoading = true;
-        await base.ActivateAsync();
-        await _mainGame.NewGameAsync();
-        _basicData.GameDataLoading = false;
+        _mainGame = resolver.ReplaceObject<SolitaireBoardGameMainGameClass>();
+        Subscribe();
+        CreateCommands(CommandContainer);
+    //if i have to do the processes for commands, do here.
+    //also any other setup would be here too.
     }
+
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
+    {
+        basicData.GameDataLoading = true;
+        await _mainGame.NewGameAsync();
+        basicData.GameDataLoading = false;
+    }
+
+    Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        Unsubscribe();
+        return Task.CompletedTask;
+    }
+
+    partial void CreateCommands(CommandContainer command);
     [Command(EnumCommandCategory.Plain)]
     public async Task MakeMoveAsync(GameSpace space)
     {

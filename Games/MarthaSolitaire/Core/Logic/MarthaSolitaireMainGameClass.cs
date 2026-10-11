@@ -1,18 +1,14 @@
 namespace MarthaSolitaire.Core.Logic;
 [SingletonGame]
-public class MarthaSolitaireMainGameClass : SolitaireGameClass<MarthaSolitaireSaveInfo>
+public class MarthaSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<MarthaSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    public MarthaSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-    }
     protected async override Task ContinueOpenSavedAsync()
     {
         //anything else you need will be here

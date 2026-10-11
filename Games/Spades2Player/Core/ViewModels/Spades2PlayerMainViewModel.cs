@@ -1,44 +1,37 @@
 namespace Spades2Player.Core.ViewModels;
 [InstanceGame]
-public class Spades2PlayerMainViewModel : BasicCardGamesVM<Spades2PlayerCardInformation>
-{
-    private readonly Spades2PlayerMainGameClass _mainGame;
-    private readonly Spades2PlayerVMData _model;
-    private readonly IGamePackageResolver _resolver;
-    private readonly Spades2PlayerGameContainer _gameContainer;
-    public Spades2PlayerMainViewModel(CommandContainer commandContainer,
+[UseStateChanged]
+public partial class Spades2PlayerMainViewModel(CommandContainer commandContainer,
         Spades2PlayerMainGameClass mainGame,
         Spades2PlayerVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         Spades2PlayerGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<Spades2PlayerCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _resolver = resolver;
-        _gameContainer = gameContainer;
-        _model.Deck1.NeverAutoDisable = true;
-        _model.ChangeScreen = ScreenChangeAsync;
+        viewModel.Deck1.NeverAutoDisable = true;
+        viewModel.ChangeScreen = ScreenChangeAsync;
+        base.AdditionalInitialize();
     }
-    public SpadesBeginningViewModel? BeginningScreen { get; set; }
-    public SpadesBiddingViewModel? BiddingScreen { get; set; }
-    protected override Task ActivateAsync()
+    [StateProperty]
+    public partial SpadesBeginningViewModel? BeginningScreen { get; set; }
+    [StateProperty]
+    public partial SpadesBiddingViewModel? BiddingScreen { get; set; }
+    protected override Task OpenAsync()
     {
         ScreenChangeAsync();
-        return base.ActivateAsync();
+        return base.OpenAsync();
     }
-    private async void ScreenChangeAsync()
+    private void ScreenChangeAsync()
     {
         if (_isClosed)
         {
             return;
         }
-        if (_model == null)
+        if (viewModel == null)
         {
             return;
         }
@@ -47,66 +40,62 @@ public class Spades2PlayerMainViewModel : BasicCardGamesVM<Spades2PlayerCardInfo
             return;
         }
         _processing = true;
-        if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.Normal)
+        if (mainGame.SaveRoot.GameStatus == EnumGameStatus.Normal)
         {
-            await CloseBeginningScreenAsync();
-            await CloseBiddingScreenAsync();
-            _model.TrickArea1.Visible = true;
+            CloseBeginningScreen();
+            CloseBiddingScreen();
+            viewModel.TrickArea1.Visible = true;
             _processing = false;
             return;
         }
-        _model.TrickArea1.Visible = false;
-        if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.Bidding)
+        viewModel.TrickArea1.Visible = false;
+        if (mainGame.SaveRoot.GameStatus == EnumGameStatus.Bidding)
         {
-            await CloseBeginningScreenAsync();
-            await OpenBiddingAsync();
+            CloseBeginningScreen();
+            OpenBidding();
             _processing = false;
             return;
         }
-        if (_mainGame.SaveRoot.GameStatus == EnumGameStatus.ChooseCards)
+        if (mainGame.SaveRoot.GameStatus == EnumGameStatus.ChooseCards)
         {
-            await CloseBiddingScreenAsync();
-            await OpenBeginningAsync();
+            CloseBiddingScreen();
+            OpenBeginning();
             _processing = false;
             return;
         }
         throw new CustomBasicException("Not supported.  Rethink");
     }
-    private async Task CloseBeginningScreenAsync()
+    private void CloseBeginningScreen()
     {
         if (BeginningScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(BeginningScreen);
         BeginningScreen = null;
     }
-    private async Task CloseBiddingScreenAsync()
+    private void CloseBiddingScreen()
     {
         if (BiddingScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(BiddingScreen);
         BiddingScreen = null;
     }
-    private async Task OpenBeginningAsync()
+    private void OpenBeginning()
     {
         if (BeginningScreen != null)
         {
             return;
         }
-        BeginningScreen = _resolver.Resolve<SpadesBeginningViewModel>();
-        await LoadScreenAsync(BeginningScreen);
+        BeginningScreen = Resolver.Resolve<SpadesBeginningViewModel>();
     }
-    private async Task OpenBiddingAsync()
+    private void OpenBidding()
     {
         if (BiddingScreen != null)
         {
             return;
         }
-        BiddingScreen = _resolver.Resolve<SpadesBiddingViewModel>();
-        await LoadScreenAsync(BiddingScreen);
+        BiddingScreen = Resolver.Resolve<SpadesBiddingViewModel>();
     }
     protected override bool CanEnableDeck()
     {
@@ -114,13 +103,13 @@ public class Spades2PlayerMainViewModel : BasicCardGamesVM<Spades2PlayerCardInfo
     }
     protected override bool CanEnablePile1()
     {
-        return _mainGame!.SaveRoot!.GameStatus == EnumGameStatus.ChooseCards;
+        return mainGame!.SaveRoot!.GameStatus == EnumGameStatus.ChooseCards;
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
-        _model.OtherPile!.Visible = false;
-        await _gameContainer!.SendDiscardMessageAsync(_model.OtherPile!.GetCardInfo().Deck);
-        await _mainGame!.DiscardAsync(_model.OtherPile.GetCardInfo().Deck);
+        viewModel.OtherPile!.Visible = false;
+        await gameContainer!.SendDiscardMessageAsync(viewModel.OtherPile!.GetCardInfo().Deck);
+        await mainGame!.DiscardAsync(viewModel.OtherPile.GetCardInfo().Deck);
     }
     public override bool CanEnableAlways()
     {
@@ -129,11 +118,11 @@ public class Spades2PlayerMainViewModel : BasicCardGamesVM<Spades2PlayerCardInfo
 
     private bool _processing;
     private bool _isClosed = false;
-    protected override async Task TryCloseAsync()
+    protected override Task CloseAsync()
     {
         _isClosed = true;
-        await CloseBeginningScreenAsync();
-        await CloseBiddingScreenAsync();
-        await base.TryCloseAsync();
+        CloseBeginningScreen();
+        CloseBiddingScreen();
+        return base.CloseAsync();
     }
 }

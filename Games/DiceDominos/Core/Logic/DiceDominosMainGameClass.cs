@@ -49,6 +49,11 @@ public class DiceDominosMainGameClass
         }
         return Task.CompletedTask;
     }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        _gameBoard.ReportCanExecuteChange();
+    }
     private void LoadControls()
     {
         if (IsLoaded == true)

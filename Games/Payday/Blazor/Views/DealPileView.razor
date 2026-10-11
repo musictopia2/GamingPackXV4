@@ -2,8 +2,10 @@
 {
     return;
 }
-<BaseSingleMiscPileBlazor D="DealCard" SinglePile="VMData.DealPile" UseKey="false">
-    <MainTemplate Context="Card">
-        <PaydayCardBlazor TargetHeight="@RealHeight" DeckObject="Card" />
-    </MainTemplate>
-</BaseSingleMiscPileBlazor>
+<ActionContentView Key="@PaydayActions.Yardsale">
+    <BaseSingleMiscPileBlazor D="DealCard" SinglePile="VMData.DealPile" UseKey="false">
+        <MainTemplate Context="Card">
+            <PaydayCardBlazor TargetHeight="@RealHeight" DeckObject="Card" />
+        </MainTemplate>
+    </BaseSingleMiscPileBlazor>
+</ActionContentView>

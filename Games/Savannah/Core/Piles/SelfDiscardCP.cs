@@ -19,7 +19,7 @@ public class SelfDiscardCP : HandObservable<RegularSimpleCard>
         {
             throw new CustomBasicException("There must be only 6 cards for overlapping");
         }
-        HandList = _player.DiscardList; //try this way.
+        ReplaceHandList(_player.DiscardList);
         bool unknowns = true;
         foreach (var card in HandList)
         {
@@ -52,7 +52,7 @@ public class SelfDiscardCP : HandObservable<RegularSimpleCard>
     }
     public void Reload()
     {
-        HandList = _player.DiscardList;
+        ReplaceHandList(_player.DiscardList);
         Maximum = _player.WhenToStackDiscards + 1;
     }
     protected override bool CanSelectSingleObject(RegularSimpleCard thisObject)

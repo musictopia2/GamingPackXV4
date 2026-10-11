@@ -3,7 +3,7 @@ public partial class TicTacToeMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private TicTacToeSaveInfo? _save;
     private WinInfo? _win;
     protected override void OnInitialized()

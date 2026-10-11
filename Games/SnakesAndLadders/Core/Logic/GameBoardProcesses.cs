@@ -11,7 +11,7 @@ public class GameBoardProcesses
     private readonly SnakesAndLaddersVMData _model;
     internal Func<SnakesAndLaddersPlayerItem>? CurrentPlayer { get; set; }
     public GameBoardProcesses(IAsyncDelayer delay,
-        EventAggregator aggregator,
+        IEventAggregator aggregator,
         TestOptions test,
         SnakesAndLaddersVMData model
         )
@@ -20,7 +20,7 @@ public class GameBoardProcesses
         _aggregator = aggregator;
         _test = test;
         _model = model;
-        _spaceList = new ();
+        _spaceList = [];
         int x;
         for (x = 1; x <= 100; x++)
         {

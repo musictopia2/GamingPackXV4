@@ -3,11 +3,11 @@ namespace CoveredUp.Core.Data;
 public partial class CoveredUpPlayerItem : PlayerSingleHand<RegularSimpleCard>
 {
     [ScoreColumn]
-    public int PointsSoFar { get; set; }
+    public partial int PointsSoFar { get; set; }
     [ScoreColumn]
-    public int PreviousScore { get; set; }
+    public partial int PreviousScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [JsonIgnore]
     public PlayerBoardCP? PlayerBoard { get; set; }
     public void LoadPlayerBoard(CoveredUpGameContainer gameContainer, CoveredUpVMData model)

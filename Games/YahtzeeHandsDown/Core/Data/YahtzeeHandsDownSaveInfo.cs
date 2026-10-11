@@ -3,7 +3,7 @@ namespace YahtzeeHandsDown.Core.Data;
 public class YahtzeeHandsDownSaveInfo : BasicSavedCardClass<YahtzeeHandsDownPlayerItem, YahtzeeHandsDownCardInformation>, IMappable, ISaveInfo
 {
     public int ExtraTurns { get; set; }
-    public BasicList<int> Combos { get; set; } = new();
-    public BasicList<int> ChanceList { get; set; } = new();
+    public BasicList<int> Combos { get; set; } = [];
+    public BasicList<int> ChanceList { get; set; } = [];
     public int FirstPlayerWentOut { get; set; }
 }

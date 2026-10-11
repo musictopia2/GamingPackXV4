@@ -5,25 +5,19 @@ namespace Spades2Player.Core.Data;
 public partial class Spades2PlayerVMData : ITrickCardGamesData<Spades2PlayerCardInformation, EnumSuitList>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumSuitList TrumpSuit { get; set; }
+    public partial EnumSuitList TrumpSuit { get; set; }
     [LabelColumn]
-    public int RoundNumber { get; set; }
-    private EnumGameStatus _gameStatus;
+    public partial int RoundNumber { get; set; }
+
     [LabelColumn]
-    public EnumGameStatus GameStatus
+    public partial EnumGameStatus GameStatus { get; set; }
+    partial void OnGameStatusChanged(EnumGameStatus value)
     {
-        get { return _gameStatus; }
-        set
-        {
-            if (SetProperty(ref _gameStatus, value))
-            {
-                ChangeScreen?.Invoke();
-            }
-        }
+        ChangeScreen?.Invoke();
     }
     public int BidAmount { get; set; } = -1;
     public Spades2PlayerVMData(CommandContainer command,

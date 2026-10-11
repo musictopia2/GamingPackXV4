@@ -6,7 +6,7 @@ public class CustomDeck : IRegularDeckInfo
     int IRegularDeckInfo.GetExtraJokers => 0;
     int IRegularDeckInfo.LowestNumber => 7;
     int IRegularDeckInfo.HighestNumber => 14;
-    BasicList<ExcludeRCard> IRegularDeckInfo.ExcludeList => new();
+    BasicList<ExcludeRCard> IRegularDeckInfo.ExcludeList => [];
     BasicList<EnumSuitList> IRegularDeckInfo.SuitList => EnumSuitList.CompleteList;
     int IDeckCount.GetDeckCount()
     {

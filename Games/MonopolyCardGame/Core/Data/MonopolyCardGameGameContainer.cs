@@ -14,4 +14,5 @@ public class MonopolyCardGameGameContainer(BasicData basicData,
     internal Action<TradePile, DeckRegularDict<MonopolyCardGameCardInformation>, TradePile>? ProcessTrade { get; set; }
     public Action<MonopolyCardGamePlayerItem>? StartCustomTrade { get; set; }
     public BasicList<OrganizeModel> TempSets { get; set; } = [];
+    public Action? RefreshMainScreen { get; set; }
 }

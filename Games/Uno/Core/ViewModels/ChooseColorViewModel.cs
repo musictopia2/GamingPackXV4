@@ -1,19 +1,15 @@
 ﻿namespace Uno.Core.ViewModels;
 [InstanceGame]
-public class ChooseColorViewModel : ScreenViewModel, IBlankGameVM
+public class ChooseColorViewModel(CommandContainer commandContainer, UnoVMData model, IChooseColorProcesses processes) : IPromptVM
 {
-    public readonly UnoVMData Model;
-    private readonly IChooseColorProcesses _processes;
-    public ChooseColorViewModel(CommandContainer commandContainer, UnoVMData model, IChooseColorProcesses processes, IEventAggregator aggregator) : base(aggregator)
-    {
-        CommandContainer = commandContainer;
-        Model = model;
-        _processes = processes;
-        Model.ColorPicker.ItemClickedAsync = ColorPicker_ItemClickedAsync;
-    }
+    public readonly UnoVMData Model = model;
     private async Task ColorPicker_ItemClickedAsync(EnumColorTypes piece)
     {
-        await _processes!.ColorChosenAsync(piece);
+        await processes!.ColorChosenAsync(piece);
     }
-    public CommandContainer CommandContainer { get; set; }
+    void IPromptVM.Initialize()
+    {
+        Model.ColorPicker.ItemClickedAsync = ColorPicker_ItemClickedAsync;
+    }
+    public CommandContainer CommandContainer { get; set; } = commandContainer;
 }

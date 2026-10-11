@@ -3,5 +3,5 @@ namespace DemonSolitaire.Core.Data;
 [Cloneable(explicitDeclaration: false)]
 public class DemonSolitaireSaveInfo : SolitaireSavedClass, IMappable
 {
-    public BasicList<int> HeelList { get; set; } = new();
+    public BasicList<int> HeelList { get; set; } = [];
 }

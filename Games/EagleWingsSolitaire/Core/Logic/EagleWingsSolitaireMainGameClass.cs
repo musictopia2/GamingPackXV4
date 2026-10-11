@@ -1,20 +1,14 @@
 namespace EagleWingsSolitaire.Core.Logic;
 [SingletonGame]
-public class EagleWingsSolitaireMainGameClass : SolitaireGameClass<EagleWingsSolitaireSaveInfo>
+public class EagleWingsSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<EagleWingsSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    private readonly IToast _toast;
-    public EagleWingsSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-        _toast = toast;
-    }
     protected override SolitaireCard CardPlayed()
     {
         var thisCard = base.CardPlayed();
@@ -39,10 +33,10 @@ public class EagleWingsSolitaireMainGameClass : SolitaireGameClass<EagleWingsSol
         int wastes = _thisMod!.WastePiles1!.OneSelected();
         if (wastes > -1)
         {
-            _toast.ShowUserErrorToast("Can choose either the waste pile or from heel; but not both");
+            Toast.ShowUserErrorToast("Can choose either the waste pile or from heel; but not both");
             return true;
         }
-        _toast.ShowUserErrorToast("Cannot play from heel to wing since its the last card");
+        Toast.ShowUserErrorToast("Cannot play from heel to wing since its the last card");
         return true;
     }
     public async Task HeelToMainAsync()

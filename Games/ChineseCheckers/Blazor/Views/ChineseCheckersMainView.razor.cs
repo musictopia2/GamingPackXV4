@@ -3,13 +3,13 @@ public partial class ChineseCheckersMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private GameBoardGraphicsCP? _graphics;
     private ChineseCheckersGameContainer? _container;
     protected override void OnInitialized()
     {
-        _graphics = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
-        _container = aa1.Resolver.Resolve<ChineseCheckersGameContainer>();
+        _graphics = Resolver!.Resolve<GameBoardGraphicsCP>();
+        _container = Resolver.Resolve<ChineseCheckersGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ChineseCheckersVMData.NormalTurn))
                 .AddLabel("Instructions", nameof(ChineseCheckersVMData.Instructions))

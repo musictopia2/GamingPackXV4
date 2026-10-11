@@ -13,5 +13,4 @@ public class DealCardGameGameContainer(BasicData basicData,
 {
     public PrivateModel PersonalInformation = new();
     public bool IsJustSayNoSelf { get; set; }
-    //public Func<BasicList<int>, Task>? Payments { get; set; }
 }

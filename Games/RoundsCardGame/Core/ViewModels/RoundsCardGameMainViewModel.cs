@@ -1,26 +1,17 @@
 namespace RoundsCardGame.Core.ViewModels;
 [InstanceGame]
-public class RoundsCardGameMainViewModel : BasicCardGamesVM<RoundsCardGameCardInformation>
-{
-    private readonly RoundsCardGameMainGameClass _mainGame; //if we don't need, delete.
-    private readonly RoundsCardGameVMData _model;
-    private readonly RoundsCardGameGameContainer _gameContainer; //if not needed, delete.
-    public RoundsCardGameMainViewModel(CommandContainer commandContainer,
+public class RoundsCardGameMainViewModel(CommandContainer commandContainer,
         RoundsCardGameMainGameClass mainGame,
         RoundsCardGameVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
-        RoundsCardGameGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<RoundsCardGameCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _gameContainer = gameContainer;
-        _model.Deck1.NeverAutoDisable = true;
+        viewModel.Deck1.NeverAutoDisable = true;
+        base.AdditionalInitialize();
     }
     //anything else needed is here.
     protected override bool CanEnableDeck()

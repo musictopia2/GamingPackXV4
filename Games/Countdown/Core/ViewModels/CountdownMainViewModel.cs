@@ -1,27 +1,22 @@
 namespace Countdown.Core.ViewModels;
 [InstanceGame]
-public partial class CountdownMainViewModel : DiceGamesVM<CountdownDice>
-{
-    private readonly CountdownMainGameClass _mainGame; //if we don't need, delete.
-    public CountdownVMData VMData { get; set; }
-    public CountdownMainViewModel(CommandContainer commandContainer,
+public partial class CountdownMainViewModel(CommandContainer commandContainer,
         CountdownMainGameClass mainGame,
         CountdownVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, roller, aggregator)
+        IEventAggregator aggregator) : DiceGamesVM<CountdownDice>(commandContainer, mainGame, viewModel, basicData, resolver, roller, aggregator)
+{
+    public CountdownVMData VMData { get; set; } = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = viewModel;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     public DiceCup<CountdownDice> GetCup => VMData.Cup!;
-    public PlayerCollection<CountdownPlayerItem> PlayerList => _mainGame.PlayerList;
+    public PlayerCollection<CountdownPlayerItem> PlayerList => mainGame.PlayerList;
     protected override bool CanEnableDice()
     {
         return false; //if you can enable dice, change the routine.
@@ -42,5 +37,6 @@ public partial class CountdownMainViewModel : DiceGamesVM<CountdownDice>
             return; //so it does not have to be static.
         }
         CountdownVMData.ShowHints = true;
+        CommandContainer.QueueRefreshAfterCommand(CountdownActions.Board);
     }
 }

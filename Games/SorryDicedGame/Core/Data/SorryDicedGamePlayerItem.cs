@@ -1,6 +1,6 @@
 namespace SorryDicedGame.Core.Data;
 [UseScoreboard]
-public partial class SorryDicedGamePlayerItem : PlayerBoardGame<EnumColorChoice>
+public partial class SorryDicedGamePlayerItem : PlayerWithColor<EnumColorChoice>
 {
     public override bool DidChooseColor => Color.IsNull == false && Color != EnumColorChoice.None;
     public override void Clear()

@@ -3,16 +3,16 @@ namespace GolfCardGame.Core.Data;
 public partial class GolfCardGamePlayerItem : PlayerSingleHand<RegularSimpleCard>
 {//anything needed is here
     [ScoreColumn]
-    public bool Knocked { get; set; }
+    public partial bool Knocked { get; set; }
     [ScoreColumn]
-    public bool FirstChanged { get; set; }
+    public partial bool FirstChanged { get; set; }
     [ScoreColumn]
-    public bool SecondChanged { get; set; }
+    public partial bool SecondChanged { get; set; }
     [ScoreColumn]
-    public int PreviousScore { get; set; }
+    public partial int PreviousScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [ScoreColumn]
-    public bool FinishedChoosing { get; set; }
-    public DeckRegularDict<RegularSimpleCard> TempSets { get; set; } = new();
+    public partial bool FinishedChoosing { get; set; }
+    public DeckRegularDict<RegularSimpleCard> TempSets { get; set; } = [];
 }

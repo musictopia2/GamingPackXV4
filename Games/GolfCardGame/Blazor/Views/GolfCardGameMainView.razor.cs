@@ -1,14 +1,14 @@
 namespace GolfCardGame.Blazor.Views;
 public partial class GolfCardGameMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     [CascadingParameter]
     public GolfCardGameVMData? VMData { get; set; }
     private GolfCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _gameContainer = aa1.Resolver!.Resolve<GolfCardGameGameContainer>();
+        _gameContainer = Resolver!.Resolve<GolfCardGameGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(GolfCardGameVMData.NormalTurn))
            .AddLabel("Status", nameof(GolfCardGameVMData.Status))

@@ -18,8 +18,11 @@ else
         <ResourceImage FileName="highspeed2.png" Height="100%" Width="100%" />
     }
 }
-@if (DataContext.CommandContainer.IsExecuting || DataContext.GameContainer.CanSpin == false)
-{
-    return;
-}
-<BlankClickableSquare @key="GetKey" Fixed="false" SpaceClicked="DataContext.SpinAsync" SpaceSize="new SizeF(260, 260)" />
+
+<ActionContentView Key="@LifeActionKeys.Spinner">
+    @if (DataContext.CommandContainer.IsExecuting || DataContext.GameContainer.CanSpin == false)
+    {
+        return;
+    }
+    <BlankClickableSquare @key="GetKey" Fixed="false" SpaceClicked="DataContext.SpinAsync" SpaceSize="new SizeF(260, 260)" />
+</ActionContentView>

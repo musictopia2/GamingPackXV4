@@ -3,9 +3,9 @@ namespace DealCardGame.Core.Data;
 public partial class DealCardGamePlayerItem : PlayerSingleHand<DealCardGameCardInformation>
 {
     [ScoreColumn]
-    public decimal Money { get; set; } //has to decide where the animation will take place at (since its not really being discarded)
+    public partial decimal Money { get; set; } //has to decide where the animation will take place at (since its not really being discarded)
     [ScoreColumn]
-    public int Monopolies { get; set; }
+    public partial int Monopolies { get; set; }
     public DeckRegularDict<DealCardGameCardInformation> BankedCards { get; set; } = [];
     public BasicList<SetPropertiesModel> SetData { get; set; } = [];
     public decimal Debt { get; set; } //go ahead and store as decimal even though it would be whole numbers.

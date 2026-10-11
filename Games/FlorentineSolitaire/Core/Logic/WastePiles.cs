@@ -1,9 +1,6 @@
 namespace FlorentineSolitaire.Core.Logic;
-public class WastePiles : WastePilesCP
+public class WastePiles(CommandContainer command) : WastePilesCP(command)
 {
-    public WastePiles(CommandContainer command) : base(command)
-    {
-    }
     public override void ClearBoard(IDeckDict<SolitaireCard> thisCol)
     {
         base.ClearBoard(thisCol);
@@ -16,7 +13,7 @@ public class WastePiles : WastePilesCP
     }
     protected override void AfterFirstLoad()
     {
-        BasicList<int> thisList = new() { 0, 2, 6, 8 };
+        BasicList<int> thisList = [0, 2, 6, 8];
         Discards!.RemoveSpecificDiscardPiles(thisList);
     }
     public override bool CanAddSingleCard(int whichOne, SolitaireCard thisCard)

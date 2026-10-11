@@ -14,15 +14,10 @@
     }
     return;
 }
-<ParentControl VM="TroubleMainViewModel">
+<MainScreen>
     <TroubleMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<TroublePlayerItem>">
-    <MultiplayerOpeningView P="TroublePlayerItem" />
-</ParentControl>
-<ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, TroublePlayerItem>">
-
-    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="TroublePlayerItem">
-        <MarblePiece MainColor="@GetColor(Piece.EnumValue)" />
-    </BeginningChooseColorView>
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="TroublePlayerItem" />
+<BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="TroublePlayerItem">
+    <MarblePiece MainColor="@GetColor(Piece.EnumValue)" />
+</BeginningChooseColorView>

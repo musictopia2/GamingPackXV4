@@ -152,15 +152,15 @@ public class CardGraphicsBlazor : BaseDeckGraphics<YaBlewItCardInformation>
         bounds = new(10, 5, 35, 35);
         DrawTriangle(bounds);
         //needs 6 small rectangles.
-        BasicList<RectangleF> firsts = new()
-        {
+        BasicList<RectangleF> firsts =
+        [
             new(13, 35, 5, 5),
             new(18, 35, 5, 5),
             new(23, 35, 5, 5),
             new(28, 35, 5, 5),
             new(33, 35, 5, 5),
             new(38, 35, 5, 5)
-        };
+        ];
         BasicList<EnumColors> seconds = EnumColors.ColorList;
         if (firsts.Count != seconds.Count)
         {

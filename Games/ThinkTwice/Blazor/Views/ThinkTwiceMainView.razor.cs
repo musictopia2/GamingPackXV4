@@ -1,8 +1,8 @@
 namespace ThinkTwice.Blazor.Views;
 public partial class ThinkTwiceMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private readonly string _diceHeight = "15vh";
     private ThinkTwiceGameContainer? _gameContainer;
     private CategoriesDice? _categories;

@@ -1,4 +1,4 @@
-@inherits BasicGameView<MonasteryCardGameMainViewModel>
+@inherits CascadingGameView<MonasteryCardGameMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -39,6 +39,9 @@
                           Players="_gameContainer.SaveRoot.PlayerList" />
     </StackItem>
     <StackItem>
-        <MissionUI MissionColumnWidth="20vw" Missions="_vmData.CompleteMissions" />
+        <StateContentView DataContext="_vmData">
+            <MissionUI MissionColumnWidth="20vw"
+                       Missions="_vmData.CompleteMissions" />
+        </StateContentView>
     </StackItem>
 </StackLayout>

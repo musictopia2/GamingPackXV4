@@ -3,19 +3,19 @@ namespace SkuckCardGame.Core.Data;
 public partial class SkuckCardGamePlayerItem : PlayerTrick<EnumSuitList, SkuckCardGameCardInformation>
 {
     [ScoreColumn]
-    public int StrengthHand { get; set; }
+    public partial int StrengthHand { get; set; }
     [ScoreColumn]
-    public string TieBreaker { get; set; } = "";
+    public partial string TieBreaker { get; set; } = "";
     [ScoreColumn]
-    public int BidAmount { get; set; }
+    public partial int BidAmount { get; set; }
     [ScoreColumn]
-    public bool BidVisible { get; set; }
+    public partial bool BidVisible { get; set; }
     [ScoreColumn]
-    public int PerfectRounds { get; set; }
+    public partial int PerfectRounds { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [JsonIgnore]
     public PlayerBoardObservable<SkuckCardGameCardInformation>? TempHand { get; set; }
 
-    public DeckRegularDict<SkuckCardGameCardInformation> SavedTemp { get; set; } = new();
+    public DeckRegularDict<SkuckCardGameCardInformation> SavedTemp { get; set; } = [];
 }

@@ -1,8 +1,10 @@
 ﻿namespace Bingo.Core.Data;
-public class SpaceInfoCP : IBasicSpace
+[UseStateChanged]
+public partial class SpaceInfoCP : IBasicSpace
 {
     public bool IsEnabled { get; set; } = true;
-    public bool AlreadyMarked { get; set; }
+    [StateProperty]
+    public partial bool AlreadyMarked { get; set; }
     public string Text { get; set; } = "";
     public Vector Vector { get; set; }
     public void ClearSpace()

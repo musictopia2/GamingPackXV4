@@ -24,12 +24,11 @@ public partial class YourOrganizerViewModel : IBasicEnableProcess
     private async Task SetClickedAsync(EnumColor color)
     {
         await VMData.YourCompleteSets.AddCardToSetAsync(color);
-        //await VMData.YourCompleteSets.AddCardToSetAsync()
     }
-    public void AddAction(Action action)
-    {
-        _gameContainer.Command.CustomStateHasChanged += action;
-    }
+    //public void AddAction(Action action)
+    //{
+    //    _gameContainer.Command.CustomStateHasChanged += action;
+    //}
     partial void CreateCommands(CommandContainer command);
     public DealCardGameVMData VMData { get; set; }
     [Command(EnumCommandCategory.Game)]
@@ -38,8 +37,8 @@ public partial class YourOrganizerViewModel : IBasicEnableProcess
         await VMData.YourCompleteSets.ResetAsync(false); //you have to reset first.
         _gameContainer.PersonalInformation.Organizing = false; //no longer organizing
         await _privateAutoResume.SaveStateAsync(_gameContainer);
-        _gameContainer.Command.ResetCustomStates();
-        _gameContainer.Command.UpdateAll();
+        _gameContainer.Command.UpdateSpecificAction(DealCardGameActions.Main);
+        //_gameContainer.Command.ResetCustomStates();
     }
     [Command(EnumCommandCategory.Game)]
     public async Task ResetAsync()
@@ -53,7 +52,7 @@ public partial class YourOrganizerViewModel : IBasicEnableProcess
         {
             return; //because not acceptable.  should give a toast.
         }
-        _gameContainer.Command.ResetCustomStates();
+        //_gameContainer.Command.ResetCustomStates();
         await _mainGame.FinishOrganizingSetsAsync(_gameContainer.PersonalInformation.SetData);
     }
     [Command(EnumCommandCategory.Game)]

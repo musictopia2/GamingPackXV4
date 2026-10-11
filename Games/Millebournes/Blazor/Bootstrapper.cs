@@ -1,6 +1,15 @@
 namespace Millebournes.Blazor;
-public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<MillebournesShellViewModel>(starts, mode)
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<MillebournesShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
+    //protected override Task RegisterTestsAsync()
+    //{
+    //    ConfigureTestOptions(options =>
+    //    {
+    //        options.SaveOption = EnumTestSaveCategory.RestoreOnly;
+    //    });
+    //    return Task.CompletedTask;
+    //}
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

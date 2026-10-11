@@ -1,13 +1,8 @@
 namespace Cribbage.Core.Data;
 [SingletonGame]
-public class CribbageDetailClass : IGameInfo, ICardInfo<CribbageCard>,
+public class CribbageDetailClass(CribbageDelegates delegates) : IGameInfo, ICardInfo<CribbageCard>,
     IBeginningRegularCards<CribbageCard>
 {
-    private readonly CribbageDelegates _delegates;
-    public CribbageDetailClass(CribbageDelegates delegates)
-    {
-        _delegates = delegates;
-    }
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
@@ -23,11 +18,11 @@ public class CribbageDetailClass : IGameInfo, ICardInfo<CribbageCard>,
     {
         get
         {
-            if (_delegates.GetPlayerCount == null)
+            if (delegates.GetPlayerCount == null)
             {
                 throw new CustomBasicException("Nobody is handling get player count.  Rethink");
             }
-            int count = _delegates.GetPlayerCount.Invoke();
+            int count = delegates.GetPlayerCount.Invoke();
             if (count == 2)
             {
                 return 6;
@@ -42,7 +37,7 @@ public class CribbageDetailClass : IGameInfo, ICardInfo<CribbageCard>,
             }
         }
     }
-    BasicList<int> ICardInfo<CribbageCard>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<CribbageCard>.PlayerExcludeList => [];
     bool ICardInfo<CribbageCard>.AddToDiscardAtBeginning => true;
     bool ICardInfo<CribbageCard>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<CribbageCard>.ShowMessageWhenReshuffling => true;
@@ -50,12 +45,12 @@ public class CribbageDetailClass : IGameInfo, ICardInfo<CribbageCard>,
     bool ICardInfo<CribbageCard>.PlayerGetsCards => true;
     bool ICardInfo<CribbageCard>.NoPass => false;
     bool ICardInfo<CribbageCard>.NeedsDummyHand => false;
-    DeckRegularDict<CribbageCard> ICardInfo<CribbageCard>.DummyHand { get; set; } = new DeckRegularDict<CribbageCard>();
+    DeckRegularDict<CribbageCard> ICardInfo<CribbageCard>.DummyHand { get; set; } = [];
     bool ICardInfo<CribbageCard>.HasDrawAnimation => true;
     bool ICardInfo<CribbageCard>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<CribbageCard>.DiscardExcludeList(IListShuffler<CribbageCard> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<CribbageCard>.AceLow => true;
     bool IBeginningRegularCards<CribbageCard>.CustomDeck => false;

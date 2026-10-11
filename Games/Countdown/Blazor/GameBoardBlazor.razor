@@ -3,10 +3,12 @@
     return;
 }
 <StackLayout>
-    @foreach (var player in _players)
-    {
-        <StackItem>
-            <PlayerBoardBlazor TargetHeight="@TargetHeight" Player="player" />
-        </StackItem>
-    }
+    <ActionContentView Key="@CountdownActions.Board">
+        @foreach (var player in _players)
+        {
+            <StackItem>
+                <PlayerBoardBlazor TargetHeight="@TargetHeight" Player="player" />
+            </StackItem>
+        }
+    </ActionContentView>
 </StackLayout>

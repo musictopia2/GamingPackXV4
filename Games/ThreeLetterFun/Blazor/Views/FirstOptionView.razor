@@ -1,4 +1,4 @@
-﻿@inherits BasicGameView<FirstOptionViewModel>
+﻿@inherits ParameterGameView<FirstOptionViewModel>
 @if (DataContext == null)
 {
     return;
@@ -11,6 +11,6 @@
         <GameButtonComponent FontSize="20vh" Display="Submit" CommandObject="DataContext.SubmitCommand" />
     </StackItem>
     <StackItem>
-        <GameButtonComponent AfterChange="ShowChange" FontSize="18vh" Display="Description" CommandObject="DataContext.DescriptionCommand" />
+        <GameButtonComponent FontSize="18vh" Display="Description" CommandObject="DataContext.DescriptionCommand" />
     </StackItem>
 </StackLayout>

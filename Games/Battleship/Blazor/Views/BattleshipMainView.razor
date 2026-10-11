@@ -1,4 +1,4 @@
-@inherits BasicGameView<BattleshipMainViewModel>
+@inherits CascadingGameView<BattleshipMainViewModel>
 @if (_humanList == null)
 {
     return;
@@ -15,7 +15,9 @@
                        TargetSpaceHeight="50"
                        TargetSpaceWidth="50">
             <ItemTemplate Context="Space">
-                <SpaceControlBlazor CommandObject="DataContext!.MakeMoveCommand" Field="Space" CommandParameter="Space.Vector" />
+                <StateContentView DataContext="Space">
+                    <SpaceControlBlazor CommandObject="DataContext!.MakeMoveCommand" Field="Space" CommandParameter="Space.Vector" />
+                </StateContentView>
             </ItemTemplate>
         </GridGameBoard>
     </GridItem>

@@ -1,15 +1,10 @@
 ﻿namespace Payday.Blazor;
 public class PaydayCardBlazor : BaseDeckGraphics<CardInformation>
 {
-    private struct TempInfo
+    private struct TempInfo(string name, float x, float y, float width, float height)
     {
-        public RectangleF Bounds { get; set; }
-        public string Name { get; set; }
-        public TempInfo(string name, float x, float y, float width, float height)
-        {
-            Name = name;
-            Bounds = new RectangleF(x, y, width, height);
-        }
+        public RectangleF Bounds { get; set; } = new RectangleF(x, y, width, height);
+        public string Name { get; set; } = name;
     }
     protected override SizeF DefaultSize => DeckObject!.DefaultSize;
     protected override bool NeedsToDrawBacks => true;
@@ -395,7 +390,7 @@ public class PaydayCardBlazor : BaseDeckGraphics<CardInformation>
     private static BasicList<TempInfo> GetDealSplitInfo(DealCard deal)
     {
         BasicList<string> list = deal.Business.Split("|").ToBasicList();
-        BasicList<TempInfo> output = new();
+        BasicList<TempInfo> output = [];
         TempInfo temp;
         if (list.Count == 2)
         {

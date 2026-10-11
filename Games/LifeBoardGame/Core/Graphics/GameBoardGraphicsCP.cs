@@ -75,7 +75,7 @@ public class GameBoardGraphicsCP
     {
         if (_gameContainer.CurrentView != EnumViewCategory.EndGame)
         {
-            return new();
+            return [];
         }
         pp1.ClearArea(_gameContainer.CountrySpace!);
         _gameContainer.CountrySpace!.PieceList.Clear();
@@ -85,7 +85,7 @@ public class GameBoardGraphicsCP
         var tempList = (from items in _gameContainer.PlayerList
                         where items.LastMove == EnumFinal.CountrySideAcres
                         select items).ToBasicList();
-        BasicList<EndPositionInfo> output = new();
+        BasicList<EndPositionInfo> output = [];
         foreach (var thisPlayer in tempList)
         {
             size = new SizeF(EndSize.Width, _gameContainer.CountrySpace.Area.Height);
@@ -105,12 +105,12 @@ public class GameBoardGraphicsCP
     {
         if (_gameContainer.CurrentView != EnumViewCategory.EndGame)
         {
-            return new();
+            return [];
         }
         RectangleF piece;
         SizeF size;
         PointF point;
-        BasicList<EndPositionInfo> output = new();
+        BasicList<EndPositionInfo> output = [];
         pp1.ClearArea(_gameContainer.MillionSpace!);
         _gameContainer.MillionSpace!.PieceList.Clear();
         var tempList = (from xx in _gameContainer.PlayerList
@@ -175,7 +175,7 @@ public class GameBoardGraphicsCP
     {
         if (_gameContainer.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
-            return new();
+            return [];
         }
         RectangleF rect = GetExtraRectangle();
         _gameContainer.ExtraSpace!.Area = rect;
@@ -183,7 +183,7 @@ public class GameBoardGraphicsCP
         ButtonInfo button;
         SizeF size = new(150, 50);
         PointF point;
-        BasicList<ButtonInfo> output = new();
+        BasicList<ButtonInfo> output = [];
         if (_options.CanPurchaseCarInsurance)
         {
             button = new();
@@ -286,11 +286,11 @@ public class GameBoardGraphicsCP
     {
         if (_gameContainer.GameStatus != EnumWhatStatus.NeedToChooseSpace)
         {
-            return new();
+            return [];
         }
         var firstPos = _spacePos.FirstPossiblePosition;
         var secondPos = _spacePos.SecondPossiblePosition;
-        BasicList<ChooseSpaceInfo> output = new();
+        BasicList<ChooseSpaceInfo> output = [];
         ChooseSpaceInfo space = new();
         if (firstPos == _gameContainer.CurrentSelected)
         {
@@ -338,43 +338,43 @@ public class GameBoardGraphicsCP
     {
         if (GoingTo == 0)
         {
-            return new();
+            return [];
         }
         var thisPos = (from Items in TempData.PositionList
                        where Items.PointView == currentPoint && Items.SpaceNumber == GoingTo
                        select Items).SingleOrDefault();
         if (thisPos == null)
         {
-            return new();
+            return [];
         }
-        return new() { GetClickableRectangle(thisPos, false) };
+        return [GetClickableRectangle(thisPos, false)];
     }
     public BasicList<StartClickInfo> GetFirstOptions()
     {
         if (_gameContainer.GameStatus != EnumWhatStatus.NeedChooseFirstOption)
         {
-            return new();
+            return [];
         }
         var firstRect = GetCareerRectangle();
         var secondRect = GetCollegeRectangle();
-        return new()
-        {
+        return
+        [
             new StartClickInfo(firstRect, EnumStart.Career),
             new StartClickInfo(secondRect, EnumStart.College)
-        };
+        ];
     }
     public BasicList<RetirementClickInfo> GetRetirementOptions()
     {
         if (_gameContainer.GameStatus != EnumWhatStatus.NeedChooseRetirement)
         {
-            return new();
+            return [];
         }
         var firstRect = GetCountrySideRect();
         var secondRect = GetMillionRect();
-        return new()
-        {
+        return
+        [
             new RetirementClickInfo(firstRect, EnumFinal.CountrySideAcres),
             new RetirementClickInfo(secondRect, EnumFinal.MillionaireEstates)
-        };
+        ];
     }
 }

@@ -14,7 +14,7 @@ public class ComboCardInfo : SimpleDeckObject, IDeckObject
     public int Points { get; set; }
     public string FirstDescription { get; set; } = "";
     public string SecondDescription { get; set; } = "";
-    public BasicList<SampleCardClass> SampleList { get; set; } = new();
+    public BasicList<SampleCardClass> SampleList { get; set; } = [];
     public ComboCardInfo CurrentCombo => this;
     public ComboCardInfo()
     {

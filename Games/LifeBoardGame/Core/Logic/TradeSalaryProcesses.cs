@@ -1,27 +1,18 @@
 ﻿namespace LifeBoardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class TradeSalaryProcesses : ITradeSalaryProcesses
+public class TradeSalaryProcesses(LifeBoardGameVMData model,
+    LifeBoardGameGameContainer gameContainer,
+    IToast toast
+        ) : ITradeSalaryProcesses
 {
-    private readonly LifeBoardGameVMData _model;
-    private readonly LifeBoardGameGameContainer _gameContainer;
-    private readonly IToast _toast;
-    public TradeSalaryProcesses(LifeBoardGameVMData model, 
-        LifeBoardGameGameContainer gameContainer,
-        IToast toast
-        )
-    {
-        _model = model;
-        _gameContainer = gameContainer;
-        _toast = toast;
-    }
     private string ComputerTradeWith
     {
         get
         {
-            decimal maxSalary = _gameContainer.SingleInfo!.Salary;
-            var tempList = _model.PlayerPicker!.TextList.Select(items => items.DisplayText).ToBasicList(); //hopefully this simple.
-            var nextList = tempList.Select(items => _gameContainer.PlayerList![items]).ToBasicList();
+            decimal maxSalary = gameContainer.SingleInfo!.Salary;
+            var tempList = model.PlayerPicker!.TextList.Select(items => items.DisplayText).ToBasicList(); //hopefully this simple.
+            var nextList = tempList.Select(items => gameContainer.PlayerList![items]).ToBasicList();
             if (nextList.Count == 0)
             {
                 return ""; //because nobody to even trade with.
@@ -39,58 +30,58 @@ public class TradeSalaryProcesses : ITradeSalaryProcesses
         string name = ComputerTradeWith;
         if (name == "")
         {
-            if (_gameContainer.CanSendMessage())
+            if (gameContainer.CanSendMessage())
             {
-                await _gameContainer.Network!.SendEndTurnAsync();
+                await gameContainer.Network!.SendEndTurnAsync();
             }
-            await _gameContainer.EndTurnAsync!.Invoke();
+            await gameContainer.EndTurnAsync!.Invoke();
             return;
         }
         await TradedSalaryAsync(name);
     }
     public void LoadOtherPlayerSalaries()
     {
-        var tempList = _gameContainer!.PlayerList!.AllPlayersExceptForCurrent();
+        var tempList = gameContainer!.PlayerList!.AllPlayersExceptForCurrent();
         var newList = tempList.GetSalaryList();
-        _gameContainer.AddPlayerChoices(newList);
+        gameContainer.AddPlayerChoices(newList);
     }
     public async Task TradedSalaryAsync(string player)
     {
         if (player == "")
         {
-            _toast.ShowUserErrorToast("Player cannot be blank.  Rethink");
+            toast.ShowUserErrorToast("Player cannot be blank.  Rethink");
         }
-        _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-        if (_gameContainer.GameStatus == EnumWhatStatus.NeedTradeSalary && _gameContainer.CanSendMessage())
+        gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
+        if (gameContainer.GameStatus == EnumWhatStatus.NeedTradeSalary && gameContainer.CanSendMessage())
         {
-            await _gameContainer.Network!.SendAllAsync("tradedsalary", player);
+            await gameContainer.Network!.SendAllAsync("tradedsalary", player);
         }
-        _model.PlayerPicker.ShowOnlyOneSelectedItem(player);
-        if (_gameContainer.Test.NoAnimations == false)
+        model.PlayerPicker.ShowOnlyOneSelectedItem(player);
+        if (gameContainer.Test.NoAnimations == false)
         {
-            await _gameContainer.Delay.DelaySeconds(.75);
+            await gameContainer.Delay.DelaySeconds(.75);
         }
-        var thisPlayer = _gameContainer.PlayerList[player];
+        var thisPlayer = gameContainer.PlayerList[player];
         SalaryInfo firstSalary;
         SalaryInfo secondSalary;
         firstSalary = thisPlayer.GetSalaryCard();
-        secondSalary = _gameContainer.SingleInfo.GetSalaryCard();
-        _gameContainer.SingleInfo.Salary = firstSalary.PayCheck;
+        secondSalary = gameContainer.SingleInfo.GetSalaryCard();
+        gameContainer.SingleInfo.Salary = firstSalary.PayCheck;
         thisPlayer.Salary = secondSalary.PayCheck;
         thisPlayer.Hand.ReplaceItem(firstSalary, secondSalary);
-        _gameContainer.SingleInfo.Hand.ReplaceItem(secondSalary, firstSalary);
-        PopulatePlayerProcesses.FillInfo(_gameContainer.SingleInfo);
+        gameContainer.SingleInfo.Hand.ReplaceItem(secondSalary, firstSalary);
+        PopulatePlayerProcesses.FillInfo(gameContainer.SingleInfo);
         PopulatePlayerProcesses.FillInfo(thisPlayer);
-        if (_gameContainer.GameStatus == EnumWhatStatus.NeedTradeSalary)
+        if (gameContainer.GameStatus == EnumWhatStatus.NeedTradeSalary)
         {
-            _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+            gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
         }
-        else if (_gameContainer.GameStatus == EnumWhatStatus.LastSpin)
+        else if (gameContainer.GameStatus == EnumWhatStatus.LastSpin)
         {
-            IMoveProcesses move = _gameContainer.Resolver.Resolve<IMoveProcesses>(); //do this way to stop the overflows.
+            IMoveProcesses move = gameContainer.Resolver.Resolve<IMoveProcesses>(); //do this way to stop the overflows.
             await move.PossibleAutomateMoveAsync();
             return;
         }
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
 }

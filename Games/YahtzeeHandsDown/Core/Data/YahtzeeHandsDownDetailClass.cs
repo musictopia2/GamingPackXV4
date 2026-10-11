@@ -14,7 +14,7 @@ public class YahtzeeHandsDownDetailClass : IGameInfo, ICardInfo<YahtzeeHandsDown
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<YahtzeeHandsDownCardInformation>.CardsToPassOut => 5;
-    BasicList<int> ICardInfo<YahtzeeHandsDownCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<YahtzeeHandsDownCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<YahtzeeHandsDownCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<YahtzeeHandsDownCardInformation>.ReshuffleAllCardsFromDiscard => true;
     bool ICardInfo<YahtzeeHandsDownCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,11 +22,11 @@ public class YahtzeeHandsDownDetailClass : IGameInfo, ICardInfo<YahtzeeHandsDown
     bool ICardInfo<YahtzeeHandsDownCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<YahtzeeHandsDownCardInformation>.NoPass => false;
     bool ICardInfo<YahtzeeHandsDownCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<YahtzeeHandsDownCardInformation> ICardInfo<YahtzeeHandsDownCardInformation>.DummyHand { get; set; } = new DeckRegularDict<YahtzeeHandsDownCardInformation>();
+    DeckRegularDict<YahtzeeHandsDownCardInformation> ICardInfo<YahtzeeHandsDownCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<YahtzeeHandsDownCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<YahtzeeHandsDownCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<YahtzeeHandsDownCardInformation>.DiscardExcludeList(IListShuffler<YahtzeeHandsDownCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

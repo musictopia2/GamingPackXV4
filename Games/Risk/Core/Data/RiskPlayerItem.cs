@@ -14,7 +14,7 @@ public partial class RiskPlayerItem : PlayerBoardGame<EnumColorChoice>, IPlayerO
     [JsonIgnore] //just in case.
     [ScoreColumn]
     public int RiskCards => MainHandList.Count;
-    public DeckRegularDict<RiskCardInfo> MainHandList { get; set; } = new();
+    public DeckRegularDict<RiskCardInfo> MainHandList { get; set; } = [];
     [JsonIgnore]
-    public DeckRegularDict<RiskCardInfo> StartUpList { get; set; } = new();
+    public DeckRegularDict<RiskCardInfo> StartUpList { get; set; } = [];
 }

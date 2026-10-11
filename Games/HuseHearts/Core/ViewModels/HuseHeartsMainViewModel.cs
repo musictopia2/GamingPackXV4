@@ -1,103 +1,94 @@
 namespace HuseHearts.Core.ViewModels;
 [InstanceGame]
-public class HuseHeartsMainViewModel : BasicCardGamesVM<HuseHeartsCardInformation>
-{
-    private readonly HuseHeartsMainGameClass _mainGame;
-    private readonly HuseHeartsVMData _model;
-    private readonly IGamePackageResolver _resolver;
-    public HuseHeartsMainViewModel(CommandContainer commandContainer,
+[UseStateChanged]
+public partial class HuseHeartsMainViewModel(CommandContainer commandContainer,
         HuseHeartsMainGameClass mainGame,
         HuseHeartsVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<HuseHeartsCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _resolver = resolver;
-        _model.Deck1.NeverAutoDisable = true;
-        _model.Blind1.SendEnableProcesses(this, () => false);
-        _model.Dummy1.SendEnableProcesses(this, () =>
+        viewModel.Deck1.NeverAutoDisable = true;
+        viewModel.Blind1.SendEnableProcesses(this, () => false);
+        viewModel.Dummy1.SendEnableProcesses(this, () =>
         {
-            if (_mainGame!.SaveRoot!.GameStatus != EnumStatus.Normal)
+            if (mainGame!.SaveRoot!.GameStatus != EnumStatus.Normal)
             {
                 return false;
             }
-            return _model!.TrickArea1!.FromDummy;
+            return viewModel!.TrickArea1!.FromDummy;
         });
-        _model.ChangeScreen = ChangeScreenAsync;
+        viewModel.ChangeScreen = ChangeScreen;
+        base.AdditionalInitialize();
     }
-    protected override async Task ActivateAsync()
+    protected override Task OpenAsync()
     {
-        await base.ActivateAsync();
-        ChangeScreenAsync();
+        ChangeScreen();
+        return base.OpenAsync();
     }
-    protected override async Task TryCloseAsync()
+    protected override Task CloseAsync()
     {
-        await CloseMoonAsync();
-        await ClosePassingAsync();
-        await base.TryCloseAsync();
+        CloseMoon();
+        ClosePassing();
+        return base.CloseAsync();
     }
-    public MoonViewModel? MoonScreen { get; set; }
-    public PassingViewModel? PassingScreen { get; set; }
-    private async Task LoadMoonAsync()
+    [StateProperty]
+    public partial MoonViewModel? MoonScreen { get; set; }
+    [StateProperty]
+    public partial PassingViewModel? PassingScreen { get; set; }
+    private void LoadMoon()
     {
         if (MoonScreen != null)
         {
             return;
         }
-        MoonScreen = _resolver.Resolve<MoonViewModel>();
-        await LoadScreenAsync(MoonScreen);
+        MoonScreen = Resolver.Resolve<MoonViewModel>();
     }
-    private async void ChangeScreenAsync()
+    private void ChangeScreen()
     {
-        if (_model == null)
+        if (viewModel == null)
         {
             return;
         }
-        _model.TrickArea1.Visible = _model.GameStatus == EnumStatus.Normal;
-        if (_model.GameStatus == EnumStatus.ShootMoon)
+        viewModel.TrickArea1.Visible = viewModel.GameStatus == EnumStatus.Normal;
+        if (viewModel.GameStatus == EnumStatus.ShootMoon)
         {
-            await LoadMoonAsync();
+            LoadMoon();
             return;
         }
-        await CloseMoonAsync();
-        if (_model.GameStatus == EnumStatus.Passing)
+        CloseMoon();
+        if (viewModel.GameStatus == EnumStatus.Passing)
         {
-            await LoadPassingAsync();
+            LoadPassing();
             return;
         }
-        await ClosePassingAsync();
+        ClosePassing();
     }
-    private async Task ClosePassingAsync()
+    private void ClosePassing()
     {
         if (PassingScreen != null)
         {
-            await CloseSpecificChildAsync(PassingScreen);
             PassingScreen = null;
         }
     }
-    private async Task CloseMoonAsync()
+    private void CloseMoon()
     {
         if (MoonScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(MoonScreen);
         MoonScreen = null;
     }
-    private async Task LoadPassingAsync()
+    private void LoadPassing()
     {
         if (PassingScreen != null)
         {
             return;
         }
-        PassingScreen = _resolver.Resolve<PassingViewModel>();
-        await LoadScreenAsync(PassingScreen);
+        PassingScreen = Resolver.Resolve<PassingViewModel>();
     }
     public override bool CanEnableAlways()
     {
@@ -109,13 +100,13 @@ public class HuseHeartsMainViewModel : BasicCardGamesVM<HuseHeartsCardInformatio
     }
     protected override bool CanEnableHand()
     {
-        if (_mainGame!.SaveRoot!.GameStatus == EnumStatus.Passing)
+        if (mainGame!.SaveRoot!.GameStatus == EnumStatus.Passing)
         {
             return true;
         }
-        if (_mainGame.SaveRoot.GameStatus == EnumStatus.Normal)
+        if (mainGame.SaveRoot.GameStatus == EnumStatus.Normal)
         {
-            if (_model!.TrickArea1!.FromDummy == true)
+            if (viewModel!.TrickArea1!.FromDummy == true)
             {
                 return false;
             }

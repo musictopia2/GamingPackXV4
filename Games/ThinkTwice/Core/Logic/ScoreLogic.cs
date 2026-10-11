@@ -1,27 +1,20 @@
 ﻿namespace ThinkTwice.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class ScoreLogic
+public class ScoreLogic(ThinkTwiceVMData model, ThinkTwiceGameContainer gameContainer)
 {
-    private readonly ThinkTwiceVMData _model;
-    private readonly ThinkTwiceGameContainer _gameContainer;
-    public ScoreLogic(ThinkTwiceVMData model, ThinkTwiceGameContainer gameContainer)
-    {
-        _model = model;
-        _gameContainer = gameContainer;
-    }
     public int CalculateScore()
     {
-        int index = _model.ItemSelected;
+        int index = model.ItemSelected;
         if (index == -1)
         {
             throw new CustomBasicException("Cannot calculate the score because nothing was selected");
         }
-        if (_gameContainer.SaveRoot!.CategoryRolled == -1)
+        if (gameContainer.SaveRoot!.CategoryRolled == -1)
         {
             throw new CustomBasicException("Cannot calculate the score because the category dice has not been rolled");
         }
-        if (_gameContainer.SaveRoot.WhichMulti == 0)
+        if (gameContainer.SaveRoot.WhichMulti == 0)
         {
             return 0;
         }
@@ -29,8 +22,8 @@ public class ScoreLogic
         sameCategory = WasSameCategory();
         int newMulti = MultiToUse(sameCategory);
         BasicList<SimpleDice> tempList;
-        tempList = _model.Cup!.DiceList.ToBasicList();
-        BasicList<int> mainList = new();
+        tempList = model.Cup!.DiceList.ToBasicList();
+        BasicList<int> mainList = [];
         foreach (var thisDice in tempList)
         {
             mainList.Add(thisDice.Value);
@@ -46,7 +39,7 @@ public class ScoreLogic
     private int FirstScore(BasicList<int> thisCol, out bool receiveMults)
     {
         int index;
-        index = _model.ItemSelected; ;
+        index = model.ItemSelected; ;
         if (index == 5)
         {
             int maxs;
@@ -78,7 +71,7 @@ public class ScoreLogic
             return ScoreDifferent(thisCol, out receiveMults);
         }
         int x;
-        BasicList<int> newCol = new();
+        BasicList<int> newCol = [];
         if (index == 3)
         {
             for (x = 1; x <= 3; x++)
@@ -152,13 +145,13 @@ public class ScoreLogic
     private int MultiToUse(bool sameCategory)
     {
         int firstMulti;
-        if (_gameContainer.SaveRoot!.WhichMulti == -1)
+        if (gameContainer.SaveRoot!.WhichMulti == -1)
         {
             firstMulti = 1;
         }
         else
         {
-            firstMulti = _gameContainer.SaveRoot.WhichMulti;
+            firstMulti = gameContainer.SaveRoot.WhichMulti;
         }
         if (sameCategory == false)
         {
@@ -169,8 +162,8 @@ public class ScoreLogic
     private bool WasSameCategory()
     {
         int index;
-        index = _model.ItemSelected;
-        if (index + 1 == _gameContainer.SaveRoot!.CategoryRolled)
+        index = model.ItemSelected;
+        if (index + 1 == gameContainer.SaveRoot!.CategoryRolled)
         {
             return true;
         }

@@ -14,7 +14,7 @@ public class A8RoundRummyDetailClass : IGameInfo, ICardInfo<A8RoundRummyCardInfo
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<A8RoundRummyCardInformation>.CardsToPassOut => 7;
-    BasicList<int> ICardInfo<A8RoundRummyCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<A8RoundRummyCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<A8RoundRummyCardInformation>.AddToDiscardAtBeginning => true;
     bool ICardInfo<A8RoundRummyCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<A8RoundRummyCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,7 +22,7 @@ public class A8RoundRummyDetailClass : IGameInfo, ICardInfo<A8RoundRummyCardInfo
     bool ICardInfo<A8RoundRummyCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<A8RoundRummyCardInformation>.NoPass => false;
     bool ICardInfo<A8RoundRummyCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<A8RoundRummyCardInformation> ICardInfo<A8RoundRummyCardInformation>.DummyHand { get; set; } = new DeckRegularDict<A8RoundRummyCardInformation>();
+    DeckRegularDict<A8RoundRummyCardInformation> ICardInfo<A8RoundRummyCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<A8RoundRummyCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<A8RoundRummyCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<A8RoundRummyCardInformation>.DiscardExcludeList(IListShuffler<A8RoundRummyCardInformation> deckList)

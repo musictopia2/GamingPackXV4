@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace LifeBoardGame.Core.Logic;
+﻿namespace LifeBoardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
 public class BoardProcesses(LifeBoardGameVMData model, LifeBoardGameGameContainer gameContainer, IToast toast) : IBoardProcesses
@@ -215,7 +213,6 @@ public class BoardProcesses(LifeBoardGameVMData model, LifeBoardGameGameContaine
         gameContainer.CurrentSelected = space;
         model.GameDetails = GetSpaceDetails(space);
         gameContainer.RepaintBoard();
-        gameContainer.Command.ReportAll();
     }
     public async Task Trade4TilesAsync()
     {

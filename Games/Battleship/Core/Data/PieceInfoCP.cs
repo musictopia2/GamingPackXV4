@@ -1,7 +1,10 @@
 ﻿namespace Battleship.Core.Data;
-public class PieceInfoCP
+[UseStateChanged]
+public partial class PieceInfoCP
 {
-    public bool DidHit { get; set; }
-    public string Location { get; set; } = "";
+    [StateProperty]
+    public partial bool DidHit { get; set; }
+    [StateProperty]
+    public partial string Location { get; set; } = "";
     public int Index { get; set; }
 }

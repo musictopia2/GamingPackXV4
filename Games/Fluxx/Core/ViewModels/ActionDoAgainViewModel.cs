@@ -7,8 +7,7 @@ public partial class ActionDoAgainViewModel : BasicActionScreen
         KeeperContainer keeperContainer,
         FluxxDelegates delegates,
         IFluxxEvent fluxxEvent,
-        BasicActionLogic basicActionLogic,
-        IEventAggregator aggregator) : base(gameContainer, actionContainer, keeperContainer, delegates, fluxxEvent, basicActionLogic, aggregator)
+        BasicActionLogic basicActionLogic) : base(gameContainer, actionContainer, keeperContainer, delegates, fluxxEvent, basicActionLogic)
     {
         CreateCommands(CommandContainer);
     }

@@ -1,28 +1,36 @@
-﻿@if (DataContext == null || Main == null || Main.PileList == null || Main.PileList.Count != 8 || _points.Count != 8)
-{
-    return;
-}
-@{
-    int x = 0;
-}
-<svg width="@TargetWidth" viewBox="@GetViewBox()">
-    @foreach (var pile in Main.PileList)
+﻿<StateContentView DataContext="Main">
+    @if (DataContext == null || Main == null || Main.PileList == null || Main.PileList.Count != 8 || _points.Count != 8)
     {
-        var point = _points[x];
-        var card = Main.GetLastCard(pile);
-        if (card.Deck > 0)
-        {
-            <DeckOfCardsImageBlazor @key="@card.Deck" Location="point" R="SolitaireCard" EmptyBorders="true"
-                                    DeckObject="card" CommandObject="Main.PileCommand" CommandParameter="pile" />
-        }
-        else
-        {
-            <DeckOfCardsImageBlazor @key="@pile" Location="point" R="SolitaireCard" EmptyBorders="true"
-                                    DeckObject="card" CommandObject="Main.PileCommand" CommandParameter="pile" />
-        }
-        x++;
+        return;
     }
-    <svg x="@_queenLocation.X" y="@_queenLocation.Y">
-        <SimpleWasteUI />
+    @{
+        int x = 0;
+    }
+    <svg width="@TargetWidth" viewBox="@GetViewBox()">
+        @foreach (var pile in Main.PileList)
+        {
+            var point = _points[x];
+            var card = Main.GetLastCard(pile);
+
+            <svg x="@point.X" y="@point.Y">
+                @if (card.Deck > 0)
+                {
+                    <DeckOfCardsImageBlazor @key="@card.Deck" PartOfBoard="true" R="SolitaireCard" EmptyBorders="true"
+                                            DeckObject="card" CommandObject="Main.PileCommand" CommandParameter="pile" />
+                }
+                else
+                {
+                    <DeckOfCardsImageBlazor @key="@pile" PartOfBoard="true" R="SolitaireCard" EmptyBorders="true"
+                                            DeckObject="card" CommandObject="Main.PileCommand" CommandParameter="pile" />
+                }
+            </svg>
+
+        
+            x++;
+        }
+        <svg x="@_queenLocation.X" y="@_queenLocation.Y">
+            <SimpleWasteUI />
+        </svg>
     </svg>
-</svg>
+</StateContentView>
+

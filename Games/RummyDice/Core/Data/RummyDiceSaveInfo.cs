@@ -7,7 +7,7 @@ public class RummyDiceSaveInfo : BasicSavedGameClass<RummyDicePlayerItem>, IMapp
     {
         _model = aa1.Resolver!.Resolve<RummyDiceVMData>();
     }
-    public BasicList<RummyDiceInfo> DiceList { get; set; } = new();
+    public StateList<RummyDiceInfo> DiceList { get; set; } = [];
     private int _rollNumber;
     public int RollNumber
     {
@@ -21,5 +21,5 @@ public class RummyDiceSaveInfo : BasicSavedGameClass<RummyDicePlayerItem>, IMapp
         }
     }
     public bool SomeoneFinished { get; set; }
-    public BasicList<BasicList<RummyDiceInfo>> TempSets { get; set; } = new();
+    public BasicList<BasicList<RummyDiceInfo>> TempSets { get; set; } = [];
 }

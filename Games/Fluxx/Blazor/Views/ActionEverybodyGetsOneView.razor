@@ -1,4 +1,4 @@
-﻿@inherits SimpleActionView
+﻿@inherits SimpleActionView<ActionEverybodyGetsOneViewModel>
 @if (CompleteContainer == null || DataContext == null)
 {
     return;
@@ -16,7 +16,7 @@
                 <GameButtonComponent CommandObject="GiveCommand"
                                      StartOnNewLine="true"
                                      Display="Give Cards To Selected Player" />
-                <KeeperButton K="ActionEverybodyGetsOneViewModel" @key="GetKey"  StartsOnNewLine="true" />
+                <KeeperButton DataContext="DataContext" @key="GetKey"  StartsOnNewLine="true" />
             </div>
         </StackItem>
     </StackLayout>

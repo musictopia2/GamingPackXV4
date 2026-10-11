@@ -1,11 +1,7 @@
 namespace CaptiveQueensSolitaire.Blazor;
-public class Bootstrapper : SinglePlayerBootstrapper<CaptiveQueensSolitaireShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : SinglePlayerBootstrapper<CaptiveQueensSolitaireShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

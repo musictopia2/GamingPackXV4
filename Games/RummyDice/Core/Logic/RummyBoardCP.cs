@@ -8,6 +8,7 @@ public class RummyBoardCP
     private readonly CommandContainer _command;
     private readonly TestOptions _test;
     readonly IGenerateDice<int> _gens;
+    
     public async Task SelectDiceAsync(RummyDiceInfo dice)
     {
         if (_command.IsExecuting)

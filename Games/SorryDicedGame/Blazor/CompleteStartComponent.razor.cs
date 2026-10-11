@@ -7,7 +7,7 @@ public partial class CompleteStartComponent : IDisposable
     public PlayerCollection<SorryDicedGamePlayerItem> Players { get; set; } = [];
     [Parameter]
     [EditorRequired]
-    public BasicList<BoardModel> BoardList { get; set; } = [];
+    public StateList<BoardModel> BoardList { get; set; } = [];
     [CascadingParameter]
     public SorryDicedGameMainViewModel? DataContext { get; set; }
     private static string Columns => gg1.RepeatAuto(2);
@@ -29,7 +29,7 @@ public partial class CompleteStartComponent : IDisposable
     private int HowMany(SorryDicedGamePlayerItem player) => BoardList.Count(x => x.PlayerOwned == player.Id && x.At == EnumBoardCategory.Start);
     protected override void OnInitialized()
     {
-        DataContext!.CommandContainer.AddAction(ShowChange, "sorrystart");
+        DataContext!.CommandContainer.AddSpecificAction("sorrystart", ShowChange);
         base.OnInitialized();
     }
     private bool _canRender;
@@ -47,7 +47,7 @@ public partial class CompleteStartComponent : IDisposable
     public void Dispose()
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
     {
-        DataContext!.CommandContainer.RemoveAction("sorrystart");
+        DataContext!.CommandContainer.RemoveSpecificAction("sorrystart");
     }
 
 

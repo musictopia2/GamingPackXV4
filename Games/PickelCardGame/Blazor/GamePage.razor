@@ -15,13 +15,11 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="PickelBidViewModel">
-        <PickelBidView />
-    </ParentControl>
-    <ParentControl VM="PickelCardGameMainViewModel">
+    <MainScreen>
         <PickelCardGameMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<PickelCardGamePlayerItem>">
-        <MultiplayerOpeningView P="PickelCardGamePlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <PromptView VM="PickelBidViewModel">
+        <PickelBidView />
+    </PromptView>
+    <MultiplayerOpeningView P="PickelCardGamePlayerItem" />
 </CascadingValue>

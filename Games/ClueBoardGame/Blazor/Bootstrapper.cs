@@ -1,5 +1,6 @@
 namespace ClueBoardGame.Blazor;
-public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<ClueBoardGameShellViewModel>(starts, mode)
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<ClueBoardGameShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     //protected override Task RegisterTestsAsync()
     //{

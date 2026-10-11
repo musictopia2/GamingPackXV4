@@ -1,49 +1,42 @@
 namespace Checkers.Core.ViewModels;
 [InstanceGame]
-public partial class CheckersMainViewModel : BasicMultiplayerMainVM
-{
-    private readonly CheckersMainGameClass _mainGame; //if we don't need, delete.
-    public CheckersVMData VMData { get; set; }
-    private readonly BasicData _basicData;
-    public CheckersMainViewModel(CommandContainer commandContainer,
+public partial class CheckersMainViewModel(CommandContainer commandContainer,
         CheckersMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        CheckersVMData data
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        CheckersVMData data) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+    public CheckersVMData VMData { get; set; } = data;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = data;
-        _basicData = basicData;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     public override bool CanEndTurn()
     {
-        return _mainGame.SaveRoot.GameStatus == EnumGameStatus.PossibleTie;
+        return mainGame.SaveRoot.GameStatus == EnumGameStatus.PossibleTie;
     }
     public bool CanTie
     {
         get
         {
-            if (_mainGame.SaveRoot.SpaceHighlighted > 0)
+            if (mainGame.SaveRoot.SpaceHighlighted > 0)
             {
                 return false;
             }
-            return _mainGame.SaveRoot.ForcedToMove == false;
+            return mainGame.SaveRoot.ForcedToMove == false;
         }
     }
     [Command(EnumCommandCategory.Game)]
     public async Task TieAsync()
     {
-        if (_basicData.MultiPlayer)
+        if (BasicData.MultiPlayer)
         {
-            await _mainGame.Network!.SendAllAsync("possibletie");
+            await mainGame.Network!.SendAllAsync("possibletie");
         }
         CommandContainer.ManuelFinish = true;
-        await _mainGame.ProcessTieAsync();
+        await mainGame.ProcessTieAsync();
     }
 }

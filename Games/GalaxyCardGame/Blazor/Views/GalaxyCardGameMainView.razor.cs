@@ -1,15 +1,15 @@
 namespace GalaxyCardGame.Blazor.Views;
 public partial class GalaxyCardGameMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private GalaxyCardGameVMData? _vmData;
     private GalaxyCardGameGameContainer? _gameContainer;
-    private BasicList<GalaxyCardGamePlayerItem> _players = new();
+    private BasicList<GalaxyCardGamePlayerItem> _players = [];
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<GalaxyCardGameVMData>();
-        _gameContainer = aa1.Resolver.Resolve<GalaxyCardGameGameContainer>();
+        _vmData = Resolver!.Resolve<GalaxyCardGameVMData>();
+        _gameContainer = Resolver.Resolve<GalaxyCardGameGameContainer>();
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(GalaxyCardGameVMData.NormalTurn))

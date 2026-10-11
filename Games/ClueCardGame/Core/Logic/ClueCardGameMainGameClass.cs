@@ -1,40 +1,30 @@
+using System.Runtime.CompilerServices;
+
 namespace ClueCardGame.Core.Logic;
 [SingletonGame]
-public class ClueCardGameMainGameClass
-    : CardGameClass<ClueCardGameCardInformation, ClueCardGamePlayerItem, ClueCardGameSaveInfo>
+public class ClueCardGameMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    ClueCardGameVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<ClueCardGameCardInformation> cardInfo,
+    CommandContainer command,
+    ClueCardGameGameContainer gameContainer,
+    ISystemError error,
+    IToast toast,
+    PrivateAutoResumeProcesses privateAutoResume,
+    IMessageBox message
+        )
+        : CardGameClass<ClueCardGameCardInformation, ClueCardGamePlayerItem, ClueCardGameSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, ISerializable
 {
-    private readonly ClueCardGameVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly ClueCardGameGameContainer _gameContainer; //if we don't need it, take it out.
-    private readonly IToast _toast;
-    private readonly PrivateAutoResumeProcesses _privateAutoResume;
-    private readonly IMessageBox _message;
-#pragma warning disable IDE0290 // Use primary constructor
-    public ClueCardGameMainGameClass(IGamePackageResolver mainContainer,
-#pragma warning restore IDE0290 // Use primary constructor
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        ClueCardGameVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<ClueCardGameCardInformation> cardInfo,
-        CommandContainer command,
-        ClueCardGameGameContainer gameContainer,
-        ISystemError error,
-        IToast toast,
-        PrivateAutoResumeProcesses privateAutoResume,
-        IMessageBox message
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _toast = toast;
-        _privateAutoResume = privateAutoResume;
-        _message = message;
-    }
+    private readonly ClueCardGameVMData _model = currentMod;
+    private readonly CommandContainer _command = command; //most of the time, needs this.  if not needed, take out.
+    private readonly IToast _toast = toast;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume = privateAutoResume;
+    private readonly IMessageBox _message = message;
     public static BasicList<int> ExcludeList { get; set; } = [];
     public int MyID => PlayerList!.GetSelf().Id; //i think.
     public int OtherTurn
@@ -63,25 +53,25 @@ public class ClueCardGameMainGameClass
             _model.Pile1.AddCard(card);
         }
         SingleInfo = PlayerList.GetSelf();
-        _model.PlayerHand1.HandList = SingleInfo!.MainHandList;
+        _model.PlayerHand1.ReplaceHandList(SingleInfo!.MainHandList);
         bool rets;
         await base.FinishGetSavedAsync(); //may have to be here (?)
         rets = await _privateAutoResume.HasAutoResumeAsync();
         if (rets == false)
         {
-            _gameContainer.DetectiveDetails = new();
-            _gameContainer.DetectiveDetails.CurrentPrediction = new();
-            _gameContainer.DetectiveDetails.PersonalNotebook = GetDetectiveList(SingleInfo);
+            gameContainer.DetectiveDetails = new();
+            gameContainer.DetectiveDetails.CurrentPrediction = new();
+            gameContainer.DetectiveDetails.PersonalNotebook = GetDetectiveList(SingleInfo);
             PopulateComputerData();
-            await _privateAutoResume.SaveStateAsync(_gameContainer);
+            await _privateAutoResume.SaveStateAsync(gameContainer);
         }
         else
         {
-            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+            await _privateAutoResume.RestoreStateAsync(gameContainer);
             if (SaveRoot.CurrentPrediction!.FirstName == "" && SaveRoot.CurrentPrediction.SecondName == "")
             {
-                SaveRoot.CurrentPrediction.FirstName = _gameContainer.DetectiveDetails!.CurrentPrediction!.FirstName;
-                SaveRoot.CurrentPrediction.SecondName = _gameContainer.DetectiveDetails.CurrentPrediction.SecondName;
+                SaveRoot.CurrentPrediction.FirstName = gameContainer.DetectiveDetails!.CurrentPrediction!.FirstName;
+                SaveRoot.CurrentPrediction.SecondName = gameContainer.DetectiveDetails.CurrentPrediction.SecondName;
                 SaveRoot.LoadMod(_model);
             }
         }
@@ -97,12 +87,12 @@ public class ClueCardGameMainGameClass
         _model.Prediction.ClearHand();
         if (SaveRoot.CurrentPrediction!.FirstName != "")
         {
-            card = _gameContainer.GetClonedCard(SaveRoot.CurrentPrediction.FirstName);
+            card = gameContainer.GetClonedCard(SaveRoot.CurrentPrediction.FirstName);
             _model.Prediction.HandList.Add(card);
         }
         if (SaveRoot.CurrentPrediction!.SecondName != "")
         {
-            card = _gameContainer.GetClonedCard(SaveRoot.CurrentPrediction.SecondName);
+            card = gameContainer.GetClonedCard(SaveRoot.CurrentPrediction.SecondName);
             _model.Prediction.HandList.Add(card);
         }
     }
@@ -118,7 +108,7 @@ public class ClueCardGameMainGameClass
     {
         Dictionary<int, DetectiveInfo> output = [];
         DetectiveInfo thisD;
-        foreach (var card in _gameContainer.DeckList)
+        foreach (var card in gameContainer.DeckList)
         {
             thisD = new();
             thisD.Category = card.WhatType;
@@ -139,17 +129,17 @@ public class ClueCardGameMainGameClass
     protected override async Task LastPartOfSetUpBeforeBindingsAsync()
     {
         //since i am using more private autoresume, the host will store the information privately.
-        _gameContainer.DetectiveDetails = new();
+        gameContainer.DetectiveDetails = new();
         _model.Accusation.Visible = false;
         _model.Accusation.HandList.Clear();
         SaveRoot.LoadMod(_model);
         _model.Prediction.HandList.Clear(); //i think.
         var self = PlayerList.GetSelf();
-        _gameContainer.DetectiveDetails.PersonalNotebook = GetDetectiveList(self);
-        _gameContainer.DetectiveDetails.CurrentPrediction = new();
+        gameContainer.DetectiveDetails.PersonalNotebook = GetDetectiveList(self);
+        gameContainer.DetectiveDetails.CurrentPrediction = new();
         PopulateComputerData();
         
-        await _privateAutoResume.SaveStateAsync(_gameContainer);
+        await _privateAutoResume.SaveStateAsync(gameContainer);
     }
     private void PopulateComputerData()
     {
@@ -160,7 +150,7 @@ public class ClueCardGameMainGameClass
             PrivatePlayer fins = new();
             fins.Id = player.Id; //to link up player.
             fins.ComputerDetectiveNoteBook = item;
-            _gameContainer.DetectiveDetails!.ComputerData.Add(fins);
+            gameContainer.DetectiveDetails!.ComputerData.Add(fins);
         }
     }
     protected override async Task ComputerTurnAsync()
@@ -178,16 +168,16 @@ public class ClueCardGameMainGameClass
         SaveRoot.GameStatus = EnumClueStatusList.MakePrediction; //i think.
         //at this point, all cards has been used.
         ExcludeList.Clear();
-        var list = _gameContainer.DeckList.Where(x => x.WhatType == EnumCardType.IsWeapon).ToBasicList();
+        var list = gameContainer.DeckList.Where(x => x.WhatType == EnumCardType.IsWeapon).ToBasicList();
         var item = list.GetRandomItem();
         SaveRoot.Solution = new();
         SaveRoot.Solution.WeaponName = item.Name;
         ExcludeList.Add(item.Deck);
-        list = _gameContainer.DeckList.Where(x => x.WhatType == EnumCardType.IsCharacter).ToBasicList();
+        list = gameContainer.DeckList.Where(x => x.WhatType == EnumCardType.IsCharacter).ToBasicList();
         item = list.GetRandomItem();
         ExcludeList.Add(item.Deck);
         SaveRoot.Solution.CharacterName = item.Name;
-        list = _gameContainer.DeckList.Where(x => x.WhatType == EnumCardType.IsRoom).ToBasicList();
+        list = gameContainer.DeckList.Where(x => x.WhatType == EnumCardType.IsRoom).ToBasicList();
         item = list.GetRandomItem();
         ExcludeList.Add(item.Deck);
         SaveRoot.Solution.RoomName = item.Name;
@@ -203,7 +193,6 @@ public class ClueCardGameMainGameClass
                 SaveRoot!.CurrentPrediction = await js1.DeserializeObjectAsync<PredictionInfo>(content);
                 _model!.FirstName = SaveRoot.CurrentPrediction.FirstName;
                 _model!.SecondName = SaveRoot.CurrentPrediction.SecondName; //private save is not necessary here.
-                _gameContainer.Command.UpdateAll();
                 await MakePredictionAsync();
 
                 return;
@@ -219,6 +208,7 @@ public class ClueCardGameMainGameClass
                 SingleInfo = PlayerList.GetWhoPlayer();
                 SaveRoot!.GameStatus = EnumClueStatusList.EndTurn;
                 SaveRoot.WhoGaveClue = hint.NickName;
+                CommandContainer.UpdateSpecificAction(ClueActions.WhoGaveClue);
                 if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
                 {
                     await MarkCardAsync(SingleInfo, card, false); //try this way now (?)
@@ -227,7 +217,6 @@ public class ClueCardGameMainGameClass
                     //for  now, show a messagebox with the information unless i find another way.
                     //await _message!.ShowMessageAsync($"Clue given by {hint.NickName}"); //hopefully this is okay.
                 }
-                _command.UpdateAll();
                 await ContinueTurnAsync(); //try this (?)
                 return;
             default:
@@ -238,20 +227,20 @@ public class ClueCardGameMainGameClass
     {
         await base.StartNewTurnAsync();
         SaveRoot.WhoGaveClue = "";
-        if (_gameContainer.DetectiveDetails is null)
+        CommandContainer.UpdateSpecificAction(ClueActions.WhoGaveClue);
+        if (gameContainer.DetectiveDetails is null)
         {
             throw new CustomBasicException("I don't think that detective details can be null when starting new turn");
         }
-        _gameContainer.DetectiveDetails.StartAccusation = false;
-        await _privateAutoResume.SaveStateAsync(_gameContainer); //because it changed.
+        gameContainer.DetectiveDetails.StartAccusation = false;
+        await _privateAutoResume.SaveStateAsync(gameContainer); //because it changed.
         PrepStartTurn(); //try this.
-        _command.UpdateAll();
         SaveRoot.GameStatus = EnumClueStatusList.MakePrediction; //you start out by making prediction.
         await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
     }
     private void ClearPrediction()
     {
-        _gameContainer.DetectiveDetails!.CurrentPrediction = new();
+        gameContainer.DetectiveDetails!.CurrentPrediction = new();
         SaveRoot.CurrentPrediction = new();
         _model.Prediction.ClearHand();
         SaveRoot.LoadMod(_model);
@@ -266,9 +255,10 @@ public class ClueCardGameMainGameClass
         _model.Prediction.Visible = true;
         _model.Accusation.Visible = false;
         _model.Accusation.ClearHand();
-        _gameContainer.DetectiveDetails!.Accusation = new();
-        await _privateAutoResume.SaveStateAsync(_gameContainer);
+        gameContainer.DetectiveDetails!.Accusation = new();
+        await _privateAutoResume.SaveStateAsync(gameContainer);
         SaveRoot.WhoGaveClue = ""; //i think
+        CommandContainer.UpdateSpecificAction(ClueActions.WhoGaveClue);
         _model.Pile1.ClearCards();
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
@@ -277,15 +267,14 @@ public class ClueCardGameMainGameClass
     {
         _model.Accusation.Visible = true;
         //_model.Accusation.HandList.Clear();
-        var card = _gameContainer.GetClonedCard(accusation.CharacterName);
+        var card = gameContainer.GetClonedCard(accusation.CharacterName);
         BasicList<ClueCardGameCardInformation> list = [];
         list.Add(card);
-        card = _gameContainer.GetClonedCard(accusation.WeaponName);
+        card = gameContainer.GetClonedCard(accusation.WeaponName);
         list.Add(card);
-        card = _gameContainer.GetClonedCard(accusation.RoomName);
+        card = gameContainer.GetClonedCard(accusation.RoomName);
         list.Add(card);
         _model.Accusation.HandList.ReplaceRange(list);
-        _command.UpdateAll(); //i think.
     }
     public override Task ContinueTurnAsync()
     {
@@ -331,22 +320,21 @@ public class ClueCardGameMainGameClass
         _model.Prediction.Visible = true;
         //if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
         //{
-        //    _gameContainer.DetectiveDetails!.HumanFailed = true;
+        //    gameContainer.DetectiveDetails!.HumanFailed = true;
         //}
-        _gameContainer.DetectiveDetails!.StartAccusation = false;
-        await _privateAutoResume.SaveStateAsync(_gameContainer);
+        gameContainer.DetectiveDetails!.StartAccusation = false;
+        await _privateAutoResume.SaveStateAsync(gameContainer);
         SaveRoot.GameStatus = EnumClueStatusList.EndTurn;
         await EndStepAsync();
     }
     private void FillOutPrediction()
     {
-        var card = _gameContainer.GetClonedCard(SaveRoot.CurrentPrediction!.FirstName);
+        var card = gameContainer.GetClonedCard(SaveRoot.CurrentPrediction!.FirstName);
         BasicList<ClueCardGameCardInformation> list = [];
         list.Add(card);
-        card = _gameContainer.GetClonedCard(SaveRoot.CurrentPrediction!.SecondName);
+        card = gameContainer.GetClonedCard(SaveRoot.CurrentPrediction!.SecondName);
         list.Add(card);
         _model.Prediction.HandList.ReplaceRange(list);
-        _command.UpdateAll();
     }
     public async Task MakePredictionAsync()
     {
@@ -427,7 +415,6 @@ public class ClueCardGameMainGameClass
         if (OtherTurn > 0 && OtherTurn == MyID)
         {
             var player = PlayerList.GetWhoPlayer();
-            _command.UpdateAll(); //do this as well.
             await _message.ShowMessageAsync($"You need to give a clue for the {player.NickName}");
             await ShowHumanCanPlayAsync();
             return;
@@ -470,7 +457,7 @@ public class ClueCardGameMainGameClass
     }
     private string CardToGive()
     {
-        var player = _gameContainer.DetectiveDetails!.ComputerData.Single(x => x.Id == OtherTurn);
+        var player = gameContainer.DetectiveDetails!.ComputerData.Single(x => x.Id == OtherTurn);
         GivenInfo? card = player.CluesGiven.Where(x => x.Player == WhoTurn &&
             (x.Clue == SaveRoot.CurrentPrediction!.FirstName
             || x.Clue == SaveRoot.CurrentPrediction.SecondName)).FirstOrDefault();
@@ -503,9 +490,9 @@ public class ClueCardGameMainGameClass
     private void ComputerNearEnd(Dictionary<int, DetectiveInfo> complete, string name)
     {
         //means not bluffing.
-        var card = _gameContainer.DeckList.Single(x => x.Name == name);
+        var card = gameContainer.DeckList.Single(x => x.Name == name);
         var category = card.WhatType;
-        var list = _gameContainer.DeckList.Where(x => x.WhatType == category && x.Name != name);
+        var list = gameContainer.DeckList.Where(x => x.WhatType == category && x.Name != name);
         foreach (var item in list)
         {
             var lasts = complete.Single(x => x.Value.Name == item.Name).Value;
@@ -514,7 +501,7 @@ public class ClueCardGameMainGameClass
     }
     private async Task ComputerNoCluesFoundAsync()
     {
-        var computer = _gameContainer.DetectiveDetails!.ComputerData.Single(x => x.Id == WhoTurn);
+        var computer = gameContainer.DetectiveDetails!.ComputerData.Single(x => x.Id == WhoTurn);
         var notes = computer.ComputerDetectiveNoteBook;
         var first = notes.Single(x => x.Value.Name == SaveRoot.CurrentPrediction!.FirstName).Value;
         var second = notes.Single(x => x.Value.Name == SaveRoot.CurrentPrediction!.SecondName).Value;
@@ -526,7 +513,7 @@ public class ClueCardGameMainGameClass
         {
             ComputerNearEnd(notes, second.Name);
         }
-        await _privateAutoResume.SaveStateAsync(_gameContainer);
+        await _privateAutoResume.SaveStateAsync(gameContainer);
     }
 
     private async Task ComputerRegularTurnAsync()
@@ -564,7 +551,7 @@ public class ClueCardGameMainGameClass
             }
             await MarkCardAsync(SingleInfo, thisCard, false);
             SaveRoot.WhoGaveClue = newPlayer.NickName;
-            _command.UpdateAll();
+            CommandContainer.UpdateSpecificAction(ClueActions.WhoGaveClue);
             await EndStepAsync();
             return;
         }
@@ -573,7 +560,7 @@ public class ClueCardGameMainGameClass
     }
     public async Task MarkCardAsync(ClueCardGamePlayerItem player, ClueCardGameCardInformation card, bool beginning)
     {
-        if (_gameContainer is null)
+        if (gameContainer is null)
         {
             throw new CustomBasicException("Must have game container"); //did this so does not expect me to use static.
         }
@@ -583,20 +570,21 @@ public class ClueCardGameMainGameClass
         }
         if (player.PlayerCategory == EnumPlayerCategory.Self)
         {
-            var item = _gameContainer.DetectiveDetails!.PersonalNotebook.Single(x => x.Value.Name == card.Name).Value;
+            var item = gameContainer.DetectiveDetails!.PersonalNotebook.Single(x => x.Value.Name == card.Name).Value;
             //will check automatically.  but also show it was given (even if its beginning).
             item.WasGiven = true;
             item.IsChecked = true;
-            await _privateAutoResume.SaveStateAsync(_gameContainer);
+            CommandContainer.UpdateSpecificAction(ClueActions.PersonalNotebook);
+            await _privateAutoResume.SaveStateAsync(gameContainer);
             return;
         }
         if (player.PlayerCategory == EnumPlayerCategory.Computer)
         {
-            var computer = _gameContainer.DetectiveDetails!.ComputerData.Single(x => x.Id == player.Id);
+            var computer = gameContainer.DetectiveDetails!.ComputerData.Single(x => x.Id == player.Id);
             var item = computer.ComputerDetectiveNoteBook.Single(x => x.Value.Name == card.Name).Value;
             item.WasGiven = true;
             item.IsChecked = true;
-            await _privateAutoResume.SaveStateAsync(_gameContainer);
+            await _privateAutoResume.SaveStateAsync(gameContainer);
             return;
         }
     }

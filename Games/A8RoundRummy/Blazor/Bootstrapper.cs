@@ -1,11 +1,7 @@
 namespace A8RoundRummy.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<A8RoundRummyShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<A8RoundRummyShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

@@ -17,7 +17,7 @@ public class GameBoardGraphicsCP
         GameContainer = gameContainer;
         CreateSpaces();
     }
-    public Dictionary<string, SpaceCP> SpaceList { get; private set; } = new ();
+    public Dictionary<string, SpaceCP> SpaceList { get; private set; } = [];
     private void CreateSpaces()
     {
         SpaceList.Clear();
@@ -71,9 +71,9 @@ public class GameBoardGraphicsCP
     {
         get
         {
-            if ((SpaceList!).ContainsKey("Start"))
+            if (SpaceList!.TryGetValue("Start", out SpaceCP? value))
             {
-                return SpaceList["Start"].Bounds;
+                return value.Bounds;
             }
             else
             {
@@ -85,9 +85,9 @@ public class GameBoardGraphicsCP
     {
         get
         {
-            if ((SpaceList!).ContainsKey("Finish"))
+            if (SpaceList!.TryGetValue("Finish", out SpaceCP? value))
             {
-                return SpaceList["Finish"].Bounds;
+                return value.Bounds;
             }
             else
             {
@@ -99,9 +99,9 @@ public class GameBoardGraphicsCP
     {
         if (space.ColorList.Count != space.PieceList.Count)
         {
-            return new();
+            return [];
         }
-        BasicList<PositionInfo> output = new();
+        BasicList<PositionInfo> output = [];
         for (int i = 0; i < space.PieceList.Count; i++)
         {
             output.Add(new PositionInfo()

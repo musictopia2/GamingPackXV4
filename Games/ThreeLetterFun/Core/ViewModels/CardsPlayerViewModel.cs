@@ -1,23 +1,28 @@
 ﻿namespace ThreeLetterFun.Core.ViewModels;
 [InstanceGame]
-public partial class CardsPlayerViewModel : ScreenViewModel, IBlankGameVM, IHandleAsync<CardsChosenEventModel>
+public partial class CardsPlayerViewModel : IHandleAsync<CardsChosenEventModel>
 {
     public CardsPlayerViewModel(CommandContainer commandContainer,
         IGamePackageResolver resolver, BasicData basicData,
         ICardsChosenProcesses processes,
         IEventAggregator aggregator
-        ) : base(aggregator)
+        )
     {
         CommandContainer = commandContainer;
         _basicData = basicData;
         _processes = processes;
-        CardList1 = new (CommandContainer, resolver);
+        _aggregator = aggregator;
+        CardList1 = new(CommandContainer, resolver);
         CardList1.IndexMethod = EnumIndexMethod.ZeroBased;
         CardList1.ItemSelectedAsync = CardList1_ItemSelectedAsync;
-        BasicList<string> thisList = new() { "4 Cards", "6 Cards", "8 Cards", "10 Cards" };
+        BasicList<string> thisList = ["4 Cards", "6 Cards", "8 Cards", "10 Cards"];
         CardList1.LoadTextList(thisList);
         CreateCommands(CommandContainer);
+        Unsubscribe();
+        Subscribe();
     }
+    private partial void Subscribe();
+    private partial void Unsubscribe();
     partial void CreateCommands(CommandContainer command);
     public ListViewPicker CardList1;
     public CommandContainer CommandContainer { get; set; }
@@ -38,9 +43,9 @@ public partial class CardsPlayerViewModel : ScreenViewModel, IBlankGameVM, IHand
     {
         return _processes.CardsChosenAsync(HowManyCards);
     }
-
     private readonly BasicData _basicData;
     private readonly ICardsChosenProcesses _processes;
+    private readonly IEventAggregator _aggregator;
     public int HowManyCards { get; set; }
     public void SelectGivenValue()
     {

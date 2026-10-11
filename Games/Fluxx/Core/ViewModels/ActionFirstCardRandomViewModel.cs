@@ -9,8 +9,7 @@ public partial class ActionFirstCardRandomViewModel : BasicActionScreen
         FluxxDelegates delegates,
         IFluxxEvent fluxxEvent,
         BasicActionLogic basicActionLogic,
-        IToast toast,
-        IEventAggregator aggregator) : base(gameContainer, actionContainer, keeperContainer, delegates, fluxxEvent, basicActionLogic, aggregator)
+        IToast toast) : base(gameContainer, actionContainer, keeperContainer, delegates, fluxxEvent, basicActionLogic)
     {
         _toast = toast;
         CreateCommands(CommandContainer);

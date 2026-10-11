@@ -1,22 +1,17 @@
 namespace FreeCellSolitaire.Core.Logic;
 [SingletonGame]
-public class FreeCellSolitaireMainGameClass : SolitaireGameClass<FreeCellSolitaireSaveInfo>
+public class FreeCellSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<FreeCellSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
     private WastePiles? _thisWaste;
     private FreePiles? _freepile;
-    private readonly IToast _toast;
-    public FreeCellSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-        _toast = toast;
-    }
+
     public override Task NewGameAsync()
     {
         if (_thisWaste == null)
@@ -41,12 +36,12 @@ public class FreeCellSolitaireMainGameClass : SolitaireGameClass<FreeCellSolitai
             }
             if (_freepile.OneSelected > -1)
             {
-                _toast.ShowUserErrorToast("Illegal move");
+                Toast.ShowUserErrorToast("Illegal move");
                 return;
             }
             if (_freepile.HasCard(pile) == false)
             {
-                _toast.ShowUserErrorToast("Illegal move");
+                Toast.ShowUserErrorToast("Illegal move");
                 return;
             }
             _freepile.SelectUnselectCard(pile);
@@ -54,12 +49,13 @@ public class FreeCellSolitaireMainGameClass : SolitaireGameClass<FreeCellSolitai
         }
         if (_freepile!.HasCard(pile))
         {
-            _toast.ShowUserErrorToast("Illegal move");
+            Toast.ShowUserErrorToast("Illegal move");
             return;
         }
         var thisCard = _thisMod.WastePiles1.GetCard();
         _freepile.AddCardToPile(pile, thisCard);
         _thisMod.WastePiles1.RemoveSingleCard();
+        UpdateWastePiles();
     }
     private int HowMuchToEmpty()
     {
@@ -162,6 +158,7 @@ public class FreeCellSolitaireMainGameClass : SolitaireGameClass<FreeCellSolitai
                 return true;
             }
             _thisMod.WastePiles1.SelectUnselectPile(pile);
+            UpdateWastePiles();
             return true;
         }
         if (_freepile!.OneSelected > -1)
@@ -169,11 +166,12 @@ public class FreeCellSolitaireMainGameClass : SolitaireGameClass<FreeCellSolitai
             var thisCard = _freepile.GetCard();
             if (_thisMod.WastePiles1.CanAddSingleCard(pile, thisCard) == false)
             {
-                _toast.ShowUserErrorToast("Illegal move");
+                Toast.ShowUserErrorToast("Illegal move");
                 return true;
             }
             _thisMod.WastePiles1.AddSingleCard(pile, thisCard);
             _freepile.RemoveCard();
+            UpdateWastePiles();
             return true;
         }
         int rooms;
@@ -187,10 +185,11 @@ public class FreeCellSolitaireMainGameClass : SolitaireGameClass<FreeCellSolitai
         }
         if (_thisWaste!.CanMoveCards(pile, out int lasts, rooms) == false)
         {
-            _toast.ShowUserErrorToast("Illegal move");
+            Toast.ShowUserErrorToast("Illegal move");
             return true;
         }
         _thisMod.WastePiles1.MoveCards(pile, lasts);
+        UpdateWastePiles();
         return true;
     }
     protected override SolitaireCard CardPlayed()

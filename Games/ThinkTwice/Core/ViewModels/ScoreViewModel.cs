@@ -1,6 +1,6 @@
 ﻿namespace ThinkTwice.Core.ViewModels;
 [InstanceGame]
-public partial class ScoreViewModel : ScreenViewModel, IBlankGameVM
+public partial class ScoreViewModel
 {
     public ThinkTwiceVMData VMData { get; set; }
     private readonly ThinkTwiceGameContainer _gameContainer;
@@ -18,9 +18,8 @@ public partial class ScoreViewModel : ScreenViewModel, IBlankGameVM
     }
     public ScoreViewModel(ThinkTwiceVMData model, 
         ThinkTwiceGameContainer gameContainer,
-        IEventAggregator aggregator,
         IMessageBox message
-        ) : base(aggregator)
+        )
     {
         VMData = model;
         _gameContainer = gameContainer;
@@ -63,6 +62,7 @@ public partial class ScoreViewModel : ScreenViewModel, IBlankGameVM
     [Command(EnumCommandCategory.Plain)]
     public void ChangeSelection(string text)
     {
+        _gameContainer.Command.QueueRefreshAfterCommand(ThinkTwiceActions.Score);
         VMData.ItemSelected = VMData.TextList.IndexOf(text);
     }
     public bool CanCalculateScore => CanClickCommands(true);

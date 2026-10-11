@@ -7,9 +7,8 @@ public abstract partial class KeeperActionViewModel : BasicKeeperScreen
     public KeeperActionViewModel(FluxxGameContainer gameContainer, 
         KeeperContainer keeperContainer, 
         IFluxxEvent fluxxEvent, 
-        IEventAggregator aggregator,
         IToast toast
-        ) : base(gameContainer, keeperContainer, aggregator)
+        ) : base(gameContainer, keeperContainer)
     {
         _fluxxEvent = fluxxEvent;
         _toast = toast;

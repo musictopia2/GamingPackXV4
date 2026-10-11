@@ -14,16 +14,11 @@
     }
     return;
 }
-<ParentControl VM="PassOutDiceGameMainViewModel">
+<MainScreen>
     <PassOutDiceGameMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<PassOutDiceGamePlayerItem>">
-    <MultiplayerOpeningView P="PassOutDiceGamePlayerItem" />
-</ParentControl>
-<ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, PassOutDiceGamePlayerItem>">
-
-    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="PassOutDiceGamePlayerItem">
-        @* if there is another piece, replace with proper piece. *@
-        <CheckerPiece HasImage="true" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" MainColor="@GetColor(Piece.EnumValue)" />
-    </BeginningChooseColorView>
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="PassOutDiceGamePlayerItem" />
+<BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="PassOutDiceGamePlayerItem">
+    @* if there is another piece, replace with proper piece. *@
+    <CheckerPiece HasImage="true" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" MainColor="@GetColor(Piece.EnumValue)" />
+</BeginningChooseColorView>

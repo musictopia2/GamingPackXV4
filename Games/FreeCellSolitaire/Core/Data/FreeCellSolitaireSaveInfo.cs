@@ -3,5 +3,5 @@ namespace FreeCellSolitaire.Core.Data;
 [Cloneable(explicitDeclaration: false)]
 public class FreeCellSolitaireSaveInfo : SolitaireSavedClass, IMappable
 {
-    public BasicList<BasicPileInfo<SolitaireCard>> FreeCards = new();
+    public BasicList<BasicPileInfo<SolitaireCard>> FreeCards { get; set; } = [];
 }

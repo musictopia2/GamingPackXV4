@@ -155,7 +155,7 @@ public class PhaseSet : SetInfo<EnumColorTypes, EnumColorTypes, Phase10CardInfor
     }
     public override void LoadSet(SavedSet currentItem)
     {
-        HandList = currentItem.CardList.ToRegularDeckDict();
+        ReplaceHandList(currentItem.CardList);
         _whatSet = currentItem.WhatSet;
     }
     public override SavedSet SavedSet()

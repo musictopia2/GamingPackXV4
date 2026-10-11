@@ -3,10 +3,10 @@ namespace ThreeLetterFun.Core.Data;
 public partial class ThreeLetterFunPlayerItem : PlayerSingleHand<ThreeLetterFunCardData>
 {
     [ScoreColumn]
-    public int CardsWon { get; set; }
+    public partial int CardsWon { get; set; }
     public bool TookTurn { get; set; }
     public int TimeToGetWord { get; set; } = -1; //-1 means did not get it.
-    public BasicList<TilePosition> TileList { get; set; } = new(); //this is the tiles used to get the word.  only send if you actually get a word.  the other players needs to know the positions as well.  before sending; will have for yourself
+    public BasicList<TilePosition> TileList { get; set; } = []; //this is the tiles used to get the word.  only send if you actually get a word.  the other players needs to know the positions as well.  before sending; will have for yourself
     public int CardUsed { get; set; }
     public int MostRecent { get; set; }
     public void ClearTurn()

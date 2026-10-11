@@ -15,15 +15,11 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="SorryCardGameMainViewModel">
+    <MainScreen>
         <SorryCardGameMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<SorryCardGamePlayerItem>">
-        <MultiplayerOpeningView P="SorryCardGamePlayerItem" />
-    </ParentControl>
-    <ParentControl VM="BeginningChooseColorViewModel<EnumColorChoices, SorryCardGamePlayerItem>">
-        <BeginningChooseColorView E="EnumColorChoices" Context="Piece" P="SorryCardGamePlayerItem">
-            <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
-        </BeginningChooseColorView>
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="SorryCardGamePlayerItem" />
+    <BeginningChooseColorView E="EnumColorChoices" Context="Piece" P="SorryCardGamePlayerItem">
+        <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
+    </BeginningChooseColorView>
 </CascadingValue>

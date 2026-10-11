@@ -1,32 +1,30 @@
 namespace AccordianSolitaire.Core.ViewModels;
 [InstanceGame]
-public partial class AccordianSolitaireMainViewModel : ScreenViewModel,
-        IBasicEnableProcess,
-        IBlankGameVM,
-        IAggregatorContainer,
-        IHandle<ScoreEventModel>
+[UseStateChanged]
+public partial class AccordianSolitaireMainViewModel(CommandContainer commandContainer,
+
+    IEventAggregator aggregator,
+    IGamePackageResolver resolver,
+        BasicData basicData,
+        IToast toast
+        ) : IBasicEnableProcess,
+    IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>, IHandle<ScoreEventModel>
 {
-    private readonly BasicData _basicData;
-    private readonly IToast _toast;
-    private readonly AccordianSolitaireMainGameClass _mainGame;
-    public int Score { get; set; }
-    public DeckObservablePile<AccordianSolitaireCardInfo> DeckPile { get; set; }
-    public GameBoard GameBoard1;
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    private AccordianSolitaireMainGameClass _mainGame = null!;
+    [StateProperty]
+    public partial int Score { get; set; }
+    public DeckObservablePile<AccordianSolitaireCardInfo> DeckPile { get; set; } = null!;
+    public GameBoard GameBoard1 = null!;
     public void UnselectAll()
     {
         GameBoard1.UnselectAllObjects();
     }
-    public AccordianSolitaireMainViewModel(IEventAggregator aggregator,
-        CommandContainer commandContainer,
-        IGamePackageResolver resolver,
-        BasicData basicData,
-        IToast toast
-        ) : base(aggregator)
+    void IMainGameVM.Initialize()
     {
-        CommandContainer = commandContainer;
-        _basicData = basicData;
-        _toast = toast;
-        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged; //hopefully no problem (?)
+        Subscribe();
+        commandContainer.ExecutingChanged = CommandContainer_ExecutingChanged; //hopefully no problem (?)
         DeckPile = resolver.ReplaceObject<DeckObservablePile<AccordianSolitaireCardInfo>>();
         DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
@@ -38,6 +36,20 @@ public partial class AccordianSolitaireMainViewModel : ScreenViewModel,
         GameBoard1.ObjectClickedAsync = GameBoard1_ObjectClickedAsync;
         _mainGame = resolver.ReplaceObject<AccordianSolitaireMainGameClass>(); //hopefully this works.  means you have to really rethink.
     }
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
+    {
+        basicData.GameDataLoading = true;
+        await _mainGame.NewGameAsync(DeckPile, GameBoard1);
+        GameBoard1.IsEnabled = true;
+        basicData.GameDataLoading = false;
+    }
+
+    async Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        Unsubscribe();
+        commandContainer.ExecutingChanged = null;
+    }
+    
     private async Task GameBoard1_ObjectClickedAsync(AccordianSolitaireCardInfo card, int index)
     {
         if (index == -1)
@@ -51,7 +63,7 @@ public partial class AccordianSolitaireMainViewModel : ScreenViewModel,
         }
         if (GameBoard1.IsValidMove(card) == false)
         {
-            _toast.ShowUserErrorToast("Illegal Move");
+            toast.ShowUserErrorToast("Illegal Move");
             return;
         }
         GameBoard1.MakeMove(card);
@@ -66,7 +78,7 @@ public partial class AccordianSolitaireMainViewModel : ScreenViewModel,
     }
     private async void CommandContainer_ExecutingChanged()
     {
-        if (CommandContainer.IsExecuting)
+        if (commandContainer.IsExecuting)
         {
             return;
         }
@@ -75,18 +87,9 @@ public partial class AccordianSolitaireMainViewModel : ScreenViewModel,
             await _mainGame.SaveStateAsync();
         }
     }
-    public CommandContainer CommandContainer { get; set; }
     public bool CanEnableBasics()
     {
         return true;
-    }
-    protected override async Task ActivateAsync()
-    {
-        _basicData.GameDataLoading = true;
-        await base.ActivateAsync();
-        await _mainGame.NewGameAsync(DeckPile, GameBoard1);
-        GameBoard1.IsEnabled = true;
-        _basicData.GameDataLoading = false;
     }
     void IHandle<ScoreEventModel>.Handle(ScoreEventModel message)
     {

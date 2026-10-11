@@ -270,7 +270,7 @@ public class GolfCardGameMainGameClass
     }
     private BasicList<int> ListScores()
     {
-        BasicList<int> output = new();
+        BasicList<int> output = [];
         PlayerList!.ForEach(thisPlayer =>
         {
             SingleInfo = thisPlayer;

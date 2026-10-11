@@ -14,7 +14,6 @@ global using CommonBasicLibraries.BasicUIProcesses;
 global using BasicGameFrameworkLibrary.Core.CommandClasses;
 global using BasicGameFrameworkLibrary.Core.ViewModels;
 global using BasicGameFrameworkLibrary.Core.ViewModelInterfaces;
-global using MVVMFramework.ViewModels;
 global using HitTheDeck.Core.Logic;
 global using BasicGameFrameworkLibrary.Core.MiscProcesses;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.MapHelpers;
@@ -63,3 +62,5 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelp
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.Cards;
 global using rr1 = HitTheDeck.Resources.SvgPngImageResource;
+global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;

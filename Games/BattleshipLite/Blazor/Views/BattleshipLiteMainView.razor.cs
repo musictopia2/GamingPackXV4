@@ -3,9 +3,9 @@ public partial class BattleshipLiteMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private BasicList<string> _rowList = new();
-    private BasicList<string> _columnList = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private BasicList<string> _rowList = [];
+    private BasicList<string> _columnList = [];
     [CascadingParameter]
     private MediaQueryListComponent? Media { get; set; }
     private string GetVH()

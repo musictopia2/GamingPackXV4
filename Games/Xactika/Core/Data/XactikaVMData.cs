@@ -5,19 +5,19 @@ namespace Xactika.Core.Data;
 public partial class XactikaVMData : ITrickCardGamesData<XactikaCardInformation, EnumShapes>, IBasicEnableProcess
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumShapes TrumpSuit { get; set; }
+    public partial EnumShapes TrumpSuit { get; set; }
     [LabelColumn]
-    public string GameModeText { get; set; } = "";
+    public partial string GameModeText { get; set; } = "";
     [LabelColumn]
-    public EnumShapes ShapeChosen { get; set; }
+    public partial EnumShapes ShapeChosen { get; set; }
     [LabelColumn]
-    public int RoundNumber { get; set; }
+    public partial int RoundNumber { get; set; }
     [LabelColumn]
-    public EnumGameMode ModeChosen { get; set; }
+    public partial EnumGameMode ModeChosen { get; set; }
     private readonly XactikaGameContainer _gameContainer;
     public XactikaVMData(CommandContainer command,
         BasicTrickAreaObservable<EnumShapes, XactikaCardInformation> trickArea1,
@@ -36,7 +36,7 @@ public partial class XactikaVMData : ITrickCardGamesData<XactikaCardInformation,
         Bid1.ChangedNumberValueAsync = Bid1_ChangedNumberValueAsync;
         PlayerHand1!.Maximum = 8;
         ModeChoose1.IndexMethod = EnumIndexMethod.OneBased;
-        BasicList<string> tempList = new() { "To Win", "To Lose", "Bid" };
+        BasicList<string> tempList = ["To Win", "To Lose", "Bid"];
         ModeChoose1.LoadTextList(tempList);
         ShapeChoose1.SendEnableProcesses(this, () => _gameContainer.SaveRoot.GameStatus == EnumStatusList.CallShape);
     }
@@ -54,11 +54,10 @@ public partial class XactikaVMData : ITrickCardGamesData<XactikaCardInformation,
     {
         return true;
     }
-
-    public ChooseShapeObservable ShapeChoose1;
+    public ChooseShapeObservable ShapeChoose1 { get; set; }
     public NumberPicker Bid1;
     [LabelColumn]
-    public int BidChosen { get; set; } = -1;
+    public partial int BidChosen { get; set; } = -1;
     public ListViewPicker ModeChoose1;
     public BasicTrickAreaObservable<EnumShapes, XactikaCardInformation> TrickArea1 { get; set; }
     public DeckObservablePile<XactikaCardInformation> Deck1 { get; set; }

@@ -14,16 +14,11 @@
     }
     return;
 }
-<ParentControl VM="SorryMainViewModel">
+<MainScreen>
     <SorryMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<SorryPlayerItem>">
-    <MultiplayerOpeningView P="SorryPlayerItem" />
-</ParentControl>
-<ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, SorryPlayerItem>">
-    
-    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="SorryPlayerItem">
-        @* if there is another piece, replace with proper piece. *@
-        <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
-    </BeginningChooseColorView>
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="SorryPlayerItem" />
+<BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="SorryPlayerItem">
+    @* if there is another piece, replace with proper piece. *@
+    <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
+</BeginningChooseColorView>

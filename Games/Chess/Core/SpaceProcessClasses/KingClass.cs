@@ -8,8 +8,8 @@ public class KingClass : IChessMan
     public EnumPieceType PieceCategory { get; set; }
     public BasicList<CheckersChessVector> GetValidMoves()
     {
-        BasicList<CheckersChessVector> possibleList = new()
-        {
+        BasicList<CheckersChessVector> possibleList =
+        [
             new CheckersChessVector(Row + 1, Column + 1),
             new CheckersChessVector(Row - 1, Column - 1),
             new CheckersChessVector(Row + 1, Column),
@@ -18,8 +18,8 @@ public class KingClass : IChessMan
             new CheckersChessVector(Row, Column - 1),
             new CheckersChessVector(Row - 1, Column + 1),
             new CheckersChessVector(Row + 1, Column - 1)
-        };
-        BasicList<CheckersChessVector> finalList = new();
+        ];
+        BasicList<CheckersChessVector> finalList = [];
         SpaceCP? c;
         foreach (var thisPos in possibleList)
         {

@@ -14,7 +14,7 @@ public class MillebournesDetailClass : IGameInfo, ICardInfo<MillebournesCardInfo
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<MillebournesCardInformation>.CardsToPassOut => 6;
-    BasicList<int> ICardInfo<MillebournesCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<MillebournesCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<MillebournesCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<MillebournesCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<MillebournesCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,11 +22,11 @@ public class MillebournesDetailClass : IGameInfo, ICardInfo<MillebournesCardInfo
     bool ICardInfo<MillebournesCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<MillebournesCardInformation>.NoPass => false;
     bool ICardInfo<MillebournesCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<MillebournesCardInformation> ICardInfo<MillebournesCardInformation>.DummyHand { get; set; } = new DeckRegularDict<MillebournesCardInformation>();
+    DeckRegularDict<MillebournesCardInformation> ICardInfo<MillebournesCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<MillebournesCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<MillebournesCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<MillebournesCardInformation>.DiscardExcludeList(IListShuffler<MillebournesCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

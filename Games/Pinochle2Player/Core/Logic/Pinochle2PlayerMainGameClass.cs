@@ -1,39 +1,24 @@
 namespace Pinochle2Player.Core.Logic;
 [SingletonGame]
-public class Pinochle2PlayerMainGameClass
-    : TrickGameClass<EnumSuitList, Pinochle2PlayerCardInformation, Pinochle2PlayerPlayerItem, Pinochle2PlayerSaveInfo>
+public class Pinochle2PlayerMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    Pinochle2PlayerVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<Pinochle2PlayerCardInformation> cardInfo,
+    CommandContainer command,
+    Pinochle2PlayerGameContainer gameContainer,
+    ITrickData trickData,
+    ITrickPlay trickPlay,
+    IAdvancedTrickProcesses aTrick,
+    ISystemError error,
+    IToast toast
+        )
+        : TrickGameClass<EnumSuitList, Pinochle2PlayerCardInformation, Pinochle2PlayerPlayerItem, Pinochle2PlayerSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
         , IMiscDataNM, IStartNewGame, ISerializable
 {
-    private readonly Pinochle2PlayerVMData _model;
-    private readonly CommandContainer _command;
-    private readonly Pinochle2PlayerGameContainer _gameContainer;
-    private readonly IAdvancedTrickProcesses _aTrick;
-    private readonly IToast _toast;
-    private readonly ITrickPlay _trickPlay;
-    public Pinochle2PlayerMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        Pinochle2PlayerVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<Pinochle2PlayerCardInformation> cardInfo,
-        CommandContainer command,
-        Pinochle2PlayerGameContainer gameContainer,
-        ITrickData trickData,
-        ITrickPlay trickPlay,
-        IAdvancedTrickProcesses aTrick,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _trickPlay = trickPlay;
-        _aTrick = aTrick;
-        _toast = toast;
-    }
     public override async Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -42,13 +27,13 @@ public class Pinochle2PlayerMainGameClass
         SortCards();
         if (SaveRoot!.StartMessage != "")
         {
-            _toast.ShowInfoToast(SaveRoot.StartMessage);
+            Toast.ShowInfoToast(SaveRoot.StartMessage);
         }
         await base.FinishGetSavedAsync();
-        _aTrick!.LoadGame();
+        aTrick!.LoadGame();
         if (SaveRoot.ChooseToMeld)
         {
-            _aTrick.HideCards();
+            aTrick.HideCards();
         }
     }
     protected override async Task LastPartOfSetUpBeforeBindingsAsync()
@@ -57,14 +42,14 @@ public class Pinochle2PlayerMainGameClass
         LoadVM();
         SaveRoot!.MeldList.Clear();
         SaveRoot.CardList.Clear();
-        SaveRoot.TrumpSuit = _model.Pile1!.GetCardInfo().Suit;
-        _aTrick!.ClearBoard();
+        SaveRoot.TrumpSuit = currentMod.Pile1!.GetCardInfo().Suit;
+        aTrick!.ClearBoard();
         PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.TricksWon = 0;
             thisPlayer.CurrentScore = 0;
         });
-        var thisCard = _model.Pile1.GetCardInfo();
+        var thisCard = currentMod.Pile1.GetCardInfo();
         if (thisCard.Value == EnumRegularCardValueList.Nine)
         {
             int player = WhoStarts;
@@ -83,7 +68,7 @@ public class Pinochle2PlayerMainGameClass
             var tempPlayer = PlayerList[player];
             SaveRoot.StartMessage = $"{tempPlayer.NickName} gets an exta 10 points because the discard to begin with is a dix and is not going first";
             CalculateScore(player);
-            _toast.ShowInfoToast(SaveRoot.StartMessage);
+            Toast.ShowInfoToast(SaveRoot.StartMessage);
         }
         await base.LastPartOfSetUpBeforeBindingsAsync();
     }
@@ -137,7 +122,7 @@ public class Pinochle2PlayerMainGameClass
     {
         message = ""; //this represents the message that will be a messagebox.
         int others;
-        others = _model!.YourMelds!.ObjectSelected();
+        others = currentMod!.YourMelds!.ObjectSelected();
         if (others == 0)
         {
             return firstChosen;
@@ -161,10 +146,10 @@ public class Pinochle2PlayerMainGameClass
     }
     public override async Task EndTurnAsync()
     {
-        SingleInfo = PlayerList!.GetWhoPlayer();
+        SingleInfo = PlayerList.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
-        var thisCard = _model.Deck1!.DrawCard();
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
+        var thisCard = currentMod.Deck1!.DrawCard();
         thisCard.Drew = true;
         SingleInfo.MainHandList.Add(thisCard);
         int newTurn;
@@ -177,18 +162,19 @@ public class Pinochle2PlayerMainGameClass
             newTurn = 1;
         }
         var tempPlayer = PlayerList[newTurn];
-        if (_model.Deck1.IsEndOfDeck())
+        if (currentMod.Deck1.IsEndOfDeck())
         {
-            thisCard = _model.Pile1!.GetCardInfo();
-            _model.Pile1.ClearCards();
+            thisCard = currentMod.Pile1!.GetCardInfo();
+            currentMod.Pile1.ClearCards();
         }
         else
         {
-            thisCard = _model.Deck1.DrawCard();
+            thisCard = currentMod.Deck1.DrawCard();
         }
         thisCard.Drew = true;
         tempPlayer.MainHandList.Add(thisCard);
-        if (_model.Deck1.IsEndOfDeck())
+        currentMod.RefreshDeckCount();
+        if (currentMod.Deck1.IsEndOfDeck())
         {
             MeldsBackInHand();
         }
@@ -239,12 +225,12 @@ public class Pinochle2PlayerMainGameClass
     private int CardsLeft()
     {
         var thisPlayer = PlayerList!.GetWhoPlayer();
-        if (_model!.Pile1!.PileEmpty() == true)
+        if (currentMod!.Pile1!.PileEmpty() == true)
         {
             return thisPlayer.ObjectCount;
         }
         int counts = SaveRoot!.MeldList.Where(items => items.Player == WhoTurn).Select(items => items.CardList.Count).ToBasicList().Count;
-        return counts = thisPlayer.ObjectCount;
+        return counts + thisPlayer.ObjectCount;
     }
     public override async Task EndTrickAsync()
     {
@@ -252,13 +238,13 @@ public class Pinochle2PlayerMainGameClass
         int wins = WhoWonTrick(trickList);
         Pinochle2PlayerPlayerItem thisPlayer = PlayerList![wins];
         thisPlayer.TricksWon++;
-        await _aTrick!.AnimateWinAsync(wins);
+        await aTrick!.AnimateWinAsync(wins);
         trickList.ForEach(card =>
         {
             card.Points = card.PinochleCardValue;
             card.Player = wins;
         });
-        _aTrick.HideCards();
+        aTrick.HideCards();
         SaveRoot.CardList.AddRange(trickList);
         CalculateScore(wins);
         WhoTurn = wins;
@@ -266,20 +252,20 @@ public class Pinochle2PlayerMainGameClass
         int lefts = CardsLeft();
         if (lefts == 0)
         {
-            if (_model!.Pile1!.PileEmpty() == false)
+            if (currentMod!.Pile1!.PileEmpty() == false)
             {
                 throw new CustomBasicException("Never went to end");
             }
             SingleInfo.CurrentScore += 10;
-            _toast.ShowInfoToast($"{SingleInfo.NickName} gets an extra 10 points for winning the last trick");
+            Toast.ShowInfoToast($"{SingleInfo.NickName} gets an extra 10 points for winning the last trick");
             await EndRoundAsync();
             return;
         }
         SingleInfo = PlayerList.GetSelf();
-        _model!.PlayerHand1!.EndTurn();
+        currentMod!.PlayerHand1!.EndTurn();
         SortCards();
         SingleInfo = PlayerList.GetWhoPlayer();
-        if (_model.Pile1!.PileEmpty() == false)
+        if (currentMod.Pile1!.PileEmpty() == false)
         {
             SaveRoot.ChooseToMeld = true;
             this.ShowTurn();
@@ -290,8 +276,8 @@ public class Pinochle2PlayerMainGameClass
     }
     private async Task StartNewTrickAsync()
     {
-        _aTrick!.ClearBoard();
-        _command!.ManuelFinish = true; //because it could be somebody else's turn.
+        aTrick!.ClearBoard();
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         await StartNewTurnAsync();
     }
     public override Task ContinueTurnAsync()
@@ -310,18 +296,18 @@ public class Pinochle2PlayerMainGameClass
         }
         if (hadCard == false)
         {
-            var thisCard = _gameContainer.DeckList!.GetSpecificItem(deck);
+            var thisCard = gameContainer.DeckList!.GetSpecificItem(deck);
             var thisMeld = GetMeldFromCard(thisCard);
             SaveRoot!.MeldList.ForEach(tempMeld =>
             {
                 tempMeld.CardList.RemoveAllOnly(items => items == deck);
             });
         }
-        await _trickPlay!.PlayCardAsync(deck);
+        await TrickPlay.PlayCardAsync(deck);
     }
     public override bool IsValidMove(int deck)
     {
-        if (_model!.Pile1!.PileEmpty())
+        if (currentMod!.Pile1!.PileEmpty())
         {
             return true; //if there is nothing in the pile, you can play anything no matter what
         }
@@ -341,10 +327,10 @@ public class Pinochle2PlayerMainGameClass
     private DeckRegularDict<Pinochle2PlayerCardInformation> GetPlayerMeldList(int player)
     {
         var thisList = SaveRoot!.MeldList.Where(items => items.Player == player).Select(items => items.CardList).ToBasicList();
-        DeckRegularDict<Pinochle2PlayerCardInformation> output = new();
+        DeckRegularDict<Pinochle2PlayerCardInformation> output = [];
         thisList.ForEach(firstTemp =>
         {
-            var tempList = firstTemp.GetNewObjectListFromDeckList(_gameContainer.DeckList!);
+            var tempList = firstTemp.GetNewObjectListFromDeckList(gameContainer.DeckList!);
             tempList.ForEach(thisCard =>
             {
                 if (output.ObjectExist(thisCard.Deck) == false)
@@ -369,16 +355,16 @@ public class Pinochle2PlayerMainGameClass
     }
     private void ReloadMeldFrames()
     {
-        _model!.YourMelds!.HandList.Clear();
-        _model.OpponentMelds!.HandList.Clear();
-        if (_model.Pile1!.PileEmpty())
+        currentMod!.YourMelds!.HandList.Clear();
+        currentMod.OpponentMelds!.HandList.Clear();
+        if (currentMod.Pile1!.PileEmpty())
         {
-            _model.YourMelds.Visible = false;
-            _model.OpponentMelds.Visible = false;
+            currentMod.YourMelds.Visible = false;
+            currentMod.OpponentMelds.Visible = false;
             return;
         }
-        _model.YourMelds.Visible = true;
-        _model.OpponentMelds.Visible = true;
+        currentMod.YourMelds.Visible = true;
+        currentMod.OpponentMelds.Visible = true;
         int myID = PlayerList!.GetSelf().Id;
         2.Times(x =>
         {
@@ -390,20 +376,20 @@ public class Pinochle2PlayerMainGameClass
             });
             if (myID == 1 && x == 1 || myID == 2 && x == 2)
             {
-                _model.YourMelds.PopulateObjects(thisList);
+                currentMod.YourMelds.PopulateObjects(thisList);
             }
             else
             {
-                _model.OpponentMelds.PopulateObjects(thisList);
+                currentMod.OpponentMelds.PopulateObjects(thisList);
             }
         });
     }
     public async Task ExchangeDiscardAsync(int deck)
     {
-        var thisCard = _model!.Pile1!.GetCardInfo();
-        _model.Pile1.RemoveFromPile();
+        var thisCard = currentMod!.Pile1!.GetCardInfo();
+        currentMod.Pile1.RemoveFromPile();
         await Aggregator.AnimatePickUpDiscardAsync(thisCard);
-        var newCard = _gameContainer.DeckList!.GetSpecificItem(deck);
+        var newCard = gameContainer.DeckList!.GetSpecificItem(deck);
         thisCard.Drew = true;
         SingleInfo!.MainHandList.Add(thisCard);
         MeldClass thisMeld = new();
@@ -455,6 +441,7 @@ public class Pinochle2PlayerMainGameClass
         }
         await this.RoundOverNextAsync();
     }
+   
     private static bool HasNewMeld(MeldClass oldMeld, MeldClass newMeld)
     {
         if (oldMeld.ClassAValue != EnumClassA.None && newMeld.ClassAValue != EnumClassA.None)
@@ -474,7 +461,7 @@ public class Pinochle2PlayerMainGameClass
     private void FirstProcessMeld(BasicList<int> thisList)
     {
         var thisMeld = SaveRoot!.MeldList.Where(items => items.Player == WhoTurn && items.CardList.Any(fins => thisList.Contains(fins))).FirstOrDefault();
-        var temps = thisList.GetNewObjectListFromDeckList(_gameContainer.DeckList!);
+        var temps = thisList.GetNewObjectListFromDeckList(gameContainer.DeckList!);
         if (thisMeld == null)
         {
             temps.ForEach(thisCard =>
@@ -623,24 +610,23 @@ public class Pinochle2PlayerMainGameClass
         });
         CalculateScore(WhoTurn);
         ReloadMeldFrames();
-        _command.UpdateAll();
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.5);
         }
         if (thisList.Count == 1)
         {
-            _toast.ShowUserErrorToast("Since the dix was played; can make one more meld");
+            Toast.ShowUserErrorToast("Since the dix was played; can make one more meld");
             await ContinueTurnAsync();
             return;
         }
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
-            _model!.YourMelds!.EndTurn();
+            currentMod!.YourMelds!.EndTurn();
         }
         else
         {
-            _model!.OpponentMelds!.EndTurn();
+            currentMod!.OpponentMelds!.EndTurn();
         }
         CalculateScore(WhoTurn);
         await EndTurnAsync();

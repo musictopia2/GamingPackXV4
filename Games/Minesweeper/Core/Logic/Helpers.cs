@@ -5,6 +5,8 @@ public static class Helpers
     {
         public async Task MessageGameOverAsync(string message, IToast toast, ISystemError error)
         {
+            IEventAggregator aggregator = Resolver!.Resolve<IEventAggregator>();
+            aggregator.PublishAll(new BeforeGameOverEventModel()); //do this for minesweeper first.
             toast.ShowInfoToast(message);
             await Task.Delay(2000); //wait 2 seconds so you can see the previous screen.
             await game.SendGameOverAsync(error);

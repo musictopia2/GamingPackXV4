@@ -3,9 +3,9 @@ namespace Phase10.Core.Data;
 public partial class Phase10PlayerItem : PlayerRummyHand<Phase10CardInformation>
 {
     [ScoreColumn]
-    public int Phase { get; set; } = 1;
+    public partial int Phase { get; set; } = 1;
     [ScoreColumn]
-    public bool Completed { get; set; }
+    public partial bool Completed { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

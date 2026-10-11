@@ -1,4 +1,4 @@
-@inherits BasicGameView<TicTacToeMainViewModel>
+@inherits CascadingGameView<TicTacToeMainViewModel>
 @using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 @{
     GetWin();
@@ -11,17 +11,20 @@
                Context="Item" GridWidth="100%" GridHeight="80vh"
                TargetSpaceHeight="300" TargetSpaceWidth="300">
     <ItemTemplate Context="Space">
-        <BorderedCommandSpace CommandObject="DataContext!.MakeMoveCommand"
-                              CommandParameter="Space"
-                              FillColor="@cc1.White"
-                              BorderWidth="5"
-                              BorderColor="@cc1.Black">
-            <CenteredTextBlazor TextColor="@cc1.White"
-                                BorderWidth="5"
-                                FontSize="300"
-                                Text="@GetText(Space)"
-                                BorderColor="@cc1.Blue" />
-        </BorderedCommandSpace>
+        <StateContentView DataContext="Space">
+            <BorderedCommandSpace CommandObject="DataContext!.MakeMoveCommand"
+                                  CommandParameter="Space"
+                                  FillColor="@cc1.White"
+                                  BorderWidth="5"
+                                  BorderColor="@cc1.Black">
+                <CenteredTextBlazor TextColor="@cc1.White"
+                                    BorderWidth="5"
+                                    FontSize="300"
+                                    Text="@GetText(Space)"
+                                    BorderColor="@cc1.Blue" />
+            </BorderedCommandSpace>
+        </StateContentView>
+        
     </ItemTemplate>
     <Canvas>
         @if (_win != null && _win.WinList.Count == 3)

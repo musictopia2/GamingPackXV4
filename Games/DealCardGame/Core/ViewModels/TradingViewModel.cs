@@ -32,14 +32,14 @@ public partial class TradingViewModel : IBasicEnableProcess
         _gameContainer.PersonalInformation.TradeInfo.OpponentCard = 0;
         _gameContainer.PersonalInformation.TradeInfo.YourCard = 0;
         _gameContainer.PersonalInformation.TradeInfo.YourColor = EnumColor.None;
-        _gameContainer.Command.ResetCustomStates();
+        //_gameContainer.Command.ResetCustomStates();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
-        _gameContainer.Command.UpdateAll(); //i think.
+        _gameContainer.Command.UpdateSpecificAction(DealCardGameActions.Main);
     }
-    public void AddAction(Action action)
-    {
-        _gameContainer.Command.CustomStateHasChanged += action;
-    }
+    //public void AddAction(Action action)
+    //{
+    //    _gameContainer.Command.CustomStateHasChanged += action;
+    //}
     [Command(EnumCommandCategory.Game)]
     public async Task TradeAsync()
     {
@@ -62,7 +62,7 @@ public partial class TradingViewModel : IBasicEnableProcess
         {
             await _gameContainer.Network!.SendAllAsync("trade", _gameContainer.PersonalInformation.TradeInfo);
         }
-        _gameContainer.Command.ResetCustomStates();
+        //_gameContainer.Command.ResetCustomStates();
         await _mainGame.PossibleTradingPropertyAsync(_gameContainer.PersonalInformation.TradeInfo);
     }
     public bool CanEnableBasics()

@@ -6,7 +6,7 @@ public class BowlingScoresCP
     private readonly BowlingDiceGameMainGameClass _mainGame;
     public BowlingScoresCP(BowlingDiceGameMainGameClass mainGame)
     {
-        TextFrames = new();
+        TextFrames = [];
         10.Times(xx =>
         {
             TextFrames.Add($"Frame {xx}");
@@ -46,11 +46,13 @@ public class BowlingScoresCP
         if (howMany == 10 && _mainGame.SaveRoot!.WhichPart == 1)
         {
             mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = "X";
+            mainFrame.Update();
             return;
         }
         if (_mainGame.SaveRoot!.WhichPart == 1)
         {
             mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = howMany.ToString();
+            mainFrame.Update();
             return;
         }
         int CurrentScore;
@@ -59,11 +61,13 @@ public class BowlingScoresCP
             if (mainFrame.SectionList[1].Score == "X" && howMany == 10)
             {
                 mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = "X";
+                mainFrame.Update();
                 return;
             }
             if (mainFrame.SectionList[1].Score == "X" && howMany < 10)
             {
                 mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = howMany.ToString();
+                mainFrame.Update();
                 return;
             }
             CurrentScore = int.Parse(mainFrame.SectionList[1].Score) + howMany;
@@ -74,9 +78,11 @@ public class BowlingScoresCP
             if (CurrentScore == 10)
             {
                 mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = "/";
+                mainFrame.Update();
                 return;
             }
             mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = howMany.ToString();
+            mainFrame.Update();
             return;
         }
         if (_mainGame.SaveRoot.WhichPart == 3)
@@ -85,30 +91,36 @@ public class BowlingScoresCP
             if (previousScore.Score == "X" && howMany == 10)
             {
                 mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = "X";
+                mainFrame.Update();
                 return;
             }
             if (previousScore.Score == "/" && howMany == 10)
             {
                 mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = "X";
+                mainFrame.Update();
                 return;
             }
             if (previousScore.Score == "X" && howMany < 10)
             {
                 mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = howMany.ToString();
+                mainFrame.Update();
                 return;
             }
             if (previousScore.Score == "/" && howMany < 10)
             {
                 mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = howMany.ToString();
+                mainFrame.Update();
                 return;
             }
             CurrentScore = int.Parse(previousScore.Score) + howMany;
             if (CurrentScore == 10)
             {
                 mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = "/";
+                mainFrame.Update();
                 return;
             }
             mainFrame.SectionList[_mainGame.SaveRoot.WhichPart].Score = howMany.ToString();
+            mainFrame.Update();
             return;
         }
     }

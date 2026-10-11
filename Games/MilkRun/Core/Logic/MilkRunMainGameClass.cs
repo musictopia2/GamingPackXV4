@@ -1,5 +1,3 @@
-using BasicGameFrameworkLibrary.Core.NetworkingClasses.Data;
-
 namespace MilkRun.Core.Logic;
 [SingletonGame]
 public class MilkRunMainGameClass
@@ -271,17 +269,26 @@ public class MilkRunMainGameClass
         if (SaveRoot!.CardsDrawn < 2 && _model.Deck1.IsEndOfDeck() == false)
         {
             return false;
-        } 
+        }
         if (SingleInfo!.MainHandList.Count > 8)
         {
             throw new CustomBasicException("Can't have more than 8 cards");
         }
         return SingleInfo.MainHandList.Count == 6;
     }
+    //not common enough to put into the main pile.
+    private DeckRegularDict<MilkRunCardInformation> FlipDiscardPile()
+    {
+        var cards = _model.Pile1.DiscardList();
+        cards.Reverse();
+        cards.Add(_model.Pile1.GetCardInfo());
+        _model.Pile1.ClearCards();
+        return cards;
+    }
     protected override DeckRegularDict<MilkRunCardInformation> GetReshuffleList()
     {
-        DeckRegularDict<MilkRunCardInformation> output = new();
-        var tempList = _model!.Pile1!.FlipCardList();
+        DeckRegularDict<MilkRunCardInformation> output = [];
+        var tempList = FlipDiscardPile();
         int x;
         for (x = 1; x <= 3; x++)
         {
@@ -295,7 +302,7 @@ public class MilkRunMainGameClass
         {
             output.AddRange(thisPlayer.GetPileCardList());
         });
-        DeckRegularDict<MilkRunCardInformation> finalList = new();
+        DeckRegularDict<MilkRunCardInformation> finalList = [];
         _gameContainer.DeckList!.ForEach(thisCard =>
         {
             if (output.Contains(thisCard) == false)
@@ -386,7 +393,6 @@ public class MilkRunMainGameClass
         var thisCard = _gameContainer.DeckList!.GetSpecificItem(deck);
         int cardsBefore = SingleInfo!.MainHandList.Count;
         SingleInfo.MainHandList.RemoveSpecificItem(thisCard);
-        _command.UpdateAll();
         int cardsAfter = SingleInfo.MainHandList.Count;
         if (cardsBefore == cardsAfter)
         {

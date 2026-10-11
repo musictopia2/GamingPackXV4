@@ -1,10 +1,12 @@
-﻿<BaseFrameBlazor IsEnabled="@IsEnabled" Text="@Player!.NickName">
-    @{
-        RegularSimpleCard? card = LastCard;
-        @if (card is null)
-        {
-            return;
+﻿<StateContentView DataContext="Player">
+    <BaseFrameBlazor IsEnabled="@IsEnabled" Text="@Player!.NickName">
+        @{
+            RegularSimpleCard? card = LastCard;
+            @if (card is null)
+            {
+                return;
+            }
         }
-    }
-    @ChildContent!(card)
-</BaseFrameBlazor>
+        @ChildContent!(card)
+    </BaseFrameBlazor>
+</StateContentView>

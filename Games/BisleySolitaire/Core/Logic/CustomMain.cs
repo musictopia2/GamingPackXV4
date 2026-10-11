@@ -1,11 +1,6 @@
 namespace BisleySolitaire.Core.Logic;
-public class CustomMain : MainPilesCP, IMain, ISerializable //good news is if nothing is found, just will do nothing.
+public class CustomMain(IScoreData thisMod, CommandContainer command, IGamePackageResolver resolver) : MainPilesCP(thisMod, command, resolver), IMain, ISerializable //good news is if nothing is found, just will do nothing.
 {
-    private readonly IScoreData _thisMod;
-    public CustomMain(IScoreData thisMod, CommandContainer command, IGamePackageResolver resolver) : base(thisMod, command, resolver)
-    {
-        _thisMod = thisMod;
-    }
     public override bool CanAddCard(int pile, SolitaireCard thisCard)
     {
         if (pile > 3)
@@ -34,7 +29,7 @@ public class CustomMain : MainPilesCP, IMain, ISerializable //good news is if no
         {
             throw new CustomBasicException("Cards To begin with must be 4");
         }
-        _thisMod.Score = thisList.Count;
+        Score.Score = thisList.Count;
         Piles.ClearBoard();
         var tempList = Piles.PileList!.Skip(4).ToBasicList();
         if (tempList.Count == 0)

@@ -4,7 +4,7 @@ public partial class ThreeLetterFunMainView : INewCard
     private ThreeLetterFunCardData? _tempCard;
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     protected override void OnInitialized()
     {
         _scores.AddColumn("Cards Won", true, nameof(ThreeLetterFunPlayerItem.CardsWon));

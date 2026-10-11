@@ -1,18 +1,9 @@
 namespace XPuzzle.Core.ViewModels;
-public class XPuzzleShellViewModel : SinglePlayerShellViewModel
+public class XPuzzleShellViewModel(IGamePackageResolver mainContainer,
+    CommandContainer container,
+    ISaveSinglePlayerClass saves,
+    IEventAggregator aggregator
+        ) : SinglePlayerShellViewModel(mainContainer, container, saves, aggregator)
 {
     protected override bool AlwaysNewGame => true; //most games allow new game always.
-    public XPuzzleShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo GameData,
-        ISaveSinglePlayerClass saves,
-        IEventAggregator aggregator
-        ) : base(mainContainer, container, GameData, saves, aggregator)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<XPuzzleMainViewModel>();
-        return model;
-    }
 }

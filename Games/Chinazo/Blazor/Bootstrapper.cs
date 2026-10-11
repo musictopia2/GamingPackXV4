@@ -1,5 +1,6 @@
 namespace Chinazo.Blazor;
-public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<ChinazoShellViewModel>(starts, mode)
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<ChinazoShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     //protected override Task RegisterTestsAsync()
     //{

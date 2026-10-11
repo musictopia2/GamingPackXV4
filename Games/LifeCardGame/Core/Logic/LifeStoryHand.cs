@@ -43,7 +43,7 @@ public class LifeStoryHand : HandObservable<LifeCardGameCardInformation>
         GetPlayerIndex = player;
         AutoSelect = EnumHandAutoType.SelectOneOnly;
         _myID = _gameContainer.PlayerList!.GetSelf().Id;
-        HandList = new DeckRegularDict<LifeCardGameCardInformation>();
+        ReplaceHandList([]);
     }
     private bool CanPositionCard(LifeCardGameCardInformation thisCard)
     {

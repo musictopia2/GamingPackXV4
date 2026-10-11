@@ -15,16 +15,12 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="PaydayMainViewModel">
+    <MainScreen>
         <PaydayMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<PaydayPlayerItem>">
-        <MultiplayerOpeningView P="PaydayPlayerItem" />
-    </ParentControl>
-    <ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, PaydayPlayerItem>">
-        <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="PaydayPlayerItem">
-            @* if there is another piece, replace with proper piece. *@
-            <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
-        </BeginningChooseColorView>
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="PaydayPlayerItem" />
+    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="PaydayPlayerItem">
+        @* if there is another piece, replace with proper piece. *@
+        <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
+    </BeginningChooseColorView>
 </CascadingValue>

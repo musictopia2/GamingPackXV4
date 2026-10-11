@@ -2,7 +2,7 @@ namespace ChineseCheckers.Core.Data;
 [SingletonGame]
 public class ChineseCheckersSaveInfo : BasicSavedGameClass<ChineseCheckersPlayerItem>, IMappable, ISaveInfo
 {
-    public BasicList<MoveInfo> PreviousMoves { get; set; } = new();
+    public BasicList<MoveInfo> PreviousMoves { get; set; } = [];
     public bool TurnContinued { get; set; }
     public int PreviousSpace { get; set; }
     private string _instructions = "None";

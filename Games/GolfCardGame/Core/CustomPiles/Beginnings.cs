@@ -28,7 +28,6 @@ public class Beginnings : GameBoardObservable<RegularSimpleCard>
     protected override Task ClickProcessAsync(RegularSimpleCard thisObject)
     {
         thisObject.IsSelected = !thisObject.IsSelected;
-        _command.UpdateAll(); //try this first.
         return Task.CompletedTask;
     }
     public bool CanContinue => ObjectList.Count(items => items.IsSelected == true) == 2;

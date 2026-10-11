@@ -14,7 +14,7 @@ public partial class CompletePlayerBoardComponent : IDisposable
     public BasicList<SorryDicedGamePlayerItem> Players { get; set; } = [];
     [Parameter]
     [EditorRequired]
-    public BasicList<BoardModel> BoardList { get; set; } = [];
+    public StateList<BoardModel> BoardList { get; set; } = [];
     [CascadingParameter]
     public SorryDicedGameMainViewModel? DataContext { get; set; }
     private static string Columns => gg1.RepeatAuto(2);
@@ -36,7 +36,7 @@ public partial class CompletePlayerBoardComponent : IDisposable
     }
     protected override void OnInitialized()
     {
-        DataContext!.CommandContainer.AddAction(ShowChange, "sorryplayers");
+        DataContext!.CommandContainer.AddSpecificAction("sorryplayers", ShowChange);
         base.OnInitialized();
     }
     private bool _canRender;
@@ -55,6 +55,6 @@ public partial class CompletePlayerBoardComponent : IDisposable
     public void Dispose()
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
     {
-        DataContext!.CommandContainer.RemoveAction("sorryplayers");
+        DataContext!.CommandContainer.RemoveSpecificAction("sorryplayers");
     }
 }

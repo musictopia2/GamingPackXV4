@@ -1,43 +1,32 @@
 namespace ThinkTwice.Core.ViewModels;
 [InstanceGame]
-public partial class ThinkTwiceMainViewModel : DiceGamesVM<SimpleDice>
-{
-    private readonly ThinkTwiceMainGameClass _mainGame; //if we don't need, delete.
-    public ThinkTwiceVMData VMData { get; set; }
-    private readonly IGamePackageResolver _resolver;
-    public ThinkTwiceMainViewModel(CommandContainer commandContainer,
+public partial class ThinkTwiceMainViewModel(CommandContainer commandContainer,
         ThinkTwiceMainGameClass mainGame,
         ThinkTwiceVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, roller, aggregator)
+        IEventAggregator aggregator) : DiceGamesVM<SimpleDice>(commandContainer, mainGame, viewModel, basicData, resolver, roller, aggregator)
+{
+    public ThinkTwiceVMData VMData { get; set; } = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = viewModel;
-        _resolver = resolver;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
+    }
+    protected override async Task OpenAsync()
+    {
+        ScoreScreen = Resolver.Resolve<ScoreViewModel>();
+        await base.OpenAsync();
     }
     partial void CreateCommands(CommandContainer command);
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
-    public PlayerCollection<ThinkTwicePlayerItem> PlayerList => _mainGame.PlayerList;
+    public PlayerCollection<ThinkTwicePlayerItem> PlayerList => mainGame.PlayerList;
     public ScoreViewModel? ScoreScreen { get; set; }
-    protected override async Task ActivateAsync()
+    protected override Task CloseAsync()
     {
-        ScoreScreen = _resolver.Resolve<ScoreViewModel>();
-        await LoadScreenAsync(ScoreScreen);
-        await base.ActivateAsync();
-    }
-    protected override async Task TryCloseAsync()
-    {
-        if (ScoreScreen is not null)
-        {
-            await CloseSpecificChildAsync(ScoreScreen);
-        }
-        await base.TryCloseAsync();
+        ScoreScreen = null;
+        return base.CloseAsync();
     }
     protected override bool CanEnableDice()
     {
@@ -49,9 +38,9 @@ public partial class ThinkTwiceMainViewModel : DiceGamesVM<SimpleDice>
     }
     public override async Task EndTurnAsync()
     {
-        if (_mainGame.BasicData.MultiPlayer) //so it can send the scores to the other players.
+        if (mainGame.BasicData.MultiPlayer) //so it can send the scores to the other players.
         {
-            await _mainGame.SendSelectedAsync();
+            await mainGame.SendSelectedAsync();
         }
         await base.EndTurnAsync();
     }
@@ -67,12 +56,12 @@ public partial class ThinkTwiceMainViewModel : DiceGamesVM<SimpleDice>
             {
                 return false;
             }
-            return _mainGame.SaveRoot.WhichMulti == -1;
+            return mainGame.SaveRoot.WhichMulti == -1;
         }
     }
     [Command(EnumCommandCategory.Game)]
     public async Task RollMultAsync()
     {
-        await _mainGame.RollMultsAsync();
+        await mainGame.RollMultsAsync();
     }
 }

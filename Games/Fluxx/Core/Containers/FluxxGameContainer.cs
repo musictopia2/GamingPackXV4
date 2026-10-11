@@ -64,10 +64,10 @@ public class FluxxGameContainer : CardGameContainer<FluxxCardInformation, FluxxP
         }
         return index;
     }
-    internal Func<Task>? LoadPlayAsync { get; set; }
-    internal Func<Task>? LoadGiveAsync { get; set; }
-    static internal BasicList<string> DescriptionList { get; set; } = new();
-    public DeckRegularDict<FluxxCardInformation> QuePlayList { get; set; } = new DeckRegularDict<FluxxCardInformation>();
+    internal Action? LoadPlay { get; set; }
+    internal Action? LoadGive { get; set; }
+    static internal BasicList<string> DescriptionList { get; set; } = [];
+    public DeckRegularDict<FluxxCardInformation> QuePlayList { get; set; } = [];
     internal bool DoDrawTemporary { get; set; } = false;
     internal bool AllNewCards { get; set; }
     public ActionCard? CurrentAction { get; set; }
@@ -112,7 +112,7 @@ public class FluxxGameContainer : CardGameContainer<FluxxCardInformation, FluxxP
     public static BasicList<string> GetSortedKeeperList()
     {
         BasicList<int> firstList = Enumerable.Range(23, 18).ToBasicList();
-        BasicList<string> output = new();
+        BasicList<string> output = [];
         firstList.ForEach(thisIndex =>
         {
             EnumKeeper thisKeep = thisIndex.ToEnum<EnumKeeper>();

@@ -1,31 +1,24 @@
 namespace Poker.Core.Logic;
 [SingletonGame]
-public class PokerMainGameClass : RegularDeckOfCardsGameClass<PokerCardInfo>, IAggregatorContainer
+public class PokerMainGameClass(ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IGamePackageResolver container,
+    ISystemError error,
+    IToast toast
+        ) : RegularDeckOfCardsGameClass<PokerCardInfo>, IAggregatorContainer
 {
-    private readonly ISaveSinglePlayerClass _thisState;
-    private readonly ISystemError _error;
-    private readonly IToast _toast;
-    internal PokerSaveInfo _saveRoot;
+    private readonly ISaveSinglePlayerClass _thisState = thisState;
+    private readonly ISystemError _error = error;
+    private readonly IToast _toast = toast;
+    internal PokerSaveInfo _saveRoot = container.ReplaceObject<PokerSaveInfo>();
     private struct PokerData
     {
         public string Message { get; set; }
         public decimal Mults { get; set; }
     }
-    private readonly DeckRegularDict<PokerCardInfo> _cardList = new();
+    private readonly DeckRegularDict<PokerCardInfo> _cardList = [];
     internal bool GameGoing { get; set; }
-    public PokerMainGameClass(ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IGamePackageResolver container,
-        ISystemError error,
-        IToast toast
-        )
-    {
-        _thisState = thisState;
-        Aggregator = aggregator;
-        _error = error;
-        _toast = toast;
-        _saveRoot = container.ReplaceObject<PokerSaveInfo>(); //can't create new one.  because if doing that, then anything that needs it won't have it.
-    }
+
     private decimal HowMuch
     {
         get
@@ -57,7 +50,7 @@ public class PokerMainGameClass : RegularDeckOfCardsGameClass<PokerCardInfo>, IA
         _cardList.Clear();
         await base.NewGameAsync(_model.DeckPile);
     }
-    public IEventAggregator Aggregator { get; }
+    public IEventAggregator Aggregator { get; } = aggregator;
     public override async Task<bool> CanOpenSavedSinglePlayerGameAsync()
     {
         return await _thisState.CanOpenSavedSinglePlayerGameAsync();

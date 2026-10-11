@@ -14,9 +14,7 @@
     }
     return;
 }
-<ParentControl VM="MonopolyDicedGameMainViewModel">
+<MainScreen>
     <MonopolyDicedGameMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<MonopolyDicedGamePlayerItem>">
-    <MultiplayerOpeningView P="MonopolyDicedGamePlayerItem" />
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="MonopolyDicedGamePlayerItem" />

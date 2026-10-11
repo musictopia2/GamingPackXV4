@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="DominosRegularMainViewModel">
+    <MainScreen>
         <DominosRegularMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<DominosRegularPlayerItem>">
-        <MultiplayerOpeningView P="DominosRegularPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="DominosRegularPlayerItem" />
 </CascadingValue>

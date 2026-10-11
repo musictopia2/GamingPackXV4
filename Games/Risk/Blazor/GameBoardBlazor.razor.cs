@@ -7,7 +7,7 @@ public partial class GameBoardBlazor
         _gameContainer = aa1.Resolver!.Resolve<RiskGameContainer>();
     }
     [Parameter]
-    public BasicList<TerritoryModel> Territories { get; set; } = new();
+    public BasicList<TerritoryModel> Territories { get; set; } = [];
     [Parameter]
     public string TargetHeight { get; set; } = "85vh"; //default at this but can change.
     [Parameter]

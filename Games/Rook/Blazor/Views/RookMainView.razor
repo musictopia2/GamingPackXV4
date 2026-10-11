@@ -1,4 +1,4 @@
-@inherits BasicGameView<RookMainViewModel>
+@inherits CascadingGameView<RookMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -13,22 +13,25 @@
         <LabelGridComponent DataContext="_vmData" Labels="_labels" />
     </StackItem>
     <StackItem>
-       @if (DataContext.GameStatus == EnumStatusList.Bidding)
-       {
-            <BiddingComponent DataContext="DataContext" />
-       }
-       @if (DataContext.GameStatus == EnumStatusList.ChooseTrump)
-       {
-            <TrumpComponent DataContext="DataContext" />
-       }
-       @if (DataContext.GameStatus == EnumStatusList.SelectNest)
-       {
-            <GameButtonComponent CommandObject="ChooseNestCommand" Display="Choose Nest Cards" />
-       }
-       @if (DataContext.GameStatus == EnumStatusList.Normal)
-       {
-            <SeveralPlayersTrickBlazor DataContext="_vmData.TrickArea1" />
-       }
+       <StateContentView DataContext="_gameContainer.SaveRoot">
+            @if (_gameContainer.SaveRoot.GameStatus == EnumStatusList.Bidding)
+            {
+                <BiddingComponent DataContext="DataContext" />
+            }
+            @if (_gameContainer.SaveRoot.GameStatus == EnumStatusList.ChooseTrump)
+            {
+                <TrumpComponent DataContext="DataContext" />
+            }
+            @if (_gameContainer.SaveRoot.GameStatus == EnumStatusList.SelectNest)
+            {
+                <GameButtonComponent CommandObject="ChooseNestCommand" Display="Choose Nest Cards" />
+            }
+            @if (_gameContainer.SaveRoot.GameStatus == EnumStatusList.Normal)
+            {
+                <SeveralPlayersTrickBlazor DataContext="_vmData.TrickArea1" />
+            }
+       </StateContentView>
+       
     </StackItem>
 </StackLayout>
 <div>

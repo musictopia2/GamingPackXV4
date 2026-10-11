@@ -11,10 +11,7 @@ public class PaydaySaveInfo : BasicSavedBoardDiceGameClass<PaydayPlayerItem>, IM
         {
             if (SetProperty(ref _instructions, value))
             {
-                if (_model != null)
-                {
-                    _model.Instructions = value;
-                }
+                _model?.Instructions = value;
             }
         }
     }
@@ -29,10 +26,7 @@ public class PaydaySaveInfo : BasicSavedBoardDiceGameClass<PaydayPlayerItem>, IM
                 if (_model != null)
                 {
                     _model.GameStatus = value;
-                    if (_aggregator is null)
-                    {
-                        _aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
-                    }
+                    _aggregator ??= Resolver!.Resolve<IEventAggregator>();
                     _aggregator.Publish(GameStatus);
                 }
             }
@@ -49,9 +43,9 @@ public class PaydaySaveInfo : BasicSavedBoardDiceGameClass<PaydayPlayerItem>, IM
     public decimal LotteryAmount { get; set; }
     public int MaxMonths { get; set; }
     public DealCard? YardSaleDealCard { get; set; }
-    public DeckRegularDict<MailCard> MailListLeft { get; set; } = new();
-    public DeckRegularDict<DealCard> DealListLeft { get; set; } = new();
-    public DeckRegularDict<CardInformation> OutCards { get; set; } = new();
+    public DeckRegularDict<MailCard> MailListLeft { get; set; } = [];
+    public DeckRegularDict<DealCard> DealListLeft { get; set; } = [];
+    public DeckRegularDict<CardInformation> OutCards { get; set; } = [];
     public int RemainingMove { get; set; }
     public bool EndOfMonth { get; set; }
     public bool EndGame { get; set; }

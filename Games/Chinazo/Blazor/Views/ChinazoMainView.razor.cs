@@ -1,14 +1,14 @@
 namespace Chinazo.Blazor.Views;
 public partial class ChinazoMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private ChinazoVMData? _vmData;
     private ChinazoGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<ChinazoVMData>();
-        _gameContainer = aa1.Resolver.Resolve<ChinazoGameContainer>();
+        _vmData = Resolver!.Resolve<ChinazoVMData>();
+        _gameContainer = Resolver.Resolve<ChinazoGameContainer>();
         _labels.AddLabel("Turn", nameof(ChinazoVMData.NormalTurn))
             .AddLabel("Status", nameof(ChinazoVMData.Status))
             .AddLabel("Other Turn", nameof(ChinazoVMData.OtherLabel))

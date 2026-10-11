@@ -1,12 +1,12 @@
 namespace SorryDicedGame.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
-public partial class SorryDicedGameVMData : ISimpleBoardGamesData
+public partial class SorryDicedGameVMData : IInstructionData
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
 }

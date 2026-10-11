@@ -5,11 +5,11 @@ namespace A8RoundRummy.Core.Data;
 public partial class A8RoundRummyVMData : IBasicCardGamesData<A8RoundRummyCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string NextTurn { get; set; } = "";
+    public partial string NextTurn { get; set; } = "";
     public A8RoundRummyVMData(CommandContainer command)
     {
         Deck1 = new(command);
@@ -21,4 +21,7 @@ public partial class A8RoundRummyVMData : IBasicCardGamesData<A8RoundRummyCardIn
     public SingleObservablePile<A8RoundRummyCardInformation> Pile1 { get; set; }
     public HandObservable<A8RoundRummyCardInformation> PlayerHand1 { get; set; }
     public SingleObservablePile<A8RoundRummyCardInformation>? OtherPile { get; set; }
+
+    public StateList<RoundClass> RoundList { get; } = [];
+
 }

@@ -1,13 +1,10 @@
-@inherits BasicGameView<MonopolyDicedGameMainViewModel>
+@inherits CascadingGameView<MonopolyDicedGameMainViewModel>
 <StackLayout>
     <StackItem>
-        <GameBoardBlazor NumberOfCops="_container!.SaveRoot.NumberOfCops"
+        <GameBoardBlazor SaveInfo="_container!.SaveRoot"
                          TargetHeight="75vh"
                          HouseDice="_house"
-                         HousesOwned="_container.SaveRoot.NumberOfHouses"
-                         HasHotel=_container.SaveRoot.HasHotel
                          MiscList="DataContext!.VMData.OtherActions"
-                         OwnList="_container.SaveRoot.Owns"
                          UtilityClicked="UtilityV2Async"
                          TrainClicked="TrainV2Async"
                          PropertyClicked="PropertyV2Async"
@@ -16,31 +13,9 @@
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
     </StackItem>
     <StackItem>
-        
-
         <GameButtonComponent Display="Roll Dice" CommandObject="RollDiceCommand" />
         <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
-
-        @* @if (CanTestRoll())
-        {
-            <GameButtonComponent Display="Test Roll Misc" CustomCallBack="TestRollMiscAsync" />
-        }
-        else
-        {
-            <GameButtonComponent Display="Clear Test Roll" CustomCallBack="ClearTestRoll" />
-        } *@
-        
-        @* @if (CanTestRoll())
-        {
-            <GameButtonComponent Display="Test Roll" CustomCallBack="TestRollAsync" />
-        }
-        else
-        {
-            <GameButtonComponent Display="Clear" CustomCallBack="Clear" />
-        } *@
         <MonopolyListBlazor ImageHeight="9vh" />
         <ScoreBoardBlazor P="MonopolyDicedGamePlayerItem" Players="DataContext!.MainGame.PlayerList" Columns="_scores" />
-
-
     </StackItem>
 </StackLayout>

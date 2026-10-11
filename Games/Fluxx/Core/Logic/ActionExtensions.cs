@@ -6,8 +6,8 @@ internal static class ActionExtensions
         public void LoadSavedGame(FluxxGameContainer gameContainer)
         {
             gameContainer.SingleInfo = gameContainer.PlayerList!.GetSelf();
-            actionContainer.YourCards!.HandList = gameContainer.SingleInfo.MainHandList;
-            actionContainer.YourKeepers!.HandList = gameContainer.SingleInfo.KeeperList;
+            actionContainer.YourCards!.ReplaceHandList(gameContainer.SingleInfo.MainHandList);
+            actionContainer.YourKeepers!.ReplaceHandList(gameContainer.SingleInfo.KeeperList);
             gameContainer.SingleInfo = gameContainer.PlayerList.GetWhoPlayer();
             if (gameContainer.CurrentAction == null)
             {
@@ -32,7 +32,7 @@ internal static class ActionExtensions
             actionContainer.ButtonChoosePlayerVisible = false;
             actionContainer.OtherHand.Visible = false; //has to be proven true here too.
             actionContainer.ButtonChooseCardVisible = false;
-            if (delegates.LoadProperActionScreenAsync == null)
+            if (delegates.LoadActionScreenAsync == null)
             {
                 throw new CustomBasicException("Nobody is loading action screen.  Rethink");
             }
@@ -41,7 +41,7 @@ internal static class ActionExtensions
             {
                 actionContainer.ActionCategory = EnumActionCategory.FirstRandom;
                 loadAction.LoadFirstRandom();
-                await delegates.LoadProperActionScreenAsync(actionContainer);
+                await delegates.LoadActionScreenAsync();
                 return;
             }
             switch (gameContainer.CurrentAction!.Deck)
@@ -73,7 +73,7 @@ internal static class ActionExtensions
                     throw new CustomBasicException("Don't know what to do for status");
             }
             actionContainer.ActionDetail.ShowCard(gameContainer.CurrentAction!);
-            await delegates.LoadProperActionScreenAsync(actionContainer);
+            await delegates.LoadActionScreenAsync();
         }
         public BasicList<int> GetTempPlayerList()
         {

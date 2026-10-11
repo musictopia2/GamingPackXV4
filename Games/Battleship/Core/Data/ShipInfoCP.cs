@@ -1,9 +1,13 @@
 ﻿namespace Battleship.Core.Data;
-public class ShipInfoCP
+[UseStateChanged]
+public partial class ShipInfoCP
 {
-    public string ShipName { get; set; } = "";
-    public EnumShipList ShipCategory { get; set; }
-    public bool Visible { get; set; }
+    [StateProperty]
+    public partial string ShipName { get; set; } = "";
+    [StateProperty]
+    public partial EnumShipList ShipCategory { get; set; }
+    [StateProperty]
+    public partial bool Visible { get; set; }
     public bool IsEnabled { get; set; }
     public Dictionary<int, PieceInfoCP>? PieceList { get; set; }
 }

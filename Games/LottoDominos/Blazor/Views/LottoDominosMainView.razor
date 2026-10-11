@@ -1,10 +1,14 @@
-@inherits BasicGameView<LottoDominosMainViewModel>
-<ParentControl VM="ChooseNumberViewModel">
-    <ChooseNumberView />
-</ParentControl>
-<ParentControl VM="MainBoardViewModel">
-    <MainBoardView />
-</ParentControl>
+@inherits CascadingGameView<LottoDominosMainViewModel>
+<StateContentView DataContext="DataContext!.MainView">
+    @if (DataContext.MainView.MainPlay)
+    {
+        <MainBoardView />
+    }
+    else if (DataContext.ChooseNumber is not null)
+    {
+        <ChooseNumberView DataContext="DataContext.ChooseNumber" />
+    }
+</StateContentView>
 <div>
     <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
 </div>

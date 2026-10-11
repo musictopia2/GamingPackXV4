@@ -3,7 +3,7 @@ namespace MonopolyDicedGame.Core.Data;
 public partial class MonopolyDicedGamePlayerItem : SimplePlayer
 {
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

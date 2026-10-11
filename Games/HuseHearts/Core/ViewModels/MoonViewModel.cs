@@ -1,16 +1,14 @@
 ﻿namespace HuseHearts.Core.ViewModels;
 [InstanceGame]
-public partial class MoonViewModel : ScreenViewModel, IBlankGameVM
+public partial class MoonViewModel
 {
     private readonly HuseHeartsMainGameClass _mainGame;
-    public MoonViewModel(CommandContainer commandContainer, HuseHeartsMainGameClass mainGame, IEventAggregator aggregator) : base(aggregator)
+    public MoonViewModel(CommandContainer commandContainer, HuseHeartsMainGameClass mainGame)
     {
-        CommandContainer = commandContainer;
         _mainGame = mainGame;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    public CommandContainer CommandContainer { get; set; }
     [Command(EnumCommandCategory.Plain)]
     public async Task MoonAsync(EnumMoonOptions option)
     {

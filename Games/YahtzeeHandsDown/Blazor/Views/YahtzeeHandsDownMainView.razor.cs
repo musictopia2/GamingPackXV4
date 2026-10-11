@@ -1,15 +1,15 @@
 namespace YahtzeeHandsDown.Blazor.Views;
 public partial class YahtzeeHandsDownMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private YahtzeeHandsDownVMData? _vmData;
     private YahtzeeHandsDownGameContainer? _gameContainer;
     private static string GetColumns => bb1.RepeatAuto(2);
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<YahtzeeHandsDownVMData>();
-        _gameContainer = aa1.Resolver.Resolve<YahtzeeHandsDownGameContainer>();
+        _vmData = Resolver!.Resolve<YahtzeeHandsDownVMData>();
+        _gameContainer = Resolver.Resolve<YahtzeeHandsDownGameContainer>();
         _labels.AddLabel("Turn", nameof(YahtzeeHandsDownVMData.NormalTurn))
              .AddLabel("Status", nameof(YahtzeeHandsDownVMData.Status));
         _scores.Clear();

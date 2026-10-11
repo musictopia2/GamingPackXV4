@@ -1,6 +1,6 @@
 ﻿namespace Flinch.Core.ViewModels;
 [InstanceGame]
-public class PlayerPilesViewModel : ScreenViewModel, IBlankGameVM
+public class PlayerPilesViewModel
 {
     public readonly FlinchVMData Model;
     private readonly FlinchMainGameClass _mainGame;
@@ -9,8 +9,7 @@ public class PlayerPilesViewModel : ScreenViewModel, IBlankGameVM
         FlinchGameContainer gameContainer, 
         FlinchVMData model, 
         FlinchMainGameClass mainGame,
-        IToast toast,
-        IEventAggregator aggregator) : base(aggregator)
+        IToast toast)
     {
         gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
         CommandContainer = commandContainer;

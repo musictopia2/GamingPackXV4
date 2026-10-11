@@ -18,7 +18,7 @@ public class QueenClass : IChessMan
         SpaceCP? c;
         UpdateChecker();
         // up processes
-        BasicList<CheckersChessVector> finalList = new();
+        BasicList<CheckersChessVector> finalList = [];
         do
         {
             checkRow -= 1;

@@ -1,20 +1,12 @@
 ﻿namespace LifeBoardGame.Core.ViewModels;
-public class ChooseHouseViewModel : BasicSubmitViewModel
+public class ChooseHouseViewModel(CommandContainer commandContainer,
+    LifeBoardGameVMData model,
+    IHouseProcesses processes
+        ) : BasicSubmitViewModel(commandContainer)
 {
-    private readonly LifeBoardGameVMData _model;
-    private readonly IHouseProcesses _processes;
-    public ChooseHouseViewModel(CommandContainer commandContainer,
-        LifeBoardGameVMData model,
-        IHouseProcesses processes,
-        IEventAggregator aggregator
-        ) : base(commandContainer, aggregator)
-    {
-        _model = model;
-        _processes = processes;
-    }
-    public override bool CanSubmit => _model.HandList.ObjectSelected() > 0;
+    public override bool CanSubmit => model.HandList.ObjectSelected() > 0;
     public override Task SubmitAsync()
     {
-        return _processes.ChoseHouseAsync(_model.HandList.ObjectSelected());
+        return processes.ChoseHouseAsync(model.HandList.ObjectSelected());
     }
 }

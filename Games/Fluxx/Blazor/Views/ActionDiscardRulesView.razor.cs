@@ -1,11 +1,9 @@
 namespace Fluxx.Blazor.Views;
-public partial class ActionDiscardRulesView : SimpleActionView
+public partial class ActionDiscardRulesView : SimpleActionView<ActionDiscardRulesViewModel>
 {
-    [CascadingParameter]
-    public ActionDiscardRulesViewModel? DataContext { get; set; }
     private ICustomCommand ViewCommand => DataContext!.ViewRuleCardCommand!;
     private ICustomCommand DiscardCommand => DataContext!.DiscardRulesCommand!;
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnInitialized()
     {
         _labels.Clear();

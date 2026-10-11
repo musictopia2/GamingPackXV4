@@ -6,8 +6,8 @@ public partial class MakePaymentComponent
     private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnInitialized()
     {
-        DataContext = aa1.Resolver!.Resolve<PaymentViewModel>();
-        DataContext.AddCommand(StateHasChanged);
+        DataContext = Resolver!.Resolve<PaymentViewModel>();
+        //DataContext.AddCommand(StateHasChanged);
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(DealCardGameVMData.OtherTurn))
             .AddLabel("Owed", nameof(DealCardGameVMData.Owed))

@@ -1,21 +1,4 @@
 namespace YaBlewIt.Core.ViewModels;
-public class YaBlewItShellViewModel : BasicMultiplayerShellViewModel<YaBlewItPlayerItem>
+public class YaBlewItShellViewModel(IGamePackageResolver mainContainer, CommandContainer container, IGameInfo gameData, BasicData basicData, IMultiplayerSaveState save, TestOptions test, IEventAggregator aggregator, IToast toast) : BasicMultiplayerShellViewModel<YaBlewItPlayerItem>(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
 {
-    public YaBlewItShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        BasicData basicData,
-        IMultiplayerSaveState save,
-        TestOptions test,
-        IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<YaBlewItMainViewModel>();
-        return model;
-    }
 }

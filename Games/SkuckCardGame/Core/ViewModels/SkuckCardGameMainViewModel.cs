@@ -1,45 +1,41 @@
 namespace SkuckCardGame.Core.ViewModels;
 [InstanceGame]
-public partial class SkuckCardGameMainViewModel : BasicCardGamesVM<SkuckCardGameCardInformation>
-{
-    private readonly SkuckCardGameMainGameClass _mainGame;
-    private readonly SkuckCardGameVMData _model;
-    private readonly IGamePackageResolver _resolver;
-    public SkuckCardGameMainViewModel(CommandContainer commandContainer,
+[UseStateChanged]
+public partial class SkuckCardGameMainViewModel(CommandContainer commandContainer,
         SkuckCardGameMainGameClass mainGame,
         SkuckCardGameVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<SkuckCardGameCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _model.ChangeScreen = ScreenChangeAsync; //try this now.
-        _resolver = resolver;
-        _model.Deck1.NeverAutoDisable = true;
+        viewModel.ChangeScreen = ScreenChangeAsync; //try this now.
+        viewModel.Deck1.NeverAutoDisable = true;
         LoadPlayerControls();
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
+    }
+    protected override Task CloseAsync()
+    {
+        _closed = true;
+        CloseBiddingScreen();
+        CloseChoosePlayScreen();
+        CloseSuitScreen();
+        return base.CloseAsync();
     }
     partial void CreateCommands(CommandContainer command);
     private bool _closed;
-    protected override async Task TryCloseAsync()
-    {
-        _closed = true;
-        await CloseBiddingScreenAsync();
-        await CloseChoosePlayScreenAsync();
-        await CloseSuitScreenAsync();
-        await base.TryCloseAsync();
-    }
-    public SkuckBiddingViewModel? BidScreen { get; set; }
-    public SkuckChoosePlayViewModel? ChoosePlayScreen { get; set; }
-    public SkuckSuitViewModel? SuitScreen { get; set; }
+    [StateProperty]
+    public partial SkuckBiddingViewModel? BidScreen { get; set; }
+    [StateProperty]
+    public partial SkuckChoosePlayViewModel? ChoosePlayScreen { get; set; }
+    [StateProperty]
+    public partial SkuckSuitViewModel? SuitScreen { get; set; }
     private void LoadPlayerControls()
     {
-        _mainGame!.PlayerList!.ForEach(thisPlayer =>
+        mainGame!.PlayerList!.ForEach(thisPlayer =>
         {
             if (thisPlayer.TempHand == null)
             {
@@ -51,7 +47,7 @@ public partial class SkuckCardGameMainViewModel : BasicCardGamesVM<SkuckCardGame
                 {
                     return false;
                 }
-                return _mainGame.SaveRoot!.WhatStatus == EnumStatusList.NormalPlay;
+                return mainGame.SaveRoot!.WhatStatus == EnumStatusList.NormalPlay;
             });
 
             if (thisPlayer.PlayerCategory == EnumPlayerCategory.Self)
@@ -62,104 +58,99 @@ public partial class SkuckCardGameMainViewModel : BasicCardGamesVM<SkuckCardGame
     }
     private void TempHand_SelectedCard()
     {
-        _model.PlayerHand1!.UnselectAllObjects();
+        viewModel.PlayerHand1!.UnselectAllObjects();
     }
-    protected override Task ActivateAsync()
+    protected override Task OpenAsync()
     {
         ScreenChangeAsync();
-        return base.ActivateAsync();
+        return base.OpenAsync();
     }
-    private async void ScreenChangeAsync()
+    
+    private void ScreenChangeAsync()
     {
-        if (_model == null || _closed)
+        if (viewModel == null || _closed)
         {
             return;
         }
-        if (_mainGame.SaveRoot.WhatStatus == EnumStatusList.NormalPlay)
+        if (mainGame.SaveRoot.WhatStatus == EnumStatusList.NormalPlay)
         {
-            await CloseChoosePlayScreenAsync();
-            await CloseBiddingScreenAsync();
-            await CloseSuitScreenAsync();
-            _model!.TrickArea1.Visible = true;
+            CloseChoosePlayScreen();
+            CloseBiddingScreen();
+            CloseSuitScreen();
+            viewModel!.TrickArea1.Visible = true;
             return;
         }
-        _model.TrickArea1.Visible = false;
-        if (_mainGame.SaveRoot.WhatStatus == EnumStatusList.ChooseBid)
+        viewModel.TrickArea1.Visible = false;
+        if (mainGame.SaveRoot.WhatStatus == EnumStatusList.ChooseBid)
         {
-            await CloseChoosePlayScreenAsync();
-            await CloseSuitScreenAsync();
-            await OpenBiddingAsync();
+            CloseChoosePlayScreen();
+            CloseSuitScreen();
+            OpenBidding();
             return;
         }
-        if (_mainGame.SaveRoot.WhatStatus == EnumStatusList.ChoosePlay)
+        if (mainGame.SaveRoot.WhatStatus == EnumStatusList.ChoosePlay)
         {
-            await CloseBiddingScreenAsync();
-            await CloseSuitScreenAsync();
-            await OpenChoosePlayAsync();
+            CloseBiddingScreen();
+            CloseSuitScreen();
+            OpenChoosePlay();
             return;
         }
-        if (_mainGame.SaveRoot.WhatStatus == EnumStatusList.ChooseTrump)
+        if (mainGame.SaveRoot.WhatStatus == EnumStatusList.ChooseTrump)
         {
-            await CloseBiddingScreenAsync();
-            await CloseChoosePlayScreenAsync();
-            await OpenSuitAsync();
+            CloseBiddingScreen();
+            CloseChoosePlayScreen();
+            OpenSuit();
             return;
         }
         throw new CustomBasicException("Not supported.  Rethink");
     }
-    private async Task CloseBiddingScreenAsync()
+    private void CloseBiddingScreen()
     {
         if (BidScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(BidScreen);
         BidScreen = null;
     }
-    private async Task CloseChoosePlayScreenAsync()
+    private void CloseChoosePlayScreen()
     {
         if (ChoosePlayScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(ChoosePlayScreen);
         ChoosePlayScreen = null;
     }
-    private async Task CloseSuitScreenAsync()
+    private void CloseSuitScreen()
     {
         if (SuitScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(SuitScreen);
         SuitScreen = null;
     }
-    private async Task OpenBiddingAsync()
+    private void OpenBidding()
     {
         if (BidScreen != null)
         {
             return;
         }
-        BidScreen = _resolver.Resolve<SkuckBiddingViewModel>();
-        await LoadScreenAsync(BidScreen);
+        BidScreen = Resolver.Resolve<SkuckBiddingViewModel>();
     }
-    private async Task OpenChoosePlayAsync()
+    private void OpenChoosePlay()
     {
         if (ChoosePlayScreen != null)
         {
             return;
         }
-        ChoosePlayScreen = _resolver.Resolve<SkuckChoosePlayViewModel>();
-        await LoadScreenAsync(ChoosePlayScreen);
+        ChoosePlayScreen = Resolver.Resolve<SkuckChoosePlayViewModel>();
     }
-    private async Task OpenSuitAsync()
+    private void OpenSuit()
     {
         if (SuitScreen != null)
         {
             return;
         }
-        SuitScreen = _resolver.Resolve<SkuckSuitViewModel>();
-        await LoadScreenAsync(SuitScreen);
+        SuitScreen = Resolver.Resolve<SkuckSuitViewModel>();
     }
     protected override bool CanEnableDeck()
     {
@@ -179,7 +170,7 @@ public partial class SkuckCardGameMainViewModel : BasicCardGamesVM<SkuckCardGame
     }
     protected override Task OnAutoSelectedHandAsync()
     {
-        SkuckCardGamePlayerItem thisPlayer = _mainGame!.PlayerList!.GetSelf();
+        SkuckCardGamePlayerItem thisPlayer = mainGame!.PlayerList!.GetSelf();
         thisPlayer.TempHand!.UnselectAllCards();
         return base.OnAutoSelectedHandAsync();
     }

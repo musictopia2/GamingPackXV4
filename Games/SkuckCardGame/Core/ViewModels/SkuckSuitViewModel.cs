@@ -1,6 +1,6 @@
 ﻿namespace SkuckCardGame.Core.ViewModels;
 [InstanceGame]
-public partial class SkuckSuitViewModel : ScreenViewModel, IBlankGameVM
+public partial class SkuckSuitViewModel
 {
     public readonly SkuckCardGameVMData Model;
     private readonly SkuckCardGameGameContainer _gameContainer;
@@ -8,18 +8,15 @@ public partial class SkuckSuitViewModel : ScreenViewModel, IBlankGameVM
     public SkuckSuitViewModel(CommandContainer commandContainer,
         SkuckCardGameVMData model,
         SkuckCardGameGameContainer gameContainer,
-        ITrumpProcesses processes,
-        IEventAggregator aggregator
-        ) : base(aggregator)
+        ITrumpProcesses processes
+        )
     {
-        CommandContainer = commandContainer;
         Model = model;
         _gameContainer = gameContainer;
         _processes = processes;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    public CommandContainer CommandContainer { get; set; }
     public bool CanTrump => Model.TrumpSuit != EnumSuitList.None;
     [Command(EnumCommandCategory.Plain)]
     public async Task TrumpAsync()

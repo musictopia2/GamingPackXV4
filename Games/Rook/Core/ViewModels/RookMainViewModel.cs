@@ -1,50 +1,36 @@
 namespace Rook.Core.ViewModels;
 [InstanceGame]
-public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
-{
-    private readonly RookMainGameClass _mainGame;
-    public readonly RookVMData Model;
-    private readonly IToast _toast;
-    private readonly INestProcesses _nestProcesses;
-    private readonly IBidProcesses _bidProcesses;
-    private readonly ITrumpProcesses _trumpProcesses;
-    public RookMainViewModel(CommandContainer commandContainer,
+public partial class RookMainViewModel(CommandContainer commandContainer,
         RookMainGameClass mainGame,
         RookVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         IToast toast,
         INestProcesses nestProcesses,
         IBidProcesses bidProcesses,
-        ITrumpProcesses trumpProcesses
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        ITrumpProcesses trumpProcesses) : BasicCardGamesVM<RookCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    public readonly RookVMData Model = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        Model = viewModel;
-        _toast = toast;
-        _nestProcesses = nestProcesses;
-        _bidProcesses = bidProcesses;
-        _trumpProcesses = trumpProcesses;
+        CreateCommands(CommandContainer);
         Model.Deck1.NeverAutoDisable = true;
         Model.Dummy1.SendEnableProcesses(this, () =>
         {
-            if (_mainGame!.SaveRoot!.GameStatus != EnumStatusList.Normal)
+            if (mainGame!.SaveRoot!.GameStatus != EnumStatusList.Normal)
             {
                 return false;
             }
-            if (_mainGame.PlayerList.Count == 3)
+            if (mainGame.PlayerList.Count == 3)
             {
                 return false;
             }
-            return _mainGame.SaveRoot.DummyPlay;
+            return mainGame.SaveRoot.DummyPlay;
         });
-        CreateCommands(commandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
-    public EnumStatusList GameStatus => _mainGame.SaveRoot.GameStatus;
     public override bool CanEndTurn()
     {
         return false;
@@ -71,13 +57,13 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
     }
     protected override bool CanEnableHand()
     {
-        if (_mainGame!.SaveRoot!.GameStatus == EnumStatusList.SelectNest)
+        if (mainGame!.SaveRoot!.GameStatus == EnumStatusList.SelectNest)
         {
             return true;
         }
-        if (_mainGame.SaveRoot.GameStatus == EnumStatusList.Normal)
+        if (mainGame.SaveRoot.GameStatus == EnumStatusList.Normal)
         {
-            return !_mainGame.SaveRoot.DummyPlay;
+            return !mainGame.SaveRoot.DummyPlay;
         }
         return false;
     }
@@ -87,27 +73,27 @@ public partial class RookMainViewModel : BasicCardGamesVM<RookCardInformation>
         var thisList = Model.PlayerHand1!.ListSelectedObjects();
         if (thisList.Count != 5)
         {
-            _toast.ShowUserErrorToast("Sorry, you must choose 5 cards to throw away");
+            Toast.ShowUserErrorToast("Sorry, you must choose 5 cards to throw away");
             return;
         }
-        await _nestProcesses.ProcessNestAsync(thisList);
+        await nestProcesses.ProcessNestAsync(thisList);
     }
     public bool CanBid => Model.BidChosen > -1;
     [Command(EnumCommandCategory.Plain)]
     public async Task BidAsync()
     {
-        await _bidProcesses.ProcessBidAsync();
+        await bidProcesses.ProcessBidAsync();
     }
     public bool CanPass => Model.CanPass;
     [Command(EnumCommandCategory.Plain)]
     public async Task PassAsync()
     {
-        await _bidProcesses.PassBidAsync();
+        await bidProcesses.PassBidAsync();
     }
     public bool CanTrump => Model.ColorChosen != EnumColorTypes.None;
     [Command(EnumCommandCategory.Plain)]
     public async Task TrumpAsync()
     {
-        await _trumpProcesses.ProcessTrumpAsync();
+        await trumpProcesses.ProcessTrumpAsync();
     }
 }

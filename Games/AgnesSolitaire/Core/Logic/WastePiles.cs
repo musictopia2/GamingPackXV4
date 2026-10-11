@@ -1,9 +1,6 @@
 namespace AgnesSolitaire.Core.Logic;
-public class WastePiles : WastePilesCP
+public class WastePiles(CommandContainer command) : WastePilesCP(command)
 {
-    public WastePiles(CommandContainer command) : base(command)
-    {
-    }
     public void AddCards(DeckRegularDict<SolitaireCard> thisList)
     {
         if (thisList.Count != Piles.PileList.Count)

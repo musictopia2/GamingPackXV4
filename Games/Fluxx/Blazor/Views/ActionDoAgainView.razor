@@ -1,4 +1,4 @@
-﻿@inherits SimpleActionView
+﻿@inherits SimpleActionView<ActionDoAgainViewModel>
 
 @if (CompleteContainer == null || DataContext == null)
 {
@@ -17,7 +17,7 @@
                 <GameButtonComponent CommandObject="ViewCommand"
                                      StartOnNewLine="true"
                                      Display="View Card" />
-                <KeeperButton K="ActionDoAgainViewModel" @key="GetKey" StartsOnNewLine="true" />
+                <KeeperButton DataContext="DataContext" @key="GetKey" StartsOnNewLine="true" />
             </StackItem>
         </StackLayout>
     </FinalActionLayout>

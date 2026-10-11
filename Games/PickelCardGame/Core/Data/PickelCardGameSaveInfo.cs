@@ -5,5 +5,5 @@ public class PickelCardGameSaveInfo : BasicSavedTrickGamesClass<EnumSuitList, Pi
     public EnumStatusList GameStatus { get; set; }
     public int HighestBid { get; set; }
     public int WonSoFar { get; set; }
-    public BasicList<PickelCardGameCardInformation> CardList { get; set; } = new(); //this holds the entire list of all cards played.
+    public BasicList<PickelCardGameCardInformation> CardList { get; set; } = []; //this holds the entire list of all cards played.
 }

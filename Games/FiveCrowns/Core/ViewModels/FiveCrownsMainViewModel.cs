@@ -1,52 +1,40 @@
 namespace FiveCrowns.Core.ViewModels;
 [InstanceGame]
-public partial class FiveCrownsMainViewModel : BasicCardGamesVM<FiveCrownsCardInformation>
-{
-    private readonly FiveCrownsMainGameClass _mainGame;
-    private readonly FiveCrownsVMData _model;
-    private readonly FiveCrownsGameContainer _gameContainer;
-    private readonly IToast _toast;
-    private readonly PrivateAutoResumeProcesses _privateAutoResume;
-    public FiveCrownsMainViewModel(CommandContainer commandContainer,
+public partial class FiveCrownsMainViewModel(CommandContainer commandContainer,
         FiveCrownsMainGameClass mainGame,
         FiveCrownsVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         FiveCrownsGameContainer gameContainer,
         IEventAggregator aggregator,
         IToast toast,
-        PrivateAutoResumeProcesses privateAutoResume
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        PrivateAutoResumeProcesses privateAutoResume) : BasicCardGamesVM<FiveCrownsCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _gameContainer = gameContainer;
-        _toast = toast;
-        _privateAutoResume = privateAutoResume;
-        _model.Deck1.NeverAutoDisable = false;
-        var player = _mainGame.PlayerList.GetSelf();
+        viewModel.Deck1.NeverAutoDisable = false;
+        var player = mainGame.PlayerList.GetSelf();
         player.DoInit();
-        _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
-        _model.TempSets.Init(this);
-        _model.TempSets.ClearBoard();
+        viewModel.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
+        viewModel.TempSets.Init(this);
+        viewModel.TempSets.ClearBoard();
         PossibleAutoResume();
-        _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
-        _model.MainSets.SendEnableProcesses(this, () => false);
-        CreateCommands(commandContainer);
+        viewModel.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
+        viewModel.MainSets.SendEnableProcesses(this, () => false);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     private void PossibleAutoResume()
     {
-        if (_gameContainer.TempSets.Count > 0)
+        if (gameContainer.TempSets.Count > 0)
         {
-            var player = _gameContainer.PlayerList!.GetSelf();
+            var player = gameContainer.PlayerList!.GetSelf();
             bool hadAny = false;
-            foreach (var item in _gameContainer.TempSets)
+            foreach (var item in gameContainer.TempSets)
             {
-                var current = _model.TempSets.SetList[item.SetNumber - 1];
-                var cards = item.Cards.GetNewObjectListFromDeckList(_gameContainer.DeckList);
+                var current = viewModel.TempSets.SetList[item.SetNumber - 1];
+                var cards = item.Cards.GetNewObjectListFromDeckList(gameContainer.DeckList);
                 DeckRegularDict<FiveCrownsCardInformation> toAdd = [];
                 foreach (var card in cards)
                 {
@@ -62,58 +50,58 @@ public partial class FiveCrownsMainViewModel : BasicCardGamesVM<FiveCrownsCardIn
             }
             if (hadAny)
             {
-                _model.TempSets.PublicCount();
+                viewModel.TempSets.PublicCount();
             }
         }
     }
     [Command(EnumCommandCategory.OutOfTurn)]
     public void Back() //you can put back even if its not your turn.
     {
-        var thisList = _model.TempSets!.ListSelectedObjects();
+        var thisList = viewModel.TempSets!.ListSelectedObjects();
         thisList.ForEach(thisCard =>
         {
             thisCard.IsSelected = false;
-            _model.TempSets.RemoveObject(thisCard.Deck);
+            viewModel.TempSets.RemoveObject(thisCard.Deck);
         });
         //no private save here now.
-        FiveCrownsPlayerItem thisPlayer = _mainGame!.PlayerList!.GetSelf();
+        FiveCrownsPlayerItem thisPlayer = mainGame!.PlayerList!.GetSelf();
         thisPlayer.MainHandList.AddRange(thisList);
-        _mainGame.SortCards();
+        mainGame.SortCards();
     }
     public bool CanLayDownSets()
     {
-        if (_gameContainer!.AlreadyDrew == false)
+        if (gameContainer!.AlreadyDrew == false)
         {
             return false;
         }
-        return !_mainGame.SaveRoot!.SetsCreated;
+        return !mainGame.SaveRoot!.SetsCreated;
     }
     [Command(EnumCommandCategory.Game)]
     public async Task LayDownSetsAsync()
     {
-        if (_mainGame!.SaveRoot!.PlayerWentOut > 0)
+        if (mainGame!.SaveRoot!.PlayerWentOut > 0)
         {
-            bool lats = _mainGame.CanLaterLayDown();
+            bool lats = mainGame.CanLaterLayDown();
             if (lats == false)
             {
                 return;
             }
-            var thisCol1 = _mainGame.ListValidSets();
+            var thisCol1 = mainGame.ListValidSets();
             await ProcessValidSetsAsync(thisCol1);
             return;
         }
-        bool rets = _mainGame.HasInitialSet();
+        bool rets = mainGame.HasInitialSet();
         if (rets == false)
         {
-            _toast.ShowUserErrorToast("Sorry, you do not have the valid sets needed to go out");
+            Toast.ShowUserErrorToast("Sorry, you do not have the valid sets needed to go out");
             return;
         }
-        var thisCol2 = _mainGame.ListValidSets();
+        var thisCol2 = mainGame.ListValidSets();
         await ProcessValidSetsAsync(thisCol2);
     }
     protected override bool CanEnableDeck()
     {
-        return !_gameContainer!.AlreadyDrew;
+        return !gameContainer!.AlreadyDrew;
     }
     protected override bool CanEnablePile1()
     {
@@ -121,18 +109,18 @@ public partial class FiveCrownsMainViewModel : BasicCardGamesVM<FiveCrownsCardIn
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
-        if (_mainGame!.CanProcessDiscard(out bool pickUp, out _, out int deck, out string message) == false)
+        if (mainGame!.CanProcessDiscard(out bool pickUp, out _, out int deck, out string message) == false)
         {
-            _toast.ShowUserErrorToast(message);
+            Toast.ShowUserErrorToast(message);
             return;
         }
         if (pickUp == true)
         {
-            await _mainGame.PickupFromDiscardAsync();
+            await mainGame.PickupFromDiscardAsync();
             return;
         }
-        await _gameContainer.SendDiscardMessageAsync(deck);
-        await _mainGame.DiscardAsync(deck);
+        await gameContainer.SendDiscardMessageAsync(deck);
+        await mainGame.DiscardAsync(deck);
     }
     public override bool CanEnableAlways()
     {
@@ -146,9 +134,9 @@ public partial class FiveCrownsMainViewModel : BasicCardGamesVM<FiveCrownsCardIn
             return;
         }
         _isProcessing = true;
-        var tempList = _model.PlayerHand1!.ListSelectedObjects(true);
-        _model.TempSets!.AddCards(index, tempList);
-        await _privateAutoResume.SaveStateAsync(_model);
+        var tempList = viewModel.PlayerHand1!.ListSelectedObjects(true);
+        viewModel.TempSets!.AddCards(index, tempList);
+        await privateAutoResume.SaveStateAsync(viewModel);
         _isProcessing = false;
     }
     private async Task ProcessValidSetsAsync(BasicList<TempInfo> thisCol)
@@ -156,19 +144,19 @@ public partial class FiveCrownsMainViewModel : BasicCardGamesVM<FiveCrownsCardIn
         BasicList<string> newList = [];
         await thisCol.ForEachAsync(async thisTemp =>
         {
-            if (_mainGame.BasicData!.MultiPlayer == true)
+            if (mainGame.BasicData!.MultiPlayer == true)
             {
                 var tempList = thisTemp.CardList.GetDeckListFromObjectList();
                 var thisStr = await js1.SerializeObjectAsync(tempList);
                 newList.Add(thisStr);
             }
-            _model.TempSets!.ClearBoard(thisTemp.SetNumber);
-            _mainGame!.CreateSet(thisTemp.CardList);
+            viewModel.TempSets!.ClearBoard(thisTemp.SetNumber);
+            mainGame!.CreateSet(thisTemp.CardList);
         });
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        if (mainGame.BasicData!.MultiPlayer == true)
         {
-            await _mainGame.Network!.SendSeveralSetsAsync(newList, "finishedsets");
+            await mainGame.Network!.SendSeveralSetsAsync(newList, "finishedsets");
         }
-        await _mainGame!.FinishedSetsAsync();
+        await mainGame!.FinishedSetsAsync();
     }
 }

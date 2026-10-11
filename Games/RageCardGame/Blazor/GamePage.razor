@@ -15,16 +15,11 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="RageBiddingViewModel">
-        <RageBiddingView />
-    </ParentControl>
-    <ParentControl VM="RageColorViewModel">
-        <RageColorView />
-    </ParentControl>
-    <ParentControl VM="RageCardGameMainViewModel">
+    <MainScreen>
         <RageCardGameMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<RageCardGamePlayerItem>">
-        <MultiplayerOpeningView P="RageCardGamePlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <PromptView VM="RageCardGamePromptViewModel">
+        <RageCardGamePromptView />
+    </PromptView>
+    <MultiplayerOpeningView P="RageCardGamePlayerItem" />
 </CascadingValue>

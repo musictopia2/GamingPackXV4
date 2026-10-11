@@ -15,22 +15,22 @@ public class ShipControlCP
     }
     private void LoadBoard()
     {
-        BasicList<string> tempList = new()
-        {
+        BasicList<string> tempList =
+        [
             "Carrier",
             "Battleship",
             "Cruiser",
             "Submarine",
             "Destroyer"
-        };
-        ShipList = new Dictionary<int, ShipInfoCP>();
+        ];
+        ShipList = [];
         var loopTo = tempList.Count;
         int x;
         for (x = 1; x <= loopTo; x++)
         {
             ShipInfoCP ship = new ();
             ship.ShipName = tempList[x - 1];
-            ship.PieceList = new Dictionary<int, PieceInfoCP>();
+            ship.PieceList = [];
             ship.Visible = true;
             ship.ShipCategory = (EnumShipList)x; // i think
             ShipList.Add(ShipList.Count + 1, ship);
@@ -68,7 +68,7 @@ public class ShipControlCP
             }
         }
     }
-    public Dictionary<int, ShipInfoCP> ShipList { get; set; } = new Dictionary<int, ShipInfoCP>();
+    public Dictionary<int, ShipInfoCP> ShipList { get; set; } = [];
     public EnumShipList ShipSelected
     {
         get

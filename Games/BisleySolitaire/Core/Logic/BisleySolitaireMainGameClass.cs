@@ -1,18 +1,14 @@
 namespace BisleySolitaire.Core.Logic;
 [SingletonGame]
-public class BisleySolitaireMainGameClass : SolitaireGameClass<BisleySolitaireSaveInfo>
+public class BisleySolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<BisleySolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    public BisleySolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-    }
     protected async override Task ContinueOpenSavedAsync()
     {
         //anything else you need will be here

@@ -3,9 +3,9 @@ namespace SnagCardGame.Core.Data;
 public partial class SnagCardGamePlayerItem : PlayerTrick<EnumSuitList, SnagCardGameCardInformation>
 {
     [ScoreColumn]
-    public int CardsWon { get; set; }
+    public partial int CardsWon { get; set; }
     [ScoreColumn]
-    public int CurrentPoints { get; set; }
+    public partial int CurrentPoints { get; set; }
     [ScoreColumn]
-    public int TotalPoints { get; set; }
+    public partial int TotalPoints { get; set; }
 }

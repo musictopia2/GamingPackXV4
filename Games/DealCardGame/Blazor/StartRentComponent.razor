@@ -14,9 +14,11 @@
 {
     <ListChooserBlazor ListPicker="DataContext.GetPlayerPicker" TotalColumns="2" TextHeight="6vh" />
 }
-<div style="background-color: @DataContext.ColorChosen.WebColor; font-size: 2rem;font-family: Lato; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;">
-    Rent Charged: @DataContext.RentOwed
-</div>
+<StateContentView DataContext="DataContext">
+    <div style="background-color: @DataContext.ColorChosen.WebColor; font-size: 2rem;font-family: Lato; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;">
+        Rent Charged: @DataContext.RentOwed
+    </div>
+</StateContentView>
 <div>
     <GameButtonComponent Display="Cancel" CommandObject="CancelCommand" />
     <GameButtonComponent Display="Collect Rent" CommandObject="ProcessRentCommand" />

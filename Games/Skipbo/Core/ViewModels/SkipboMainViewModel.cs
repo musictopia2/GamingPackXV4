@@ -1,55 +1,42 @@
 namespace Skipbo.Core.ViewModels;
 [InstanceGame]
-public class SkipboMainViewModel : BasicCardGamesVM<SkipboCardInformation>
-{
-    private readonly SkipboMainGameClass _mainGame;
-    private readonly SkipboVMData _model;
-    private readonly IGamePackageResolver _resolver;
-    private readonly SkipboGameContainer _gameContainer;
-    public SkipboMainViewModel(CommandContainer commandContainer,
+[UseStateChanged]
+public partial class SkipboMainViewModel(CommandContainer commandContainer,
         SkipboMainGameClass mainGame,
         SkipboVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         SkipboGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<SkipboCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _resolver = resolver;
-        _gameContainer = gameContainer;
-        _model.Deck1.NeverAutoDisable = true;
-        _model.PlayerHand1.Maximum = 5;
-        _gameContainer.LoadPlayerPilesAsync = LoadPlayerPilesAsync;
+        viewModel.Deck1.NeverAutoDisable = true;
+        viewModel.PlayerHand1.Maximum = 5;
+        gameContainer.LoadPlayerPiles = LoadPlayerPiles;
+        base.AdditionalInitialize();
     }
-    protected override async Task ActivateAsync()
+    protected override async Task OpenAsync()
     {
-        await base.ActivateAsync();
-        await LoadPlayerPilesAsync();
+        LoadPlayerPiles();
     }
-    protected override async Task TryCloseAsync()
+    protected override Task CloseAsync()
     {
         if (PlayerPilesScreen != null)
         {
-            await CloseSpecificChildAsync(PlayerPilesScreen);
             PlayerPilesScreen = null;
         }
-        await base.TryCloseAsync();
+        return base.CloseAsync();
     }
-    private async Task LoadPlayerPilesAsync()
+    
+    private void LoadPlayerPiles()
     {
-        if (PlayerPilesScreen != null)
-        {
-            await CloseSpecificChildAsync(PlayerPilesScreen);
-        }
-        PlayerPilesScreen = _resolver.Resolve<PlayerPilesViewModel>();
-        await LoadScreenAsync(PlayerPilesScreen);
+        PlayerPilesScreen = Resolver.Resolve<PlayerPilesViewModel>();
+
     }
-    public PlayerPilesViewModel? PlayerPilesScreen { get; set; }
+    [StateProperty]
+    public partial PlayerPilesViewModel? PlayerPilesScreen { get; set; }
     protected override bool CanEnableDeck()
     {
         return false;
@@ -64,7 +51,7 @@ public class SkipboMainViewModel : BasicCardGamesVM<SkipboCardInformation>
     }
     protected override async Task BeforeUnselectCardFromHandAsync()
     {
-        _mainGame!.UnselectAllCards();
+        mainGame!.UnselectAllCards();
         await Task.CompletedTask;
     }
     public override bool CanEnableAlways()

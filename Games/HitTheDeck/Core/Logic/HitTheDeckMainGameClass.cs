@@ -1,33 +1,25 @@
 namespace HitTheDeck.Core.Logic;
 [SingletonGame]
-public class HitTheDeckMainGameClass
-    : CardGameClass<HitTheDeckCardInformation, HitTheDeckPlayerItem, HitTheDeckSaveInfo>
+public class HitTheDeckMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    HitTheDeckVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<HitTheDeckCardInformation> cardInfo,
+    CommandContainer command,
+    HitTheDeckGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        )
+        : CardGameClass<HitTheDeckCardInformation, HitTheDeckPlayerItem, HitTheDeckSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, IStartNewGame, ISerializable
 {
-    private readonly HitTheDeckVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly HitTheDeckGameContainer _gameContainer; //if we don't need it, take it out.
-    private readonly IToast _toast;
-
-    public HitTheDeckMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        HitTheDeckVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<HitTheDeckCardInformation> cardInfo,
-        CommandContainer command,
-        HitTheDeckGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _toast = toast;
-    }
+    private readonly HitTheDeckVMData _model = currentMod;
+    private readonly HitTheDeckGameContainer _gameContainer = gameContainer; //if we don't need it, take it out.
+    private readonly IToast _toast = toast;
+    private bool _isCutting;
     private HitTheDeckCardInformation ManuallyChooseCard
     {
         get
@@ -163,7 +155,7 @@ public class HitTheDeckMainGameClass
                 await FlipDeckAsync();
                 return;
             case "preparecut":
-                _model.Deck1.IsCutting = true;
+                _isCutting = true;
                 DoDraw = false; //try this too.
                 Network!.IsEnabled = true; //wait for next message
                 return;
@@ -176,7 +168,7 @@ public class HitTheDeckMainGameClass
     }
     public override async Task StartNewTurnAsync()
     {
-        _model.Deck1.IsCutting = false; //try this way.
+        _isCutting = false; //try this way.
         await base.StartNewTurnAsync();
         PlayerDraws = 0;
         var newTurn = await PlayerList!.CalculateWhoTurnAsync();
@@ -218,7 +210,7 @@ public class HitTheDeckMainGameClass
         {
             SingleInfo.MainHandList.ForEach(thisCard => thisCard.Drew = false);
         }
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
@@ -230,7 +222,7 @@ public class HitTheDeckMainGameClass
         }
         var oldCard = _model!.Pile1!.GetCardInfo();
         var newCard = _gameContainer.DeckList!.GetSpecificItem(deck);
-        if (newCard.Instructions == EnumInstructionList.Flip && _model.Deck1!.CanFlipDeck() == false)
+        if (newCard.Instructions == EnumInstructionList.Flip && CanFlipDeck() == false)
         {
             return false;
         }
@@ -263,6 +255,14 @@ public class HitTheDeckMainGameClass
             return newCard.Number == oldCard.Number;
         }
         throw new CustomBasicException("Cannot find out whether to play the card or not");
+    }
+    public override Task DrawAsync()
+    {
+        if (_isCutting)
+        {
+            throw new CustomBasicException("You cannot draw a card because you are cutting");
+        }
+        return base.DrawAsync();
     }
     public async Task ProcessPlayAsync(int deck)
     {
@@ -306,9 +306,7 @@ public class HitTheDeckMainGameClass
     }
     private void ReconcileFlips(DeckRegularDict<HitTheDeckCardInformation> discardList, DeckRegularDict<HitTheDeckCardInformation> deckList)
     {
-        DeckRegularDict<HitTheDeckCardInformation> finalList = new();
-        finalList.AddRange(discardList);
-        finalList.AddRange(deckList);
+        DeckRegularDict<HitTheDeckCardInformation> finalList = [.. discardList, .. deckList];
         PlayerList!.ForEach(thisPlayer =>
         {
             finalList.AddRange(thisPlayer.MainHandList);
@@ -327,10 +325,10 @@ public class HitTheDeckMainGameClass
     }
     public async Task FlipDeckAsync()
     {
-        _command.ManuelFinish = true;
-        var deckList = _model!.Deck1!.FlipCardList();
+        CommandContainer.ManuelFinish = true;
+        var deckList = FlipDrawDeck();
         PlayerList!.ChangeReverse();
-        var discardList = _model.Pile1!.FlipCardList();
+        var discardList = FlipDiscardPile();
         ReconcileFlips(discardList, deckList);
         _model.Deck1.OriginalList(discardList);
         _model.Pile1.NewList(deckList);
@@ -339,16 +337,17 @@ public class HitTheDeckMainGameClass
         bool useDeck;
         if (thisCard.Instructions == EnumInstructionList.Flip)
         {
-            useDeck = !_model.Pile1.CanCutDiscard();
+            useDeck = !CanCutDiscard();
             do
             {
                 if (useDeck == false)
                 {
-                    _model.Pile1.CutDeck();
+                    CutDiscardPile();
                 }
                 else
                 {
-                    _model.Deck1.PutInMiddle(_model.Pile1.GetCardInfo());
+                    PutInMiddleOfDrawDeck(_model.Pile1.GetCardInfo());
+                    //_model.Deck1.PutInMiddle(_model.Pile1.GetCardInfo());
                     _model.Pile1.RemoveFromPile();
                 }
                 thisCard = _model.Pile1.GetCardInfo();
@@ -364,7 +363,7 @@ public class HitTheDeckMainGameClass
     public override async Task ContinueTurnAsync()
     {
         await base.ContinueTurnAsync();
-        _command.ManualReport();
+        CommandContainer.ReportAllCommandStates();
     }
     private bool CanProcessPlay
     {
@@ -382,14 +381,14 @@ public class HitTheDeckMainGameClass
         SingleInfo = PlayerList!.GetWhoPlayer();
         if (CanProcessPlay)
         {
-            _model.Deck1.IsCutting = true;
-            if (_model!.Deck1!.CanCutDeck() == false)
+            _isCutting = true;
+            if (CanCutDeck() == false)
             {
                 if (BasicData.MultiPlayer)
                 {
                     await Network!.SendAllAsync("preparecut");
                 }
-                var deckList = _model.Deck1.FlipCardList();
+                var deckList = FlipDrawDeck();
                 _toast.ShowInfoToast("Its the end of the deck while cutting. therefore; the cards are being reshuffled");
                 _model.Pile1!.AddRestOfDeck(deckList);
                 await ReshuffleCardsAsync(SingleInfo!.CanSendMessage(BasicData!)); //try this way.
@@ -399,7 +398,7 @@ public class HitTheDeckMainGameClass
                 await Network!.SendAllAsync("cutdeck");
             }
         }
-        _model!.Pile1!.AddCard(_model.Deck1!.CutTheDeck());
+        _model!.Pile1!.AddCard(CutDrawDeck());
         await EndTurnAsync();
     }
     private void UpdateScores()
@@ -447,4 +446,96 @@ public class HitTheDeckMainGameClass
             return PlayerList.Any(items => items.TotalPoints >= pointsNeeded);
         }
     }
+    #region Cut The Deck Features
+
+
+    private bool CanCutDeck()
+    {
+        return _model.Deck1.CardsLeft() >= 5;
+    }
+
+    private bool CanFlipDeck()
+    {
+        return _model.Deck1.CardsLeft() > 1;
+    }
+
+    private bool CanCutDiscard()
+    {
+        // The current face-up card is separate from DiscardList().
+        return _model.Pile1.DiscardList().Count >= 4;
+    }
+
+    private DeckRegularDict<HitTheDeckCardInformation> FlipDrawDeck()
+    {
+        var cards = _model.Deck1.SavedList();
+        cards.Reverse();
+        _model.Deck1.ClearCards();
+        return cards;
+    }
+
+    private DeckRegularDict<HitTheDeckCardInformation> FlipDiscardPile()
+    {
+        var cards = _model.Pile1.DiscardList();
+        cards.Reverse();
+        cards.Add(_model.Pile1.GetCardInfo());
+        _model.Pile1.ClearCards();
+        return cards;
+    }
+
+    private HitTheDeckCardInformation CutDrawDeck()
+    {
+        var cards = _model.Deck1.SavedList();
+
+        if (cards.Count == 0)
+        {
+            throw new CustomBasicException(
+                "Cannot cut because the draw deck is empty.");
+        }
+
+        var card = cards[cards.Count / 2];
+
+        // Removes the specific card and updates the deck control.
+        return _model.Deck1.DrawCard(card.Deck);
+    }
+
+    private void PutInMiddleOfDrawDeck(HitTheDeckCardInformation card)
+    {
+        var cards = _model.Deck1.SavedList();
+        cards.InsertMiddle(cards.Count / 2, card);
+
+        // Also applies the deck's known/unknown card settings.
+        _model.Deck1.OriginalList(cards);
+    }
+
+    private void CutDiscardPile()
+    {
+        var cards = _model.Pile1.DiscardList();
+
+        if (cards.Count < 4)
+        {
+            throw new CustomBasicException(
+                "Cannot cut discard because there are fewer than four buried cards.");
+        }
+
+        var currentCard = _model.Pile1.GetCardInfo();
+        int index = cards.Count / 2;
+
+        if (cards.ObjectExist(currentCard.Deck))
+        {
+            cards.RemoveObjectByDeck(currentCard.Deck);
+        }
+
+        cards.InsertMiddle(index, currentCard);
+
+        // The last buried card becomes the new face-up card.
+        var newTop = cards.Last();
+        cards.RemoveLastItem();
+
+        // NewList expects the face-up card first, followed by buried cards.
+        DeckRegularDict<HitTheDeckCardInformation> replacement = [newTop];
+        replacement.AddRange(cards);
+
+        _model.Pile1.NewList(replacement);
+    }
+    #endregion
 }

@@ -1,14 +1,12 @@
 ﻿namespace LottoDominos.Core.ViewModels;
 [InstanceGame]
-public partial class ChooseNumberViewModel : ScreenViewModel, IBlankGameVM
+public partial class ChooseNumberViewModel
 {
     private readonly LottoDominosMainGameClass _mainGame;
-
     public ChooseNumberViewModel(CommandContainer commandContainer,
         LottoDominosMainGameClass mainGame,
-        IGamePackageResolver resolver,
-        IEventAggregator aggregator
-        ) : base(aggregator)
+        IGamePackageResolver resolver
+        )
     {
         CommandContainer = commandContainer;
         _mainGame = mainGame;
@@ -32,7 +30,6 @@ public partial class ChooseNumberViewModel : ScreenViewModel, IBlankGameVM
         {
             await _mainGame.Network!.SendAllAsync("numberchosen", numberChosen);
         }
-        CommandContainer.UpdateAll();
         if (_mainGame.SingleInfo.PlayerCategory != EnumPlayerCategory.Self && _mainGame.Test!.NoAnimations == false)
         {
             await _mainGame.Delay!.DelaySeconds(1);

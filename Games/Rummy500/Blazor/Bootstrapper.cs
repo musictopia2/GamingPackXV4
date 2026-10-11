@@ -1,10 +1,8 @@
 //i think this is the most common things i like to do
 namespace Rummy500.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<Rummy500ShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<Rummy500ShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

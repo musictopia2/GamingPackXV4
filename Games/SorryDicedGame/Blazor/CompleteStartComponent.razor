@@ -1,8 +1,10 @@
-﻿@if (SorryDicedGameGameContainer.CanStart == false || SorryDicedGameGameContainer.IsGameOver)
-{
-    return;
-}
-<RefreshComponent CanRender=_canRender>
+﻿<StateContentView DataContext="BoardList">
+
+    @if (SorryDicedGameGameContainer.CanStart == false || SorryDicedGameGameContainer.IsGameOver)
+    {
+        return;
+    }
+
     <BaseFrameBlazor Text="Start">
         <GridTwoByTwo ColumnLength="@Columns">
             @{
@@ -23,4 +25,8 @@
             }
         </GridTwoByTwo>
     </BaseFrameBlazor>
-</RefreshComponent>
+
+    <RefreshComponent CanRender=_canRender>
+        
+    </RefreshComponent>
+</StateContentView>

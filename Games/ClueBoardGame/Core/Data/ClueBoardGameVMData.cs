@@ -1,20 +1,35 @@
 namespace ClueBoardGame.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
+[UseStateChanged]
 public partial class ClueBoardGameVMData : IDiceBoardGamesData
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
+    [StateProperty]
+    public partial int LeftToMove { get; set; }
     [LabelColumn]
-    public int LeftToMove { get; set; }
+    public partial string CurrentRoomName { get; set; } = "";
+
+    partial void OnCurrentRoomNameChanged(string value)
+    {
+        StateChanged?.Invoke();
+    }
+
     [LabelColumn]
-    public string CurrentRoomName { get; set; } = "";
+    public partial string CurrentCharacterName { get; set; } = "";
+    partial void OnCurrentCharacterNameChanged(string value)
+    {
+        StateChanged?.Invoke();
+    }
     [LabelColumn]
-    public string CurrentCharacterName { get; set; } = "";
-    [LabelColumn]
-    public string CurrentWeaponName { get; set; } = "";
+    public partial string CurrentWeaponName { get; set; } = "";
+    partial void OnCurrentWeaponNameChanged(string value)
+    {
+        StateChanged?.Invoke();
+    }
     public DiceCup<SimpleDice>? Cup { get; set; }
     public string Instructions { get; set; } = ""; //has to be here in order to implement the interface for idiceboarddata
 

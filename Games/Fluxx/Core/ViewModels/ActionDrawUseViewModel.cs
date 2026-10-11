@@ -9,9 +9,8 @@ public partial class ActionDrawUseViewModel : BasicActionScreen
         FluxxDelegates delegates,
         IFluxxEvent fluxxEvent,
         BasicActionLogic basicActionLogic,
-        IEventAggregator aggregator,
         IToast toast
-        ) : base(gameContainer, actionContainer, keeperContainer, delegates, fluxxEvent, basicActionLogic, aggregator)
+        ) : base(gameContainer, actionContainer, keeperContainer, delegates, fluxxEvent, basicActionLogic)
     {
         _toast = toast;
         CreateCommands(CommandContainer);

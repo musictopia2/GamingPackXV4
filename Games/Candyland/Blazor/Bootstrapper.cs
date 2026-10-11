@@ -1,12 +1,16 @@
 //i think this is the most common things i like to do
 namespace Candyland.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<CandylandShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<CandylandShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
+    //protected override Task RegisterTestsAsync()
+    //{
+    //    ConfigureTestOptions(test =>
+    //    {
+    //        test.WhoStarts = 1;
+    //    });
+    //    return base.RegisterTestsAsync();
+    //}
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

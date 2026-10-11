@@ -8,7 +8,9 @@
         <DeckOfCardsTwoPlayerTrickBlazor T="GalaxyCardGameCardInformation" DataContext="_vmData.TrickArea1" />
     </StackItem>
     <StackItem>
-        <DeckOfCardsImageBlazor @key="@GetKey" R="GalaxyCardGameCardInformation" DeckObject="_gameContainer.SaveRoot.WinningCard" TargetHeight="@HeightString" />
+        <StateContentView DataContext="_gameContainer.SaveRoot">
+            <DeckOfCardsImageBlazor @key="@GetKey" R="GalaxyCardGameCardInformation" DeckObject="_gameContainer.SaveRoot.WinningCard" TargetHeight="@HeightString" />
+        </StateContentView>
     </StackItem>
     <StackItem>
         <DeckOfCardsDrawPileBlazor R="GalaxyCardGameCardInformation" DeckPile="_vmData.Deck1" />
@@ -19,11 +21,11 @@
     {
         <StackItem>
             <DeckOfCardsMainRummySetsBlazor ContainerHeight="25vh"
-                                        ContainerWidth="45vw"
-                                        RU="GalaxyCardGameCardInformation"
-                                        SE="MoonClass"
-                                        T="SavedSet"
-                                        DataContext="player.Moons" />
+                                            ContainerWidth="45vw"
+                                            RU="GalaxyCardGameCardInformation"
+                                            SE="MoonClass"
+                                            T="SavedSet"
+                                            DataContext="player.Moons" />
         </StackItem>
     }
 </StackLayout>

@@ -1,10 +1,12 @@
-﻿@inherits BasicGameView<ChooseGenderViewModel>
+﻿@inherits CascadingGameView<ChooseGenderViewModel>
 <EnumPickerBlazor E="EnumGender" Context="Piece" ListPicker="DataContext!.GetGenderPicker">
     <CirclePiece MainColor="@GetColor(Piece.EnumValue)" />
 </EnumPickerBlazor>
 <div>
-    <BasePieceGraphics LongestSize="93">
-        <CarPieceBlazor Player="DataContext.GetPlayer" />
-    </BasePieceGraphics>
+    <ActionContentView Key="@LifeActionKeys.Gender">
+        <BasePieceGraphics LongestSize="93">
+            <CarPieceBlazor Player="DataContext.GetPlayer" />
+        </BasePieceGraphics>
+    </ActionContentView>
 </div>
 <LabelGridComponent DataContext="DataContext" Labels="_labels" />

@@ -1,7 +1,7 @@
 namespace CalculationSolitaire.Blazor.Views;
 public partial class CalculationSolitaireMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnInitialized()
     {
         _labels.Clear();
@@ -19,6 +19,5 @@ public partial class CalculationSolitaireMainView
         WastePilesCP waste = (WastePilesCP)DataContext!.WastePiles1;
         var output = waste.Piles;
         return output;
-        //return (WastePilesCP)DataContext!.WastePiles1;
     }
 }

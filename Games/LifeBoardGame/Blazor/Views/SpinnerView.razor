@@ -1,3 +1,8 @@
-﻿<SpinnerGraphicsBlazor TargetHeight="25vh">
-    <SpinnerAnimationBlazor />
+﻿@inherits ParameterGameView<SpinnerViewModel>
+@if (DataContext is null)
+{
+    return;
+}
+<SpinnerGraphicsBlazor TargetHeight="25vh">
+    <SpinnerAnimationBlazor DataContext="DataContext" />
 </SpinnerGraphicsBlazor>

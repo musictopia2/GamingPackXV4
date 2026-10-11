@@ -20,7 +20,6 @@ public class AttackLogic
             PopulateDefenses();
             _container.SaveRoot.Stage = EnumStageList.Roll;
             _container.VMData.RollingProgress = true;
-            _container.Command.UpdateAll();
         };
     }
     private void PopulateDefenses()
@@ -60,7 +59,7 @@ public class AttackLogic
         var lossData = _container.GetAttackResults();
         _container.SaveRoot.ArmiesInBattle -= lossData.AttackLosses;
         _container.SaveRoot.NumberDefenseArmies -= lossData.DefenseLosses;
-        _container.Command.UpdateAll(); //try this as well.  this should update everything (?)
+        _container.VMData.UpdateStatus();
         await _container.Delay.DelayMilli(1200); //to see the results
         TerritoryModel territory = _container.GetTerritory(_container.SaveRoot.PreviousTerritory);
         territory.Armies -= lossData.AttackLosses;
@@ -99,7 +98,6 @@ public class AttackLogic
             _container.SaveRoot.Stage = EnumStageList.EndGame; //i think now.
             _gameBoardProcesses.ResetMove();
             _container.SaveRoot.Instructions = $"Game Is Over {_container.SingleInfo!.NickName} has won"; //since there is no status, then show game is over
-            _container.Command.UpdateAll(); //to show that part.
             await _container.ShowWinAsync!.Invoke(); ;
             return;
         }
@@ -113,7 +111,6 @@ public class AttackLogic
         {
             await _container.Network!.SendAllAsync(nameof(IMultiplayerModel.AttackArmies), _container.SaveRoot.ArmiesInBattle);
         }
-        _container.Command.UpdateAll();
         await _rollingProcesses.RollDiceAsync();
     }
 }

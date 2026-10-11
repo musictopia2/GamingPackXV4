@@ -14,7 +14,6 @@ global using CommonBasicLibraries.BasicUIProcesses;
 global using BasicGameFrameworkLibrary.Core.CommandClasses;
 global using BasicGameFrameworkLibrary.Core.ViewModels;
 global using BasicGameFrameworkLibrary.Core.ViewModelInterfaces;
-global using MVVMFramework.ViewModels;
 global using Yahtzee.Core.Logic;
 global using BasicGameFrameworkLibrary.Core.MiscProcesses;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.MapHelpers;
@@ -46,3 +45,4 @@ global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHel
 global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Logic;
 global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+global using BasicGameFrameworkLibrary.Core.SystemEventModels;

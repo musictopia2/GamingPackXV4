@@ -1,21 +1,17 @@
 namespace FlorentineSolitaire.Core.ViewModels;
 [InstanceGame]
 [UseLabelGrid]
-public partial class FlorentineSolitaireMainViewModel : SolitaireMainViewModel<FlorentineSolitaireSaveInfo>
+public partial class FlorentineSolitaireMainViewModel(IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver
+        ) : SolitaireMainViewModel<FlorentineSolitaireSaveInfo>(aggregator, command, resolver)
 {
-    public FlorentineSolitaireMainViewModel(IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver
-        )
-        : base(aggregator, command, resolver)
-    {
-    }
     protected override SolitaireGameClass<FlorentineSolitaireSaveInfo> GetGame(IGamePackageResolver resolver)
     {
         return resolver.ReplaceObject<FlorentineSolitaireMainGameClass>();
     }
     [LabelColumn]
-    public int StartingNumber { get; set; }
+    public partial int StartingNumber { get; set; }
     protected override void CommandExecutingChanged()
     {
         StartingNumber = MainPiles1!.StartNumber();

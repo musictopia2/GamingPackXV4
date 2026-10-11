@@ -1,18 +1,14 @@
 namespace EasyGoSolitaire.Core.Logic;
 [SingletonGame]
-public class EasyGoSolitaireMainGameClass : SolitaireGameClass<EasyGoSolitaireSaveInfo>
+public class EasyGoSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<EasyGoSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    public EasyGoSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-    }
     protected async override Task ContinueOpenSavedAsync()
     {
         //anything else you need will be here

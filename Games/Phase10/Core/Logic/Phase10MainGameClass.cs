@@ -2,39 +2,29 @@ using BasicGameFrameworkLibrary.Blazor.LocalStorageClasses;
 using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
 namespace Phase10.Core.Logic;
 [SingletonGame]
-public class Phase10MainGameClass
-    : CardGameClass<Phase10CardInformation, Phase10PlayerItem, Phase10SaveInfo>
+public class Phase10MainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    Phase10VMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<Phase10CardInformation> cardInfo,
+    CommandContainer command,
+    Phase10GameContainer gameContainer,
+    ISystemError error,
+    IToast toast,
+    PrivateAutoResumeProcesses privateAutoResume
+        )
+        : CardGameClass<Phase10CardInformation, Phase10PlayerItem, Phase10SaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, IStartNewGame, IMissTurnClass<Phase10PlayerItem>, ISerializable
 {
-    private readonly Phase10VMData _model;
-    private readonly CommandContainer _command;
-    private readonly Phase10GameContainer _gameContainer;
-    private readonly PrivateAutoResumeProcesses _privateAutoResume;
-    private readonly RummyProcesses<EnumColorTypes, EnumColorTypes, Phase10CardInformation> _rummys;
+    private readonly Phase10VMData _model = currentMod;
+    private readonly CommandContainer _command = command;
+    private readonly Phase10GameContainer _gameContainer = gameContainer;
+    private readonly PrivateAutoResumeProcesses _privateAutoResume = privateAutoResume;
+    private readonly RummyProcesses<EnumColorTypes, EnumColorTypes, Phase10CardInformation> _rummys = new();
     private BasicList<PhaseList>? _phaseInfo;
-#pragma warning disable IDE0290 // Use primary constructor cannot this time because it removes the intellisense this time.
-    public Phase10MainGameClass(IGamePackageResolver mainContainer,
-#pragma warning restore IDE0290 // Use primary constructor
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        Phase10VMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<Phase10CardInformation> cardInfo,
-        CommandContainer command,
-        Phase10GameContainer gameContainer,
-        ISystemError error,
-        IToast toast,
-        PrivateAutoResumeProcesses privateAutoResume
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _privateAutoResume = privateAutoResume;
-        _rummys = new();
-    }
     public override async Task FinishGetSavedAsync()
     {
         _model!.MainSets!.ClearBoard();
@@ -234,7 +224,6 @@ public class Phase10MainGameClass
                 break;
             case "playerskipped":
                 _model.PlayerPicker.ShowOnlyOneSelectedItem(content);
-                _command.UpdateAll();
                 if (_gameContainer.Test.NoAnimations == false)
                 {
                     await _gameContainer.Delay.DelaySeconds(1);

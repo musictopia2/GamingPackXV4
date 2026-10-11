@@ -2,5 +2,5 @@
 public class MissionList
 {
     public string Description { get; set; } = "";
-    public BasicList<SetInfo> MissionSets { get; set; } = new();
+    public BasicList<SetInfo> MissionSets { get; set; } = [];
 }

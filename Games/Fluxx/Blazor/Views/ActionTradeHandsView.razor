@@ -1,9 +1,9 @@
-﻿@inherits SimpleActionView
+﻿@inherits SimpleActionView<ActionTradeHandsViewModel>
 @if (DataContext == null)
 {
     return;
 }
 <FinalActionLayout>
     <PlayerUI Command="DataContext.ChoosePlayerCommand" UsePlayerButton="true" />
-    <KeeperButton K="ActionTradeHandsViewModel" @key="GetKey"  />
+    <KeeperButton DataContext="DataContext" @key="GetKey"  />
 </FinalActionLayout>

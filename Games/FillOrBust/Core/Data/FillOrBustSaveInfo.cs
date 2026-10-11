@@ -13,10 +13,7 @@ public class FillOrBustSaveInfo : BasicSavedCardClass<FillOrBustPlayerItem, Fill
         {
             if (SetProperty(ref _tempScore, value))
             {
-                if (_model != null)
-                {
-                    _model.TempScore = value;
-                }
+                _model?.TempScore = value;
             }
         }
     }
@@ -28,10 +25,7 @@ public class FillOrBustSaveInfo : BasicSavedCardClass<FillOrBustPlayerItem, Fill
         {
             if (SetProperty(ref _diceScore, value))
             {
-                if (_model != null)
-                {
-                    _model.DiceScore = value;
-                }
+                _model?.DiceScore = value;
             }
         }
     }

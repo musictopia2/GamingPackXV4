@@ -1,10 +1,8 @@
 //i think this is the most common things i like to do
 namespace Cribbage.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<CribbageShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<CribbageShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
     //protected override Task RegisterTestsAsync()
     //{
     //    var container = GetDIContainer;

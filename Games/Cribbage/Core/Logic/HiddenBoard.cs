@@ -1,43 +1,38 @@
 ﻿namespace Cribbage.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class HiddenBoard
+public class HiddenBoard(CribbageGameContainer gameContainer)
 {
-    private readonly CribbageGameContainer _gameContainer;
-    public HiddenBoard(CribbageGameContainer gameContainer)
-    {
-        _gameContainer = gameContainer;
-    }
     public async Task PegAsync(int howMany)
     {
-        if (_gameContainer.WhoTurn == 0)
+        if (gameContainer.WhoTurn == 0)
         {
             throw new CustomBasicException("The whoturn cannot be 0");
         }
-        if (_gameContainer.NextStepAsync == null)
+        if (gameContainer.NextStepAsync == null)
         {
             throw new CustomBasicException("Nobody is handling the next step");
         }
         if (howMany == 0)
         {
-            await _gameContainer.NextStepAsync();
+            await gameContainer.NextStepAsync();
             return;
         }
         int oldPosition;
         bool useFirsts;
-        if (_gameContainer.SingleInfo!.FirstPosition == 0 && _gameContainer.SingleInfo.SecondPosition == 0)
+        if (gameContainer.SingleInfo!.FirstPosition == 0 && gameContainer.SingleInfo.SecondPosition == 0)
         {
             oldPosition = 0;
             useFirsts = true;
         }
-        else if (_gameContainer.SingleInfo.FirstPosition > _gameContainer.SingleInfo.SecondPosition)
+        else if (gameContainer.SingleInfo.FirstPosition > gameContainer.SingleInfo.SecondPosition)
         {
-            oldPosition = _gameContainer.SingleInfo.FirstPosition;
+            oldPosition = gameContainer.SingleInfo.FirstPosition;
             useFirsts = false;
         }
         else
         {
-            oldPosition = _gameContainer.SingleInfo.SecondPosition;
+            oldPosition = gameContainer.SingleInfo.SecondPosition;
             useFirsts = true;
         }
         int newPosition = oldPosition + howMany;
@@ -47,30 +42,30 @@ public class HiddenBoard
             howMany -= diffs;
             newPosition = 121;
         }
-        _gameContainer.SingleInfo.ScoreRound += howMany;
-        int oldTotal = _gameContainer.SingleInfo.TotalScore;
-        _gameContainer.SingleInfo.TotalScore = newPosition;
-        if (_gameContainer.SingleInfo.TotalScore < oldTotal)
+        gameContainer.SingleInfo.ScoreRound += howMany;
+        int oldTotal = gameContainer.SingleInfo.TotalScore;
+        gameContainer.SingleInfo.TotalScore = newPosition;
+        if (gameContainer.SingleInfo.TotalScore < oldTotal)
         {
             throw new CustomBasicException("Can't lower score.  Rethink");
         }
         if (newPosition > 90)
         {
-            _gameContainer.SingleInfo.IsSkunk = false;
+            gameContainer.SingleInfo.IsSkunk = false;
         }
         if (useFirsts == true)
         {
-            _gameContainer.SingleInfo.FirstPosition = newPosition;
+            gameContainer.SingleInfo.FirstPosition = newPosition;
         }
         else
         {
-            _gameContainer.SingleInfo.SecondPosition = newPosition;
+            gameContainer.SingleInfo.SecondPosition = newPosition;
         }
-        if (newPosition == 121 || _gameContainer.Test.ImmediatelyEndGame)
+        if (newPosition == 121 || gameContainer.Test.ImmediatelyEndGame)
         {
-            await _gameContainer.ShowWinAsync!.Invoke();
+            await gameContainer.ShowWinAsync!.Invoke();
             return;
         }
-        await _gameContainer.NextStepAsync.Invoke();
+        await gameContainer.NextStepAsync.Invoke();
     }
 }

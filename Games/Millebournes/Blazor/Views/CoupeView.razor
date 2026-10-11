@@ -1,2 +1,7 @@
-﻿<GameButtonComponent CommandObject="CoupeCommand"
+﻿@inherits ParameterGameView<CoupeViewModel>
+@if (DataContext is null)
+{
+    return;
+}
+<GameButtonComponent CommandObject="CoupeCommand"
                      Display="Coupe Foure" />

@@ -1,10 +1,10 @@
 ﻿namespace Uno.Core.ViewModels;
 [InstanceGame]
-public partial class SayUnoViewModel : ScreenViewModel, IBlankGameVM
+public partial class SayUnoViewModel
 {
     private readonly ISayUnoProcesses _processes;
     private readonly UnoVMData _model;
-    public SayUnoViewModel(CommandContainer commandContainer, ISayUnoProcesses processes, UnoVMData model, IEventAggregator aggregator) : base(aggregator)
+    public SayUnoViewModel(CommandContainer commandContainer, ISayUnoProcesses processes, UnoVMData model)
     {
         CommandContainer = commandContainer;
         _processes = processes;
@@ -29,10 +29,9 @@ public partial class SayUnoViewModel : ScreenViewModel, IBlankGameVM
         CommandContainer.IsExecuting = true;
         await _processes.ProcessUnoAsync(false);
     }
-    protected override Task TryCloseAsync()
+    public void Close()
     {
         _model.Stops.TimeUp -= Stops_TimeUp;
-        return base.TryCloseAsync();
     }
     public CommandContainer CommandContainer { get; set; }
     [Command(EnumCommandCategory.Plain)]

@@ -1,8 +1,8 @@
 ﻿@typeparam K
+@inherits ParameterGameView<K>
 @using BasicGameFrameworkLibrary.Core.MultiplayerClasses.BasicPlayerClasses; 
-@if (DataContext == null)
+@if (DataContext is null)
 {
-    <div>No datacontext was sent via cascading parameters.</div>
     return;
 }
 @if (CompleteContainer == null )

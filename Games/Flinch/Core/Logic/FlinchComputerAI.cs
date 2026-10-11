@@ -1,15 +1,8 @@
 ﻿namespace Flinch.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class FlinchComputerAI
+public class FlinchComputerAI(FlinchGameContainer gameContainer, FlinchVMData model)
 {
-    private readonly FlinchGameContainer _gameContainer;
-    private readonly FlinchVMData _model;
-    public FlinchComputerAI(FlinchGameContainer gameContainer, FlinchVMData model)
-    {
-        _gameContainer = gameContainer;
-        _model = model;
-    }
     private struct DiscardPileInfo
     {
         public int Number1; // most recent
@@ -35,14 +28,14 @@ public class FlinchComputerAI
     public int MaxPiles { get; set; }
     public BasicList<ComputerData> ComputerMoves()
     {
-        BasicList<ComputerData> output = new();
+        BasicList<ComputerData> output = [];
         _startList = ValidMoveList();
         if (_startList.Count == 0)
         {
             return output;
         }
         int x = default;
-        BasicList<MoveInfo> possibleList = new();
+        BasicList<MoveInfo> possibleList = [];
         MoveInfo tempMove;
         foreach (var thisMove in _startList)
         {
@@ -72,18 +65,18 @@ public class FlinchComputerAI
     }
     private BasicList<ComputerData> ValidMoveList()
     {
-        BasicList<ComputerData> thisList = new();
+        BasicList<ComputerData> thisList = [];
         ComputerData thisComputer;
         int x;
-        if (_gameContainer.IsValidMove == null)
+        if (gameContainer.IsValidMove == null)
         {
             throw new CustomBasicException("Nobody is handling the isvalidmove.  Rethink");
         }
-        foreach (var tempCard in _gameContainer.SingleInfo!.MainHandList)
+        foreach (var tempCard in gameContainer.SingleInfo!.MainHandList)
         {
             for (x = 1; x <= MaxPiles; x++)
             {
-                if (_gameContainer.IsValidMove(x - 1, tempCard.Deck) == true)
+                if (gameContainer.IsValidMove(x - 1, tempCard.Deck) == true)
                 {
                     thisComputer = new ();
                     thisComputer.CardToPlay = tempCard;
@@ -96,7 +89,7 @@ public class FlinchComputerAI
         }
         FlinchCardInformation thisCard;
         int y;
-        var thisDiscard = _model.DiscardPiles;
+        var thisDiscard = model.DiscardPiles;
         DeckRegularDict<FlinchCardInformation> cardList;
         for (x = 1; x <= HowManyDiscards; x++)
         {
@@ -106,7 +99,7 @@ public class FlinchComputerAI
                 thisCard = thisDiscard.GetLastCard(x - 1);
                 for (y = 1; y <= MaxPiles; y++)
                 {
-                    if (_gameContainer.IsValidMove(y - 1, thisCard.Deck) == true)
+                    if (gameContainer.IsValidMove(y - 1, thisCard.Deck) == true)
                     {
                         thisComputer = new ();
                         thisComputer.CardToPlay = thisCard;
@@ -118,10 +111,10 @@ public class FlinchComputerAI
                 }
             }
         }
-        thisCard = _model.StockPile!.GetCard();
+        thisCard = model.StockPile!.GetCard();
         for (x = 1; x <= MaxPiles; x++)
         {
-            if (_gameContainer.IsValidMove(x - 1, thisCard.Deck) == true)
+            if (gameContainer.IsValidMove(x - 1, thisCard.Deck) == true)
             {
                 thisComputer = new ();
                 thisComputer.CardToPlay = thisCard;
@@ -135,21 +128,17 @@ public class FlinchComputerAI
     }
     private void CopyDiscards(bool alsoHand)
     {
-        var thisDiscard = _model.DiscardPiles;
+        var thisDiscard = model.DiscardPiles;
         thisDiscard!.CopyDiscards(out _tempDiscards);
         if (alsoHand == false)
         {
             return;
         }
-        _tempHand = new DeckRegularDict<FlinchCardInformation>();
-        foreach (var thisCard in _gameContainer.SingleInfo!.MainHandList)
-        {
-            _tempHand.Add(thisCard);
-        }
+        _tempHand = [.. gameContainer.SingleInfo!.MainHandList];
     }
     private static BasicList<MoveInfo> StockList(BasicList<MoveInfo> possibleMoves)
     {
-        BasicList<MoveInfo> output = new();
+        BasicList<MoveInfo> output = [];
         foreach (var tempItem in possibleMoves)
         {
             foreach (var tempMove in tempItem.MoveList)
@@ -168,7 +157,7 @@ public class FlinchComputerAI
     }
     private bool AllDiscardEmpty()
     {
-        var thisDiscard = _model.DiscardPiles;
+        var thisDiscard = model.DiscardPiles;
         int x;
         for (x = 1; x <= HowManyDiscards; x++)
         {
@@ -182,7 +171,7 @@ public class FlinchComputerAI
     private int EmptyDiscardPile()
     {
         int x;
-        var thisDiscard = _model.DiscardPiles;
+        var thisDiscard = model.DiscardPiles;
         for (x = 1; x <= HowManyDiscards; x++)
         {
             if (thisDiscard!.PileList![x - 1].ObjectList.Count == 0)
@@ -194,9 +183,9 @@ public class FlinchComputerAI
     }
     private void FillDiscardList()
     {
-        _tempDiscardList = new();
+        _tempDiscardList = [];
         DiscardPileInfo thisTemp;
-        var thisDiscard = _model.DiscardPiles;
+        var thisDiscard = model.DiscardPiles;
         FlinchCardInformation thisCard;
         for (var x = 1; x <= HowManyDiscards; x++)
         {
@@ -226,14 +215,14 @@ public class FlinchComputerAI
         output.Pile = 0;
         ComputerDiscardInfo thisDiscard;
         int newNums = default;
-        BasicList<ComputerDiscardInfo> newList = new();
+        BasicList<ComputerDiscardInfo> newList = [];
         FlinchCardInformation thisCard;
         foreach (var thisTemp in _tempDiscardList!)
         {
             if (thisTemp.Number1 < 13 && thisTemp.Number1 > 1)
             {
                 newNums = thisTemp.Number1 - 1;
-                var Filters = _gameContainer.SingleInfo!.MainHandList.Where(x => x.Number == newNums).ToRegularDeckDict();
+                var Filters = gameContainer.SingleInfo!.MainHandList.Where(x => x.Number == newNums).ToRegularDeckDict();
                 if (Filters.Count > 0)
                 {
                     thisCard = Filters.First();
@@ -259,7 +248,7 @@ public class FlinchComputerAI
         {
             return output;
         }
-        BasicList<ComputerDiscardInfo> newList = new();
+        BasicList<ComputerDiscardInfo> newList = [];
         int newNums = default;
         ComputerDiscardInfo thisDiscard;
         FlinchCardInformation thisCard;
@@ -268,7 +257,7 @@ public class FlinchComputerAI
             if (thisTemp.Number2 < 13 && thisTemp.Number2 > 1)
             {
                 newNums = thisTemp.Number1 - 1;
-                var Filters = _gameContainer.SingleInfo!.MainHandList.Where(x => x.Number == newNums).ToRegularDeckDict();
+                var Filters = gameContainer.SingleInfo!.MainHandList.Where(x => x.Number == newNums).ToRegularDeckDict();
                 if (Filters.Count > 0)
                 {
                     thisCard = Filters.First();
@@ -299,13 +288,13 @@ public class FlinchComputerAI
             return output;
         }
         ComputerDiscardInfo thisDiscard;
-        BasicList<ComputerDiscardInfo> newList = new();
+        BasicList<ComputerDiscardInfo> newList = [];
         FlinchCardInformation thisCard;
         foreach (var thisTemp in sames)
         {
             if (thisTemp.Number1 < 13)
             {
-                var filters = _gameContainer.SingleInfo!.MainHandList.Where(x => x.Number == thisTemp.Number1).ToRegularDeckDict();
+                var filters = gameContainer.SingleInfo!.MainHandList.Where(x => x.Number == thisTemp.Number1).ToRegularDeckDict();
                 if (filters.Count > 0)
                 {
                     thisCard = filters.First();
@@ -317,12 +306,14 @@ public class FlinchComputerAI
             }
         }
         if (newList.Count == 0)
+        {
             return output;
+        }
         return newList.GetRandomItem();
     }
     private BasicList<DiscardPileInfo> StackList()
     {
-        BasicList<DiscardPileInfo> output = new();
+        BasicList<DiscardPileInfo> output = [];
         foreach (var thisTemp in _tempDiscardList!)
         {
             if (thisTemp.Number1 == (thisTemp.Number2 - 1) && thisTemp.Number1 > 0 && thisTemp.Number2 > 0)
@@ -334,7 +325,7 @@ public class FlinchComputerAI
     }
     private BasicList<DiscardPileInfo> NoStackNoSame()
     {
-        BasicList<DiscardPileInfo> output = new();
+        BasicList<DiscardPileInfo> output = [];
         foreach (var thisTemp in _tempDiscardList!)
         {
             if (thisTemp.Number1 > 0 && thisTemp.Number2 > 0 && thisTemp.Number1 < 13 && thisTemp.Number2 < 13)
@@ -349,7 +340,7 @@ public class FlinchComputerAI
     }
     private BasicList<DiscardPileInfo> SameList()
     {
-        BasicList<DiscardPileInfo> output = new();
+        BasicList<DiscardPileInfo> output = [];
         foreach (var thisTemp in _tempDiscardList!)
         {
             if (thisTemp.Number1 == thisTemp.Number2 && thisTemp.Number1 > 0 && thisTemp.Number2 > 0)
@@ -371,11 +362,11 @@ public class FlinchComputerAI
             return output;
         }
         ComputerDiscardInfo thisDiscard;
-        BasicList<ComputerDiscardInfo> newList = new();
+        BasicList<ComputerDiscardInfo> newList = [];
         FlinchCardInformation thisCard;
         foreach (var thisTemp in ones)
         {
-            var filters = _gameContainer.SingleInfo!.MainHandList.Where(x => x.Number == thisTemp.Number1).ToRegularDeckDict();
+            var filters = gameContainer.SingleInfo!.MainHandList.Where(x => x.Number == thisTemp.Number1).ToRegularDeckDict();
             if (filters.Count > 0)
             {
                 thisCard = filters.First();
@@ -386,14 +377,16 @@ public class FlinchComputerAI
             }
         }
         if (newList.Count > 0)
+        {
             return newList.GetRandomItem();
+        }
         int newNums;
         foreach (var thisTemp in ones)
         {
             newNums = thisTemp.Number1 - 1;
             if (newNums > 0 && newNums < 12)
             {
-                var filters = _gameContainer.SingleInfo!.MainHandList.Where(x => x.Number == newNums).ToRegularDeckDict();
+                var filters = gameContainer.SingleInfo!.MainHandList.Where(x => x.Number == newNums).ToRegularDeckDict();
                 if (filters.Count > 0)
                 {
                     thisCard = filters.First();
@@ -416,11 +409,11 @@ public class FlinchComputerAI
     }
     private int BestCardForEmpty()
     {
-        if (_gameContainer.SingleInfo!.MainHandList.Count == 1)
+        if (gameContainer.SingleInfo!.MainHandList.Count == 1)
         {
-            return _gameContainer.SingleInfo.MainHandList.First().Deck;
+            return gameContainer.SingleInfo.MainHandList.First().Deck;
         }
-        return _gameContainer.SingleInfo.MainHandList.GetRandomItem().Deck;
+        return gameContainer.SingleInfo.MainHandList.GetRandomItem().Deck;
     }
 
     public ComputerDiscardInfo ComputerDiscard()
@@ -565,11 +558,11 @@ public class FlinchComputerAI
         output.WhichType = EnumCardType.IsNone;
         output.Discard = 0;
         string stockNumber;
-        stockNumber = _gameContainer.SingleInfo!.InStock;
+        stockNumber = gameContainer.SingleInfo!.InStock;
         if (int.Parse(stockNumber) == nextNumber)
         {
             output.Pile = pile;
-            output.CardToPlay = _model.StockPile!.GetCard();
+            output.CardToPlay = model.StockPile!.GetCard();
             output.WhichType = EnumCardType.Stock;
             output.Discard = -1;
             return output;
@@ -614,7 +607,7 @@ public class FlinchComputerAI
     private MoveInfo ResultsOfMove(BasicList<ComputerData> whatList, int whichOne)
     {
         MoveInfo output = new();
-        output.MoveList = new();
+        output.MoveList = [];
         ComputerData thisMove;
         int numberNext;
         thisMove = whatList[whichOne - 1];
@@ -622,16 +615,16 @@ public class FlinchComputerAI
         if (thisMove.WhichType == EnumCardType.Stock)
         {
             tempMove = new ();
-            tempMove.MoveList = new();
+            tempMove.MoveList = [];
             tempMove.Value = 500;
             tempMove.StartNum = whichOne;
-            tempMove.MoveList = new()
-            {
+            tempMove.MoveList =
+            [
                 thisMove
-            };
+            ];
             return tempMove;
         }
-        numberNext = _model.PublicPiles!.NextNumberNeeded(thisMove.Pile);
+        numberNext = model.PublicPiles!.NextNumberNeeded(thisMove.Pile);
         ComputerData newMove;
         output.MoveList.Add(thisMove);
         CopyDiscards(true);
@@ -689,7 +682,7 @@ public class FlinchComputerAI
         {
             newValue += 20;
             _tempDiscards!.RemoveCard(newMove.Discard, newMove.CardToPlay!.Deck);
-            if (_model.DiscardPiles!.PileList![newMove.Discard].ObjectList.Count == 0)
+            if (model.DiscardPiles!.PileList![newMove.Discard].ObjectList.Count == 0)
             {
                 throw new CustomBasicException("Cannot be 0 for the discards");
             }

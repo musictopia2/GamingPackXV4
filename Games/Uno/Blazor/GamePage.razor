@@ -15,13 +15,12 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="ChooseColorViewModel">
+
+    <PromptView VM="ChooseColorViewModel">
         <ChooseColorView />
-    </ParentControl>
-    <ParentControl VM="UnoMainViewModel">
+    </PromptView>
+    <MainScreen>
         <UnoMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<UnoPlayerItem>">
-        <MultiplayerOpeningView P="UnoPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="UnoPlayerItem" />
 </CascadingValue>

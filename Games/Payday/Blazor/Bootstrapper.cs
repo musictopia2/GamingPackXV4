@@ -1,6 +1,7 @@
 //i think this is the most common things i like to do
 namespace Payday.Blazor;
-public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<PaydayShellViewModel>(starts, mode)
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<PaydayShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {

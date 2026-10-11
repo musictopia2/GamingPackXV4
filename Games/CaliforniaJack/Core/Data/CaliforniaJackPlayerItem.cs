@@ -3,7 +3,7 @@ namespace CaliforniaJack.Core.Data;
 public partial class CaliforniaJackPlayerItem : PlayerTrick<EnumSuitList, CaliforniaJackCardInformation>
 {
     [ScoreColumn]
-    public int Points { get; set; }
+    public partial int Points { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

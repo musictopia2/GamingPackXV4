@@ -1,35 +1,26 @@
 namespace Millebournes.Core.Logic;
 [SingletonGame]
-public class MillebournesMainGameClass
-    : CardGameClass<MillebournesCardInformation, MillebournesPlayerItem, MillebournesSaveInfo>
+public class MillebournesMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    MillebournesVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<MillebournesCardInformation> cardInfo,
+    CommandContainer command,
+    MillebournesGameContainer gameContainer,
+    ComputerAI ai,
+    ISystemError error,
+    IToast toast
+        )
+        : CardGameClass<MillebournesCardInformation, MillebournesPlayerItem, MillebournesSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, IStartNewGame, ISerializable
 {
-    private readonly MillebournesVMData _model;
-    private readonly CommandContainer _command;
-    private readonly MillebournesGameContainer _gameContainer;
-    private readonly ComputerAI _ai;
-    private readonly IToast _toast;
-    public MillebournesMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        MillebournesVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<MillebournesCardInformation> cardInfo,
-        CommandContainer command,
-        MillebournesGameContainer gameContainer,
-        ComputerAI ai,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _ai = ai;
-        _toast = toast;
-    }
+    private readonly MillebournesVMData _model = currentMod;
+    private readonly MillebournesGameContainer _gameContainer = gameContainer;
+    private readonly ComputerAI _ai = ai;
+    private readonly IToast _toast = toast;
     public int FindDeck
     {
         get
@@ -68,7 +59,6 @@ public class MillebournesMainGameClass
             cats.AddToString(thisPlayer.NickName, ",");
         });
         await ShowWinAsync(cats.GetInfo());
-        _command.UpdateAll(); //may fix the problem with not showing the ui for the win.
     }
     public override Task FinishGetSavedAsync()
     {
@@ -87,18 +77,6 @@ public class MillebournesMainGameClass
         }
         return base.FinishGetSavedAsync();
     }
-    //public override Task ContinueTurnAsync()
-    //{
-    //    if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
-    //    {
-    //        _model.Pile1.Visible = _model.Pile1.PileEmpty() == false;
-    //    }
-    //    else
-    //    {
-    //        _model.Pile1!.Visible = false;
-    //    }
-    //    return base.ContinueTurnAsync();
-    //}
     protected override async Task ComputerTurnAsync()
     {
         var thisMove = _ai.ComputerMove();
@@ -166,7 +144,7 @@ public class MillebournesMainGameClass
     }
     public override Task PopulateSaveRootAsync()
     {
-        SaveRoot!.TeamData = new();
+        SaveRoot!.TeamData = [];
         _gameContainer.TeamList.ForEach(thisTeam =>
         {
             TempData thisTemp = new();
@@ -256,7 +234,7 @@ public class MillebournesMainGameClass
     private void LoadTeams()
     {
         _gameContainer.TeamList.Clear();
-        _gameContainer.TeamList = new();
+        _gameContainer.TeamList = [];
         int howMany = HowManyTeams;
         SingleInfo = PlayerList!.GetSelf();
         TeamCP thisTeam = new(SingleInfo.Team, _gameContainer, _model);
@@ -325,7 +303,7 @@ public class MillebournesMainGameClass
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
@@ -604,7 +582,7 @@ public class MillebournesMainGameClass
     {
         var thisTeam = _gameContainer.FindTeam(whichTeam);
         _gameContainer.CurrentCP = thisTeam;
-        _command.ManuelFinish = true; //because somebody could have a coupe foure.
+        CommandContainer.ManuelFinish = true; //because somebody could have a coupe foure.
         thisTeam.CurrentCard = _gameContainer.DeckList!.GetSpecificItem(deck);
         thisTeam.CurrentCard.IsSelected = false;
         AdjustHand(deck);
@@ -612,7 +590,6 @@ public class MillebournesMainGameClass
         {
             SortCards();
         }
-        _command.UpdateAll();
         await thisTeam.AnimateMoveAsync(whichPile, thisTeam.CurrentCard);
         thisTeam.AddCard(whichPile, out bool doDelay, isCoupe);
         UpdateGrid(whichTeam);
@@ -631,11 +608,11 @@ public class MillebournesMainGameClass
             MillebournesPlayerItem finPlayer1 = PlayerList.GetSelf();
             if (whichTeam == finPlayer1.Team)
             {
-                if (_gameContainer.LoadCoupeAsync == null)
+                if (_gameContainer.LoadCoupe == null)
                 {
                     throw new CustomBasicException("Nobody is loading the coupe screen.  Rethink");
                 }
-                await _gameContainer.LoadCoupeAsync.Invoke();
+                _gameContainer.LoadCoupe.Invoke();
                 _model.Stops!.StartTimer();
                 await ShowHumanCanPlayAsync();
                 return;

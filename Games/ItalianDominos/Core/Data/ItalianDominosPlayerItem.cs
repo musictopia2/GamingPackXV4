@@ -3,7 +3,7 @@ namespace ItalianDominos.Core.Data;
 public partial class ItalianDominosPlayerItem : PlayerSingleHand<SimpleDominoInfo>
 {
     [ScoreColumn] //does not hurt making as scorecolumn
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [ScoreColumn]
-    public bool DrewYet { get; set; }
+    public partial bool DrewYet { get; set; }
 }

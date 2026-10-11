@@ -1,34 +1,27 @@
 namespace DutchBlitz.Core.Logic;
 [SingletonGame]
-public class DutchBlitzMainGameClass
-    : CardGameClass<DutchBlitzCardInformation, DutchBlitzPlayerItem, DutchBlitzSaveInfo>
+public class DutchBlitzMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    DutchBlitzVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<DutchBlitzCardInformation> cardInfo,
+    CommandContainer command,
+    DutchBlitzGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        )
+        : CardGameClass<DutchBlitzCardInformation, DutchBlitzPlayerItem, DutchBlitzSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, IStartNewGame, ISerializable
 {
-    private readonly DutchBlitzVMData _model;
-    private readonly CommandContainer _command;
-    private readonly DutchBlitzGameContainer _gameContainer;
-    private readonly IToast _toast;
+    private readonly DutchBlitzVMData _model = currentMod;
+    private readonly CommandContainer _command = command;
+    private readonly DutchBlitzGameContainer _gameContainer = gameContainer;
+    private readonly IToast _toast = toast;
     private ComputerAI? _ai;
-    public DutchBlitzMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        DutchBlitzVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<DutchBlitzCardInformation> cardInfo,
-        CommandContainer command,
-        DutchBlitzGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _toast = toast;
-    }
-    private DeckRegularDict<DutchBlitzCardInformation> _otherList = new();
+    private DeckRegularDict<DutchBlitzCardInformation> _otherList = [];
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -37,7 +30,7 @@ public class DutchBlitzMainGameClass
     }
     private void LoadControls()
     {
-        _otherList = new DeckRegularDict<DutchBlitzCardInformation>();
+        _otherList = [];
         if (IsLoaded == true)
         {
             return;
@@ -170,7 +163,7 @@ public class DutchBlitzMainGameClass
     {
         int minNum;
         int maxNum;
-        _gameContainer.ComputerPlayers = new();
+        _gameContainer.ComputerPlayers = [];
         PlayerList!.ForEach(thisPlayer =>
         {
             int whatPlayer = thisPlayer.Id;
@@ -377,8 +370,9 @@ public class DutchBlitzMainGameClass
         thisCard.Drew = false;
         thisCard.IsUnknown = false;
         thisCard.IsSelected = false;
+
+
         _model!.PublicPiles1!.CreateNewPile(thisCard);
-        _command.UpdateAll();
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Computer && Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.25);
@@ -392,7 +386,6 @@ public class DutchBlitzMainGameClass
         thisCard.IsSelected = false;
         thisCard.IsUnknown = false;
         _model!.PublicPiles1!.AddCardToPile(index, thisCard);
-        _command.UpdateAll();
         if (_model.PublicPiles1.NeedToRemovePile(index))
         {
             if (Test!.NoAnimations == false)

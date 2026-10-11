@@ -1,12 +1,16 @@
 ﻿<div style="height: @ImageHeight; margin-bottom: 4px;">
     <StackLayout>
-        @foreach (var item in DiceList)
-        {
-            <StackItem>
-                <div @onclick="() => SelectDiceAsync(item)">
-                    <BasicDiceBlazor TargetHeight="@ImageHeight" Dice="item" />
-                </div>
-            </StackItem>
-        }
+        <StateContentView DataContext="DiceList">
+            @foreach (var item in DiceList)
+            {
+                <StackItem>
+                    <div @onclick="() => SelectDiceAsync(item)">
+                        <StateContentView DataContext="item">
+                            <BasicDiceBlazor TargetHeight="@ImageHeight" Dice="item" />
+                        </StateContentView>
+                    </div>
+                </StackItem>
+            }
+        </StateContentView>
     </StackLayout>
 </div>

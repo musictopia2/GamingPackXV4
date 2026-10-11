@@ -1,30 +1,25 @@
 namespace Bingo.Core.Logic;
 [SingletonGame]
-public class BingoMainGameClass : BasicGameClass<BingoPlayerItem, BingoSaveInfo>
+public class BingoMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    BingoVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    IRandomGenerator rs,
+    BingoGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        ) : BasicGameClass<BingoPlayerItem, BingoSaveInfo>(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     , ICommonMultiplayer<BingoPlayerItem, BingoSaveInfo>
     , IMiscDataNM
 {
     internal BingoItem? CurrentInfo { get; set; }
     private int _currentNum;
-    public BingoMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        BingoVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        IRandomGenerator rs,
-        BingoGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
-    {
-        _model = model;
-        _rs = rs;
-    }
-    private readonly BingoVMData? _model;
-    private readonly IRandomGenerator _rs; //if we don't need, take out.
+    private readonly BingoVMData? _model = model;
+
     internal Action<bool>? SetTimerEnabled { get; set; }
     public override async Task FinishGetSavedAsync()
     {
@@ -88,7 +83,7 @@ public class BingoMainGameClass : BasicGameClass<BingoPlayerItem, BingoSaveInfo>
         {
             throw new CustomBasicException("The loader never set the finish up code.  Rethink");
         }
-        BasicList<int> CardList = _rs!.GenerateRandomList(75);
+        BasicList<int> CardList = rs!.GenerateRandomList(75);
         SaveRoot!.CallList.Clear();
         SaveRoot.BingoBoard.ClearBoard(_model!); //i think.
         CardList.ForEach(x =>
@@ -164,10 +159,14 @@ public class BingoMainGameClass : BasicGameClass<BingoPlayerItem, BingoSaveInfo>
         for (x = 1; x <= 5; x++)
         {
             if (x != 3)
+            {
                 y = 5;
+            }
             else
+            {
                 y = 4;
-            thisList = _rs!.GenerateRandomList(starts + 14, y, starts);
+            }
+            thisList = rs!.GenerateRandomList(starts + 14, y, starts);
             if (x == 3)
             {
                 for (y = 1; y <= 2; y++)

@@ -1,4 +1,4 @@
-@inherits BasicGameView<HuseHeartsMainViewModel>
+@inherits CascadingGameView<HuseHeartsMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -16,14 +16,10 @@
         <DeckOfCardsSeveralPlayersTrickBlazor B="HuseHeartsTrickAreaCP" P="HuseHeartsPlayerItem" T="HuseHeartsCardInformation" DataContext="_vmData.TrickArea1" />
     </StackItem>
     <StackItem>
-        <ParentControl VM="PassingViewModel">
-            <PassingView />
-        </ParentControl>
+        <PassingView DataContext="DataContext.PassingScreen" />
     </StackItem>
     <StackItem>
-        <ParentControl VM="MoonViewModel">
-            <MoonView />
-        </ParentControl>
+        <MoonView DataContext="DataContext.MoonScreen" />
     </StackItem>
     <StackItem>
         <DeckOfCardsHandBlazor AdditionalSpacing="1" R="HuseHeartsCardInformation" Hand="_vmData.Blind1" />

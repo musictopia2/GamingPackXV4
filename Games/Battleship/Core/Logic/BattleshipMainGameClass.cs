@@ -1,42 +1,30 @@
 namespace Battleship.Core.Logic;
 [SingletonGame]
-public class BattleshipMainGameClass : BasicGameClass<BattleshipPlayerItem, BattleshipSaveInfo>,
+public class BattleshipMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    BattleshipVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    BattleshipGameContainer gameContainer,
+     GameBoardCP gameBoard1,
+     ShipControlCP ships,
+    ISystemError error,
+    IToast toast
+        ) : BasicGameClass<BattleshipPlayerItem, BattleshipSaveInfo>(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast),
     IMiscDataNM, IMoveNM, ISerializable,
     ICommonMultiplayer<BattleshipPlayerItem, BattleshipSaveInfo>
 {
-    public BattleshipMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        BattleshipVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        BattleshipGameContainer gameContainer,
-         GameBoardCP gameBoard1,
-         ShipControlCP ships,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
-    {
-        _test = test;
-        _model = model;
-        _command = command;
-        GameBoard1 = gameBoard1;
-        Ships = ships;
-    }
-    internal GameBoardCP GameBoard1 { get; set; } //needed for view model for human waiting.
-    internal ShipControlCP Ships { get; set; }
-
-    private readonly TestOptions _test;
-    private readonly BattleshipVMData _model;
-    private readonly CommandContainer _command;
+    internal GameBoardCP GameBoard1 { get; set; } = gameBoard1;
+    internal ShipControlCP Ships { get; set; } = ships;
     public Vector CurrentSpace { get; set; }
     private BattleshipComputerAI? _ai;
     public EnumStatusList StatusOfGame { get; set; } //has to be part of game class.
     public override Task FinishGetSavedAsync()
     {
-        if (BasicData!.MultiPlayer == false)
+        if (BasicData.MultiPlayer == false)
         {
             throw new CustomBasicException("Only multiplayer should have received this since no autoresume");
         }
@@ -60,17 +48,17 @@ public class BattleshipMainGameClass : BasicGameClass<BattleshipPlayerItem, Batt
         StatusOfGame = EnumStatusList.PlacingShips;
         Ships.ClearBoard();
         GameBoard1.ClearBoard();
-        _model.ShipDirectionsVisible = true; //hopefully this is it (?)
+        model.ShipDirectionsVisible = true; //hopefully this is it (?)
         IsLoaded = true; //i think needs to be here.
     }
     public async override Task ContinueTurnAsync()
     {
         if (StatusOfGame == EnumStatusList.PlacingShips)
         {
-            _model.NormalTurn = "None";
-            _model.Status = "Please place your ships by clicking on the ship and cliking on the grid where you want to place them.";
-            _command.ManuelFinish = false;
-            _command.IsExecuting = false; //at this point, show its done so you can do what you need to do in order to choose ships.
+            model.NormalTurn = "None";
+            model.Status = "Please place your ships by clicking on the ship and cliking on the grid where you want to place them.";
+            CommandContainer.ManuelFinish = false;
+            CommandContainer.IsExecuting = false; //at this point, show its done so you can do what you need to do in order to choose ships.
             if (BasicData.MultiPlayer == false)
             {
                 return;
@@ -122,9 +110,9 @@ public class BattleshipMainGameClass : BasicGameClass<BattleshipPlayerItem, Batt
     }
     public async Task HumanFinishedPlacingShipsAsync()
     {
-        _model.Status = "Waiting for other player to place their ships";
-        _model.ShipDirectionsVisible = false;
-        _command.ManuelFinish = true; //now has to manually be done.
+        model.Status = "Waiting for other player to place their ships";
+        model.ShipDirectionsVisible = false;
+        CommandContainer.ManuelFinish = true; //now has to manually be done.
         if (BasicData!.MultiPlayer == true)
         {
             await Network!.SendAllAsync("finishedships");
@@ -135,7 +123,7 @@ public class BattleshipMainGameClass : BasicGameClass<BattleshipPlayerItem, Batt
     }
     protected async override Task ComputerTurnAsync()
     {
-        if (_test!.NoAnimations == false)
+        if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.3);
         }

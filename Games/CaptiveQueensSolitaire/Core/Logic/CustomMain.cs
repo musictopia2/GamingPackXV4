@@ -1,27 +1,23 @@
 namespace CaptiveQueensSolitaire.Core.Logic;
-public class CustomMain : BasicMultiplePilesCP<SolitaireCard>, IMain, ISerializable //good news is if nothing is found, just will do nothing.
+public class CustomMain(IScoreData score, CommandContainer command) : BasicMultiplePilesCP<SolitaireCard>(command)
+    , IMain, ISerializable //good news is if nothing is found, just will do nothing.
 {
     public int CardsNeededToBegin { get; set; }
     public bool IsRound { get; set; }
     public Func<int, Task>? PileSelectedAsync { get; set; }
-    private readonly IScoreData _score;
-    public CustomMain(IScoreData score, CommandContainer command) : base(command)
-    {
-        _score = score;
-    }
     public void SetSavedScore(int previousScore)
     {
-        _score.Score = previousScore;
+        score.Score = previousScore;
     }
     public override void ClearBoard()
     {
         base.ClearBoard();
-        _score.Score = 4;
+        score.Score = 4;
     }
     public void AddCard(int pile, SolitaireCard thisCard)
     {
         AddCardToPile(pile, thisCard);
-        _score.Score++;
+        score.Score++;
     }
     public void FirstLoad(bool needToMatch, bool showNextNeeded)
     {
@@ -117,4 +113,6 @@ public class CustomMain : BasicMultiplePilesCP<SolitaireCard>, IMain, ISerializa
     {
 
     }
+
+    
 }

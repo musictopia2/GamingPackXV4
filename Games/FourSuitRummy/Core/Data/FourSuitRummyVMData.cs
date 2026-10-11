@@ -5,9 +5,9 @@ namespace FourSuitRummy.Core.Data;
 public partial class FourSuitRummyVMData : IBasicCardGamesData<RegularRummyCard>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public FourSuitRummyVMData(CommandContainer command, IGamePackageResolver resolver)
     {
         Deck1 = new DeckObservablePile<RegularRummyCard>(command);

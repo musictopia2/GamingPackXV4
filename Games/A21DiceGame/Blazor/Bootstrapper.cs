@@ -1,12 +1,8 @@
 //i think this is the most common things i like to do
 namespace A21DiceGame.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<A21DiceGameShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<A21DiceGameShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         IBasicDiceGamesData<SimpleDice>.NeedsRollIncrement = true;

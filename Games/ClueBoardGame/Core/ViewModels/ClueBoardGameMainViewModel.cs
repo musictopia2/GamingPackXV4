@@ -1,43 +1,45 @@
 namespace ClueBoardGame.Core.ViewModels;
 [InstanceGame]
-public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<SelectionChosenEventModel>
-{
-    private readonly ClueBoardGameMainGameClass _mainGame; //if we don't need, delete.
-    public ClueBoardGameVMData VMData { get; set; }
-    private readonly ClueBoardGameGameContainer _gameContainer;
-    private readonly GameBoardProcesses _gameBoard;
-    public ClueBoardGameMainViewModel(CommandContainer commandContainer,
+[EventAggregatorFromMemberClass(nameof(Aggregator))]
+public partial class ClueBoardGameMainViewModel(CommandContainer commandContainer,
         ClueBoardGameMainGameClass mainGame,
         ClueBoardGameVMData model,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
         ClueBoardGameGameContainer gameContainer,
         GameBoardProcesses gameBoard,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, roller, aggregator)
+        IEventAggregator aggregator) : BoardDiceGameVM(commandContainer, mainGame, basicData, resolver, roller, aggregator),
+    IHandleAsync<SelectionChosenEventModel>
+{
+    public ClueBoardGameVMData VMData { get; set; } = model;
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = model;
-        _gameContainer = gameContainer;
-        _gameBoard = gameBoard;
-        _gameContainer.SpaceClickedAsync = MoveSpaceAsync;
-        _gameContainer.RoomClickedAsync = MoveRoomAsync;
+        Subscribe();
+        gameContainer.SpaceClickedAsync = MoveSpaceAsync;
+        gameContainer.RoomClickedAsync = MoveRoomAsync;
         VMData.Pile.SendEnableProcesses(this, () => false);
         VMData.HandList.ObjectClickedAsync = HandList_ObjectClickedAsync;
-        VMData.HandList.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumClueStatusList.FindClues);
-        CreateCommands(commandContainer);
+        VMData.HandList.SendEnableProcesses(this, () => mainGame.SaveRoot.GameStatus == EnumClueStatusList.FindClues);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
+    }
+    protected override Task CloseAsync()
+    {
+        Unsubscribe();
+        VMData.HandList.ObjectClickedAsync = null;
+        return base.CloseAsync();
     }
     partial void CreateCommands(CommandContainer command);
     public void PopulateDetectiveNoteBook()
     {
-        _mainGame.PopulateDetectiveNoteBook();
+        mainGame.PopulateDetectiveNoteBook();
     }
     public Dictionary<int, DetectiveInfo> GetOwnDetectiveNotebook()
     {
-        var player = _mainGame.PlayerList.GetSelf();
+        var player = mainGame.PlayerList.GetSelf();
         return player.DetectiveList;
     }
     public HandObservable<CardInfo> GetHand => VMData.HandList;
@@ -46,29 +48,29 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
     private bool _wasManuel;
     private async Task MoveSpaceAsync(int space)
     {
-        if (_gameContainer.Test.DoubleCheck)
+        if (gameContainer.Test.DoubleCheck)
         {
-            _gameContainer.TempClicked = space;
-            _gameBoard.RepaintBoard();
+            gameContainer.TempClicked = space;
+            gameBoard.RepaintBoard();
             ManuallyEnable();
             return;
         }
-        if (_gameBoard.CanMoveToSpace(space) == false)
-        {
-            ManuallyEnable();
-            return;
-        }
-        if (_mainGame.SaveRoot.MovesLeft == 0)
+        if (gameBoard.CanMoveToSpace(space) == false)
         {
             ManuallyEnable();
             return;
         }
-        if (_mainGame.BasicData.MultiPlayer)
+        if (mainGame.SaveRoot.MovesLeft == 0)
         {
-            await _mainGame.Network!.SendAllAsync("space", space);
+            ManuallyEnable();
+            return;
         }
-        _gameBoard.MoveToSpace(space);
-        await _mainGame.ContinueMoveAsync();
+        if (mainGame.BasicData.MultiPlayer)
+        {
+            await mainGame.Network!.SendAllAsync("space", space);
+        }
+        gameBoard.MoveToSpace(space);
+        await mainGame.ContinueMoveAsync();
     }
     public async Task LeftArrowAsync()
     {
@@ -91,50 +93,50 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
         //no need to send to other players.
         //because if you are able to make move, just send normal move anyways.
         //this is view alone.
-        if (_gameContainer.Command.Processing)
+        if (gameContainer.Command.Processing)
         {
             return; //because everything should have been disabled.
         }
-        if (_gameContainer.Command.IsExecuting)
+        if (gameContainer.Command.IsExecuting)
         {
             return;
         }
         //if you are not on a space, can't do it.
-        if (_gameContainer.SaveRoot.GameStatus != EnumClueStatusList.MoveSpaces)
+        if (gameContainer.SaveRoot.GameStatus != EnumClueStatusList.MoveSpaces)
         {
             return; //you can't do it because the status is not even move spaces.
         }
-        if (_gameContainer.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+        if (gameContainer.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
             //only self can do it.
             return;
         }
         //if you can't make move, then can't do it.
-        if (_gameContainer.CurrentCharacter!.CurrentRoom > 0)
+        if (gameContainer.CurrentCharacter!.CurrentRoom > 0)
         {
             return; //because you are currently in a room.
         }
-        if (_gameContainer.CurrentCharacter.Space == 0)
+        if (gameContainer.CurrentCharacter.Space == 0)
         {
-            if (_gameContainer.CurrentCharacter.FirstSpace == 41 && direction != EnumPositionInfo.Bottom) //space 1
+            if (gameContainer.CurrentCharacter.FirstSpace == 41 && direction != EnumPositionInfo.Bottom) //space 1
             {
                 return;
             }
-            if ((_gameContainer.CurrentCharacter.FirstSpace == 15 || _gameContainer.CurrentCharacter.FirstSpace == 19) && direction != EnumPositionInfo.Right) //space 2 and 3
+            if ((gameContainer.CurrentCharacter.FirstSpace == 15 || gameContainer.CurrentCharacter.FirstSpace == 19) && direction != EnumPositionInfo.Right) //space 2 and 3
             {
                 return;
             }
-            if ((_gameContainer.CurrentCharacter.FirstSpace == 171 || _gameContainer.CurrentCharacter.FirstSpace == 172) && direction != EnumPositionInfo.Top) //space 4 and 5
+            if ((gameContainer.CurrentCharacter.FirstSpace == 171 || gameContainer.CurrentCharacter.FirstSpace == 172) && direction != EnumPositionInfo.Top) //space 4 and 5
             {
                 return;
             }
-            if (_gameContainer.CurrentCharacter.FirstSpace == 53 && direction != EnumPositionInfo.Left) //space 6
+            if (gameContainer.CurrentCharacter.FirstSpace == 53 && direction != EnumPositionInfo.Left) //space 6
             {
                 return;
             }
         }
         //int space = GetSpace(direction);
-        _gameContainer.Command.StartExecuting(); //has to do manually
+        gameContainer.Command.StartExecuting(); //has to do manually
         int space = GetMove(direction);
         _wasManuel = true;
         if (space == 0)
@@ -146,9 +148,9 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
     }
     private int GetMove(EnumPositionInfo direction)
     {
-        if (_gameContainer.CurrentCharacter!.Space > 0)
+        if (gameContainer.CurrentCharacter!.Space > 0)
         {
-            var currentField = _gameBoard.FieldList[_gameContainer.CurrentCharacter.Space];
+            var currentField = gameBoard.FieldList[gameContainer.CurrentCharacter.Space];
             var output = currentField.Neighbors.Values.Where(x => x.Position == direction).SingleOrDefault();
             if (output is null)
             {
@@ -156,7 +158,7 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
             }
             return output.SpaceNumber;
         }
-        return _gameContainer.CurrentCharacter.FirstSpace;
+        return gameContainer.CurrentCharacter.FirstSpace;
 
     }
     private void ManuallyEnable()
@@ -166,71 +168,70 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
             return;
         }
         _wasManuel = false; //set to false again.
-        _gameContainer.Command.StopExecuting();
+        gameContainer.Command.StopExecuting();
     }
     private async Task MoveRoomAsync(int room)
     {
-        if (_gameBoard.CanMoveToRoom(room) == false)
+        if (gameBoard.CanMoveToRoom(room) == false)
         {
             return;
         }
-        if (_mainGame!.SaveRoot.GameStatus == EnumClueStatusList.EndTurn)
+        if (mainGame!.SaveRoot.GameStatus == EnumClueStatusList.EndTurn)
         {
             return; //because you are supposed to end turn.
         }
-        if (_mainGame!.SaveRoot!.GameStatus == EnumClueStatusList.MoveSpaces && _gameContainer.CurrentCharacter!.PreviousRoom > 0)
+        if (mainGame!.SaveRoot!.GameStatus == EnumClueStatusList.MoveSpaces && gameContainer.CurrentCharacter!.PreviousRoom > 0)
         {
             return;
         }
-        if (_gameContainer.BasicData!.MultiPlayer)
+        if (gameContainer.BasicData!.MultiPlayer)
         {
-            await _gameContainer.Network!.SendAllAsync("room", room);
+            await gameContainer.Network!.SendAllAsync("room", room);
         }
-        _gameContainer.SaveRoot.MovesLeft = 0;
-        _gameBoard.MoveToRoom(room);
-        _gameContainer.SaveRoot.GameStatus = EnumClueStatusList.MakePrediction; //hopefully this is it.
+        gameContainer.SaveRoot.MovesLeft = 0;
+        gameBoard.MoveToRoom(room);
+        gameContainer.SaveRoot.GameStatus = EnumClueStatusList.MakePrediction; //hopefully this is it.
     }
     private async Task HandList_ObjectClickedAsync(CardInfo payLoad, int index)
     {
-        if (_gameContainer.CanGiveCard(payLoad) == false)
+        if (gameContainer.CanGiveCard(payLoad) == false)
         {
             return;
         }
         payLoad.IsSelected = true;
-        CommandContainer.UpdateAll(); //to notify blazor.
-        if (_gameContainer.Test.NoAnimations == false)
+        if (gameContainer.Test.NoAnimations == false)
         {
-            await _gameContainer.Delay.DelaySeconds(.25);
+            await gameContainer.Delay.DelaySeconds(.25);
         }
-        var player = _gameContainer.PlayerList!.GetSelf();
+        var player = gameContainer.PlayerList!.GetSelf();
        
-        var tempPlayer = _gameContainer!.PlayerList!.GetWhoPlayer();
-        if (_gameContainer.BasicData!.MultiPlayer)
+        var tempPlayer = gameContainer!.PlayerList!.GetWhoPlayer();
+        if (gameContainer.BasicData!.MultiPlayer)
         {
             HintInfo hint = new()
             {
                 Deck = payLoad.Deck,
                 NickName = player.NickName
             };
-            await _gameContainer.Network!.SendAllAsync("cluegiven", hint);
+            await gameContainer.Network!.SendAllAsync("cluegiven", hint);
             //only whoever turn it is needs to show who gave it.
             //has to send to everybody.  that way the host can record (since recording must be done).
-            //await _gameContainer.Network!.SendToParticularPlayerAsync("cluegiven", payLoad.Deck, tempPlayer.NickName);
+            //await gameContainer.Network!.SendToParticularPlayerAsync("cluegiven", payLoad.Deck, tempPlayer.NickName);
         }
         CommandContainer!.ManuelFinish = true;
         payLoad.IsSelected = false;
-        _mainGame.MarkCard(tempPlayer, payLoad, false);
-        _gameContainer.SaveRoot!.GameStatus = EnumClueStatusList.EndTurn;
-        if (_gameContainer.BasicData.MultiPlayer == false)
+        mainGame.MarkCard(tempPlayer, payLoad, false);
+        gameContainer.SaveRoot!.GameStatus = EnumClueStatusList.EndTurn;
+        if (gameContainer.BasicData.MultiPlayer == false)
         {
             throw new CustomBasicException("Computer should have never had this");
         }
-        _gameContainer.Network!.IsEnabled = true; //to wait for them to end turn.
+        gameContainer.Network!.IsEnabled = true; //to wait for them to end turn.
     }
     [Command(EnumCommandCategory.Game)]
     public void CurrentRoomClick(DetectiveInfo room)
     {
-        if (_mainGame.OtherTurn > 0)
+        if (mainGame.OtherTurn > 0)
         {
             return; //because you have to just give a clue alone.
         }
@@ -239,7 +240,7 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
     [Command(EnumCommandCategory.Game)]
     public void CurrentCharacterClick(DetectiveInfo character)
     {
-        if (_mainGame.OtherTurn > 0)
+        if (mainGame.OtherTurn > 0)
         {
             return; //because you have to just give a clue alone.
         }
@@ -249,7 +250,7 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
     [Command(EnumCommandCategory.Game)]
     public void CurrentWeaponClick(DetectiveInfo weapon) //had to try to change to detectiveinfo to support blazor.
     {
-        if (_mainGame.OtherTurn > 0)
+        if (mainGame.OtherTurn > 0)
         {
             return; //because you have to just give a clue alone.
         }
@@ -257,24 +258,28 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
     }
     public bool CanStartOver()
     {
-        if (_gameContainer.SaveRoot.GameStatus == EnumClueStatusList.StartTurn
-            || _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.FindClues
-            || _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction
-            || _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.EndGame)
+        if (gameContainer.SaveRoot.GameStatus == EnumClueStatusList.StartTurn
+            || gameContainer.SaveRoot.GameStatus == EnumClueStatusList.FindClues
+            || gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction
+            || gameContainer.SaveRoot.GameStatus == EnumClueStatusList.EndGame)
         {
             return false;
         }
-        if (_gameContainer.SaveRoot.GameStatus == EnumClueStatusList.EndTurn)
+        if (gameContainer.SaveRoot.GameStatus == EnumClueStatusList.EndTurn)
         {
-            return _gameContainer.CurrentCharacter!.CurrentRoom == 0; //if you made it into the room, then you can't.
+            return gameContainer.CurrentCharacter!.CurrentRoom == 0; //if you made it into the room, then you can't.
         }
         //has to move one space.  or its not even worth doing it.
+        if (VMData.Cup!.DiceList.Count == 0)
+        {
+            return false; //because did not even roll yet.
+        }
         if (VMData.LeftToMove == VMData.Cup!.ValueOfOnlyDice)
         {
             return false;
         }
         return true;
-        //return _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MoveSpaces;
+        //return gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MoveSpaces;
     }
     [Command(EnumCommandCategory.Game)]
     public async Task StartOverAsync()
@@ -283,11 +288,11 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
 
         //VMData.LeftToMove = VMData.Cup!.ValueOfOnlyDice;
         //start out with extending move (will eventually rethink).
-        if (_gameContainer.BasicData.MultiPlayer)
+        if (gameContainer.BasicData.MultiPlayer)
         {
-            await _gameContainer.Network!.SendAllAsync("startover");
+            await gameContainer.Network!.SendAllAsync("startover");
         }
-        await _mainGame.StartOverAsync();
+        await mainGame.StartOverAsync();
     }
     public bool CanMakePrediction
     {
@@ -297,13 +302,13 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
             {
                 return false;
             }
-            if (_gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction)
+            if (gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction)
             {
                 return true;
             }
-            if (_gameContainer.SaveRoot.GameStatus == EnumClueStatusList.StartTurn)
+            if (gameContainer.SaveRoot.GameStatus == EnumClueStatusList.StartTurn)
             {
-                if (_gameContainer.CurrentCharacter!.PreviousRoom != _gameContainer.CurrentCharacter.CurrentRoom)
+                if (gameContainer.CurrentCharacter!.PreviousRoom != gameContainer.CurrentCharacter.CurrentRoom)
                 {
                     return true;
                 }
@@ -314,15 +319,15 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
     [Command(EnumCommandCategory.Game)]
     public async Task MakePredictionAsync()
     {
-        _gameContainer!.SaveRoot!.CurrentPrediction!.CharacterName = VMData.CurrentCharacterName;
-        _gameContainer.SaveRoot.CurrentPrediction.WeaponName = VMData.CurrentWeaponName;
-        await _mainGame.MakePredictionAsync();
+        gameContainer!.SaveRoot!.CurrentPrediction!.CharacterName = VMData.CurrentCharacterName;
+        gameContainer.SaveRoot.CurrentPrediction.WeaponName = VMData.CurrentWeaponName;
+        await mainGame.MakePredictionAsync();
     }
     public bool CanMakeAccusation
     {
         get
         {
-            if (_gameContainer.SaveRoot.GameStatus == EnumClueStatusList.FindClues)
+            if (gameContainer.SaveRoot.GameStatus == EnumClueStatusList.FindClues)
             {
                 return false;
             }
@@ -368,18 +373,18 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
     private async Task FinishAccusationAsync()
     {
 
-        _gameContainer!.SaveRoot!.CurrentPrediction!.CharacterName = VMData.CurrentCharacterName;
-        _gameContainer.SaveRoot.CurrentPrediction.WeaponName = VMData.CurrentWeaponName;
-        _gameContainer.SaveRoot.CurrentPrediction.RoomName = VMData.CurrentRoomName;
-        await _mainGame.MakeAccusationAsync();
+        gameContainer!.SaveRoot!.CurrentPrediction!.CharacterName = VMData.CurrentCharacterName;
+        gameContainer.SaveRoot.CurrentPrediction.WeaponName = VMData.CurrentWeaponName;
+        gameContainer.SaveRoot.CurrentPrediction.RoomName = VMData.CurrentRoomName;
+        await mainGame.MakeAccusationAsync();
     }
     public override bool CanRollDice()
     {
-        return _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.StartTurn;
+        return gameContainer.SaveRoot.GameStatus == EnumClueStatusList.StartTurn;
     }
     public override bool CanEndTurn()
     {
-        return _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction || _gameContainer.SaveRoot.GameStatus == EnumClueStatusList.EndTurn;
+        return gameContainer.SaveRoot.GameStatus == EnumClueStatusList.MakePrediction || gameContainer.SaveRoot.GameStatus == EnumClueStatusList.EndTurn;
     }
     public override async Task RollDiceAsync()
     {
@@ -388,11 +393,11 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
     [Command(EnumCommandCategory.Limited)]
     public void FillInClue(DetectiveInfo detective)
     {
-        if (_gameContainer is null)
+        if (gameContainer is null)
         {
             throw new CustomBasicException("Must have container");
         }
-        if (_mainGame.OtherTurn > 0)
+        if (mainGame.OtherTurn > 0)
         {
             return; //because you have to just give a clue alone.
         }
@@ -409,12 +414,13 @@ public partial class ClueBoardGameMainViewModel : BoardDiceGameVM, IHandleAsync<
                 VMData.CurrentCharacterName = "";
                 VMData.CurrentWeaponName = "";
                 VMData.CurrentRoomName = "";
-                _gameContainer!.SaveRoot!.CurrentPrediction!.CharacterName = "";
-                _gameContainer.SaveRoot.CurrentPrediction.WeaponName = "";
-                _gameContainer.SaveRoot.CurrentPrediction.RoomName = "";
-                _gameContainer.Command.ManuelFinish = false;
-                _gameContainer.Command.IsExecuting = false;
-                _gameContainer.Command.UpdateAll();
+                gameContainer!.SaveRoot!.CurrentPrediction!.CharacterName = "";
+                gameContainer.SaveRoot.CurrentPrediction.WeaponName = "";
+                gameContainer.SaveRoot.CurrentPrediction.RoomName = "";
+                gameContainer.Command.ManuelFinish = false;
+                gameContainer.Command.IsExecuting = false;
+                gameBoard.RepaintBoard();
+                //gameContainer.Command.UpdateAll();
                 break;
             default:
                 throw new CustomBasicException("Should have chosen yes or no");

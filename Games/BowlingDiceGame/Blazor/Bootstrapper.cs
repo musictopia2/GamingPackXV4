@@ -1,6 +1,7 @@
 //i think this is the most common things i like to do
 namespace BowlingDiceGame.Blazor;
-public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<BowlingDiceGameShellViewModel>(starts, mode)
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<BowlingDiceGameShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {

@@ -10,7 +10,7 @@ public class SpaceControlBlazor : GraphicsCommand
             return;
         }
         string color = Ship.FillColor().ToWebColor;
-        ISvg svg = new SVG();
+        SVG svg = new ();
         SvgRenderClass render = new();
         Rect rect = new();
         rect.Width = "50";

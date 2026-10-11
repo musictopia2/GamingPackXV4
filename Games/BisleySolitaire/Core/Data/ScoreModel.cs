@@ -1,9 +1,9 @@
 namespace BisleySolitaire.Core.Data;
 [SingletonGame]
-public class ScoreModel : IScoreData
+public class ScoreModel(IEventAggregator aggregator) : IScoreData
 {
     private int _score;
-    private readonly IEventAggregator _aggregator;
+
     public int Score
     {
         get { return _score; }
@@ -18,10 +18,6 @@ public class ScoreModel : IScoreData
     }
     private void DoPublish(IScoreData data)
     {
-        _aggregator.Publish(data);
-    }
-    public ScoreModel(IEventAggregator aggregator)
-    {
-        _aggregator = aggregator;
+        aggregator.Publish(data);
     }
 }

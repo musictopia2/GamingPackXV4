@@ -1,15 +1,10 @@
 namespace GrandfathersClock.Core.ViewModels;
 [InstanceGame]
-[UseLabelGrid]
-public partial class GrandfathersClockMainViewModel : SolitaireMainViewModel<GrandfathersClockSaveInfo>
+public partial class GrandfathersClockMainViewModel(IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver
+        ) : SolitaireMainViewModel<GrandfathersClockSaveInfo>(aggregator, command, resolver)
 {
-    public GrandfathersClockMainViewModel(IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver
-        )
-        : base(aggregator, command, resolver)
-    {
-    }
     protected override SolitaireGameClass<GrandfathersClockSaveInfo> GetGame(IGamePackageResolver resolver)
     {
         return resolver.ReplaceObject<GrandfathersClockMainGameClass>();

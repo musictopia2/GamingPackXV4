@@ -3,9 +3,9 @@ public partial class BattleshipMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private BasicList<string> _rowList = new();
-    private BasicList<string> _columnList = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private BasicList<string> _rowList = [];
+    private BasicList<string> _columnList = [];
     protected override void OnInitialized()
     {
         _labels.Clear();
@@ -17,7 +17,7 @@ public partial class BattleshipMainView
     private BattleshipCollection? _humanList;
     protected override void OnParametersSet()
     {
-        var ship = aa1.Resolver!.Resolve<ShipControlCP>(); //i think.
+        var ship = Resolver!.Resolve<ShipControlCP>(); //i think.
         _ships = ship.ShipList.Values.ToBasicList();
         GameBoardCP gameBoard = aa1.Resolver.Resolve<GameBoardCP>();
         _humanList = gameBoard.HumanList!;

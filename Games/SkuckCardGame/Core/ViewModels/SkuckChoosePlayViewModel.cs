@@ -1,23 +1,20 @@
 ﻿namespace SkuckCardGame.Core.ViewModels;
 [InstanceGame]
-public partial class SkuckChoosePlayViewModel : ScreenViewModel, IBlankGameVM
+public partial class SkuckChoosePlayViewModel
 {
     private readonly SkuckCardGameGameContainer _gameContainer;
     private readonly IPlayChoiceProcesses _processes;
     public SkuckChoosePlayViewModel(
         CommandContainer commandContainer,
         SkuckCardGameGameContainer gameContainer,
-        IPlayChoiceProcesses processes,
-        IEventAggregator aggregator
-        ) : base(aggregator)
+        IPlayChoiceProcesses processes
+        ) 
     {
-        CommandContainer = commandContainer;
         _gameContainer = gameContainer;
         _processes = processes;
-        CreateCommands(CommandContainer);
+        CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    public CommandContainer CommandContainer { get; set; }
     [Command(EnumCommandCategory.Plain)]
     public async Task FirstPlayAsync(EnumChoiceOption choice)
     {

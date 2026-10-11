@@ -32,22 +32,24 @@
         <MainContent>
             @foreach (var pile in TempPiles.SetList)
             {
-                @if (pile.HandList.Count > 0)
-                {
-                    <div style="margin-bottom: -10px;">
-                        <TemporaryCardsBlazor Hand="pile"
-                                              AdditionalSpacing="-4"
-                                              HandType="EnumHandList.Horizontal"
-                                              TargetImageSize="@TargetImageSize"
-                                              Divider="1.4"
-                                              TargetContainerSize="@TargetContainerSize"
-                                              Context="item">
-                            <CardGraphicsBlazor CommandObject="pile.ObjectSingleClickCommand"
-                                                CommandParameter="item"
-                                                DeckObject="item" />
-                        </TemporaryCardsBlazor>
-                    </div>
-                }
+                <StateContentView DataContext="pile.HandList">
+                    @if (pile.HandList.Count > 0)
+                    {
+                        <div style="margin-bottom: -10px;">
+                            <TemporaryCardsBlazor Hand="pile"
+                                                  AdditionalSpacing="-4"
+                                                  HandType="EnumHandList.Horizontal"
+                                                  TargetImageSize="@TargetImageSize"
+                                                  Divider="1.4"
+                                                  TargetContainerSize="@TargetContainerSize"
+                                                  Context="item">
+                                <CardGraphicsBlazor CommandObject="pile.ObjectSingleClickCommand"
+                                                    CommandParameter="item"
+                                                    DeckObject="item" />
+                            </TemporaryCardsBlazor>
+                        </div>
+                    }
+                </StateContentView>
             }
         </MainContent>
     </LeftOverLayout>

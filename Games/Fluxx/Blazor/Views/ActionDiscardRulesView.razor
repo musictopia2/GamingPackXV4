@@ -1,4 +1,4 @@
-﻿@inherits SimpleActionView
+﻿@inherits SimpleActionView<ActionDiscardRulesViewModel>
 
 @if (CompleteContainer == null || DataContext == null)
 {
@@ -21,7 +21,7 @@
             <GameButtonComponent StartOnNewLine="true"
                                  CommandObject="DiscardCommand"
                                  Display="Discard Selected Rule(s)" />
-            <KeeperButton K="ActionDiscardRulesViewModel" @key="GetKey" StartsOnNewLine="true" />
+            <KeeperButton DataContext="DataContext" @key="GetKey" StartsOnNewLine="true" />
         </StackItem>
     </StackLayout>
 </FinalActionLayout>

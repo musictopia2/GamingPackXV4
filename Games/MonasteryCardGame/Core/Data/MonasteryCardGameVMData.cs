@@ -2,14 +2,18 @@ namespace MonasteryCardGame.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
 [AutoReset]
-public partial class MonasteryCardGameVMData : IBasicCardGamesData<MonasteryCardInfo>
+public partial class MonasteryCardGameVMData : IBasicCardGamesData<MonasteryCardInfo>, IStateChanged
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string MissionChosen { get; set; } = "";
+    public partial string MissionChosen { get; set; } = "";
+    partial void OnMissionChosenChanged(string value)
+    {
+        StateChanged?.Invoke();
+    }
     public MonasteryCardGameVMData(CommandContainer command, IGamePackageResolver resolver)
     {
         Deck1 = new DeckObservablePile<MonasteryCardInfo>(command);
@@ -26,7 +30,10 @@ public partial class MonasteryCardGameVMData : IBasicCardGamesData<MonasteryCard
     public SingleObservablePile<MonasteryCardInfo>? OtherPile { get; set; }
     public TempSetsObservable<EnumSuitList, EnumRegularColorList, MonasteryCardInfo> TempSets;
     public MainSetsObservable<EnumSuitList, EnumRegularColorList, MonasteryCardInfo, RummySet, SavedSet> MainSets;
-    public BasicList<MissionList> CompleteMissions = new();
+    public StateList<MissionList> CompleteMissions = [];
+
+    public event Action? StateChanged;
+
     internal void PopulateMissions(BasicList<MissionList> thisList)
     {
         MissionChosen = "";

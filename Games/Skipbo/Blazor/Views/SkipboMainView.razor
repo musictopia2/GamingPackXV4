@@ -1,4 +1,4 @@
-@inherits BasicGameView<SkipboMainViewModel>
+@inherits CascadingGameView<SkipboMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -10,7 +10,6 @@
                 <DrawPileBlazor DeckPile="_vmData.Deck1" />
             </StackItem>
             <StackItem>
-                
                 <MultiplePilesBlazor AnimationTag="public" Piles="_vmData.PublicPiles" />
             </StackItem>
         </StackLayout>
@@ -18,9 +17,7 @@
             <HandBlazor Hand="_vmData.PlayerHand1" />
         </div>
         <div>
-            <ParentControl VM="PlayerPilesViewModel">
-                <PlayerPilesView />
-            </ParentControl>
+            <PlayerPilesView DataContext="DataContext.PlayerPilesScreen" />
         </div>
         <div>
             <LabelGridComponent DataContext="_vmData" Labels="_labels" />

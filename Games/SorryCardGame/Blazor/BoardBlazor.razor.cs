@@ -27,7 +27,7 @@ public partial class BoardBlazor
         GameData!.Command.StartExecuting();
         await Player!.SorryPlayerAsync();
     }
-    private readonly BasicList<SorryCardGameCardInformation> _list = new();
+    private readonly BasicList<SorryCardGameCardInformation> _list = [];
     private SorryCardGameCardInformation GetCard(int index)
     {
         SorryCardGameCardInformation output = new();

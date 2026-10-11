@@ -1,6 +1,7 @@
-@inherits BasicGameView<LifeBoardGameMainViewModel>
+@inherits CascadingGameView<LifeBoardGameMainViewModel>
 <CascadingValue Value="_vmData">
     <CascadingValue Value="_gameContainer">
+        
         <StackLayout>
             <StackItem>
                 <LifeCompleteGameBoardBlazor BoardProcesses="_boardProcesses"
@@ -10,54 +11,40 @@
             <StackItem>
                 @* screens to render *@
                 <div>
-                    <ParentControl VM="ChooseCareerViewModel">
-                        <ChooseCareerView />
-                    </ParentControl>
+                    <ChooseCareerView DataContext="DataContext!.CareerScreen" />
                 </div>
                 <div>
-                    <ParentControl VM="ChooseSalaryViewModel">
-                        <ChooseSalaryView />
-                    </ParentControl>
+                    <ChooseSalaryView DataContext="DataContext!.ChooseSalaryScreen" />
                 </div>
                 <div>
-                    <ParentControl VM="ChooseHouseViewModel">
-                        <ChooseHouseView />
-                    </ParentControl>
+                    <ChooseHouseView DataContext="DataContext.HouseScreen" />
                 </div>
                 <div>
-                    <ParentControl VM="ChooseStockViewModel">
-                        <ChooseStockView />
-                    </ParentControl>
+                    <ChooseStockView DataContext="DataContext.ChooseStockScreen" />
                 </div>
                 <div>
-                    <ParentControl VM="LifeScoreboardViewModel">
+                    @if (DataContext.ShowScores)
+                    {
                         <LifeScoreboardView />
-                    </ParentControl>
+                    }
                 </div>
                 <div>
-                    <ParentControl VM="ReturnStockViewModel">
-                        <ReturnStockView />
-                    </ParentControl>
+                    <ReturnStockView DataContext="DataContext.ReturnStockScreen" />
                 </div>
                 <div>
-                    <ParentControl VM="ShowCardViewModel">
+                    @if (DataContext.ShowCards)
+                    {
                         <ShowCardView />
-                    </ParentControl>
+                    }
                 </div>
                 <div>
-                    <ParentControl VM="SpinnerViewModel">
-                        <SpinnerView />
-                    </ParentControl>
+                    <SpinnerView DataContext="DataContext.SpinnerScreen" />
                 </div>
                 <div>
-                    <ParentControl VM="StealTilesViewModel">
-                        <StealTilesView />
-                    </ParentControl>
+                    <StealTilesView DataContext="DataContext.StealTilesScreen" />
                 </div>
                 <div>
-                    <ParentControl VM="TradeSalaryViewModel">
-                        <TradeSalaryView />
-                    </ParentControl>
+                    <TradeSalaryView DataContext="DataContext.TradeSalaryScreen" />
                 </div>
             </StackItem>
         </StackLayout>
@@ -69,7 +56,10 @@
                 <StackItem>
                     Space Details:
                     <div>
-                        @DataContext!.VMData.GameDetails
+                        <StateContentView DataContext="DataContext!.VMData">
+                            @DataContext!.VMData.GameDetails
+                        </StateContentView>
+                        
                     </div>
                 </StackItem>
             </StackLayout>

@@ -14,7 +14,7 @@ public class SorryDiceComponent : GraphicsCommand
         output.Height = "40";
         return output;
     }
-    private void CreateGrapics(ISvg container)
+    private void CreateGrapics(SVG container)
     {
         if (Dice is null)
         {
@@ -92,7 +92,7 @@ public class SorryDiceComponent : GraphicsCommand
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         SvgRenderClass render = new();
-        ISvg svg = new SVG();
+        SVG svg = new ();
         svg.Width = TargetHeight;
         svg.Height = TargetHeight;
         svg.ViewBox = "0 0 40 40";

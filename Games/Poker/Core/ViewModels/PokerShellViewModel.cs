@@ -1,18 +1,9 @@
 namespace Poker.Core.ViewModels;
-public class PokerShellViewModel : SinglePlayerShellViewModel
+public class PokerShellViewModel(IGamePackageResolver mainContainer,
+    CommandContainer container,
+    ISaveSinglePlayerClass saves,
+    IEventAggregator aggregator
+        ) : SinglePlayerShellViewModel(mainContainer, container, saves, aggregator)
 {
-    protected override bool AlwaysNewGame => false; //most games allow new game always.
-    public PokerShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo GameData,
-        ISaveSinglePlayerClass saves,
-        IEventAggregator aggregator
-        ) : base(mainContainer, container, GameData, saves, aggregator)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<PokerMainViewModel>();
-        return model;
-    }
+    protected override bool AlwaysNewGame => false;
 }

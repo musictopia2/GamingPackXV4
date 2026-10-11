@@ -3,7 +3,7 @@ namespace RollEm.Core.Data;
 public partial class RollEmPlayerItem : SimplePlayer
 {
     [ScoreColumn]
-    public int ScoreRound { get; set; }
+    public partial int ScoreRound { get; set; }
     [ScoreColumn]
-    public int ScoreGame { get; set; }
+    public partial int ScoreGame { get; set; }
 }

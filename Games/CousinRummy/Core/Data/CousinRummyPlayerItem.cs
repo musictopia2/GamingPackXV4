@@ -3,11 +3,11 @@ namespace CousinRummy.Core.Data;
 public partial class CousinRummyPlayerItem : PlayerRummyHand<RegularRummyCard>
 {//anything needed is here
     [ScoreColumn]
-    public int TokensLeft { get; set; }
+    public partial int TokensLeft { get; set; }
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [ScoreColumn]
-    public bool LaidDown { get; set; }
+    public partial bool LaidDown { get; set; }
 }

@@ -1,20 +1,17 @@
 namespace ClueBoardGame.Core.Data;
 [SingletonGame]
 [AutoReset]
-public class ClueBoardGameGameContainer : BasicGameContainer<ClueBoardGamePlayerItem, ClueBoardGameSaveInfo>
+public class ClueBoardGameGameContainer(BasicData basicData,
+    TestOptions test,
+    IGameInfo gameInfo,
+    IAsyncDelayer delay,
+    IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver,
+    IRandomGenerator random) : BasicGameContainer<ClueBoardGamePlayerItem, ClueBoardGameSaveInfo>(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
 {
-    public ClueBoardGameGameContainer(BasicData basicData,
-        TestOptions test,
-        IGameInfo gameInfo,
-        IAsyncDelayer delay,
-        IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver,
-        IRandomGenerator random) : base(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
-    {
-    }
-    public Dictionary<int, DetectiveInfo> DetectiveList { get; set; } = new();
-    public Dictionary<int, RoomInfo> RoomList { get; set; } = new();
+    public Dictionary<int, DetectiveInfo> DetectiveList { get; set; } = [];
+    public Dictionary<int, RoomInfo> RoomList { get; set; } = [];
     public CharacterInfo? CurrentCharacter { get; set; }
     public int PreviousRoomForRefreshing { get; set; }
     //public bool NeedsToRefreshCharacterRooms { get; set; }

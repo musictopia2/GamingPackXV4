@@ -14,7 +14,7 @@ public class MilkRunDetailClass : IGameInfo, ICardInfo<MilkRunCardInformation>
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<MilkRunCardInformation>.CardsToPassOut => 6;
-    BasicList<int> ICardInfo<MilkRunCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<MilkRunCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<MilkRunCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<MilkRunCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<MilkRunCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,11 +22,11 @@ public class MilkRunDetailClass : IGameInfo, ICardInfo<MilkRunCardInformation>
     bool ICardInfo<MilkRunCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<MilkRunCardInformation>.NoPass => false;
     bool ICardInfo<MilkRunCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<MilkRunCardInformation> ICardInfo<MilkRunCardInformation>.DummyHand { get; set; } = new DeckRegularDict<MilkRunCardInformation>();
+    DeckRegularDict<MilkRunCardInformation> ICardInfo<MilkRunCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<MilkRunCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<MilkRunCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<MilkRunCardInformation>.DiscardExcludeList(IListShuffler<MilkRunCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

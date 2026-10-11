@@ -1,78 +1,71 @@
 namespace TileRummy.Core.ViewModels;
 [InstanceGame]
-public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
-{
-    private readonly TileRummyMainGameClass _mainGame; //if we don't need, delete.
-    private readonly IToast _toast;
-    public TileRummyVMData VMData { get; set; }
-    public TileRummyMainViewModel(CommandContainer commandContainer,
+public partial class TileRummyMainViewModel(CommandContainer commandContainer,
         TileRummyMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         TileRummyVMData data,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        IToast toast) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+    public TileRummyVMData VMData { get; set; } = data;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = data;
-        _toast = toast;
         VMData.TempSets.Init(this);
         VMData.TempSets.ClearBoard();
         VMData.Pool1.DrewTileAsync = DrewTileAsync;
         VMData.MainSetsClickedAsync = MainSets1_SetClickedAsync;
         VMData.TempSetsClickedAsync = TempSets_SetClickedAsync;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     public PoolCP GetPool => VMData.Pool1;
-    public PlayerCollection<TileRummyPlayerItem> GetPlayers => _mainGame.SaveRoot.PlayerList;
+    public PlayerCollection<TileRummyPlayerItem> GetPlayers => mainGame.PlayerList;
     public TempSetsObservable<EnumColorType, EnumColorType, TileInfo> GetTempTiles => VMData.TempSets;
     public HandObservable<TileInfo> GetHand => VMData.PlayerHand1;
     public MainSets GetMainSets => VMData.MainSets1;
     public override bool CanEndTurn()
     {
         bool didPlay = VMData.MainSets1!.PlayedAtLeastOneFromHand();
-        return didPlay == true || _mainGame.SaveRoot.FirstInit || VMData.Pool1!.HasDrawn() || VMData.Pool1.HasTiles() == false;
+        return didPlay == true || mainGame.SaveRoot.FirstInit || VMData.Pool1!.HasDrawn() || VMData.Pool1.HasTiles() == false;
     }
     public override async Task EndTurnAsync()
     {
-        var thisCol = _mainGame!.GetSelectedList();
+        var thisCol = mainGame!.GetSelectedList();
         if (thisCol.Count > 0)
         {
-            _toast.ShowUserErrorToast("Must either use the tiles selected or unselect the tiles before ending turn");
+            toast.ShowUserErrorToast("Must either use the tiles selected or unselect the tiles before ending turn");
             return;
         }
         bool didPlay;
         bool valids;
         didPlay = VMData.MainSets1!.PlayedAtLeastOneFromHand();
-        valids = _mainGame.ValidPlay();
-        if (_mainGame.BasicData!.MultiPlayer)
+        valids = mainGame.ValidPlay();
+        if (mainGame.BasicData!.MultiPlayer)
         {
             SendCustom thisEnd = new()
             {
                 DidPlay = didPlay,
                 ValidSets = valids
             };
-            await _mainGame.Network!.SendAllAsync("endcustom", thisEnd); //i think
+            await mainGame.Network!.SendAllAsync("endcustom", thisEnd); //i think
         }
-        await _mainGame.EndTurnAsync(didPlay, valids);
+        await mainGame.EndTurnAsync(didPlay, valids);
     }
     private bool _isProcessing;
     private async Task DrewTileAsync(TileInfo thisTile)
     {
-        if (_mainGame.BasicData.MultiPlayer)
+        if (mainGame.BasicData.MultiPlayer)
         {
             SendDraw thisDraw = new()
             {
                 Deck = thisTile.Deck,
                 FromEnd = false
             };
-            await _mainGame.Network!.SendAllAsync("drewtile", thisDraw);
+            await mainGame.Network!.SendAllAsync("drewtile", thisDraw);
         }
-        await _mainGame!.DrawTileAsync(thisTile, false);
+        await mainGame!.DrawTileAsync(thisTile, false);
     }
     private async Task MainSets1_SetClickedAsync(int setNumber, int section, int deck)
     {
@@ -81,38 +74,38 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
             throw new CustomBasicException("If the set is 0, rethinking is required");
         }
         var thisSet = VMData.MainSets1!.GetIndividualSet(setNumber);
-        var thisCol = _mainGame!.GetSelectedList();
+        var thisCol = mainGame!.GetSelectedList();
         if (thisCol.Count == 0)
         {
             if (deck == 0 || thisSet.HandList.Count < 2)
             {
-                if (_mainGame.BasicData!.MultiPlayer)
+                if (mainGame.BasicData!.MultiPlayer)
                 {
-                    await _mainGame.Network!.SendAllAsync("removeentireset", setNumber);
+                    await mainGame.Network!.SendAllAsync("removeentireset", setNumber);
                 }
-                await _mainGame.RemoveEntireSetAsync(setNumber);
+                await mainGame.RemoveEntireSetAsync(setNumber);
                 return;
             }
-            if (_mainGame.BasicData!.MultiPlayer)
+            if (mainGame.BasicData!.MultiPlayer)
             {
                 SendSet thisSend = new()
                 {
                     Index = setNumber,
                     Tile = deck
                 };
-                await _mainGame.Network!.SendAllAsync("removeonefromset", thisSend);
+                await mainGame.Network!.SendAllAsync("removeonefromset", thisSend);
             }
-            await _mainGame.RemoveTileFromSetAsync(setNumber, deck);
+            await mainGame.RemoveTileFromSetAsync(setNumber, deck);
             return;
         }
         if (thisCol.Count > 1)
         {
-            _toast.ShowUserErrorToast("Can only add one tile to the set at a time");
+            toast.ShowUserErrorToast("Can only add one tile to the set at a time");
             return;
         }
         var thisTile = thisCol.First();
         var newPos = thisSet.PositionToPlay(thisTile, section);
-        if (_mainGame.BasicData!.MultiPlayer)
+        if (mainGame.BasicData!.MultiPlayer)
         {
             SendSet finSend = new()
             {
@@ -120,7 +113,7 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
                 Position = newPos,
                 Tile = thisTile.Deck
             };
-            await _mainGame.Network!.SendAllAsync("addtoset", finSend);
+            await mainGame.Network!.SendAllAsync("addtoset", finSend);
         }
         if (VMData.TempSets!.HasObject(thisTile.Deck))
         {
@@ -128,9 +121,9 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
         }
         else
         {
-            _mainGame.SingleInfo!.MainHandList.RemoveObjectByDeck(thisTile.Deck);
+            mainGame.SingleInfo!.MainHandList.RemoveObjectByDeck(thisTile.Deck);
         }
-        await _mainGame.AddToSetAsync(setNumber, thisTile, newPos);
+        await mainGame.AddToSetAsync(setNumber, thisTile, newPos);
     }
     private Task TempSets_SetClickedAsync(int index)
     {
@@ -140,28 +133,27 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
         }
         _isProcessing = true;
         var tempList = VMData.PlayerHand1!.ListSelectedObjects(true);
-        //var player = _mainGame.PlayerList.GetSelf();
+        //var player = mainGame.PlayerList.GetSelf();
         //var tt = player.MainHandList.GetSelectedItems();
         VMData.TempSets!.AddCards(index, tempList);
         _isProcessing = false;
-        CommandContainer.UpdateAll();
         return Task.CompletedTask;
     }
     #region "Command Processes"
-    public bool CanCreateFirstSets => !_mainGame.SingleInfo!.InitCompleted;
+    public bool CanCreateFirstSets => !mainGame.SingleInfo!.InitCompleted;
     [Command(EnumCommandCategory.Game)]
     public async Task CreateFirstSetsAsync()
     {
-        bool rets = _mainGame!.HasInitialSets(out BasicList<TempInfo> thisList);
+        bool rets = mainGame!.HasInitialSets(out BasicList<TempInfo> thisList);
         if (rets == false)
         {
-            _toast.ShowUserErrorToast("Sorry, you do not have the initial set needed.  The point values has to be at least 30");
+            toast.ShowUserErrorToast("Sorry, you do not have the initial set needed.  The point values has to be at least 30");
             return;
         }
-        BasicList<string> newList = new();
+        BasicList<string> newList = [];
         await thisList.ForEachAsync(async thisTemp =>
         {
-            if (_mainGame.BasicData!.MultiPlayer == true)
+            if (mainGame.BasicData!.MultiPlayer == true)
             {
                 var tempList = thisTemp.CardList.GetDeckListFromObjectList();
                 SendCreateSet thisSend = new()
@@ -173,25 +165,25 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
                 newList.Add(thisStr);
             }
             VMData.TempSets.ClearBoard(thisTemp.TempSet);
-            await _mainGame.CreateNewSetAsync(thisTemp, true);
+            await mainGame.CreateNewSetAsync(thisTemp, true);
         });
-        if (_mainGame.BasicData!.MultiPlayer)
+        if (mainGame.BasicData!.MultiPlayer)
         {
-            await _mainGame.Network!.SendSeveralSetsAsync(newList, "laiddowninitial");
+            await mainGame.Network!.SendSeveralSetsAsync(newList, "laiddowninitial");
         }
-        await _mainGame.InitialCompletedAsync();
+        await mainGame.InitialCompletedAsync();
     }
-    public bool CanCreateNewSet => _mainGame.SingleInfo!.InitCompleted;
+    public bool CanCreateNewSet => mainGame.SingleInfo!.InitCompleted;
     [Command(EnumCommandCategory.Game)]
     public async Task CreateNewSetAsync()
     {
-        var thisCol = _mainGame!.GetSelectedList();
+        var thisCol = mainGame!.GetSelectedList();
         if (thisCol.Count < 3)
         {
-            _toast.ShowUserErrorToast("You must have at least 3 tiles in order to create a set");
+            toast.ShowUserErrorToast("You must have at least 3 tiles in order to create a set");
             return;
         }
-        _mainGame.HasValidSet(thisCol, out int firstNumber, out int secondNumber);
+        mainGame.HasValidSet(thisCol, out int firstNumber, out int secondNumber);
         TempInfo thisTemp = new()
         {
             CardList = thisCol,
@@ -214,7 +206,7 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
         {
             thisTemp.WhatSet = EnumWhatSets.Runs;
         }
-        if (_mainGame.BasicData!.MultiPlayer)
+        if (mainGame.BasicData!.MultiPlayer)
         {
             SendCreateSet thisSend = new()
             {
@@ -223,7 +215,7 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
                 SecondNumber = thisTemp.SecondNumber,
                 WhatSet = thisTemp.WhatSet
             };
-            await _mainGame.Network!.SendAllAsync("createnewset", thisSend);
+            await mainGame.Network!.SendAllAsync("createnewset", thisSend);
         }
         thisCol.ForEach(thisTile =>
         {
@@ -233,20 +225,20 @@ public partial class TileRummyMainViewModel : BasicMultiplayerMainVM
             }
             else
             {
-                _mainGame.SingleInfo!.MainHandList.RemoveObjectByDeck(thisTile.Deck);
+                mainGame.SingleInfo!.MainHandList.RemoveObjectByDeck(thisTile.Deck);
             }
         });
-        await _mainGame.CreateNewSetAsync(thisTemp, false);
+        await mainGame.CreateNewSetAsync(thisTemp, false);
     }
-    public bool CanUndoMove => _mainGame.SaveRoot.DidExpand;
+    public bool CanUndoMove => mainGame.SaveRoot.DidExpand;
     [Command(EnumCommandCategory.Game)]
     public async Task UndoMoveAsync()
     {
-        if (_mainGame.BasicData!.MultiPlayer)
+        if (mainGame.BasicData!.MultiPlayer)
         {
-            await _mainGame.Network!.SendAllAsync("undomove");
+            await mainGame.Network!.SendAllAsync("undomove");
         }
-        await _mainGame.UndoMoveAsync();
+        await mainGame.UndoMoveAsync();
     }
     #endregion
 }

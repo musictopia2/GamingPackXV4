@@ -1,11 +1,7 @@
 namespace FreeCellSolitaire.Blazor;
-public class Bootstrapper : SinglePlayerBootstrapper<FreeCellSolitaireShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : SinglePlayerBootstrapper<FreeCellSolitaireShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

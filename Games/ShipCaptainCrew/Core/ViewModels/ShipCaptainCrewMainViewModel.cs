@@ -1,25 +1,16 @@
 namespace ShipCaptainCrew.Core.ViewModels;
 [InstanceGame]
-public class ShipCaptainCrewMainViewModel : DiceGamesVM<SimpleDice>
-{
-    private readonly ShipCaptainCrewMainGameClass _mainGame; //if we don't need, delete.
-    public ShipCaptainCrewVMData VMData { get; set; }
-    public ShipCaptainCrewMainViewModel(CommandContainer commandContainer,
+public class ShipCaptainCrewMainViewModel(CommandContainer commandContainer,
         ShipCaptainCrewMainGameClass mainGame,
         ShipCaptainCrewVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, roller, aggregator)
-    {
-        _mainGame = mainGame;
-        VMData = viewModel;
-    }
+        IEventAggregator aggregator) : DiceGamesVM<SimpleDice>(commandContainer, mainGame, viewModel, basicData, resolver, roller, aggregator)
+{
+    public ShipCaptainCrewVMData VMData { get; set; } = viewModel;
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
-    public PlayerCollection<ShipCaptainCrewPlayerItem> PlayerList => _mainGame.PlayerList;
+    public PlayerCollection<ShipCaptainCrewPlayerItem> PlayerList => mainGame.PlayerList;
     protected override bool CanEnableDice()
     {
         return true; //if you can enable dice, change the routine.

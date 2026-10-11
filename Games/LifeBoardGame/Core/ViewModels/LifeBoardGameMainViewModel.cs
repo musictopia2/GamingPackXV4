@@ -1,181 +1,183 @@
 namespace LifeBoardGame.Core.ViewModels;
 [InstanceGame]
-public partial class LifeBoardGameMainViewModel : BasicMultiplayerMainVM
-    , IHandleAsync<ShowCardEventModel>, IHandle<EnumWhatStatus>
-{
-    private readonly LifeBoardGameMainGameClass _mainGame; //if we don't need, delete.
-    public LifeBoardGameVMData VMData { get; set; }
-    private readonly IGamePackageResolver _resolver;
-    public LifeBoardGameMainViewModel(CommandContainer commandContainer,
+[EventAggregatorFromMemberClass(nameof(Aggregator))]
+public partial class LifeBoardGameMainViewModel(CommandContainer commandContainer,
         LifeBoardGameMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         LifeBoardGameGameContainer gameContainer,
-        LifeBoardGameVMData model
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        LifeBoardGameVMData model) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+    , IHandleAsync<ShowCardEventModel>, IHandle<EnumWhatStatus>
+{
+    public LifeBoardGameVMData VMData { get; set; } = model;
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = model;
-        if (_mainGame.SaveRoot.GameStatus == EnumWhatStatus.NeedChooseGender)
+        Subscribe();
+        if (mainGame.SaveRoot.GameStatus == EnumWhatStatus.NeedChooseGender)
         {
             throw new CustomBasicException("Cannot load main view model because you need to choose gender.  Rethink");
         }
-        if (_mainGame.PlayerList.Any(x => x.Gender == EnumGender.None))
+        if (mainGame.PlayerList.Any(x => x.Gender == EnumGender.None))
         {
             throw new CustomBasicException("Cannot load the main screen if sombody did not choose gender.  Rethink");
         }
-        _resolver = resolver;
         gameContainer.HideCardAsync = HideCardAsync;
-        gameContainer.CardVisible = () => ShowCardScreen != null;
-        if (LifeBoardGameGameContainer.StartCollegeCareer && basicData.GamePackageMode == EnumGamePackageMode.Production)
+        gameContainer.CardVisible = () =>ShowCards;
+        if (LifeBoardGameGameContainer.StartCollegeCareer && BasicData.GamePackageMode == EnumGamePackageMode.Production)
         {
             throw new CustomBasicException("You cannot start college career because its in production");
         }
+        base.AdditionalInitialize();
     }
+
+    public bool ShowCards { get; private set; } = false;
+    public bool ShowScores { get; private set; } = false;
+
     private async Task HideCardAsync()
     {
-        if (ShowCardScreen == null)
+        if (ShowCards == false)
         {
             return;
         }
-        await CloseSpecificChildAsync(ShowCardScreen);
-        ShowCardScreen = null;
+        ShowCards = false;
+        OnStateChanged();
     }
-    private async Task ShowCardAsync(EnumWhatStatus oldStatus)
+    private void ShowCard(EnumWhatStatus oldStatus)
     {
         switch (oldStatus)
         {
 
             case EnumWhatStatus.NeedChooseFirstCareer:
             case EnumWhatStatus.NeedNewCareer:
-                await CloseCareerAsync();
-                await LoadShowCardAsync();
+                CloseCareer();
+                LoadShowCard();
                 break;
             case EnumWhatStatus.NeedChooseHouse:
             case EnumWhatStatus.NeedSellHouse:
             case EnumWhatStatus.NeedSellBuyHouse:
-                await CloseHouseAsync();
-                await LoadShowCardAsync();
+                CloseHouse();
+                LoadShowCard();
                 break;
             case EnumWhatStatus.NeedReturnStock:
-                await CloseReturnStockAsync();
-                await LoadShowCardAsync();
+                CloseReturnStock();
+                LoadShowCard();
                 break;
             case EnumWhatStatus.NeedChooseStock:
-                await CloseChooseStockAsync();
-                await LoadShowCardAsync();
+                CloseChooseStock();
+                LoadShowCard();
                 break;
             case EnumWhatStatus.NeedChooseSalary:
-                await CloseChooseSalaryAsync();
-                await LoadShowCardAsync();
+                CloseChooseSalary();
+                LoadShowCard();
                 break; //sometimes it shows up for a second.  other times, only for a while.
             default:
-                await LoadShowCardAsync(); //in this case, just show the card.
+                LoadShowCard(); //in this case, just show the card.
                 break;
         }
     }
     #region Load Screens
-    private async Task LoadScoreAsync()
+
+    private void LoadScores()
     {
-        if (ScoreScreen != null)
+        if (ShowScores)
         {
             return;
         }
-        ScoreScreen = _resolver.Resolve<LifeScoreboardViewModel>();
-        await LoadScreenAsync(ScoreScreen);
+        ShowScores = true;
     }
-    private async Task LoadCareerAsync()
+
+    //private async Task LoadScoreAsync()
+    //{
+    //    if (ScoreScreen != null)
+    //    {
+    //        return;
+    //    }
+    //    ScoreScreen = _resolver.Resolve<LifeScoreboardViewModel>();
+    //    await LoadScreenAsync(ScoreScreen);
+    //}
+    private void LoadCareer()
     {
         if (CareerScreen != null)
         {
             return;
         }
-        CareerScreen = _resolver.Resolve<ChooseCareerViewModel>();
-        await LoadScreenAsync(CareerScreen);
+        CareerScreen = Resolver.Resolve<ChooseCareerViewModel>();
     }
-    private async Task LoadChooseSalaryAsync()
+    private void LoadChooseSalary()
     {
         if (ChooseSalaryScreen != null)
         {
             return;
         }
-        ChooseSalaryScreen = _resolver.Resolve<ChooseSalaryViewModel>();
-        await LoadScreenAsync(ChooseSalaryScreen);
+        ChooseSalaryScreen = Resolver.Resolve<ChooseSalaryViewModel>();
     }
-    private async Task LoadChooseStockAsync()
+    private void LoadChooseStock()
     {
         if (ChooseStockScreen != null)
         {
             return;
         }
-        ChooseStockScreen = _resolver.Resolve<ChooseStockViewModel>();
-        await LoadScreenAsync(ChooseStockScreen);
+        ChooseStockScreen = Resolver.Resolve<ChooseStockViewModel>();
     }
-    private async Task LoadReturnStockAsync()
+    private void LoadReturnStock()
     {
         if (ReturnStockScreen != null)
         {
             return;
         }
-        ReturnStockScreen = _resolver.Resolve<ReturnStockViewModel>();
-        await LoadScreenAsync(ReturnStockScreen);
+        ReturnStockScreen = Resolver.Resolve<ReturnStockViewModel>();
     }
-    private async Task LoadSpinnerAsync()
+    private void LoadSpinner()
     {
         if (SpinnerScreen != null)
         {
             return;
         }
-        SpinnerScreen = _resolver.Resolve<SpinnerViewModel>();
-        await LoadScreenAsync(SpinnerScreen);
+        SpinnerScreen = Resolver.Resolve<SpinnerViewModel>();
     }
-    private async Task LoadStealTilesAsync()
+    private void LoadStealTiles()
     {
         if (StealTilesScreen != null)
         {
             return;
         }
-        StealTilesScreen = _resolver.Resolve<StealTilesViewModel>();
-        await LoadScreenAsync(StealTilesScreen);
+        StealTilesScreen = Resolver.Resolve<StealTilesViewModel>();
     }
-    private async Task LoadTradeSalaryAsync()
+    private void LoadTradeSalary()
     {
         if (TradeSalaryScreen != null)
         {
             return;
         }
-        TradeSalaryScreen = _resolver.Resolve<TradeSalaryViewModel>();
-        await LoadScreenAsync(TradeSalaryScreen);
+        TradeSalaryScreen = Resolver.Resolve<TradeSalaryViewModel>();
     }
-    private async Task LoadHouseAsync()
+    private void LoadHouse()
     {
         if (HouseScreen != null)
         {
             return;
         }
-        HouseScreen = _resolver.Resolve<ChooseHouseViewModel>();
-        await LoadScreenAsync(HouseScreen);
+        HouseScreen = Resolver.Resolve<ChooseHouseViewModel>();
     }
     //for now its static.
-    private static Task LoadBoardAsync() //keep this for now.
+    //private static Task LoadBoardAsync() //keep this for now.
+    //{
+    //    return Task.CompletedTask;
+    //}
+    private void LoadShowCard()
     {
-        return Task.CompletedTask;
-    }
-    private async Task LoadShowCardAsync()
-    {
-        if (ShowCardScreen != null)
+        if (ShowCards)
         {
             return;
         }
-        ShowCardScreen = _resolver.Resolve<ShowCardViewModel>();
-        await LoadScreenAsync(ShowCardScreen);
+        ShowCards = true;
     }
     #endregion
     #region Screens
-    public LifeScoreboardViewModel? ScoreScreen { get; set; }
+    //public LifeScoreboardViewModel? ScoreScreen { get; set; }
     public ChooseCareerViewModel? CareerScreen { get; set; }
     public ChooseSalaryViewModel? ChooseSalaryScreen { get; set; }
     public ChooseStockViewModel? ChooseStockScreen { get; set; }
@@ -184,136 +186,114 @@ public partial class LifeBoardGameMainViewModel : BasicMultiplayerMainVM
     public StealTilesViewModel? StealTilesScreen { get; set; }
     public TradeSalaryViewModel? TradeSalaryScreen { get; set; }
     public ChooseHouseViewModel? HouseScreen { get; set; }
-    public ShowCardViewModel? ShowCardScreen { get; set; }
+    //public ShowCardViewModel? ShowCardScreen { get; set; }
     #endregion
     #region Unload Screens
-    protected override async Task TryCloseAsync()
+
+    protected override Task CloseAsync()
     {
-        await CloseScoreAsync();
-        await CloseCareerAsync();
-        await CloseChooseSalaryAsync();
-        await CloseChooseStockAsync();
-        await CloseReturnStockAsync();
-        await CloseSpinnerAsync();
-        await CloseStealTilesAsync();
-        await CloseTradeSalaryAsync();
-        await CloseHouseAsync();
-        await base.TryCloseAsync();
+        Unsubscribe();
+        CloseScore();
+        CloseCareer();
+        CloseChooseSalary();
+        CloseChooseStock();
+        CloseReturnStock();
+        CloseSpinner();
+        CloseStealTiles();
+        CloseTradeSalary();
+        CloseHouse();
+        return base.CloseAsync();
     }
-    private async Task CloseScoreAsync()
+
+    private void CloseScore()
     {
-        if (ScoreScreen == null)
+        if (ShowScores == false)
         {
             return;
         }
-        await CloseSpecificChildAsync(ScoreScreen);
-        ScoreScreen = null;
+        ShowScores = false;
     }
-    private async Task CloseCareerAsync()
+    private void CloseCareer()
     {
         if (CareerScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(CareerScreen);
         CareerScreen = null;
     }
-    private async Task CloseChooseSalaryAsync()
+    private void CloseChooseSalary()
     {
         if (ChooseSalaryScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(ChooseSalaryScreen);
         ChooseSalaryScreen = null;
     }
-    private async Task CloseChooseStockAsync()
+    private void CloseChooseStock()
     {
         if (ChooseStockScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(ChooseStockScreen);
         ChooseStockScreen = null;
     }
-    private async Task CloseReturnStockAsync()
+    private void CloseReturnStock()
     {
         if (ReturnStockScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(ReturnStockScreen);
         ReturnStockScreen = null;
     }
-    private async Task CloseSpinnerAsync()
+    private void CloseSpinner()
     {
         if (SpinnerScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(SpinnerScreen);
         SpinnerScreen = null;
     }
-    private async Task CloseStealTilesAsync()
+    private void CloseStealTiles()
     {
         if (StealTilesScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(StealTilesScreen);
         StealTilesScreen = null;
     }
-    private async Task CloseTradeSalaryAsync()
+    private void CloseTradeSalary()
     {
         if (TradeSalaryScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(TradeSalaryScreen);
         TradeSalaryScreen = null;
     }
-    private async Task CloseHouseAsync()
+    private void CloseHouse()
     {
         if (HouseScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(HouseScreen);
         HouseScreen = null;
-    }
-    private static Task CloseBoardAsync() //this this in there for now.
-    {
-        return Task.CompletedTask;
-        //if (_basicData.IsXamarinForms == false)
-        //{
-        //    return; //because always needs to show up.  this is the best way to handle this
-        //}
-        //if (BoardScreen == null)
-        //{
-        //    return;
-        //}
-        //await CloseSpecificChildAsync(BoardScreen);
-        //BoardScreen = null;
     }
     #endregion
     private bool _didInit;
-    private async Task LoadSpinnerBoardScoresAsync()
+    private void LoadSpinnerBoardScores()
     {
-        await LoadScoreAsync();
-        await LoadSpinnerAsync();
-        await LoadBoardAsync();
+        LoadScores();
+        LoadSpinner();
     }
-    private async Task LoadProperScreensAsync()
+    private void LoadProperScreens()
     {
-        switch (_mainGame.SaveRoot.GameStatus)
+        switch (mainGame.SaveRoot.GameStatus)
         {
             case EnumWhatStatus.NeedChooseFirstOption:
             case EnumWhatStatus.NeedNight:
             case EnumWhatStatus.NeedToChooseSpace:
             case EnumWhatStatus.NeedChooseRetirement:
             case EnumWhatStatus.NeedToEndTurn:
-                await LoadScoreAsync();
-                await LoadBoardAsync();
+                LoadScores();
                 break;
             case EnumWhatStatus.None:
                 {
@@ -322,68 +302,66 @@ public partial class LifeBoardGameMainViewModel : BasicMultiplayerMainVM
             case EnumWhatStatus.NeedToSpin:
             case EnumWhatStatus.LastSpin:
             case EnumWhatStatus.MakingMove:
-                await LoadSpinnerBoardScoresAsync();
+                LoadSpinnerBoardScores();
                 break;
             case EnumWhatStatus.NeedChooseStock:
-                await LoadChooseStockAsync();
+                LoadChooseStock();
                 break;
             case EnumWhatStatus.NeedChooseFirstCareer:
             case EnumWhatStatus.NeedNewCareer:
-                await LoadCareerAsync();
+                LoadCareer();
                 break;
             case EnumWhatStatus.NeedChooseSalary:
-                await LoadChooseSalaryAsync();
+                LoadChooseSalary();
                 break;
             case EnumWhatStatus.NeedChooseGender:
                 throw new CustomBasicException("Cannot choose gender on main view model.  Rethink");
             case EnumWhatStatus.NeedChooseHouse:
-                await LoadSpinnerAsync();
-                await LoadHouseAsync();
+                LoadSpinner();
+                LoadHouse();
                 break;
             case EnumWhatStatus.NeedTradeSalary:
-                await LoadTradeSalaryAsync();
-                await LoadScoreAsync();
+                LoadTradeSalary();
+                LoadScores();
                 break;
             case EnumWhatStatus.NeedStealTile:
-                await LoadScoreAsync();
-                await LoadStealTilesAsync();
+                LoadScores();
+                LoadStealTiles();
                 break;
             case EnumWhatStatus.NeedReturnStock:
-                await LoadReturnStockAsync();
-                await LoadScoreAsync();
-                await LoadBoardAsync();
+                LoadReturnStock();
+                LoadScores();
                 break;
             case EnumWhatStatus.NeedSellBuyHouse:
             case EnumWhatStatus.NeedSellHouse:
             case EnumWhatStatus.NeedFindSellPrice:
-                await LoadBoardAsync();
-                await LoadSpinnerAsync();
-                await LoadScoreAsync();
-                await LoadShowCardAsync();
+                LoadSpinner();
+                LoadScores();
+                LoadShowCard();
                 break;
             default:
                 break;
         }
     }
-    protected override async Task ActivateAsync()
+    protected override Task OpenAsync()
     {
-        await base.ActivateAsync();
-        await LoadProperScreensAsync();
+        LoadProperScreens();
         _didInit = true;
+        return base.OpenAsync();
     }
-    private async void ChangeScreensAsync(EnumWhatStatus oldStatus, EnumWhatStatus newStatus)
+    private void ChangeScreens(EnumWhatStatus oldStatus, EnumWhatStatus newStatus)
     {
         if (oldStatus == EnumWhatStatus.NeedTradeSalary)
         {
-            await CloseTradeSalaryAsync();
+            CloseTradeSalary();
         }
         if (oldStatus == EnumWhatStatus.NeedStealTile)
         {
-            await CloseStealTilesAsync();
+            CloseStealTiles();
         }
         if (oldStatus == EnumWhatStatus.NeedChooseHouse || oldStatus == EnumWhatStatus.NeedSellBuyHouse || oldStatus == EnumWhatStatus.NeedSellHouse)
         {
-            await CloseHouseAsync();
+            CloseHouse();
         }
 
         switch (newStatus)
@@ -393,38 +371,38 @@ public partial class LifeBoardGameMainViewModel : BasicMultiplayerMainVM
             case EnumWhatStatus.NeedToChooseSpace:
             case EnumWhatStatus.NeedChooseRetirement:
             case EnumWhatStatus.NeedToEndTurn:
-                await CloseSpinnerAsync();
+                CloseSpinner();
                 break;
 
             case EnumWhatStatus.NeedChooseSalary:
             case EnumWhatStatus.NeedChooseStock:
             case EnumWhatStatus.NeedChooseFirstCareer:
             case EnumWhatStatus.NeedNewCareer:
-                await CloseBoardAsync();
-                await CloseSpinnerAsync();
-                await CloseScoreAsync();
+                CloseSpinner();
+                CloseScore();
                 break;
             case EnumWhatStatus.NeedSellBuyHouse:
-                await CloseScoreAsync();
+                CloseScore();
                 break;
             case EnumWhatStatus.NeedSellHouse:
             case EnumWhatStatus.NeedFindSellPrice:
-                await CloseHouseAsync();
-                await CloseScoreAsync();
+                CloseHouse();
+                CloseScore();
                 break;
             case EnumWhatStatus.NeedTradeSalary:
             case EnumWhatStatus.NeedStealTile:
-                await CloseSpinnerAsync();
+                CloseSpinner();
                 break;
             default:
                 break;
         }
-
-        await LoadProperScreensAsync();
+        LoadProperScreens();
     }
     Task IHandleAsync<ShowCardEventModel>.HandleAsync(ShowCardEventModel message)
     {
-        return ShowCardAsync(message.GameStatus);
+        ShowCard(message.GameStatus);
+        OnStateChanged();
+        return Task.CompletedTask;
     }
     private EnumWhatStatus _gameStatus;
     void IHandle<EnumWhatStatus>.Handle(EnumWhatStatus message)
@@ -437,7 +415,8 @@ public partial class LifeBoardGameMainViewModel : BasicMultiplayerMainVM
         {
             return;
         }
-        ChangeScreensAsync(_gameStatus, message);
+        ChangeScreens(_gameStatus, message);
+        OnStateChanged(); //try this.  at least fix part of the issues.
         _gameStatus = message;
     }
 }

@@ -33,7 +33,7 @@ public class BackgammonMainGameClass
     {
         LoadControls();
         AfterRestoreDice();
-        BoardGameSaved();
+        GameSaved();
         _model.Cup!.ShowDiceListAlways = true;
         _model.Cup.Visible = true;
         _model.Cup.CanShowDice = true;
@@ -135,6 +135,11 @@ public class BackgammonMainGameClass
             SaveRoot.Instructions = "Make Moves";
         }
         await base.ContinueTurnAsync();
+    }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        _gameBoard.Repaint();
     }
     public override async Task MakeMoveAsync(int space)
     {

@@ -1,7 +1,5 @@
 namespace Fluxx.Blazor.Views;
-public partial class ActionDrawUseView : SimpleActionView
+public partial class ActionDrawUseView : SimpleActionView<ActionDrawUseViewModel>
 {
-    [CascadingParameter]
-    public ActionDrawUseViewModel? DataContext { get; set; }
     private ICustomCommand DrawUseCommand => DataContext!.DrawUseCommand!;
 }

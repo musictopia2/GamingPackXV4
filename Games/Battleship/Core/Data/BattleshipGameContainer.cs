@@ -1,15 +1,12 @@
 namespace Battleship.Core.Data;
 [SingletonGame]
-public class BattleshipGameContainer : BasicGameContainer<BattleshipPlayerItem, BattleshipSaveInfo>
+public class BattleshipGameContainer(BasicData basicData,
+    TestOptions test,
+    IGameInfo gameInfo,
+    IAsyncDelayer delay,
+    IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver,
+    IRandomGenerator random) : BasicGameContainer<BattleshipPlayerItem, BattleshipSaveInfo>(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
 {
-    public BattleshipGameContainer(BasicData basicData,
-        TestOptions test,
-        IGameInfo gameInfo,
-        IAsyncDelayer delay,
-        IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver,
-        IRandomGenerator random) : base(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
-    {
-    }
 }

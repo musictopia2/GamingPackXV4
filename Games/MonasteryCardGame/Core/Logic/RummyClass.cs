@@ -1,7 +1,7 @@
 ﻿namespace MonasteryCardGame.Core.Logic;
 public class RummyClass
 {
-    public DeckRegularDict<MonasteryCardInfo> EntireList = new();
+    public DeckRegularDict<MonasteryCardInfo> EntireList = [];
     public RummyClass(MonasteryCardGameGameContainer gameContainer)
     {
         EntireList = gameContainer.DeckList!.ToRegularDeckDict();
@@ -305,7 +305,7 @@ public class RummyClass
     public DeckRegularDict<MonasteryCardInfo> RunList(DeckRegularDict<MonasteryCardInfo> thisCol, EnumRunType runType)
     {
         var tempCol = PopulateTempCol(thisCol, out DeckRegularDict<MonasteryCardInfo> aceList);
-        DeckRegularDict<MonasteryCardInfo> output = new();
+        DeckRegularDict<MonasteryCardInfo> output = [];
         var thisCard = tempCol.First();
         int minNumber = thisCard.Value.Value;
         int maxNumber = minNumber + thisCol.Count - 1;
@@ -361,7 +361,7 @@ public class RummyClass
     public DeckRegularDict<MonasteryCardInfo> KindList(DeckRegularDict<MonasteryCardInfo> thisCol, bool needColor)
     {
         var tempCol = PopulateTempCol(thisCol, out DeckRegularDict<MonasteryCardInfo> aceList);
-        DeckRegularDict<MonasteryCardInfo> output = new();
+        DeckRegularDict<MonasteryCardInfo> output = [];
         if (aceList.Count == 0)
         {
             return thisCol;
@@ -402,7 +402,7 @@ public class RummyClass
     public DeckRegularDict<MonasteryCardInfo> EvenOddList(DeckRegularDict<MonasteryCardInfo> thisCol)
     {
         var tempCol = PopulateTempCol(thisCol, out DeckRegularDict<MonasteryCardInfo> aceList);
-        DeckRegularDict<MonasteryCardInfo> output = new();
+        DeckRegularDict<MonasteryCardInfo> output = [];
         if (aceList.Count == 0)
         {
             return thisCol;

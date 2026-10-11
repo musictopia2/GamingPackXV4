@@ -5,11 +5,11 @@ namespace FiveCrowns.Core.Data;
 public partial class FiveCrownsVMData : IBasicCardGamesData<FiveCrownsCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public int UpTo { get; set; }
+    public partial int UpTo { get; set; }
     public FiveCrownsVMData(CommandContainer command, IGamePackageResolver resolver)
     {
         Deck1 = new(command);

@@ -1,19 +1,12 @@
 ﻿namespace Checkers.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class GameBoardProcesses
+public class GameBoardProcesses(GameBoardGraphicsCP graphicsBoard, CheckersGameContainer gameContainer)
 {
-    private readonly CheckersGameContainer _gameContainer;
-    private readonly GameBoardGraphicsCP _graphicsBoard;
-    public GameBoardProcesses(GameBoardGraphicsCP graphicsBoard, CheckersGameContainer gameContainer)
-    {
-        _graphicsBoard = graphicsBoard;
-        _gameContainer = gameContainer;
-    }
     public static SpaceCP? GetSpace(int row, int column) => GameBoardGraphicsCP.GetSpace(row, column);
     public void ClearBoard()
     {
-        _gameContainer.PlayerList!.ForEach(thisPlayer =>
+        gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.CurrentPieceList.Clear();
             var firstList = GameBoardGraphicsCP.GetBlackStartingSpaces();
@@ -28,25 +21,25 @@ public class GameBoardProcesses
     }
     private bool NeedsReversed(int playerConsidered)
     {
-        if (_gameContainer.BasicData!.MultiPlayer)
+        if (gameContainer.BasicData!.MultiPlayer)
         {
-            var tempPlayer = _gameContainer.PlayerList![playerConsidered];
+            var tempPlayer = gameContainer.PlayerList![playerConsidered];
             return tempPlayer.PlayerCategory == EnumPlayerCategory.OtherHuman;
         }
-        return _gameContainer.WhoTurn != playerConsidered; //try this
+        return gameContainer.WhoTurn != playerConsidered; //try this
     }
     private void PopulateSpaces()
     {
-        _graphicsBoard.ClearBoard();
+        graphicsBoard.ClearBoard();
         int realIndex;
         bool wasReversed;
-        _gameContainer.PlayerList!.ForEach(thisPlayer =>
+        gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.CurrentPieceList.ForEach(thisTemp =>
             {
                 wasReversed = NeedsReversed(thisPlayer.Id);
                 realIndex = GameBoardGraphicsCP.GetRealIndex(thisTemp.Index, wasReversed);
-                var thisSpace = _gameContainer.SpaceList!.Single(items => items.MainIndex == realIndex);
+                var thisSpace = gameContainer.SpaceList!.Single(items => items.MainIndex == realIndex);
                 thisSpace.PlayerOwns = thisPlayer.Id;
                 thisSpace.WasReversed = wasReversed;
                 thisSpace.IsCrowned = thisTemp.IsCrowned;
@@ -56,30 +49,30 @@ public class GameBoardProcesses
     }
     public async Task StartNewTurnAsync()
     {
-        _gameContainer.PlayerList!.ForEach(thisPlayer =>
+        gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.StartPieceList = thisPlayer.CurrentPieceList.Clone();
         });
-        _gameContainer.SaveRoot!.ForcedToMove = false;
-        _gameContainer.SaveRoot.SpaceHighlighted = 0;
-        _gameContainer.SaveRoot.GameStatus = EnumGameStatus.None;
+        gameContainer.SaveRoot!.ForcedToMove = false;
+        gameContainer.SaveRoot.SpaceHighlighted = 0;
+        gameContainer.SaveRoot.GameStatus = EnumGameStatus.None;
         PopulateSpaces();
         PopulateMoves();
-        _gameContainer.Aggregator.RepaintBoard();
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.Aggregator.RepaintBoard();
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     private void PopulateMoves()
     {
-        _gameContainer.CurrentMoveList = new();
-        _gameContainer.CompleteMoveList = new();
+        gameContainer.CurrentMoveList = [];
+        gameContainer.CompleteMoveList = [];
         GetActualMoves();
     }
     public Task LoadPreviousGameAsync()
     {
-        _gameContainer.SaveRoot!.SpaceHighlighted = 0; //i think if there was a space highlighted, it will return to 0.  so you have to choose the piece again if autoresume.
+        gameContainer.SaveRoot!.SpaceHighlighted = 0; //i think if there was a space highlighted, it will return to 0.  so you have to choose the piece again if autoresume.
         PopulateSpaces();
         PopulateMoves();
-        _gameContainer.Aggregator.RepaintBoard();
+        gameContainer.Aggregator.RepaintBoard();
         return Task.CompletedTask;
     }
     #region "Move Processes"
@@ -102,7 +95,7 @@ public class GameBoardProcesses
             checkColumn = column;
         }
         UpdateChecker();
-        BasicList<MoveInfo> thisList = new();
+        BasicList<MoveInfo> thisList = [];
         SpaceCP? newSpace;
         int playerIndex;
         MoveInfo thisMove;
@@ -154,104 +147,104 @@ public class GameBoardProcesses
     }
     private void GetActualMoves()
     {
-        _currentReversed = NeedsReversed(_gameContainer.WhoTurn);
-        var tempList = _gameContainer.SpaceList!.Where(items => items.PlayerOwns == _gameContainer.WhoTurn).ToBasicList();
-        if (_gameContainer.SaveRoot!.SpaceHighlighted > 0)
+        _currentReversed = NeedsReversed(gameContainer.WhoTurn);
+        var tempList = gameContainer.SpaceList!.Where(items => items.PlayerOwns == gameContainer.WhoTurn).ToBasicList();
+        if (gameContainer.SaveRoot!.SpaceHighlighted > 0)
         {
-            tempList.KeepConditionalItems(items => items.MainIndex == _gameContainer.SaveRoot.SpaceHighlighted);
+            tempList.KeepConditionalItems(items => items.MainIndex == gameContainer.SaveRoot.SpaceHighlighted);
         }
         tempList.ForEach(oldSpace =>
         {
-            _gameContainer.CompleteMoveList.AddRange(GetMovesWithPiece(oldSpace));
+            gameContainer.CompleteMoveList.AddRange(GetMovesWithPiece(oldSpace));
         });
-        if (_gameContainer.CompleteMoveList.Any(items => items.PlayerCaptured > 0))
+        if (gameContainer.CompleteMoveList.Any(items => items.PlayerCaptured > 0))
         {
-            _gameContainer.SaveRoot.ForcedToMove = true;
+            gameContainer.SaveRoot.ForcedToMove = true;
         }
-        if (_gameContainer.SaveRoot.ForcedToMove)
+        if (gameContainer.SaveRoot.ForcedToMove)
         {
-            _gameContainer.CompleteMoveList.KeepConditionalItems(items => items.PlayerCaptured > 0);
+            gameContainer.CompleteMoveList.KeepConditionalItems(items => items.PlayerCaptured > 0);
         }
     }
     public bool IsValidMove(int space)
     {
-        if (space == _gameContainer.SaveRoot!.SpaceHighlighted)
+        if (space == gameContainer.SaveRoot!.SpaceHighlighted)
         {
             return true;
         }
-        if (_gameContainer.CompleteMoveList.Any(items => items.SpaceFrom == space))
+        if (gameContainer.CompleteMoveList.Any(items => items.SpaceFrom == space))
         {
             return true;
         }
-        if (_gameContainer.SaveRoot.SpaceHighlighted == 0)
+        if (gameContainer.SaveRoot.SpaceHighlighted == 0)
         {
             return false;
         }
-        return _gameContainer.CompleteMoveList.Any(items => items.SpaceFrom == _gameContainer.SaveRoot.SpaceHighlighted && items.SpaceTo == space);
+        return gameContainer.CompleteMoveList.Any(items => items.SpaceFrom == gameContainer.SaveRoot.SpaceHighlighted && items.SpaceTo == space);
     }
     private async Task RemovePieceAsync(int player, int oldPosition)
     {
-        int tempTurn = _gameContainer.WhoTurn;
-        if (_gameContainer.WhoTurn == 1)
+        int tempTurn = gameContainer.WhoTurn;
+        if (gameContainer.WhoTurn == 1)
         {
-            _gameContainer.WhoTurn = 2;
+            gameContainer.WhoTurn = 2;
         }
         else
         {
-            _gameContainer.WhoTurn = 1;
+            gameContainer.WhoTurn = 1;
         }
-        _gameContainer.Animates!.LocationTo = _graphicsBoard.SuggestedOffLocation(_currentReversed);
-        var thisPlayer = _gameContainer.PlayerList![player];
+        gameContainer.Animates!.LocationTo = graphicsBoard.SuggestedOffLocation(_currentReversed);
+        var thisPlayer = gameContainer.PlayerList![player];
         var thisSpace = thisPlayer.CurrentPieceList.Single(items => items.Index == oldPosition);
         thisPlayer.CurrentPieceList.RemoveSpecificItem(thisSpace);
-        await _gameContainer.Animates.DoAnimateAsync();
-        _gameContainer.WhoTurn = tempTurn;
+        await gameContainer.Animates.DoAnimateAsync();
+        gameContainer.WhoTurn = tempTurn;
     }
     private void PopulateCurrent()
     {
-        if (_gameContainer.SaveRoot!.SpaceHighlighted == 0)
+        if (gameContainer.SaveRoot!.SpaceHighlighted == 0)
         {
             throw new CustomBasicException("No current move to populate with");
         }
-        _gameContainer.CurrentMoveList = _gameContainer.CompleteMoveList.Where(items => items.SpaceFrom == _gameContainer.SaveRoot.SpaceHighlighted).ToBasicList();
+        gameContainer.CurrentMoveList = gameContainer.CompleteMoveList.Where(items => items.SpaceFrom == gameContainer.SaveRoot.SpaceHighlighted).ToBasicList();
     }
     public async Task MakeMoveAsync(int space)
     {
-        var hIndex = GameBoardGraphicsCP.GetRealIndex(_gameContainer.SaveRoot!.SpaceHighlighted, _currentReversed);
-        if (_gameContainer.SaveRoot.SpaceHighlighted == space)
+        var hIndex = GameBoardGraphicsCP.GetRealIndex(gameContainer.SaveRoot!.SpaceHighlighted, _currentReversed);
+        if (gameContainer.SaveRoot.SpaceHighlighted == space)
         {
-            _gameContainer.SaveRoot.SpaceHighlighted = 0;
-            _gameContainer.CurrentMoveList.Clear();
-            _gameContainer.Aggregator.RepaintBoard();
-            await _gameContainer.ContinueTurnAsync!();
+            gameContainer.SaveRoot.SpaceHighlighted = 0;
+            gameContainer.CurrentMoveList.Clear();
+            gameContainer.Aggregator.RepaintBoard();
+            await gameContainer.ContinueTurnAsync!();
             return;
         }
-        if (_gameContainer.SaveRoot.SpaceHighlighted == 0)
+        if (gameContainer.SaveRoot.SpaceHighlighted == 0)
         {
-            _gameContainer.SaveRoot.SpaceHighlighted = space;
+            gameContainer.SaveRoot.SpaceHighlighted = space;
             PopulateCurrent();
-            _gameContainer.Aggregator.RepaintBoard();
-            await _gameContainer.ContinueTurnAsync!();
+            gameContainer.Aggregator.RepaintBoard();
+            await gameContainer.ContinueTurnAsync!();
             return;
         }
-        if (_gameContainer.CompleteMoveList.Any(items => items.SpaceFrom == space))
+        if (gameContainer.CompleteMoveList.Any(items => items.SpaceFrom == space))
         {
-            _gameContainer.SaveRoot.SpaceHighlighted = space;
+            gameContainer.SaveRoot.SpaceHighlighted = space;
             PopulateCurrent();
-            _gameContainer.Aggregator.RepaintBoard();
-            await _gameContainer.ContinueTurnAsync!();
+            gameContainer.Aggregator.RepaintBoard();
+            await gameContainer.ContinueTurnAsync!();
             return;
         }
-        var thisMove = _gameContainer.CurrentMoveList.Single(items => items.SpaceTo == space);
-        var thisSpace = GameBoardGraphicsCP.GetSpace(_gameContainer.SaveRoot.SpaceHighlighted, false);
+        var thisMove = gameContainer.CurrentMoveList.Single(items => items.SpaceTo == space);
+        var thisSpace = GameBoardGraphicsCP.GetSpace(gameContainer.SaveRoot.SpaceHighlighted, false);
         var newSpace = GameBoardGraphicsCP.GetSpace(space, false);
-        _gameContainer.Animates!.LocationFrom = thisSpace.GetLocation();
-        _gameContainer.Animates.LocationTo = newSpace.GetLocation();
+        gameContainer.Animates!.LocationFrom = thisSpace.GetLocation();
+        gameContainer.Animates.LocationTo = newSpace.GetLocation();
         thisSpace.ClearSpace();
-        var myCurrent = _gameContainer.SingleInfo!.CurrentPieceList.Single(items => items.Index == hIndex);
-        _gameContainer.CurrentCrowned = thisSpace.IsCrowned;
-        await _gameContainer.Animates.DoAnimateAsync(); //only problem is after getting to location, does not do the full location on single player.
-        if (_gameContainer.BasicData!.MultiPlayer == false || _gameContainer.SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
+        var myCurrent = gameContainer.SingleInfo!.CurrentPieceList.Single(items => items.Index == hIndex);
+        gameContainer.CurrentCrowned = thisSpace.IsCrowned;
+        await gameContainer.Animates.DoAnimateAsync(); //only problem is after getting to location, does not do the full location on single player.
+        if (gameContainer.BasicData!.MultiPlayer == false || gameContainer.SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
         {
             myCurrent.Index = space;
         }
@@ -259,31 +252,31 @@ public class GameBoardProcesses
         {
             myCurrent.Index = GameBoardGraphicsCP.GetIndexByPoint(9 - newSpace.Row, 9 - newSpace.Column);
         }
-        _gameContainer.CurrentCrowned = newSpace.IsCrowned;
-        newSpace.PlayerColor = _gameContainer.SingleInfo.Color;
+        gameContainer.CurrentCrowned = newSpace.IsCrowned;
+        newSpace.PlayerColor = gameContainer.SingleInfo.Color;
         newSpace.IsCrowned = myCurrent.IsCrowned;
-        newSpace.PlayerOwns = _gameContainer.WhoTurn;
+        newSpace.PlayerOwns = gameContainer.WhoTurn;
         bool isGameOver = false;
         if (thisMove.PlayerCaptured > 0)
         {
-            var tempSpace = _gameContainer.SpaceList!.Single(items => items.MainIndex == thisMove.PlayerCaptured);
+            var tempSpace = gameContainer.SpaceList!.Single(items => items.MainIndex == thisMove.PlayerCaptured);
             var newPlayer = tempSpace.PlayerOwns;
             var tempReverse = NeedsReversed(newPlayer);
             var oldPosition = GameBoardGraphicsCP.GetRealIndex(tempSpace.MainIndex, tempReverse);
-            _gameContainer.Animates.LocationFrom = tempSpace.GetLocation();
+            gameContainer.Animates.LocationFrom = tempSpace.GetLocation();
             tempSpace.PlayerOwns = 0;
             await RemovePieceAsync(newPlayer, oldPosition);
 
-            var tempPlayer = _gameContainer.PlayerList![newPlayer];
+            var tempPlayer = gameContainer.PlayerList![newPlayer];
             if (tempPlayer.CurrentPieceList.Count == 0)
             {
                 isGameOver = true;
             }
         }
-        _gameContainer.CurrentMoveList.Clear();
-        if (isGameOver || _gameContainer.Test.ImmediatelyEndGame)
+        gameContainer.CurrentMoveList.Clear();
+        if (isGameOver || gameContainer.Test.ImmediatelyEndGame)
         {
-            await _gameContainer.ShowWinAsync!(); //in this case, no problem sending that class to do the code for showwinasync.
+            await gameContainer.ShowWinAsync!(); //in this case, no problem sending that class to do the code for showwinasync.
             return;
         }
         if (newSpace.IsCrowned == false)
@@ -292,23 +285,23 @@ public class GameBoardProcesses
             {
                 newSpace.IsCrowned = true;
                 myCurrent.IsCrowned = true;
-                _gameContainer.Aggregator.RepaintBoard();
+                gameContainer.Aggregator.RepaintBoard();
             }
         }
-        if (_gameContainer.SaveRoot.ForcedToMove)
+        if (gameContainer.SaveRoot.ForcedToMove)
         {
-            _gameContainer.SaveRoot.SpaceHighlighted = space;
-            _gameContainer.CompleteMoveList.Clear();
-            _gameContainer.CurrentMoveList.Clear();
+            gameContainer.SaveRoot.SpaceHighlighted = space;
+            gameContainer.CompleteMoveList.Clear();
+            gameContainer.CurrentMoveList.Clear();
             GetActualMoves();
-            _gameContainer.CurrentMoveList = _gameContainer.CompleteMoveList.ToBasicList(); //needs to copy over.
-            if (_gameContainer.CompleteMoveList.Count > 0)
+            gameContainer.CurrentMoveList = gameContainer.CompleteMoveList.ToBasicList(); //needs to copy over.
+            if (gameContainer.CompleteMoveList.Count > 0)
             {
-                await _gameContainer.ContinueTurnAsync!();
+                await gameContainer.ContinueTurnAsync!();
                 return;
             }
         }
-        await _gameContainer.EndTurnAsync!();
+        await gameContainer.EndTurnAsync!();
     }
     #endregion
 }

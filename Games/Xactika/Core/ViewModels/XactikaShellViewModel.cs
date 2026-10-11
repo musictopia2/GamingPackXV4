@@ -16,38 +16,39 @@ public class XactikaShellViewModel : BasicTrickShellViewModel<XactikaPlayerItem>
         delegates.LoadModeAsync = LoadModeAsync;
         delegates.CloseModeAsync = CloseModeAsync;
     }
-    public XactikaModeViewModel? ModeScreen { get; set; }
-    protected override async Task GetStartingScreenAsync()
-    {
-
-        await LoadModeAsync();
-    }
+    
+    
     private async Task LoadModeAsync()
     {
-        if (ModeScreen != null)
+        if (IsPromptOpened)
         {
             return;
         }
-        if (MainVM != null)
+        if (IsMainOpened)
         {
-            await CloseMainAsync("Cannot close game from mode.  Rethink");
+            throw new CustomBasicException("Cannot close game from mode.  Rethink");
         }
-        ModeScreen = MainContainer.Resolve<XactikaModeViewModel>();
-        await LoadScreenAsync(ModeScreen);
+        await OpenPromptAsync();
     }
     private async Task CloseModeAsync()
     {
-        if (ModeScreen == null)
+        if (IsPromptOpened)
         {
-            return;
+            ClosePrompt();
         }
-        await CloseSpecificChildAsync(ModeScreen);
-        ModeScreen = null;
-        await StartNewGameAsync();
+
+        if (IsMainOpened == false)
+        {
+            await StartNewGameAsync();
+        }
     }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<XactikaMainViewModel>();
-        return model;
-    }
+    //private async Task CloseModeAsync()
+    //{
+    //    if (IsPromptOpened == false)
+    //    {
+    //        return;
+    //    }
+    //    ClosePrompt();
+    //    await StartNewGameAsync();
+    //}   
 }

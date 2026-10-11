@@ -3,14 +3,14 @@ public partial class HeartsMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private HeartsVMData? _vmData;
     private HeartsGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<HeartsVMData>();
-        _gameContainer = aa1.Resolver.Resolve<HeartsGameContainer>();
+        _vmData = Resolver!.Resolve<HeartsVMData>();
+        _gameContainer = Resolver.Resolve<HeartsGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(HeartsVMData.NormalTurn))
             .AddLabel("Status", nameof(HeartsVMData.Status))

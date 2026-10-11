@@ -1,18 +1,14 @@
 namespace AlternationSolitaire.Core.Logic;
 [SingletonGame]
-public class AlternationSolitaireMainGameClass : SolitaireGameClass<AlternationSolitaireSaveInfo>
+public class AlternationSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<AlternationSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    public AlternationSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-    }
     protected async override Task ContinueOpenSavedAsync()
     {
         //anything else you need will be here

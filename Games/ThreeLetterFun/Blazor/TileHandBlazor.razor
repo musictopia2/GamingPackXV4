@@ -1,16 +1,20 @@
-﻿@if (Board == null || Board.HandList.Count != 2)
-{
-    return;
-}
-<StackLayout>
-    @foreach (var tile in Board.HandList)
-    {
-        <StackItem>
-            <TileCardBlazor @key="tile" 
-                            CommandObject="Board.ObjectSingleClickCommand"
-                            DeckObject="tile"
-                            TargetHeight="@TargetHeight"
-                            CommandParameter="tile" />
-        </StackItem>
-    }
+﻿<StackLayout>
+    <StateContentView DataContext="Board">
+        @if (Board == null || Board.HandList.Count != 2)
+        {
+            return;
+        }
+        @foreach (var tile in Board.HandList)
+        {
+            <StackItem>
+                <StateContentView DataContext="tile">
+                    <TileCardBlazor @key="tile"
+                                    CommandObject="Board.ObjectSingleClickCommand"
+                                    DeckObject="tile"
+                                    TargetHeight="@TargetHeight"
+                                    CommandParameter="tile" />
+                </StateContentView>
+            </StackItem>
+        }
+    </StateContentView>
 </StackLayout>

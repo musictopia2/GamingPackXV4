@@ -14,7 +14,7 @@ public class TeeItUpDetailClass : IGameInfo, ICardInfo<TeeItUpCardInformation>
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<TeeItUpCardInformation>.CardsToPassOut => 8;
-    BasicList<int> ICardInfo<TeeItUpCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<TeeItUpCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<TeeItUpCardInformation>.AddToDiscardAtBeginning => true;
     bool ICardInfo<TeeItUpCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<TeeItUpCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,11 +22,11 @@ public class TeeItUpDetailClass : IGameInfo, ICardInfo<TeeItUpCardInformation>
     bool ICardInfo<TeeItUpCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<TeeItUpCardInformation>.NoPass => false;
     bool ICardInfo<TeeItUpCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<TeeItUpCardInformation> ICardInfo<TeeItUpCardInformation>.DummyHand { get; set; } = new DeckRegularDict<TeeItUpCardInformation>();
+    DeckRegularDict<TeeItUpCardInformation> ICardInfo<TeeItUpCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<TeeItUpCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<TeeItUpCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<TeeItUpCardInformation>.DiscardExcludeList(IListShuffler<TeeItUpCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

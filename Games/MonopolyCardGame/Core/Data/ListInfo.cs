@@ -1,10 +1,10 @@
 ﻿namespace MonopolyCardGame.Core.Data;
 public class ListInfo
 {
-    public EnumCardType WhatCard;
-    public int NumberOfHouses;
-    public bool HasHotel;
-    public int Group;
-    public int RailRoads;
-    public int ID;
+    public EnumCardType WhatCard { get; set; }
+    public int NumberOfHouses { get; set; }
+    public bool HasHotel { get; set; }
+    public int Group { get; set; }
+    public int RailRoads { get; set; }
+    public int ID { get; set; }
 }

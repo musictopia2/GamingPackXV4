@@ -2,8 +2,8 @@ namespace AccordianSolitaire.Core.Data;
 [SingletonGame]
 public class AccordianSolitaireSaveInfo : IMappable, ISaveInfo
 {
-    public BasicList<int> DeckList { get; set; } = new();
-    public DeckRegularDict<AccordianSolitaireCardInfo> HandList { get; set; } = new();
+    public BasicList<int> DeckList { get; set; } = [];
+    public DeckRegularDict<AccordianSolitaireCardInfo> HandList { get; set; } = [];
     public int DeckSelected { get; set; }
     public int NewestOne { get; set; }
     private int _score;

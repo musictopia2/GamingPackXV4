@@ -1,11 +1,7 @@
 namespace Savannah.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<SavannahShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<SavannahShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-
-    
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         register.RegisterSingleton<IDeckCount, CustomDeck>();

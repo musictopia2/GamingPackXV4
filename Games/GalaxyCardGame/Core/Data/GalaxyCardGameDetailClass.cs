@@ -1,13 +1,8 @@
 namespace GalaxyCardGame.Core.Data;
 [SingletonGame]
-public class GalaxyCardGameDetailClass : IGameInfo, ICardInfo<GalaxyCardGameCardInformation>, ITrickData,
+public class GalaxyCardGameDetailClass(GalaxyDelegates delegates) : IGameInfo, ICardInfo<GalaxyCardGameCardInformation>, ITrickData,
     IBeginningRegularCards<GalaxyCardGameCardInformation>
 {
-    private readonly GalaxyDelegates _delegates;
-    public GalaxyCardGameDetailClass(GalaxyDelegates delegates)
-    {
-        _delegates = delegates;
-    }
     EnumGameType IGameInfo.GameType => EnumGameType.NewGame;
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
@@ -20,15 +15,15 @@ public class GalaxyCardGameDetailClass : IGameInfo, ICardInfo<GalaxyCardGameCard
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<GalaxyCardGameCardInformation>.CardsToPassOut => 9;
-    BasicList<int> ICardInfo<GalaxyCardGameCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<GalaxyCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<GalaxyCardGameCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<GalaxyCardGameCardInformation>.ReshuffleAllCardsFromDiscard => true;
     bool ICardInfo<GalaxyCardGameCardInformation>.ShowMessageWhenReshuffling => true;
     bool ICardInfo<GalaxyCardGameCardInformation>.PassOutAll => false;
-    bool ICardInfo<GalaxyCardGameCardInformation>.PlayerGetsCards => _delegates.PlayerGetCards!.Invoke();
+    bool ICardInfo<GalaxyCardGameCardInformation>.PlayerGetsCards => delegates.PlayerGetCards!.Invoke();
     bool ICardInfo<GalaxyCardGameCardInformation>.NoPass => false;
     bool ICardInfo<GalaxyCardGameCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<GalaxyCardGameCardInformation> ICardInfo<GalaxyCardGameCardInformation>.DummyHand { get; set; } = new DeckRegularDict<GalaxyCardGameCardInformation>();
+    DeckRegularDict<GalaxyCardGameCardInformation> ICardInfo<GalaxyCardGameCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<GalaxyCardGameCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<GalaxyCardGameCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -40,7 +35,7 @@ public class GalaxyCardGameDetailClass : IGameInfo, ICardInfo<GalaxyCardGameCard
     bool ITrickData.HasDummy => false;
     BasicList<int> ICardInfo<GalaxyCardGameCardInformation>.DiscardExcludeList(IListShuffler<GalaxyCardGameCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<GalaxyCardGameCardInformation>.AceLow => false;
     bool IBeginningRegularCards<GalaxyCardGameCardInformation>.CustomDeck => false;

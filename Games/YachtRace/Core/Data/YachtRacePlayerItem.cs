@@ -3,5 +3,5 @@ namespace YachtRace.Core.Data;
 public partial class YachtRacePlayerItem : SimplePlayer
 {
     [ScoreColumn]
-    public float Time { get; set; }
+    public partial float Time { get; set; }
 }

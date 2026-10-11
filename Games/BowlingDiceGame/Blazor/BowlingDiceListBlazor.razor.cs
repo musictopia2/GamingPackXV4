@@ -1,5 +1,5 @@
 namespace BowlingDiceGame.Blazor;
-public partial class BowlingDiceListBlazor
+public partial class BowlingDiceListBlazor : IDisposable
 {
     [Parameter]
     public BasicList<SingleDiceInfo>? DiceList { get; set; }
@@ -10,12 +10,16 @@ public partial class BowlingDiceListBlazor
     }
     protected override void OnInitialized()
     {
-        _command.AddAction(ShowChange, BowlingDiceSet.CommandActionString);
+        _command.AddSpecificAction(BowlingDiceSet.CommandActionString, ShowChange);
         base.OnInitialized();
     }
     private async void ShowChange()
     {
         await InvokeAsync(StateHasChanged);
     }
-
+    public void Dispose()
+    {
+        _command.RemoveSpecificAction(BowlingDiceSet.CommandActionString);
+        GC.SuppressFinalize(this);
+    }
 }

@@ -1,11 +1,7 @@
 namespace RageCardGame.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<RageCardGameShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<RageCardGameShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         //change view model for area if not using 2 player.

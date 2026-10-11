@@ -1,15 +1,15 @@
 namespace Racko.Blazor.Views;
 public partial class RackoMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private RackoVMData? _vmData;
     private RackoGameContainer? _gameContainer;
     private static string GetColumns => bb1.RepeatAuto(2);
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<RackoVMData>();
-        _gameContainer = aa1.Resolver.Resolve<RackoGameContainer>();
+        _vmData = Resolver!.Resolve<RackoVMData>();
+        _gameContainer = Resolver.Resolve<RackoGameContainer>();
         _labels.AddLabel("Turn", nameof(RackoVMData.NormalTurn))
            .AddLabel("Status", nameof(RackoVMData.Status));
         _scores.Clear();

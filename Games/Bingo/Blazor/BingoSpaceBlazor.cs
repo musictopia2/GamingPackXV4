@@ -8,7 +8,7 @@ public class BingoSpaceBlazor : GraphicsCommand
         {
             return;
         }
-        ISvg svg = new SVG();
+        SVG svg = new ();
         SvgRenderClass render = new();
         Rect rect = new();
         rect.Width = "100%";

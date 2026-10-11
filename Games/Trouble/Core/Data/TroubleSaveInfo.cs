@@ -11,10 +11,7 @@ public class TroubleSaveInfo : BasicSavedBoardDiceGameClass<TroublePlayerItem>, 
             if (SetProperty(ref _instructions, value))
             {
                 //can decide what to do when property changes
-                if (_model != null)
-                {
-                    _model.Instructions = value;
-                }
+                _model?.Instructions = value;
             }
 
         }
@@ -25,7 +22,7 @@ public class TroubleSaveInfo : BasicSavedBoardDiceGameClass<TroublePlayerItem>, 
         _model = model;
         _model.Instructions = Instructions;
     }
-    public BasicList<MoveInfo> MoveList { get; set; } = new();
+    public BasicList<MoveInfo> MoveList { get; set; } = [];
     public EnumColorChoice OurColor { get; set; }
     public int DiceNumber { get; set; }
 }

@@ -8,9 +8,8 @@ public partial class TradeSalaryViewModel : BasicSubmitViewModel
         CommandContainer commandContainer,
         LifeBoardGameGameContainer gameContainer,
         LifeBoardGameVMData model,
-        ITradeSalaryProcesses processes,
-        IEventAggregator aggregator
-        ) : base(commandContainer, aggregator)
+        ITradeSalaryProcesses processes
+        ) : base(commandContainer)
     {
         if (gameContainer.SaveRoot.GameStatus != EnumWhatStatus.NeedTradeSalary)
         {

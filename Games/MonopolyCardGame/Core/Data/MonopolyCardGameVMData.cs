@@ -5,9 +5,9 @@ namespace MonopolyCardGame.Core.Data;
 public partial class MonopolyCardGameVMData : IBasicCardGamesData<MonopolyCardGameCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public MonopolyCardGameVMData(CommandContainer command, IGamePackageResolver resolver, MonopolyCardGameGameContainer container)
     {
         Deck1 = new(command);

@@ -1,15 +1,15 @@
 namespace HorseshoeCardGame.Blazor.Views;
 public partial class HorseshoeCardGameMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private HorseshoeCardGameVMData? _vmData;
     private HorseshoeCardGameGameContainer? _gameContainer;
-    private BasicList<HorseshoeCardGamePlayerItem> _players = new();
+    private BasicList<HorseshoeCardGamePlayerItem> _players = [];
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<HorseshoeCardGameVMData>();
-        _gameContainer = aa1.Resolver.Resolve<HorseshoeCardGameGameContainer>();
+        _vmData = Resolver!.Resolve<HorseshoeCardGameVMData>();
+        _gameContainer = Resolver.Resolve<HorseshoeCardGameGameContainer>();
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(HorseshoeCardGameVMData.NormalTurn))

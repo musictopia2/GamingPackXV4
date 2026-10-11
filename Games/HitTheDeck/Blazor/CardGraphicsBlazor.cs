@@ -19,7 +19,7 @@ public class CardGraphicsBlazor : BaseDarkCardsBlazor<HitTheDeckCardInformation>
     protected override void DrawBacks()
     {
         RectangleF rect_Card = new(0, 0, DefaultSize.Width, DefaultSize.Height);
-        BasicList<RectangleF> list = new();
+        BasicList<RectangleF> list = [];
         var fontSize = rect_Card.Height / 4f;
         var thisRect = new RectangleF(0, 0, rect_Card.Width, rect_Card.Height / 3);
         list.Add(thisRect);

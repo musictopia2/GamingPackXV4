@@ -114,6 +114,7 @@ public class BowlingDiceGameMainGameClass(IGamePackageResolver resolver,
                 await GameOverAsync();
                 return;
             }
+            model.UpdateFrame();
         }
         await StartNewTurnAsync();
     }

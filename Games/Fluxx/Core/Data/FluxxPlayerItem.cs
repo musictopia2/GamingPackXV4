@@ -2,7 +2,7 @@ namespace Fluxx.Core.Data;
 [UseScoreboard]
 public partial class FluxxPlayerItem : PlayerSingleHand<FluxxCardInformation>
 {
-    public DeckRegularDict<KeeperCard> KeeperList { get; set; } = new DeckRegularDict<KeeperCard>();
+    public DeckRegularDict<KeeperCard> KeeperList { get; set; } = [];
     public void UpdateKeepers()
     {
         NumberOfKeepers = KeeperList.Count;
@@ -26,47 +26,47 @@ public partial class FluxxPlayerItem : PlayerSingleHand<FluxxCardInformation>
         War = KeeperList.Any(items => items.Deck == EnumKeeper.War);
     }
     [ScoreColumn]
-    public int NumberOfKeepers { get; set; }
+    public partial int NumberOfKeepers { get; set; }
     [ScoreColumn]
-    public bool Bread { get; set; }
+    public partial bool Bread { get; set; }
     [ScoreColumn]
-    public bool Chocolate { get; set; }
+    public partial bool Chocolate { get; set; }
     [ScoreColumn]
-    public bool Cookies { get; set; }
+    public partial bool Cookies { get; set; }
     [ScoreColumn]
-    public bool Death { get; set; }
+    public partial bool Death { get; set; }
     [ScoreColumn]
-    public bool Dreams { get; set; }
+    public partial bool Dreams { get; set; }
     [ScoreColumn]
-    public bool Love { get; set; }
+    public partial bool Love { get; set; }
     [ScoreColumn]
-    public bool Milk { get; set; }
+    public partial bool Milk { get; set; }
     [ScoreColumn]
-    public bool Money { get; set; }
+    public partial bool Money { get; set; }
     [ScoreColumn]
-    public bool Peace { get; set; }
+    public partial bool Peace { get; set; }
     [ScoreColumn]
-    public bool Sleep { get; set; }
+    public partial bool Sleep { get; set; }
     [ScoreColumn]
-    public bool Television { get; set; }
+    public partial bool Television { get; set; }
     [ScoreColumn]
-    public bool TheBrain { get; set; }
+    public partial bool TheBrain { get; set; }
     [ScoreColumn]
-    public bool TheMoon { get; set; }
+    public partial bool TheMoon { get; set; }
     [ScoreColumn]
-    public bool TheRocket { get; set; }
+    public partial bool TheRocket { get; set; }
     [ScoreColumn]
-    public bool TheSun { get; set; }
+    public partial bool TheSun { get; set; }
     [ScoreColumn]
-    public bool TheToaster { get; set; }
+    public partial bool TheToaster { get; set; }
     [ScoreColumn]
-    public bool Time { get; set; }
+    public partial bool Time { get; set; }
     [ScoreColumn]
-    public bool War { get; set; }
+    public partial bool War { get; set; }
     private FluxxGameContainer? _gameContainer;
     public bool ObeyedRulesWhenNotYourTurn()
     {
-        _gameContainer ??= aa1.Resolver!.Resolve<FluxxGameContainer>();
+        _gameContainer ??= Resolver!.Resolve<FluxxGameContainer>();
         var tempList = _gameContainer.GetLimitList();
         if (tempList.Count > 2)
         {

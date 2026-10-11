@@ -1,14 +1,14 @@
 namespace A8RoundRummy.Blazor.Views;
 public partial class A8RoundRummyMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private A8RoundRummyVMData? _vmData;
     private A8RoundRummyGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<A8RoundRummyVMData>();
-        _gameContainer = aa1.Resolver.Resolve<A8RoundRummyGameContainer>();
+        _vmData = Resolver!.Resolve<A8RoundRummyVMData>();
+        _gameContainer = Resolver.Resolve<A8RoundRummyGameContainer>();
         _labels.AddLabel("Turn", nameof(A8RoundRummyVMData.NormalTurn))
             .AddLabel("Status", nameof(A8RoundRummyVMData.Status))
             .AddLabel("Next", nameof(A8RoundRummyVMData.NextTurn));

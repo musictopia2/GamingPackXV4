@@ -1,42 +1,30 @@
-using System.Runtime.InteropServices;
-
 namespace Hearts.Core.Logic;
 [SingletonGame]
-public class HeartsMainGameClass
-    : TrickGameClass<EnumSuitList, HeartsCardInformation, HeartsPlayerItem, HeartsSaveInfo>
+public class HeartsMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    HeartsVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<HeartsCardInformation> cardInfo,
+    CommandContainer command,
+    HeartsGameContainer gameContainer,
+    ITrickData trickData,
+    ITrickPlay trickPlay,
+    IAdvancedTrickProcesses aTrick,
+    ISystemError error,
+    IToast toast,
+    IMessageBox message
+        )
+        : TrickGameClass<EnumSuitList, HeartsCardInformation, HeartsPlayerItem, HeartsSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
         , IMiscDataNM, IStartNewGame, ISerializable
 {
-    private readonly HeartsVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly HeartsGameContainer _gameContainer; //if we don't need it, take it out.
-    private readonly IAdvancedTrickProcesses _aTrick;
-    private readonly IToast _toast;
-    private readonly IMessageBox _message;
-    public HeartsMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        HeartsVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<HeartsCardInformation> cardInfo,
-        CommandContainer command,
-        HeartsGameContainer gameContainer,
-        ITrickData trickData,
-        ITrickPlay trickPlay,
-        IAdvancedTrickProcesses aTrick,
-        ISystemError error,
-        IToast toast,
-        IMessageBox message
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _aTrick = aTrick;
-        _toast = toast;
-        _message = message;
-    }
+    private readonly HeartsVMData _model = currentMod;
+    private readonly HeartsGameContainer _gameContainer = gameContainer; //if we don't need it, take it out.
+    private readonly IAdvancedTrickProcesses _aTrick = aTrick;
+    private readonly IToast _toast = toast;
+    private readonly IMessageBox _message = message;
     public override async Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -252,7 +240,6 @@ public class HeartsMainGameClass
     {
         SingleInfo!.CurrentScore -= 52;
         SingleInfo.PreviousScore = SingleInfo.CurrentScore;
-        _command.UpdateAll();
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.OtherHuman)
         {
             await _message.ShowMessageAsync($"{SingleInfo.NickName} chose to give him/herself -26 points");
@@ -270,11 +257,6 @@ public class HeartsMainGameClass
             thisPlayer.CurrentScore += 26;
             thisPlayer.PreviousScore = thisPlayer.CurrentScore;
         }
-
-
-
-        
-        _command.UpdateAll();
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.OtherHuman)
         {
             await _message.ShowMessageAsync($"{SingleInfo.NickName} chose to give the other player 26 points");
@@ -330,7 +312,7 @@ public class HeartsMainGameClass
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         SingleInfo = PlayerList.GetWhoPlayer();
         if (SaveRoot.GameStatus == EnumStatus.Passing)
@@ -357,7 +339,7 @@ public class HeartsMainGameClass
             int turn = player.Id; //i think.
             int passTo = PassTurn(turn);
             var others = PlayerList[passTo];
-            BasicList<HeartsCardInformation> list = new();
+            BasicList<HeartsCardInformation> list = [];
             player.CardsPassed.ForEach(deck =>
             {
                 card = _gameContainer.DeckList!.GetSpecificItem(deck);
@@ -441,7 +423,7 @@ public class HeartsMainGameClass
     private async Task StartNewTrickAsync() //done
     {
         _aTrick!.ClearBoard();
-        _command!.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer!.ManuelFinish = true; //because it could be somebody else's turn.
         await StartNewTurnAsync(); //hopefully this simple.
     }
     //decided to not have separate for shooting moon or even passing cards for game class.

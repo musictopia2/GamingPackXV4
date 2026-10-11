@@ -1,11 +1,11 @@
 ﻿namespace OldMaid.Core.ViewModels;
 [InstanceGame]
-public class OpponentCardsViewModel : ScreenViewModel, IBlankGameVM, IBasicEnableProcess
+public class OpponentCardsViewModel : IBasicEnableProcess
 {
     private readonly OldMaidVMData _model;
     private readonly IOtherPlayerProcess _process;
     public CommandContainer CommandContainer { get; set; }
-    public OpponentCardsViewModel(CommandContainer commandContainer, OldMaidGameContainer gameContainer, OldMaidVMData model, IOtherPlayerProcess process, IEventAggregator aggregator) : base(aggregator)
+    public OpponentCardsViewModel(CommandContainer commandContainer, OldMaidGameContainer gameContainer, OldMaidVMData model, IOtherPlayerProcess process)
     {
         CommandContainer = commandContainer;
         _model = model;

@@ -1,26 +1,23 @@
 namespace LifeCardGame.Core.Data;
 [SingletonGame]
 [AutoReset] //usually needs reset
-public class LifeCardGameGameContainer : CardGameContainer<LifeCardGameCardInformation, LifeCardGamePlayerItem, LifeCardGameSaveInfo>
+public class LifeCardGameGameContainer(BasicData basicData,
+    TestOptions test,
+    IGameInfo gameInfo,
+    IAsyncDelayer delay,
+    IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver,
+    IListShuffler<LifeCardGameCardInformation> deckList,
+    IRandomGenerator random) : CardGameContainer<LifeCardGameCardInformation, LifeCardGamePlayerItem, LifeCardGameSaveInfo>(basicData, test, gameInfo, delay, aggregator, command, resolver, deckList, random)
 {
-    public LifeCardGameGameContainer(BasicData basicData,
-        TestOptions test,
-        IGameInfo gameInfo,
-        IAsyncDelayer delay,
-        IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver,
-        IListShuffler<LifeCardGameCardInformation> deckList,
-        IRandomGenerator random) : base(basicData, test, gameInfo, delay, aggregator, command, resolver, deckList, random)
-    {
-    }
     internal DeckRegularDict<LifeCardGameCardInformation> YearCards() => DeckList.Where(items => items.CanBeInPlayerHandToBeginWith == false).ToRegularDeckDict();
     public LifeCardGameCardInformation? CardChosen { get; set; }
     public int PlayerChosen { get; set; }
-    public DeckRegularDict<LifeCardGameCardInformation>? TradeList { get; set; } = new DeckRegularDict<LifeCardGameCardInformation>();
+    public DeckRegularDict<LifeCardGameCardInformation>? TradeList { get; set; } = [];
     internal Func<int, Task>? ChosePlayerAsync { get; set; }
-    internal Func<Task>? LoadOtherScreenAsync { get; set; }
-    internal Func<Task>? CloseOtherScreenAsync { get; set; }
+    internal Action? LoadOtherScreen { get; set; }
+    internal Action? CloseOtherScreen { get; set; }
     public LifeCardGamePlayerItem PlayerWithCard(LifeCardGameCardInformation thisCard)
     {
         var tempList = PlayerList!.ToBasicList();

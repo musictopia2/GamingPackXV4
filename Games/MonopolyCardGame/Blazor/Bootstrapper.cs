@@ -1,22 +1,7 @@
 namespace MonopolyCardGame.Blazor;
-public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<MonopolyCardGameShellViewModel>(starts, mode)
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<MonopolyCardGameShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    //protected override Task RegisterTestsAsync()
-    //{
-    //    //TestData!.WhoStarts = 2;
-    //    //TestData.PlayCategory = EnumTestPlayCategory.NoShuffle;
-    //    TestData!.EndRoundEarly = true;
-    //    //TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly; //so i can test going out with wilds everytime.
-    //    var container = GetDIContainer;
-    //    container.RegisterSingleton<ITestCardSetUp<MonopolyCardGameCardInformation, MonopolyCardGamePlayerItem>, TestCards>();
-    //    return base.RegisterTestsAsync();
-    //}
-    //protected override Task RegisterTestsAsync()
-    //{
-    //    TestData!.EndRoundEarly = true;
-    //    //TestData!.SaveOption = EnumTestSaveCategory.RestoreOnly;
-    //    return base.RegisterTestsAsync();
-    //}
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

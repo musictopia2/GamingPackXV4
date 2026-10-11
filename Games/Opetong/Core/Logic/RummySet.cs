@@ -1,12 +1,7 @@
 ﻿namespace Opetong.Core.Logic;
-public class RummySet : SetInfo<EnumSuitList, EnumRegularColorList, RegularRummyCard, SavedSet>
+public class RummySet(OpetongGameContainer gameContainer) : SetInfo<EnumSuitList, EnumRegularColorList, RegularRummyCard, SavedSet>(gameContainer.Command)
 {
     private int _player;
-    private readonly OpetongGameContainer _gameContainer;
-    public RummySet(OpetongGameContainer gameContainer) : base(gameContainer.Command)
-    {
-        _gameContainer = gameContainer;
-    }
     public override void LoadSet(SavedSet current)
     {
         _player = current.Player;
@@ -25,15 +20,15 @@ public class RummySet : SetInfo<EnumSuitList, EnumRegularColorList, RegularRummy
         {
             var newList = HandList.ToRegularDeckDict();
             bool rets;
-            rets = _gameContainer.Rummys!.IsNewRummy(newList, HandList.Count, EnumRummyType.Sets);
+            rets = gameContainer.Rummys!.IsNewRummy(newList, HandList.Count, EnumRummyType.Sets);
             if (rets)
             {
                 return 10;
             }
             bool suits;
             bool runs;
-            suits = _gameContainer.Rummys.IsNewRummy(newList, HandList.Count, EnumRummyType.Colors);
-            runs = _gameContainer.Rummys.IsNewRummy(newList, HandList.Count, EnumRummyType.Runs);
+            suits = gameContainer.Rummys.IsNewRummy(newList, HandList.Count, EnumRummyType.Colors);
+            runs = gameContainer.Rummys.IsNewRummy(newList, HandList.Count, EnumRummyType.Runs);
             if (suits && runs)
             {
                 return 10;
@@ -47,7 +42,7 @@ public class RummySet : SetInfo<EnumSuitList, EnumRegularColorList, RegularRummy
         {
             throw new CustomBasicException("A set must have 2 to 4 cards");
         }
-        _player = _gameContainer.WhoTurn;
+        _player = gameContainer.WhoTurn;
         thisCol.ForEach(thisCard =>
         {
             thisCard.Drew = false;

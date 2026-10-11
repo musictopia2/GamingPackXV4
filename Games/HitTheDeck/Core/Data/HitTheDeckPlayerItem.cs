@@ -3,7 +3,7 @@ namespace HitTheDeck.Core.Data;
 public partial class HitTheDeckPlayerItem : PlayerSingleHand<HitTheDeckCardInformation>
 {
     [ScoreColumn]
-    public int PreviousPoints { get; set; }
+    public partial int PreviousPoints { get; set; }
     [ScoreColumn]
-    public int TotalPoints { get; set; }
+    public partial int TotalPoints { get; set; }
 }

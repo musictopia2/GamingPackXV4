@@ -5,5 +5,5 @@ public class MillebournesSaveInfo : BasicSavedCardClass<MillebournesPlayerItem, 
     public int LastThrowAway { get; set; }
     public int CurrentTeam { get; set; }
     public bool DidClone100 { get; set; }
-    public BasicList<TempData> TeamData { get; set; } = new();
+    public BasicList<TempData> TeamData { get; set; } = [];
 }

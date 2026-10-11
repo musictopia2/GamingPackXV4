@@ -1,29 +1,24 @@
 namespace ConnectFour.Core.ViewModels;
 [InstanceGame]
-public partial class ConnectFourMainViewModel : BasicMultiplayerMainVM
-{
-    private readonly ConnectFourMainGameClass _mainGame; //if we don't need, delete.
-    public ConnectFourVMData VMData { get; set; }
-    public ConnectFourMainViewModel(CommandContainer commandContainer,
+public partial class ConnectFourMainViewModel(CommandContainer commandContainer,
         ConnectFourMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        ConnectFourVMData data
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        ConnectFourVMData data) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+    public ConnectFourVMData VMData { get; set; } = data;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = data;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer container);
-    public ConnectFourCollection GetBoardList => _mainGame.SaveRoot.GameBoard;
-    public bool CanColumn(SpaceInfoCP space) => !_mainGame.SaveRoot.GameBoard.IsFilled(space.Vector.Column);
+    public ConnectFourCollection GetBoardList => mainGame.SaveRoot.GameBoard;
+    public bool CanColumn(SpaceInfoCP space) => !mainGame.SaveRoot.GameBoard.IsFilled(space.Vector.Column);
     [Command(EnumCommandCategory.Game)]
     public async Task ColumnAsync(SpaceInfoCP space)
     {
-        await _mainGame.MakeMoveAsync(space.Vector.Column);
+        await mainGame.MakeMoveAsync(space.Vector.Column);
     }
 }

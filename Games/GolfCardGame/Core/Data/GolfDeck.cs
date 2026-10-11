@@ -11,7 +11,7 @@ public class GolfDeck : IRegularDeckInfo
 
     int IRegularDeckInfo.HighestNumber => 13;
 
-    BasicList<ExcludeRCard> IRegularDeckInfo.ExcludeList => new();
+    BasicList<ExcludeRCard> IRegularDeckInfo.ExcludeList => [];
 
     BasicList<EnumSuitList> IRegularDeckInfo.SuitList => EnumSuitList.CompleteList;
 

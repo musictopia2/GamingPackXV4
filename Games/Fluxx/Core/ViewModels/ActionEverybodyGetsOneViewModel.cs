@@ -9,9 +9,8 @@ public partial class ActionEverybodyGetsOneViewModel : BasicActionScreen
         FluxxDelegates delegates,
         IFluxxEvent fluxxEvent,
         BasicActionLogic basicActionLogic,
-        IEventAggregator aggregator,
         IToast toast
-        ) : base(gameContainer, actionContainer, keeperContainer, delegates, fluxxEvent, basicActionLogic, aggregator)
+        ) : base(gameContainer, actionContainer, keeperContainer, delegates, fluxxEvent, basicActionLogic)
     {
         _toast = toast;
         CreateCommands(CommandContainer);
@@ -29,7 +28,7 @@ public partial class ActionEverybodyGetsOneViewModel : BasicActionScreen
                 _toast.ShowUserErrorToast("Must choose a card to give to a player");
                 return;
             }
-            thisList = new() { ActionContainer.TempHand.ObjectSelected() };
+            thisList = [ActionContainer.TempHand.ObjectSelected()];
             await BasicActionLogic.ShowMainScreenAgainAsync();
             await FluxxEvent.ChoseForEverybodyGetsOneAsync(thisList, ActionContainer.IndexPlayer);
             return;

@@ -18,7 +18,7 @@ public class ClickableCandylandSpaceBlazor : ComponentBase
     }
     protected override void BuildRenderTree(RenderTreeBuilder builder) //this is too specialized to use the component i had.
     {
-        ISvg svg = new SVG();
+        SVG svg = new ();
         SvgRenderClass render = new();
         svg.EventData.ActionClicked = Clicked;
         Path path = new();

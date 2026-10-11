@@ -1,16 +1,16 @@
 namespace CousinRummy.Blazor.Views;
 public partial class CousinRummyMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private CousinRummyVMData? _vmData;
     private CousinRummyGameContainer? _gameContainer;
     private static string GetFirstRows => bb1.RepeatAuto(3);
     private static string GetSecondColumns => bb1.RepeatAuto(3);
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<CousinRummyVMData>();
-        _gameContainer = aa1.Resolver.Resolve<CousinRummyGameContainer>();
+        _vmData = Resolver!.Resolve<CousinRummyVMData>();
+        _gameContainer = Resolver.Resolve<CousinRummyGameContainer>();
         _labels.Clear();
         _labels.AddLabel("N.Turn", nameof(CousinRummyVMData.NormalTurn)) //try to have no spaces to stop the bug of going to next line as well
             .AddLabel("O.Turn", nameof(CousinRummyVMData.OtherLabel))

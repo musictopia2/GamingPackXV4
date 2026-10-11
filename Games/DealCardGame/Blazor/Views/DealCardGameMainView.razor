@@ -1,4 +1,4 @@
-@inherits BasicGameView<DealCardGameMainViewModel>
+@inherits CascadingGameView<DealCardGameMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -18,123 +18,125 @@
             <HandBlazor HandType="EnumHandList.Vertical" TargetContainerSize="35vh" Hand="_vmData.PlayerHand1" />
         </StackItem>
     </StackLayout>
-    <div>
-        Good Job
-    </div>
     return;
 }
-@if (_gameContainer.PersonalInformation.NeedsPayment )
-{
-    <StackLayout>
-        <StackItem>
-            <MakePaymentComponent />
-        </StackItem>
-        <StackItem>
-            <CompletePlayerSetsComponent SetCommand=SetChosenCommand Players="GetPlayers()" />
-        </StackItem>
-    </StackLayout>
-    return;
-}
-@if (_gameContainer.PersonalInformation.Organizing)
-{
-    <PropertySetOrganizerComponent />
-    return;
-}
-<GridContainer Rows="@Rows" ColumnGap="5px" RowGap=5px Columns="auto 35vw 1fr">
-    <GridItem Row="1" Column="1">
+
+<ActionContentView Key="@DealCardGameActions.Main">
+    
+    @if (_gameContainer.PersonalInformation.NeedsPayment)
+    {
         <StackLayout>
             <StackItem>
-                <DrawPileBlazor DeckPile="_vmData.Deck1" />
+                <MakePaymentComponent />
             </StackItem>
             <StackItem>
-                <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+                <CompletePlayerSetsComponent SetCommand=SetChosenCommand Players="GetPlayers()" />
             </StackItem>
         </StackLayout>
-    </GridItem>
-    <GridItem Column="2" Row="1">
-        <HandBlazor TargetContainerSize="35vw" Hand="_vmData.PlayerHand1" />
-    </GridItem>
-    <GridItem Row="2" Column="1" ColumnSpan="2">
-        <div>
-            <GameButtonComponent Display="Play" CommandObject="PlayCommand" />
-            <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
-            <GameButtonComponent Display="Bank" CommandObject="BankCommand" />
-            <GameButtonComponent Display="Start Organizing" CommandObject="StartOrganizingCommand" />
-        </div>
-        <div>
-            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
-        </div>
-        <div>
-            <ScoreBoardBlazor P="DealCardGamePlayerItem"
-            Columns="_scores"
-            Players="_gameContainer.SaveRoot.PlayerList" />
-        </div>
-        @if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.ConsiderJustSayNo && _gameContainer.IsJustSayNoSelf)
-        {
-            <JustSayNoComponent />
-            return;
-        }
-        @if (_gameContainer.PersonalInformation.RentInfo.RentCategory != EnumRentCategory.NA)
-        {
-            <StartRentComponent />
-            return;
-        }
-        @if (_gameContainer.PersonalInformation.StealInfo.StartStealing)
-        {
-            <StealingComponent />
-            return;
-        }
-        @if (_gameContainer.PersonalInformation.TradeInfo.StartTrading)
-        {
-            <TradingComponent />
-            return;
-        }
-        @if (DataContext.VMData.TradeDisplay is not null)
-        {
+        return;
+    }
+    @if (_gameContainer.PersonalInformation.Organizing)
+    {
+        <PropertySetOrganizerComponent />
+        return;
+    }
+    <GridContainer Rows="@Rows" ColumnGap="5px" RowGap=5px Columns="auto 35vw 1fr">
+        <GridItem Row="1" Column="1">
+            <StackLayout>
+                <StackItem>
+                    <DrawPileBlazor DeckPile="_vmData.Deck1" />
+                </StackItem>
+                <StackItem>
+                    <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+                </StackItem>
+            </StackLayout>
+        </GridItem>
+        <GridItem Column="2" Row="1">
+            <HandBlazor TargetContainerSize="35vw" Hand="_vmData.PlayerHand1" />
+        </GridItem>
+        <GridItem Row="2" Column="1" ColumnSpan="2">
             <div>
-                <BaseFrameBlazor Text="@YourDisplayText">
-                    <CardGraphicsBlazor DeckObject="DataContext.VMData.TradeDisplay.WhoReceive" TargetHeight="18vh" />
-                </BaseFrameBlazor>
-                <BaseFrameBlazor Text="@OpponentDisplayText">
-                    <CardGraphicsBlazor DeckObject="DataContext.VMData.TradeDisplay.TradeReceive" TargetHeight="18vh" />
-                </BaseFrameBlazor>
+                <GameButtonComponent Display="Play" CommandObject="PlayCommand" />
+                <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
+                <GameButtonComponent Display="Bank" CommandObject="BankCommand" />
+                <GameButtonComponent Display="Start Organizing" CommandObject="StartOrganizingCommand" />
             </div>
-            
-            return;
-        }
-        @if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
-        {
-            <ListChooserBlazor ListPicker="DataContext.VMData.PlayerPicker" TotalColumns="1" TextHeight="6vh" />
-            <GameButtonComponent Display="Choose Player" CommandObject="ChoosePlayerCommand" />
-            return;
-        }
-        @if (_vmData.ShownCard is not null)
-        {
-            <CardGraphicsBlazor DeckObject="_vmData.ShownCard" TargetHeight="15vh" />
-        }
-        @if (_vmData.ChosenPlayer is not null)
-        {
-            <div style="font-size: 2rem;">
-                @_vmData.ChosenPlayer
+            <div>
+                <LabelGridComponent DataContext="_vmData" Labels="_labels" />
             </div>
-            @if (_vmData.StolenCards.HandList.Count > 0)
+            <div>
+                <ScoreBoardBlazor P="DealCardGamePlayerItem"
+                                  Columns="_scores"
+                                  Players="_gameContainer.SaveRoot.PlayerList" />
+            </div>
+            @if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.ConsiderJustSayNo && _gameContainer.IsJustSayNoSelf)
             {
-                <HandBlazor TargetContainerSize="35vw" Hand="_vmData.StolenCards" />
+                <JustSayNoComponent />
+                return;
             }
-        }
-        @if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.ConfirmPayment)
-        {
-            <HandBlazor TargetContainerSize="35vw" Hand="_vmData.ReceivedPayments" />
-            <div>
-                <GameButtonComponent Display="Resume" CommandObject="ResumeCommand" />
-            </div>
-        }
-    </GridItem>
-    <GridItem Column="3" Row="1" RowSpan="3">
-        <CompletePlayerSetsComponent SetCommand=SetChosenCommand Players="GetPlayers()" />
-    </GridItem>
+            @if (_gameContainer.PersonalInformation.RentInfo.RentCategory != EnumRentCategory.NA)
+            {
+                <StartRentComponent />
+                return;
+            }
+            @if (_gameContainer.PersonalInformation.StealInfo.StartStealing)
+            {
+                <StealingComponent />
+                return;
+            }
+            @if (_gameContainer.PersonalInformation.TradeInfo.StartTrading)
+            {
+                <TradingComponent />
+                return;
+            }
+            @if (DataContext.VMData.TradeDisplay is not null)
+            {
+                <div>
+                    <BaseFrameBlazor Text="@YourDisplayText">
+                        <CardGraphicsBlazor DeckObject="DataContext.VMData.TradeDisplay.WhoReceive" TargetHeight="18vh" />
+                    </BaseFrameBlazor>
+                    <BaseFrameBlazor Text="@OpponentDisplayText">
+                        <CardGraphicsBlazor DeckObject="DataContext.VMData.TradeDisplay.TradeReceive" TargetHeight="18vh" />
+                    </BaseFrameBlazor>
+                </div>
 
-</GridContainer>
+                return;
+            }
+            @if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.StartDebtCollector)
+            {
+                <ListChooserBlazor ListPicker="DataContext.VMData.PlayerPicker" TotalColumns="1" TextHeight="6vh" />
+                <GameButtonComponent Display="Choose Player" CommandObject="ChoosePlayerCommand" />
+                return;
+            }
+            <StateContentView DataContext="_vmData">
+                @if (_vmData.ShownCard is not null)
+                {
+                    <CardGraphicsBlazor DeckObject="_vmData.ShownCard" TargetHeight="15vh" />
+                }
+                @if (_vmData.ChosenPlayer is not null)
+                {
+                    <div style="font-size: 2rem;">
+                        @_vmData.ChosenPlayer
+                    </div>
+                    @if (_vmData.StolenCards.HandList.Count > 0)
+                    {
+                        <HandBlazor TargetContainerSize="35vw" Hand="_vmData.StolenCards" />
+                    }
+                }
+            </StateContentView>
+            
+            @if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.ConfirmPayment)
+            {
+                <HandBlazor TargetContainerSize="35vw" Hand="_vmData.ReceivedPayments" />
+                <div>
+                    <GameButtonComponent Display="Resume" CommandObject="ResumeCommand" />
+                </div>
+            }
+        </GridItem>
+        <GridItem Column="3" Row="1" RowSpan="3">
+            <CompletePlayerSetsComponent SetCommand=SetChosenCommand Players="GetPlayers()" />
+        </GridItem>
 
+    </GridContainer>
 
-
+</ActionContentView>

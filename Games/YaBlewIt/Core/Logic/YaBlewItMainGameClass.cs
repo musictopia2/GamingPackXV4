@@ -223,10 +223,17 @@ public class YaBlewItMainGameClass
         }
         await base.AfterDrawingAsync();
     }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        CommandContainer.ReportAllCommandStates();
+    }
     public override async Task ContinueTurnAsync()
     {
         _model.Instructions = ""; //to reset
         _autoDrew = false;
+        _model.ShowSafeScreen =
+            SaveRoot.GameStatus == EnumGameStatus.Safe;
         if (OtherTurn > 0)
         {
             SingleInfo = PlayerList.GetOtherPlayer();
@@ -252,7 +259,6 @@ public class YaBlewItMainGameClass
             {
                 SaveRoot.PreviousStatus = EnumGameStatus.Beginning;
             }
-            _command.UpdateAll();
             await Task.Delay(500);
             await DrawAsync();
             return; //will go back later.
@@ -680,6 +686,7 @@ public class YaBlewItMainGameClass
             await Network!.SendAllAsync(nameof(IMultiplayerModel.TakeClaim));
         }
         SingleInfo!.MainHandList.AddRange(_model.Claims.HandList);
+        SingleInfo.Update();
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
         {
             SortCards();
@@ -747,7 +754,7 @@ public class YaBlewItMainGameClass
         {
             throw new CustomBasicException("Should not had to finish fire here if there was nothing found to lose");
         }
-        HashSet<EnumColors> fulfillList = new();
+        HashSet<EnumColors> fulfillList = [];
         foreach (var item in list)
         {
             if (SaveRoot.ProtectedColors.Contains(item.CardColor))
@@ -778,6 +785,7 @@ public class YaBlewItMainGameClass
             safe.Populate(item);
             SingleInfo.MainHandList.Add(safe);
         }
+        SingleInfo.Update();
         SortCards(); //i think (hopefully this simple).
         SaveRoot.PreviousStatus = EnumGameStatus.None;
         SaveRoot.GameStatus = EnumGameStatus.ResolveFire;

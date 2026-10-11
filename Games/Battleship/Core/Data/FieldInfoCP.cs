@@ -1,11 +1,16 @@
 ﻿namespace Battleship.Core.Data;
-public class FieldInfoCP : IBasicSpace
+
+[UseStateChanged]
+public partial class FieldInfoCP : IBasicSpace
 {
     public Vector Vector { get; set; } //no need for column or row because of vector.  this takes care of that.
     public string Letter { get; set; } = "";
-    public EnumWhatHit Hit { get; set; }
-    public int ShipNumber { get; set; }
-    public string FillColor { get; set; } = cs1.Blue;
+    [StateProperty]
+    public partial EnumWhatHit Hit { get; set; }
+    [StateProperty]
+    public partial int ShipNumber { get; set; }
+    [StateProperty]
+    public partial string FillColor { get; set; } = cs1.Blue;
     public void ClearSpace()
     {
         FillColor = cs1.Blue;

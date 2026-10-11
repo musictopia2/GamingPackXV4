@@ -5,6 +5,9 @@ public partial class PersonalShipComponent
     private BattleshipLiteMainViewModel? DataContext { get; set; }
     [CascadingParameter]
     private string TargetHeight { get; set; } = "";
+
+
+
     private string PieceColor(ShipInfo ship)
     {
         var opponent = DataContext!.OpponentShip(ship);

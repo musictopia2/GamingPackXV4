@@ -1,4 +1,4 @@
-﻿@inherits BasicGameView<FroggiesMainViewModel>
+﻿@inherits CascadingGameView<FroggiesMainViewModel>
 @using System.Drawing;
 @if (Lilies == null || Lilies.Count == 0)
 {
@@ -9,7 +9,9 @@
     {
         Point point = GetPoint(item);
         <svg x="@point.X" y="@point.Y" width="64" height="64">
-            <LilyPadBlazor AfterChange="@ShowChange" CommandObject="DataContext!.MakeMoveCommand" CommandParameter="item" Space="item" />
+            <StateContentView DataContext="item">
+                <LilyPadBlazor CommandObject="DataContext!.MakeMoveCommand" CommandParameter="item" Space="item" />
+            </StateContentView>
         </svg>
     }
 </svg>

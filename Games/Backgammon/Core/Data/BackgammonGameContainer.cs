@@ -16,10 +16,10 @@ public class BackgammonGameContainer : BasicGameContainer<BackgammonPlayerItem, 
         Animates.LongestTravelTime = 100;
     }
     public bool RefreshPieces { get; set; }
-    public Dictionary<int, TriangleClass> TriangleList { get; set; } = new Dictionary<int, TriangleClass>();
+    public Dictionary<int, TriangleClass> TriangleList { get; set; } = [];
     public AnimateBasicGameBoard Animates { get; set; }
     public bool MoveInProgress { get; set; }
-    public BasicList<MoveInfo> MoveList { get; set; } = new();
+    public BasicList<MoveInfo> MoveList { get; set; } = [];
     public int FirstDiceValue { get; set; }
     public int SecondDiceValue { get; set; }
     public bool HadDoubles()

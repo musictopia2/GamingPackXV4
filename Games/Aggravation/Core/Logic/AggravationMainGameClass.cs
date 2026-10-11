@@ -40,7 +40,7 @@ public class AggravationMainGameClass
         LoadControls();
         AfterRestoreDice();
         _gameBoard.LoadSavedGame();
-        BoardGameSaved();
+        GameSaved();
         SaveRoot.LoadMod(_model);
         _model.Cup!.CanShowDice = SaveRoot.DiceNumber > 0;
         return Task.CompletedTask;
@@ -97,6 +97,7 @@ public class AggravationMainGameClass
             }
         }
         await base.ContinueTurnAsync();
+        _gameBoard.RepaintBoard(); //try here too.
     }
     public override async Task MakeMoveAsync(int space)
     {

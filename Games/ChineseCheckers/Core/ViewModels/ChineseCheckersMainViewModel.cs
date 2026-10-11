@@ -1,25 +1,16 @@
 namespace ChineseCheckers.Core.ViewModels;
 [InstanceGame]
-public class ChineseCheckersMainViewModel : BasicMultiplayerMainVM
-{
-    private readonly GameBoardProcesses _gameBoard;
-    public ChineseCheckersVMData VMData { get; set; }
-    public ChineseCheckersMainViewModel(CommandContainer commandContainer,
+public class ChineseCheckersMainViewModel(CommandContainer commandContainer,
         ChineseCheckersMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         GameBoardProcesses gameBoard,
         IEventAggregator aggregator,
-        ChineseCheckersVMData data
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
-    {
-        _gameBoard = gameBoard;
-        VMData = data;
-    }
+        ChineseCheckersVMData data) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+    public ChineseCheckersVMData VMData { get; set; } = data;
     public override bool CanEndTurn()
     {
-        return _gameBoard.WillContinueTurn();
+        return gameBoard.WillContinueTurn();
     }
 }

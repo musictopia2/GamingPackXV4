@@ -3,7 +3,7 @@ namespace DummyRummy.Core.Data;
 public partial class DummyRummyPlayerItem : PlayerRummyHand<RegularRummyCard>
 {
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

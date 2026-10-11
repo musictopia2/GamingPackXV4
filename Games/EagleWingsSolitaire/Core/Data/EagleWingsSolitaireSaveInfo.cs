@@ -3,5 +3,5 @@ namespace EagleWingsSolitaire.Core.Data;
 [Cloneable(explicitDeclaration: false)]
 public class EagleWingsSolitaireSaveInfo : SolitaireSavedClass, IMappable
 {
-    public BasicList<int> HeelList { get; set; } = new();
+    public BasicList<int> HeelList { get; set; } = [];
 }

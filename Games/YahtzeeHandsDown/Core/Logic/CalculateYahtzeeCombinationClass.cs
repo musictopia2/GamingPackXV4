@@ -6,7 +6,7 @@ public class CalculateYahtzeeCombinationClass
     private bool HasFullHouse(BasicList<ICard> cardList)
     {
         int x;
-        BasicList<ICard> tempList = new();
+        BasicList<ICard> tempList = [];
         for (x = 6; x >= 1; x += -1)
         {
 
@@ -16,7 +16,7 @@ public class CalculateYahtzeeCombinationClass
 
                 if (_firstNumber == 0)
                 {
-                    BasicList<ICard> newList = new();
+                    BasicList<ICard> newList = [];
                     tempList = cardList.ToBasicList();
                     do
                     {
@@ -92,7 +92,7 @@ public class CalculateYahtzeeCombinationClass
                 var thisColor = y;
                 if (_secondNumber == 0)
                 {
-                    BasicList<ICard> newList = new();
+                    BasicList<ICard> newList = [];
                     tempList = finList.ToBasicList();
                     do
                     {
@@ -202,11 +202,11 @@ public class CalculateYahtzeeCombinationClass
         int y;
         int z = 0;
         BasicList<ICard> tempList;
-        BasicList<ICard> newList = new();
+        BasicList<ICard> newList = [];
         for (y = 1; y <= 3; y++)
         {
             tempList = cardList.ToBasicList();
-            newList = new();
+            newList = [];
             thisList.ForEach(x =>
             {
                 z++;
@@ -262,19 +262,19 @@ public class CalculateYahtzeeCombinationClass
     }
     private static BasicList<int> StraightPoints(BasicList<ICard> cardList, int howManyInStraight)
     {
-        BasicList<BasicList<int>> tempList = new();
+        BasicList<BasicList<int>> tempList = [];
         if (howManyInStraight == 4)
         {
-            tempList.Add(new() { 1, 2, 3, 4 });
-            tempList.Add(new() { 2, 3, 4, 5 });
-            tempList.Add(new() { 3, 4, 5, 6 });
+            tempList.Add([1, 2, 3, 4]);
+            tempList.Add([2, 3, 4, 5]);
+            tempList.Add([3, 4, 5, 6]);
         }
         else
         {
-            tempList.Add(new() { 1, 2, 3, 4, 5 });
-            tempList.Add(new() { 2, 3, 4, 5, 6 });
+            tempList.Add([1, 2, 3, 4, 5]);
+            tempList.Add([2, 3, 4, 5, 6]);
         }
-        BasicList<int> output = new();
+        BasicList<int> output = [];
         tempList.ForEach(thisItem =>
         {
             if (HasCompleteStraight(thisItem, cardList))
@@ -296,7 +296,7 @@ public class CalculateYahtzeeCombinationClass
     }
     public BasicList<YahtzeeResults> GetResults(BasicList<ComboCardInfo> combinationList, BasicList<ICard> cardList) // 0 means no results found
     {
-        BasicList<YahtzeeResults> resultList = new();
+        BasicList<YahtzeeResults> resultList = [];
         combinationList.ForEach(thisCombo =>
         {
             _firstNumber = 0;

@@ -2,8 +2,8 @@ namespace SixtySix2Player.Core.Data;
 [SingletonGame]
 public class SixtySix2PlayerSaveInfo : BasicSavedTrickGamesClass<EnumSuitList, SixtySix2PlayerCardInformation, SixtySix2PlayerPlayerItem>, IMappable, ISaveInfo
 {
-    public DeckRegularDict<SixtySix2PlayerCardInformation> CardList { get; set; } = new DeckRegularDict<SixtySix2PlayerCardInformation>();
-    public BasicList<int> CardsForMarriage { get; set; } = new();
+    public DeckRegularDict<SixtySix2PlayerCardInformation> CardList { get; set; } = [];
+    public BasicList<int> CardsForMarriage { get; set; } = [];
     public int LastTrickWon { get; set; }
     private SixtySix2PlayerVMData? _model;
     public void LoadMod(SixtySix2PlayerVMData model)
@@ -19,10 +19,7 @@ public class SixtySix2PlayerSaveInfo : BasicSavedTrickGamesClass<EnumSuitList, S
         {
             if (SetProperty(ref _bonusPoints, value))
             {
-                if (_model != null)
-                {
-                    _model.BonusPoints = value;
-                }
+                _model?.BonusPoints = value;
             }
         }
     }

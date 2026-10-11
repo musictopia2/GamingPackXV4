@@ -15,7 +15,7 @@ public class SkuckCardGameDetailClass : IGameInfo, ICardInfo<SkuckCardGameCardIn
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<SkuckCardGameCardInformation>.CardsToPassOut => 10;
-    BasicList<int> ICardInfo<SkuckCardGameCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<SkuckCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<SkuckCardGameCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<SkuckCardGameCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<SkuckCardGameCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,7 +23,7 @@ public class SkuckCardGameDetailClass : IGameInfo, ICardInfo<SkuckCardGameCardIn
     bool ICardInfo<SkuckCardGameCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<SkuckCardGameCardInformation>.NoPass => false;
     bool ICardInfo<SkuckCardGameCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<SkuckCardGameCardInformation> ICardInfo<SkuckCardGameCardInformation>.DummyHand { get; set; } = new DeckRegularDict<SkuckCardGameCardInformation>();
+    DeckRegularDict<SkuckCardGameCardInformation> ICardInfo<SkuckCardGameCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<SkuckCardGameCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<SkuckCardGameCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -35,7 +35,7 @@ public class SkuckCardGameDetailClass : IGameInfo, ICardInfo<SkuckCardGameCardIn
     bool ITrickData.HasDummy => true;
     BasicList<int> ICardInfo<SkuckCardGameCardInformation>.DiscardExcludeList(IListShuffler<SkuckCardGameCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<SkuckCardGameCardInformation>.AceLow => false;
     bool IBeginningRegularCards<SkuckCardGameCardInformation>.CustomDeck => false;

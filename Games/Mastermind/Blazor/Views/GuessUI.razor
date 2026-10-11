@@ -1,4 +1,4 @@
-﻿@inherits BasicGameView<GameBoardViewModel>
+﻿@inherits ParameterGameView<GameBoardViewModel>
 @using gg1 = Global;
 @if (Guess == null || Guess.YourBeads.Count == 0)
 {
@@ -6,7 +6,10 @@
 }
 @foreach (Bead bead in Guess!.YourBeads)
 {
-    <BasePieceGraphics CommandParameter="bead" CommandObject="DataContext!.ChangeMindCommand" TargetWidth="@gg1.BeadHeight">
-        <CirclePiece NeedsWhiteBorders="true" MainColor="@bead.ColorChosen.Color" />
-    </BasePieceGraphics>
+    <StateContentView DataContext="bead">
+        <BasePieceGraphics CommandParameter="bead" CommandObject="DataContext!.ChangeMindCommand" TargetWidth="@gg1.BeadHeight">
+            <CirclePiece NeedsWhiteBorders="true" MainColor="@bead.ColorChosen.Color" />
+        </BasePieceGraphics>
+    </StateContentView>
+    
 }

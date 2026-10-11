@@ -3,16 +3,22 @@
     return;
 }
 <CascadingValue Value="GameData.PublicPiles1">
-    <div @onclick="() => NewClickedAsync()" style="height: @RealHeight; width: 100vw">
-        <StackLayout ItemSpacing="0px">
-            @foreach (var pile in GameData.PublicPiles1.PileList)
-            {
-                <StackItem>
-                    <div style="position: relative">
-                        <IndividualPileBlazor IndividualPile="pile" />
-                    </div>
-                </StackItem>
-            }
-        </StackLayout>
-    </div>
+    <StateContentView DataContext="GameData.PublicPiles1.PileList">
+        <div @onclick="() => NewClickedAsync()" style="height: @RealHeight; width: 100vw">
+            <StackLayout ItemSpacing="0px">
+                @foreach (var pile in GameData.PublicPiles1.PileList)
+                {
+                    <StateContentView DataContext="pile">
+                        <StackItem>
+                            <div style="position: relative">
+                                <IndividualPileBlazor IndividualPile="pile" />
+                            </div>
+                        </StackItem>
+                    </StateContentView>
+
+                }
+            </StackLayout>
+        </div>
+    </StateContentView>
+    
 </CascadingValue>

@@ -1,25 +1,18 @@
 namespace LittleSpiderSolitaire.Core.Logic;
 [SingletonGame]
-public class LittleSpiderSolitaireMainGameClass : SolitaireGameClass<LittleSpiderSolitaireSaveInfo>
+public class LittleSpiderSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<LittleSpiderSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    public LittleSpiderSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-    }
     private WastePiles? _thisWaste;
     public override Task NewGameAsync()
     {
-        if (_thisWaste == null)
-        {
-            _thisWaste = (WastePiles)_thisMod!.WastePiles1;
-        }
+        _thisWaste ??= (WastePiles)_thisMod!.WastePiles1;
         return base.NewGameAsync();
     }
     protected async override Task ContinueOpenSavedAsync()

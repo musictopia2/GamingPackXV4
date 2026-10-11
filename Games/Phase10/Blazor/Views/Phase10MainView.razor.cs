@@ -1,14 +1,14 @@
 namespace Phase10.Blazor.Views;
 public partial class Phase10MainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private Phase10VMData? _vmData;
     private Phase10GameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<Phase10VMData>();
-        _gameContainer = aa1.Resolver.Resolve<Phase10GameContainer>();
+        _vmData = Resolver!.Resolve<Phase10VMData>();
+        _gameContainer = Resolver.Resolve<Phase10GameContainer>();
         _labels.AddLabel("Turn", nameof(Phase10VMData.NormalTurn))
             .AddLabel("Status", nameof(Phase10VMData.Status))
             .AddLabel("Phase", nameof(Phase10VMData.CurrentPhase));

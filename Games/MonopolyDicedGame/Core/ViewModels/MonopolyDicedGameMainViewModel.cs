@@ -1,30 +1,23 @@
 namespace MonopolyDicedGame.Core.ViewModels;
 [InstanceGame]
-public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
-{
-    private readonly IToast _toast;
-    public MonopolyDicedGameVMData VMData { get; set; }
-    public MonopolyDicedGameMainViewModel(CommandContainer commandContainer,
+public partial class MonopolyDicedGameMainViewModel(CommandContainer commandContainer,
         MonopolyDicedGameMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         MonopolyDicedGameVMData data,
         MonopolyDiceSet monopolyDice,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        IToast toast) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+    public MonopolyDicedGameVMData VMData { get; set; } = data;
+    protected override void AdditionalInitialize()
     {
-        MainGame = mainGame;
-        VMData = data;
-        MonopolyDice = monopolyDice;
-        _toast = toast;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     //anything else needed is here.
-    public MonopolyDicedGameMainGameClass MainGame;
-    public MonopolyDiceSet MonopolyDice;
+    public MonopolyDicedGameMainGameClass MainGame = mainGame;
+    public MonopolyDiceSet MonopolyDice = monopolyDice;
     partial void CreateCommands(CommandContainer command);
     public override bool CanEndTurn() => MainGame.SaveRoot.RollNumber > 1;
     public bool CanRoll => MainGame.SaveRoot.NumberOfCops < 3;
@@ -36,7 +29,7 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
         //will be a command now to roll the dice (getting closer to reals).
         if (MonopolyDice.HasSelectedDice())
         {
-            _toast.ShowUserErrorToast("Need to either unselect the dice or use them.");
+            toast.ShowUserErrorToast("Need to either unselect the dice or use them.");
             return;
         }
         await MainGame.RollDiceAsync();
@@ -49,18 +42,18 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
         int chancesSelected = list.Count(x => x.WhatDice == EnumBasicType.Chance);
         if (chancesSelected > 1)
         {
-            _toast!.ShowUserErrorToast("You can only choose one chance to place in a group");
+            toast!.ShowUserErrorToast("You can only choose one chance to place in a group");
             return true;
         }
         int chancesOwned = MainGame.SaveRoot.Owns.Count(x => x.WasChance && selector.Invoke(x));
         if (chancesOwned > 0 && chancesSelected > 0)
         {
-            _toast!.ShowUserErrorToast("Only one chance can be used per group");
+            toast!.ShowUserErrorToast("Only one chance can be used per group");
             return true;
         }
         if (chancesOwned + chancesSelected > 1)
         {
-            _toast!.ShowUserErrorToast("Only one chance can be used per group");
+            toast!.ShowUserErrorToast("Only one chance can be used per group");
             return true;
         }
         return false;
@@ -80,7 +73,7 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
         var list = GetSelectedDice;
         if (list.Count == 0)
         {
-            _toast!.ShowUserErrorToast("Did not choose any dice");
+            toast!.ShowUserErrorToast("Did not choose any dice");
             return;
         }
         allProper = list.All(x =>
@@ -97,7 +90,7 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
         });
         if (allProper == false)
         {
-            _toast!.ShowUserErrorToast("You have dice selected that does not belong to this group");
+            toast!.ShowUserErrorToast("You have dice selected that does not belong to this group");
             return;
         }
         if (HasChanceError(list, x => x.Group == group))
@@ -117,7 +110,7 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
         int total = list.Count + MainGame.SaveRoot.Owns.Count(x => x.Group == group);
         if (total > maxAllowed)
         {
-            _toast!.ShowUserErrorToast("This will show too many dice used for this group");
+            toast!.ShowUserErrorToast("This will show too many dice used for this group");
             return;
         }
         if (MainGame.BasicData.MultiPlayer)
@@ -133,7 +126,7 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
         var list = GetSelectedDice;
         if (list.Count == 0)
         {
-            _toast!.ShowUserErrorToast("Did not choose any dice");
+            toast!.ShowUserErrorToast("Did not choose any dice");
             return;
         }
         bool allTrains;
@@ -151,13 +144,13 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
         });
         if (allTrains == false)
         {
-            _toast!.ShowUserErrorToast("You have some dice that is not train or chance selected");
+            toast!.ShowUserErrorToast("You have some dice that is not train or chance selected");
             return;
         }
         int owns = MainGame!.SaveRoot.Owns.Count(x => x.UsedOn == EnumBasicType.Railroad);
         if (owns + list.Count > 4)
         {
-            _toast!.ShowUserErrorToast("This results in too many trains.  Only 4 are allowed at the most");
+            toast!.ShowUserErrorToast("This results in too many trains.  Only 4 are allowed at the most");
             return;
         }
         if (HasChanceError(list, x => x.UsedOn == EnumBasicType.Railroad))
@@ -189,25 +182,25 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
         var list = GetSelectedDice;
         if (list.Count == 0)
         {
-            _toast!.ShowUserErrorToast("Did not choose any dice");
+            toast!.ShowUserErrorToast("Did not choose any dice");
             return;
         }
         if (list.Count > 1)
         {
-            _toast!.ShowUserErrorToast("Can only choose one item when its utility");
+            toast!.ShowUserErrorToast("Can only choose one item when its utility");
             return;
         }
         int count = MainGame!.SaveRoot.Owns.Count(x => x.Utility != EnumUtilityType.None);
         if (count == 2)
         {
-            _toast!.ShowUserErrorToast("Too many utilities would have been chosen");
+            toast!.ShowUserErrorToast("Too many utilities would have been chosen");
             return;
         }
         var dice = list.Single();
         bool hasUsed = MainGame.SaveRoot.Owns.Any(x => x.Utility == utility);
         if (hasUsed)
         {
-            _toast!.ShowUserErrorToast("You already own this utility");
+            toast!.ShowUserErrorToast("You already own this utility");
             return;
         }
         if (HasChanceError(list, x => x.UsedOn == EnumBasicType.Utility))
@@ -224,6 +217,6 @@ public partial class MonopolyDicedGameMainViewModel : BasicMultiplayerMainVM
             await MainGame.ChoseUtilityAsync(utility);
             return;
         }
-        _toast!.ShowUserErrorToast("This is not the proper utility");
+        toast!.ShowUserErrorToast("This is not the proper utility");
     }
 }

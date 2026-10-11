@@ -29,15 +29,15 @@ public partial class CribbageVMData : IBasicCardGamesData<CribbageCard>, IBasicE
     public HandObservable<CribbageCard> PlayerHand1 { get; set; }
     public SingleObservablePile<CribbageCard>? OtherPile { get; set; }
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [LabelColumn]
-    public int TotalCount { get; set; }
+    public partial int TotalCount { get; set; }
     [LabelColumn]
-    public string Dealer { get; set; } = "";
+    public partial string Dealer { get; set; } = "";
     bool IBasicEnableProcess.CanEnableBasics()
     {
         return true;

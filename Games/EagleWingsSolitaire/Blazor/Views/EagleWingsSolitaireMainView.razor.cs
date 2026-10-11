@@ -1,7 +1,7 @@
 namespace EagleWingsSolitaire.Blazor.Views;
 public partial class EagleWingsSolitaireMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnInitialized()
     {
         _labels.Clear();

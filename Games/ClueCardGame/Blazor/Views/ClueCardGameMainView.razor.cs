@@ -9,8 +9,8 @@ public partial class ClueCardGameMainView
     private PlayerCollection<ClueCardGamePlayerItem> _players = [];
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<ClueCardGameVMData>();
-        _gameContainer = aa1.Resolver.Resolve<ClueCardGameGameContainer>();
+        _vmData = Resolver!.Resolve<ClueCardGameVMData>();
+        _gameContainer = Resolver.Resolve<ClueCardGameGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ClueCardGameVMData.NormalTurn))
             .AddLabel("Status", nameof(ClueCardGameVMData.Status))

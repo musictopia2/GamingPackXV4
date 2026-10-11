@@ -6,39 +6,40 @@ public partial class LifeBoardGamePlayerItem : PlayerBoardGame<EnumColorChoice>
     public override void Clear()
     {
         Color = EnumColorChoice.None;
+        Gender = EnumGender.None;
     }
-    public DeckRegularDict<LifeBaseCard> Hand { get; set; } = new(); //this time, can use the standard hand.
+    public DeckRegularDict<LifeBaseCard> Hand { get; set; } = []; //this time, can use the standard hand.
     public EnumStart OptionChosen { get; set; }
     public int Position { get; set; } // where you are at on the board.
     public EnumFinal LastMove { get; set; }
     public int Distance { get; set; }
-    public EnumGender Gender { get; set; }
-    public BasicList<EnumGender> ChildrenList { get; set; } = new();
+    public EnumGender Gender { get; set; } = EnumGender.None;
+    public BasicList<EnumGender> ChildrenList { get; set; } = [];
     [ScoreColumn]
-    public decimal Loans { get; set; }
+    public partial decimal Loans { get; set; }
     [ScoreColumn]
-    public decimal Salary { get; set; }
+    public partial decimal Salary { get; set; }
     [ScoreColumn]
-    public decimal MoneyEarned { get; set; }
+    public partial decimal MoneyEarned { get; set; }
     [ScoreColumn]
-    public int FirstStock { get; set; }
+    public partial int FirstStock { get; set; }
     [ScoreColumn]
-    public int SecondStock { get; set; }
+    public partial int SecondStock { get; set; }
     [ScoreColumn]
-    public bool CarIsInsured { get; set; }
+    public partial bool CarIsInsured { get; set; }
     [ScoreColumn]
-    public bool HouseIsInsured { get; set; }
+    public partial bool HouseIsInsured { get; set; }
     [ScoreColumn]
-    public bool DegreeObtained { get; set; }
+    public partial bool DegreeObtained { get; set; }
     [ScoreColumn]
-    public int TilesCollected { get; set; }
+    public partial int TilesCollected { get; set; }
     [ScoreColumn]
-    public string HouseName { get; set; } = "";
+    public partial string HouseName { get; set; } = "";
     [ScoreColumn]
-    public string Career1 { get; set; } = "";
+    public partial string Career1 { get; set; } = "";
     [ScoreColumn]
-    public string Career2 { get; set; } = "";
-    public BasicList<TileInfo> TileList { get; set; } = new();
+    public partial string Career2 { get; set; } = "";
+    public BasicList<TileInfo> TileList { get; set; } = [];
     public EnumTurnInfo WhatTurn { get; set; }
     public bool Married { get; set; }
 }

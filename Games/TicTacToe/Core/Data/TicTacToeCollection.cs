@@ -1,6 +1,4 @@
-﻿
-
-namespace TicTacToe.Core.Data;
+﻿namespace TicTacToe.Core.Data;
 public class TicTacToeCollection : IEnumerable<SpaceInfoCP>, IBoardCollection<SpaceInfoCP>
 {
     private readonly BoardCollection<SpaceInfoCP> _privateBoard;

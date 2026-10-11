@@ -1,14 +1,14 @@
 namespace GermanWhist.Blazor.Views;
 public partial class GermanWhistMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private GermanWhistVMData? _vmData;
     private GermanWhistGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<GermanWhistVMData>();
-        _gameContainer = aa1.Resolver.Resolve<GermanWhistGameContainer>();
+        _vmData = Resolver!.Resolve<GermanWhistVMData>();
+        _gameContainer = Resolver.Resolve<GermanWhistGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(GermanWhistVMData.NormalTurn))
             .AddLabel("Trump", nameof(GermanWhistVMData.TrumpSuit))

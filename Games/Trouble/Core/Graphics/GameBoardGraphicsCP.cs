@@ -9,7 +9,7 @@ public class GameBoardGraphicsCP
     {
         CreateSpaces();
     }
-    public Dictionary<int, RectangleF> SpaceList = new();
+    public Dictionary<int, RectangleF> SpaceList = [];
     public RectangleF DiceRectangle { get; private set; }
     public static PointF RecommendedPointForDice
     {

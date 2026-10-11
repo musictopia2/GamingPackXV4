@@ -1,12 +1,8 @@
 namespace LittleSpiderSolitaire.Core.Logic;
-public class CustomMain : MainPilesCP, IMain, ISerializable //good news is if nothing is found, just will do nothing.
+public class CustomMain(IScoreData score,
+       CommandContainer command,
+       IGamePackageResolver resolver) : MainPilesCP(score, command, resolver), IMain, ISerializable //good news is if nothing is found, just will do nothing.
 {
-    public CustomMain(IScoreData score,
-           CommandContainer command,
-           IGamePackageResolver resolver) : base(score, command, resolver)
-    {
-
-    }
     public override bool CanAddCard(int pile, SolitaireCard thisCard)
     {
         if (GlobalClass.MainModel!.DeckPile!.IsEndOfDeck() && pile > 1)

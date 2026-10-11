@@ -1,17 +1,12 @@
 ﻿namespace HorseshoeCardGame.Core.Logic;
 [SingletonGame]
-public class HorseshoeTrickAreaCP : PossibleDummyTrickObservable<EnumSuitList, HorseshoeCardGameCardInformation,
-    HorseshoeCardGamePlayerItem, HorseshoeCardGameSaveInfo>, ITrickPlay, IAdvancedTrickProcesses
+public class HorseshoeTrickAreaCP(HorseshoeCardGameGameContainer gameContainer) : PossibleDummyTrickObservable<EnumSuitList, HorseshoeCardGameCardInformation,
+    HorseshoeCardGamePlayerItem, HorseshoeCardGameSaveInfo>(gameContainer), ITrickPlay, IAdvancedTrickProcesses
 {
-    private readonly HorseshoeCardGameGameContainer _gameContainer;
-    public HorseshoeTrickAreaCP(HorseshoeCardGameGameContainer gameContainer) : base(gameContainer)
-    {
-        _gameContainer = gameContainer;
-    }
     protected override bool UseDummy { get; set; } = true;
     protected override int GetCardIndex()
     {
-        var thisSingle = ViewList!.Where(items => items.Player == _gameContainer.WhoTurn && items.PossibleDummy == _gameContainer.SaveRoot!.FirstCardPlayed).Single();
+        var thisSingle = ViewList!.Where(items => items.Player == gameContainer.WhoTurn && items.PossibleDummy == gameContainer.SaveRoot!.FirstCardPlayed).Single();
         return ViewList!.IndexOf(thisSingle);
     }
     protected override void PopulateNewCard(HorseshoeCardGameCardInformation oldCard, ref HorseshoeCardGameCardInformation newCard) { }
@@ -35,14 +30,14 @@ public class HorseshoeTrickAreaCP : PossibleDummyTrickObservable<EnumSuitList, H
     protected override async Task ProcessCardClickAsync(HorseshoeCardGameCardInformation thisCard)
     {
         int index = CardList.IndexOf(thisCard);
-        if (index == 0 && _gameContainer.SaveRoot!.FirstCardPlayed == false)
+        if (index == 0 && gameContainer.SaveRoot!.FirstCardPlayed == false)
         {
-            await _gameContainer.CardClickedAsync!.Invoke();
+            await gameContainer.CardClickedAsync!.Invoke();
             return;
         }
-        if (index == 3 && _gameContainer.SaveRoot!.FirstCardPlayed == true)
+        if (index == 3 && gameContainer.SaveRoot!.FirstCardPlayed == true)
         {
-            await _gameContainer.CardClickedAsync!.Invoke();
+            await gameContainer.CardClickedAsync!.Invoke();
             return;
         }
     }
@@ -60,10 +55,10 @@ public class HorseshoeTrickAreaCP : PossibleDummyTrickObservable<EnumSuitList, H
     {
         return 4;
     }
-    internal bool DidPlay2Cards => _gameContainer.SaveRoot!.TrickList.Count == 2;
+    internal bool DidPlay2Cards => gameContainer.SaveRoot!.TrickList.Count == 2;
     public void ClearBoard()
     {
-        DeckRegularDict<HorseshoeCardGameCardInformation> tempList = new();
+        DeckRegularDict<HorseshoeCardGameCardInformation> tempList = [];
         for (int x = 1; x <= 4; x++)
         {
             HorseshoeCardGameCardInformation thisCard = new();
@@ -88,10 +83,10 @@ public class HorseshoeTrickAreaCP : PossibleDummyTrickObservable<EnumSuitList, H
         int index;
         int tempTurn;
         bool previousFirst;
-        previousFirst = _gameContainer.SaveRoot!.FirstCardPlayed;
+        previousFirst = gameContainer.SaveRoot!.FirstCardPlayed;
         HorseshoeCardGameCardInformation lastCard;
-        tempTurn = _gameContainer.WhoTurn;
-        DeckRegularDict<HorseshoeCardGameCardInformation> otherList = new();
+        tempTurn = gameContainer.WhoTurn;
+        DeckRegularDict<HorseshoeCardGameCardInformation> otherList = [];
         int x = 0;
         tempList.ForEach(thisCard =>
         {
@@ -99,25 +94,25 @@ public class HorseshoeTrickAreaCP : PossibleDummyTrickObservable<EnumSuitList, H
             {
                 throw new CustomBasicException("The Player Cannot Be 0");
             }
-            _gameContainer.WhoTurn = thisCard.Player;
-            _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
+            gameContainer.WhoTurn = thisCard.Player;
+            gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
             x++;
             if (x == 1 || x == 2)
             {
-                _gameContainer.SaveRoot.FirstCardPlayed = false;
+                gameContainer.SaveRoot.FirstCardPlayed = false;
             }
             else
             {
-                _gameContainer.SaveRoot.FirstCardPlayed = true;
+                gameContainer.SaveRoot.FirstCardPlayed = true;
             }
             index = GetCardIndex();
-            lastCard = _gameContainer.GetBrandNewCard(thisCard.Deck);
+            lastCard = gameContainer.GetBrandNewCard(thisCard.Deck);
             lastCard.Player = thisCard.Player;
             TradeCard(index, lastCard);
             otherList.Add(lastCard);
         });
         OrderList.ReplaceRange(otherList);
-        _gameContainer.SaveRoot.FirstCardPlayed = previousFirst;
-        _gameContainer.WhoTurn = tempTurn;
+        gameContainer.SaveRoot.FirstCardPlayed = previousFirst;
+        gameContainer.WhoTurn = tempTurn;
     }
 }

@@ -3,10 +3,10 @@ namespace YahtzeeHandsDown.Core.Data;
 public partial class YahtzeeHandsDownPlayerItem : PlayerSingleHand<YahtzeeHandsDownCardInformation>
 {
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [ScoreColumn]
-    public int ScoreRound { get; set; }
+    public partial int ScoreRound { get; set; }
     [ScoreColumn]
-    public string WonLastRound { get; set; } = "";
+    public partial string WonLastRound { get; set; } = "";
     public YahtzeeResults Results { get; set; } = new ();
 }

@@ -1,4 +1,4 @@
-﻿namespace TicTacToe.Blazor.Views;
+﻿namespace TicTacToe.Blazor;
 public class LineComponent : ComponentBase
 {
     [CascadingParameter]

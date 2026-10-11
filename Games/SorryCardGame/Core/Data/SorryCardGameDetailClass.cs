@@ -14,7 +14,7 @@ public class SorryCardGameDetailClass : IGameInfo, ICardInfo<SorryCardGameCardIn
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<SorryCardGameCardInformation>.CardsToPassOut => 5;
-    BasicList<int> ICardInfo<SorryCardGameCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<SorryCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<SorryCardGameCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<SorryCardGameCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<SorryCardGameCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,11 +22,11 @@ public class SorryCardGameDetailClass : IGameInfo, ICardInfo<SorryCardGameCardIn
     bool ICardInfo<SorryCardGameCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<SorryCardGameCardInformation>.NoPass => false;
     bool ICardInfo<SorryCardGameCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<SorryCardGameCardInformation> ICardInfo<SorryCardGameCardInformation>.DummyHand { get; set; } = new DeckRegularDict<SorryCardGameCardInformation>();
+    DeckRegularDict<SorryCardGameCardInformation> ICardInfo<SorryCardGameCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<SorryCardGameCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<SorryCardGameCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<SorryCardGameCardInformation>.DiscardExcludeList(IListShuffler<SorryCardGameCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

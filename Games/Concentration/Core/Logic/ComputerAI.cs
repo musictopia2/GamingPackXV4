@@ -30,14 +30,14 @@ public static class ComputerAI
     }
     private static DeckRegularDict<RegularSimpleCard> PairToTry(DeckRegularDict<RegularSimpleCard> computerList, ConcentrationGameContainer container)
     {
-        DeckRegularDict<RegularSimpleCard> output = new();
+        DeckRegularDict<RegularSimpleCard> output = [];
 
         //have a chance it pretend like it can't remember (no fun if computer wins all the time for having perfect memory).
         //tried 20 but remembered too often.  then tried 30.  that was a good balance.
         bool rets = container.Random.NextBool(30); //tried 70 percent chance it will forget but was too high.
         if (rets == true)
         {
-            return new(); //pretend like it can't remember.
+            return []; //pretend like it can't remember.
         }
 
         foreach (var firstCard in computerList)

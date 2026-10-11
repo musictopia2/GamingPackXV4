@@ -5,13 +5,13 @@ namespace PickelCardGame.Core.Data;
 public partial class PickelCardGameVMData : ITrickCardGamesData<PickelCardGameCardInformation, EnumSuitList>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumSuitList TrumpSuit { get; set; }
+    public partial EnumSuitList TrumpSuit { get; set; }
     [LabelColumn]
-    public int BidAmount { get; set; }
+    public partial int BidAmount { get; set; }
     public PickelCardGameVMData(CommandContainer command,
             BasicTrickAreaObservable<EnumSuitList, PickelCardGameCardInformation> trickArea1,
             IGamePackageResolver resolver

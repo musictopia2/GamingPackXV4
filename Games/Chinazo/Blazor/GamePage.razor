@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="ChinazoMainViewModel">
+    <MainScreen>
         <ChinazoMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<ChinazoPlayerItem>">
-        <MultiplayerOpeningView P="ChinazoPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="ChinazoPlayerItem" />
 </CascadingValue>

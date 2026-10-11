@@ -1,18 +1,12 @@
 namespace BeleaguredCastle.Core.ViewModels;
 [InstanceGame]
-[UseLabelGrid]
-public partial class BeleaguredCastleMainViewModel : SolitaireMainViewModel<BeleaguredCastleSaveInfo>
+public partial class BeleaguredCastleMainViewModel(IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver
+        ) : SolitaireMainViewModel<BeleaguredCastleSaveInfo>(aggregator, command, resolver)
 {
-    public BeleaguredCastleMainViewModel(IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver
-        )
-        : base(aggregator, command, resolver)
-    {
-    }
     protected override SolitaireGameClass<BeleaguredCastleSaveInfo> GetGame(IGamePackageResolver resolver)
     {
         return resolver.ReplaceObject<BeleaguredCastleMainGameClass>();
     }
-    //anything else needed is here.
 }

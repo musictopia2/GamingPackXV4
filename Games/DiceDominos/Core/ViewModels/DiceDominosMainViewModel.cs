@@ -1,37 +1,34 @@
 namespace DiceDominos.Core.ViewModels;
 [InstanceGame]
-public class DiceDominosMainViewModel : DiceGamesVM<SimpleDice>
-{
-    private readonly DiceDominosMainGameClass _mainGame; //if we don't need, delete.
-    private readonly IToast _toast;
-    public DiceDominosVMData VMData { get; set; }
-    public DiceDominosMainViewModel(CommandContainer commandContainer,
+public class DiceDominosMainViewModel(CommandContainer commandContainer,
         DiceDominosMainGameClass mainGame,
         DiceDominosVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
         DiceDominosGameContainer gameContainer,
         GameBoardCP gameBoard,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, roller, aggregator)
+        IToast toast) : DiceGamesVM<SimpleDice>(commandContainer, mainGame, viewModel, basicData, resolver, roller, aggregator)
+{
+    public DiceDominosVMData VMData { get; set; } = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        GameBoard = gameBoard;
-        _toast = toast;
-        VMData = viewModel;
         gameContainer.DominoClickedAsync = DominoClickedAsync;
-        gameBoard.SendEnableProcesses(this, (() => _mainGame.SaveRoot.HasRolled));
+        gameBoard.SendEnableProcesses(this, () => mainGame.SaveRoot.HasRolled);
+        base.AdditionalInitialize();
+    }
+    protected override Task CloseAsync()
+    {
+        gameContainer.DominoClickedAsync = null;
+        return base.CloseAsync();
     }
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
-    public GameBoardCP GameBoard { get; }
-    public PlayerCollection<DiceDominosPlayerItem> PlayerList => _mainGame.PlayerList;
+    public GameBoardCP GameBoard => gameBoard;
+    public PlayerCollection<DiceDominosPlayerItem> PlayerList => mainGame.PlayerList;
     protected override bool CanEnableDice()
     {
-        if (_mainGame!.SaveRoot!.HasRolled == false || _mainGame.SaveRoot.DidHold == true)
+        if (mainGame!.SaveRoot!.HasRolled == false || mainGame.SaveRoot.DidHold == true)
         {
             return false;
         }
@@ -39,19 +36,19 @@ public class DiceDominosMainViewModel : DiceGamesVM<SimpleDice>
     }
     public override bool CanEndTurn()
     {
-        return _mainGame!.SaveRoot!.HasRolled;
+        return mainGame!.SaveRoot!.HasRolled;
     }
     public override bool CanRollDice()
     {
-        return !_mainGame!.SaveRoot!.HasRolled;
+        return !mainGame!.SaveRoot!.HasRolled;
     }
     private async Task DominoClickedAsync(SimpleDominoInfo thisDomino)
     {
         if (GameBoard.IsValidMove(thisDomino.Deck) == false)
         {
-            _toast.ShowUserErrorToast("Illegal Move");
+            toast.ShowUserErrorToast("Illegal Move");
             return;
         }
-        await _mainGame.MakeMoveAsync(thisDomino.Deck);
+        await mainGame.MakeMoveAsync(thisDomino.Deck);
     }
 }

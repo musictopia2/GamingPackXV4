@@ -2,16 +2,21 @@ namespace SorryCardGame.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
 [AutoReset]
-public partial class SorryCardGameVMData : IBasicCardGamesData<SorryCardGameCardInformation>
+public partial class SorryCardGameVMData : IBasicCardGamesData<SorryCardGameCardInformation>, IStateChanged
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public int UpTo { get; set; }
+    public partial int UpTo { get; set; }
+    partial void OnUpToChanged(int value)
+    {
+        StateChanged?.Invoke();
+    }
+
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
     public SorryCardGameVMData(CommandContainer command)
     {
         Deck1 = new(command);
@@ -25,4 +30,6 @@ public partial class SorryCardGameVMData : IBasicCardGamesData<SorryCardGameCard
     public SingleObservablePile<SorryCardGameCardInformation> Pile1 { get; set; }
     public HandObservable<SorryCardGameCardInformation> PlayerHand1 { get; set; }
     public SingleObservablePile<SorryCardGameCardInformation>? OtherPile { get; set; }
+
+    public event Action? StateChanged;
 }

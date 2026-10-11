@@ -1,4 +1,4 @@
-namespace CrazyEights.Core.Data;
+namespace Concentration.Core.Data;
 [SingletonGame]
 public class CustomConfig : IRegularCardsSortCategory
 {

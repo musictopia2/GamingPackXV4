@@ -3,17 +3,17 @@ public partial class XPuzzleMainView
 {
     private static XPuzzleCollection GetSpaceList()
     {
-        XPuzzleSaveInfo thisSave = aa1.Resolver!.Resolve<XPuzzleSaveInfo>();
+        XPuzzleSaveInfo thisSave = Resolver!.Resolve<XPuzzleSaveInfo>();
         return thisSave.SpaceList;
     }
     private async Task ClickedAsync(XPuzzleSpaceInfo space)
     {
+        await DataContext!.MakeMoveAsync(space);
         if (DataContext!.CommandContainer.CanExecuteBasics == false)
         {
             return;
         }
-        DataContext!.CommandContainer.StartExecuting();
-        await DataContext.MakeMoveAsync(space);
-        DataContext.CommandContainer.StopExecuting();
+        await DataContext.CommandContainer.ProcessCustomCommandAsync(
+            () => DataContext.MakeMoveAsync(space));
     }
 }

@@ -1,14 +1,20 @@
 ﻿namespace SorryDicedGame.Core.Data;
-public class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>, ISelectableObject
+[UseStateChanged]
+public partial class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>, ISelectableObject
 {
     public int HeightWidth => 40;
-    public bool IsEnabled { get; set; } = true;
-    public bool Used { get; set; }
+    [StateProperty]
+    public partial bool IsEnabled { get; set; } = true;
+    [StateProperty]
+    public partial bool Used { get; set; }
     public int Value { get; set; }
     public int Index { get; set; }
-    public bool Visible { get; set; }
-    public EnumDiceCategory Category { get; set; } = EnumDiceCategory.None;
-    public EnumColorChoice Color { get; set; } //would be none if category is not color.
+    [StateProperty]
+    public partial bool Visible { get; set; }
+    [StateProperty]
+    public partial EnumDiceCategory Category { get; set; } = EnumDiceCategory.None;
+    [StateProperty]
+    public partial EnumColorChoice Color { get; set; } //would be none if category is not color.
     private static int GetFrequency(int index)
     {
         if (index == 5)
@@ -25,7 +31,8 @@ public class SorryDiceModel : IBasicDice<int>, IGenerateDice<int>, ISelectableOb
         }
         throw new CustomBasicException("Only 5, 6, 7 for frequency is supported");
     }
-    public bool IsSelected { get; set; }
+    [StateProperty]
+    public partial bool IsSelected { get; set; }
     public void Populate(int chosen)
     {
         Index = chosen;

@@ -1,14 +1,14 @@
 namespace Uno.Blazor.Views;
 public partial class UnoMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private UnoVMData? _vmData;
     private UnoGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<UnoVMData>();
-        _gameContainer = aa1.Resolver.Resolve<UnoGameContainer>();
+        _vmData = Resolver!.Resolve<UnoVMData>();
+        _gameContainer = Resolver.Resolve<UnoGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(UnoVMData.NormalTurn))
             .AddLabel("Next", nameof(UnoVMData.NextPlayer))

@@ -7,7 +7,7 @@ public partial class ClueBoardGameMainView
     private PlayerCollection<ClueBoardGamePlayerItem> _players = [];
     protected override void OnInitialized()
     {
-        _graphicsData = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _graphicsData = Resolver!.Resolve<GameBoardGraphicsCP>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ClueBoardGameVMData.NormalTurn));
         _clues.Clear();

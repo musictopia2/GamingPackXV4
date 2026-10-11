@@ -1,6 +1,7 @@
 //i think this is the most common things i like to do
 namespace Mastermind.Blazor;
-public class Bootstrapper : SinglePlayerBootstrapper<MastermindShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : SinglePlayerBootstrapper<MastermindShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
     {

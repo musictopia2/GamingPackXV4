@@ -2,8 +2,8 @@ namespace RageCardGame.Blazor.Views;
 public partial class RageBiddingView
 {
     private ICustomCommand BidCommand => DataContext!.BidCommand!;
-    private BasicList<ScoreColumnModel> _scores = new();
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private BasicList<ScoreColumnModel> _scores = [];
+    private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnParametersSet()
     {
         _scores = ScoreModule.GetScores();

@@ -288,25 +288,12 @@ public class SkuckCardGameMainGameClass
             PlayerList!.ForEach(thisItem => thisItem.TempHand!.ReportCanExecuteChange()); //just in case it got hosed.
             return;
         }
-        //SingleInfo = PlayerList!.GetSelf();
-        //WhoTurn = SingleInfo.Id;
-        //this.ShowTurn();
-        //if (SingleInfo.BidAmount > 0)
-        //{
-        //    if (BasicData!.MultiPlayer == false)
-        //    {
-        //        throw new CustomBasicException("If you already bidded, the computer player should have bidded then moved on");
-        //    }
-        //    await SaveStateAsync();
-        //    Network!.IsEnabled = true;
-        //    return; //to wait for the other player.
-        //}
         await base.ContinueTurnAsync();
     }
     private void EvalulateStrength()
     {
-        DeckRegularDict<SkuckCardGameCardInformation> firstCollection = new();
-        DeckRegularDict<SkuckCardGameCardInformation> secondCollection = new();
+        DeckRegularDict<SkuckCardGameCardInformation> firstCollection = [];
+        DeckRegularDict<SkuckCardGameCardInformation> secondCollection = [];
         DeckRegularDict<SkuckCardGameCardInformation> tempList;
         PlayerList!.ForEach(tempPlayer =>
         {

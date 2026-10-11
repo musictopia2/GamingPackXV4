@@ -1,9 +1,12 @@
 ﻿namespace SolitaireBoardGame.Core.Data;
-public class GameSpace : IBasicSpace
+[UseStateChanged]
+public partial class GameSpace : IBasicSpace
 {
     public Vector Vector { get; set; }
-    public bool HasImage { get; set; }
-    public string Color { get; set; } = cs1.Transparent;
+    [StateProperty]
+    public partial bool HasImage { get; set; }
+    [StateProperty]
+    public partial string Color { get; set; } = cs1.Transparent;
     public void ClearSpace()
     {
         Color = cs1.Blue; //was blue.  trying green for experimenting.

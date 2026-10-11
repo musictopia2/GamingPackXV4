@@ -1,22 +1,12 @@
 ﻿namespace Battleship.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class BattleshipComputerAI
+public class BattleshipComputerAI(GameBoardCP gameBoard1,
+    IRandomGenerator rs,
+    IAsyncDelayer delay, TestOptions test)
 {
     private Vector _firstHit;
-    private readonly GameBoardCP _gameBoard1;
-    private readonly IRandomGenerator _rs;
-    private readonly IAsyncDelayer _delay;
-    private readonly TestOptions _test;
-    public BattleshipComputerAI(GameBoardCP gameBoard1,
-        IRandomGenerator rs,
-        IAsyncDelayer delay, TestOptions test)
-    {
-        _gameBoard1 = gameBoard1;
-        _rs = rs;
-        _delay = delay;
-        _test = test;
-    }
+
     public void StartNewGame()
     {
         _firstHit = new Vector();
@@ -24,7 +14,7 @@ public class BattleshipComputerAI
     public bool HasHit(Vector space)
     {
         FieldInfoCP thisField;
-        thisField = _gameBoard1.ComputerList![space];
+        thisField = gameBoard1.ComputerList![space];
         if (thisField.ShipNumber > 0)
         {
             return true;
@@ -69,17 +59,16 @@ public class BattleshipComputerAI
         {
             return false;
         }
-        FieldInfoCP thisField = _gameBoard1.ComputerList![space];
+        FieldInfoCP thisField = gameBoard1.ComputerList![space];
         return thisField.Hit == EnumWhatHit.None;
     }
     public async Task ComputerPlaceShipsAsync()
     {
-        if (_test.NoAnimations == false)
+        if (test.NoAnimations == false)
         {
-            await _delay.DelaySeconds(.3);
+            await delay.DelaySeconds(.3);
         }
-        BasicList<int> shipList = new()
-        { 5, 4, 3, 2, 2 };
+        BasicList<int> shipList = [5, 4, 3, 2, 2];
         BasicList<int> chooseList = shipList.ToBasicList();
         chooseList.ShuffleList();
         int ComputerShip;
@@ -91,7 +80,7 @@ public class BattleshipComputerAI
         {
             do
             {
-                lefts = _rs.NextBool();
+                lefts = rs.NextBool();
                 thisSpace = GetRandomVector();
                 ComputerShip = chooseList[x - 1];
                 if (CanComputerPlaceShip(thisSpace, lefts, ComputerShip))
@@ -106,7 +95,7 @@ public class BattleshipComputerAI
             }
             ComputerShip.Times(y =>
             {
-                thisField = _gameBoard1.ComputerList![latestSpace];
+                thisField = gameBoard1.ComputerList![latestSpace];
                 thisField.ShipNumber = 1;
                 if (lefts == true)
                 {
@@ -118,25 +107,25 @@ public class BattleshipComputerAI
                 }
             });
         });
-        int counts = _gameBoard1.ComputerList!.Count(Items => Items.ShipNumber == 1);
+        int counts = gameBoard1.ComputerList!.Count(Items => Items.ShipNumber == 1);
         if (counts != 16)
         {
             throw new CustomBasicException($"Must have 16 ships to begin with, not {counts}");
         }
-        if (_test.NoAnimations == false)
+        if (test.NoAnimations == false)
         {
-            await _delay.DelaySeconds(.5);
+            await delay.DelaySeconds(.5);
         }
     }
     private Vector SmartHit()
     {
-        BasicList<Vector> offSetList = new()
-        {
+        BasicList<Vector> offSetList =
+        [
             new Vector(0, -1), //this means minus one column
             new Vector(0, 1),
             new Vector(-1, 0),
             new Vector(1, 0)
-        };
+        ];
         bool foundGoodSpot = false;
         Vector nextHit = _firstHit;
         Vector whatMove = new();
@@ -152,7 +141,7 @@ public class BattleshipComputerAI
             }
             else
             {
-                thisField = _gameBoard1.ComputerList![nextHit];
+                thisField = gameBoard1.ComputerList![nextHit];
                 if (thisField.Hit == EnumWhatHit.Miss)
                 {
                     goneTooFar = true;
@@ -167,7 +156,7 @@ public class BattleshipComputerAI
                     _firstHit = new Vector();
                 }
             }
-            thisField = _gameBoard1.ComputerList![nextHit];
+            thisField = gameBoard1.ComputerList![nextHit];
             if (thisField.Hit == EnumWhatHit.None)
             {
                 whatMove = nextHit;
@@ -183,8 +172,8 @@ public class BattleshipComputerAI
     }
     private Vector GetRandomVector()
     {
-        int row = _rs.GetRandomNumber(10);
-        int column = _rs.GetRandomNumber(10);
+        int row = rs.GetRandomNumber(10);
+        int column = rs.GetRandomNumber(10);
         return new Vector(row, column);
     }
     private bool CanComputerPlaceShip(Vector space, bool lefts, int typeship)
@@ -204,7 +193,7 @@ public class BattleshipComputerAI
             var loopTo = typeship;
             for (x = 1; x <= loopTo; x++)
             {
-                newField = _gameBoard1.ComputerList![space.Row, space.Column + x - 1];
+                newField = gameBoard1.ComputerList![space.Row, space.Column + x - 1];
                 if (newField.ShipNumber != 0)
                 {
                     return false;
@@ -220,7 +209,7 @@ public class BattleshipComputerAI
             var loopTo1 = typeship;
             for (x = 1; x <= loopTo1; x++)
             {
-                newField = _gameBoard1.ComputerList![space.Row + x - 1, space.Column];
+                newField = gameBoard1.ComputerList![space.Row + x - 1, space.Column];
                 if (newField.ShipNumber != 0)
                 {
                     return false;

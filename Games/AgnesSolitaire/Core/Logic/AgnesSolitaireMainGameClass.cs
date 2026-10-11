@@ -1,18 +1,14 @@
 namespace AgnesSolitaire.Core.Logic;
 [SingletonGame]
-public class AgnesSolitaireMainGameClass : SolitaireGameClass<AgnesSolitaireSaveInfo>
+public class AgnesSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<AgnesSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    public AgnesSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-    }
     protected async override Task ContinueOpenSavedAsync()
     {
         //anything else you need will be here
@@ -32,10 +28,7 @@ public class AgnesSolitaireMainGameClass : SolitaireGameClass<AgnesSolitaireSave
     private WastePiles? _thisWaste;
     public override Task NewGameAsync()
     {
-        if (_thisWaste == null)
-        {
-            _thisWaste = (WastePiles)_thisMod!.WastePiles1!;
-        }
+        _thisWaste ??= (WastePiles)_thisMod!.WastePiles1!;
         return base.NewGameAsync();
     }
     public override void DrawCard()

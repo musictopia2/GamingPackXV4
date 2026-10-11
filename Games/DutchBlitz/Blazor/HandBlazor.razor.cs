@@ -1,4 +1,5 @@
 namespace DutchBlitz.Blazor;
+
 public partial class HandBlazor
 {
     [Parameter]
@@ -28,6 +29,4 @@ public partial class HandBlazor
     /// </summary>
     [Parameter]
     public string TargetImageSize { get; set; } = "";
-
-    private static string GetKey => Guid.NewGuid().ToString();
 }

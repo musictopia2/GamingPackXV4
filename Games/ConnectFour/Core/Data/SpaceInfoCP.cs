@@ -1,9 +1,13 @@
 ﻿namespace ConnectFour.Core.Data;
-public class SpaceInfoCP : IBasicSpace
+
+[UseStateChanged]
+public partial class SpaceInfoCP : IBasicSpace
 {
     public Vector Vector { get; set; }
-    public int Player { get; set; }
-    public string Color { get; set; } = cs1.Transparent;
+    [StateProperty]
+    public partial int Player { get; set; }
+    [StateProperty]
+    public partial string Color { get; set; } = cs1.Transparent;
     public bool HasImage => Player > 0;
     public void ClearSpace()
     {

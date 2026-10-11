@@ -1,21 +1,4 @@
 namespace GermanWhist.Core.ViewModels;
-public class GermanWhistShellViewModel : BasicTrickShellViewModel<GermanWhistPlayerItem>
+public class GermanWhistShellViewModel(IGamePackageResolver mainContainer, CommandContainer container, IGameInfo gameData, BasicData basicData, IMultiplayerSaveState save, TestOptions test, IEventAggregator aggregator, IToast toast) : BasicTrickShellViewModel<GermanWhistPlayerItem>(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
 {
-    public GermanWhistShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        BasicData basicData,
-        IMultiplayerSaveState save,
-        TestOptions test,
-        IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<GermanWhistMainViewModel>();
-        return model;
-    }
 }

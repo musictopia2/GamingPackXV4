@@ -1,40 +1,27 @@
 namespace CrazyEights.Core.Logic;
 [SingletonGame]
-public class CrazyEightsMainGameClass
-    : CardGameClass<RegularSimpleCard, CrazyEightsPlayerItem, CrazyEightsSaveInfo>
+public class CrazyEightsMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    CrazyEightsVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<RegularSimpleCard> cardInfo,
+    CommandContainer command,
+    CrazyEightsGameContainer gameContainer,
+    ISuitProcesses processes,
+    ISystemError error,
+    IToast toast,
+    IMessageBox message
+        )
+        : CardGameClass<RegularSimpleCard, CrazyEightsPlayerItem, CrazyEightsSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , ISerializable
 {
-    private readonly CrazyEightsVMData _model;
-    private readonly CommandContainer _command;
-    private readonly CrazyEightsGameContainer _gameContainer;
-    private readonly ISuitProcesses _processes;
-    private readonly IMessageBox _message;
-    public CrazyEightsMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        CrazyEightsVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<RegularSimpleCard> cardInfo,
-        CommandContainer command,
-        CrazyEightsGameContainer gameContainer,
-        ISuitProcesses processes,
-        ISystemError error,
-        IToast toast,
-        IMessageBox message
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _processes = processes;
-        _message = message;
-    }
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
-        SaveRoot.LoadMod(_model);
+        SaveRoot.LoadMod(currentMod);
         return base.FinishGetSavedAsync();
     }
     private void LoadControls()
@@ -59,7 +46,7 @@ public class CrazyEightsMainGameClass
         if (SaveRoot!.ChooseSuit == true)
         {
             EnumSuitList thisSuit = co1.SuitToChoose(SingleInfo);
-            await _processes.SuitChosenAsync(thisSuit);
+            await processes.SuitChosenAsync(thisSuit);
             return;
         }
         await Delay.DelaySeconds(.5);
@@ -71,7 +58,7 @@ public class CrazyEightsMainGameClass
         }
         if (BasicData!.MultiPlayer == true)
         {
-            await _gameContainer.SendDrawMessageAsync();
+            await gameContainer.SendDrawMessageAsync();
         }
         await DrawAsync();
     }
@@ -82,7 +69,7 @@ public class CrazyEightsMainGameClass
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
     {
-        var tempCard = _model!.Pile1!.GetCardInfo();
+        var tempCard = currentMod!.Pile1!.GetCardInfo();
         SaveRoot!.CurrentNumber = tempCard.Value;
         if (tempCard.DisplaySuit == EnumSuitList.None)
         {
@@ -93,7 +80,7 @@ public class CrazyEightsMainGameClass
             SaveRoot.CurrentSuit = tempCard.DisplaySuit;
         }
         SaveRoot.CurrentCard = tempCard.Deck;
-        SaveRoot.LoadMod(_model);
+        SaveRoot.LoadMod(currentMod);
         return Task.CompletedTask;
     }
     public override async Task StartNewTurnAsync()
@@ -111,19 +98,19 @@ public class CrazyEightsMainGameClass
             await ShowWinAsync();
             return;
         }
-        _command.ManuelFinish = true;
+        CommandContainer.ManuelFinish = true;
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
     protected async override Task AfterDrawingAsync()
     {
-        _gameContainer.AlreadyDrew = false;
+        gameContainer.AlreadyDrew = false;
         PlayerDraws = 0;
         await base.AfterDrawingAsync();
     }
     public bool IsValidMove(int deck)
     {
-        var card = _gameContainer.DeckList!.GetSpecificItem(deck);
+        var card = gameContainer.DeckList!.GetSpecificItem(deck);
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self && Test!.AllowAnyMove == true)
         {
             return true;
@@ -144,10 +131,10 @@ public class CrazyEightsMainGameClass
     }
     public async Task PlayCardAsync(int deck)
     {
-        var card = _gameContainer.DeckList!.GetSpecificItem(deck);
+        var card = gameContainer.DeckList!.GetSpecificItem(deck);
         card.Drew = false;
         card.IsSelected = false;
-        await _gameContainer.SendDiscardMessageAsync(deck);
+        await gameContainer.SendDiscardMessageAsync(deck);
         await DiscardAsync(card);
     }
     public override async Task DiscardAsync(RegularSimpleCard thisCard)
@@ -155,7 +142,6 @@ public class CrazyEightsMainGameClass
         int firstCount;
         firstCount = SingleInfo!.MainHandList.Count;
         SingleInfo.MainHandList.RemoveSpecificItem(thisCard);
-        _gameContainer.Command.UpdateAll();
         int secondCount = SingleInfo.MainHandList.Count;
         if (secondCount + 1 != firstCount)
         {
@@ -174,10 +160,10 @@ public class CrazyEightsMainGameClass
             return;
         }
         SaveRoot.CurrentSuit = thisCard.Suit;
-        var tempCard = _model!.Pile1!.GetCardInfo();
+        var tempCard = currentMod!.Pile1!.GetCardInfo();
         if (tempCard.Deck != thisCard.Deck)
         {
-            await _message.ShowMessageAsync("Failed to add to discard pile.  Rethink");
+            await message.ShowMessageAsync("Failed to add to discard pile.  Rethink");
             return;
         }
         await EndTurnAsync();

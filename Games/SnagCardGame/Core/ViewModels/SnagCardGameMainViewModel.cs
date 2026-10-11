@@ -1,32 +1,26 @@
 namespace SnagCardGame.Core.ViewModels;
 [InstanceGame]
-public class SnagCardGameMainViewModel : BasicCardGamesVM<SnagCardGameCardInformation>,
-    ITrickDummyHand<EnumSuitList, SnagCardGameCardInformation>
-{
-    private readonly SnagCardGameMainGameClass _mainGame;
-    private readonly SnagCardGameVMData _model;
-    public SnagCardGameMainViewModel(CommandContainer commandContainer,
+public class SnagCardGameMainViewModel(CommandContainer commandContainer,
         SnagCardGameMainGameClass mainGame,
         SnagCardGameVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<SnagCardGameCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast),
+    ITrickDummyHand<EnumSuitList, SnagCardGameCardInformation>
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _model.Deck1.NeverAutoDisable = true;
-        _model.Bar1.SendEnableProcesses(this, () =>
+        viewModel.Deck1.NeverAutoDisable = true;
+        viewModel.Bar1.SendEnableProcesses(this, () =>
         {
-            if (_mainGame!.SaveRoot!.GameStatus != EnumStatusList.Normal)
+            if (mainGame!.SaveRoot!.GameStatus != EnumStatusList.Normal)
             {
                 return false;
             }
-            return !_mainGame.SaveRoot.FirstCardPlayed;
+            return !mainGame.SaveRoot.FirstCardPlayed;
         });
+        base.AdditionalInitialize();
     }
     protected override bool CanEnableDeck()
     {
@@ -46,41 +40,41 @@ public class SnagCardGameMainViewModel : BasicCardGamesVM<SnagCardGameCardInform
     }
     protected override bool CanEnableHand()
     {
-        if (_mainGame!.SaveRoot!.GameStatus != EnumStatusList.Normal)
+        if (mainGame!.SaveRoot!.GameStatus != EnumStatusList.Normal)
         {
             return false;
         }
-        return _mainGame.SaveRoot.FirstCardPlayed;
+        return mainGame.SaveRoot.FirstCardPlayed;
     }
     public DeckRegularDict<SnagCardGameCardInformation> GetCurrentHandList()
     {
-        if (_mainGame!.SaveRoot!.FirstCardPlayed == false)
+        if (mainGame!.SaveRoot!.FirstCardPlayed == false)
         {
-            return _model.Bar1!.PossibleList.ToRegularDeckDict();
+            return viewModel.Bar1!.PossibleList.ToRegularDeckDict();
         }
-        return _mainGame.SingleInfo!.MainHandList.ToRegularDeckDict();
+        return mainGame.SingleInfo!.MainHandList.ToRegularDeckDict();
     }
     public int CardSelected()
     {
-        if (_mainGame!.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+        if (mainGame!.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
             throw new CustomBasicException("Only self should know what is selected");
         }
-        if (_mainGame.SaveRoot!.FirstCardPlayed == false)
+        if (mainGame.SaveRoot!.FirstCardPlayed == false)
         {
-            return _model.Bar1!.ObjectSelected();
+            return viewModel.Bar1!.ObjectSelected();
         }
-        return _model.PlayerHand1!.ObjectSelected();
+        return viewModel.PlayerHand1!.ObjectSelected();
     }
     public void RemoveCard(int deck)
     {
-        if (_mainGame!.SaveRoot!.FirstCardPlayed == false)
+        if (mainGame!.SaveRoot!.FirstCardPlayed == false)
         {
-            _model.Bar1!.HandList.RemoveObjectByDeck(deck);
+            viewModel.Bar1!.HandList.RemoveObjectByDeck(deck);
         }
         else
         {
-            _mainGame.SingleInfo!.MainHandList.RemoveObjectByDeck(deck);
+            mainGame.SingleInfo!.MainHandList.RemoveObjectByDeck(deck);
         }
     }
 }

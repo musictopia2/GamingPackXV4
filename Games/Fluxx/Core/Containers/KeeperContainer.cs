@@ -1,31 +1,22 @@
 ﻿namespace Fluxx.Core.Containers;
 [SingletonGame]
 [AutoReset]
-public class KeeperContainer
+public class KeeperContainer(FluxxGameContainer gameContainer, FluxxDelegates delegates)
 {
-    private readonly FluxxGameContainer _gameContainer;
-    private readonly FluxxDelegates _delegates;
-    public BasicList<HandObservable<KeeperCard>> KeeperHandList;
-    public DetailCardObservable CardDetail;
-    public KeeperContainer(FluxxGameContainer gameContainer, FluxxDelegates delegates)
-    {
-        _gameContainer = gameContainer;
-        _delegates = delegates;
-        KeeperHandList = new();
-        CardDetail = new DetailCardObservable();
-    }
+    public BasicList<HandObservable<KeeperCard>> KeeperHandList = [];
+    public DetailCardObservable CardDetail = new();
     public void Init()
     {
         LinkKeepers();
     }
     private void LinkKeepers()
     {
-        _gameContainer.PlayerList!.ForEach(thisPlayer =>
+        gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
-            HandObservable<KeeperCard> thisHand = new (_gameContainer.Command);
+            HandObservable<KeeperCard> thisHand = new (gameContainer.Command);
             thisHand.Visible = true;
             thisHand.AutoSelect = EnumHandAutoType.None;
-            thisHand.HandList = thisPlayer.KeeperList;
+            thisHand.ReplaceHandList(thisPlayer.KeeperList);
             thisHand.Text = thisPlayer.NickName;
             thisHand.ObjectClickedAsync = ThisHand_ObjectClickedAsync;
             KeeperHandList!.Add(thisHand);
@@ -65,7 +56,6 @@ public class KeeperContainer
             var thisKeep = KeeperHandList![thisTemp.Player - 1];
             thisKeep.SelectOneFromDeck(thisTemp.Card);
         });
-        _gameContainer.Command.UpdateAll();
     }
     public void ShowKeepers()
     {
@@ -74,19 +64,19 @@ public class KeeperContainer
     }
     public async Task LoadKeeperScreenAsync()
     {
-        if (_gameContainer.CurrentAction == null)
+        if (gameContainer.CurrentAction == null)
         {
             throw new CustomBasicException("Must have a current action in order to load the keeper screen.  If a player wants to see the keepers only; use ShowKeepers method.");
         }
-        if (_gameContainer.CurrentAction.Deck == EnumActionMain.TrashAKeeper)
+        if (gameContainer.CurrentAction.Deck == EnumActionMain.TrashAKeeper)
         {
             Section = EnumKeeperSection.Trash;
         }
-        else if (_gameContainer.CurrentAction.Deck == EnumActionMain.StealAKeeper)
+        else if (gameContainer.CurrentAction.Deck == EnumActionMain.StealAKeeper)
         {
             Section = EnumKeeperSection.Steal;
         }
-        else if (_gameContainer.CurrentAction.Deck == EnumActionMain.ExchangeKeepers)
+        else if (gameContainer.CurrentAction.Deck == EnumActionMain.ExchangeKeepers)
         {
             Section = EnumKeeperSection.Exchange;
         }
@@ -94,13 +84,13 @@ public class KeeperContainer
         {
             throw new CustomBasicException("Can't figure out the section when loading keepers");
         }
-        CardDetail!.ShowCard(_gameContainer.CurrentAction);
+        CardDetail!.ShowCard(gameContainer.CurrentAction);
         ChangeKeeperClick(EnumHandAutoType.SelectOneOnly);
-        if (_delegates.LoadKeeperScreenAsync == null)
+        if (delegates.LoadKeeperScreenAsync == null)
         {
             throw new CustomBasicException("Nobody is loading keeper screen.  Rethink");
         }
-        await _delegates.LoadKeeperScreenAsync.Invoke(this);
+        await delegates.LoadKeeperScreenAsync.Invoke();
     }
     public HandObservable<KeeperCard> GetKeeperHand(FluxxPlayerItem thisPlayer)
     {

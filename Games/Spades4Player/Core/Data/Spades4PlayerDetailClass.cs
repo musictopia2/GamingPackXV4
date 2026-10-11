@@ -15,7 +15,7 @@ public class Spades4PlayerDetailClass : IGameInfo, ICardInfo<Spades4PlayerCardIn
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
     int ICardInfo<Spades4PlayerCardInformation>.CardsToPassOut => 13; //change to what you need.
-    BasicList<int> ICardInfo<Spades4PlayerCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<Spades4PlayerCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<Spades4PlayerCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<Spades4PlayerCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<Spades4PlayerCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,10 +23,10 @@ public class Spades4PlayerDetailClass : IGameInfo, ICardInfo<Spades4PlayerCardIn
     bool ICardInfo<Spades4PlayerCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<Spades4PlayerCardInformation>.NoPass => false;
     bool ICardInfo<Spades4PlayerCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<Spades4PlayerCardInformation> ICardInfo<Spades4PlayerCardInformation>.DummyHand { get; set; } = new DeckRegularDict<Spades4PlayerCardInformation>();
+    DeckRegularDict<Spades4PlayerCardInformation> ICardInfo<Spades4PlayerCardInformation>.DummyHand { get; set; } = [];
     BasicList<int> ICardInfo<Spades4PlayerCardInformation>.DiscardExcludeList(IListShuffler<Spades4PlayerCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool ICardInfo<Spades4PlayerCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<Spades4PlayerCardInformation>.CanSortCardsToBeginWith => true;

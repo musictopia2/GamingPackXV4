@@ -29,6 +29,11 @@ public class OpetongMainGameClass
         _privateAutoResume = privateAutoResume;
         _gameContainer.DrawFromPoolAsync = DrawFromPoolAsync;
     }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        _model.Pool1.ReportCanExecuteChange();
+    }
     public override async Task FinishGetSavedAsync()
     {
         _gameContainer.TempSets.Clear();
@@ -108,7 +113,7 @@ public class OpetongMainGameClass
     protected override void LinkHand()
     {
         SingleInfo = PlayerList!.GetSelf();
-        _model!.PlayerHand1!.HandList = SingleInfo.MainHandList;
+        _model.PlayerHand1.ReplaceHandList(SingleInfo.MainHandList);
         PrepSort();
     }
     protected override Task StartSetUpAsync(bool isBeginning)
@@ -192,7 +197,6 @@ public class OpetongMainGameClass
         {
             SortCards();
         }
-        _command.UpdateAll();
         await ResumePlayAsync();
     }
     private void WhoWon()

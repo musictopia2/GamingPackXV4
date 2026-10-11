@@ -7,19 +7,19 @@ public partial class RookVMData : ITrickCardGamesData<RookCardInformation, EnumC
 {
     private readonly RookGameContainer _gameContainer;
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumColorTypes TrumpSuit { get; set; }
+    public partial EnumColorTypes TrumpSuit { get; set; }
     [LabelColumn]
-    public EnumColorTypes ColorChosen { get; set; }
+    public partial EnumColorTypes ColorChosen { get; set; }
     [LabelColumn]
-    public int BidChosen { get; set; } = -1;
+    public partial int BidChosen { get; set; } = -1;
     [LabelColumn]
-    public EnumStatusList GameStatus { get; set; }
+    public partial EnumStatusList GameStatus { get; set; }
     [LabelColumn]
-    public string TeamMate { get; set; } = "None"; //the players name.  only for ui.
+    public partial string TeamMate { get; set; } = "None"; //the players name.  only for ui.
     public RookVMData(CommandContainer command,
             RookTrickAreaCP trickArea1,
             IGamePackageResolver resolver,

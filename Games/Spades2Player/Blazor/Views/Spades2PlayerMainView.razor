@@ -1,17 +1,13 @@
-@inherits BasicGameView<Spades2PlayerMainViewModel>
+@inherits CascadingGameView<Spades2PlayerMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
 }
-<ParentControl VM="SpadesBeginningViewModel">
-    <SpadesBeginningView />
-</ParentControl>
+<SpadesBeginningView DataContext="DataContext.BeginningScreen" />
 <div>
     <DeckOfCardsTwoPlayerTrickBlazor T="Spades2PlayerCardInformation" DataContext="_vmData.TrickArea1" />
 </div>
-<ParentControl VM="SpadesBiddingViewModel">
-    <SpadesBiddingView />
-</ParentControl>
+<SpadesBiddingView DataContext="DataContext.BiddingScreen" />
 <div>
     <DeckOfCardsHandBlazor R="Spades2PlayerCardInformation"
         AdditionalSpacing="1"

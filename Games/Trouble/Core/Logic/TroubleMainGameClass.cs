@@ -49,7 +49,7 @@ public class TroubleMainGameClass
         LoadControls();
         AfterRestoreDice();
         _gameBoard.LoadSavedGame();
-        BoardGameSaved();
+        GameSaved();
         SaveRoot.LoadMod(_model);
         _model.Cup!.CanShowDice = SaveRoot.DiceNumber > 0;
         return Task.CompletedTask;
@@ -99,6 +99,7 @@ public class TroubleMainGameClass
             }
         }
         await base.ContinueTurnAsync();
+        _gameBoard.Repaint();
     }
     public override async Task MakeMoveAsync(int space)
     {

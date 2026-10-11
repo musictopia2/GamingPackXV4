@@ -1,39 +1,28 @@
 namespace RollEm.Core.Logic;
 [SingletonGame]
-public class RollEmMainGameClass
-    : DiceGameClass<SimpleDice, RollEmPlayerItem, RollEmSaveInfo>
+public class RollEmMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    RollEmVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    RollEmGameContainer gameContainer,
+    StandardRollProcesses<SimpleDice, RollEmPlayerItem> roller,
+    GameBoardProcesses gameBoard,
+    ISystemError error,
+    IToast toast
+        )
+        : DiceGameClass<SimpleDice, RollEmPlayerItem, RollEmSaveInfo>(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
     , IMiscDataNM, IMoveNM, ISerializable
 {
-    private readonly RollEmVMData _model;
-    private readonly RollEmGameContainer _gameContainer;
-    private readonly StandardRollProcesses<SimpleDice, RollEmPlayerItem> _roller;
-    private readonly GameBoardProcesses _gameBoard;
-    public RollEmMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        RollEmVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        RollEmGameContainer gameContainer,
-        StandardRollProcesses<SimpleDice, RollEmPlayerItem> roller,
-        GameBoardProcesses gameBoard,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
-    {
-        _model = currentMod;
-        _gameContainer = gameContainer;
-        _roller = roller;
-        _gameBoard = gameBoard;
-    }
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
         AfterRestoreDice();
-        SaveRoot!.LoadMod(_model);
-        _gameBoard.LoadSavedGame();
+        SaveRoot!.LoadMod(currentMod);
+        gameBoard.LoadSavedGame();
         return Task.CompletedTask;
     }
     private void LoadControls()
@@ -43,17 +32,17 @@ public class RollEmMainGameClass
             return;
         }
         LoadMod();
-        GameBoardGraphicsCP.CreateNumberList(_gameContainer);
+        GameBoardGraphicsCP.CreateNumberList(gameContainer);
         IsLoaded = true;
     }
     protected override async Task ComputerTurnAsync()
     {
         if (SaveRoot!.GameStatus == EnumStatusList.NeedRoll)
         {
-            await _roller.RollDiceAsync();
+            await Roller.RollDiceAsync();
             return;
         }
-        var thisList = ComputerAI.NumberList(_gameBoard);
+        var thisList = ComputerAI.NumberList(gameBoard);
         if (thisList.Count == 0)
         {
             if (BasicData!.MultiPlayer == true)
@@ -63,10 +52,7 @@ public class RollEmMainGameClass
             await EndTurnAsync();
             return;
         }
-        await thisList.ForEachAsync(async thisItem =>
-        {
-            await MakeMoveAsync(thisItem);
-        });
+        await thisList.ForEachAsync(MakeMoveAsync);
     }
     public override async Task SetUpGameAsync(bool isBeginning)
     {
@@ -76,7 +62,7 @@ public class RollEmMainGameClass
             throw new CustomBasicException("The loader never set the finish up code.  Rethink");
         }
         SetUpDice();
-        SaveRoot!.LoadMod(_model);
+        SaveRoot!.LoadMod(currentMod);
         SaveRoot.Round = 1;
         SaveRoot.GameStatus = EnumStatusList.NeedRoll;
         PlayerList!.ForEach(thisPlayer =>
@@ -92,8 +78,8 @@ public class RollEmMainGameClass
         {
             await Network!.SendMoveAsync(Space);
         }
-        await _gameBoard.MakeMoveAsync(Space);
-        bool rets = _gameBoard.IsMoveFinished();
+        await gameBoard.MakeMoveAsync(Space);
+        bool rets = gameBoard.IsMoveFinished();
         if (rets == false)
         {
             if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Computer)
@@ -111,13 +97,13 @@ public class RollEmMainGameClass
             await ContinueTurnAsync();
             return;
         }
-        _gameBoard.FinishMove();
+        gameBoard.FinishMove();
         SaveRoot!.GameStatus = EnumStatusList.NeedRoll;
         await ContinueTurnAsync();
     }
     public override Task PopulateSaveRootAsync()
     {
-        _gameBoard.SaveGame();
+        gameBoard.SaveGame();
         return base.PopulateSaveRootAsync();
     }
     private async Task GameOverAsync()
@@ -130,7 +116,7 @@ public class RollEmMainGameClass
         switch (status)
         {
             case "clearrecent":
-                _gameBoard.ClearRecent(true);
+                gameBoard.ClearRecent(true);
                 await ContinueTurnAsync();
                 return;
             default:
@@ -139,7 +125,7 @@ public class RollEmMainGameClass
     }
     public override async Task StartNewTurnAsync()
     {
-        _gameBoard.ClearBoard();
+        gameBoard.ClearBoard();
         this.ShowTurn();
         SaveRoot!.GameStatus = EnumStatusList.NeedRoll;
         await ContinueTurnAsync();
@@ -151,7 +137,7 @@ public class RollEmMainGameClass
     }
     public override async Task EndTurnAsync()
     {
-        int score = _gameBoard.CalculateScore;
+        int score = gameBoard.CalculateScore;
         SingleInfo!.ScoreRound = score;
         SingleInfo.ScoreGame += score;
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
@@ -159,7 +145,7 @@ public class RollEmMainGameClass
         {
             if (SaveRoot!.Round == 5 || Test!.ImmediatelyEndGame)
             {
-                _gameBoard.ClearBoard();
+                gameBoard.ClearBoard();
                 await GameOverAsync();
                 return;
             }

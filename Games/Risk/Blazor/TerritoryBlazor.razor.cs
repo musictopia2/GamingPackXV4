@@ -8,7 +8,7 @@ public partial class TerritoryBlazor
     private readonly RiskGameContainer _gameContainer;
     public TerritoryBlazor()
     {
-        _gameContainer = aa1.Resolver!.Resolve<RiskGameContainer>();
+        _gameContainer = Resolver!.Resolve<RiskGameContainer>();
     }
     private async Task PrivateClick()
     {

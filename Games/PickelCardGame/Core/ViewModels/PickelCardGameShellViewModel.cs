@@ -14,35 +14,15 @@ public class PickelCardGameShellViewModel : BasicTrickShellViewModel<PickelCardG
         : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
     {
         delegates.CloseBiddingAsync = CloseBidAsync;
-        delegates.LoadBiddingAsync = LoadBidAsync;
-    }
-    public PickelBidViewModel? BidScreen { get; set; }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<PickelCardGameMainViewModel>();
-        return model;
     }
     private async Task CloseBidAsync()
     {
-        if (BidScreen == null)
+        if (IsPromptOpened == false)
         {
             return;
         }
-        await CloseSpecificChildAsync(BidScreen);
-        BidScreen = null;
-        await StartNewGameAsync();
+        ClosePrompt();
+        await LoadMainAsync();
     }
-    private async Task LoadBidAsync()
-    {
-        if (BidScreen != null)
-        {
-            await CloseSpecificChildAsync(BidScreen);
-        }
-        BidScreen = MainContainer.Resolve<PickelBidViewModel>();
-        await LoadScreenAsync(BidScreen);
-    }
-    protected override async Task GetStartingScreenAsync()
-    {
-        await LoadBidAsync();
-    }
+    protected override EnumOpeningCategory OpeningCategory => EnumOpeningCategory.GamePrompt;
 }

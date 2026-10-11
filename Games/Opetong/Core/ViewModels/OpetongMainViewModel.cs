@@ -1,52 +1,40 @@
 namespace Opetong.Core.ViewModels;
 [InstanceGame]
-public partial class OpetongMainViewModel : BasicCardGamesVM<RegularRummyCard>
-{
-    private readonly OpetongMainGameClass _mainGame;
-    private readonly OpetongVMData _model;
-    private readonly IToast _toast;
-    private readonly PrivateAutoResumeProcesses _privateAutoResume;
-    private readonly OpetongGameContainer _gameContainer;
-    public OpetongMainViewModel(CommandContainer commandContainer,
+public partial class OpetongMainViewModel(CommandContainer commandContainer,
         OpetongMainGameClass mainGame,
         OpetongVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         IToast toast,
         PrivateAutoResumeProcesses privateAutoResume,
-        OpetongGameContainer gameContainer
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        OpetongGameContainer gameContainer) : BasicCardGamesVM<RegularRummyCard>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _toast = toast;
-        _privateAutoResume = privateAutoResume;
-        _gameContainer = gameContainer;
-        var player = _mainGame.PlayerList.GetSelf();
+        var player = mainGame.PlayerList.GetSelf();
         player.DoInit();
-        _model.Deck1.NeverAutoDisable = true;
-        _model.TempSets.Init(this);
-        _model.TempSets.ClearBoard();
+        viewModel.Deck1.NeverAutoDisable = true;
+        viewModel.TempSets.Init(this);
+        viewModel.TempSets.ClearBoard();
         PossibleAutoResume();
-        _model.MainSets.SendEnableProcesses(this, () => false);
-        _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
-        _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
-        CreateCommands(commandContainer);
+        viewModel.MainSets.SendEnableProcesses(this, () => false);
+        viewModel.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
+        viewModel.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     private void PossibleAutoResume()
     {
-        if (_gameContainer.TempSets.Count > 0)
+        if (gameContainer.TempSets.Count > 0)
         {
-            var player = _gameContainer.PlayerList!.GetSelf();
+            var player = gameContainer.PlayerList!.GetSelf();
             bool hadAny = false;
-            foreach (var item in _gameContainer.TempSets)
+            foreach (var item in gameContainer.TempSets)
             {
-                var current = _model.TempSets.SetList[item.SetNumber - 1];
-                var cards = item.Cards.GetNewObjectListFromDeckList(_gameContainer.DeckList);
+                var current = viewModel.TempSets.SetList[item.SetNumber - 1];
+                var cards = item.Cards.GetNewObjectListFromDeckList(gameContainer.DeckList);
                 DeckRegularDict<RegularRummyCard> toAdd = [];
                 foreach (var card in cards)
                 {
@@ -62,7 +50,7 @@ public partial class OpetongMainViewModel : BasicCardGamesVM<RegularRummyCard>
             }
             if (hadAny)
             {
-                _model.TempSets.PublicCount();
+                viewModel.TempSets.PublicCount();
             }
         }
     }
@@ -74,9 +62,9 @@ public partial class OpetongMainViewModel : BasicCardGamesVM<RegularRummyCard>
             return;
         }
         _isProcessing = true;
-        var tempList = _model.PlayerHand1!.ListSelectedObjects(true);
-        _model.TempSets!.AddCards(index, tempList);
-        await _privateAutoResume.SaveStateAsync(_model);
+        var tempList = viewModel.PlayerHand1!.ListSelectedObjects(true);
+        viewModel.TempSets!.AddCards(index, tempList);
+        await privateAutoResume.SaveStateAsync(viewModel);
         _isProcessing = false;
     }
     protected override bool CanEnableDeck()
@@ -98,19 +86,19 @@ public partial class OpetongMainViewModel : BasicCardGamesVM<RegularRummyCard>
     [Command(EnumCommandCategory.Game)]
     public async Task PlaySetAsync()
     {
-        int nums = _mainGame!.FindValidSet();
+        int nums = mainGame!.FindValidSet();
         if (nums == 0)
         {
-            _toast.ShowUserErrorToast("Sorry, there is no valid set here");
+            Toast.ShowUserErrorToast("Sorry, there is no valid set here");
             return;
         }
-        var thisCol = _model.TempSets.ObjectList(nums).ToRegularDeckDict();
-        _model.TempSets.ClearBoard(nums);
-        if (_mainGame.BasicData!.MultiPlayer)
+        var thisCol = viewModel.TempSets.ObjectList(nums).ToRegularDeckDict();
+        viewModel.TempSets.ClearBoard(nums);
+        if (mainGame.BasicData!.MultiPlayer)
         {
             var tempCol = thisCol.GetDeckListFromObjectList();
-            await _mainGame.Network!.SendAllAsync("newset", tempCol);
+            await mainGame.Network!.SendAllAsync("newset", tempCol);
         }
-        await _mainGame.PlaySetAsync(thisCol);
+        await mainGame.PlaySetAsync(thisCol);
     }
 }

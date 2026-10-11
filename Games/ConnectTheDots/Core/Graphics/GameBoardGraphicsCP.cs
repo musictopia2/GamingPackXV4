@@ -24,7 +24,7 @@ public class GameBoardGraphicsCP
     }
     private static void InitDots(ConnectTheDotsGameContainer gameContainer)
     {
-        gameContainer.DotList = new();
+        gameContainer.DotList = [];
         for (int x = 1; x <= 8; x++)
         {
             for (int y = 1; y <= 8; y++)
@@ -38,7 +38,7 @@ public class GameBoardGraphicsCP
     }
     private static void InitSquares(ConnectTheDotsGameContainer gameContainer)
     {
-        gameContainer.SquareList = new();
+        gameContainer.SquareList = [];
         for (int x = 1; x <= 7; x++)
         {
             for (int y = 1; y <= 7; y++)
@@ -53,7 +53,7 @@ public class GameBoardGraphicsCP
     }
     private static void InitLines(ConnectTheDotsGameContainer gameContainer)
     {
-        gameContainer.LineList = new();
+        gameContainer.LineList = [];
         LineInfo thisLine;
         for (int x = 1; x <= 8; x++)
         {

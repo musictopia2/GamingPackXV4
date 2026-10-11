@@ -16,54 +16,29 @@ public class BladesOfSteelShellViewModel : BasicMultiplayerShellViewModel<Blades
         delegates.ReloadFaceoffAsync = LoadFaceoffAsync;
         delegates.LoadMainGameAsync = LoadMainGameAsync;
     }
-    public FaceoffViewModel? FaceoffScreen { get; set; }
     private async Task LoadMainGameAsync()
     {
-        if (FaceoffScreen == null)
-        {
-            throw new CustomBasicException("Faceoff should have been loaded first.  Rethink");
-        }
-        await CloseSpecificChildAsync(FaceoffScreen);
-        FaceoffScreen = null;
-        MainVM = MainContainer.Resolve<BladesOfSteelMainViewModel>();
-        await LoadScreenAsync(MainVM);
+        ClosePrompt();
+        await base.StartNewGameAsync(); //i think.
     }
     private async Task LoadFaceoffAsync()
     {
-        if (MainVM != null)
-        {
-            await CloseSpecificChildAsync(MainVM);
-            MainVM = null;
-        }
-        if (FaceoffScreen != null)
-        {
-            throw new CustomBasicException("Faceoff should be null when loading faceoffs");
-        }
-        FaceoffScreen = MainContainer.Resolve<FaceoffViewModel>();
-        await LoadScreenAsync(FaceoffScreen);
+        await CloseMainAsync();
+        await OpenPromptAsync();
     }
     protected override async Task StartNewGameAsync()
     {
-        if (MainVM is not null)
-        {
-            await MainVM.TryCloseAsync();
-        }
-        BladesOfSteelGameContainer gameContainer = MainContainer.Resolve<BladesOfSteelGameContainer>();
+        await CloseMainAsync(); //to start with.
+        BladesOfSteelGameContainer gameContainer = Resolver!.Resolve<BladesOfSteelGameContainer>();
         if (gameContainer.SaveRoot is null || gameContainer.SaveRoot.IsFaceOff)
         {
-            if (FaceoffScreen != null)
+            if (IsPromptOpened)
             {
-                await CloseSpecificChildAsync(FaceoffScreen);
-                FaceoffScreen = null;
+                ClosePrompt();
             }
-            await LoadFaceoffAsync();
+            await OpenPromptAsync();
             return;
         }
-        MainVM = MainContainer.Resolve<BladesOfSteelMainViewModel>();
-        await LoadScreenAsync(MainVM); //try this way.
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        throw new CustomBasicException("Something else should have happened instead of getting the main view model because of faceoffs");
+        await base.StartNewGameAsync();
     }
 }

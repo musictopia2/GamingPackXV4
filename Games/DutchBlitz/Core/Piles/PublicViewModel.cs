@@ -1,20 +1,15 @@
 ﻿namespace DutchBlitz.Core.Piles;
-public class PublicViewModel : PublicPilesVM<DutchBlitzCardInformation>
+public class PublicViewModel(DutchBlitzGameContainer gameContainer) : PublicPilesVM<DutchBlitzCardInformation>(gameContainer.Command)
 {
-    private readonly DutchBlitzGameContainer _gameContainer;
-    public PublicViewModel(DutchBlitzGameContainer gameContainer) : base(gameContainer.Command)
-    {
-        _gameContainer = gameContainer;
-    }
     protected override int MaximumAllowed => 10;
     public bool CanCreatePile(int deck)
     {
-        var thisCard = _gameContainer.DeckList!.GetSpecificItem(deck);
+        var thisCard = gameContainer.DeckList!.GetSpecificItem(deck);
         return thisCard.CardValue == 1;
     }
     public bool CanAddToPile(int deck, int pile)
     {
-        var thisCard = _gameContainer.DeckList!.GetSpecificItem(deck);
+        var thisCard = gameContainer.DeckList!.GetSpecificItem(deck);
         return CanAddToPile(thisCard, pile);
     }
     public bool CanAddToPile(DutchBlitzCardInformation newCard, int pile)
@@ -23,7 +18,7 @@ public class PublicViewModel : PublicPilesVM<DutchBlitzCardInformation>
         {
             return false;
         }
-        if (_gameContainer.Test!.AllowAnyMove == true && _gameContainer.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        if (gameContainer.Test!.AllowAnyMove == true && gameContainer.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             return true; //while i test.
         }

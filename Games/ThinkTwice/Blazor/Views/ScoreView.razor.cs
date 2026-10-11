@@ -1,8 +1,6 @@
 namespace ThinkTwice.Blazor.Views;
 public partial class ScoreView
 {
-    [CascadingParameter]
-    public ScoreViewModel? DataContext { get; set; }
     private string GetButtonColor(string text)
     {
         if (DataContext!.VMData!.ItemSelected == -1)

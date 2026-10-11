@@ -10,5 +10,5 @@ public class HouseInfo : LifeBaseCard
     public string Description { get; set; } = "";
     public decimal HousePrice { get; set; }
     public decimal InsuranceCost { get; set; }
-    public Dictionary<int, decimal> SellingPrices { get; set; } = new();
+    public Dictionary<int, decimal> SellingPrices { get; set; } = [];
 }

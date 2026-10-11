@@ -1,8 +1,7 @@
 ﻿namespace DominosRegular.Core.Logic;
 public partial class GameBoardCP : SimpleControlObservable
 {
-
-    public DeckRegularDict<SimpleDominoInfo> DominoList = new();
+    public StateList<SimpleDominoInfo> DominoList = [];
     public ControlCommand? DominoCommand { get; set; }
     private DominosRegularSaveInfo? _saveRoot;
     [Command(EnumCommandCategory.Control)]
@@ -70,7 +69,7 @@ public partial class GameBoardCP : SimpleControlObservable
     public void LoadSavedGame(DominosRegularSaveInfo saveRoot)
     {
         _saveRoot = saveRoot;
-        DominoList.ReplaceRange(new BasicList<SimpleDominoInfo> { FirstDomino, CenterDomino, SecondDomino });
+        DominoList.ReplaceRange([FirstDomino, CenterDomino, SecondDomino]);
     }
     public void ClearBoard(DominosRegularSaveInfo saveRoot)
     {
@@ -81,7 +80,7 @@ public partial class GameBoardCP : SimpleControlObservable
         SecondDomino.Deck = -2;
         CenterDomino = new ();
         CenterDomino.Deck = -3;
-        DominoList.ReplaceRange(new BasicList<SimpleDominoInfo> { FirstDomino, CenterDomino, SecondDomino });
+        DominoList.ReplaceRange([FirstDomino, CenterDomino, SecondDomino]);
     }
     public void PopulateCenter(SimpleDominoInfo thisDomino)
     {
@@ -96,7 +95,6 @@ public partial class GameBoardCP : SimpleControlObservable
     {
         DominoCommand!.ReportCanExecuteChange();
     }
-    protected override void PrivateEnableAlways() { }
     public bool IsValidMove(int whichOne, SimpleDominoInfo thisDomino)
     {
         if (FirstDomino.Deck <= 0 && whichOne == 1 || SecondDomino.Deck <= 0 && whichOne == 2)

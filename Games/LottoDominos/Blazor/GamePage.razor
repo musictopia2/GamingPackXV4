@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="LottoDominosMainViewModel">
+    <MainScreen>
         <LottoDominosMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<LottoDominosPlayerItem>">
-        <MultiplayerOpeningView P="LottoDominosPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="LottoDominosPlayerItem" />
 </CascadingValue>

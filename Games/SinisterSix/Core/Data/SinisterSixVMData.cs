@@ -4,13 +4,13 @@ namespace SinisterSix.Core.Data;
 public partial class SinisterSixVMData : IBasicDiceGamesData<EightSidedDice>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public int MaxRolls { get; set; }
+    public partial int MaxRolls { get; set; }
     [LabelColumn]
-    public int RollNumber { get; set; }
+    public partial int RollNumber { get; set; }
     private readonly IGamePackageResolver _resolver;
     private readonly CommandContainer _command;
     public DiceCup<EightSidedDice>? Cup { get; set; }

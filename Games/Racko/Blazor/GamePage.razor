@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="RackoMainViewModel">
+    <MainScreen>
         <RackoMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<RackoPlayerItem>">
-        <MultiplayerOpeningView P="RackoPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="RackoPlayerItem" />
 </CascadingValue>

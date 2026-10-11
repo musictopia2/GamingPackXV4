@@ -1,39 +1,30 @@
 namespace Concentration.Core.Logic;
 [SingletonGame]
-public class ConcentrationMainGameClass
-    : CardGameClass<RegularSimpleCard, ConcentrationPlayerItem, ConcentrationSaveInfo>
+public class ConcentrationMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    ConcentrationVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<RegularSimpleCard> cardInfo,
+    CommandContainer command,
+    ConcentrationGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        )
+        : CardGameClass<RegularSimpleCard, ConcentrationPlayerItem, ConcentrationSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, ISerializable
 {
-    private readonly ConcentrationVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly ConcentrationGameContainer _gameContainer;
-    public ConcentrationMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        ConcentrationVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<RegularSimpleCard> cardInfo,
-        CommandContainer command,
-        ConcentrationGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-    }
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
-        _model!.GameBoard1!.PileList = SaveRoot!.BoardList.ToBasicList();
+        currentMod!.GameBoard1!.PileList = SaveRoot!.BoardList.ToBasicList();
         return base.FinishGetSavedAsync();
     }
     public override async Task ContinueTurnAsync()
     {
-        var thisCol = _model!.GameBoard1!.GetSelectedCards();
+        var thisCol = currentMod!.GameBoard1!.GetSelectedCards();
         if (thisCol.Count == 2)
         {
             await SaveStateAsync(); //so you can't cheat.
@@ -46,15 +37,14 @@ public class ConcentrationMainGameClass
     {
         if (IsValidMove(thisCol) == true)
         {
-            _command.UpdateAll();
             if (Test!.NoAnimations == false)
             {
                 await Delay!.DelaySeconds(1);
             }
             RemoveComputer(thisCol);
-            _model!.GameBoard1!.SelectedCardsGone();
+            currentMod!.GameBoard1!.SelectedCardsGone();
             SingleInfo!.Pairs++;
-            if (_model.GameBoard1.CardsGone == true || Test.ImmediatelyEndGame == true)
+            if (currentMod.GameBoard1.CardsGone == true || Test.ImmediatelyEndGame == true)
             {
                 await GameOverAsync();
                 return;
@@ -62,14 +52,18 @@ public class ConcentrationMainGameClass
             await ContinueTurnAsync();
             return;
         }
-        _command.UpdateAll();
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(5);
         }
-        _model!.GameBoard1!.UnselectCards();
+        currentMod.GameBoard1!.UnselectCards();
         AddComputer(thisCol);
         await EndTurnAsync();
+    }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        currentMod.GameBoard1!.ReportCanExecuteChange();
     }
     private void LoadControls()
     {
@@ -121,14 +115,14 @@ public class ConcentrationMainGameClass
         {
             await Delay!.DelaySeconds(1);
         }
-        await SelectCardAsync(ComputerAI.CardToTry(this, _model, _gameContainer));
+        await SelectCardAsync(ComputerAI.CardToTry(this, currentMod, gameContainer));
     }
     protected override Task StartSetUpAsync(bool isBeginning)
     {
         LoadControls();
         PlayerList!.ForEach(thisPlayer => thisPlayer.Pairs = 0);
-        SaveRoot!.ComputerList = new DeckRegularDict<RegularSimpleCard>();
-        _model!.GameBoard1!.ClearBoard();
+        SaveRoot!.ComputerList = [];
+        currentMod!.GameBoard1!.ClearBoard();
         return base.StartSetUpAsync(isBeginning);
     }
     async Task IMiscDataNM.MiscDataReceived(string status, string content)
@@ -151,7 +145,7 @@ public class ConcentrationMainGameClass
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects();
-        _command.ManuelFinish = true;
+        CommandContainer.ManuelFinish = true;
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
@@ -162,7 +156,7 @@ public class ConcentrationMainGameClass
     }
     public override async Task PopulateSaveRootAsync()
     {
-        SaveRoot!.BoardList = _model.GameBoard1.PileList!.ToBasicList();
+        SaveRoot!.BoardList = currentMod.GameBoard1.PileList!.ToBasicList();
         await base.PopulateSaveRootAsync();
     }
     internal async Task SelectCardAsync(int deck)
@@ -171,7 +165,7 @@ public class ConcentrationMainGameClass
         {
             await Network!.SendAllAsync("selectcard", deck);
         }
-        _model!.GameBoard1!.SelectCard(deck);
+        currentMod!.GameBoard1!.SelectCard(deck);
         await ContinueTurnAsync();
     }
 }

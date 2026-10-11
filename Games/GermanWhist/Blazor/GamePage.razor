@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="GermanWhistMainViewModel">
+    <MainScreen>
         <GermanWhistMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<GermanWhistPlayerItem>">
-        <MultiplayerOpeningView P="GermanWhistPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="GermanWhistPlayerItem" />
 </CascadingValue>

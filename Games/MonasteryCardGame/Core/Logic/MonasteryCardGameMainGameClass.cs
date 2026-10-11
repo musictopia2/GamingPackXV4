@@ -1,47 +1,34 @@
 namespace MonasteryCardGame.Core.Logic;
 [SingletonGame]
-public class MonasteryCardGameMainGameClass
-    : CardGameClass<MonasteryCardInfo, MonasteryCardGamePlayerItem, MonasteryCardGameSaveInfo>
+public class MonasteryCardGameMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    MonasteryCardGameVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<MonasteryCardInfo> cardInfo,
+    CommandContainer command,
+    MonasteryCardGameGameContainer gameContainer,
+    ISystemError error,
+    IToast toast,
+    PrivateAutoResumeProcesses privateAutoResume
+        )
+        : CardGameClass<MonasteryCardInfo, MonasteryCardGamePlayerItem, MonasteryCardGameSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, IStartNewGame, ISerializable
 {
-    private readonly MonasteryCardGameVMData _model;
-    private readonly CommandContainer _command;
-    private readonly MonasteryCardGameGameContainer _gameContainer;
-    private readonly PrivateAutoResumeProcesses _privateAutoResume;
     internal MissionList? CurrentMission { get; set; }
     internal BasicList<MissionList>? MissionInfo { get; set; }
-#pragma warning disable IDE0290 // Use primary constructor
-    public MonasteryCardGameMainGameClass(IGamePackageResolver mainContainer,
-#pragma warning restore IDE0290 // Use primary constructor
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        MonasteryCardGameVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<MonasteryCardInfo> cardInfo,
-        CommandContainer command,
-        MonasteryCardGameGameContainer gameContainer,
-        ISystemError error,
-        IToast toast,
-        PrivateAutoResumeProcesses privateAutoResume
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _privateAutoResume = privateAutoResume;
-    }
     public override async Task FinishGetSavedAsync()
     {
-        _model!.MainSets!.ClearBoard();
-        _gameContainer.TempSets.Clear();
+        currentMod!.MainSets!.ClearBoard();
+        gameContainer.TempSets.Clear();
         LoadControls();
         int x = SaveRoot!.SetList.Count;
         x.Times(items =>
         {
-            RummySet thisSet = new(_gameContainer);
-            _model.MainSets.CreateNewSet(thisSet);
+            RummySet thisSet = new(gameContainer);
+            currentMod.MainSets.CreateNewSet(thisSet);
         });
         PlayerList!.ForEach(thisPlayer =>
         {
@@ -53,7 +40,7 @@ public class MonasteryCardGameMainGameClass
         });
         SingleInfo = PlayerList.GetSelf();
         SortCards();
-        _model.MainSets.LoadSets(SaveRoot.SetList);
+        currentMod.MainSets.LoadSets(SaveRoot.SetList);
         SingleInfo = PlayerList.GetWhoPlayer();
         if (SaveRoot.Mission == 0)
         {
@@ -65,10 +52,10 @@ public class MonasteryCardGameMainGameClass
         }
         PopulateMissions();
         bool rets;
-        rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer);
+        rets = await privateAutoResume.HasAutoResumeAsync(gameContainer);
         if (rets)
         {
-            await _privateAutoResume.RestoreStateAsync(_gameContainer);
+            await privateAutoResume.RestoreStateAsync(gameContainer);
         }
         await base.FinishGetSavedAsync();
         CreateRummys();
@@ -84,11 +71,11 @@ public class MonasteryCardGameMainGameClass
     }
     private void CreateRummys()
     {
-        if (_gameContainer.Rummys != null)
+        if (gameContainer.Rummys != null)
         {
             return;
         }
-        _gameContainer.Rummys = new RummyClass(_gameContainer);
+        gameContainer.Rummys = new RummyClass(gameContainer);
     }
     private void CreateSets()
     {
@@ -184,9 +171,9 @@ public class MonasteryCardGameMainGameClass
     }
     public override Task PopulateSaveRootAsync()
     {
-        SaveRoot!.SetList = _model!.MainSets!.SavedSets();
+        SaveRoot!.SetList = currentMod!.MainSets!.SavedSets();
         MonasteryCardGamePlayerItem self = PlayerList!.GetSelf();
-        self.AdditionalCards = _model.TempSets!.ListAllObjects();
+        self.AdditionalCards = currentMod.TempSets!.ListAllObjects();
         return base.PopulateSaveRootAsync();
     }
     protected override Task StartSetUpAsync(bool isBeginning)
@@ -200,14 +187,14 @@ public class MonasteryCardGameMainGameClass
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
     {
-        _gameContainer.TempSets.Clear();
+        gameContainer.TempSets.Clear();
         if (IsLoaded == false)
         {
             LoadControls();
             CreateRummys();
             SingleInfo = PlayerList!.GetSelf();
         }
-        _model!.MainSets!.ClearBoard();
+        currentMod!.MainSets!.ClearBoard();
         SaveRoot!.SetList.Clear();
         SingleInfo = PlayerList!.GetWhoPlayer();
         PopulateMissions();
@@ -248,7 +235,7 @@ public class MonasteryCardGameMainGameClass
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         UnselectCards();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
@@ -263,7 +250,7 @@ public class MonasteryCardGameMainGameClass
             var thisCol = await thisSend.CardData.GetObjectsFromDataAsync(SingleInfo!.MainHandList);
             if (x == 1)
             {
-                _model!.MissionChosen = thisSend.MissionCompleted;
+                currentMod!.MissionChosen = thisSend.MissionCompleted;
                 ProcessCurrentMission();
             }
             CreateNewSet(thisCol, thisSend.Index);
@@ -274,7 +261,7 @@ public class MonasteryCardGameMainGameClass
         message = "";
         index = 0;
         deck = 0;
-        if (_gameContainer.AlreadyDrew == false && _gameContainer.PreviousCard == 0)
+        if (gameContainer.AlreadyDrew == false && gameContainer.PreviousCard == 0)
         {
             pickUp = true;
         }
@@ -284,15 +271,15 @@ public class MonasteryCardGameMainGameClass
         }
         if (pickUp == true)
         {
-            if (_model!.PlayerHand1!.HowManySelectedObjects > 0 || _model.TempSets!.HowManySelectedObjects > 0)
+            if (currentMod!.PlayerHand1!.HowManySelectedObjects > 0 || currentMod.TempSets!.HowManySelectedObjects > 0)
             {
                 message = "There is at least one card selected.  Unselect all the cards before picking up from discard";
                 return false;
             }
             return true;
         }
-        var thisCol = _model!.PlayerHand1!.ListSelectedObjects();
-        var otherCol = _model.TempSets!.ListSelectedObjects();
+        var thisCol = currentMod!.PlayerHand1!.ListSelectedObjects();
+        var otherCol = currentMod.TempSets!.ListSelectedObjects();
         if (thisCol.Count == 0 && otherCol.Count == 0)
         {
             message = "Sorry, you must select a card to discard";
@@ -305,15 +292,15 @@ public class MonasteryCardGameMainGameClass
         }
         if (thisCol.Count == 0)
         {
-            index = _model.TempSets.PileForSelectedObject;
-            deck = _model.TempSets.DeckForSelectedObjected(index);
+            index = currentMod.TempSets.PileForSelectedObject;
+            deck = currentMod.TempSets.DeckForSelectedObjected(index);
         }
         else
         {
-            deck = _model.PlayerHand1.ObjectSelected();
+            deck = currentMod.PlayerHand1.ObjectSelected();
         }
-        var thisCard = _gameContainer.DeckList!.GetSpecificItem(deck);
-        if (thisCard.Deck == _gameContainer.PreviousCard && SingleInfo!.ObjectCount > 1)
+        var thisCard = gameContainer.DeckList!.GetSpecificItem(deck);
+        if (thisCard.Deck == gameContainer.PreviousCard && SingleInfo!.ObjectCount > 1)
         {
             message = "Sorry, you cannot discard the one that was picked up since there is more than one card to choose from";
             return false;
@@ -328,9 +315,9 @@ public class MonasteryCardGameMainGameClass
         }
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
         {
-            if (_model!.TempSets!.HasObject(deck))
+            if (currentMod!.TempSets!.HasObject(deck))
             {
-                _model.TempSets.RemoveObject(deck);
+                currentMod.TempSets.RemoveObject(deck);
                 return;
             }
         }
@@ -345,9 +332,9 @@ public class MonasteryCardGameMainGameClass
         DeckRegularDict<MonasteryCardInfo> output = [];
         thisCol.ForEach(thisCard =>
         {
-            if (_model!.TempSets!.HasObject(thisCard.Deck))
+            if (currentMod!.TempSets!.HasObject(thisCard.Deck))
             {
-                _model.TempSets.RemoveObject(thisCard.Deck);
+                currentMod.TempSets.RemoveObject(thisCard.Deck);
             }
             else
             {
@@ -362,8 +349,8 @@ public class MonasteryCardGameMainGameClass
         {
             return;
         }
-        _model!.PlayerHand1!.EndTurn();
-        _model.TempSets!.EndTurn();
+        currentMod!.PlayerHand1!.EndTurn();
+        currentMod.TempSets!.EndTurn();
     }
     private bool CanEndGame()
     {
@@ -380,13 +367,13 @@ public class MonasteryCardGameMainGameClass
     }
     private int GetMissionNumber => MissionInfo!.IndexOf(CurrentMission!);
     private bool DidAllPlayersComplete => PlayerList.All(items => items.FinishedCurrentMission == true);
-    public MissionList GetMission => MissionInfo!.Single(items => items.Description == _model!.MissionChosen);
+    public MissionList GetMission => MissionInfo!.Single(items => items.Description == currentMod!.MissionChosen);
     public void ProcessCurrentMission()
     {
         CurrentMission = GetMission;
         int nums = GetMissionNumber;
         SingleInfo!.CompleteMissionIndex(nums);
-        _model!.CompleteMissions.ReplaceAllWithGivenItem(CurrentMission);
+        currentMod!.CompleteMissions.ReplaceAllWithGivenItem(CurrentMission);
     }
     public void CreateNewSet(DeckRegularDict<MonasteryCardInfo> thisCol, int whichOne)
     {
@@ -398,16 +385,16 @@ public class MonasteryCardGameMainGameClass
         var newCol = thisSet.SetType switch
         {
             EnumMonasterySets.RegularSuits => thisCol, //because no change is needed in this situation.
-            EnumMonasterySets.RegularKinds => _gameContainer.Rummys!.KindList(thisCol, false),
-            EnumMonasterySets.RegularRuns => _gameContainer.Rummys!.RunList(thisCol, EnumRunType.None),
-            EnumMonasterySets.SuitRuns => _gameContainer.Rummys!.RunList(thisCol, EnumRunType.Suit),
+            EnumMonasterySets.RegularKinds => gameContainer.Rummys!.KindList(thisCol, false),
+            EnumMonasterySets.RegularRuns => gameContainer.Rummys!.RunList(thisCol, EnumRunType.None),
+            EnumMonasterySets.SuitRuns => gameContainer.Rummys!.RunList(thisCol, EnumRunType.Suit),
             EnumMonasterySets.DoubleRun => RummyClass.DoubleRunList(thisCol),
-            EnumMonasterySets.KindColor => _gameContainer.Rummys!.KindList(thisCol, true),
-            EnumMonasterySets.RunColors => _gameContainer.Rummys!.RunList(thisCol, EnumRunType.Color),
-            EnumMonasterySets.EvenOdd => _gameContainer.Rummys!.EvenOddList(thisCol),
+            EnumMonasterySets.KindColor => gameContainer.Rummys!.KindList(thisCol, true),
+            EnumMonasterySets.RunColors => gameContainer.Rummys!.RunList(thisCol, EnumRunType.Color),
+            EnumMonasterySets.EvenOdd => gameContainer.Rummys!.EvenOddList(thisCol),
             _ => throw new CustomBasicException("None"),
         };
-        RummySet thisRummy = new(_gameContainer);
+        RummySet thisRummy = new(gameContainer);
         thisRummy.CreateSet(newCol, thisSet.SetType);
         if (thisRummy.HandList.Count != thisCol.Count)
         {
@@ -417,11 +404,11 @@ public class MonasteryCardGameMainGameClass
         {
             throw new CustomBasicException("There was no list to even create a set with.");
         }
-        _model!.MainSets!.CreateNewSet(thisRummy);
+        currentMod!.MainSets!.CreateNewSet(thisRummy);
     }
     public async Task ExpandSetAsync(DeckRegularDict<MonasteryCardInfo> thisCol, int whichOne, int position)
     {
-        var thisRummy = _model!.MainSets!.GetIndividualSet(whichOne);
+        var thisRummy = currentMod!.MainSets!.GetIndividualSet(whichOne);
         RemoveCards(thisCol);
         thisCol.ForEach(thisCard =>
         {
@@ -452,7 +439,7 @@ public class MonasteryCardGameMainGameClass
     }
     public bool IsCardSelected()
     {
-        return _model!.PlayerHand1!.HowManySelectedObjects > 0 || _model.TempSets!.HowManySelectedObjects > 0;
+        return currentMod!.PlayerHand1!.HowManySelectedObjects > 0 || currentMod.TempSets!.HowManySelectedObjects > 0;
     }
     private void ResetSuccess()
     {
@@ -469,7 +456,7 @@ public class MonasteryCardGameMainGameClass
         {
             otherList.Add(MissionInfo![thisIndex]);
         });
-        _model!.PopulateMissions(otherList);
+        currentMod!.PopulateMissions(otherList);
     }
     public bool DidCompleteMission(out BasicList<InstructionInfo> tempList)
     {
@@ -477,12 +464,10 @@ public class MonasteryCardGameMainGameClass
         var thisMission = GetMission;
         DeckRegularDict<MonasteryCardInfo> thisCollection;
         IDeckDict<MonasteryCardInfo> tempCollection;
-        for (int x = 1; x <= _model!.TempSets!.HowManySets; x++)
+        for (int x = 1; x <= currentMod!.TempSets!.HowManySets; x++)
         {
-            tempCollection = _model.TempSets.ObjectList(x);
-#pragma warning disable IDE0028 // Simplify collection initialization  too difficult to read though.
-            thisCollection = new DeckRegularDict<MonasteryCardInfo>();
-#pragma warning restore IDE0028 // Simplify collection initialization
+            tempCollection = currentMod.TempSets.ObjectList(x);
+            thisCollection = [];
             thisCollection.AddRange(tempCollection);
             for (int y = 1; y <= thisMission.MissionSets.Count; y++)
             {

@@ -1,30 +1,24 @@
 namespace ConnectFour.Core.Logic;
 [SingletonGame]
-public class ConnectFourMainGameClass
-    : SimpleBoardGameClass<ConnectFourPlayerItem, ConnectFourSaveInfo, EnumColorChoice, int>, ISerializable,
+public class ConnectFourMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    ConnectFourVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    ConnectFourGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        )
+        : SimpleBoardGameClass<ConnectFourPlayerItem, ConnectFourSaveInfo, EnumColorChoice, int>(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast), ISerializable,
     IBeginningColors<EnumColorChoice, ConnectFourPlayerItem, ConnectFourSaveInfo>
 {
-    public ConnectFourMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        ConnectFourVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        ConnectFourGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
-    {
-        _command = command;
-    }
-
-    private readonly CommandContainer _command;
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
-        BoardGameSaved();
+        GameSaved();
         RepaintBoard();
         return Task.CompletedTask;
     }
@@ -105,7 +99,7 @@ public class ConnectFourMainGameClass
     }
     public override async Task EndTurnAsync()
     {
-        _command!.ManuelFinish = true;
+        CommandContainer.ManuelFinish = true;
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }

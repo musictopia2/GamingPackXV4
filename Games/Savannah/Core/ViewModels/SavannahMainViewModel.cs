@@ -1,66 +1,53 @@
 namespace Savannah.Core.ViewModels;
 [InstanceGame]
-public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
-{
-    private readonly SavannahMainGameClass _mainGame;
-    private readonly SavannahGameContainer _gameContainer;
-    private readonly IToast _toast;
-    public SavannahVMData VMData { get; set; }
-    public SavannahMainViewModel(CommandContainer commandContainer,
+public partial class SavannahMainViewModel(CommandContainer commandContainer,
         SavannahMainGameClass mainGame,
         SavannahVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         SavannahGameContainer gameContainer,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<RegularSimpleCard>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    public SavannahVMData VMData { get; set; } = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = viewModel;
-        _gameContainer = gameContainer;
-        
-        _toast = toast;
-        _gameContainer.WrongDiscardProcess = () =>
+        gameContainer.WrongDiscardProcess = () =>
         {
-            _toast.ShowUserErrorToast("You are not allowed to discard jokers");
+            Toast.ShowUserErrorToast("You are not allowed to discard jokers");
         };
         VMData.Deck1.NeverAutoDisable = true;
         VMData.PlayerHand1.Maximum = 4;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
         VMData.PlayerHand1.BeforeAutoSelectObjectAsync = PlayerHand1_BeforeAutoSelectObjectAsync;
         VMData.SelfStock.StockClickedAsync = SelfStock_StockClickedAsync;
         VMData.PublicPiles.PileClickedAsync = PublicPiles_PileClickedAsync;
+        base.AdditionalInitialize();
     }
     private async Task PublicPiles_PileClickedAsync(int index, BasicPileInfo<RegularSimpleCard> thisPile)
     {
-        SendPlay plays = _mainGame.CardSelected(message =>
-        {
-            _toast.ShowUserErrorToast(message);
-        });
+        SendPlay plays = mainGame.CardSelected(Toast.ShowUserErrorToast);
         await Task.Delay(0);
         if (plays.Deck == 0)
         {
             return;
         }
-        var card = _gameContainer.DeckList.GetSpecificItem(plays.Deck);
+        var card = gameContainer.DeckList.GetSpecificItem(plays.Deck);
         int rolled = VMData.Cup!.DiceList.Sum(x => x.Value);
-        if (_gameContainer.Test.AllowAnyMove == false)
+        if (gameContainer.Test.AllowAnyMove == false)
         {
             if (VMData.PublicPiles.CanPlayOnPile(index, rolled, card) == false)
             {
-                _toast.ShowUserErrorToast("Illegal Move");
+                Toast.ShowUserErrorToast("Illegal Move");
                 return;
             }
         }
         plays.Pile = index;
-        if (_gameContainer.BasicData.MultiPlayer)
+        if (gameContainer.BasicData.MultiPlayer)
         {
-            await _gameContainer.Network!.SendAllAsync(nameof(IMultiplayerModel.Play), plays);
+            await gameContainer.Network!.SendAllAsync(nameof(IMultiplayerModel.Play), plays);
         }
-        await _mainGame.PlayOnPileAsync(plays);
+        await mainGame.PlayOnPileAsync(plays);
     }
     private async Task SelfStock_StockClickedAsync()
     {
@@ -83,11 +70,11 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
     }
     private async Task UnselectAllAsync()
     {
-        if (_gameContainer.UnselectAllPilesAsync is null)
+        if (gameContainer.UnselectAllPilesAsync is null)
         {
             throw new CustomBasicException("Nobody is handling the UnselectAllPilesAsync");
         }
-        await _gameContainer.UnselectAllPilesAsync.Invoke(); //hopefully nothing else because the proper one should be done automatically here.
+        await gameContainer.UnselectAllPilesAsync.Invoke(); //hopefully nothing else because the proper one should be done automatically here.
     }
     partial void CreateCommands(CommandContainer command);
     public bool CanClickPlayerDiscard => CanEnablePlayer;
@@ -130,7 +117,7 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
     {
         get
         {
-            if (_mainGame.SaveRoot.ChoseOtherPlayer)
+            if (mainGame.SaveRoot.ChoseOtherPlayer)
             {
                 return false;
             }
@@ -142,7 +129,7 @@ public partial class SavannahMainViewModel : BasicCardGamesVM<RegularSimpleCard>
             {
                 return false;
             }
-            if (_mainGame.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+            if (mainGame.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
             {
                 return false; //because only self can play obviously.
             }

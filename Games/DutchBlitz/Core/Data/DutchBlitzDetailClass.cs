@@ -14,7 +14,7 @@ public class DutchBlitzDetailClass : IGameInfo, ICardInfo<DutchBlitzCardInformat
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
     int ICardInfo<DutchBlitzCardInformation>.CardsToPassOut => 0;
-    BasicList<int> ICardInfo<DutchBlitzCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<DutchBlitzCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<DutchBlitzCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<DutchBlitzCardInformation>.ReshuffleAllCardsFromDiscard => true;
     bool ICardInfo<DutchBlitzCardInformation>.ShowMessageWhenReshuffling => false;
@@ -22,11 +22,11 @@ public class DutchBlitzDetailClass : IGameInfo, ICardInfo<DutchBlitzCardInformat
     bool ICardInfo<DutchBlitzCardInformation>.PlayerGetsCards => false;
     bool ICardInfo<DutchBlitzCardInformation>.NoPass => true;
     bool ICardInfo<DutchBlitzCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<DutchBlitzCardInformation> ICardInfo<DutchBlitzCardInformation>.DummyHand { get; set; } = new DeckRegularDict<DutchBlitzCardInformation>();
+    DeckRegularDict<DutchBlitzCardInformation> ICardInfo<DutchBlitzCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<DutchBlitzCardInformation>.HasDrawAnimation => false;
     bool ICardInfo<DutchBlitzCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<DutchBlitzCardInformation>.DiscardExcludeList(IListShuffler<DutchBlitzCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

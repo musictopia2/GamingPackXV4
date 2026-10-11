@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="GoFishMainViewModel">
+    <MainScreen>
         <GoFishMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<GoFishPlayerItem>">
-        <MultiplayerOpeningView P="GoFishPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="GoFishPlayerItem" />
 </CascadingValue>

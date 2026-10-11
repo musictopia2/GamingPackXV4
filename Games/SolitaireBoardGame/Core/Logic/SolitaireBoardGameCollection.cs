@@ -4,7 +4,7 @@ public class SolitaireBoardGameCollection : IBoardCollection<GameSpace>
     private readonly Dictionary<Vector, GameSpace> _privateDict;
     public SolitaireBoardGameCollection()
     {
-        _privateDict = new Dictionary<Vector, GameSpace>();
+        _privateDict = [];
     }
     public SolitaireBoardGameCollection(IEnumerable<GameSpace> ThisList)
     {

@@ -14,7 +14,7 @@ public class MonopolyCardGameDetailClass : IGameInfo, ICardInfo<MonopolyCardGame
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<MonopolyCardGameCardInformation>.CardsToPassOut => 10;
-    BasicList<int> ICardInfo<MonopolyCardGameCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<MonopolyCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<MonopolyCardGameCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<MonopolyCardGameCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<MonopolyCardGameCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,11 +22,11 @@ public class MonopolyCardGameDetailClass : IGameInfo, ICardInfo<MonopolyCardGame
     bool ICardInfo<MonopolyCardGameCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<MonopolyCardGameCardInformation>.NoPass => false;
     bool ICardInfo<MonopolyCardGameCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<MonopolyCardGameCardInformation> ICardInfo<MonopolyCardGameCardInformation>.DummyHand { get; set; } = new DeckRegularDict<MonopolyCardGameCardInformation>();
+    DeckRegularDict<MonopolyCardGameCardInformation> ICardInfo<MonopolyCardGameCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<MonopolyCardGameCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<MonopolyCardGameCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<MonopolyCardGameCardInformation>.DiscardExcludeList(IListShuffler<MonopolyCardGameCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

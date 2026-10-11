@@ -1,19 +1,13 @@
-@inherits BasicGameView<SkuckCardGameMainViewModel>
+@inherits CascadingGameView<SkuckCardGameMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
 }
 <GridContainer Inline="true" Columns="70vw auto">
     <GridItem>
-        <ParentControl VM="SkuckBiddingViewModel">
-            <SkuckBiddingView />
-        </ParentControl>
-        <ParentControl VM="SkuckChoosePlayViewModel">
-            <SkuckChoosePlayView />
-        </ParentControl>
-        <ParentControl VM="SkuckSuitViewModel">
-            <SkuckSuitView />
-        </ParentControl>
+        <SkuckBiddingView DataContext="DataContext.BidScreen" />
+        <SkuckChoosePlayView DataContext="DataContext.ChoosePlayScreen" />
+        <SkuckSuitView DataContext="DataContext.SuitScreen" />
         <div>
             <DeckOfCardsTwoPlayerTrickBlazor T="SkuckCardGameCardInformation" DataContext="_vmData.TrickArea1" />
         </div>

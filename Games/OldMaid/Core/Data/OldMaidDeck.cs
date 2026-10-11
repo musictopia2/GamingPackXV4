@@ -15,7 +15,7 @@ public class OldMaidDeck : IRegularDeckInfo
     {
         get
         {
-            BasicList<ExcludeRCard> output = new();
+            BasicList<ExcludeRCard> output = [];
             output.AppendExclude(EnumSuitList.Clubs, 12)
                 .AppendExclude(EnumSuitList.Diamonds, 12)
                 .AppendExclude(EnumSuitList.Hearts, 12);

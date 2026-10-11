@@ -1,15 +1,15 @@
 namespace FillOrBust.Blazor.Views;
 public partial class FillOrBustMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private FillOrBustVMData? _vmData;
     private FillOrBustGameContainer? _gameContainer;
-    private readonly BasicList<LabelGridModel> _temps = new();
+    private readonly BasicList<LabelGridModel> _temps = [];
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<FillOrBustVMData>();
-        _gameContainer = aa1.Resolver.Resolve<FillOrBustGameContainer>();
+        _vmData = Resolver!.Resolve<FillOrBustVMData>();
+        _gameContainer = Resolver.Resolve<FillOrBustGameContainer>();
         _labels.Clear();
         _temps.Clear();
         _labels.AddLabel("Turn", nameof(FillOrBustVMData.NormalTurn))

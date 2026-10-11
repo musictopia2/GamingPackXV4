@@ -1,25 +1,20 @@
 namespace SorryDicedGame.Core.ViewModels;
 [InstanceGame]
-public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
-{
-    public readonly SorryDicedGameMainGameClass MainGame; //if we don't need, delete.
-    private readonly IToast _toast;
-    public SorryDicedGameVMData VMData { get; set; }
-    public SorryDicedGameMainViewModel(CommandContainer commandContainer,
+public partial class SorryDicedGameMainViewModel(CommandContainer commandContainer,
         SorryDicedGameMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         SorryDicedGameVMData data,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        IToast toast) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+
+    public readonly SorryDicedGameMainGameClass MainGame = mainGame; //if we don't need, delete.
+    public SorryDicedGameVMData VMData { get; set; } = data;
+    protected override void AdditionalInitialize()
     {
-        MainGame = mainGame;
-        VMData = data;
-        _toast = toast;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     public bool CanRoll => MainGame.SaveRoot.DiceList.Count == 0;
@@ -105,7 +100,7 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
     {
         if (MainGame.SaveRoot.BoardList.Any(x => x.PlayerOwned == player.Id && x.At == EnumBoardCategory.Home) == false)
         {
-            _toast.ShowUserErrorToast("This player has none at home");
+            toast.ShowUserErrorToast("This player has none at home");
             return;
         }
         if (MainGame.BasicData.MultiPlayer)
@@ -149,20 +144,20 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
         var player = MainGame.PlayerList.GetWhoPlayer();
         if (player.Id == wait.Player)
         {
-            _toast.ShowUserErrorToast("Cannot click on your own wait area when there is no slide");
+            toast.ShowUserErrorToast("Cannot click on your own wait area when there is no slide");
             return;
         }
         var chosen = MainGame.PlayerList[wait.Player];
         var rets = MainGame.SaveRoot.BoardList.Any(x => x.Color == wait.ColorUsed && x.At == EnumBoardCategory.Start);
         if (rets)
         {
-            _toast.ShowUserErrorToast("Cannot click on wait area because must use one from start first");
+            toast.ShowUserErrorToast("Cannot click on wait area because must use one from start first");
             return;
         }
         rets = MainGame.SaveRoot.BoardList.Any(x => x.Color == wait.ColorUsed && x.PlayerOwned == wait.Player && x.At == EnumBoardCategory.Waiting);
         if (rets == false)
         {
-            _toast.ShowUserErrorToast($"{chosen.NickName} has no color {wait.ColorUsed} in their waiting area");
+            toast.ShowUserErrorToast($"{chosen.NickName} has no color {wait.ColorUsed} in their waiting area");
             return;
         }
         if (MainGame.BasicData.MultiPlayer)
@@ -176,7 +171,7 @@ public partial class SorryDicedGameMainViewModel : BasicMultiplayerMainVM
         var player = MainGame.PlayerList[wait.Player];
         if (wait.ColorUsed == player.SlideColor)
         {
-            _toast.ShowUserErrorToast("Must choose a different slide color");
+            toast.ShowUserErrorToast("Must choose a different slide color");
             return;
         }
         if (MainGame.BasicData.MultiPlayer)

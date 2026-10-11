@@ -37,7 +37,13 @@
         @foreach (var frame in player.FrameList)
         {
             <svg x="@x" y="@y" width="150" height="100">
-                <CompleteFrameBlazor @key="frame.Value" Frame="frame.Value" /> 
+
+                <StateContentView DataContext="frame.Value">
+                    <CompleteFrameBlazor @key="frame.Value"
+                                         Frame="frame.Value" />
+                </StateContentView>
+
+                @* <CompleteFrameBlazor @key="frame.Value" Frame="frame.Value" />  *@
             </svg>
             x += 150;
         }

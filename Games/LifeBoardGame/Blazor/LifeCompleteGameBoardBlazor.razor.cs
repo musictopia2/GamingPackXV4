@@ -112,6 +112,10 @@ public partial class LifeCompleteGameBoardBlazor
     }
     protected override bool ShouldRender()
     {
+        if (ContainerData!.SingleInfo is null)
+        {
+            return false;
+        }
         return ContainerData!.SingleInfo!.Color != EnumColorChoice.None;
     }
 }

@@ -1,7 +1,6 @@
 ﻿namespace Savannah.Core.Piles;
-public class StockViewModel : StockPileVM<RegularSimpleCard>
+public class StockViewModel(CommandContainer command) : StockPileVM<RegularSimpleCard>(command)
 {
-    public StockViewModel(CommandContainer command) : base(command) { }
     public override string NextCardInStock()
     {
         if (DidGoOut() == true)

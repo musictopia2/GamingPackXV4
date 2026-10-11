@@ -15,7 +15,7 @@ public class GermanWhistDetailClass : IGameInfo, ICardInfo<GermanWhistCardInform
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<GermanWhistCardInformation>.CardsToPassOut => 13;
-    BasicList<int> ICardInfo<GermanWhistCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<GermanWhistCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<GermanWhistCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<GermanWhistCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<GermanWhistCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,7 +23,7 @@ public class GermanWhistDetailClass : IGameInfo, ICardInfo<GermanWhistCardInform
     bool ICardInfo<GermanWhistCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<GermanWhistCardInformation>.NoPass => false;
     bool ICardInfo<GermanWhistCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<GermanWhistCardInformation> ICardInfo<GermanWhistCardInformation>.DummyHand { get; set; } = new DeckRegularDict<GermanWhistCardInformation>();
+    DeckRegularDict<GermanWhistCardInformation> ICardInfo<GermanWhistCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<GermanWhistCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<GermanWhistCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -35,7 +35,7 @@ public class GermanWhistDetailClass : IGameInfo, ICardInfo<GermanWhistCardInform
     bool ITrickData.HasDummy => false;
     BasicList<int> ICardInfo<GermanWhistCardInformation>.DiscardExcludeList(IListShuffler<GermanWhistCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<GermanWhistCardInformation>.AceLow => false;
     bool IBeginningRegularCards<GermanWhistCardInformation>.CustomDeck => false;

@@ -14,15 +14,10 @@
     }
     return;
 }
-<ParentControl VM="AggravationMainViewModel">
+<MainScreen>
     <AggravationMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<AggravationPlayerItem>">
-    <MultiplayerOpeningView P="AggravationPlayerItem" />
-</ParentControl>
-<ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, AggravationPlayerItem>">
-
-    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="AggravationPlayerItem">
-        <MarblePiece MainColor="@GetColor(Piece.EnumValue)" />
-    </BeginningChooseColorView>
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="AggravationPlayerItem" />
+<BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="AggravationPlayerItem">
+    <MarblePiece MainColor="@GetColor(Piece.EnumValue)" />
+</BeginningChooseColorView>

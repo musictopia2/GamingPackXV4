@@ -1,12 +1,12 @@
 namespace RageCardGame.Blazor.Views;
 public partial class RageColorView
 {
-    private BasicList<ScoreColumnModel> _scores = new();
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private BasicList<ScoreColumnModel> _scores = [];
+    private readonly BasicList<LabelGridModel> _labels = [];
     private RageCardGameVMData? _vmData;
     protected override void OnParametersSet()
     {
-        _vmData = aa1.Resolver!.Resolve<RageCardGameVMData>();
+        _vmData = Resolver!.Resolve<RageCardGameVMData>();
         _scores = ScoreModule.GetScores();
         _labels.Clear();
         _labels.AddLabel("Trump", nameof(RageCardGameVMData.TrumpSuit))

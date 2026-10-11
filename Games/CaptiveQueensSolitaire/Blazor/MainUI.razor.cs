@@ -7,15 +7,18 @@ public partial class MainUI
     public CustomMain? Main { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; }
-    private readonly BasicList<PointF> _points = new();
+    private readonly BasicList<PointF> _points = [];
     private PointF _queenLocation;
     protected override void OnInitialized()
     {
         base.OnInitialized();
     }
     private SizeF _viewSize;
-    protected override void OnParametersSet()
+
+
+    private void Refresh()
     {
+
         if (DataContext == null || Main == null)
         {
             return;
@@ -37,6 +40,11 @@ public partial class MainUI
         _points.Add(new PointF(0, size.Height + 60));
         _points.Add(new PointF(0, size.Height + size.Width + 60));
         _viewSize = new SizeF(size.Width * 6, size.Height * 4.5f);
+    }
+
+    protected override void OnParametersSet()
+    {
+        Refresh();
         base.OnParametersSet();
     }
     private string TargetWidth => (TargetHeight * 6).WidthString<SolitaireCard>();

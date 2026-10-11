@@ -2,18 +2,24 @@ namespace YaBlewIt.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
 [AutoReset]
+[UseStateChanged]
 public partial class YaBlewItVMData : IBasicCardGamesData<YaBlewItCardInformation>, ICup<EightSidedDice>
 {
     private readonly CommandContainer _command;
     private readonly IGamePackageResolver _resolver;
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string OtherLabel { get; set; } = "";
+    public partial string OtherLabel { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
+
+
+    [StateProperty]
+    public partial bool ShowSafeScreen { get; set; }
+
     public YaBlewItVMData(CommandContainer command, IGamePackageResolver resolver)
     {
         Deck1 = new(command);

@@ -58,7 +58,9 @@ public class HeapSolitaireMainGameClass : RegularDeckOfCardsGameClass<HeapSolita
     public async Task SaveStateAsync()
     {
         if (_isBusy)
+        {
             return;
+        }
         _isBusy = true;
         SaveRoot.DeckList = DeckPile!.GetCardIntegers();
         SaveRoot.MainPiles = _model!.Main1.PileList!.ToBasicList();
@@ -73,10 +75,10 @@ public class HeapSolitaireMainGameClass : RegularDeckOfCardsGameClass<HeapSolita
         GameGoing = false;
         await this.SendGameOverAsync(_error);
     }
-    private DeckRegularDict<HeapSolitaireCardInfo> _cardList = new();
+    private DeckRegularDict<HeapSolitaireCardInfo> _cardList = [];
     private DeckRegularDict<HeapSolitaireCardInfo> GetFirstList()
     {
-        DeckRegularDict<HeapSolitaireCardInfo> output = new();
+        DeckRegularDict<HeapSolitaireCardInfo> output = [];
         EnumRegularColorList newColor = EnumRegularColorList.FromValue(_rs.GetRandomNumber(2));
         int newNumber = 7;
         do

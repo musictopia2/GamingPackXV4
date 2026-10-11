@@ -6,6 +6,8 @@ public class DetailCardObservable
     {
         CurrentCard = new();
         CurrentCard.IsUnknown = true;
+        CommandContainer command = Resolver!.Resolve<CommandContainer>();
+        command.UpdateSpecificAction(FluxxActions.ShowCard);
     }
     public void ShowCard<F>(F thisCard)
         where F : FluxxCardInformation, new()
@@ -16,6 +18,8 @@ public class DetailCardObservable
         }
         CurrentCard = FluxxDetailClass.GetNewCard(thisCard.Deck);
         CurrentCard.Populate(thisCard.Deck);
+        CommandContainer command = Resolver!.Resolve<CommandContainer>();
+        command.UpdateSpecificAction(FluxxActions.ShowCard);
     }
     public DetailCardObservable()
     {

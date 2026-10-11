@@ -10,10 +10,7 @@ public class ThinkTwiceSaveInfo : BasicSavedDiceClass<SimpleDice, ThinkTwicePlay
         {
             if (SetProperty(ref _score, value))
             {
-                if (_model != null)
-                {
-                    _model.Score = value;
-                }
+                _model?.Score = value;
             }
         }
     }

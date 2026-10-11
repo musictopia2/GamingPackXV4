@@ -19,39 +19,26 @@ public class UnoShellViewModel : BasicMultiplayerShellViewModel<UnoPlayerItem>
     public ChooseColorViewModel? ColorScreen { get; set; }
     private async Task OpenColorAsync()
     {
-        if (MainVM != null)
+        if (IsMainOpened)
         {
-            await CloseSpecificChildAsync(MainVM);
-            MainVM = null;
+            await CloseMainAsync();
         }
-        if (ColorScreen != null)
+        if (IsPromptOpened)
         {
-            await CloseSpecificChildAsync(ColorScreen);
-            ColorScreen = null;
+            ClosePrompt();
         }
-        ColorScreen = MainContainer.Resolve<ChooseColorViewModel>();
-        await LoadScreenAsync(ColorScreen);
+        await OpenPromptAsync();
     }
     private async Task CloseColorAsync()
     {
-        if (ColorScreen == null && MainVM != null)
+        if (IsPromptOpened == false && IsMainOpened)
         {
             return;
         }
-        if (ColorScreen != null)
+        if (IsPromptOpened)
         {
-            await CloseSpecificChildAsync(ColorScreen);
-            ColorScreen = null;
+            ClosePrompt();
         }
         await StartNewGameAsync(); //misleading because sometimes it can reload even if not new game like in cases like uno.
-    }
-    protected override async Task GetStartingScreenAsync()
-    {
-        await OpenColorAsync();
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<UnoMainViewModel>();
-        return model;
     }
 }

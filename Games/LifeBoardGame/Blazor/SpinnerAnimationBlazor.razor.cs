@@ -1,10 +1,11 @@
 namespace LifeBoardGame.Blazor;
 public partial class SpinnerAnimationBlazor
 {
-    [CascadingParameter]
+    [Parameter]
+    [EditorRequired]
     public SpinnerViewModel? DataContext { get; set; }
 
-    private BasicList<string> _matrixs = new();
+    private BasicList<string> _matrixs = [];
     protected override void OnInitialized()
     {
         _matrixs = Resources.ArrowMatrix.GetResource<BasicList<string>>();

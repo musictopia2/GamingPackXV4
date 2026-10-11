@@ -13,7 +13,6 @@ public class SorryCompleteDiceSet(IGamePackageResolver resolver, SorryDicedGameG
     public BasicList<BasicList<SorryDiceModel>> RollDice(int howManySections = 6)
     {
         IGenerateDice<int> thisG = MainContainer!.Resolve<IGenerateDice<int>>();
-        //thisG.MainContainer = MainContainer;
         BasicList<BasicList<SorryDiceModel>> output = [];
         howManySections.Times(x =>
         {

@@ -1,10 +1,10 @@
 ﻿namespace Payday.Core.ViewModels;
 [InstanceGame]
-public partial class RollerViewModel : ScreenViewModel, IBlankGameVM
+public partial class RollerViewModel
 {
     private readonly PaydayMainGameClass _mainGame;
     private readonly StandardRollProcesses<SimpleDice, PaydayPlayerItem> _roller;
-    public RollerViewModel(CommandContainer commandContainer, PaydayMainGameClass mainGame, StandardRollProcesses<SimpleDice, PaydayPlayerItem> roller, IEventAggregator aggregator) : base(aggregator)
+    public RollerViewModel(CommandContainer commandContainer, PaydayMainGameClass mainGame, StandardRollProcesses<SimpleDice, PaydayPlayerItem> roller)
     {
         CommandContainer = commandContainer;
         _mainGame = mainGame;

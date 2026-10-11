@@ -1,6 +1,7 @@
 //i think this is the most common things i like to do
 namespace Sorry.Blazor;
-public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : MultiplayerBasicBootstrapper<SorryShellViewModel>(starts, mode)
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<SorryShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     //keep there for comments.  for now, if this goes to production, does not work.
     protected override Task RegisterTestsAsync()

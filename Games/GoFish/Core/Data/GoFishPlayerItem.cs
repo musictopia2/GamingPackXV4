@@ -3,5 +3,5 @@ namespace GoFish.Core.Data;
 public partial class GoFishPlayerItem : PlayerSingleHand<RegularSimpleCard>
 {
     [ScoreColumn]
-    public int Pairs { get; set; }
+    public partial int Pairs { get; set; }
 }

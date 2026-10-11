@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="MonopolyCardGameMainViewModel">
+    <MainScreen>
         <MonopolyCardGameMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<MonopolyCardGamePlayerItem>">
-        <MultiplayerOpeningView P="MonopolyCardGamePlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="MonopolyCardGamePlayerItem" />
 </CascadingValue>

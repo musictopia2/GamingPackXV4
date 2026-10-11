@@ -3,15 +3,15 @@ namespace Millebournes.Core.Data;
 public partial class MillebournesPlayerItem : PlayerSingleHand<MillebournesCardInformation>
 {
     [ScoreColumn]
-    public int Team { get; set; }
+    public partial int Team { get; set; }
     [ScoreColumn]
-    public bool OtherTurn { get; set; }
+    public partial bool OtherTurn { get; set; }
     [ScoreColumn]
-    public int Miles { get; set; }
+    public partial int Miles { get; set; }
     [ScoreColumn]
-    public int OtherPoints { get; set; }
+    public partial int OtherPoints { get; set; }
     [ScoreColumn]
-    public int TotalPoints { get; set; }
+    public partial int TotalPoints { get; set; }
     [ScoreColumn]
-    public int Number200s { get; set; }
+    public partial int Number200s { get; set; }
 }

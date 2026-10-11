@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="SkipboMainViewModel">
+    <MainScreen>
         <SkipboMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<SkipboPlayerItem>">
-        <MultiplayerOpeningView P="SkipboPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="SkipboPlayerItem" />
 </CascadingValue>

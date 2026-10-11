@@ -1,4 +1,4 @@
-﻿namespace CheckersCP.Data;
+﻿namespace Checkers.Core.Data;
 public class MoveInfo
 {
     public int SpaceFrom { get; set; }

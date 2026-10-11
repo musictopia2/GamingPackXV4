@@ -1,24 +1,19 @@
 namespace TicTacToe.Core.ViewModels;
 [InstanceGame]
-public partial class TicTacToeMainViewModel : BasicMultiplayerMainVM
-{
-    private readonly TicTacToeMainGameClass _mainGame; //if we don't need, delete.
-    public TicTacToeVMData VMData { get; set; }
-    public TicTacToeMainViewModel(CommandContainer commandContainer,
+public partial class TicTacToeMainViewModel(CommandContainer commandContainer,
         TicTacToeMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        TicTacToeVMData data
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
-    {
-        _mainGame = mainGame;
-        VMData = data;
-        CreateCommands(commandContainer);
-    }
+        TicTacToeVMData data) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+    public TicTacToeVMData VMData { get; set; } = data;
     partial void CreateCommands(CommandContainer container);
+    protected override void AdditionalInitialize()
+    {
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
+    }
     public bool CanMakeMove(SpaceInfoCP space)
     {
         if (VMData is null)
@@ -30,6 +25,16 @@ public partial class TicTacToeMainViewModel : BasicMultiplayerMainVM
     [Command(EnumCommandCategory.Game)]
     public async Task MakeMoveAsync(SpaceInfoCP space)
     {
-        await _mainGame.MakeMoveAsync(space);
+        await mainGame.MakeMoveAsync(space);
+    }
+
+    protected override async Task CloseAsync()
+    {
+        
+    }
+
+    protected override async Task OpenAsync()
+    {
+        
     }
 }

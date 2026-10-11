@@ -126,9 +126,9 @@ internal static class MiscRollExtensions
             }
             return 3;
         }
-        public BasicList<EnumMiscType> GetMiscResults(IRandomGenerator randoms)
+        public StateList<EnumMiscType> GetMiscResults(IRandomGenerator randoms)
         {
-            BasicList<EnumMiscType> output = [];
+            StateList<EnumMiscType> output = [];
             if (saveRoot.NumberOfCops > 3)
             {
                 throw new CustomBasicException("Can never have more than 3 cops");

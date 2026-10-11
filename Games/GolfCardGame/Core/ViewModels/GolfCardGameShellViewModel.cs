@@ -15,34 +15,22 @@ public class GolfCardGameShellViewModel : BasicMultiplayerShellViewModel<GolfCar
     {
         delegates.LoadMainScreenAsync = LoadMainScreenAsync;
     }
-    public FirstViewModel? FirstScreen { get; set; }
     protected override async Task StartNewGameAsync()
     {
-        if (MainVM != null)
-        {
-            await CloseSpecificChildAsync(MainVM);
-            MainVM = null;
-        }
-        if (FirstScreen != null)
+        if (IsPromptOpened)
         {
             throw new CustomBasicException("First Screen should be null when loading First Screens");
         }
-        FirstScreen = MainContainer.Resolve<FirstViewModel>();
-        await LoadScreenAsync(FirstScreen);
+        await CloseMainAsync();
+        await OpenPromptAsync();
     }
     private async Task LoadMainScreenAsync()
     {
-        if (FirstScreen == null)
+        if (IsPromptOpened == false)
         {
-            return;
+            return; //hopefully this is play.
         }
-        await CloseSpecificChildAsync(FirstScreen);
-        FirstScreen = null;
-        MainVM = MainContainer.Resolve<GolfCardGameMainViewModel>();
-        await LoadScreenAsync(MainVM);
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        throw new CustomBasicException("Needed to open first screen instead");
-    }
+        ClosePrompt();
+        await base.StartNewGameAsync();
+    }   
 }

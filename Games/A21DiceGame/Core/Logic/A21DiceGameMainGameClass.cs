@@ -1,30 +1,22 @@
 namespace A21DiceGame.Core.Logic;
 [SingletonGame]
-public class A21DiceGameMainGameClass
-    : DiceGameClass<SimpleDice, A21DiceGamePlayerItem, A21DiceGameSaveInfo>
+public class A21DiceGameMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    A21DiceGameVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    A21DiceGameGameContainer gameContainer,
+    StandardRollProcesses<SimpleDice, A21DiceGamePlayerItem> roller,
+    ISystemError error,
+    IToast toast
+        )
+        : DiceGameClass<SimpleDice, A21DiceGamePlayerItem, A21DiceGameSaveInfo>(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
     , ISerializable
 {
-    private readonly A21DiceGameVMData? _model;
-    private readonly StandardRollProcesses<SimpleDice, A21DiceGamePlayerItem> _roller;
-    private readonly IToast _toast;
-    public A21DiceGameMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        A21DiceGameVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        A21DiceGameGameContainer gameContainer,
-        StandardRollProcesses<SimpleDice, A21DiceGamePlayerItem> roller,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
-    {
-        _model = currentMod;
-        _roller = roller;
-        _toast = toast;
-    }
+    private readonly A21DiceGameVMData? _model = currentMod;
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -48,7 +40,7 @@ public class A21DiceGameMainGameClass
         }
         if (SingleInfo!.Score <= 15)
         {
-            await _roller!.RollDiceAsync();
+            await Roller!.RollDiceAsync();
             return;
         }
         if (BasicData!.MultiPlayer == true)
@@ -96,7 +88,7 @@ public class A21DiceGameMainGameClass
         SingleInfo.NumberOfRolls++;
         if (SingleInfo.Score > 21)
         {
-            _toast.ShowInfoToast($"{SingleInfo.NickName} is out for going over 21");
+            Toast.ShowInfoToast($"{SingleInfo.NickName} is out for going over 21");
             await EndTurnAsync();
             return;
         }

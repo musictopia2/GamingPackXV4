@@ -1,4 +1,5 @@
-﻿@if (VMData == null )
+﻿@inherits ParameterGameView<RollerViewModel>
+@if (VMData is null || DataContext is null)
 {
     return;
 }

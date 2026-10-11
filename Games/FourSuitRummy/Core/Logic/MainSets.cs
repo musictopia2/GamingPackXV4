@@ -57,7 +57,7 @@ public class MainSets : MainSetsObservable<EnumSuitList, EnumRegularColorList, R
             {
                 return 0;
             }
-            BasicList<int> numList = new();
+            BasicList<int> numList = [];
             SetList.ForEach(thisSet =>
             {
                 numList.Add(thisSet.HandList.First().Value.Value);

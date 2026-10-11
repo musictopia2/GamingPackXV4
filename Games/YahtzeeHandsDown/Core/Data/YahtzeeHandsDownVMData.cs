@@ -5,9 +5,9 @@ namespace YahtzeeHandsDown.Core.Data;
 public partial class YahtzeeHandsDownVMData : IBasicCardGamesData<YahtzeeHandsDownCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public YahtzeeHandsDownVMData(CommandContainer command)
     {
         Deck1 = new(command);

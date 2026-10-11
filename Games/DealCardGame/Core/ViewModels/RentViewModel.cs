@@ -1,5 +1,6 @@
 ﻿namespace DealCardGame.Core.ViewModels;
 [InstanceGame]
+[UseStateChanged]
 public partial class RentViewModel : IBasicEnableProcess
 {
     private readonly DealCardGameGameContainer _gameContainer;
@@ -51,10 +52,10 @@ public partial class RentViewModel : IBasicEnableProcess
         }
         RentPicker.IsEnabled = NeedsRentPicker;
     }
-    public void AddAction( Action action )
-    {
-        _gameContainer.Command.CustomStateHasChanged += action;
-    }
+    //public void AddAction( Action action )
+    //{
+    //    _gameContainer.Command.CustomStateHasChanged += action;
+    //}
     private Task ItemSelectedAsync(EnumRentCategory category)
     {
         _gameContainer.PersonalInformation.RentInfo.RentCategory = category;
@@ -64,7 +65,8 @@ public partial class RentViewModel : IBasicEnableProcess
     }
     public bool NeedsRentPicker { get; private set; }
     public bool NeedsPlayerPicker => _gameContainer.PersonalInformation.RentInfo.Player == -1;
-    public int RentOwed { get; private set; }
+    [StateProperty]
+    public partial int RentOwed { get; private set; }
     public ListViewPicker GetPlayerPicker => _model.PlayerPicker;
     public EnumColor ColorChosen => _gameContainer.PersonalInformation.RentInfo.Color;
     public SimpleEnumPickerVM<EnumRentCategory> RentPicker { get; set; }
@@ -76,10 +78,10 @@ public partial class RentViewModel : IBasicEnableProcess
         _gameContainer.PersonalInformation.RentInfo.Color = EnumColor.None; //none chosen now.
         _gameContainer.PersonalInformation.RentInfo.Deck = 0;
         _gameContainer.PersonalInformation.RentInfo.Player = -1;
-        _gameContainer.Command.ResetCustomStates();
+        //_gameContainer.Command.ResetCustomStates();
         _model.PlayerHand1.UnselectAllObjects(); //if you can cancelling, must manually select one again.
         await _privateAutoResume.SaveStateAsync(_gameContainer);
-        _gameContainer.Command.UpdateAll(); //i think.
+        _gameContainer.Command.UpdateSpecificAction(DealCardGameActions.Main); //hopefully this simple.
     }
     [Command(EnumCommandCategory.Game)]
     public async Task ProcessRentRequestAsync()
@@ -113,7 +115,7 @@ public partial class RentViewModel : IBasicEnableProcess
         {
             await _gameContainer.Network!.SendAllAsync("rentrequest", _gameContainer.PersonalInformation.RentInfo);
         }
-        _gameContainer.Command.ResetCustomStates();
+        //_gameContainer.Command.ResetCustomStates();
         _model.PlayerPicker.SelectedIndex = 0; //i think.
         await _mainGame.PossibleRentRequestAsync(_gameContainer.PersonalInformation.RentInfo);
     }

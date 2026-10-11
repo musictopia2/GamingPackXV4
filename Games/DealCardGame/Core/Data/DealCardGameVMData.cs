@@ -2,25 +2,26 @@ namespace DealCardGame.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
 [AutoReset]
+[UseStateChanged]
 public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string OtherTurn { get; set; } = "";
+    public partial string OtherTurn { get; set; } = "";
 
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
     [LabelColumn]
-    public int PlaysRemaining { get; set; }
+    public partial int PlaysRemaining { get; set; }
 
     //another ui can use this.
     [LabelColumn]
-    public decimal Owed { get; set; }
+    public partial decimal Owed { get; set; }
     [LabelColumn]
-    public decimal PaidSoFar { get; set; }
+    public partial decimal PaidSoFar { get; set; }
     public DealCardGameVMData(CommandContainer command,
         DealCardGameGameContainer gameContainer, IToast toast, PrivateAutoResumeProcesses privateAutoResume)
     {
@@ -54,9 +55,11 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
     public SingleObservablePile<DealCardGameCardInformation> Pile1 { get; set; }
     public HandObservable<DealCardGameCardInformation> PlayerHand1 { get; set; }
     public SingleObservablePile<DealCardGameCardInformation>? OtherPile { get; set; }
-    public DealCardGameCardInformation? ShownCard { get; set; }
+    [StateProperty]
+    public partial DealCardGameCardInformation? ShownCard { get; set; }
     public HandObservable<DealCardGameCardInformation> StolenCards { get; set; }
-    public string ChosenPlayer { get; set; } = ""; //this is needed so you can see the cards that are needed.
+    [StateProperty]
+    public partial string ChosenPlayer { get; set; } = ""; //this is needed so you can see the cards that are needed.
     public HandObservable<DealCardGameCardInformation> ReceivedPayments { get; set; }
 
     public HandObservable<DealCardGameCardInformation> Properties { get; set; }
@@ -65,7 +68,8 @@ public partial class DealCardGameVMData : IBasicCardGamesData<DealCardGameCardIn
 
     public PersonalCompleteSets YourCompleteSets { get; set; }
     public ListViewPicker PlayerPicker { get; set; }
-    public TradeDisplayModel? TradeDisplay { get; set; }
+    [StateProperty]
+    public partial TradeDisplayModel? TradeDisplay { get; set; }
     private Task ChosePlayerAsync(int index, string player)
     {
         PlayerPicker.SelectedIndex = index;

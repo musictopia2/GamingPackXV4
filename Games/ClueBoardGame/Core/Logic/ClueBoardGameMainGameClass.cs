@@ -50,7 +50,7 @@ public class ClueBoardGameMainGameClass
     {
         LoadControls();
         AfterRestoreDice();
-        BoardGameSaved();
+        GameSaved();
         SaveRoot.LoadMod(_model);
         if (PlayerList.DidChooseColors())
         {
@@ -58,17 +58,26 @@ public class ClueBoardGameMainGameClass
             _model.Pile.Visible = true;
             _model.Pile.ClearCards();
             SingleInfo = PlayerList.GetSelf();
-            _model.HandList.HandList = SingleInfo!.MainHandList;
+            _model.HandList.ReplaceHandList(SingleInfo!.MainHandList);
             SetCurrentPlayer();
             this.ShowTurn();
-            _command.UpdateAll();
+            _gameBoard.RepaintBoard(); //at least repaint the board.
+            
             _gameBoard.LoadSavedGame();
-            _model.Cup!.CanShowDice = SaveRoot.MovesLeft > 0;
+            if (SaveRoot.MovesLeft > 0)
+            {
+                SetDiceVisible(true);
+            }
+            else
+            {
+                SetDiceVisible(false);
+            }
             if (WhoTurn == MyID && SaveRoot.PreviousClue > 0)
             {
                 var card = _gameContainer.ClueInfo(SaveRoot.PreviousClue);
                 _model.Pile.AddCard(card);
             }
+            CommandContainer.UpdateSpecificAction(ClueActions.Notebook);
         }
         SingleInfo = PlayerList.GetWhoPlayer();
         return Task.CompletedTask;
@@ -150,7 +159,9 @@ public class ClueBoardGameMainGameClass
         _model.CurrentCharacterName = "";
         _model.CurrentRoomName = "";
         _model.CurrentWeaponName = "";
+        SaveRoot.PreviousClue = 0; //just in case.
         SaveRoot.CurrentPrediction = new PredictionInfo();
+        
         await FinishUpAsync(isBeginning);
     }
     public override async Task AfterChoosingColorsAsync()
@@ -272,6 +283,7 @@ public class ClueBoardGameMainGameClass
             SaveRoot!.ImmediatelyStartTurn = true;
             await Network!.SendRestoreGameAsync(SaveRoot);
         }
+        CommandContainer.UpdateSpecificAction(ClueActions.Notebook);
         await StartNewTurnAsync();
     }
     async Task IMiscDataNM.MiscDataReceived(string status, string content)
@@ -287,7 +299,7 @@ public class ClueBoardGameMainGameClass
                 SaveRoot!.MovesLeft = 0;
                 _model.CurrentRoomName = _gameContainer!.RoomList[int.Parse(content)].Name;
                 SaveRoot.GameStatus = EnumClueStatusList.MakePrediction;
-                _gameContainer.Command.UpdateAll();
+                _gameBoard.RepaintBoard();
                 Network!.IsEnabled = true;
                 return;
             case "prediction":
@@ -297,7 +309,8 @@ public class ClueBoardGameMainGameClass
                 _model!.CurrentCharacterName = SaveRoot.CurrentPrediction.CharacterName;
                 _model.CurrentRoomName = SaveRoot.CurrentPrediction.RoomName;
                 _model.CurrentWeaponName = SaveRoot.CurrentPrediction.WeaponName;
-                _gameContainer.Command.UpdateAll();
+                _gameBoard.RepaintBoard();
+                //CommandContainer.UpdateSpecificAction(ClueActions.Prediction);
                 if (status == "prediction")
                 {
                     await MakePredictionAsync();
@@ -316,10 +329,12 @@ public class ClueBoardGameMainGameClass
                 SingleInfo = PlayerList.GetWhoPlayer();
                 SaveRoot!.GameStatus = EnumClueStatusList.EndTurn;
                 MarkCard(SingleInfo, thisCard, false);
+                CommandContainer.UpdateSpecificAction(ClueActions.Notebook);
                 if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
                 {
                     _model!.Pile!.AddCard(thisCard);
-                    _command.UpdateAll();
+                    CommandContainer.UpdateSpecificAction(ClueActions.Given);
+                    //_command.UpdateAll();
                     //for  now, show a messagebox with the information unless i find another way.
                     await _message!.ShowMessageAsync($"Clue given by {hint.NickName}"); //hopefully this is okay.
                 }
@@ -340,8 +355,8 @@ public class ClueBoardGameMainGameClass
             SaveRoot.GameStatus = EnumClueStatusList.StartTurn;
             SingleInfo = PlayerList!.GetWhoPlayer();
             PrepStartTurn();
-            _command.UpdateAll();
             _gameBoard.NewTurn();
+            _gameBoard.RepaintBoard();
             SaveRoot.AccusationMade = false;
             SaveRoot.PreviousClue = 0;
             SaveRoot.CurrentPrediction = new PredictionInfo();
@@ -349,10 +364,12 @@ public class ClueBoardGameMainGameClass
             _model.CurrentCharacterName = "";
             _model.CurrentRoomName = "";
             _model.CurrentWeaponName = "";
+            //CommandContainer.UpdateSpecificAction(ClueActions.Prediction);
             if (WhoTurn == 0)
             {
                 throw new CustomBasicException("WhoTurn cannot be 0");
             }
+            CommandContainer.UpdateSpecificAction(ClueActions.Turn);
             await EndStepAsync();
             return;
         }
@@ -372,13 +389,16 @@ public class ClueBoardGameMainGameClass
     }
     public override async Task EndTurnAsync()
     {
+
         _command.ManuelFinish = true;
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
         if (PlayerList.DidChooseColors())
         {
             _model.Pile.ClearCards();
+            SetDiceVisible(false);
             SaveRoot!.PreviousMoves = [];
         }
+        CommandContainer.UpdateSpecificAction(ClueActions.Given);
         await StartNewTurnAsync();
     }
     private void SetCurrentPlayer()
@@ -440,7 +460,7 @@ public class ClueBoardGameMainGameClass
                 SingleInfo.StartingTurnPosition = current.Space;
             }
         }
-        await SaveStateAsync(); //i tihnk needs to be here now.
+        await SaveStateAsync(); //i think needs to be here now.
         Aggregator.RepaintBoard();
         if (Test!.ImmediatelyEndGame && SaveRoot.GameStatus != EnumClueStatusList.StartTurn)
         {
@@ -588,13 +608,22 @@ public class ClueBoardGameMainGameClass
             MarkCard(SingleInfo, thisCard, false);
             if (WhoTurn == MyID)
             {
-                _command.UpdateAll();
+                //await Task.Delay(10000);
+                //_command.UpdateAll();
+                CommandContainer.UpdateSpecificAction(ClueActions.Given);
+                CommandContainer.UpdateSpecificAction(ClueActions.Notebook);
                 await _message.ShowMessageAsync($"Clue given by {newPlayer.NickName}");
             }
             await EndStepAsync();
             return;
         }
         throw new CustomBasicException("The computer should have skipped their turns since their moving was really hosed");
+    }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        _gameBoard.RepaintBoard();
+        CommandContainer.ReportAllCommandStates(); //i think.
     }
     public override async Task AfterRollingAsync()
     {

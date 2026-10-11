@@ -1,17 +1,20 @@
 ﻿@inherits KeyComponentBase
-@if (_detail == null || CompleteContainer == null)
-{
-    return;
-}
-<BaseFrameBlazor Text="@_text">
-    <div style="width: @Width">
-        <GridContainer Inline="true" ColumnGap="10px" Columns="auto auto">
-            <GridItem>
-                <CardGraphicsBlazor TargetHeight="@RealHeight" DeckObject="_detail.CurrentCard" @key="@GetKey" />
-            </GridItem>
-            <GridItem Column="2">
-                @_detail.CurrentCard.Description
-            </GridItem>
-        </GridContainer>
-    </div>
-</BaseFrameBlazor>
+<ActionContentView Key="@FluxxActions.ShowCard">
+
+    @if (_detail == null || CompleteContainer == null)
+    {
+        return;
+    }
+    <BaseFrameBlazor Text="@_text">
+        <div style="width: @Width">
+            <GridContainer Inline="true" ColumnGap="10px" Columns="auto auto">
+                <GridItem>
+                    <CardGraphicsBlazor TargetHeight="@RealHeight" DeckObject="_detail.CurrentCard" @key="@GetKey" />
+                </GridItem>
+                <GridItem Column="2">
+                    @_detail.CurrentCard.Description
+                </GridItem>
+            </GridContainer>
+        </div>
+    </BaseFrameBlazor>
+</ActionContentView>

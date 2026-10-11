@@ -13,7 +13,7 @@ public partial class RoomCharacterGraphics
         return GraphicsData.CanRefreshCharactersRoomInfo(Room!);
     }
     [Parameter]
-    public BasicList<CharacterInfo> Characters { get; set; } = new();
+    public BasicList<CharacterInfo> Characters { get; set; } = [];
     [Parameter]
     public RoomInfo? Room { get; set; }
     [Parameter]

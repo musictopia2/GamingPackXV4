@@ -2,7 +2,7 @@ namespace MonasteryCardGame.Core.Data;
 [UseScoreboard]
 public partial class MonasteryCardGamePlayerItem : PlayerRummyHand<MonasteryCardInfo>
 {//anything needed is here
-    public BasicList<int> IndexList { get; set; } = new();
+    public BasicList<int> IndexList { get; set; } = [];
     public void UpdateIndexes()
     {
         IndexList = Enumerable.Range(0, 9).ToBasicList();
@@ -18,7 +18,7 @@ public partial class MonasteryCardGamePlayerItem : PlayerRummyHand<MonasteryCard
         FinishedCurrentMission = false;
     }
     [ScoreColumn]
-    public bool FinishedCurrentMission { get; set; }
+    public partial bool FinishedCurrentMission { get; set; }
     private void UpdateValue(int index, bool completed)
     {
         if (completed == false)
@@ -96,159 +96,77 @@ public partial class MonasteryCardGamePlayerItem : PlayerRummyHand<MonasteryCard
         }
     }
     //long format is always needed because you have to update the value so it knows what to show up on the ui.
-    private bool _mission1Completed;
     [ScoreColumn]
-    public bool Mission1Completed
-    {
-        get
-        {
-            return _mission1Completed;
-        }
+    public partial bool Mission1Completed { get; set; }
 
-        set
-        {
-            if (SetProperty(ref _mission1Completed, value) == true)
-            {
-                UpdateValue(0, value);
-            }
-        }
+
+    partial void OnMission1CompletedChanged(bool value)
+    {
+        UpdateValue(0, value);
     }
-    private bool _mission2Completed;
-    [ScoreColumn]
-    public bool Mission2Completed
-    {
-        get
-        {
-            return _mission2Completed;
-        }
+   
 
-        set
-        {
-            if (SetProperty(ref _mission2Completed, value) == true)
-            {
-                UpdateValue(1, value);
-            }
-        }
-    }
-    private bool _mission3Completed;
     [ScoreColumn]
-    public bool Mission3Completed
-    {
-        get
-        {
-            return _mission3Completed;
-        }
+    public partial bool Mission2Completed { get; set; }
 
-        set
-        {
-            if (SetProperty(ref _mission3Completed, value) == true)
-            {
-                UpdateValue(2, value);
-            }
-        }
-    }
-    private bool _mission4Completed;
-    [ScoreColumn]
-    public bool Mission4Completed
+    partial void OnMission2CompletedChanged(bool value)
     {
-        get
-        {
-            return _mission4Completed;
-        }
-
-        set
-        {
-            if (SetProperty(ref _mission4Completed, value) == true)
-            {
-                UpdateValue(3, value);
-            }
-        }
+        UpdateValue(1, value);
     }
 
-    private bool _mission5Completed;
     [ScoreColumn]
-    public bool Mission5Completed
-    {
-        get
-        {
-            return _mission5Completed;
-        }
+    public partial bool Mission3Completed { get; set; }
 
-        set
-        {
-            if (SetProperty(ref _mission5Completed, value) == true)
-            {
-                UpdateValue(4, value);
-            }
-        }
+    partial void OnMission3CompletedChanged(bool value)
+    {
+        UpdateValue(2, value);
     }
 
-    private bool _mission6Completed;
     [ScoreColumn]
-    public bool Mission6Completed
-    {
-        get
-        {
-            return _mission6Completed;
-        }
+    public partial bool Mission4Completed { get; set; }
 
-        set
-        {
-            if (SetProperty(ref _mission6Completed, value) == true)
-            {
-                UpdateValue(5, value);
-            }
-        }
+    partial void OnMission4CompletedChanged(bool value)
+    {
+        UpdateValue(3, value);
     }
-    private bool _mission7Completed;
-    [ScoreColumn]
-    public bool Mission7Completed
-    {
-        get
-        {
-            return _mission7Completed;
-        }
 
-        set
-        {
-            if (SetProperty(ref _mission7Completed, value) == true)
-            {
-                UpdateValue(6, value);
-            }
-        }
+    [ScoreColumn]
+    public partial bool Mission5Completed { get; set; }
+
+    partial void OnMission5CompletedChanged(bool value)
+    {
+        UpdateValue(4, value);
     }
-    private bool _mission8Completed;
-    [ScoreColumn]
-    public bool Mission8Completed
-    {
-        get
-        {
-            return _mission8Completed;
-        }
 
-        set
-        {
-            if (SetProperty(ref _mission8Completed, value) == true)
-            {
-                UpdateValue(7, value);
-            }
-        }
+    [ScoreColumn]
+    public partial bool Mission6Completed { get; set; }
+
+    partial void OnMission6CompletedChanged(bool value)
+    {
+        UpdateValue(5, value);
     }
-    private bool _mission9Completed;
-    [ScoreColumn]
-    public bool Mission9Completed
-    {
-        get
-        {
-            return _mission9Completed;
-        }
 
-        set
-        {
-            if (SetProperty(ref _mission9Completed, value) == true)
-            {
-                UpdateValue(8, value);
-            }
-        }
+    [ScoreColumn]
+    public partial bool Mission7Completed { get; set; }
+
+    partial void OnMission7CompletedChanged(bool value)
+    {
+        UpdateValue(6, value);
+    }
+
+    [ScoreColumn]
+    public partial bool Mission8Completed { get; set; }
+
+    partial void OnMission8CompletedChanged(bool value)
+    {
+        UpdateValue(7, value);
+    }
+
+    [ScoreColumn]
+    public partial bool Mission9Completed { get; set; }
+
+    partial void OnMission9CompletedChanged(bool value)
+    {
+        UpdateValue(8, value);
     }
 }

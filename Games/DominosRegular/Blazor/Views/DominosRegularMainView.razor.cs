@@ -5,7 +5,6 @@ public partial class DominosRegularMainView
     public TestOptions? TestData { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; } //i like the idea of cascading values here.
-
     private readonly BasicList<LabelGridModel> _labels = [];
     private readonly BasicList<ScoreColumnModel> _scores = [];
     protected override void OnInitialized()

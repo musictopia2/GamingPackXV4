@@ -71,11 +71,15 @@ public static class PropertiesExtensions
         {
             var list = player.SetData.GetCards(color);
             list.Add(card);
+            CommandContainer command = Resolver!.Resolve<CommandContainer>();
+            command.UpdateSpecificAction(DealCardGameActions.AllProperties);
         }
         public void AddSeveralCardsToPlayerPropertySet(DeckRegularDict<DealCardGameCardInformation> cards, EnumColor color)
         {
             var list = player.SetData.GetCards(color);
             list.AddRange(cards);
+            CommandContainer command = Resolver!.Resolve<CommandContainer>();
+            command.UpdateSpecificAction(DealCardGameActions.AllProperties);
         }
     }
     extension (PrivateModel model)

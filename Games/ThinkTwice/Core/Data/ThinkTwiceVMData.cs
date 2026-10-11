@@ -1,49 +1,40 @@
 namespace ThinkTwice.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
-public partial class ThinkTwiceVMData : IBasicDiceGamesData<SimpleDice>
+public partial class ThinkTwiceVMData(IGamePackageResolver resolver,
+        CommandContainer command,
+        ThinkTwiceGameContainer gameContainer
+            ) : IBasicDiceGamesData<SimpleDice>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public int Score { get; set; }
+    public partial int Score { get; set; }
     [LabelColumn]
-    public int RollNumber { get; set; }
+    public partial int RollNumber { get; set; }
     [LabelColumn]
-    public string CategoryChosen { get; set; } = "None";
+    public partial string CategoryChosen { get; set; } = "None";
     public string DisplayScoreText { get; set; } = "Category Information";
-    private readonly IGamePackageResolver _resolver;
-    private readonly CommandContainer _command;
-    private readonly ThinkTwiceGameContainer _gameContainer;
     public DiceCup<SimpleDice>? Cup { get; set; }
-    public BasicList<string> TextList;
-    public ThinkTwiceVMData(IGamePackageResolver resolver,
-            CommandContainer command,
-            ThinkTwiceGameContainer gameContainer
-            )
-    {
-        _resolver = resolver;
-        _command = command;
-        _gameContainer = gameContainer;
-        TextList = new()
-        {
+    public BasicList<string> TextList =
+        [
             "Different (1, 2, 3, 4, 5, 6)",
             "Even (2, 4, 6)",
             "High (4, 5, 6)",
             "Low (1, 2, 3)",
             "Odd (1, 3, 5)",
             "Same (2, 2, 2)"
-        };
-    }
+        ];
+
     public void LoadCup(ISavedDiceList<SimpleDice> saveRoot, bool autoResume)
     {
         if (Cup != null && autoResume)
         {
             return;
         }
-        Cup = new DiceCup<SimpleDice>(saveRoot.DiceList, _resolver, _command);
+        Cup = new DiceCup<SimpleDice>(saveRoot.DiceList, resolver, command);
         if (autoResume == true)
         {
             Cup.CanShowDice = true;
@@ -69,7 +60,7 @@ public partial class ThinkTwiceVMData : IBasicDiceGamesData<SimpleDice>
                 {
                     CategoryChosen = TextList[ItemSelected];
                 }
-                _gameContainer.SaveRoot.CategorySelected = value;
+                gameContainer.SaveRoot.CategorySelected = value;
             }
         }
     }

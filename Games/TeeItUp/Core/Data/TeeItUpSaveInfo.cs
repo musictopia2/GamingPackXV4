@@ -10,10 +10,7 @@ public class TeeItUpSaveInfo : BasicSavedCardClass<TeeItUpPlayerItem, TeeItUpCar
         {
             if (SetProperty(ref _round, value))
             {
-                if (_model != null)
-                {
-                    _model.Round = value;
-                }
+                _model?.Round = value;
             }
         }
     }

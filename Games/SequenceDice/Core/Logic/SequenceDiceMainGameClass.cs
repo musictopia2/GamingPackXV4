@@ -1,45 +1,40 @@
 namespace SequenceDice.Core.Logic;
 [SingletonGame]
-public class SequenceDiceMainGameClass
-    : BoardDiceGameClass<SequenceDicePlayerItem, SequenceDiceSaveInfo, EnumColorChoice, SpaceInfoCP>
+public class SequenceDiceMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    SequenceDiceVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    SequenceDiceGameContainer container,
+    StandardRollProcesses<SimpleDice, SequenceDicePlayerItem> roller,
+    ISystemError error,
+    IToast toast
+        )
+        : BoardDiceGameClass<SequenceDicePlayerItem, SequenceDiceSaveInfo, EnumColorChoice, SpaceInfoCP>(resolver, aggregator, basic, test, model, state, delay, command, container, roller, error, toast)
     , ISerializable
 {
-    private readonly SequenceDiceVMData _model;
-    public SequenceDiceMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        SequenceDiceVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        SequenceDiceGameContainer container,
-        StandardRollProcesses<SimpleDice, SequenceDicePlayerItem> roller,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, container, roller, error, toast)
-    {
-        _model = model;
-    }
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
         AfterRestoreDice();
-        BoardGameSaved();
+        GameSaved();
         if (SaveRoot.GameStatus == EnumGameStatusList.RollDice)
         {
-            _model.Cup!.CanShowDice = false;
+            model.Cup!.CanShowDice = false;
         }
         else
         {
-            _model.Cup!.CanShowDice = true;
+            model.Cup!.CanShowDice = true;
         }
         return Task.CompletedTask;
     }
     private void LoadControls()
     {
-        SaveRoot.GameBoard.LoadBoard(PlayerList, Test!, _model); //this has to load.  because when rejoining, then does not work correctly.
-        SaveRoot.LoadMod(_model);
+        SaveRoot.GameBoard.LoadBoard(PlayerList, Test!, model); //this has to load.  because when rejoining, then does not work correctly.
+        SaveRoot.LoadMod(model);
     }
     protected override async Task ComputerTurnAsync()
     {
@@ -53,7 +48,7 @@ public class SequenceDiceMainGameClass
             throw new CustomBasicException("The loader never set the finish up code.  Rethink");
         }
         SetUpDice();
-        SaveRoot.LoadMod(_model);
+        SaveRoot.LoadMod(model);
         SaveRoot!.ImmediatelyStartTurn = true;
         await FinishUpAsync(isBeginning);
     }
@@ -68,7 +63,7 @@ public class SequenceDiceMainGameClass
             PrepStartTurn();
             SingleInfo = PlayerList!.GetWhoPlayer();
             SaveRoot!.GameStatus = EnumGameStatusList.RollDice;
-            _model!.Cup!.CanShowDice = false;
+            SetDiceVisible(false);
         }
         await ContinueTurnAsync();
     }
@@ -107,12 +102,13 @@ public class SequenceDiceMainGameClass
     {
         SpaceInfoCP newSpace = SaveRoot!.GameBoard[space.Vector];
         SaveRoot.GameBoard.MakeMove(newSpace, SingleInfo!);
+
         if (SaveRoot.GameBoard.HasWon() == true || Test!.ImmediatelyEndGame)
         {
             await ShowWinAsync();
             return;
         }
-        int Totals = _model.Cup!.TotalDiceValue;
+        int Totals = model.Cup!.TotalDiceValue;
         if (Totals == 2 || Totals == 12)
         {
             SaveRoot.GameStatus = EnumGameStatusList.RollDice;
@@ -124,6 +120,7 @@ public class SequenceDiceMainGameClass
     public override async Task EndTurnAsync()
     {
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
+        SetDiceVisible(false);
         await StartNewTurnAsync();
     }
     public override async Task AfterChoosingColorsAsync()
@@ -133,7 +130,7 @@ public class SequenceDiceMainGameClass
     }
     public override async Task AfterRollingAsync()
     {
-        int totals = _model.Cup!.TotalDiceValue;
+        int totals = model.Cup!.TotalDiceValue;
         if (SaveRoot!.GameBoard.HasValidMove() == false)
         {
             if (totals == 2 || totals == 12)
@@ -143,7 +140,7 @@ public class SequenceDiceMainGameClass
                 {
                     await Delay!.DelaySeconds(1);
                 }
-                _model.Cup.CanShowDice = false;
+                model.Cup.CanShowDice = false;
                 await ContinueTurnAsync();
                 return;
             }

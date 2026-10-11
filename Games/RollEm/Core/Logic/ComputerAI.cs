@@ -8,12 +8,12 @@ public static class ComputerAI
     }
     public static BasicList<int> NumberList(GameBoardProcesses gameBoard1)
     {
-        BasicList<int> output = new();
+        BasicList<int> output = [];
         var thisList = gameBoard1.GetNumberList();
         var newList = ComboList(thisList, gameBoard1);
         if (newList.Count == 0)
         {
-            return new();
+            return [];
         }
         var thisCombo = newList.GetRandomItem();
         if (thisCombo.Number1 == 0)

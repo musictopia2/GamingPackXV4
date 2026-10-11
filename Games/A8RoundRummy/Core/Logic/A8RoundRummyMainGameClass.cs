@@ -1,44 +1,41 @@
 namespace A8RoundRummy.Core.Logic;
 [SingletonGame]
-public class A8RoundRummyMainGameClass
-    : CardGameClass<A8RoundRummyCardInformation, A8RoundRummyPlayerItem, A8RoundRummySaveInfo>
+public class A8RoundRummyMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    A8RoundRummyVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<A8RoundRummyCardInformation> cardInfo,
+    CommandContainer command,
+    A8RoundRummyGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        )
+        : CardGameClass<A8RoundRummyCardInformation, A8RoundRummyPlayerItem, A8RoundRummySaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, ISerializable
 {
-    private readonly A8RoundRummyVMData _model;
-    private readonly CommandContainer _command;
-    private readonly A8RoundRummyGameContainer _gameContainer;
-    private readonly IToast _toast;
     internal A8RoundRummyCardInformation? LastCard { get; set; }
     internal bool LastSuccessful { get; set; }
     public bool WasGuarantee { get; set; }
     public A8RoundRummyCardInformation? CardForDiscard { get; set; }
     public EnumPlayerStatus PlayerStatus { get; set; }
     private bool _wasNew;
-    public A8RoundRummyMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        A8RoundRummyVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<A8RoundRummyCardInformation> cardInfo,
-        CommandContainer command,
-        A8RoundRummyGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _toast = toast;
-    }
+
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
         _wasNew = false;
         CardForDiscard = null;
         WasGuarantee = false;
+
+        if (!ReferenceEquals(SaveRoot!.RoundList, currentMod.RoundList))
+        {
+            currentMod.RoundList.ReplaceRange(SaveRoot.RoundList);
+            SaveRoot.RoundList = currentMod.RoundList;
+        }
+
         return base.FinishGetSavedAsync();
     }
     private void LoadControls()
@@ -60,7 +57,7 @@ public class A8RoundRummyMainGameClass
         _wasNew = false;
         WasGuarantee = false;
         CardForDiscard = null;
-        BasicList<RoundClass> tempList = new();
+        BasicList<RoundClass> tempList = [];
         RoundClass thisRound = new();
         thisRound.Description = "Round 1:  Same Color";
         thisRound.Category = EnumCategory.Colors;
@@ -113,7 +110,8 @@ public class A8RoundRummyMainGameClass
         {
             tempList.KeepConditionalItems(items => items.Points >= 4);
         }
-        SaveRoot!.RoundList.ReplaceRange(tempList);
+        currentMod.RoundList.ReplaceRange(tempList);
+        SaveRoot!.RoundList = currentMod.RoundList;
         return base.StartSetUpAsync(isBeginning);
     }
     async Task IMiscDataNM.MiscDataReceived(string status, string content)
@@ -123,7 +121,7 @@ public class A8RoundRummyMainGameClass
             case "goout":
                 MultiplayerOut thisOut = await js1.DeserializeObjectAsync<MultiplayerOut>(content);
                 WasGuarantee = thisOut.WasGuaranteed;
-                CardForDiscard = _gameContainer.DeckList!.GetSpecificItem(thisOut.Deck);
+                CardForDiscard = gameContainer.DeckList!.GetSpecificItem(thisOut.Deck);
                 await GoOutAsync();
                 break;
             case "reversecards":
@@ -153,7 +151,7 @@ public class A8RoundRummyMainGameClass
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects();
         _wasNew = false;
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync(true);
         await StartNewTurnAsync();
     }
@@ -167,7 +165,7 @@ public class A8RoundRummyMainGameClass
         A8RoundRummyPlayerItem newPlayer;
         int newTurn = await PlayerList!.CalculateWhoTurnAsync();
         newPlayer = PlayerList[newTurn];
-        _model!.NextTurn = newPlayer.NickName;
+        currentMod!.NextTurn = newPlayer.NickName;
     }
     protected override bool ShowNewCardDrawn(A8RoundRummyPlayerItem tempPlayer)
     {
@@ -181,7 +179,7 @@ public class A8RoundRummyMainGameClass
     {
         message = "";
         deck = 0;
-        if (_gameContainer.AlreadyDrew == false && _gameContainer.PreviousCard == 0)
+        if (gameContainer.AlreadyDrew == false && gameContainer.PreviousCard == 0)
         {
             pickUp = true;
         }
@@ -189,7 +187,7 @@ public class A8RoundRummyMainGameClass
         {
             pickUp = false;
         }
-        int Selected = _model!.PlayerHand1!.ObjectSelected();
+        int Selected = currentMod!.PlayerHand1!.ObjectSelected();
         if (pickUp == true)
         {
             if (Selected > 0)
@@ -204,7 +202,7 @@ public class A8RoundRummyMainGameClass
             message = "Sorry, you must select a card to discard";
             return false;
         }
-        if (Selected == _gameContainer.PreviousCard)
+        if (Selected == gameContainer.PreviousCard)
         {
             deck = 0;
             message = "Sorry, you cannot discard the one that was picked up since there is more than one card to choose from";
@@ -237,11 +235,11 @@ public class A8RoundRummyMainGameClass
     {
         if (SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
-            _toast.ShowInfoToast($"{SingleInfo.NickName} went out");
+            Toast.ShowInfoToast($"{SingleInfo.NickName} went out");
         }
         else
         {
-            _model!.PlayerHand1!.EndTurn();
+            currentMod!.PlayerHand1!.EndTurn();
         }
         var thisList = SingleInfo.MainHandList.ToRegularDeckDict();
         thisList.RemoveObjectByDeck(CardForDiscard!.Deck);
@@ -306,14 +304,14 @@ public class A8RoundRummyMainGameClass
             await StartNewTurnAsync();
             return;
         }
-        _gameContainer.AlreadyDrew = true;
+        gameContainer.AlreadyDrew = true;
         await base.AfterDrawingAsync();
     }
     public override async Task DiscardAsync(A8RoundRummyCardInformation thisCard)
     {
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
-            _model!.PlayerHand1!.EndTurn();
+            currentMod!.PlayerHand1!.EndTurn();
         }
         if (thisCard.CardType == EnumCardType.Reverse)
         {
@@ -332,7 +330,7 @@ public class A8RoundRummyMainGameClass
             SingleInfo = PlayerList.GetWhoPlayer();
             if (ShowMessageBox == true)
             {
-                _toast.ShowWarningToast($"{SingleInfo.NickName} has to discard all the cards and draw new cards");
+                Toast.ShowWarningToast($"{SingleInfo.NickName} has to discard all the cards and draw new cards");
             }
             if (SingleInfo.PlayerCategory == EnumPlayerCategory.OtherHuman)
             {

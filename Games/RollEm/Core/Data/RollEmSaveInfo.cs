@@ -2,7 +2,7 @@ namespace RollEm.Core.Data;
 [SingletonGame]
 public class RollEmSaveInfo : BasicSavedDiceClass<SimpleDice, RollEmPlayerItem>, IMappable, ISaveInfo
 {
-    public BasicList<string> SpaceList { get; set; } = new();
+    public BasicList<string> SpaceList { get; set; } = [];
     public EnumStatusList GameStatus { get; set; }
     private int _round;
     public int Round

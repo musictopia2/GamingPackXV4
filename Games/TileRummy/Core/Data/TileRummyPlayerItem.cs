@@ -3,15 +3,16 @@ namespace TileRummy.Core.Data;
 public partial class TileRummyPlayerItem : PlayerSingleHand<TileInfo>, IHandle<UpdateCountEventModel>
 {
     private IEventAggregator? _aggregator;
-    public DeckRegularDict<TileInfo> AdditionalTileList { get; set; } = new();
+    public DeckRegularDict<TileInfo> AdditionalTileList { get; set; } = [];
     public bool InitCompleted { get; set; }
     [ScoreColumn]
-    public int Score { get; set; }
+    public partial int Score { get; set; }
     public override int ObjectCount => MainHandList.Count + _tempCards;
     private int _tempCards;
     public void Handle(UpdateCountEventModel message)
     {
         _tempCards = message.ObjectCount;
+        MainHandListChanged();
     }
     private partial void Subscribe();
     private partial void Unsubscribe();

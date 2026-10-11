@@ -1,4 +1,4 @@
-﻿@inherits SimpleActionView
+﻿@inherits SimpleActionView<ActionFirstCardRandomViewModel>
 @if (CompleteContainer == null || DataContext == null)
 {
     return;
@@ -9,6 +9,6 @@
         <GameButtonComponent CommandObject="ChooseCommand"
                              StartOnNewLine="true"
                              Display="Choose Card" />
-        <KeeperButton K="ActionFirstCardRandomViewModel" @key="GetKey"  StartsOnNewLine="true" />
+        <KeeperButton  DataContext="DataContext" @key="GetKey"  StartsOnNewLine="true" />
     </div>
 </FinalActionLayout>

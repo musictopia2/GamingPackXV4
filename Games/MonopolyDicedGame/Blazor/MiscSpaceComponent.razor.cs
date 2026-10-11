@@ -2,7 +2,7 @@ namespace MonopolyDicedGame.Blazor;
 public partial class MiscSpaceComponent
 {
     [Parameter]
-    public BasicList<EnumMiscType> MiscList { get; set; } = [];
+    public StateList<EnumMiscType> MiscList { get; set; } = [];
 
     [Parameter]
     public string TargetImageHeight { get; set; } = "";

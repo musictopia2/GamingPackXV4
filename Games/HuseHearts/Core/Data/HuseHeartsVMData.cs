@@ -7,11 +7,11 @@ public partial class HuseHeartsVMData : ITrickCardGamesData<HuseHeartsCardInform
 {
     private readonly HuseHeartsGameContainer _gameContainer;
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumSuitList TrumpSuit { get; set; }
+    public partial EnumSuitList TrumpSuit { get; set; }
     public HuseHeartsVMData(CommandContainer command,
            HuseHeartsTrickAreaCP trickArea1,
            HuseHeartsGameContainer gameContainer
@@ -43,19 +43,12 @@ public partial class HuseHeartsVMData : ITrickCardGamesData<HuseHeartsCardInform
     public HandObservable<HuseHeartsCardInformation> PlayerHand1 { get; set; }
     public SingleObservablePile<HuseHeartsCardInformation>? OtherPile { get; set; }
     [LabelColumn]
-    public int RoundNumber { get; set; }
-    private EnumStatus _gameStatus;
+    public partial int RoundNumber { get; set; }
     [LabelColumn]
-    public EnumStatus GameStatus
+    public partial EnumStatus GameStatus { get; set; }
+    partial void OnGameStatusChanged(EnumStatus value)
     {
-        get { return _gameStatus; }
-        set
-        {
-            if (SetProperty(ref _gameStatus, value))
-            {
-                ChangeScreen?.Invoke();
-            }
-        }
+        ChangeScreen?.Invoke();
     }
     public DeckRegularDict<HuseHeartsCardInformation> GetCurrentHandList()
     {

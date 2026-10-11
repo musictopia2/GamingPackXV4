@@ -1,12 +1,7 @@
 namespace FiveCrowns.Core.Data;
 [SingletonGame]
-public class FiveCrownsDetailClass : IGameInfo, ICardInfo<FiveCrownsCardInformation>
+public class FiveCrownsDetailClass(FiveCrownsDelegates delegates) : IGameInfo, ICardInfo<FiveCrownsCardInformation>
 {
-    private readonly FiveCrownsDelegates _delegates;
-    public FiveCrownsDetailClass(FiveCrownsDelegates delegates)
-    {
-        _delegates = delegates;
-    }
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
 
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
@@ -29,9 +24,9 @@ public class FiveCrownsDetailClass : IGameInfo, ICardInfo<FiveCrownsCardInformat
 
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
 
-    int ICardInfo<FiveCrownsCardInformation>.CardsToPassOut => _delegates.CardsToPassOut!.Invoke();
+    int ICardInfo<FiveCrownsCardInformation>.CardsToPassOut => delegates.CardsToPassOut!.Invoke();
 
-    BasicList<int> ICardInfo<FiveCrownsCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<FiveCrownsCardInformation>.PlayerExcludeList => [];
 
     bool ICardInfo<FiveCrownsCardInformation>.AddToDiscardAtBeginning => true;
 
@@ -47,7 +42,7 @@ public class FiveCrownsDetailClass : IGameInfo, ICardInfo<FiveCrownsCardInformat
 
     bool ICardInfo<FiveCrownsCardInformation>.NeedsDummyHand => false;
 
-    DeckRegularDict<FiveCrownsCardInformation> ICardInfo<FiveCrownsCardInformation>.DummyHand { get; set; } = new DeckRegularDict<FiveCrownsCardInformation>();
+    DeckRegularDict<FiveCrownsCardInformation> ICardInfo<FiveCrownsCardInformation>.DummyHand { get; set; } = [];
 
     bool ICardInfo<FiveCrownsCardInformation>.HasDrawAnimation => true;
 
@@ -55,6 +50,6 @@ public class FiveCrownsDetailClass : IGameInfo, ICardInfo<FiveCrownsCardInformat
 
     BasicList<int> ICardInfo<FiveCrownsCardInformation>.DiscardExcludeList(IListShuffler<FiveCrownsCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

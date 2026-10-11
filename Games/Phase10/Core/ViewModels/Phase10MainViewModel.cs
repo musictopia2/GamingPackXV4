@@ -1,53 +1,41 @@
 namespace Phase10.Core.ViewModels;
 [InstanceGame]
-public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformation>
-{
-    private readonly Phase10MainGameClass _mainGame;
-    private readonly Phase10VMData _model;
-    private readonly Phase10GameContainer _gameContainer;
-    private readonly IToast _toast;
-    private readonly PrivateAutoResumeProcesses _privateAutoResume;
-    public Phase10MainViewModel(CommandContainer commandContainer,
+public partial class Phase10MainViewModel(CommandContainer commandContainer,
         Phase10MainGameClass mainGame,
         Phase10VMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         Phase10GameContainer gameContainer,
         IEventAggregator aggregator,
         IToast toast,
-        PrivateAutoResumeProcesses privateAutoResume
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        PrivateAutoResumeProcesses privateAutoResume) : BasicCardGamesVM<Phase10CardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _gameContainer = gameContainer;
-        _toast = toast;
-        _privateAutoResume = privateAutoResume;
-        _model.Deck1.NeverAutoDisable = true;
-        _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
-        var player = _mainGame.PlayerList.GetSelf();
+        viewModel.Deck1.NeverAutoDisable = true;
+        viewModel.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
+        var player = mainGame.PlayerList.GetSelf();
         player.DoInit();
-        _model.TempSets.Init(this);
-        _model.TempSets.ClearBoard();
+        viewModel.TempSets.Init(this);
+        viewModel.TempSets.ClearBoard();
         PossibleAutoResume();
-        _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
-        _model.MainSets.SetClickedAsync = MainSets_SetClickedAsync;
-        _model.MainSets.SendEnableProcesses(this, () => _gameContainer!.AlreadyDrew);
-        CreateCommands(commandContainer);
+        viewModel.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
+        viewModel.MainSets.SetClickedAsync = MainSets_SetClickedAsync;
+        viewModel.MainSets.SendEnableProcesses(this, () => gameContainer!.AlreadyDrew);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     private void PossibleAutoResume()
     {
-        if (_gameContainer.TempSets.Count > 0)
+        if (gameContainer.TempSets.Count > 0)
         {
-            var player = _gameContainer.PlayerList!.GetSelf();
+            var player = gameContainer.PlayerList!.GetSelf();
             bool hadAny = false;
-            foreach (var item in _gameContainer.TempSets)
+            foreach (var item in gameContainer.TempSets)
             {
-                var current = _model.TempSets.SetList[item.SetNumber - 1];
-                var cards = item.Cards.GetNewObjectListFromDeckList(_gameContainer.DeckList);
+                var current = viewModel.TempSets.SetList[item.SetNumber - 1];
+                var cards = item.Cards.GetNewObjectListFromDeckList(gameContainer.DeckList);
                 DeckRegularDict<Phase10CardInformation> toAdd = [];
                 foreach (var card in cards)
                 {
@@ -63,52 +51,52 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
             }
             if (hadAny)
             {
-                _model.TempSets.PublicCount();
+                viewModel.TempSets.PublicCount();
             }
         }
     }
     protected override bool CanEnableDeck()
     {
-        return !_gameContainer!.AlreadyDrew;
+        return !gameContainer!.AlreadyDrew;
     }
     protected override bool CanEnablePile1()
     {
         return true;
     }
-    public bool CanSkipPlayer() => _model.PlayerChosen != "";
+    public bool CanSkipPlayer() => viewModel.PlayerChosen != "";
     [Command(EnumCommandCategory.Game)]
     public async Task SkipPlayerAsync()
     {
-        if (_mainGame.BasicData.MultiPlayer)
+        if (mainGame.BasicData.MultiPlayer)
         {
-            await _mainGame.Network!.SendAllAsync("playerskipped", _model.PlayerChosen);
+            await mainGame.Network!.SendAllAsync("playerskipped", viewModel.PlayerChosen);
         }
-        await _mainGame.SkipPlayerAsync(_model.PlayerChosen);
+        await mainGame.SkipPlayerAsync(viewModel.PlayerChosen);
     }
     public bool CanCompletePhase()
     {
-        if (_gameContainer!.AlreadyDrew == false)
+        if (gameContainer!.AlreadyDrew == false)
         {
             return false;
         }
-        return !_mainGame.SaveRoot!.CompletedPhase;
+        return !mainGame.SaveRoot!.CompletedPhase;
     }
     [Command(EnumCommandCategory.Game)]
     public async Task CompletePhaseAsync()
     {
         bool rets;
-        rets = _mainGame!.DidCompletePhase(out int Manys);
-        if (Manys == _model.TempSets!.TotalObjects + _mainGame.SingleInfo!.MainHandList.Count)
+        rets = mainGame!.DidCompletePhase(out int Manys);
+        if (Manys == viewModel.TempSets!.TotalObjects + mainGame.SingleInfo!.MainHandList.Count)
         {
-            _toast.ShowUserErrorToast("Cannot complete the phase.  Otherwise; there is no card to discard");
+            Toast.ShowUserErrorToast("Cannot complete the phase.  Otherwise; there is no card to discard");
             return;
         }
         if (rets == false)
         {
-            _toast.ShowUserErrorToast("Sorry, you did not complete the phase");
+            Toast.ShowUserErrorToast("Sorry, you did not complete the phase");
             return;
         }
-        var thisCol = _mainGame.ListValidSets();
+        var thisCol = mainGame.ListValidSets();
         if (thisCol.Count > 2)
         {
             throw new CustomBasicException("Can not have more than 2 sets");
@@ -116,7 +104,7 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
         BasicList<string> newList = [];
         await thisCol.ForEachAsync(async thisTemp =>
         {
-            if (_mainGame.BasicData!.MultiPlayer == true)
+            if (mainGame.BasicData!.MultiPlayer == true)
             {
                 SendNewSet thisSend = new();
                 thisSend.CardListData = await js1.SerializeObjectAsync(thisTemp.CardList.GetDeckListFromObjectList());
@@ -124,34 +112,34 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
                 string newStr = await js1.SerializeObjectAsync(thisSend);
                 newList.Add(newStr);
             }
-            _mainGame.CreateNewSet(thisTemp);
+            mainGame.CreateNewSet(thisTemp);
         });
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        if (mainGame.BasicData!.MultiPlayer == true)
         {
-            await _mainGame.Network!.SendSeveralSetsAsync(newList, "phasecompleted");
+            await mainGame.Network!.SendSeveralSetsAsync(newList, "phasecompleted");
         }
-        await _mainGame.ProcessCompletedPhaseAsync();
+        await mainGame.ProcessCompletedPhaseAsync();
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
-        bool rets = _mainGame!.CanProcessDiscard(out bool pickUp, out _, out int deck, out string message);
+        bool rets = mainGame!.CanProcessDiscard(out bool pickUp, out _, out int deck, out string message);
         if (rets == false)
         {
             if (message != "")
             {
-                _model.PlayerHand1!.UnselectAllObjects();
-                _model.TempSets!.UnselectAllCards(); //its best to just unselect everything if you can't discard.  that will solve some issues.
-                _toast.ShowUserErrorToast(message); //because on tablets, its possible it can't show message
+                viewModel.PlayerHand1!.UnselectAllObjects();
+                viewModel.TempSets!.UnselectAllCards(); //its best to just unselect everything if you can't discard.  that will solve some issues.
+                Toast.ShowUserErrorToast(message); //because on tablets, its possible it can't show message
             }
             return;
         }
         if (pickUp == true)
         {
-            await _mainGame.PickupFromDiscardAsync();
+            await mainGame.PickupFromDiscardAsync();
             return;
         }
-        await _gameContainer.SendDiscardMessageAsync(deck);
-        await _mainGame.DiscardAsync(deck);
+        await gameContainer.SendDiscardMessageAsync(deck);
+        await mainGame.DiscardAsync(deck);
     }
     public override bool CanEnableAlways()
     {
@@ -165,9 +153,9 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
             return;
         }
         _isProcessing = true;
-        var tempList = _model.PlayerHand1!.ListSelectedObjects(true);
-        _model.TempSets!.AddCards(index, tempList);
-        await _privateAutoResume.SaveStateAsync(_model);
+        var tempList = viewModel.PlayerHand1!.ListSelectedObjects(true);
+        viewModel.TempSets!.AddCards(index, tempList);
+        await privateAutoResume.SaveStateAsync(viewModel);
         _isProcessing = false;
     }
     private async Task MainSets_SetClickedAsync(int setNumber, int section, int deck)
@@ -176,31 +164,31 @@ public partial class Phase10MainViewModel : BasicCardGamesVM<Phase10CardInformat
         {
             return;
         }
-        if (_mainGame!.SaveRoot!.CompletedPhase == false)
+        if (mainGame!.SaveRoot!.CompletedPhase == false)
         {
-            _toast.ShowUserErrorToast("Sorry, the phase must be completed before expanding onto a set");
+            Toast.ShowUserErrorToast("Sorry, the phase must be completed before expanding onto a set");
             return;
         }
-        var thisSet = _model.MainSets!.GetIndividualSet(setNumber);
+        var thisSet = viewModel.MainSets!.GetIndividualSet(setNumber);
         int position = section;
         bool rets;
-        rets = _mainGame.CanHumanExpand(thisSet, ref position, out Phase10CardInformation? thisCard, out string message);
+        rets = mainGame.CanHumanExpand(thisSet, ref position, out Phase10CardInformation? thisCard, out string message);
         if (rets == false)
         {
             if (message != "")
             {
-                _toast.ShowUserErrorToast(message);
+                Toast.ShowUserErrorToast(message);
             }
             return;
         }
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        if (mainGame.BasicData!.MultiPlayer == true)
         {
             SendExpandedSet expands = new();
             expands.Deck = thisCard!.Deck;
             expands.Position = position;
             expands.Number = setNumber;
-            await _mainGame.Network!.SendAllAsync("expandrummy", expands);
+            await mainGame.Network!.SendAllAsync("expandrummy", expands);
         }
-        await _mainGame.ExpandHumanRummyAsync(setNumber, thisCard!.Deck, position);
+        await mainGame.ExpandHumanRummyAsync(setNumber, thisCard!.Deck, position);
     }
 }

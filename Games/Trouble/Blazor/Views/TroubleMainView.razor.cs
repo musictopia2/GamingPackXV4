@@ -1,13 +1,13 @@
 namespace Trouble.Blazor.Views;
 public partial class TroubleMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private TroubleGameContainer? _gameContainer;
     private GameBoardGraphicsCP? _graphicsData;
     protected override void OnInitialized()
     {
-        _gameContainer = aa1.Resolver!.Resolve<TroubleGameContainer>();
-        _graphicsData = aa1.Resolver.Resolve<GameBoardGraphicsCP>();
+        _gameContainer = Resolver!.Resolve<TroubleGameContainer>();
+        _graphicsData = Resolver.Resolve<GameBoardGraphicsCP>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(TroubleVMData.NormalTurn))
              .AddLabel("Instructions", nameof(TroubleVMData.Instructions))

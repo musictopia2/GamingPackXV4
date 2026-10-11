@@ -12,7 +12,7 @@ public partial class CompleteDiceRollerComponent : IDisposable
     private BasicList<SorryDiceModel> DiceList { get; set; } = [];
     protected override void OnInitialized()
     {
-        DataContext!.CommandContainer.AddAction(ShowChange, "sorrydice");
+        DataContext!.CommandContainer.AddSpecificAction("sorrydice", ShowChange);
         base.OnInitialized();
     }
     protected override void OnParametersSet()
@@ -24,10 +24,9 @@ public partial class CompleteDiceRollerComponent : IDisposable
     {
         InvokeAsync(StateHasChanged);
     }
-#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
     public void Dispose()
-#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
     {
-        DataContext!.CommandContainer.RemoveAction("sorrydice");
+        DataContext!.CommandContainer.RemoveSpecificAction("sorrydice");
+        GC.SuppressFinalize(this);
     }
 }

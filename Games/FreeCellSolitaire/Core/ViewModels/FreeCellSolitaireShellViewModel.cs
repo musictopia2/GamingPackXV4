@@ -1,18 +1,5 @@
 namespace FreeCellSolitaire.Core.ViewModels;
-public class FreeCellSolitaireShellViewModel : SinglePlayerShellViewModel
+public class FreeCellSolitaireShellViewModel(IGamePackageResolver mainContainer, CommandContainer container, ISaveSinglePlayerClass saves, IEventAggregator aggregator) : SinglePlayerShellViewModel(mainContainer, container, saves, aggregator)
 {
-    protected override bool AlwaysNewGame => true; //most games allow new game always.
-    public FreeCellSolitaireShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo GameData,
-        ISaveSinglePlayerClass saves,
-        IEventAggregator aggregator
-        ) : base(mainContainer, container, GameData, saves, aggregator)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<FreeCellSolitaireMainViewModel>();
-        return model;
-    }
+    protected override bool AlwaysNewGame => true;
 }

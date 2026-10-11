@@ -5,9 +5,9 @@ namespace Racko.Core.Data;
 public partial class RackoVMData : IBasicCardGamesData<RackoCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public RackoVMData(CommandContainer command)
     {
         Deck1 = new(command);

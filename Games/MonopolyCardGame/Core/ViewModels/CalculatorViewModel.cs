@@ -40,12 +40,6 @@ public class CalculatorViewModel
             var card = item.First();
             output.Add(card.GetClonedCard());
         }
-        //var first = cardsOwned.Where(x => x.Group > 0).GroupBy(x => x.Group);
-        //foreach (var item in first)
-        //{
-        //    var card = deck.First(x => x.Group == item.Key);
-        //    output.Add(card.GetClonedCard());
-        //}
         return output;
     }
     private static BasicList<MonopolyCardGameCardInformation> GetSpecialCards(
@@ -55,12 +49,6 @@ public class CalculatorViewModel
         BasicList<EnumCardType> categories = [EnumCardType.IsRailRoad, EnumCardType.IsUtilities];
         foreach (var item in categories)
         {
-            //bool rets;
-            //rets = cardsOwned.Any(x => x.WhatCard == item);
-            //if (rets == false)
-            //{
-            //    continue;
-            //}
             var card = deck.First(x => x.WhatCard == item);
             output.Add(card.GetClonedCard());
         }

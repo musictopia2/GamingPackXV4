@@ -14,7 +14,7 @@ public class FluxxDetailClass : IGameInfo, ICardInfo<FluxxCardInformation>, INew
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.LargeDevices;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<FluxxCardInformation>.CardsToPassOut => 3;
-    BasicList<int> ICardInfo<FluxxCardInformation>.PlayerExcludeList => new() { 1 };
+    BasicList<int> ICardInfo<FluxxCardInformation>.PlayerExcludeList => [1];
     bool ICardInfo<FluxxCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<FluxxCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<FluxxCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,7 +22,7 @@ public class FluxxDetailClass : IGameInfo, ICardInfo<FluxxCardInformation>, INew
     bool ICardInfo<FluxxCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<FluxxCardInformation>.NoPass => false;
     bool ICardInfo<FluxxCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<FluxxCardInformation> ICardInfo<FluxxCardInformation>.DummyHand { get; set; } = new DeckRegularDict<FluxxCardInformation>();
+    DeckRegularDict<FluxxCardInformation> ICardInfo<FluxxCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<FluxxCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<FluxxCardInformation>.CanSortCardsToBeginWith => true;
     FluxxCardInformation INewCard<FluxxCardInformation>.GetNewCard(int chosen)
@@ -55,6 +55,6 @@ public class FluxxDetailClass : IGameInfo, ICardInfo<FluxxCardInformation>, INew
     }
     BasicList<int> ICardInfo<FluxxCardInformation>.DiscardExcludeList(IListShuffler<FluxxCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

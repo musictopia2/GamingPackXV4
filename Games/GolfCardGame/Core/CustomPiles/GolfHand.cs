@@ -49,7 +49,6 @@ public class GolfHand : GameBoardObservable<RegularSimpleCard>
             throw new CustomBasicException("Nobody is handling change hand async.  Rethink");
         }
         await _gameContainer.ChangeHandAsync.Invoke(index);
-        _gameContainer.Command.UpdateAll(); //try this too.
     }
     protected override bool CanExecute(RegularSimpleCard card)
     {

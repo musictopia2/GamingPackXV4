@@ -5,13 +5,13 @@ namespace GolfCardGame.Core.Data;
 public partial class GolfCardGameVMData : IBasicCardGamesData<RegularSimpleCard>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public int Round { get; set; }
+    public partial int Round { get; set; }
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
     public GolfCardGameVMData(CommandContainer command, GolfCardGameGameContainer gameContainer)
     {
         Deck1 = new DeckObservablePile<RegularSimpleCard>(command);

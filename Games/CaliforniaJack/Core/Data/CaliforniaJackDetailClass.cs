@@ -15,7 +15,7 @@ public class CaliforniaJackDetailClass : IGameInfo, ICardInfo<CaliforniaJackCard
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
     int ICardInfo<CaliforniaJackCardInformation>.CardsToPassOut => 6;
-    BasicList<int> ICardInfo<CaliforniaJackCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<CaliforniaJackCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<CaliforniaJackCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<CaliforniaJackCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<CaliforniaJackCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,7 +23,7 @@ public class CaliforniaJackDetailClass : IGameInfo, ICardInfo<CaliforniaJackCard
     bool ICardInfo<CaliforniaJackCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<CaliforniaJackCardInformation>.NoPass => false;
     bool ICardInfo<CaliforniaJackCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<CaliforniaJackCardInformation> ICardInfo<CaliforniaJackCardInformation>.DummyHand { get; set; } = new DeckRegularDict<CaliforniaJackCardInformation>();
+    DeckRegularDict<CaliforniaJackCardInformation> ICardInfo<CaliforniaJackCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<CaliforniaJackCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<CaliforniaJackCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -35,7 +35,7 @@ public class CaliforniaJackDetailClass : IGameInfo, ICardInfo<CaliforniaJackCard
     bool ITrickData.HasDummy => false;
     BasicList<int> ICardInfo<CaliforniaJackCardInformation>.DiscardExcludeList(IListShuffler<CaliforniaJackCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<CaliforniaJackCardInformation>.AceLow => false;
     bool IBeginningRegularCards<CaliforniaJackCardInformation>.CustomDeck => false;

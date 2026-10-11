@@ -1,7 +1,5 @@
 namespace Fluxx.Blazor.Views;
-public partial class ActionTakeUseView : SimpleActionView
+public partial class ActionTakeUseView : SimpleActionView<ActionTakeUseViewModel>
 {
-    [CascadingParameter]
-    public ActionTakeUseViewModel? DataContext { get; set; }
     private ICustomCommand ChooseCommand => DataContext!.ChooseCardCommand!;
 }

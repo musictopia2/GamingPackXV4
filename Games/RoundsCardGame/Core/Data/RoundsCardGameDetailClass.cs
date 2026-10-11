@@ -15,7 +15,7 @@ public class RoundsCardGameDetailClass : IGameInfo, ICardInfo<RoundsCardGameCard
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<RoundsCardGameCardInformation>.CardsToPassOut => 9;
-    BasicList<int> ICardInfo<RoundsCardGameCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<RoundsCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<RoundsCardGameCardInformation>.AddToDiscardAtBeginning => true;
     bool ICardInfo<RoundsCardGameCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<RoundsCardGameCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,7 +23,7 @@ public class RoundsCardGameDetailClass : IGameInfo, ICardInfo<RoundsCardGameCard
     bool ICardInfo<RoundsCardGameCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<RoundsCardGameCardInformation>.NoPass => false;
     bool ICardInfo<RoundsCardGameCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<RoundsCardGameCardInformation> ICardInfo<RoundsCardGameCardInformation>.DummyHand { get; set; } = new DeckRegularDict<RoundsCardGameCardInformation>();
+    DeckRegularDict<RoundsCardGameCardInformation> ICardInfo<RoundsCardGameCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<RoundsCardGameCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<RoundsCardGameCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -35,7 +35,7 @@ public class RoundsCardGameDetailClass : IGameInfo, ICardInfo<RoundsCardGameCard
     bool ITrickData.HasDummy => false;
     BasicList<int> ICardInfo<RoundsCardGameCardInformation>.DiscardExcludeList(IListShuffler<RoundsCardGameCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<RoundsCardGameCardInformation>.AceLow => false;
     bool IBeginningRegularCards<RoundsCardGameCardInformation>.CustomDeck => false;

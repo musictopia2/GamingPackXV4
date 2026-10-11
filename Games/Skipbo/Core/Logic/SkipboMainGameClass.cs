@@ -9,7 +9,7 @@ public class SkipboMainGameClass
     private readonly SkipboGameContainer _gameContainer;
     private readonly SkipboComputerAI _ai;
     private readonly IToast _toast;
-    internal BasicList<ComputerData> ComputerList { get; set; } = new(); //the computer ai needs it.
+    internal BasicList<ComputerData> ComputerList { get; set; } = []; //the computer ai needs it.
     public SkipboMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
         BasicData basicData,
@@ -83,7 +83,7 @@ public class SkipboMainGameClass
     protected override void PrepStartTurn()
     {
         base.PrepStartTurn();
-        ComputerList = new();
+        ComputerList = [];
     }
     private void LoadControls()
     {
@@ -166,10 +166,7 @@ public class SkipboMainGameClass
     public override async Task StartNewTurnAsync()
     {
         await base.StartNewTurnAsync();
-        if (_gameContainer.LoadPlayerPilesAsync != null)
-        {
-            await _gameContainer.LoadPlayerPilesAsync.Invoke();
-        }
+        _gameContainer.LoadPlayerPiles?.Invoke();
         await StartDrawingAsync();
     }
     public override async Task EndTurnAsync()
@@ -295,7 +292,6 @@ public class SkipboMainGameClass
         {
             throw new CustomBasicException($"After removing a card, must have less than 5 cards left for {SingleInfo.NickName}");
         }
-        _command.UpdateAll();
     }
     protected override Task AfterDrawingAsync()
     {
@@ -349,9 +345,7 @@ public class SkipboMainGameClass
         thisCard.IsSelected = false;
         await AnimateDiscardAsync(thisCard, pile, EnumAnimcationDirection.StartUpToCard);
         _model.DiscardPiles!.AddCardToPile(pile, thisCard);
-        _command.UpdateAll();
         UpdateDiscardData(SingleInfo, pile);
-        _command.UpdateAll();
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.5);
@@ -446,7 +440,6 @@ public class SkipboMainGameClass
             await AnimateStockAsync(thisCard);
             SingleInfo.StockLeft = _model.StockPile.CardsLeft();
             SingleInfo.InStock = _model.StockPile.NextCardInStock();
-            _command.UpdateAll();
         }
         else
         {
@@ -462,7 +455,6 @@ public class SkipboMainGameClass
             UpdateDiscardData(SingleInfo, discardNum);
             await AnimateDiscardAsync(thisCard, discardNum, EnumAnimcationDirection.StartCardToUp);
             _model.DiscardPiles.UnselectAllCards();
-            _command.UpdateAll();
         }
         var thisPile = _model.PublicPiles.PileList![pile];
         if (thisCard.IsWild == true)
@@ -471,7 +463,6 @@ public class SkipboMainGameClass
         }
         await Aggregator.AnimateCardAsync(thisCard, EnumAnimcationDirection.StartDownToCard, "public", thisPile);
         _model.PublicPiles.AddCardToPile(pile, thisCard); //hopefully this is still okay.
-        _command.UpdateAll();
         if (_model.PublicPiles.NeedToRemovePile(pile))
         {
             if (Test!.NoAnimations == false)

@@ -1,4 +1,4 @@
-@inherits BasicGameView<BowlingDiceGameMainViewModel>
+@inherits CascadingGameView<BowlingDiceGameMainViewModel>
 <BowlingCompleteScoresheetBlazor MainGame="@DataContext!.MainGame" />
 <BowlingDiceListBlazor DiceList="DataContext.MainGame.DiceBoard!.DiceList" />
 <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />

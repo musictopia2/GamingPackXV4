@@ -3,11 +3,11 @@ namespace ShipCaptainCrew.Core.Data;
 public partial class ShipCaptainCrewPlayerItem : SimplePlayer
 {
     [ScoreColumn]
-    public bool WentOut { get; set; }
+    public partial bool WentOut { get; set; }
     [ScoreColumn]
-    public int Score { get; set; }
+    public partial int Score { get; set; }
     [ScoreColumn]
-    public int Wins { get; set; }
+    public partial int Wins { get; set; }
     [ScoreColumn]
-    public bool TookTurn { get; set; }
+    public partial bool TookTurn { get; set; }
 }

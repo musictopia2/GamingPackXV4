@@ -1,4 +1,4 @@
-@inherits BasicGameView<HeartsMainViewModel>
+@inherits CascadingGameView<HeartsMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -12,28 +12,33 @@
     <StackItem>
         <LabelGridComponent DataContext="_vmData" Labels="_labels" />
     </StackItem>
-    @if (_gameContainer.SaveRoot.GameStatus == EnumStatus.Normal)
-    {
-        <StackItem>
-            <DeckOfCardsSeveralPlayersTrickBlazor B="HeartsTrickAreaCP" P="HeartsPlayerItem" T="HeartsCardInformation" DataContext="_vmData.TrickArea1" />
-        </StackItem>
-    }
+    <StateContentView DataContext="_gameContainer.SaveRoot">
+        @if (_gameContainer.SaveRoot.GameStatus == EnumStatus.Normal)
+        {
+            <StackItem>
+                <DeckOfCardsSeveralPlayersTrickBlazor B="HeartsTrickAreaCP" P="HeartsPlayerItem" T="HeartsCardInformation" DataContext="_vmData.TrickArea1" />
+            </StackItem>
+        }
+    </StateContentView>
+    
 </StackLayout>
 <div>
     <DeckOfCardsHandBlazor AdditionalSpacing="1" R="HeartsCardInformation" Hand="_vmData.PlayerHand1" />
 </div>
-@if (_gameContainer.SaveRoot.GameStatus == EnumStatus.Passing)
-{
-    <GameButtonComponent CommandObject="PassCommand" Display="Pass" StartOnNewLine=true />
-}
-@if (_gameContainer.SaveRoot.GameStatus == EnumStatus.ShootMoon)
-{
-    <BaseFrameBlazor Text="Shoot Moon Options">
-        <GameButtonComponent CommandObject="MoonCommand"
-                         CommandParameter="EnumMoonOptions.GiveEverybodyPlus"
-                         Display="Give Other Players 26 Points" />
-        <GameButtonComponent CommandObject="MoonCommand"
-                         CommandParameter="EnumMoonOptions.GiveSelfMinus"
-                         Display="Reduce your score by 26 points" />
-    </BaseFrameBlazor>
-}
+<StateContentView DataContext="_gameContainer.SaveRoot">
+    @if (_gameContainer.SaveRoot.GameStatus == EnumStatus.Passing)
+    {
+        <GameButtonComponent CommandObject="PassCommand" Display="Pass" StartOnNewLine=true />
+    }
+    @if (_gameContainer.SaveRoot.GameStatus == EnumStatus.ShootMoon)
+    {
+        <BaseFrameBlazor Text="Shoot Moon Options">
+            <GameButtonComponent CommandObject="MoonCommand"
+                                 CommandParameter="EnumMoonOptions.GiveEverybodyPlus"
+                                 Display="Give Other Players 26 Points" />
+            <GameButtonComponent CommandObject="MoonCommand"
+                                 CommandParameter="EnumMoonOptions.GiveSelfMinus"
+                                 Display="Reduce your score by 26 points" />
+        </BaseFrameBlazor>
+    }
+</StateContentView>

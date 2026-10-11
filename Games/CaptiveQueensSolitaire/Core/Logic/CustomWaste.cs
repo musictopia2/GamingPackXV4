@@ -1,5 +1,5 @@
 namespace CaptiveQueensSolitaire.Core.Logic;
-public class CustomWaste : IWaste, ISerializable
+public class CustomWaste : IWaste, ISerializable, IStateChanged
 {
     public bool IsEnabled { get; set; }
     public int CardsNeededToBegin { get; set; }
@@ -17,7 +17,10 @@ public class CustomWaste : IWaste, ISerializable
     {
 
     }
-    public DeckRegularDict<SolitaireCard> CardList = new();
+    public DeckRegularDict<SolitaireCard> CardList = [];
+
+    public event Action? StateChanged;
+
     public void ClearBoard(IDeckDict<SolitaireCard> thisCol)
     {
         if (thisCol.Count != CardsNeededToBegin)
@@ -128,5 +131,10 @@ public class CustomWaste : IWaste, ISerializable
     public bool HasCard(int whichOne)
     {
         return false;
+    }
+
+    void IWaste.UpdatePiles()
+    {
+        StateChanged?.Invoke();
     }
 }

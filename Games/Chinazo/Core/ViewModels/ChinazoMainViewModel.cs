@@ -1,59 +1,47 @@
 namespace Chinazo.Core.ViewModels;
 [InstanceGame]
-public partial class ChinazoMainViewModel : BasicCardGamesVM<ChinazoCard>
-{
-    private readonly ChinazoMainGameClass _mainGame;
-    private readonly ChinazoVMData _model;
-    private readonly ChinazoGameContainer _gameContainer;
-    private readonly IToast _toast;
-    private readonly PrivateAutoResumeProcesses _privateAutoResume;
-    public ChinazoMainViewModel(CommandContainer commandContainer,
+public partial class ChinazoMainViewModel(CommandContainer commandContainer,
         ChinazoMainGameClass mainGame,
         ChinazoVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         ChinazoGameContainer gameContainer,
-        IToast toast, 
-        PrivateAutoResumeProcesses privateAutoResume
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast,
+        PrivateAutoResumeProcesses privateAutoResume) : BasicCardGamesVM<ChinazoCard>(commandContainer ,mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _gameContainer = gameContainer;
-        _toast = toast;
-        _privateAutoResume = privateAutoResume;
-        _model.Deck1.NeverAutoDisable = true;
-        _model.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
-        var player = _mainGame.PlayerList.GetSelf();
+        viewModel.Deck1.NeverAutoDisable = true;
+        viewModel.PlayerHand1.AutoSelect = EnumHandAutoType.SelectAsMany;
+        var player = mainGame.PlayerList.GetSelf();
         player.DoInit();
-        _model.TempSets.Init(this);
-        _model.TempSets.ClearBoard();
+        viewModel.TempSets.Init(this);
+        viewModel.TempSets.ClearBoard();
         PossibleAutoResume();
-        _model.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
-        _model.MainSets.SetClickedAsync = MainSets_SetClickedAsync;
-        _model.MainSets.SendEnableProcesses(this, () =>
+        viewModel.TempSets.SetClickedAsync = TempSets_SetClickedAsync;
+        viewModel.MainSets.SetClickedAsync = MainSets_SetClickedAsync;
+        viewModel.MainSets.SendEnableProcesses(this, () =>
         {
-            if (_mainGame!.OtherTurn > 0)
+            if (mainGame!.OtherTurn > 0)
             {
                 return false;
             }
-            return _mainGame.SingleInfo!.LaidDown;
+            return mainGame.SingleInfo!.LaidDown;
         });
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     private void PossibleAutoResume()
     {
-        if (_gameContainer.TempSets.Count > 0)
+        if (gameContainer.TempSets.Count > 0)
         {
-            var player = _gameContainer.PlayerList!.GetSelf();
+            var player = gameContainer.PlayerList!.GetSelf();
             bool hadAny = false;
-            foreach (var item in _gameContainer.TempSets)
+            foreach (var item in gameContainer.TempSets)
             {
-                var current = _model.TempSets.SetList[item.SetNumber - 1];
-                var cards = item.Cards.GetNewObjectListFromDeckList(_gameContainer.DeckList);
+                var current = viewModel.TempSets.SetList[item.SetNumber - 1];
+                var cards = item.Cards.GetNewObjectListFromDeckList(gameContainer.DeckList);
                 DeckRegularDict<ChinazoCard> toAdd = [];
                 foreach (var card in cards)
                 {
@@ -69,7 +57,7 @@ public partial class ChinazoMainViewModel : BasicCardGamesVM<ChinazoCard>
             }
             if (hadAny)
             {
-                _model.TempSets.PublicCount();
+                viewModel.TempSets.PublicCount();
             }
         }
     }
@@ -80,35 +68,35 @@ public partial class ChinazoMainViewModel : BasicCardGamesVM<ChinazoCard>
     }
     protected override bool CanEnablePile1()
     {
-        return _mainGame!.OtherTurn == 0;
+        return mainGame!.OtherTurn == 0;
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
-        int counts = _model.PlayerHand1!.HowManySelectedObjects;
-        int others = _model.TempSets!.HowManySelectedObjects;
+        int counts = viewModel.PlayerHand1!.HowManySelectedObjects;
+        int others = viewModel.TempSets!.HowManySelectedObjects;
         if (counts + others > 1)
         {
-            _toast.ShowUserErrorToast("Sorry, you can only select one card to discard");
+            Toast.ShowUserErrorToast("Sorry, you can only select one card to discard");
             return;
         }
         if (counts + others == 0)
         {
-            _toast.ShowUserErrorToast("Sorry, you must select a card to discard");
+            Toast.ShowUserErrorToast("Sorry, you must select a card to discard");
             return;
         }
         int index;
         int deck;
         if (counts == 0)
         {
-            index = _model.TempSets.PileForSelectedObject;
-            deck = _model.TempSets.DeckForSelectedObjected(index);
+            index = viewModel.TempSets.PileForSelectedObject;
+            deck = viewModel.TempSets.DeckForSelectedObjected(index);
         }
         else
         {
-            deck = _model.PlayerHand1.ObjectSelected();
+            deck = viewModel.PlayerHand1.ObjectSelected();
         }
-        await _gameContainer!.SendDiscardMessageAsync(deck);
-        await _mainGame.DiscardAsync(deck);
+        await gameContainer!.SendDiscardMessageAsync(deck);
+        await mainGame.DiscardAsync(deck);
     }
     public override bool CanEnableAlways()
     {
@@ -122,9 +110,9 @@ public partial class ChinazoMainViewModel : BasicCardGamesVM<ChinazoCard>
             return;
         }
         _isProcessing = true;
-        var tempList = _model.PlayerHand1!.ListSelectedObjects(true);
-        _model.TempSets!.AddCards(index, tempList);
-        await _privateAutoResume.SaveStateAsync(_model);
+        var tempList = viewModel.PlayerHand1!.ListSelectedObjects(true);
+        viewModel.TempSets!.AddCards(index, tempList);
+        await privateAutoResume.SaveStateAsync(viewModel);
         _isProcessing = false;
     }
     private async Task MainSets_SetClickedAsync(int setNumber, int section, int deck)
@@ -133,68 +121,68 @@ public partial class ChinazoMainViewModel : BasicCardGamesVM<ChinazoCard>
         {
             return;
         }
-        var thisSet = _model.MainSets!.GetIndividualSet(setNumber);
+        var thisSet = viewModel.MainSets!.GetIndividualSet(setNumber);
         bool rets;
-        rets = _mainGame!.CanAddToSet(thisSet, out ChinazoCard? thisCard, section, out string message);
+        rets = mainGame!.CanAddToSet(thisSet, out ChinazoCard? thisCard, section, out string message);
         if (rets == false)
         {
             if (message != "")
             {
-                _toast.ShowUserErrorToast(message);
+                Toast.ShowUserErrorToast(message);
             }
             return;
         }
         int nums = setNumber;
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        if (mainGame.BasicData!.MultiPlayer == true)
         {
             SendExpandedSet thiss = new();
             thiss.Deck = thisCard!.Deck;
             thiss.Number = nums;
             thiss.Position = section;
-            await _mainGame.Network!.SendAllAsync("expandrummy", thiss);
+            await mainGame.Network!.SendAllAsync("expandrummy", thiss);
         }
-        await _mainGame.AddToSetAsync(nums, thisCard!.Deck, section);
+        await mainGame.AddToSetAsync(nums, thisCard!.Deck, section);
     }
     public bool CanPass => !CanEnablePile1();
     [Command(EnumCommandCategory.Game)]
     public async Task PassAsync()
     {
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        if (mainGame.BasicData!.MultiPlayer == true)
         {
-            await _mainGame.Network!.SendAllAsync("pass");
+            await mainGame.Network!.SendAllAsync("pass");
         }
-        await _mainGame!.PassAsync();
+        await mainGame!.PassAsync();
     }
     public bool CanTake => !CanEnablePile1();
     [Command(EnumCommandCategory.Game)]
     public async Task TakeAsync()
     {
-        await _mainGame!.PickupFromDiscardAsync();
+        await mainGame!.PickupFromDiscardAsync();
     }
     public bool CanFirstSets
     {
         get
         {
-            if (_mainGame!.OtherTurn > 0)
+            if (mainGame!.OtherTurn > 0)
             {
                 return false;
             }
-            return !_mainGame.SingleInfo!.LaidDown;
+            return !mainGame.SingleInfo!.LaidDown;
         }
     }
     [Command(EnumCommandCategory.Game)]
     public async Task FirstSetsAsync()
     {
-        if (_mainGame!.CanLayDownInitialSets() == false)
+        if (mainGame!.CanLayDownInitialSets() == false)
         {
-            _toast.ShowUserErrorToast("Sorry; you do not have the required sets yet");
+            Toast.ShowUserErrorToast("Sorry; you do not have the required sets yet");
             return;
         }
-        var thisCol = _mainGame.ListValidSets();
+        var thisCol = mainGame.ListValidSets();
         BasicList<string> newList = [];
         await thisCol.ForEachAsync(async thisTemp =>
         {
-            if (_mainGame.BasicData!.MultiPlayer == true)
+            if (mainGame.BasicData!.MultiPlayer == true)
             {
                 SendNewSet thiss = new();
                 thiss.CardListData = await js1.SerializeObjectAsync(thisTemp.CardList.GetDeckListFromObjectList());
@@ -203,12 +191,12 @@ public partial class ChinazoMainViewModel : BasicCardGamesVM<ChinazoCard>
                 var thisStr = await js1.SerializeObjectAsync(thiss);
                 newList.Add(thisStr);
             }
-            _mainGame.CreateNewSet(thisTemp);
+            mainGame.CreateNewSet(thisTemp);
         });
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        if (mainGame.BasicData!.MultiPlayer == true)
         {
-            await _mainGame.Network!.SendSeveralSetsAsync(newList, "laiddowninitial");
+            await mainGame.Network!.SendSeveralSetsAsync(newList, "laiddowninitial");
         }
-        await _mainGame!.LaidDownInitialSetsAsync();
+        await mainGame!.LaidDownInitialSetsAsync();
     }
 }

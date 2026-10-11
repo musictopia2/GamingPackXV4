@@ -1,4 +1,5 @@
 namespace Payday.Core.Logic;
+
 [SingletonGame]
 public class PaydayMainGameClass
     : BoardDiceGameClass<PaydayPlayerItem, PaydaySaveInfo, EnumColorChoice, int>
@@ -103,13 +104,14 @@ public class PaydayMainGameClass
         _mailProcesses.PopulateMails();
         return Task.CompletedTask;
     }
+    private bool _firstLoadRefreshSent;
     public override Task FinishGetSavedAsync()
     {
         _autoResume = true;
         CanPrepTurnOnSaved = false;
         LoadControls();
         AfterRestoreDice();
-        BoardGameSaved();
+        GameSaved();
         SaveRoot.LoadMod(_model);
         CardInformation thisCard;
         if (PlayerList.DidChooseColors() == true)
@@ -125,7 +127,7 @@ public class PaydayMainGameClass
         PlayerList!.ForEach(thisPlayer =>
         {
             var nextList = thisPlayer.Hand.ToRegularDeckDict();
-            DeckRegularDict<CardInformation> finList = new();
+            DeckRegularDict<CardInformation> finList = [];
             nextList.ForEach(temps =>
             {
                 thisCard = PaydayGameContainer.GetCard(temps.Deck);
@@ -235,6 +237,7 @@ public class PaydayMainGameClass
         {
             SaveRoot.MaxMonths = 2;
         }
+
         await FinishUpAsync(isBeginning);
     }
 
@@ -244,7 +247,6 @@ public class PaydayMainGameClass
         {
             case "popupchosen":
                 _model!.PopUpChosen = content;
-
                 if (SaveRoot.GameStatus == EnumStatus.ChoosePlayer)
                 {
                     await _playerProcesses.ProcessChosenPlayerAsync();
@@ -277,7 +279,7 @@ public class PaydayMainGameClass
                 break;
             case "reshuffledeallist":
                 BasicList<int> tempList1 = await js1.DeserializeObjectAsync<BasicList<int>>(content);
-                DeckRegularDict<DealCard> finList1 = new();
+                DeckRegularDict<DealCard> finList1 = [];
                 tempList1.ForEach(x =>
                 {
                     DealCard thisCard = (DealCard)PaydayGameContainer.GetCard(x);
@@ -288,7 +290,7 @@ public class PaydayMainGameClass
                 break;
             case "reshufflemaillist":
                 BasicList<int> tempList2 = await js1.DeserializeObjectAsync<BasicList<int>>(content);
-                DeckRegularDict<MailCard> finList2 = new();
+                DeckRegularDict<MailCard> finList2 = [];
                 tempList2.ForEach(x =>
                 {
                     MailCard thisCard = (MailCard)PaydayGameContainer.GetCard(x);
@@ -316,7 +318,8 @@ public class PaydayMainGameClass
             SaveRoot.Instructions = "Roll the dice to start your turn";
             _dealProcesses.PopulateDeals();
             _mailProcesses.PopulateMails();
-            _model!.Cup!.CanShowDice = false;
+            SetDiceVisible(false);
+            CommandContainer.UpdateSpecificAction(PaydayActions.Turn);
         }
         await ContinueTurnAsync();
     }
@@ -351,14 +354,14 @@ public class PaydayMainGameClass
                 break;
             case EnumStatus.DealOrBuy:
                 SaveRoot.Instructions = "Please either choose to move to the nearest buy or the nearest deal space";
-                _model!.AddPopupLists(new() { "Buy", "Deal" });
+                _model!.AddPopupLists(["Buy", "Deal"]);
                 break;
             case EnumStatus.ChooseDeal:
                 if (SaveRoot.CurrentDeal!.Deck == 0)
                 {
                     throw new CustomBasicException("Must have a deal to look at to decide whether to choose a deal or not");
                 }
-                _model.AddPopupLists(new() { "Yes", "No" });
+                _model.AddPopupLists(["Yes", "No"]);
                 break;
             case EnumStatus.RollRadio:
                 _model!.Cup!.CanShowDice = false;
@@ -378,6 +381,17 @@ public class PaydayMainGameClass
         {
             SingleInfo = PlayerList!.GetWhoPlayer();
             _model!.OtherLabel = "None";
+        }
+        if (BasicData.MultiPlayer == false)
+        {
+            await base.ContinueTurnAsync();
+            return;
+        }
+        var selfPlayer = PlayerList.GetSelf();
+        if (_firstLoadRefreshSent == false && PlayerList.DidChooseColors() && selfPlayer.IsHost == false)
+        {
+            _firstLoadRefreshSent = true;
+            CommandContainer.UpdateSpecificAction(PaydayActions.FirstLoad);
         }
         await base.ContinueTurnAsync();
     }
@@ -409,6 +423,25 @@ public class PaydayMainGameClass
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
+
+
+    private void StartSetup()
+    {
+        _model.DealPile.ClearCards();
+        _model.MailPile.ClearCards();
+        _model.CurrentDealList.HandList.Clear();
+        _model.CurrentMailList.HandList.Clear();
+        _model.PopUpChosen = "";
+        _model.PopUpList.UnselectAll();
+        SaveRoot.NumberHighlighted = 0;
+        SaveRoot.DiceNumber = 0;
+        SaveRoot.RemainingMove = 0;
+        SaveRoot.EndOfMonth = false;
+        SaveRoot.EndGame = false;
+        SaveRoot.OutCards.Clear();
+        OtherTurn = 0;
+    }
+
     public override async Task AfterChoosingColorsAsync()
     {
         if (BasicData!.MultiPlayer == true && BasicData.Client == true)
@@ -417,6 +450,7 @@ public class PaydayMainGameClass
             Network!.IsEnabled = true;
             return;
         }
+        StartSetup();
         _mailProcesses.SetUpMail();
         _dealProcesses.SetUpDeal();
         _gameBoard.ResetBoard();
@@ -510,7 +544,6 @@ public class PaydayMainGameClass
         }
         SaveRoot!.Instructions = $"{SingleInfo!.NickName} has won $1,000 for being a radio contest winnner by rolling a 3.";
         SingleInfo.MoneyHas += 1000;
-        _gameContainer.Command.UpdateAll();
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(1);
@@ -522,7 +555,6 @@ public class PaydayMainGameClass
     {
         decimal amounts = Cup!.ValueOfOnlyDice * 100;
         SaveRoot!.Instructions = $"{SingleInfo!.NickName} owes {amounts.ToCurrency(0)} for the walk for charity";
-        _gameContainer.Command.UpdateAll();
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(2);
@@ -570,7 +602,6 @@ public class PaydayMainGameClass
                 if (_lotteryProcesses.CanStartLotteryProcess() == false)
                 {
                     SaveRoot!.Instructions = "No lottery will be played because fewer than 2 players chose to participate";
-                    _gameContainer.Command.UpdateAll();
                     if (Test!.NoAnimations == false)
                     {
                         await Delay!.DelaySeconds(1);

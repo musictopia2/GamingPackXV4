@@ -2,8 +2,8 @@ namespace HuseHearts.Core.Data;
 [SingletonGame]
 public class HuseHeartsSaveInfo : BasicSavedTrickGamesClass<EnumSuitList, HuseHeartsCardInformation, HuseHeartsPlayerItem>, IMappable, ISaveInfo, ITrickStatusSavedClass
 {
-    public DeckRegularDict<HuseHeartsCardInformation> BlindList { get; set; } = new();
-    public DeckRegularDict<HuseHeartsCardInformation> DummyList { get; set; } = new();
+    public DeckRegularDict<HuseHeartsCardInformation> BlindList { get; set; } = [];
+    public DeckRegularDict<HuseHeartsCardInformation> DummyList { get; set; } = [];
     public EnumTrickStatus TrickStatus { get; set; }
     public int WhoLeadsTrick { get; set; }
     public int WhoWinsBlind { get; set; }
@@ -15,10 +15,7 @@ public class HuseHeartsSaveInfo : BasicSavedTrickGamesClass<EnumSuitList, HuseHe
         {
             if (SetProperty(ref _roundNumber, value))
             {
-                if (_model != null)
-                {
-                    _model.RoundNumber = value;
-                }
+                _model?.RoundNumber = value;
             }
         }
     }

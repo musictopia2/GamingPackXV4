@@ -26,5 +26,5 @@ public class FiveCrownsSaveInfo : BasicSavedCardClass<FiveCrownsPlayerItem, Five
     }
     public int PlayerWentOut { get; set; }
     public bool SetsCreated { get; set; }
-    public BasicList<SavedSet> SetList { get; set; } = new();
+    public BasicList<SavedSet> SetList { get; set; } = [];
 }

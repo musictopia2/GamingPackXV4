@@ -14,16 +14,11 @@
     }
     return;
 }
-<ParentControl VM="ConnectFourMainViewModel">
+<MainScreen>
     <ConnectFourMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<ConnectFourPlayerItem>">
-    <MultiplayerOpeningView P="ConnectFourPlayerItem" />
-</ParentControl>
-<ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, ConnectFourPlayerItem>">
-    
-    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="ConnectFourPlayerItem">
-        @* if there is another piece, replace with proper piece. *@
-        <CheckerPiece HasImage="true" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" MainColor="@GetColor(Piece.EnumValue)" />
-    </BeginningChooseColorView>
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="ConnectFourPlayerItem" />
+<BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="ConnectFourPlayerItem">
+    @* if there is another piece, replace with proper piece. *@
+    <CheckerPiece HasImage="true" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" MainColor="@GetColor(Piece.EnumValue)" />
+</BeginningChooseColorView>

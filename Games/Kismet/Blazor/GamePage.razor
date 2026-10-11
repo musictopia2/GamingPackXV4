@@ -14,9 +14,8 @@
     }
     return;
 }
-<ParentControl VM="YahtzeeMainViewModel<KismetDice>">
+
+<MainScreen>
     <YahtzeeMainView D="KismetDice" />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<YahtzeePlayerItem<KismetDice>>">
-    <MultiplayerOpeningView P="YahtzeePlayerItem<KismetDice>" />
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="YahtzeePlayerItem<KismetDice>" />

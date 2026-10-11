@@ -1,25 +1,20 @@
 namespace PersianSolitaire.Core.Logic;
-public class WastePiles : WastePilesCP
+public class WastePiles(CommandContainer command,
+    ScoreModel model
+        ) : WastePilesCP(command)
 {
     private int DealNumber
     {
         get
         {
-            return _model.DealNumber;
+            return model.DealNumber;
         }
         set
         {
-            _model.DealNumber = value;
+            model.DealNumber = value;
         }
     }
-    private readonly ScoreModel _model;
-    public WastePiles(CommandContainer command,
-        ScoreModel model
-        ) : base(command)
-    {
 
-        _model = model;
-    }
     public override void ClearBoard(IDeckDict<SolitaireCard> thisCol)
     {
         base.ClearBoard(thisCol);
@@ -67,7 +62,7 @@ public class WastePiles : WastePilesCP
     }
     public void Redeal()
     {
-        TempList = new DeckRegularDict<SolitaireCard>();
+        TempList = [];
         if (DealNumber == 3)
         {
             throw new CustomBasicException("There are only 3 deals allowed.  Therefore, there is a problem");

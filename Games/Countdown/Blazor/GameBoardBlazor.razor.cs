@@ -5,8 +5,7 @@ public partial class GameBoardBlazor
     public string TargetHeight { get; set; } = "";
     [Parameter]
     public CountdownGameContainer? GameContainer { get; set; }
-
-    private BasicList<CountdownPlayerItem> _players = new();
+    private BasicList<CountdownPlayerItem> _players = [];
     protected override void OnInitialized()
     {
         _players = GameContainer!.GetPlayerList();

@@ -3,10 +3,20 @@
 {
     return;
 }
-<FlexibleDeckRenderComponent D="DutchBlitzCardInformation" DeckObject="_card">
-    <CardGraphicsBlazor 
-                        DeckObject="_card"
-                        CommandParameter="IndividualPile"
-                        CommandObject="MainPiles.PileCommand"
-                        TargetHeight="@RealHeight" />
-</FlexibleDeckRenderComponent>
+
+<StateContentView DataContext="IndividualPile.ObjectList">
+    @if (IndividualPile.ObjectList.Count == 0)
+    {
+        return;
+    }
+    @{
+        var card = IndividualPile.ObjectList.Last();
+    }
+    <FlexibleDeckRenderComponent D="DutchBlitzCardInformation"
+                                 DeckObject="card">
+        <CardGraphicsBlazor DeckObject="card"
+                            CommandParameter="IndividualPile"
+                            CommandObject="MainPiles.PileCommand"
+                            TargetHeight="@RealHeight" />
+    </FlexibleDeckRenderComponent>
+</StateContentView>

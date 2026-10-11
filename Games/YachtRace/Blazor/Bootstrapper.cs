@@ -1,12 +1,8 @@
 //i think this is the most common things i like to do
 namespace YachtRace.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<YachtRaceShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<YachtRaceShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
 	  IBasicDiceGamesData<SimpleDice>.NeedsRollIncrement = true;

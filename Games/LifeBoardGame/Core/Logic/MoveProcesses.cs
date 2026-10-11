@@ -1,41 +1,32 @@
 ﻿namespace LifeBoardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class MoveProcesses : IMoveProcesses, ITwinProcesses
+public class MoveProcesses(LifeBoardGameVMData model,
+    LifeBoardGameGameContainer gameContainer,
+    GameBoardProcesses gameBoard
+        ) : IMoveProcesses, ITwinProcesses
 {
-    private readonly LifeBoardGameVMData _model;
-    private readonly LifeBoardGameGameContainer _gameContainer;
-    private readonly GameBoardProcesses _gameBoard;
-    public MoveProcesses(LifeBoardGameVMData model,
-        LifeBoardGameGameContainer gameContainer,
-        GameBoardProcesses gameBoard
-        )
-    {
-        _model = model;
-        _gameContainer = gameContainer;
-        _gameBoard = gameBoard;
-    }
     public async Task DoAutomateMoveAsync(int space)
     {
-        IBoardProcesses processes = _gameContainer.Resolver.Resolve<IBoardProcesses>();
-        _model!.GameDetails = processes.GetSpaceDetails(space);
-        _model!.Instructions = "Making Move";
-        _gameBoard.NewPosition = space;
-        if (space == _gameBoard.SecondPossiblePosition)
+        IBoardProcesses processes = gameContainer.Resolver.Resolve<IBoardProcesses>();
+        model!.GameDetails = processes.GetSpaceDetails(space);
+        model!.Instructions = "Making Move";
+        gameBoard.NewPosition = space;
+        if (space == gameBoard.SecondPossiblePosition)
         {
-            await _gameBoard.AnimateMoveAsync(true);
+            await gameBoard.AnimateMoveAsync(true);
         }
         else
         {
-            await _gameBoard.AnimateMoveAsync(false);
+            await gameBoard.AnimateMoveAsync(false);
         }
-        await MoveResultsAsync(space, _gameContainer.SingleInfo!);
+        await MoveResultsAsync(space, gameContainer.SingleInfo!);
     }
     private bool TilesLeft
     {
         get
         {
-            int howMany = _gameContainer.PlayerList!.Sum(items => items.TilesCollected);
+            int howMany = gameContainer.PlayerList!.Sum(items => items.TilesCollected);
             if (howMany > 21)
             {
                 throw new CustomBasicException("Only 21 tiles at the most");
@@ -43,10 +34,10 @@ public class MoveProcesses : IMoveProcesses, ITwinProcesses
             return howMany < 21;
         }
     }
-    private bool CanStealTile => _gameContainer.PlayerList!.Any(items => items.TilesCollected > 0 && items.LastMove != EnumFinal.CountrySideAcres);
+    private bool CanStealTile => gameContainer.PlayerList!.Any(items => items.TilesCollected > 0 && items.LastMove != EnumFinal.CountrySideAcres);
     private async Task MoveResultsAsync(int index, LifeBoardGamePlayerItem thisPlayer)
     {
-        var thisSpace = _gameContainer!.SpaceList![index - 1];
+        var thisSpace = gameContainer!.SpaceList![index - 1];
         PaydayProcessing(thisPlayer);
         decimal newAmount;
         int newPlayer;
@@ -55,21 +46,21 @@ public class MoveProcesses : IMoveProcesses, ITwinProcesses
             if (TilesLeft)
             {
                 LifeBoardGameGameContainer.ObtainLife(thisPlayer);
-                _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
             }
             else if (CanStealTile)
             {
-                _gameContainer.GameStatus = EnumWhatStatus.NeedStealTile;
+                gameContainer.GameStatus = EnumWhatStatus.NeedStealTile;
             }
             else
             {
-                _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
             }
         }
         switch (thisSpace.ActionInfo)
         {
             case EnumActionType.CollectPayMoney:
-                _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
                 if (thisSpace.AmountReceived < 0)
                 {
                     newAmount = Math.Abs(thisSpace.AmountReceived);
@@ -77,116 +68,116 @@ public class MoveProcesses : IMoveProcesses, ITwinProcesses
                     {
                         if (thisPlayer.CarIsInsured == true)
                         {
-                            _model!.GameDetails = $"{_model.GameDetails}{Constants.VBCrLf} Pay nothing because the player had car insurance";
+                            model!.GameDetails = $"{model.GameDetails}{Constants.VBCrLf} Pay nothing because the player had car insurance";
                         }
                         else
                         {
-                            _model!.GameDetails = $"{thisSpace.Description}{Constants.VBCrLf}Pay {newAmount.ToCurrency(0)} because the player had no car insurance";
-                            _gameContainer.TakeOutExpense(newAmount);
+                            model!.GameDetails = $"{thisSpace.Description}{Constants.VBCrLf}Pay {newAmount.ToCurrency(0)} because the player had no car insurance";
+                            gameContainer.TakeOutExpense(newAmount);
                         }
                     }
                     else if (thisSpace.WhatInsurance == EnumInsuranceType.NeedHouse)
                     {
                         if (thisPlayer.HouseIsInsured || thisPlayer.HouseName == "")
                         {
-                            _model!.GameDetails = $"{_model.GameDetails}{Constants.VBCrLf} Pay nothing because the player had house insurance or had no house";
+                            model!.GameDetails = $"{model.GameDetails}{Constants.VBCrLf} Pay nothing because the player had house insurance or had no house";
                         }
                         else
                         {
-                            _model!.GameDetails = $"{thisSpace.Description}{Constants.VBCrLf}Pay {newAmount.ToCurrency(0)} because the player had no house insurance";
-                            _gameContainer.TakeOutExpense(newAmount);
+                            model!.GameDetails = $"{thisSpace.Description}{Constants.VBCrLf}Pay {newAmount.ToCurrency(0)} because the player had no house insurance";
+                            gameContainer.TakeOutExpense(newAmount);
                         }
                     }
                     else
                     {
                         if (thisSpace.CareerSpace != EnumCareerType.None)
                         {
-                            newPlayer = _gameContainer.WhoHadCareerName(thisSpace.CareerSpace);
-                            if (newPlayer == _gameContainer.WhoTurn)
+                            newPlayer = gameContainer.WhoHadCareerName(thisSpace.CareerSpace);
+                            if (newPlayer == gameContainer.WhoTurn)
                             {
-                                _model!.GameDetails = "Owe nothing because the player owns the career";
+                                model!.GameDetails = "Owe nothing because the player owns the career";
                             }
                             else if (newPlayer > 0)
                             {
-                                var tempPlayer = _gameContainer.PlayerList![newPlayer];
-                                _model!.GameDetails = $"{_model.GameDetails}{Constants.VBCrLf} Pay {tempPlayer.NickName} since they own the career";
-                                _gameContainer.CollectMoney(newPlayer, newAmount);
+                                var tempPlayer = gameContainer.PlayerList![newPlayer];
+                                model!.GameDetails = $"{model.GameDetails}{Constants.VBCrLf} Pay {tempPlayer.NickName} since they own the career";
+                                gameContainer.CollectMoney(newPlayer, newAmount);
                             }
                         }
-                        _gameContainer.TakeOutExpense(newAmount);
+                        gameContainer.TakeOutExpense(newAmount);
                     }
                 }
                 else
                 {
-                    _gameContainer.CollectMoney(_gameContainer.WhoTurn, thisSpace.AmountReceived); //i think
+                    gameContainer.CollectMoney(gameContainer.WhoTurn, thisSpace.AmountReceived); //i think
                 }
 
                 break;
             case EnumActionType.StartCareer:
-                _gameContainer.GameStatus = EnumWhatStatus.NeedChooseFirstCareer;
+                gameContainer.GameStatus = EnumWhatStatus.NeedChooseFirstCareer;
                 break;
             case EnumActionType.AttendNightSchool:
-                _gameContainer.GameStatus = EnumWhatStatus.NeedNight;
+                gameContainer.GameStatus = EnumWhatStatus.NeedNight;
                 break;
             case EnumActionType.FindNewJob:
                 var tempList = thisPlayer.GetCareerList();
                 tempList.ForEach(thisCard => thisPlayer.Hand.RemoveSpecificItem(thisCard));
-                _gameContainer.GameStatus = EnumWhatStatus.NeedNewCareer;
+                gameContainer.GameStatus = EnumWhatStatus.NeedNewCareer;
                 break;
             case EnumActionType.GetMarried:
                 GetMarriedProcess(thisPlayer);
                 break;
             case EnumActionType.ObtainLifeTile:
-                _gameContainer.SaveRoot!.WasMarried = false;
-                if (_gameContainer.GameStatus != EnumWhatStatus.NeedStealTile)
+                gameContainer.SaveRoot!.WasMarried = false;
+                if (gameContainer.GameStatus != EnumWhatStatus.NeedStealTile)
                 {
-                    _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                    gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
                 }
                 break;
             case EnumActionType.GetPaid:
-                _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
                 break;
             case EnumActionType.GotBabyBoy:
                 GetBaby(thisPlayer, EnumGender.Boy);
-                _gameContainer.SaveRoot!.WasMarried = false;
-                if (_gameContainer.GameStatus != EnumWhatStatus.NeedStealTile)
+                gameContainer.SaveRoot!.WasMarried = false;
+                if (gameContainer.GameStatus != EnumWhatStatus.NeedStealTile)
                 {
-                    _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                    gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
                 }
                 break;
             case EnumActionType.GotBabyGirl:
                 GetBaby(thisPlayer, EnumGender.Girl);
-                _gameContainer.SaveRoot!.WasMarried = false;
-                if (_gameContainer.GameStatus != EnumWhatStatus.NeedStealTile)
+                gameContainer.SaveRoot!.WasMarried = false;
+                if (gameContainer.GameStatus != EnumWhatStatus.NeedStealTile)
                 {
-                    _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                    gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
                 }
                 break;
             case EnumActionType.HadTwins:
-                if (_gameContainer.BasicData!.MultiPlayer && _gameContainer.SingleInfo!.CanSendMessage(_gameContainer.BasicData) == false)
+                if (gameContainer.BasicData!.MultiPlayer && gameContainer.SingleInfo!.CanSendMessage(gameContainer.BasicData) == false)
                 {
-                    _gameContainer.Network!.IsEnabled = true; //wait to see if they got boys or girls.
+                    gameContainer.Network!.IsEnabled = true; //wait to see if they got boys or girls.
                     return;
                 }
                 var genderList = new BasicList<EnumGender> { EnumGender.Boy, EnumGender.Girl };
-                BasicList<EnumGender> newList = new() { genderList.GetRandomItem(), genderList.GetRandomItem() };
-                if (_gameContainer.BasicData.MultiPlayer)
+                BasicList<EnumGender> newList = [genderList.GetRandomItem(), genderList.GetRandomItem()];
+                if (gameContainer.BasicData.MultiPlayer)
                 {
-                    await _gameContainer.Network!.SendAllAsync("twins", newList);
+                    await gameContainer.Network!.SendAllAsync("twins", newList);
                 }
                 await GetTwinsAsync(newList);
                 return;
             case EnumActionType.MayBuyHouse:
-                _gameContainer.GameStatus = EnumWhatStatus.NeedChooseHouse;
+                gameContainer.GameStatus = EnumWhatStatus.NeedChooseHouse;
                 break;
             case EnumActionType.MaySellHouse:
                 if (thisPlayer.HouseName == "")
                 {
-                    _gameContainer.GameStatus = EnumWhatStatus.NeedChooseHouse;
+                    gameContainer.GameStatus = EnumWhatStatus.NeedChooseHouse;
                 }
                 else
                 {
-                    _gameContainer.GameStatus = EnumWhatStatus.NeedSellBuyHouse;
+                    gameContainer.GameStatus = EnumWhatStatus.NeedSellBuyHouse;
                 }
                 break;
             case EnumActionType.PayTaxes:
@@ -194,62 +185,62 @@ public class MoveProcesses : IMoveProcesses, ITwinProcesses
                 {
                     throw new CustomBasicException("Only accountants can show up for paying taxes");
                 }
-                newPlayer = _gameContainer.WhoHadCareerName(EnumCareerType.Accountant);
-                newAmount = _gameContainer.SingleInfo!.TaxesDue;
-                if (newPlayer == _gameContainer.WhoTurn)
+                newPlayer = gameContainer.WhoHadCareerName(EnumCareerType.Accountant);
+                newAmount = gameContainer.SingleInfo!.TaxesDue;
+                if (newPlayer == gameContainer.WhoTurn)
                 {
-                    _model!.GameDetails = "Owe no taxes because the player is the accountant";
+                    model!.GameDetails = "Owe no taxes because the player is the accountant";
                 }
                 else if (newPlayer != 0)
                 {
-                    var tempPlayer = _gameContainer.PlayerList![newPlayer];
-                    _model!.GameDetails = $"{_model.GameDetails}{Constants.VBCrLf} Pay {tempPlayer.NickName} {newAmount.ToCurrency(0)} in taxes since they are the accountant";
-                    _gameContainer.CollectMoney(newPlayer, newAmount);
+                    var tempPlayer = gameContainer.PlayerList![newPlayer];
+                    model!.GameDetails = $"{model.GameDetails}{Constants.VBCrLf} Pay {tempPlayer.NickName} {newAmount.ToCurrency(0)} in taxes since they are the accountant";
+                    gameContainer.CollectMoney(newPlayer, newAmount);
                 }
                 else
                 {
-                    _model!.GameDetails = $"{_model.GameDetails}{Constants.VBCrLf} Pay {newAmount.ToCurrency(0)} in taxes";
+                    model!.GameDetails = $"{model.GameDetails}{Constants.VBCrLf} Pay {newAmount.ToCurrency(0)} in taxes";
                 }
-                _gameContainer.TakeOutExpense(newAmount);
-                _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                gameContainer.TakeOutExpense(newAmount);
+                gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
                 break;
             case EnumActionType.SpinAgainIfBehind:
-                if (_gameContainer.WhoTurn != _gameBoard!.PlayerInLead)
+                if (gameContainer.WhoTurn != gameBoard!.PlayerInLead)
                 {
-                    _gameContainer.GameStatus = EnumWhatStatus.NeedToSpin;
+                    gameContainer.GameStatus = EnumWhatStatus.NeedToSpin;
                 }
                 else
                 {
-                    _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                    gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
                 }
                 break;
             case EnumActionType.StockCrashed:
                 if (thisPlayer.FirstStock > 0 && thisPlayer.SecondStock > 0)
                 {
-                    _gameContainer.GameStatus = EnumWhatStatus.NeedReturnStock;
+                    gameContainer.GameStatus = EnumWhatStatus.NeedReturnStock;
                 }
                 else if (thisPlayer.FirstStock > 0 || thisPlayer.SecondStock > 0)
                 {
-                    _model!.GameDetails = $"{_model.GameDetails}{Constants.VBCrLf} There was only one stock.  That has been returned automatically.";
+                    model!.GameDetails = $"{model.GameDetails}{Constants.VBCrLf} There was only one stock.  That has been returned automatically.";
                     await AutoReturnAsync();
                     return;
                 }
                 else
                 {
-                    _model!.GameDetails = $"{_model.GameDetails}{Constants.VBCrLf} There was no stocks to return.";
-                    _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                    model!.GameDetails = $"{model.GameDetails}{Constants.VBCrLf} There was no stocks to return.";
+                    gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
                 }
                 break;
             case EnumActionType.StockBoomed:
-                _gameContainer.GameStatus = EnumWhatStatus.NeedChooseStock;
-                _gameContainer.SaveRoot!.EndAfterStock = true;
+                gameContainer.GameStatus = EnumWhatStatus.NeedChooseStock;
+                gameContainer.SaveRoot!.EndAfterStock = true;
                 break;
             case EnumActionType.TradeSalary:
-                _gameContainer.SaveRoot!.EndAfterSalary = true;
-                _gameContainer.GameStatus = EnumWhatStatus.NeedTradeSalary;
+                gameContainer.SaveRoot!.EndAfterSalary = true;
+                gameContainer.GameStatus = EnumWhatStatus.NeedTradeSalary;
                 break;
             case EnumActionType.WillMissTurn:
-                _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+                gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
                 thisPlayer.MissNextTurn = true;
                 break;
             case EnumActionType.WillRetire:
@@ -258,113 +249,113 @@ public class MoveProcesses : IMoveProcesses, ITwinProcesses
             default:
                 throw new CustomBasicException("Move Results Status Not Found");
         }
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     public async Task PossibleAutomateMoveAsync()
     {
-        if (_gameContainer.GameStatus != EnumWhatStatus.NeedToSpin && _gameContainer.GameStatus != EnumWhatStatus.LastSpin)
+        if (gameContainer.GameStatus != EnumWhatStatus.NeedToSpin && gameContainer.GameStatus != EnumWhatStatus.LastSpin)
         {
-            await _gameContainer.ContinueTurnAsync!.Invoke();
+            await gameContainer.ContinueTurnAsync!.Invoke();
             return;
         }
-        if (_gameBoard.FirstPossiblePosition > 0 && _gameBoard.SecondPossiblePosition > 0)
+        if (gameBoard.FirstPossiblePosition > 0 && gameBoard.SecondPossiblePosition > 0)
         {
-            _gameContainer.GameStatus = EnumWhatStatus.NeedToChooseSpace;
-            await _gameContainer.ContinueTurnAsync!.Invoke();
+            gameContainer.GameStatus = EnumWhatStatus.NeedToChooseSpace;
+            await gameContainer.ContinueTurnAsync!.Invoke();
             return;
         }
-        if (_gameBoard.SecondPossiblePosition > 0)
+        if (gameBoard.SecondPossiblePosition > 0)
         {
             throw new CustomBasicException("Can't have a second possible option but not the first one");
         }
-        await DoAutomateMoveAsync(_gameBoard.FirstPossiblePosition);
+        await DoAutomateMoveAsync(gameBoard.FirstPossiblePosition);
     }
     private void PaydayProcessing(LifeBoardGamePlayerItem thisPlayer)
     {
-        if (_gameBoard.PayDaysPassed == 0)
+        if (gameBoard.PayDaysPassed == 0)
         {
             return;
         }
         decimal amountPaid = thisPlayer.Salary;
-        _gameContainer.CollectMoney(thisPlayer.Id, amountPaid * _gameBoard.PayDaysPassed);
-        _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+        gameContainer.CollectMoney(thisPlayer.Id, amountPaid * gameBoard.PayDaysPassed);
+        gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
     }
     private void GetBaby(LifeBoardGamePlayerItem thisPlayer, EnumGender gender)
     {
         thisPlayer.ChildrenList.Add(gender);
-        _gameContainer.RepaintBoard();
+        gameContainer.RepaintBoard();
     }
     public async Task GetTwinsAsync(BasicList<EnumGender> twinList)
     {
-        _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-        twinList.ForEach(thisTwin => GetBaby(_gameContainer.SingleInfo, thisTwin));
-        _gameContainer.SaveRoot!.WasMarried = false;
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
+        twinList.ForEach(thisTwin => GetBaby(gameContainer.SingleInfo, thisTwin));
+        gameContainer.SaveRoot!.WasMarried = false;
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     private void GetMarriedProcess(LifeBoardGamePlayerItem thisPlayer)
     {
         thisPlayer.Married = true;
-        if (_gameContainer.GameStatus != EnumWhatStatus.NeedStealTile)
+        if (gameContainer.GameStatus != EnumWhatStatus.NeedStealTile)
         {
-            _gameContainer.GameStatus = EnumWhatStatus.NeedToSpin;
+            gameContainer.GameStatus = EnumWhatStatus.NeedToSpin;
         }
-        _gameContainer.RepaintBoard();
-        _gameContainer.SaveRoot!.WasMarried = true;
+        gameContainer.RepaintBoard();
+        gameContainer.SaveRoot!.WasMarried = true;
     }
     private async Task AutoReturnAsync()
     {
         StockInfo thisStock;
-        if (_gameContainer.SingleInfo!.FirstStock > 0)
+        if (gameContainer.SingleInfo!.FirstStock > 0)
         {
-            thisStock = (StockInfo)_gameContainer.SingleInfo.GetStockCard(_gameContainer.SingleInfo.FirstStock);
-            _gameContainer.SingleInfo.FirstStock = 0;
+            thisStock = (StockInfo)gameContainer.SingleInfo.GetStockCard(gameContainer.SingleInfo.FirstStock);
+            gameContainer.SingleInfo.FirstStock = 0;
         }
-        else if (_gameContainer.SingleInfo.SecondStock > 0)
+        else if (gameContainer.SingleInfo.SecondStock > 0)
         {
-            thisStock = (StockInfo)_gameContainer.SingleInfo.GetStockCard(_gameContainer.SingleInfo.SecondStock);
-            _gameContainer.SingleInfo.SecondStock = 0;
+            thisStock = (StockInfo)gameContainer.SingleInfo.GetStockCard(gameContainer.SingleInfo.SecondStock);
+            gameContainer.SingleInfo.SecondStock = 0;
         }
         else
         {
             throw new CustomBasicException("There is nothing to return");
         }
-        _gameContainer.SingleInfo.Hand.RemoveSpecificItem(thisStock);
-        await _gameContainer!.ShowCardAsync(thisStock);
-        _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.SingleInfo.Hand.RemoveSpecificItem(thisStock);
+        await gameContainer!.ShowCardAsync(thisStock);
+        gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     private async Task RetirementProcessAsync()
     {
-        var careerList = _gameContainer.SingleInfo!.GetCareerList();
+        var careerList = gameContainer.SingleInfo!.GetCareerList();
         careerList.ForEach(thisCard =>
         {
-            _gameContainer.SingleInfo!.Hand.RemoveSpecificItem(thisCard);
+            gameContainer.SingleInfo!.Hand.RemoveSpecificItem(thisCard);
         });
-        var thisSalary = _gameContainer.SingleInfo!.GetSalaryCard();
-        _gameContainer.SingleInfo!.Hand.RemoveSpecificItem(thisSalary);
-        _gameContainer.SingleInfo.HouseIsInsured = false;
-        _gameContainer.SingleInfo.CarIsInsured = false;
-        _gameContainer.SingleInfo.Salary = 0;
+        var thisSalary = gameContainer.SingleInfo!.GetSalaryCard();
+        gameContainer.SingleInfo!.Hand.RemoveSpecificItem(thisSalary);
+        gameContainer.SingleInfo.HouseIsInsured = false;
+        gameContainer.SingleInfo.CarIsInsured = false;
+        gameContainer.SingleInfo.Salary = 0;
         RepayLoans();
-        PopulatePlayerProcesses.FillInfo(_gameContainer.SingleInfo);
-        if (_gameContainer.SingleInfo.HouseName == "")
+        PopulatePlayerProcesses.FillInfo(gameContainer.SingleInfo);
+        if (gameContainer.SingleInfo.HouseName == "")
         {
-            _gameContainer.GameStatus = EnumWhatStatus.NeedChooseRetirement;
+            gameContainer.GameStatus = EnumWhatStatus.NeedChooseRetirement;
         }
         else
         {
-            _gameContainer.GameStatus = EnumWhatStatus.NeedSellHouse;
+            gameContainer.GameStatus = EnumWhatStatus.NeedSellHouse;
         }
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     private void RepayLoans()
     {
-        if (_gameContainer.SingleInfo!.Loans == 0)
+        if (gameContainer.SingleInfo!.Loans == 0)
         {
             return;
         }
-        var numberLoans = _gameContainer.SingleInfo.Loans / 20000;
-        _gameContainer.SingleInfo.Loans = 0;
-        _gameContainer.TakeOutExpense(numberLoans * 25000);
+        var numberLoans = gameContainer.SingleInfo.Loans / 20000;
+        gameContainer.SingleInfo.Loans = 0;
+        gameContainer.TakeOutExpense(numberLoans * 25000);
     }
 }

@@ -3,5 +3,5 @@ namespace Concentration.Core.Data;
 public partial class ConcentrationPlayerItem : PlayerSingleHand<RegularSimpleCard>
 {
     [ScoreColumn]
-    public int Pairs { get; set; }
+    public partial int Pairs { get; set; }
 }

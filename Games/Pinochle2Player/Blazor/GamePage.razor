@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="Pinochle2PlayerMainViewModel">
+    <MainScreen>
         <Pinochle2PlayerMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<Pinochle2PlayerPlayerItem>">
-        <MultiplayerOpeningView P="Pinochle2PlayerPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="Pinochle2PlayerPlayerItem" />
 </CascadingValue>

@@ -1,39 +1,30 @@
 namespace GermanWhist.Core.Logic;
 [SingletonGame]
-public class GermanWhistMainGameClass
-    : TrickGameClass<EnumSuitList, GermanWhistCardInformation, GermanWhistPlayerItem, GermanWhistSaveInfo>
+public class GermanWhistMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    GermanWhistVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<GermanWhistCardInformation> cardInfo,
+    CommandContainer command,
+    GermanWhistGameContainer gameContainer,
+    ITrickData trickData,
+    ITrickPlay trickPlay,
+    IAdvancedTrickProcesses aTrick,
+    ISystemError error,
+    IToast toast
+        )
+        : TrickGameClass<EnumSuitList, GermanWhistCardInformation, GermanWhistPlayerItem, GermanWhistSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
         , ISerializable
 {
-    private readonly GermanWhistVMData _model;
-    private readonly CommandContainer _command;
-    private readonly IAdvancedTrickProcesses _aTrick;
-    public GermanWhistMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        GermanWhistVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<GermanWhistCardInformation> cardInfo,
-        CommandContainer command,
-        GermanWhistGameContainer gameContainer,
-        ITrickData trickData,
-        ITrickPlay trickPlay,
-        IAdvancedTrickProcesses aTrick,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _aTrick = aTrick;
-    }
     public override async Task FinishGetSavedAsync()
     {
         LoadControls();
         LoadVM();
         await base.FinishGetSavedAsync();
-        _aTrick!.LoadGame();
+        aTrick!.LoadGame();
     }
     private void LoadControls()
     {
@@ -69,9 +60,9 @@ public class GermanWhistMainGameClass
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
     {
-        var thisCard = _model!.Deck1!.RevealCard();
+        var thisCard = currentMod!.Deck1!.RevealCard();
         SaveRoot!.TrumpSuit = thisCard.Suit;
-        _aTrick!.ClearBoard();
+        aTrick!.ClearBoard();
         return base.LastPartOfSetUpBeforeBindingsAsync();
     }
     public override async Task StartNewTurnAsync()
@@ -83,7 +74,7 @@ public class GermanWhistMainGameClass
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         this.ShowTurn();
         await SaveStateAsync();
@@ -119,29 +110,29 @@ public class GermanWhistMainGameClass
         {
             player.TricksWon++;
         }
-        else if (_model!.Deck1!.IsEndOfDeck() == true)
+        else if (currentMod!.Deck1!.IsEndOfDeck() == true)
         {
             SaveRoot.WasEnd = true;
             player.TricksWon++;
         }
-        await _aTrick!.AnimateWinAsync(wins);
+        await aTrick!.AnimateWinAsync(wins);
         if (SingleInfo!.MainHandList.Count == 0)
         {
             await GameOverAsync();
             return;
         }
-        _model!.PlayerHand1!.EndTurn();
+        currentMod!.PlayerHand1!.EndTurn();
         WhoTurn = wins;
         await StartNewTrickAsync();
     }
     private async Task StartNewTrickAsync()
     {
-        _aTrick!.ClearBoard();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
-        if (_model.Deck1!.IsEndOfDeck() == false)
+        aTrick!.ClearBoard();
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
+        if (currentMod.Deck1!.IsEndOfDeck() == false)
         {
             GermanWhistCardInformation thisCard;
-            thisCard = _model.Deck1.DrawCard();
+            thisCard = currentMod.Deck1.DrawCard();
             SingleInfo = PlayerList!.GetWhoPlayer();
             SingleInfo.MainHandList.Add(thisCard);
             if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
@@ -149,9 +140,11 @@ public class GermanWhistMainGameClass
                 thisCard.Drew = true;
                 SortCards();
             }
-            _command.UpdateAll();
             if (Test!.NoAnimations == false)
+            {
                 await Delay!.DelaySeconds(1);
+            }
+
             GermanWhistPlayerItem player;
             if (WhoTurn == 1)
             {
@@ -161,9 +154,8 @@ public class GermanWhistMainGameClass
             {
                 player = PlayerList[1];
             }
-            thisCard = _model.Deck1.DrawCard();
+            thisCard = currentMod.Deck1.DrawCard();
             player.MainHandList.Add(thisCard);
-            _command.UpdateAll();
             if (player.PlayerCategory == EnumPlayerCategory.Self)
             {
                 thisCard.Drew = true;

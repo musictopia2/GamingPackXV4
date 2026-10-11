@@ -51,7 +51,7 @@ public class LifeCardGameMainGameClass
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
             var thisList = await js1.DeserializeObjectAsync<DeckRegularDict<LifeCardGameCardInformation>>(thisPlayer.LifeString);
-            thisPlayer.LifeStory!.HandList = new DeckRegularDict<LifeCardGameCardInformation>(thisList);
+            thisPlayer.LifeStory!.ReplaceHandList([.. thisList]);
         });
         await PlayerList.RepositionCardsAsync(this, _gameContainer, _model); //i think.
         await base.FinishGetSavedAsync();
@@ -484,7 +484,6 @@ public class LifeCardGameMainGameClass
             _gameContainer.TradeList.Add(opponentCard);
             _gameContainer.PlayerChosen = 0;
             await PlayerList!.RepositionCardsAsync(this, _gameContainer, _model);
-            _command.UpdateAll();
             if (Test!.NoAnimations == false)
             {
                 await Delay!.DelaySeconds(1);
@@ -521,7 +520,6 @@ public class LifeCardGameMainGameClass
             _gameContainer.CardChosen = thisCard;
             await PlayerList!.RepositionCardsAsync(this, _gameContainer, _model);
             SingleInfo.Points = SingleInfo.LifeStory.TotalPoints();
-            _command.UpdateAll();
             if (Test!.NoAnimations == false)
             {
                 await Delay!.DelaySeconds(1);

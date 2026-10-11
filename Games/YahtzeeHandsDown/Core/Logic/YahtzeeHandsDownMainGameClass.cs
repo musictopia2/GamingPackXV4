@@ -1,35 +1,27 @@
 namespace YahtzeeHandsDown.Core.Logic;
 [SingletonGame]
-public class YahtzeeHandsDownMainGameClass
-    : CardGameClass<YahtzeeHandsDownCardInformation, YahtzeeHandsDownPlayerItem, YahtzeeHandsDownSaveInfo>
+public class YahtzeeHandsDownMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    YahtzeeHandsDownVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<YahtzeeHandsDownCardInformation> cardInfo,
+    CommandContainer command,
+    YahtzeeHandsDownGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        )
+        : CardGameClass<YahtzeeHandsDownCardInformation, YahtzeeHandsDownPlayerItem, YahtzeeHandsDownSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, ISerializable
 {
-    private readonly YahtzeeHandsDownVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly YahtzeeHandsDownGameContainer _gameContainer; //if we don't need it, take it out.
-    private readonly IToast _toast;
-    public YahtzeeHandsDownMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        YahtzeeHandsDownVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<YahtzeeHandsDownCardInformation> cardInfo,
-        CommandContainer command,
-        YahtzeeHandsDownGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _toast = toast;
-    }
+    private readonly YahtzeeHandsDownVMData _model = currentMod;
+    private readonly YahtzeeHandsDownGameContainer _gameContainer = gameContainer; //if we don't need it, take it out.
+    private readonly IToast _toast = toast;
     private bool _wasStarted;
     private readonly CalculateYahtzeeCombinationClass _yatz = new();
-    private DeckRegularDict<ChanceCardInfo> _chanceList = new();
+    private DeckRegularDict<ChanceCardInfo> _chanceList = [];
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -40,7 +32,7 @@ public class YahtzeeHandsDownMainGameClass
             temps.Populate(items);
             return temps;
         });
-        _chanceList = new DeckRegularDict<ChanceCardInfo>(firstList);
+        _chanceList = [.. firstList];
         return base.FinishGetSavedAsync();
     }
     private void LoadControls()
@@ -64,7 +56,7 @@ public class YahtzeeHandsDownMainGameClass
             thisPlayer.ScoreRound = 0;
             thisPlayer.TotalScore = 0;
         });
-        DeckRegularDict<ComboCardInfo> tempList = new();
+        DeckRegularDict<ComboCardInfo> tempList = [];
         6.Times(x =>
         {
             ComboCardInfo thisCard = new();
@@ -135,7 +127,10 @@ public class YahtzeeHandsDownMainGameClass
         await base.StartNewTurnAsync();
         SingleInfo = PlayerList!.GetWhoPlayer();
         if (PlayerList.Count == 2 && SaveRoot!.FirstPlayerWentOut > 0)
+        {
             SaveRoot.ExtraTurns++;
+        }
+
         if (SingleInfo.MainHandList.Count == 0)
         {
             LeftToDraw = 5;
@@ -150,7 +145,7 @@ public class YahtzeeHandsDownMainGameClass
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         if (SaveRoot!.ExtraTurns == 4)
         {
             await SecondPlayerDidNotGoOutAsync();
@@ -198,7 +193,6 @@ public class YahtzeeHandsDownMainGameClass
             thisCard.IsSelected = false;
             SingleInfo!.MainHandList.RemoveObjectByDeck(thisCard.Deck);
             await AnimatePlayAsync(thisCard);
-            _command.UpdateAll();
             if (Test!.NoAnimations == false)
             {
                 await Delay!.DelaySeconds(.25);
@@ -265,7 +259,6 @@ public class YahtzeeHandsDownMainGameClass
         else
         {
             rets = false;
-            _command.UpdateAll();
             if (Test!.NoAnimations == false)
             {
                 await Delay!.DelaySeconds(2);
@@ -299,7 +292,6 @@ public class YahtzeeHandsDownMainGameClass
         {
             var copyList = _model.ComboHandList.HandList.ToRegularDeckDict();
             _model.ComboHandList.HandList.ReplaceAllWithGivenItem(thisCombo);
-            _command.UpdateAll();
             var finList = thisPlayer.MainHandList.ToRegularDeckDict();
             await finList.ForEachAsync(async thisCard =>
             {
@@ -311,7 +303,6 @@ public class YahtzeeHandsDownMainGameClass
                 }
             });
             _model.ComboHandList.HandList.ReplaceRange(copyList);
-            _command.UpdateAll();
         };
         await AnimateRemovalOfCardsAsync();
         var pList = PlayerList.ToBasicList();

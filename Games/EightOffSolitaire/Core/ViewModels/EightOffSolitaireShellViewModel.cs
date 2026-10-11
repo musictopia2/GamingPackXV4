@@ -1,18 +1,5 @@
 namespace EightOffSolitaire.Core.ViewModels;
-public class EightOffSolitaireShellViewModel : SinglePlayerShellViewModel
+public class EightOffSolitaireShellViewModel(IGamePackageResolver mainContainer, CommandContainer container, ISaveSinglePlayerClass saves, IEventAggregator aggregator) : SinglePlayerShellViewModel(mainContainer, container, saves, aggregator)
 {
-    protected override bool AlwaysNewGame => true; //most games allow new game always.
-    public EightOffSolitaireShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo GameData,
-        ISaveSinglePlayerClass saves,
-        IEventAggregator aggregator
-        ) : base(mainContainer, container, GameData, saves, aggregator)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<EightOffSolitaireMainViewModel>();
-        return model;
-    }
+    protected override bool AlwaysNewGame => true;
 }

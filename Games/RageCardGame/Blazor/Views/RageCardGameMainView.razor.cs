@@ -1,14 +1,14 @@
 namespace RageCardGame.Blazor.Views;
 public partial class RageCardGameMainView
 {
-    private BasicList<ScoreColumnModel> _scores = new();
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private BasicList<ScoreColumnModel> _scores = [];
+    private readonly BasicList<LabelGridModel> _labels = [];
     private RageCardGameVMData? _vmData;
     private RageCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<RageCardGameVMData>();
-        _gameContainer = aa1.Resolver.Resolve<RageCardGameGameContainer>();
+        _vmData = Resolver!.Resolve<RageCardGameVMData>();
+        _gameContainer = Resolver.Resolve<RageCardGameGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(RageCardGameVMData.NormalTurn))
             .AddLabel("Status", nameof(RageCardGameVMData.Status))

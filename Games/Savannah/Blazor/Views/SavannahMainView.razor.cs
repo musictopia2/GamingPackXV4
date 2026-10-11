@@ -5,14 +5,14 @@ public partial class SavannahMainView
     public TestOptions? TestData { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private SavannahVMData? _vmData;
     private SavannahGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<SavannahVMData>();
-        _gameContainer = aa1.Resolver.Resolve<SavannahGameContainer>();
+        _vmData = Resolver!.Resolve<SavannahVMData>();
+        _gameContainer = Resolver.Resolve<SavannahGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(SavannahVMData.NormalTurn))
             .AddLabel("Status", nameof(SavannahVMData.Status));
@@ -34,5 +34,5 @@ public partial class SavannahMainView
     }
     private ICustomCommand PlayerCommand => DataContext!.ClickPlayerDiscardCommand!;
     private string HeightString => $"{TargetHeight}vh";
-    private PointF Location => new(10, -300);
+    private static PointF Location => new(10, -300);
 }

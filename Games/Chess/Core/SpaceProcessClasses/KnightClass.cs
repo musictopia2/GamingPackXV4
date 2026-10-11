@@ -8,8 +8,8 @@ public class KnightClass : IChessMan
     public EnumPieceType PieceCategory { get; set; }
     public BasicList<CheckersChessVector> GetValidMoves()
     {
-        BasicList<CheckersChessVector> possibleList = new()
-        {
+        BasicList<CheckersChessVector> possibleList =
+        [
             new CheckersChessVector(Row + 1, Column + 2),
             new CheckersChessVector(Row - 1, Column + 2),
             new CheckersChessVector(Row + 1, Column - 2),
@@ -18,8 +18,8 @@ public class KnightClass : IChessMan
             new CheckersChessVector(Row - 2, Column + 1),
             new CheckersChessVector(Row + 2, Column - 1),
             new CheckersChessVector(Row - 2, Column - 1)
-        };
-        BasicList<CheckersChessVector> output = new();
+        ];
+        BasicList<CheckersChessVector> output = [];
         SpaceCP? c;
         foreach (var possible in possibleList)
         {

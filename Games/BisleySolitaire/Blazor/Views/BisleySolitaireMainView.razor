@@ -1,4 +1,4 @@
-@inherits BasicGameView<BisleySolitaireMainViewModel>
+@inherits CascadingGameView<BisleySolitaireMainViewModel>
 @if (DataContext!.DeckPile != null)
 {
     <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />

@@ -1,54 +1,38 @@
 namespace Flinch.Core.ViewModels;
 [InstanceGame]
-public class FlinchMainViewModel : BasicCardGamesVM<FlinchCardInformation>
-{
-    private readonly FlinchMainGameClass _mainGame;
-    private readonly FlinchVMData _model;
-    private readonly IGamePackageResolver _resolver;
-    private readonly FlinchGameContainer _gameContainer;
-    public FlinchMainViewModel(CommandContainer commandContainer,
+[UseStateChanged]
+public partial class FlinchMainViewModel(CommandContainer commandContainer,
         FlinchMainGameClass mainGame,
         FlinchVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         FlinchGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<FlinchCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _resolver = resolver;
-        _gameContainer = gameContainer;
-        _model.Deck1.NeverAutoDisable = true;
-        _model.PlayerHand1.Maximum = 5;
-        _gameContainer.LoadPlayerPilesAsync = LoadPlayerPilesAsync;
+        viewModel.Deck1.NeverAutoDisable = true;
+        viewModel.PlayerHand1.Maximum = 5;
+        gameContainer.LoadPlayerPiles = LoadPlayerPiles;
+        base.AdditionalInitialize();
     }
-    private async Task LoadPlayerPilesAsync()
+    private void LoadPlayerPiles()
     {
-        if (PlayerPilesScreen != null)
-        {
-            await CloseSpecificChildAsync(PlayerPilesScreen);
-        }
-        PlayerPilesScreen = _resolver.Resolve<PlayerPilesViewModel>();
-        await LoadScreenAsync(PlayerPilesScreen);
+        PlayerPilesScreen = Resolver.Resolve<PlayerPilesViewModel>();
     }
-    protected override async Task TryCloseAsync()
+    protected override Task CloseAsync()
     {
-        if (PlayerPilesScreen != null)
-        {
-            await CloseSpecificChildAsync(PlayerPilesScreen);
-        }
-        await base.TryCloseAsync();
+        PlayerPilesScreen ??= null;
+        return base.CloseAsync();
     }
-    protected override async Task ActivateAsync()
+    protected override Task OpenAsync()
     {
-        await base.ActivateAsync();
-        await LoadPlayerPilesAsync();
+        LoadPlayerPiles();
+        return base.OpenAsync();
     }
-    public PlayerPilesViewModel? PlayerPilesScreen { get; set; }
+    [StateProperty]
+    public partial PlayerPilesViewModel? PlayerPilesScreen { get; set; }
     protected override bool CanEnableDeck()
     {
         return false;
@@ -59,7 +43,7 @@ public class FlinchMainViewModel : BasicCardGamesVM<FlinchCardInformation>
     }
     public override bool CanEndTurn()
     {
-        return _mainGame!.SaveRoot!.GameStatus == EnumStatusList.FirstOne && _mainGame.SaveRoot.PlayerFound == 0;
+        return mainGame!.SaveRoot!.GameStatus == EnumStatusList.FirstOne && mainGame.SaveRoot.PlayerFound == 0;
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
@@ -67,7 +51,7 @@ public class FlinchMainViewModel : BasicCardGamesVM<FlinchCardInformation>
     }
     protected override async Task BeforeUnselectCardFromHandAsync()
     {
-        _mainGame!.UnselectAllCards();
+        mainGame!.UnselectAllCards();
         await Task.CompletedTask;
     }
     public override bool CanEnableAlways()

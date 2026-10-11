@@ -5,7 +5,7 @@ public class CribbagePatienceMainGameClass : RegularDeckOfCardsGameClass<Cribbag
     private readonly ISaveSinglePlayerClass _thisState;
     private readonly ISystemError _error;
     internal CribbagePatienceSaveInfo _saveRoot;
-    internal BasicList<CribbageCombos> ComboList { get; set; } = new();
+    internal BasicList<CribbageCombos> ComboList { get; set; } = [];
     internal bool GameGoing { get; set; }
     private RummyProcesses<EnumSuitList, EnumRegularColorList, CribbageCard>? _rummys;
     public CribbagePatienceMainGameClass(ISaveSinglePlayerClass thisState,
@@ -254,9 +254,9 @@ public class CribbagePatienceMainGameClass : RegularDeckOfCardsGameClass<Cribbag
         });
         _model.Scores!.AddScore(_model.HandScores.Sum(items => items.TotalScore()));
     }
-    private BasicList<CribbageCombos> ListCribbageCombos(IDeckDict<CribbageCard> thisCol, bool fromCrib)
+    private BasicList<CribbageCombos> ListCribbageCombos(DeckRegularDict<CribbageCard> thisCol, bool fromCrib)
     {
-        BasicList<CribbageCombos> output = new();
+        BasicList<CribbageCombos> output = [];
         var mostSuits = thisCol.GroupOrderDescending(items => items.Suit);
         bool hadFourFlush;
         bool hadFiveFlush;
@@ -395,7 +395,7 @@ public class CribbagePatienceMainGameClass : RegularDeckOfCardsGameClass<Cribbag
         var newCol = thisCol.ToRegularDeckDict();
         int output = 0;
         CribbageCard newCard;
-        DeckRegularDict<CribbageCard> finals = new();
+        DeckRegularDict<CribbageCard> finals = [];
         newCol.Add(StartCard());
         newCol.RemoveAllOnly(items => items.HasUsed);
         var whatNewRummy = _rummys!.WhatNewRummy(newCol, 2, EnumRummyType.Sets, false);
@@ -437,9 +437,7 @@ public class CribbagePatienceMainGameClass : RegularDeckOfCardsGameClass<Cribbag
     }
     public int Find15Combos(IDeckDict<CribbageCard> thisCol)
     {
-        DeckRegularDict<CribbageCard> newCol = new();
-        newCol.AddRange(thisCol);
-        newCol.Add(StartCard());
+        DeckRegularDict<CribbageCard> newCol = [.. thisCol, StartCard()];
         int firstNumber;
         int secondNumber;
         int output = 0;
@@ -476,7 +474,7 @@ public class CribbagePatienceMainGameClass : RegularDeckOfCardsGameClass<Cribbag
         });
         return output;
     }
-    private bool IsMultiMove(CribbageCombos thisCombo, IDeckDict<CribbageCard> thisCol)
+    private bool IsMultiMove(CribbageCombos thisCombo, DeckRegularDict<CribbageCard> thisCol)
     {
         var newCol = thisCol.ToRegularDeckDict();
         newCol.Add(StartCard());
@@ -522,7 +520,7 @@ public class CribbagePatienceMainGameClass : RegularDeckOfCardsGameClass<Cribbag
     public bool HadProperStraight(IDeckDict<CribbageCard> thisCol, CribbageCombos thisCombo)
     {
         var newCol = thisCol.ToRegularDeckDict();
-        DeckRegularDict<CribbageCard> finals = new();
+        DeckRegularDict<CribbageCard> finals = [];
         newCol.Add(StartCard());
         finals.AddRange(newCol);
         finals.KeepConditionalItems(items => items.HasUsed == false);
@@ -544,7 +542,7 @@ public class CribbagePatienceMainGameClass : RegularDeckOfCardsGameClass<Cribbag
     public bool HadProperKind(IDeckDict<CribbageCard> thisCol, CribbageCombos thisCombo)
     {
         var newCol = thisCol.ToRegularDeckDict();
-        DeckRegularDict<CribbageCard> finals = new();
+        DeckRegularDict<CribbageCard> finals = [];
         newCol.Add(StartCard());
         finals.AddRange(newCol);
         finals.KeepConditionalItems(items => items.HasUsed == false);
@@ -562,7 +560,7 @@ public class CribbagePatienceMainGameClass : RegularDeckOfCardsGameClass<Cribbag
         whatNewRummy.ForEach(thisCard => thisCard.HasUsed = true);
         return true;
     }
-    private bool HadFullHouse(IDeckDict<CribbageCard> thisCol)
+    private bool HadFullHouse(DeckRegularDict<CribbageCard> thisCol)
     {
         var newCol = thisCol.Where(items => items.HasUsed == false).ToRegularDeckDict();
         var whatNewRummy = _rummys!.WhatNewRummy(newCol, 3, EnumRummyType.Sets, false);

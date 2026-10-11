@@ -57,5 +57,4 @@ public class PoolCP : ScatteringPiecesObservable<TileInfo, TileShuffler>
         }
         await DrewTileAsync.Invoke(GetTile(Deck));
     }
-    protected override void PrivateEnableAlways() { }
 }

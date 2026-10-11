@@ -3,7 +3,7 @@ namespace Uno.Core.Data;
 public partial class UnoPlayerItem : PlayerSingleHand<UnoCardInformation>
 {
     [ScoreColumn]
-    public int TotalPoints { get; set; }
+    public partial int TotalPoints { get; set; }
     [ScoreColumn]
-    public int PreviousPoints { get; set; }
+    public partial int PreviousPoints { get; set; }
 }

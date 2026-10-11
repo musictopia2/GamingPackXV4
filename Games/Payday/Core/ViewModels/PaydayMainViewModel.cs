@@ -1,60 +1,58 @@
 namespace Payday.Core.ViewModels;
 [InstanceGame]
-public partial class PaydayMainViewModel : BasicMultiplayerMainVM, IHandle<EnumStatus>
-{
-    private readonly PaydayMainGameClass _mainGame;
-    public PaydayVMData VMData { get; set; }
-    private readonly IGamePackageResolver _resolver;
-    private readonly IBuyProcesses _processes;
-    public PaydayMainViewModel(CommandContainer commandContainer,
+[EventAggregatorFromMemberClass(nameof(Aggregator))]
+[UseStateChanged]
+public partial class PaydayMainViewModel(CommandContainer commandContainer,
         PaydayMainGameClass mainGame,
         PaydayVMData model,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IBuyProcesses processes,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
-    {
-        _mainGame = mainGame;
-        VMData = model;
-        _resolver = resolver;
-        _processes = processes;
-    }
+        IEventAggregator aggregator) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator), IHandle<EnumStatus>
+{
+    public PaydayVMData VMData { get; set; } = model;
+    private partial void Subscribe();
+    private partial void Unsubscribe();
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
     private bool _didInit;
-    protected override async Task ActivateAsync()
+    protected override void AdditionalInitialize()
     {
-        await base.ActivateAsync();
-        VMData.DealPile.SendEnableProcesses(this, () => _mainGame.SaveRoot.GameStatus == EnumStatus.ChooseBuy);
+        Subscribe();
+        base.AdditionalInitialize();
+    }
+    protected override async Task CloseAsync()
+    {
+        Unsubscribe();
+        CloseBuyDealScreen();
+        CloseChooseDealScreen();
+        CloseDealOrBuyScreen();
+        CloseDealPileScreen();
+        CloseLotteryScreen();
+        CloseMailListScreen();
+        CloseMailPileScreen();
+        ClosePlayerScreen();
+        CloseRollerScreen();
+        await base.CloseAsync();
+    }
+    protected override Task OpenAsync()
+    {
+        VMData.DealPile.SendEnableProcesses(this, () => mainGame.SaveRoot.GameStatus == EnumStatus.ChooseBuy);
         VMData.CurrentDealList.ObjectClickedAsync = CurrentDealList_ObjectClickedAsync;
-        LoadProperScreensAsync();
+        LoadProperScreens();
+        return base.OpenAsync();
     }
-    protected override async Task TryCloseAsync()
-    {
-        await CloseBuyDealScreenAsync();
-        await CloseChooseDealScreenAsync();
-        await CloseDealOrBuyScreenAsync();
-        await CloseDealPileScreenAsync();
-        await CloseLotteryScreenAsync();
-        await CloseMailListScreenAsync();
-        await CloseMailPileScreenAsync();
-        await ClosePlayerScreenAsync();
-        await CloseRollerScreenAsync();
-        await base.TryCloseAsync();
-    }
+
     private async Task CurrentDealList_ObjectClickedAsync(DealCard payLoad, int index)
     {
         if (VMData.GameStatus != EnumStatus.ChooseBuy)
         {
             return; //because you can't do it.
         }
-        await _processes.BuyerSelectedAsync(payLoad.Deck);
+        await processes.BuyerSelectedAsync(payLoad.Deck);
     }
-    private async void LoadProperScreensAsync()
+    private void LoadProperScreens()
     {
-        switch (_mainGame.SaveRoot.GameStatus)
+        switch (mainGame.SaveRoot.GameStatus)
         {
             case EnumStatus.Starts:
             case EnumStatus.None:
@@ -63,54 +61,54 @@ public partial class PaydayMainViewModel : BasicMultiplayerMainVM, IHandle<EnumS
             case EnumStatus.RollRadio:
             case EnumStatus.EndingTurn:
             case EnumStatus.RollCharity:
-                await LoadMainScreensAsync();
+                LoadMainScreens();
                 break;
             case EnumStatus.ChooseDeal:
-                await CloseRollerScreenAsync();
-                await CloseMailListScreenAsync();
-                await LoadDealPileScreenAsync();
-                await LoadChooseDealScreenAsync();
+                CloseRollerScreen();
+                CloseMailListScreen();
+                LoadDealPileScreen();
+                LoadChooseDealScreen();
                 break;
             case EnumStatus.ChoosePlayer:
-                await CloseMailListScreenAsync();
-                await CloseRollerScreenAsync();
-                await LoadMailPileScreenAsync();
-                await LoadPlayerScreenAsync();
+                CloseMailListScreen();
+                CloseRollerScreen();
+                LoadMailPileScreen();
+                LoadPlayerScreen();
                 break;
             case EnumStatus.ChooseLottery:
-                await CloseMailListScreenAsync();
-                await CloseRollerScreenAsync();
-                await LoadLotteryScreenAsync();
+                CloseMailListScreen();
+                CloseRollerScreen();
+                LoadLotteryScreen();
                 break;
             case EnumStatus.ChooseBuy:
                 //leave the comments because not sure about other platforms (?)
-                await LoadMainScreensAsync(); //for now, does not know anything about xamarin forms
-                                              //may require rethinking (?)
+                LoadMainScreens(); //for now, does not know anything about xamarin forms
+                                   //may require rethinking (?)
 
-                //if (_mainGame.BasicData.IsXamarinForms)
+                //if (mainGame.BasicData.IsXamarinForms)
                 //{
-                //    await CloseMailListScreenAsync();
-                //    await CloseDealOrBuyScreenAsync();
-                //    await LoadBuyDealScreenAsync();
+                //    CloseMailListScreen();
+                //    CloseDealOrBuyScreen();
+                //    LoadBuyDealScreen();
                 //}
                 //else
                 //{
-                //    await LoadMainScreensAsync(); //desktop can show all.
+                //    LoadMainScreens(); //desktop can show all.
                 //}
                 break;
             case EnumStatus.DealOrBuy:
-                await CloseRollerScreenAsync();
-                await LoadMailPileScreenAsync();
-                await CloseMailListScreenAsync();
-                await LoadDealOrBuyScreenAsync();
+                CloseRollerScreen();
+                LoadMailPileScreen();
+                CloseMailListScreen();
+                LoadDealOrBuyScreen();
                 break;
             case EnumStatus.ViewMail:
-                await CloseRollerScreenAsync();
-                await LoadMailPileScreenAsync();
+                CloseRollerScreen();
+                LoadMailPileScreen();
                 break;
             case EnumStatus.ViewYardSale:
-                await CloseRollerScreenAsync();
-                await LoadDealPileScreenAsync();
+                CloseRollerScreen();
+                LoadDealPileScreen();
                 break;
             default:
                 break;
@@ -118,188 +116,171 @@ public partial class PaydayMainViewModel : BasicMultiplayerMainVM, IHandle<EnumS
         _didInit = true;
     }
     #region Screen Processes
-    private async Task CloseBuyDealScreenAsync()
+    private void CloseBuyDealScreen()
     {
         if (BuyDealScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(BuyDealScreen);
         BuyDealScreen = null;
     }
-    private async Task CloseChooseDealScreenAsync()
+    private void CloseChooseDealScreen()
     {
         if (ChooseDealScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(ChooseDealScreen);
         ChooseDealScreen = null;
     }
-    private async Task CloseDealOrBuyScreenAsync()
+    private void CloseDealOrBuyScreen()
     {
         if (DealOrBuyScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(DealOrBuyScreen);
         DealOrBuyScreen = null;
     }
-    private async Task CloseDealPileScreenAsync()
+    private void CloseDealPileScreen()
     {
-        if (DealPileScreen == null)
+        if (ShowDealPile == false)
         {
             return;
         }
-        await CloseSpecificChildAsync(DealPileScreen);
-        DealPileScreen = null;
+        ShowDealPile = false;
     }
-    private async Task CloseLotteryScreenAsync()
+    private void CloseLotteryScreen()
     {
         if (LotteryScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(LotteryScreen);
         LotteryScreen = null;
     }
-    private async Task CloseMailPileScreenAsync()
+    private void CloseMailPileScreen()
     {
-        if (MailPileScreen == null)
+        if (ShowMailPile == false)
         {
             return;
         }
-        await CloseSpecificChildAsync(MailPileScreen);
-        MailPileScreen = null;
+        ShowMailPile = false;
     }
-    private async Task ClosePlayerScreenAsync()
+    private void ClosePlayerScreen()
     {
         if (PlayerScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(PlayerScreen);
         PlayerScreen = null;
     }
-    private async Task CloseRollerScreenAsync()
+    private void CloseRollerScreen()
     {
         if (RollerScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(RollerScreen);
         RollerScreen = null;
     }
-    private async Task CloseMailListScreenAsync()
+    private void CloseMailListScreen()
     {
-        if (MailListScreen == null)
+        if (ShowMailList == false)
         {
             return;
         }
-        await CloseSpecificChildAsync(MailListScreen);
-        MailListScreen = null;
+        ShowMailList = false;
     }
-    public MailListViewModel? MailListScreen { get; set; }
-    public BuyDealViewModel? BuyDealScreen { get; set; }
-    public ChooseDealViewModel? ChooseDealScreen { get; set; }
-    public DealOrBuyViewModel? DealOrBuyScreen { get; set; }
-    public DealPileViewModel? DealPileScreen { get; set; }
-    public LotteryViewModel? LotteryScreen { get; set; }
-    public MailPileViewModel? MailPileScreen { get; set; }
-    public PlayerPickerViewModel? PlayerScreen { get; set; }
-    public RollerViewModel? RollerScreen { get; set; }
-    private async Task LoadMailListScreenAsync()
+    [StateProperty]
+    public partial bool ShowMailList { get; private set; }
+    [StateProperty]
+    public partial bool ShowDealPile { get; private set; }
+    [StateProperty]
+    public partial bool ShowMailPile { get; private set; }
+    [StateProperty]
+    public partial BuyDealViewModel? BuyDealScreen { get; set; }
+    [StateProperty]
+    public partial ChooseDealViewModel? ChooseDealScreen { get; set; }
+    [StateProperty]
+    public partial DealOrBuyViewModel? DealOrBuyScreen { get; set; }
+    [StateProperty]
+    public partial LotteryViewModel? LotteryScreen { get; set; }
+    [StateProperty]
+    public partial PlayerPickerViewModel? PlayerScreen { get; set; }
+    [StateProperty]
+    public partial RollerViewModel? RollerScreen { get; set; }
+    private void LoadMailListScreen()
     {
-        if (MailListScreen != null)
+        if (ShowMailList)
         {
             return;
         }
-        MailListScreen = _resolver.Resolve<MailListViewModel>();
-        await LoadScreenAsync(MailListScreen);
+        ShowMailList = true;
     }
-    //private async Task LoadBuyDealScreenAsync()
-    //{
-    //    if (BuyDealScreen != null)
-    //    {
-    //        return;
-    //    }
-    //    BuyDealScreen = _resolver.Resolve<BuyDealViewModel>();
-    //    await LoadScreenAsync(BuyDealScreen);
-    //}
-    private async Task LoadChooseDealScreenAsync()
+    private void LoadChooseDealScreen()
     {
         if (ChooseDealScreen != null)
         {
             return;
         }
-        ChooseDealScreen = _resolver.Resolve<ChooseDealViewModel>();
-        await LoadScreenAsync(ChooseDealScreen);
+        ChooseDealScreen = Resolver.Resolve<ChooseDealViewModel>();
     }
-    private async Task LoadDealOrBuyScreenAsync()
+    private void LoadDealOrBuyScreen()
     {
         if (DealOrBuyScreen != null)
         {
             return;
         }
-        DealOrBuyScreen = _resolver.Resolve<DealOrBuyViewModel>();
-        await LoadScreenAsync(DealOrBuyScreen);
+        DealOrBuyScreen = Resolver.Resolve<DealOrBuyViewModel>();
     }
-    private async Task LoadDealPileScreenAsync()
+    private void LoadDealPileScreen()
     {
-        if (DealPileScreen != null)
+        if (ShowDealPile)
         {
             return;
         }
-        DealPileScreen = _resolver.Resolve<DealPileViewModel>();
-        await LoadScreenAsync(DealPileScreen);
+        ShowDealPile = true;
     }
-    private async Task LoadLotteryScreenAsync()
+    private void LoadLotteryScreen()
     {
         if (LotteryScreen != null)
         {
             return;
         }
-        LotteryScreen = _resolver.Resolve<LotteryViewModel>();
-        await LoadScreenAsync(LotteryScreen);
+        LotteryScreen = Resolver.Resolve<LotteryViewModel>();
     }
-    private async Task LoadMailPileScreenAsync()
+    private void LoadMailPileScreen()
     {
-        if (MailPileScreen != null)
+        if (ShowMailPile)
         {
             return;
         }
-        MailPileScreen = _resolver.Resolve<MailPileViewModel>();
-        await LoadScreenAsync(MailPileScreen);
+        ShowMailPile = true;
     }
-    private async Task LoadPlayerScreenAsync()
+    private void LoadPlayerScreen()
     {
         if (PlayerScreen != null)
         {
             return;
         }
-        PlayerScreen = _resolver.Resolve<PlayerPickerViewModel>();
-        await LoadScreenAsync(PlayerScreen);
+        PlayerScreen = Resolver.Resolve<PlayerPickerViewModel>();
     }
-    private async Task LoadRollerScreenAsync()
+    private void LoadRollerScreen()
     {
         if (RollerScreen != null)
         {
             return;
         }
-        RollerScreen = _resolver.Resolve<RollerViewModel>();
-        await LoadScreenAsync(RollerScreen);
+        RollerScreen = Resolver.Resolve<RollerViewModel>();
     }
-    private async Task LoadMainScreensAsync()
+    private void LoadMainScreens()
     {
-        await CloseBuyDealScreenAsync();
-        await CloseChooseDealScreenAsync();
-        await CloseDealOrBuyScreenAsync();
-        await CloseDealPileScreenAsync();
-        await CloseLotteryScreenAsync();
-        await CloseMailPileScreenAsync();
-        await ClosePlayerScreenAsync();
-        await LoadRollerScreenAsync();
-        await LoadMailListScreenAsync();
+        CloseBuyDealScreen();
+        CloseChooseDealScreen();
+        CloseDealOrBuyScreen();
+        CloseDealPileScreen();
+        CloseLotteryScreen();
+        CloseMailPileScreen();
+        ClosePlayerScreen();
+        LoadRollerScreen();
+        LoadMailListScreen();
     }
     private EnumStatus _gameStatus;
     void IHandle<EnumStatus>.Handle(EnumStatus message)
@@ -313,7 +294,7 @@ public partial class PaydayMainViewModel : BasicMultiplayerMainVM, IHandle<EnumS
             return;
         }
         _gameStatus = message;
-        LoadProperScreensAsync(); //hopefully this works too.
+        LoadProperScreens();
     }
     #endregion
 }

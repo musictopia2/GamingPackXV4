@@ -14,7 +14,7 @@ public class RackoDetailClass : IGameInfo, ICardInfo<RackoCardInformation>
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
     int ICardInfo<RackoCardInformation>.CardsToPassOut => 10;
-    BasicList<int> ICardInfo<RackoCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<RackoCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<RackoCardInformation>.AddToDiscardAtBeginning => true;
     bool ICardInfo<RackoCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<RackoCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,11 +22,11 @@ public class RackoDetailClass : IGameInfo, ICardInfo<RackoCardInformation>
     bool ICardInfo<RackoCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<RackoCardInformation>.NoPass => false;
     bool ICardInfo<RackoCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<RackoCardInformation> ICardInfo<RackoCardInformation>.DummyHand { get; set; } = new DeckRegularDict<RackoCardInformation>();
+    DeckRegularDict<RackoCardInformation> ICardInfo<RackoCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<RackoCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<RackoCardInformation>.CanSortCardsToBeginWith => false;
     BasicList<int> ICardInfo<RackoCardInformation>.DiscardExcludeList(IListShuffler<RackoCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

@@ -15,13 +15,11 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="XactikaModeViewModel">
-        <XactikaModeView />
-    </ParentControl>
-    <ParentControl VM="XactikaMainViewModel">
+    <MainScreen>
         <XactikaMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<XactikaPlayerItem>">
-        <MultiplayerOpeningView P="XactikaPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="XactikaPlayerItem" />
+    <PromptView VM="XactikaModeViewModel">
+        <XactikaModeView />
+    </PromptView>
 </CascadingValue>

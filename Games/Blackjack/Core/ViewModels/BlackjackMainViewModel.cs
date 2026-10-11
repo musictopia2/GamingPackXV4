@@ -1,25 +1,28 @@
 namespace Blackjack.Core.ViewModels;
 [InstanceGame]
 [UseLabelGrid]
-public partial class BlackjackMainViewModel : ScreenViewModel, IBasicEnableProcess, IBlankGameVM, IAggregatorContainer
-{
-    private readonly BlackjackMainGameClass _mainGame;
-    public DeckObservablePile<BlackjackCardInfo> DeckPile { get; set; }
-    public BlackjackMainViewModel(IEventAggregator aggregator,
-        CommandContainer commandContainer,
-        IGamePackageResolver resolver,
+[UseStateChanged]
+public partial class BlackjackMainViewModel(CommandContainer commandContainer,
+
+    IEventAggregator aggregator,
+    IGamePackageResolver resolver,
         StatsClass stats,
         BasicData basicData
-        ) : base(aggregator)
+        ) : IBasicEnableProcess,
+    IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>
+{
+    private BlackjackMainGameClass _mainGame = null!;
+    public DeckObservablePile<BlackjackCardInfo> DeckPile { get; set; } = null!;
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    void IMainGameVM.Initialize()
     {
-        CommandContainer = commandContainer;
-        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged; //hopefully no problem (?)
+        Subscribe();
+        commandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<BlackjackCardInfo>>();
         DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
-        _stats = stats;
-        _basicData = basicData;
-        HumanStack = new (commandContainer);
-        ComputerStack = new (commandContainer);
+        HumanStack = new(commandContainer);
+        ComputerStack = new(commandContainer);
         HumanStack.ProcessLabel(false);
         HumanStack.CardSelectedAsync = HumanStack_CardSelectedAsync;
         ComputerStack.ProcessLabel(true);
@@ -35,43 +38,40 @@ public partial class BlackjackMainViewModel : ScreenViewModel, IBasicEnableProce
             return false; //false this time.
         });
         _mainGame = resolver.ReplaceObject<BlackjackMainGameClass>(); //hopefully this works.  means you have to really rethink.
-        CreateCommands(CommandContainer);
+        CreateCommands(commandContainer);
+    }
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
+    {
+        basicData.GameDataLoading = false; //because no autoresume.
+        await _mainGame.NewGameAsync(DeckPile, this);
+        //commandContainer.ManualReport(); //just had to run the code to manually report.
+        //commandContainer.UpdateAll();
+    }
+    async Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        Unsubscribe();
+        commandContainer.ExecutingChanged = null;
     }
     partial void CreateCommands(CommandContainer container);
-    private readonly StatsClass _stats;
-    private readonly BasicData _basicData;
+    
 
     public PlayerStack? ComputerStack; //decided to make it more clear now.
     public PlayerStack? HumanStack;
-    private bool _needsAceChoice;
-    public bool NeedsAceChoice
+    [StateProperty]
+    public partial bool NeedsAceChoice { get; set; }
+    partial void OnNeedsAceChoiceChanged(bool value)
     {
-        get
-        {
-            return _needsAceChoice;
-        }
-
-        set
-        {
-            if (SetProperty(ref _needsAceChoice, value) == true)
-            {
-                Reprocess();
-            }
-        }
+        Reprocess();
     }
-    private bool _selectedYet;
-    public bool SelectedYet
+
+    [StateProperty]
+    public partial bool SelectedYet { get; set; }
+
+    partial void OnSelectedYetChanged(bool value)
     {
-        get { return _selectedYet; }
-        set
-        {
-            if (SetProperty(ref _selectedYet, value))
-            {
-                Reprocess();
-            }
-
-        }
+        Reprocess();
     }
+
     private void Reprocess()
     {
         if (NeedsAceChoice == false && SelectedYet == true)
@@ -85,60 +85,34 @@ public partial class BlackjackMainViewModel : ScreenViewModel, IBasicEnableProce
     }
     public bool CanHitOrStay { get; set; }
     [LabelColumn]
-    public int HumanPoints { get; set; }
+    public partial int HumanPoints { get; set; }
     [LabelColumn]
-    public int ComputerPoints { get; set; }
-    private int _draws;
+    public partial int ComputerPoints { get; set; }
+    //private int _draws;
     [LabelColumn]
-    public int Draws
-    {
-        get
-        {
-            return _draws;
-        }
+    public partial int Draws { get; set; }
 
-        set
-        {
-            if (SetProperty(ref _draws, value) == true)
-            {
-                _stats.Draws = value;
-            }
-        }
-    }
-    private int _wins;
-    [LabelColumn]
-    public int Wins
+    partial void OnDrawsChanged(int value)
     {
-        get
-        {
-            return _wins;
-        }
-
-        set
-        {
-            if (SetProperty(ref _wins, value) == true)
-            {
-                _stats.Wins = value;
-            }
-        }
+        stats.Draws = value;
     }
-    private int _losses;
+
+
+
     [LabelColumn]
-    public int Losses
+    public partial int Wins { get; set; }
+    partial void OnWinsChanged(int value)
     {
-        get
-        {
-            return _losses;
-        }
-
-        set
-        {
-            if (SetProperty(ref _losses, value) == true)
-            {
-                _stats.Losses = value;
-            }
-        }
+        stats.Wins = value;
     }
+
+    [LabelColumn]
+    public partial int Losses { get; set; }
+    partial void OnLossesChanged(int value)
+    {
+        stats.Losses = value;
+    }
+
     public bool CanAce => NeedsAceChoice;
     [Command(EnumCommandCategory.Game)]
     public async Task AceAsync(EnumAceChoice choice)
@@ -165,7 +139,7 @@ public partial class BlackjackMainViewModel : ScreenViewModel, IBasicEnableProce
     }
     private async void CommandContainer_ExecutingChanged()
     {
-        if (CommandContainer.IsExecuting)
+        if (commandContainer.IsExecuting)
         {
             return;
         }
@@ -180,18 +154,11 @@ public partial class BlackjackMainViewModel : ScreenViewModel, IBasicEnableProce
     {
         await _mainGame!.HumanSelectAsync(HasChoice);
     }
-    public CommandContainer CommandContainer { get; set; }
-    IEventAggregator IAggregatorContainer.Aggregator => Aggregator;
     public bool CanEnableBasics()
     {
         return true;
     }
-    protected override async Task ActivateAsync()
-    {
-        _basicData.GameDataLoading = false; //because no autoresume.
-        await base.ActivateAsync();
-        await _mainGame.NewGameAsync(DeckPile, this);
-        CommandContainer.ManualReport(); //just had to run the code to manually report.
-        CommandContainer.UpdateAll();
-    }
+    
+
+    
 }

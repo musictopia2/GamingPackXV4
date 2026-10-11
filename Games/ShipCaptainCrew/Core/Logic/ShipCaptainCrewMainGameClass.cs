@@ -1,32 +1,21 @@
 namespace ShipCaptainCrew.Core.Logic;
 [SingletonGame]
-public class ShipCaptainCrewMainGameClass
-    : DiceGameClass<SimpleDice, ShipCaptainCrewPlayerItem, ShipCaptainCrewSaveInfo>
+public class ShipCaptainCrewMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    ShipCaptainCrewVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    ShipCaptainCrewGameContainer gameContainer,
+    StandardRollProcesses<SimpleDice, ShipCaptainCrewPlayerItem> roller,
+    ISystemError error,
+    IToast toast
+        )
+        : DiceGameClass<SimpleDice, ShipCaptainCrewPlayerItem, ShipCaptainCrewSaveInfo>(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
     , ISerializable
 {
-    private readonly ShipCaptainCrewVMData _model;
-    private readonly CommandContainer _command;
-    private readonly StandardRollProcesses<SimpleDice, ShipCaptainCrewPlayerItem> _roller;
-    private readonly IToast _toast;
-    public ShipCaptainCrewMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        ShipCaptainCrewVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        ShipCaptainCrewGameContainer gameContainer,
-        StandardRollProcesses<SimpleDice, ShipCaptainCrewPlayerItem> roller,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _roller = roller;
-        _toast = toast;
-    }
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -48,7 +37,7 @@ public class ShipCaptainCrewMainGameClass
         {
             await Delay!.DelayMilli(300);
         }
-        await _roller.RollDiceAsync();
+        await Roller.RollDiceAsync();
     }
     public override async Task SetUpGameAsync(bool isBeginning)
     {
@@ -71,11 +60,11 @@ public class ShipCaptainCrewMainGameClass
     public override async Task StartNewTurnAsync()
     {
         PrepStartTurn();
-        _model!.Cup!.HideDice();
+        currentMod!.Cup!.HideDice();
         SaveRoot.RollNumber = 1;
-        _model.Cup.CanShowDice = false;
+        currentMod.Cup.CanShowDice = false;
         SingleInfo!.TookTurn = false;
-        _model.Cup.UnholdDice();
+        currentMod.Cup.UnholdDice();
         await ContinueTurnAsync();
     }
     protected override bool ShowDiceUponAutoSave => SaveRoot!.RollNumber > 1;
@@ -133,7 +122,7 @@ public class ShipCaptainCrewMainGameClass
     protected override async Task ProtectedAfterRollingAsync()
     {
         HoldShips();
-        if (SaveRoot!.RollNumber <= 3 && _model.Cup!.HowManyHeldDice() < 5)
+        if (SaveRoot!.RollNumber <= 3 && currentMod.Cup!.HowManyHeldDice() < 5)
         {
             await ContinueTurnAsync();
             return;
@@ -147,7 +136,6 @@ public class ShipCaptainCrewMainGameClass
         var tempList = GetScoringGuide(otherList);
         var score = tempList.Sum(items => items.Value);
         SingleInfo!.Score = score;
-        _command.UpdateAll();
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(1);
@@ -156,7 +144,7 @@ public class ShipCaptainCrewMainGameClass
     }
     public override async Task EndTurnAsync()
     {
-        _command.ManuelFinish = true;
+        CommandContainer.ManuelFinish = true;
         SingleInfo!.TookTurn = true;
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync(true);
         if (PlayerList.All(x => x.TookTurn))
@@ -171,7 +159,7 @@ public class ShipCaptainCrewMainGameClass
         var thisList = GetShipList();
         if (thisList.Any(items => items.Index == index))
         {
-            _toast.ShowUserErrorToast("Cannot unselect a part of a ship");
+            Toast.ShowUserErrorToast("Cannot unselect a part of a ship");
             return;
         }
         if (thisList.Count < 3)
@@ -200,19 +188,19 @@ public class ShipCaptainCrewMainGameClass
     }
     private BasicList<SimpleDice> GetShipList()
     {
-        BasicList<SimpleDice> output = new();
+        BasicList<SimpleDice> output = [];
         for (int x = 4; x <= 6; x++)
         {
-            if (_model.Cup!.DiceList.Any(items => items.Value == x))
+            if (currentMod.Cup!.DiceList.Any(items => items.Value == x))
             {
-                output.Add(_model.Cup.DiceList.First(items => items.Value == x));
+                output.Add(currentMod.Cup.DiceList.First(items => items.Value == x));
             }
         }
         return output;
     }
     private BasicList<SimpleDice> GetScoringGuide(BasicList<SimpleDice> shipList)
     {
-        var output = _model.Cup!.DiceList.ToBasicList();
+        var output = currentMod.Cup!.DiceList.ToBasicList();
         output.RemoveGivenList(shipList);
         if (output.Count > 2)
         {

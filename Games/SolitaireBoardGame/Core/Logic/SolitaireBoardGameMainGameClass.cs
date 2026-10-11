@@ -96,7 +96,7 @@ public class SolitaireBoardGameMainGameClass : IAggregatorContainer
             _saveRoot = await _thisState.RetrieveSinglePlayerGameAsync<SolitaireBoardGameSaveInfo>();
             MainContainer.ReplaceObject(_saveRoot);
         }
-        _command.UpdateAll();
+        //_command.UpdateAll();
     }
     public void SelectUnSelectSpace(GameSpace thisSpace)
     {

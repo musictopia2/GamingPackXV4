@@ -9,7 +9,7 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
     }
     private readonly CoveredUpGameContainer _gameContainer;
     private readonly CoveredUpVMData _model;
-    private BasicList<int> _orders;
+    private readonly BasicList<int> _orders;
     private CoveredUpPlayerItem? _player;
     public PlayerBoardCP(CoveredUpGameContainer gameContainer, CoveredUpVMData model) : base(gameContainer.Command)
     {
@@ -18,8 +18,8 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
         Rows = 2;
         Columns = 4;
         Text = "Your Cards";
-        _orders = new()
-        {
+        _orders =
+        [
             4,
             0,
             5,
@@ -28,7 +28,7 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
             2,
             7,
             3
-        };
+        ];
     }
     protected override async Task ClickProcessAsync(RegularSimpleCard card)
     {
@@ -123,7 +123,7 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
             return output;
         }
         int score;
-        BasicList<int> points = new();
+        BasicList<int> points = [];
         if (category1 == EnumMatchCategory.Two)
         {
             score = MatchSinglePoints(1);
@@ -164,7 +164,7 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
         EnumMatchCategory category2;
         category2 = GetMatchCategory(2);
         int score;
-        BasicList<int> points = new();
+        BasicList<int> points = [];
         if (category2 == EnumMatchCategory.None)
         {
             score = ColumnPoints(2);
@@ -190,7 +190,7 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
     }
     private int Category1NonePoints()
     {
-        BasicList<int> points = new();
+        BasicList<int> points = [];
         int score = ColumnPoints(1);
         points.Add(score);
         score = Category2Points();
@@ -201,7 +201,7 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
     {
         EnumMatchCategory category3;
         int score;
-        BasicList<int> points = new();
+        BasicList<int> points = [];
         category3 = GetMatchCategory(3);
         if (category3 == EnumMatchCategory.None)
         {
@@ -256,6 +256,7 @@ public class PlayerBoardCP : GameBoardObservable<RegularSimpleCard>
                 ObjectList.MakeAllObjectsKnown(); //needs this before getting points so far as well.
             }
             PointsSoFar();
+            OnStateChanged();
             return;
         }
         

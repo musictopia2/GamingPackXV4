@@ -31,7 +31,7 @@ public class RummySet : SetInfo<EnumSuitList, EnumRegularColorList, MonasteryCar
     public void CreateSet(IDeckDict<MonasteryCardInfo> thisCol, EnumMonasterySets whatSet)
     {
         _setType = whatSet;
-        DeckRegularDict<MonasteryCardInfo> tempList = new();
+        DeckRegularDict<MonasteryCardInfo> tempList = [];
         thisCol.ForEach(thisCard =>
         {
             var newCard = new MonasteryCardInfo();
@@ -50,7 +50,7 @@ public class RummySet : SetInfo<EnumSuitList, EnumRegularColorList, MonasteryCar
             thisCard = HandList[1];
         }
         var entireList = _gameContainer.Rummys!.EntireList;
-        DeckRegularDict<MonasteryCardInfo> output = new();
+        DeckRegularDict<MonasteryCardInfo> output = [];
         if (_setType == EnumMonasterySets.RegularSuits)
         {
             output.AddRange(entireList.Where(items => items.Suit == thisCard.Suit));
@@ -206,7 +206,9 @@ public class RummySet : SetInfo<EnumSuitList, EnumRegularColorList, MonasteryCar
             numberNeeded = tempCard.Value.Value - 1;
         }
         if (numberNeeded == 1)
+        {
             return thisCard;
+        }
         EnumSuitList suitNeeded;
         if (_setType == EnumMonasterySets.RegularRuns)
         {

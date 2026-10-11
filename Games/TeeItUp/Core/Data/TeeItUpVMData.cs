@@ -5,13 +5,13 @@ namespace TeeItUp.Core.Data;
 public partial class TeeItUpVMData : IBasicCardGamesData<TeeItUpCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public int Round { get; set; }
+    public partial int Round { get; set; }
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
     public TeeItUpVMData(CommandContainer command)
     {
         Deck1 = new(command);

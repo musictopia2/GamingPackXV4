@@ -1,30 +1,35 @@
 ﻿namespace ThreeLetterFun.Core.ViewModels;
 [InstanceGame]
-public partial class AdvancedOptionsViewModel : ScreenViewModel, IBlankGameVM, IHandleAsync<AdvancedSettingsEventModel>, ISerializable
+public partial class AdvancedOptionsViewModel : IHandleAsync<AdvancedSettingsEventModel>, ISerializable
 {
     public AdvancedOptionsViewModel(CommandContainer commandContainer,
         IGamePackageResolver resolver,
         BasicData basicData,
         IAdvancedProcesses processes,
         IEventAggregator aggregator
-        ) : base(aggregator)
+        )
     {
         CommandContainer = commandContainer;
         _basicData = basicData;
         _processes = processes;
+        _aggregator = aggregator;
         Game1 = new ListViewPicker(commandContainer, resolver);
         Easy1 = new ListViewPicker(commandContainer, resolver);
         Game1.IndexMethod = EnumIndexMethod.OneBased;
         Easy1.IndexMethod = EnumIndexMethod.OneBased;
         var thisList = new BasicList<string>() { "Easy Words", "Any Words" };
         Easy1.LoadTextList(thisList);
-        thisList = new() { "Short Game", "Regular Game" };
+        thisList = ["Short Game", "Regular Game"];
         Game1.LoadTextList(thisList);
         SelectSpecificOptions();
         Game1.ItemSelectedAsync = Game1_ItemSelectedAsync;
         Easy1.ItemSelectedAsync = Easy1_ItemSelectedAsync;
         CreateCommands(commandContainer);
+        Unsubscribe();
+        Subscribe();
     }
+    private partial void Subscribe();
+    private partial void Unsubscribe();
     partial void CreateCommands(CommandContainer command);
     public CommandContainer CommandContainer { get; set; }
     public ListViewPicker Game1;
@@ -33,6 +38,8 @@ public partial class AdvancedOptionsViewModel : ScreenViewModel, IBlankGameVM, I
     public bool EasyWords { get; set; }
     private readonly BasicData _basicData;
     private readonly IAdvancedProcesses _processes;
+    private readonly IEventAggregator _aggregator;
+
     public bool CanSubmit
     {
         get

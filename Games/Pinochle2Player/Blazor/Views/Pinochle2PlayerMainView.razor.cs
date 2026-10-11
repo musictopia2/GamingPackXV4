@@ -1,14 +1,14 @@
 namespace Pinochle2Player.Blazor.Views;
 public partial class Pinochle2PlayerMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private Pinochle2PlayerVMData? _vmData;
     private Pinochle2PlayerGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<Pinochle2PlayerVMData>();
-        _gameContainer = aa1.Resolver.Resolve<Pinochle2PlayerGameContainer>();
+        _vmData = Resolver!.Resolve<Pinochle2PlayerVMData>();
+        _gameContainer = Resolver.Resolve<Pinochle2PlayerGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(Pinochle2PlayerVMData.NormalTurn))
            .AddLabel("Deck Count", nameof(Pinochle2PlayerVMData.DeckCount))

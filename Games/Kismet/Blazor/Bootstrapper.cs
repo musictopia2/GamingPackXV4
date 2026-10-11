@@ -1,11 +1,7 @@
 namespace Kismet.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<YahtzeeShellViewModel<KismetDice>>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<YahtzeeShellViewModel<KismetDice>>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         IBasicDiceGamesData<SimpleDice>.NeedsRollIncrement = true;

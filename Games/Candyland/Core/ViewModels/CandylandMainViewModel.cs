@@ -1,32 +1,43 @@
 namespace Candyland.Core.ViewModels;
 [InstanceGame]
-public class CandylandMainViewModel : BasicMultiplayerMainVM
-{
-    private readonly CandylandMainGameClass _mainGame; //if we don't need, delete.
-    public CandylandVMData VMData { get; set; }
-    public CandylandMainViewModel(CommandContainer commandContainer,
+[EventAggregatorFromMemberClass(nameof(Aggregator))]
+public partial class CandylandMainViewModel(CommandContainer commandContainer,
         CandylandMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        CandylandVMData data
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        CandylandVMData data) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator),
+    IHandle<CandylandRefreshEvent>, IDisposable
+{
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = data;
+        Unsubscribe(); //just in case.
+        Subscribe();
+        base.AdditionalInitialize();
     }
+    public CandylandVMData VMData { get; set; } = data;
     public BasicList<CandylandPlayerItem> GetPlayerList
     {
         get
         {
-            BasicList<CandylandPlayerItem> output = _mainGame.PlayerList.ToBasicList();
-            output.RemoveSpecificItem(_mainGame.SingleInfo!);
-            output.Add(_mainGame.SingleInfo!);
+            BasicList<CandylandPlayerItem> output = mainGame.PlayerList.ToBasicList();
+            output.RemoveSpecificItem(mainGame.SingleInfo!);
+            output.Add(mainGame.SingleInfo!);
             return output;
         }
     }
-    public CandylandPlayerItem CurrentPlayer => _mainGame.SingleInfo!;
-    public CandylandCardData CurrentCard => _mainGame.SaveRoot.CurrentCard!;
+    public CandylandPlayerItem CurrentPlayer => mainGame.SingleInfo!;
+    public CandylandCardData CurrentCard => mainGame.SaveRoot.CurrentCard!;
+    void IHandle<CandylandRefreshEvent>.Handle(CandylandRefreshEvent message)
+    {
+        OnStateChanged();
+    }
+
+    void IDisposable.Dispose()
+    {
+        Unsubscribe();
+        GC.SuppressFinalize(this);
+    }
 }

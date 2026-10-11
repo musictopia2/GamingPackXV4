@@ -1,22 +1,19 @@
 namespace BowlingDiceGame.Core.ViewModels;
 [InstanceGame]
-public partial class BowlingDiceGameMainViewModel : BasicMultiplayerMainVM
-{
-    public readonly BowlingDiceGameMainGameClass MainGame; //if we don't need, delete.
-    public BowlingDiceGameVMData VMData { get; set; }
-    public BowlingDiceGameMainViewModel(CommandContainer commandContainer,
+public partial class BowlingDiceGameMainViewModel(CommandContainer commandContainer,
         BowlingDiceGameMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        BowlingDiceGameVMData data
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        BowlingDiceGameVMData data) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+    public readonly BowlingDiceGameMainGameClass MainGame = mainGame;
+    public BowlingDiceGameVMData VMData { get; set; } = data;
+    protected override void AdditionalInitialize()
     {
-        MainGame = mainGame;
-        VMData = data;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        CommandContainer.AddCommand(RollCommand!);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     private bool _lastTurn;
@@ -43,7 +40,6 @@ public partial class BowlingDiceGameMainViewModel : BasicMultiplayerMainVM
         MainGame.SaveRoot.IsExtended = false;
         _lastTurn = true;
         await Task.Delay(10);
-        CommandContainer.ManualReport(); //try this.
     }
     public bool CanRoll
     {

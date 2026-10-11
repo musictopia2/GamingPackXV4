@@ -1,7 +1,5 @@
-
 namespace SpiderSolitaire.Core.ViewModels;
 [InstanceGame]
-[UseLabelGrid]
 public partial class SpiderSolitaireMainViewModel : SolitaireMainViewModel<SpiderSolitaireSaveInfo>
 {
     public SpiderSolitaireMainViewModel(IEventAggregator aggregator,

@@ -1,4 +1,4 @@
-﻿namespace MonopolyCardGame.Core.Data;
+﻿namespace ClueCardGame.Core.Data;
 public class PrivateModel : IMappable
 {
     public Dictionary<int, DetectiveInfo> PersonalNotebook { get; set; } = [];

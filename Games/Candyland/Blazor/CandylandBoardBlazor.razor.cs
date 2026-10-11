@@ -17,7 +17,7 @@ public partial class CandylandBoardBlazor
             var firstList = PlayerList!.ToBasicList();
             firstList.RemoveAllOnly(x => x.SpaceNumber == 0);
             var nextList = firstList.GroupBy(x => x.SpaceNumber);
-            BasicList<CandylandPlayerItem> output = new();
+            BasicList<CandylandPlayerItem> output = [];
             foreach (var item in nextList)
             {
                 output.Add(item.Last());
@@ -42,8 +42,8 @@ public partial class CandylandBoardBlazor
         }
         await BoardViewModel!.MakeMoveAsync(space);
     }
-    private readonly Dictionary<int, CandylandSquareModel> _clickSquares = new();
-    private BasicList<PointF> _positionList = new();
+    private readonly Dictionary<int, CandylandSquareModel> _clickSquares = [];
+    private BasicList<PointF> _positionList = [];
     private void PopulateSquares()
     {
         _clickSquares.AddSquare(0.180156657963446f, 0.869718309859155f, 0.18668407310705f, 0.947183098591549f, 0.112271540469974f, 0.947183098591549f, 0.121409921671018f, 0.830985915492958f);
@@ -175,8 +175,8 @@ public partial class CandylandBoardBlazor
     }
     private void CreatePositions()
     {
-        _positionList = new BasicList<PointF>
-        {
+        _positionList =
+        [
             new PointF() { X = 121, Y = 601 - 10 },
             new PointF() { X = 155, Y = 599 - 10 },
             new PointF() { X = 180, Y = 588  - 10 },
@@ -304,7 +304,7 @@ public partial class CandylandBoardBlazor
             new PointF() { X = 328, Y = 59  - 10 },
             new PointF() { X = 358, Y = 55  - 10 },
             new PointF() { X = 416, Y = 42 } // last one is the castle.
-        };
+        ];
     }
     protected override void OnInitialized()
     {

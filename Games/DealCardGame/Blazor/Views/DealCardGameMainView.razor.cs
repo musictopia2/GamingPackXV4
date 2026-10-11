@@ -2,7 +2,7 @@ namespace DealCardGame.Blazor.Views;
 public partial class DealCardGameMainView
 {
 
-    private bool _isTesting = false;
+    private readonly bool _isTesting = false;
 
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
@@ -12,8 +12,8 @@ public partial class DealCardGameMainView
     private DealCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<DealCardGameVMData>();
-        _gameContainer = aa1.Resolver.Resolve<DealCardGameGameContainer>();
+        _vmData = Resolver!.Resolve<DealCardGameVMData>();
+        _gameContainer = Resolver.Resolve<DealCardGameGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(DealCardGameVMData.NormalTurn))
             .AddLabel("Status", nameof(DealCardGameVMData.Status))

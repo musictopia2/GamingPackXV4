@@ -1,18 +1,14 @@
 namespace FlorentineSolitaire.Core.Logic;
 [SingletonGame]
-public class FlorentineSolitaireMainGameClass : SolitaireGameClass<FlorentineSolitaireSaveInfo>
+public class FlorentineSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<FlorentineSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    public FlorentineSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-    }
     protected async override Task ContinueOpenSavedAsync()
     {
         //anything else you need will be here
@@ -31,10 +27,10 @@ public class FlorentineSolitaireMainGameClass : SolitaireGameClass<FlorentineSol
     }
     protected override void AfterShuffleCards()
     {
-        DeckRegularDict<SolitaireCard> thisList = new()
-        {
+        DeckRegularDict<SolitaireCard> thisList =
+        [
             CardList![5]
-        };
+        ];
         CardList.RemoveAt(5);
         AfterShuffle(thisList);
     }

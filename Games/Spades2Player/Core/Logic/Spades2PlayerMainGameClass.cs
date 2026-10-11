@@ -1,35 +1,28 @@
 namespace Spades2Player.Core.Logic;
 [SingletonGame]
-public class Spades2PlayerMainGameClass
-    : TrickGameClass<EnumSuitList, Spades2PlayerCardInformation, Spades2PlayerPlayerItem, Spades2PlayerSaveInfo>
+public class Spades2PlayerMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    Spades2PlayerVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<Spades2PlayerCardInformation> cardInfo,
+    CommandContainer command,
+    Spades2PlayerGameContainer gameContainer,
+    ITrickData trickData,
+    ITrickPlay trickPlay,
+    IAdvancedTrickProcesses aTrick,
+    ISystemError error,
+    IToast toast
+        )
+        : TrickGameClass<EnumSuitList, Spades2PlayerCardInformation, Spades2PlayerPlayerItem, Spades2PlayerSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
         , IMiscDataNM, IStartNewGame, ISerializable
 {
-    private readonly Spades2PlayerVMData _model;
-    private readonly CommandContainer _command;
-    private readonly Spades2PlayerGameContainer _gameContainer;
-    private readonly IAdvancedTrickProcesses _aTrick;
-    public Spades2PlayerMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        Spades2PlayerVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<Spades2PlayerCardInformation> cardInfo,
-        CommandContainer command,
-        Spades2PlayerGameContainer gameContainer,
-        ITrickData trickData,
-        ITrickPlay trickPlay,
-        IAdvancedTrickProcesses aTrick,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _aTrick = aTrick;
-    }
+    private readonly Spades2PlayerVMData _model = currentMod;
+    private readonly CommandContainer _command = command;
+    private readonly Spades2PlayerGameContainer _gameContainer = gameContainer;
+    private readonly IAdvancedTrickProcesses _aTrick = aTrick;
     private bool _mustKeep;
     public override async Task FinishGetSavedAsync()
     {
@@ -53,7 +46,7 @@ public class Spades2PlayerMainGameClass
     protected override void LinkHand()
     {
         SingleInfo = PlayerList!.GetSelf();
-        _model!.PlayerHand1!.HandList = SingleInfo.MainHandList;
+        _model!.PlayerHand1!.ReplaceHandList(SingleInfo.MainHandList);
         PrepSort();
     }
     protected override void LoadVM()
@@ -341,7 +334,6 @@ public class Spades2PlayerMainGameClass
         var thisCard = _model.OtherPile.GetCardInfo();
         SingleInfo!.MainHandList.Add(thisCard);
         _model.OtherPile.Visible = false;
-        _command.UpdateAll();
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
         {
             thisCard.Drew = true;
@@ -354,7 +346,6 @@ public class Spades2PlayerMainGameClass
         if (SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
             _model!.Bid1!.SelectNumberValue(_model.BidAmount);
-            _command.UpdateAll();
             if (Test!.NoAnimations == false)
             {
                 await Delay!.DelaySeconds(.5);

@@ -15,7 +15,7 @@ public class GolfCardGameDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
     int ICardInfo<RegularSimpleCard>.CardsToPassOut => 4;
-    BasicList<int> ICardInfo<RegularSimpleCard>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<RegularSimpleCard>.PlayerExcludeList => [];
     bool ICardInfo<RegularSimpleCard>.AddToDiscardAtBeginning => true;
     bool ICardInfo<RegularSimpleCard>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<RegularSimpleCard>.ShowMessageWhenReshuffling => true;
@@ -23,12 +23,12 @@ public class GolfCardGameDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     bool ICardInfo<RegularSimpleCard>.PlayerGetsCards => true;
     bool ICardInfo<RegularSimpleCard>.NoPass => false;
     bool ICardInfo<RegularSimpleCard>.NeedsDummyHand => false;
-    DeckRegularDict<RegularSimpleCard> ICardInfo<RegularSimpleCard>.DummyHand { get; set; } = new DeckRegularDict<RegularSimpleCard>();
+    DeckRegularDict<RegularSimpleCard> ICardInfo<RegularSimpleCard>.DummyHand { get; set; } = [];
     bool ICardInfo<RegularSimpleCard>.HasDrawAnimation => true;
     bool ICardInfo<RegularSimpleCard>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<RegularSimpleCard>.DiscardExcludeList(IListShuffler<RegularSimpleCard> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<RegularSimpleCard>.AceLow => true;
     bool IBeginningRegularCards<RegularSimpleCard>.CustomDeck => true;

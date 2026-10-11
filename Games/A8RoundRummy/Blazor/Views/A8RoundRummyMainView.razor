@@ -1,4 +1,4 @@
-@inherits BasicGameView<A8RoundRummyMainViewModel>
+@inherits CascadingGameView<A8RoundRummyMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -26,6 +26,6 @@
         </div>
     </GridItem>
     <GridItem Column="2">
-        <RoundUI Rounds="@_gameContainer.SaveRoot.RoundList" />
+        <RoundUI Rounds="@_vmData.RoundList" />
     </GridItem>
 </GridContainer>

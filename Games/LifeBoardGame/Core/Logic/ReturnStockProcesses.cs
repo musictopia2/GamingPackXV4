@@ -1,53 +1,46 @@
 ﻿namespace LifeBoardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class ReturnStockProcesses : IReturnStockProcesses
+public class ReturnStockProcesses(LifeBoardGameVMData model, LifeBoardGameGameContainer gameContainer) : IReturnStockProcesses
 {
-    private readonly LifeBoardGameVMData _model;
-    private readonly LifeBoardGameGameContainer _gameContainer;
-    public ReturnStockProcesses(LifeBoardGameVMData model, LifeBoardGameGameContainer gameContainer)
-    {
-        _model = model;
-        _gameContainer = gameContainer;
-    }
     public void LoadCurrentPlayerStocks()
     {
-        if (_gameContainer!.SingleInfo!.FirstStock == 0 || _gameContainer.SingleInfo.SecondStock == 0)
+        if (gameContainer!.SingleInfo!.FirstStock == 0 || gameContainer.SingleInfo.SecondStock == 0)
         {
             throw new CustomBasicException("Must have both stock items.  Otherwise; should do automatically");
         }
-        DeckRegularDict<LifeBaseCard> tempList = new()
-        {
-            _gameContainer.SingleInfo.GetStockCard(_gameContainer.SingleInfo.FirstStock),
-            _gameContainer.SingleInfo.GetStockCard(_gameContainer.SingleInfo.SecondStock)
-        };
-        _model.HandList!.HandList.ReplaceRange(tempList);
-        _model.HandList.AutoSelect = EnumHandAutoType.SelectOneOnly;
-        _model.HandList.Text = "List Of Stocks";
+        DeckRegularDict<LifeBaseCard> tempList =
+        [
+            gameContainer.SingleInfo.GetStockCard(gameContainer.SingleInfo.FirstStock),
+            gameContainer.SingleInfo.GetStockCard(gameContainer.SingleInfo.SecondStock)
+        ];
+        model.HandList!.HandList.ReplaceRange(tempList);
+        model.HandList.AutoSelect = EnumHandAutoType.SelectOneOnly;
+        model.HandList.Text = "List Of Stocks";
     }
     public async Task StockReturnedAsync(int deck)
     {
-        if (_gameContainer.CanSendMessage())
+        if (gameContainer.CanSendMessage())
         {
-            await _gameContainer.Network!.SendAllAsync("stockreturned", deck);
+            await gameContainer.Network!.SendAllAsync("stockreturned", deck);
         }
         var thisStock = CardsModule.GetStockCard(deck);
-        await _gameContainer.ShowCardAsync(thisStock);
-        _gameContainer.SingleInfo!.Hand.RemoveObjectByDeck(thisStock.Deck);
-        if (thisStock.Value == _gameContainer.SingleInfo.FirstStock)
+        await gameContainer.ShowCardAsync(thisStock);
+        gameContainer.SingleInfo!.Hand.RemoveObjectByDeck(thisStock.Deck);
+        if (thisStock.Value == gameContainer.SingleInfo.FirstStock)
         {
-            _gameContainer.SingleInfo.FirstStock = _gameContainer.SingleInfo.SecondStock;
-            _gameContainer.SingleInfo.FirstStock = 0;
+            gameContainer.SingleInfo.FirstStock = gameContainer.SingleInfo.SecondStock;
+            gameContainer.SingleInfo.FirstStock = 0;
         }
-        else if (thisStock.Value == _gameContainer.SingleInfo.SecondStock)
+        else if (thisStock.Value == gameContainer.SingleInfo.SecondStock)
         {
-            _gameContainer.SingleInfo.SecondStock = 0;
+            gameContainer.SingleInfo.SecondStock = 0;
         }
         else
         {
             throw new CustomBasicException("Cannot update the stock");
         }
-        _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
 }

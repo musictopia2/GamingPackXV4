@@ -11,10 +11,7 @@ public class BackgammonSaveInfo : BasicSavedBoardDiceGameClass<BackgammonPlayerI
             if (SetProperty(ref _instructions, value))
             {
                 //can decide what to do when property changes
-                if (_model != null)
-                {
-                    _model.Instructions = value;
-                }
+                _model?.Instructions = value;
             }
 
         }
@@ -27,10 +24,7 @@ public class BackgammonSaveInfo : BasicSavedBoardDiceGameClass<BackgammonPlayerI
         {
             if (SetProperty(ref _movesMade, value))
             {
-                if (_model != null)
-                {
-                    _model.MovesMade = value;
-                }
+                _model?.MovesMade = value;
             }
         }
     }

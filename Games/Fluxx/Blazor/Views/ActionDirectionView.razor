@@ -1,4 +1,4 @@
-﻿@inherits SimpleActionView
+﻿@inherits SimpleActionView<ActionDirectionViewModel>
 @if (CompleteContainer == null || DataContext == null)
 {
     return;
@@ -11,7 +11,7 @@
         <div>
             <GameButtonComponent CommandObject="DirectionCommand"
                                  Display="Choose Direction" />
-            <KeeperButton K="ActionDirectionViewModel" @key="GetKey"  />
+            <KeeperButton @key="GetKey" DataContext="DataContext"  />
         </div>
     </FinalActionLayout>
 </BaseFrameBlazor>

@@ -3,7 +3,7 @@ public partial class SequenceDiceMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private SequenceDiceSaveInfo? _saveRoot;
     protected override void OnInitialized()
     {
@@ -15,7 +15,7 @@ public partial class SequenceDiceMainView
     }
     protected override void OnParametersSet()
     {
-        _saveRoot = aa1.Resolver!.Resolve<SequenceDiceSaveInfo>();
+        _saveRoot = Resolver!.Resolve<SequenceDiceSaveInfo>();
         base.OnParametersSet();
     }
     private static string ColumnText => "50vw 50vw"; //could adjust as needed.

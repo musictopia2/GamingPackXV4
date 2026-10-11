@@ -140,7 +140,7 @@ public static class TerritoryHelpers
         {
             int x = 0;
             int y = 0;
-            BasicList<EnumColorChoice> output = new();
+            BasicList<EnumColorChoice> output = [];
             do
             {
                 y++;

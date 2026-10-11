@@ -14,5 +14,5 @@ public class CribbageCombos
     public EnumScoreGroups Group;
     public bool JackStarter;
     public bool JackSameSuitAsStarter;
-    public BasicList<CribbageCard> Hand = new(); //try to use cribbage card now (?)
+    public BasicList<CribbageCard> Hand = []; //try to use cribbage card now (?)
 }

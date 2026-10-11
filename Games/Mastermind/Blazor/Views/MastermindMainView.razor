@@ -1,9 +1,10 @@
-@inherits BasicGameView<MastermindMainViewModel>
+@inherits CascadingGameView<MastermindMainViewModel>
 <StackLayout ItemSpacing="10px">
     <StackItem>
-        <ParentControl VM="GameBoardViewModel">
-            <GameBoardView />
-        </ParentControl>
+        <StateContentView DataContext="DataContext!.MainBoard">
+            <GameBoardView DataContext="DataContext!.MainBoard" />
+        </StateContentView>
+        
     </StackItem>
     <StackItem Style="background-color: brown;">
         <EnumPickerBlazor E="EnumColorPossibilities" Context="Piece" Rows="10" TargetSize="11vh" ListPicker="DataContext!.Color1">
@@ -12,10 +13,10 @@
     </StackItem>
     <StackItem>
         <div>
-            <GameButtonComponent CommandObject="DataContext!.AcceptCommand" AfterChange="@ShowChange" Display="Accept" />
+            <GameButtonComponent CommandObject="DataContext!.AcceptCommand" Display="Accept" />
         </div>
         <div>
-            <GameButtonComponent CommandObject="DataContext.GiveUpCommand" AfterChange="@ShowChange" Display="Give Up" />
+            <GameButtonComponent CommandObject="DataContext.GiveUpCommand" Display="Give Up" />
         </div>
         <div>
             Level Chosen: @DataContext!.LevelChosen

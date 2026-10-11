@@ -1,51 +1,44 @@
 namespace SequenceDice.Core.ViewModels;
 [InstanceGame]
-public partial class SequenceDiceMainViewModel : BoardDiceGameVM
-{
-    private readonly SequenceDiceMainGameClass _mainGame; //if we don't need, delete.
-    private readonly IToast _toast;
-    public SequenceDiceVMData VMData { get; set; }
-    public SequenceDiceMainViewModel(CommandContainer commandContainer,
+public partial class SequenceDiceMainViewModel(CommandContainer commandContainer,
         SequenceDiceMainGameClass mainGame,
         SequenceDiceVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, roller, aggregator)
+        IToast toast) : BoardDiceGameVM(commandContainer, mainGame, basicData, resolver, roller, aggregator)
+{
+    public SequenceDiceVMData VMData { get; set; } = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = viewModel;
-        _toast = toast;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
-    public PlayerCollection<SequenceDicePlayerItem> PlayerList => _mainGame.PlayerList;
+    public PlayerCollection<SequenceDicePlayerItem> PlayerList => mainGame.PlayerList;
     public override bool CanRollDice()
     {
-        return _mainGame.SaveRoot!.GameStatus != EnumGameStatusList.MovePiece;
+        return mainGame.SaveRoot!.GameStatus != EnumGameStatusList.MovePiece;
     }
     public override async Task RollDiceAsync()
     {
         await base.RollDiceAsync();
     }
-    public bool CanMakeMove => _mainGame.SaveRoot.GameStatus == EnumGameStatusList.MovePiece;
+    public bool CanMakeMove => mainGame.SaveRoot.GameStatus == EnumGameStatusList.MovePiece;
     [Command(EnumCommandCategory.Game)]
     public async Task MakeMoveAsync(SpaceInfoCP space)
     {
-        if (_mainGame.SaveRoot.GameBoard.CanMakeMove(space) == false)
+        if (mainGame.SaveRoot.GameBoard.CanMakeMove(space) == false)
         {
-            _toast.ShowUserErrorToast("Illegal Move");
+            toast.ShowUserErrorToast("Illegal Move");
             return;
         }
-        if (_mainGame.BasicData.MultiPlayer)
+        if (mainGame.BasicData.MultiPlayer)
         {
-            await _mainGame.Network!.SendMoveAsync(space);
+            await mainGame.Network!.SendMoveAsync(space);
         }
-        await _mainGame.MakeMoveAsync(space);
+        await mainGame.MakeMoveAsync(space);
     }
 }

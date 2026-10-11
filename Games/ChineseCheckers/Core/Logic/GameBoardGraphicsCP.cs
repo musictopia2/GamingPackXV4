@@ -3,7 +3,7 @@
 [AutoReset]
 public class GameBoardGraphicsCP
 {
-    public Dictionary<int, RectangleF> SpaceList { get; } = new ();
+    public Dictionary<int, RectangleF> SpaceList { get; } = [];
     public GameBoardGraphicsCP()
     {
         CreateSpaces();

@@ -247,11 +247,11 @@ public class ThreeLetterFunMainGameClass : BasicGameClass<ThreeLetterFunPlayerIt
         GameBoard.RemoveTiles();
         if (_test.ImmediatelyEndGame == false)
         {
-            SaveRoot!.TileList.RemoveTiles(_model);
+            SaveRoot.TileList.RemoveTiles(_model);
         }
         if (BasicData.MultiPlayer == true)
         {
-            PlayerList!.TakeTurns();
+            PlayerList.TakeTurns();
         }
         if (SaveRoot!.TileList.Count == 0 || _test.ImmediatelyEndGame == true)
         {

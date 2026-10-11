@@ -3,9 +3,11 @@
 {
     return;
 }
-@foreach (var card in DataContext.GameBoard1!.HandList)
-{
-    <FlexibleDeckRenderComponent D="AccordianSolitaireCardInfo" DeckObject="card">
-        <DeckOfCardsImageBlazor R="AccordianSolitaireCardInfo" CommandParameter="card" DeckObject="card" TargetHeight="@HeightString" CommandObject="DataContext.GameBoard1.ObjectSingleClickCommand" />
-    </FlexibleDeckRenderComponent>
-}
+<SimpleControlView DataContext="DataContext.GameBoard1">
+    @foreach (var card in DataContext.GameBoard1!.HandList)
+    {
+        <FlexibleDeckRenderComponent D="AccordianSolitaireCardInfo" DeckObject="card">
+            <DeckOfCardsImageBlazor R="AccordianSolitaireCardInfo" CommandParameter="card" DeckObject="card" TargetHeight="@HeightString" CommandObject="DataContext.GameBoard1.ObjectSingleClickCommand" />
+        </FlexibleDeckRenderComponent>
+    }
+</SimpleControlView>

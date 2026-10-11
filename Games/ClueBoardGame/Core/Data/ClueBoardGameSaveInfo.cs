@@ -2,7 +2,6 @@ namespace ClueBoardGame.Core.Data;
 [SingletonGame]
 public class ClueBoardGameSaveInfo : BasicSavedBoardDiceGameClass<ClueBoardGamePlayerItem>, IMappable, ISaveInfo
 {
-    
     private ClueBoardGameVMData? _model;
     internal void LoadMod(ClueBoardGameVMData model)
     {
@@ -25,10 +24,7 @@ public class ClueBoardGameSaveInfo : BasicSavedBoardDiceGameClass<ClueBoardGameP
         {
             if (SetProperty(ref _movesLeft, value))
             {
-                if (_model != null)
-                {
-                    _model.LeftToMove = MovesLeft;
-                }
+                _model?.LeftToMove = MovesLeft;
             }
         }
     }

@@ -1,8 +1,6 @@
 namespace Fluxx.Blazor.Views;
-public partial class ActionDoAgainView : SimpleActionView
+public partial class ActionDoAgainView : SimpleActionView<ActionDoAgainViewModel>
 {
-    [CascadingParameter]
-    public ActionDoAgainViewModel? DataContext { get; set; }
     private ICustomCommand SelectCommand => DataContext!.SelectCardCommand!;
     private ICustomCommand ViewCommand => DataContext!.ViewCardCommand!;
 }

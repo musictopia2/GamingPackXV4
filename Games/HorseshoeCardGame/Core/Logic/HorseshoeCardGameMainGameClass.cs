@@ -1,35 +1,28 @@
 namespace HorseshoeCardGame.Core.Logic;
 [SingletonGame]
-public class HorseshoeCardGameMainGameClass
-    : TrickGameClass<EnumSuitList, HorseshoeCardGameCardInformation, HorseshoeCardGamePlayerItem, HorseshoeCardGameSaveInfo>
+public class HorseshoeCardGameMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    HorseshoeCardGameVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<HorseshoeCardGameCardInformation> cardInfo,
+    CommandContainer command,
+    HorseshoeCardGameGameContainer gameContainer,
+    ITrickData trickData,
+    ITrickPlay trickPlay,
+    IAdvancedTrickProcesses aTrick,
+    ISystemError error,
+    IToast toast
+        )
+        : TrickGameClass<EnumSuitList, HorseshoeCardGameCardInformation, HorseshoeCardGamePlayerItem, HorseshoeCardGameSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
         , IStartNewGame, ISerializable
 {
-    private readonly HorseshoeCardGameVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly HorseshoeCardGameGameContainer _gameContainer; //if we don't need it, take it out.
-    private readonly IAdvancedTrickProcesses _aTrick;
-    public HorseshoeCardGameMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        HorseshoeCardGameVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<HorseshoeCardGameCardInformation> cardInfo,
-        CommandContainer command,
-        HorseshoeCardGameGameContainer gameContainer,
-        ITrickData trickData,
-        ITrickPlay trickPlay,
-        IAdvancedTrickProcesses aTrick,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _aTrick = aTrick;
-    }
+    private readonly HorseshoeCardGameVMData _model = currentMod;
+    private readonly HorseshoeCardGameGameContainer _gameContainer = gameContainer; //if we don't need it, take it out.
+    private readonly IAdvancedTrickProcesses _aTrick = aTrick;
+
     public override Task PopulateSaveRootAsync()
     {
         PlayerList!.ForEach(thisPlayer =>
@@ -44,7 +37,7 @@ public class HorseshoeCardGameMainGameClass
         {
             if (thisPlayer.TempHand == null)
             {
-                thisPlayer.TempHand = new(_command);
+                thisPlayer.TempHand = new(CommandContainer);
                 thisPlayer.TempHand.Game = EnumPlayerBoardGameList.HorseShoe;
                 thisPlayer.TempHand.IsSelf = thisPlayer.PlayerCategory == EnumPlayerCategory.Self;
             }
@@ -129,7 +122,7 @@ public class HorseshoeCardGameMainGameClass
             await ContinueTurnAsync();
             return;
         }
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         this.ShowTurn();
         await SaveStateAsync();
@@ -148,8 +141,8 @@ public class HorseshoeCardGameMainGameClass
         {
             return begins;
         }
-        DeckRegularDict<HorseshoeCardGameCardInformation> playerStarted = new();
-        DeckRegularDict<HorseshoeCardGameCardInformation> otherPlayer = new();
+        DeckRegularDict<HorseshoeCardGameCardInformation> playerStarted = [];
+        DeckRegularDict<HorseshoeCardGameCardInformation> otherPlayer = [];
         playerStarted.Add(thisCol.First());
         playerStarted.Add(thisCol.Last());
         otherPlayer.Add(thisCol[1]);
@@ -253,7 +246,7 @@ public class HorseshoeCardGameMainGameClass
     private async Task StartNewTrickAsync()
     {
         _aTrick!.ClearBoard();
-        _command!.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer!.ManuelFinish = true; //because it could be somebody else's turn.
         SaveRoot!.FirstCardPlayed = false;
         await StartNewTurnAsync();
     }

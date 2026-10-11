@@ -3,7 +3,7 @@ public static class RummyExtensions
 {
     extension(IDeckDict<A8RoundRummyCardInformation> cardList)
     {
-        private A8RoundRummyCardInformation GetLastCard(IDeckDict<A8RoundRummyCardInformation> newList)
+        private A8RoundRummyCardInformation GetLastCard(DeckRegularDict<A8RoundRummyCardInformation> newList)
         {
             if (cardList.Count != 8 && newList.Count != 7)
             {

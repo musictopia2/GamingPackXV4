@@ -1,14 +1,14 @@
 namespace SnagCardGame.Blazor.Views;
 public partial class SnagCardGameMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private SnagCardGameVMData? _vmData;
     private SnagCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<SnagCardGameVMData>();
-        _gameContainer = aa1.Resolver.Resolve<SnagCardGameGameContainer>();
+        _vmData = Resolver!.Resolve<SnagCardGameVMData>();
+        _gameContainer = Resolver.Resolve<SnagCardGameGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(SnagCardGameVMData.NormalTurn))
            .AddLabel("Status", nameof(SnagCardGameVMData.Status))

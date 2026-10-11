@@ -1,4 +1,4 @@
-@inherits BasicGameView<YaBlewItMainViewModel>
+@inherits CascadingGameView<YaBlewItMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -48,6 +48,8 @@
 <PopupFullScreen @bind-Visible="_showPopup">
     <ScorePopupComponent Close="ClosePopup" />
 </PopupFullScreen>
-<PopupFullScreen Visible="@DataContext.ShowSafeScreen">
-    <SafeScreen />
-</PopupFullScreen>
+<StateContentView DataContext="DataContext.VMData">
+    <PopupFullScreen Visible="@DataContext.ShowSafeScreen">
+        <SafeScreen />
+    </PopupFullScreen>
+</StateContentView>

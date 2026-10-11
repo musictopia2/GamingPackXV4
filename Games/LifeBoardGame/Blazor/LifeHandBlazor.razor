@@ -1,19 +1,21 @@
-﻿@if (Hand!.HandList.All(x => x.IsUnknown == false))
-{
+﻿<StateContentView DataContext="Hand">
+    @if (Hand!.HandList.All(x => x.IsUnknown == false))
+    {
+        <BaseHandBlazor D="LifeBaseCard" Hand="Hand"
+                        HandType="EnumHandList.Vertical"
+                        TargetImageSize="@RealHeight"
+                        LegendExtraWidth="20"
+                        Context="DeckObject">
+            <LifeCardBlazor CommandParameter="DeckObject" TargetHeight="@RealHeight" DeckObject="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
+        </BaseHandBlazor>
+        return;
+    }
     <BaseHandBlazor D="LifeBaseCard" Hand="Hand"
                     HandType="EnumHandList.Vertical"
+                    TargetContainerSize="@TargetContainerSize"
                     TargetImageSize="@RealHeight"
-                    LegendExtraWidth="20"
-                    Context="DeckObject">
+                    Context="DeckObject"
+                    Divider="1.3">
         <LifeCardBlazor CommandParameter="DeckObject" TargetHeight="@RealHeight" DeckObject="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
     </BaseHandBlazor>
-    return;
-}
-<BaseHandBlazor D="LifeBaseCard" Hand="Hand"
-                HandType="EnumHandList.Vertical"
-                TargetContainerSize="@TargetContainerSize"
-                TargetImageSize="@RealHeight"
-                Context="DeckObject"
-                Divider="1.3">
-    <LifeCardBlazor CommandParameter="DeckObject" TargetHeight="@RealHeight" DeckObject="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
-</BaseHandBlazor>
+</StateContentView>

@@ -1,4 +1,4 @@
-@inherits BasicGameView<CoveredUpMainViewModel>
+@inherits CascadingGameView<CoveredUpMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -29,9 +29,11 @@
     <StackItem Length="1fr">
        @foreach (var player in DataContext.Players)
        {
-           <TextCardBoardBlazor D="RegularSimpleCard" DataContext="player.PlayerBoard!" Context="card">
-               @card.DisplayValue
-           </TextCardBoardBlazor>
+           <StateContentView DataContext="player.PlayerBoard">
+                <TextCardBoardBlazor D="RegularSimpleCard" DataContext="player.PlayerBoard!" Context="card">
+                    @card.DisplayValue
+                </TextCardBoardBlazor>
+           </StateContentView>
        }
     </StackItem>
 </StackLayout>

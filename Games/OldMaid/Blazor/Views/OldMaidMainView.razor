@@ -1,19 +1,26 @@
-@inherits BasicGameView<OldMaidMainViewModel>
+@inherits CascadingGameView<OldMaidMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
 }
 <StackLayout>
     <StackItem>
-        <ParentControl VM="OpponentCardsViewModel">
-            <DeckOfCardsHandBlazor Divider="2" R="RegularSimpleCard" Hand="_vmData.OpponentCards1" />
-        </ParentControl>
+        <StateContentView DataContext="DataContext">
+            @if (DataContext.OpponentScreen is not null)
+            {
+                <DeckOfCardsHandBlazor Divider="2" R="RegularSimpleCard" Hand="_vmData.OpponentCards1" />
+            }
+        </StateContentView>
     </StackItem>
     <StackItem>
         <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard" SinglePile="_vmData.Pile1" />
     </StackItem>
+    
     <StackItem>
         <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
+    </StackItem>
+    <StackItem>
+        <GameButtonComponent Display="Remove Pairs Automatically" CommandObject="RemovePairsCommand" />
     </StackItem>
 </StackLayout>
 <div>

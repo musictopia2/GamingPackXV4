@@ -1,28 +1,23 @@
 namespace DeadDie96.Core.Logic;
 [SingletonGame]
-public class DeadDie96MainGameClass
-    : DiceGameClass<TenSidedDice, DeadDie96PlayerItem, DeadDie96SaveInfo>
+public class DeadDie96MainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    DeadDie96VMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    DeadDie96GameContainer gameContainer,
+    StandardRollProcesses<TenSidedDice, DeadDie96PlayerItem> roller,
+    ISystemError error,
+    IToast toast
+        )
+        : DiceGameClass<TenSidedDice, DeadDie96PlayerItem, DeadDie96SaveInfo>(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
     , ISerializable
 {
-    private readonly DeadDie96VMData? _model;
-    private readonly StandardRollProcesses<TenSidedDice, DeadDie96PlayerItem> _roller;
-    public DeadDie96MainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        DeadDie96VMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        DeadDie96GameContainer gameContainer,
-        StandardRollProcesses<TenSidedDice, DeadDie96PlayerItem> roller,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
-    {
-        _model = currentMod;
-        _roller = roller;
-    }
+    private readonly DeadDie96VMData? _model = currentMod;
+
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -45,7 +40,7 @@ public class DeadDie96MainGameClass
         {
             await Delay!.DelayMilli(200);
         }
-        await _roller!.RollDiceAsync();
+        await Roller!.RollDiceAsync();
     }
     private async Task GameOverAsync()
     {

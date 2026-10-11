@@ -1,13 +1,8 @@
 ﻿namespace HuseHearts.Core.Logic;
 [SingletonGame]
-public class HuseHeartsTrickAreaCP : PossibleDummyTrickObservable<EnumSuitList, HuseHeartsCardInformation,
-    HuseHeartsPlayerItem, HuseHeartsSaveInfo>, ITrickPlay, IAdvancedTrickProcesses
+public class HuseHeartsTrickAreaCP(HuseHeartsGameContainer gameContainer) : PossibleDummyTrickObservable<EnumSuitList, HuseHeartsCardInformation,
+    HuseHeartsPlayerItem, HuseHeartsSaveInfo>(gameContainer), ITrickPlay, IAdvancedTrickProcesses
 {
-    private readonly HuseHeartsGameContainer _gameContainer;
-    public HuseHeartsTrickAreaCP(HuseHeartsGameContainer gameContainer) : base(gameContainer)
-    {
-        _gameContainer = gameContainer;
-    }
     protected override bool UseDummy { get; set; } = true;
     public async Task AnimateWinAsync(int wins)
     {
@@ -23,10 +18,10 @@ public class HuseHeartsTrickAreaCP : PossibleDummyTrickObservable<EnumSuitList, 
     public bool FromDummy => OrderList.Count == 2;
     public void ClearBoard()
     {
-        DeckRegularDict<HuseHeartsCardInformation> tempList = new();
+        DeckRegularDict<HuseHeartsCardInformation> tempList = [];
         int x;
-        int self = _gameContainer.SelfPlayer;
-        HuseHeartsSaveInfo saveRoot = _gameContainer.Resolver.Resolve<HuseHeartsSaveInfo>(); //since you can't unit test now anyways because of config.
+        int self = gameContainer.SelfPlayer;
+        HuseHeartsSaveInfo saveRoot = gameContainer.Resolver.Resolve<HuseHeartsSaveInfo>(); //since you can't unit test now anyways because of config.
         for (x = 1; x <= 4; x++)
         {
             HuseHeartsCardInformation thisCard = new();
@@ -70,28 +65,28 @@ public class HuseHeartsTrickAreaCP : PossibleDummyTrickObservable<EnumSuitList, 
         int index;
         int tempTurn;
         HuseHeartsCardInformation lastCard;
-        tempTurn = _gameContainer.WhoTurn;
-        DeckRegularDict<HuseHeartsCardInformation> otherList = new();
+        tempTurn = gameContainer.WhoTurn;
+        DeckRegularDict<HuseHeartsCardInformation> otherList = [];
         tempList.ForEach(thisCard =>
         {
             if (thisCard.Player == 0)
             {
                 throw new CustomBasicException("The Player Cannot Be 0");
             }
-            _gameContainer.WhoTurn = thisCard.Player;
-            _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
+            gameContainer.WhoTurn = thisCard.Player;
+            gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
             index = GetCardIndex();
-            lastCard = _gameContainer.GetBrandNewCard(thisCard.Deck);
+            lastCard = gameContainer.GetBrandNewCard(thisCard.Deck);
             lastCard.Player = thisCard.Player;
             TradeCard(index, lastCard);
             otherList.Add(lastCard);
         });
         OrderList.ReplaceRange(otherList);
-        _gameContainer.WhoTurn = tempTurn;
+        gameContainer.WhoTurn = tempTurn;
     }
     protected override int GetCardIndex()
     {
-        if (_gameContainer.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        if (gameContainer.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             if (OrderList.Count == 2)
             {
@@ -112,7 +107,7 @@ public class HuseHeartsTrickAreaCP : PossibleDummyTrickObservable<EnumSuitList, 
         int tndex = CardList.IndexOf(thisCard);
         if (tndex == 0 || tndex == 3)
         {
-            await _gameContainer.CardClickedAsync!.Invoke();
+            await gameContainer.CardClickedAsync!.Invoke();
         }
     }
     protected override string FirstHumanText()

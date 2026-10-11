@@ -1,14 +1,14 @@
 namespace Fluxx.Blazor.Views;
 public partial class FluxxMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private FluxxVMData? _vmData;
     private FluxxGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<FluxxVMData>();
-        _gameContainer = aa1.Resolver.Resolve<FluxxGameContainer>();
+        _vmData = Resolver!.Resolve<FluxxVMData>();
+        _gameContainer = Resolver.Resolve<FluxxGameContainer>();
         _scores.Clear();
         _scores.AddColumn("# In Hand", false, nameof(FluxxPlayerItem.ObjectCount))
             .AddColumn("# Keepers", false, nameof(FluxxPlayerItem.NumberOfKeepers))

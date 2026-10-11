@@ -1,4 +1,4 @@
-@inherits BasicGameView<ThinkTwiceMainViewModel>
+@inherits CascadingGameView<ThinkTwiceMainViewModel>
 @if (_categories == null || _multiplier == null)
 {
     return;
@@ -6,21 +6,25 @@
 <CascadingValue Value="@_diceHeight">
     <div style="margin: 5px; height: @_diceHeight">
         <StackLayout ItemSpacing="@_diceHeight">
-            @if (_categories.Visible == true)
-            {
-                <StackItem>
-                    <ButtonDiceBlazor WillHold="@_categories.Hold"
-                                  Value="@_categories.Value"
-                                  ButtonClicked="CategoryClickedAsync" />
-                </StackItem>
+            <StateContentView DataContext="_categories">
+                @if (_categories.Visible == true)
+                {
+                    <StackItem>
+                        <ButtonDiceBlazor WillHold="@_categories.Hold"
+                                          Value="@_categories.Value"
+                                          ButtonClicked="CategoryClickedAsync" />
+                    </StackItem>
 
-            }
-            @if (_multiplier.Visible)
-            {
-                <StackItem>
-                    <ButtonDiceBlazor Value="@_multiplier.Value.ToString()" />
-                </StackItem>
-            }
+                }
+            </StateContentView>
+            <StateContentView DataContext="_multiplier">
+                @if (_multiplier.Visible)
+                {
+                    <StackItem>
+                        <ButtonDiceBlazor Value="@_multiplier.Value.ToString()" />
+                    </StackItem>
+                }
+            </StateContentView>
         </StackLayout>
     </div>
 </CascadingValue>
@@ -40,8 +44,6 @@
         </div>
     </StackItem>
     <StackItem>
-        <ParentControl VM="ScoreViewModel">
-            <ScoreView />
-        </ParentControl>
+        <ScoreView DataContext="DataContext.ScoreScreen" />
     </StackItem>
 </StackLayout>

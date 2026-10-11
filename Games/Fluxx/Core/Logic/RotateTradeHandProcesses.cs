@@ -1,83 +1,74 @@
 ﻿namespace Fluxx.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class RotateTradeHandProcesses : IRotateTradeHandProcesses
+public class RotateTradeHandProcesses(FluxxGameContainer gameContainer, IAnalyzeProcesses processes, ActionContainer actionContainer) : IRotateTradeHandProcesses
 {
-    private readonly FluxxGameContainer _gameContainer;
-    private readonly IAnalyzeProcesses _processes;
-    private readonly ActionContainer _actionContainer;
-    public RotateTradeHandProcesses(FluxxGameContainer gameContainer, IAnalyzeProcesses processes, ActionContainer actionContainer)
-    {
-        _gameContainer = gameContainer;
-        _processes = processes;
-        _actionContainer = actionContainer;
-    }
     async Task IRotateTradeHandProcesses.RotateHandAsync(EnumDirection direction)
     {
-        _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-        if (_gameContainer.SingleInfo.CanSendMessage(_gameContainer.BasicData!))
+        gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
+        if (gameContainer.SingleInfo.CanSendMessage(gameContainer.BasicData!))
         {
-            await _gameContainer.Network!.SendAllAsync("rotatehands", direction);
+            await gameContainer.Network!.SendAllAsync("rotatehands", direction);
         }
         DeckRegularDict<FluxxCardInformation> oldList;
         DeckRegularDict<FluxxCardInformation> newList;
-        int oldTurn = _gameContainer.WhoTurn;
-        bool oldReverse = _gameContainer.SaveRoot!.PlayOrder.IsReversed;
+        int oldTurn = gameContainer.WhoTurn;
+        bool oldReverse = gameContainer.SaveRoot!.PlayOrder.IsReversed;
         FluxxPlayerItem oldPlayer;
-        _gameContainer.SaveRoot.PlayOrder.IsReversed = direction == EnumDirection.Right;
-        oldList = _gameContainer.SingleInfo.MainHandList.ToRegularDeckDict();
-        int count = _gameContainer.PlayerList.Count;
+        gameContainer.SaveRoot.PlayOrder.IsReversed = direction == EnumDirection.Right;
+        oldList = gameContainer.SingleInfo.MainHandList.ToRegularDeckDict();
+        int count = gameContainer.PlayerList.Count;
         await count.TimesAsync(async x =>
         {
-            oldPlayer = _gameContainer.SingleInfo;
-            _gameContainer.WhoTurn = await _gameContainer.PlayerList.CalculateWhoTurnAsync();
-            _gameContainer.SingleInfo = _gameContainer.PlayerList.GetWhoPlayer();
-            if (oldPlayer.NickName == _gameContainer.SingleInfo.NickName)
+            oldPlayer = gameContainer.SingleInfo;
+            gameContainer.WhoTurn = await gameContainer.PlayerList.CalculateWhoTurnAsync();
+            gameContainer.SingleInfo = gameContainer.PlayerList.GetWhoPlayer();
+            if (oldPlayer.NickName == gameContainer.SingleInfo.NickName)
             {
                 throw new CustomBasicException("Its the same player.  A problem");
             }
-            newList = _gameContainer.SingleInfo.MainHandList.ToRegularDeckDict();
-            _gameContainer.SingleInfo.MainHandList.ReplaceRange(oldList);
-            if (newList.Count == _gameContainer.SingleInfo.MainHandList.Count && _gameContainer.SingleInfo.MainHandList.Count > 0 && newList.First().Deck == _gameContainer.SingleInfo.MainHandList.First().Deck)
+            newList = gameContainer.SingleInfo.MainHandList.ToRegularDeckDict();
+            gameContainer.SingleInfo.MainHandList.ReplaceRange(oldList);
+            if (newList.Count == gameContainer.SingleInfo.MainHandList.Count && gameContainer.SingleInfo.MainHandList.Count > 0 && newList.First().Deck == gameContainer.SingleInfo.MainHandList.First().Deck)
             {
                 throw new CustomBasicException("Did not rotate the cards");
             }
             oldList = newList;
         });
-        _gameContainer.SaveRoot.PlayOrder.IsReversed = oldReverse;
-        _gameContainer.WhoTurn = oldTurn;
-        _gameContainer.SingleInfo = _gameContainer.PlayerList.GetSelf();
-        _gameContainer.SortCards!();
-        _gameContainer.SingleInfo = _gameContainer.PlayerList.GetWhoPlayer();
-        _gameContainer!.CurrentAction = null;
-        await _processes.AnalyzeQueAsync();
+        gameContainer.SaveRoot.PlayOrder.IsReversed = oldReverse;
+        gameContainer.WhoTurn = oldTurn;
+        gameContainer.SingleInfo = gameContainer.PlayerList.GetSelf();
+        gameContainer.SortCards!();
+        gameContainer.SingleInfo = gameContainer.PlayerList.GetWhoPlayer();
+        gameContainer!.CurrentAction = null;
+        await processes.AnalyzeQueAsync();
     }
     async Task IRotateTradeHandProcesses.TradeHandAsync(int selectedIndex)
     {
-        if (_gameContainer.SingleInfo!.CanSendMessage(_gameContainer.BasicData!))
+        if (gameContainer.SingleInfo!.CanSendMessage(gameContainer.BasicData!))
         {
-            await _gameContainer.Network!.SendAllAsync("tradehands", selectedIndex);
+            await gameContainer.Network!.SendAllAsync("tradehands", selectedIndex);
         }
-        int player = _actionContainer.GetPlayerIndex(selectedIndex);
-        if (player == _gameContainer.WhoTurn)
+        int player = actionContainer.GetPlayerIndex(selectedIndex);
+        if (player == gameContainer.WhoTurn)
         {
             throw new CustomBasicException("Cannot pick yourself");
         }
-        _actionContainer.SetUpGoals();
-        _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-        var oldList = _gameContainer.SingleInfo.MainHandList.ToRegularDeckDict();
-        var thisPlayer = _gameContainer.PlayerList[player];
+        actionContainer.SetUpGoals();
+        gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
+        var oldList = gameContainer.SingleInfo.MainHandList.ToRegularDeckDict();
+        var thisPlayer = gameContainer.PlayerList[player];
         var newList = thisPlayer.MainHandList.ToRegularDeckDict();
-        _gameContainer.SingleInfo.MainHandList.ReplaceRange(newList);
+        gameContainer.SingleInfo.MainHandList.ReplaceRange(newList);
         thisPlayer.MainHandList.ReplaceRange(oldList);
-        int myID = _gameContainer.PlayerList.GetSelf().Id;
-        if (player == myID || _gameContainer.WhoTurn == myID)
+        int myID = gameContainer.PlayerList.GetSelf().Id;
+        if (player == myID || gameContainer.WhoTurn == myID)
         {
-            _gameContainer.SingleInfo = _gameContainer.PlayerList.GetSelf();
-            _gameContainer.SortCards!();
+            gameContainer.SingleInfo = gameContainer.PlayerList.GetSelf();
+            gameContainer.SortCards!();
         }
-        _gameContainer.SingleInfo = _gameContainer.PlayerList.GetWhoPlayer();
-        _gameContainer!.CurrentAction = null;
-        await _processes.AnalyzeQueAsync();
+        gameContainer.SingleInfo = gameContainer.PlayerList.GetWhoPlayer();
+        gameContainer!.CurrentAction = null;
+        await processes.AnalyzeQueAsync();
     }
 }

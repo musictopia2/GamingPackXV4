@@ -3,7 +3,7 @@ namespace Pinochle2Player.Core.Data;
 public partial class Pinochle2PlayerPlayerItem : PlayerTrick<EnumSuitList, Pinochle2PlayerCardInformation>
 {
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

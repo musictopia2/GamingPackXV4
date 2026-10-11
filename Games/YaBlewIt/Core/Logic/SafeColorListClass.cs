@@ -7,12 +7,12 @@ public class SafeColorListClass : IEnumListClass<EnumColors>
     }
     public static BasicList<EnumColors> GetColorChoices()
     {
-        _gameContainer ??= aa1.Resolver!.Resolve<YaBlewItGameContainer>();
+        _gameContainer ??= Resolver!.Resolve<YaBlewItGameContainer>();
         if (_gameContainer.SingleInfo is null)
         {
-            return new(); //hopefully will be okay (?)
+            return []; //hopefully will be okay (?)
         }
-        BasicList<EnumColors> output = new();
+        BasicList<EnumColors> output = [];
         //needs to be here so if there are no more colors to choose from, then won't even let the player choose the safe card.
         //needs to already be set to the proper SingleInfo.
         

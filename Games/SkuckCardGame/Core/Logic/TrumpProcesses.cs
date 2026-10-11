@@ -21,7 +21,6 @@ public class TrumpProcesses : ITrumpProcesses
             if (_gameContainer.Test!.NoAnimations == false)
             {
                 _model!.Suit1!.SelectSpecificItem(_gameContainer.SaveRoot.TrumpSuit);
-                _gameContainer.Command.UpdateAll();
                 await _gameContainer.Delay!.DelaySeconds(1);
             }
         }

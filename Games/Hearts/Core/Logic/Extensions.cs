@@ -13,8 +13,7 @@ public static class Extensions
                     return firstList.Single().Id;
                 }
                 return 0;
-            }
-            
+            }       
         }
     }
     

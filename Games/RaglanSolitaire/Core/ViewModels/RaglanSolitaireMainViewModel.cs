@@ -1,6 +1,5 @@
 namespace RaglanSolitaire.Core.ViewModels;
 [InstanceGame]
-[UseLabelGrid]
 public partial class RaglanSolitaireMainViewModel : SolitaireMainViewModel<RaglanSolitaireSaveInfo>
 {
     public RaglanSolitaireMainViewModel(IEventAggregator aggregator,

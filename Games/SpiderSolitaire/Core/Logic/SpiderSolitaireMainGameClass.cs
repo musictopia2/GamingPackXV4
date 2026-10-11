@@ -1,20 +1,14 @@
 namespace SpiderSolitaire.Core.Logic;
 [SingletonGame]
-public class SpiderSolitaireMainGameClass : SolitaireGameClass<SpiderSolitaireSaveInfo>
+public class SpiderSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<SpiderSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    private readonly IScoreData _score;
-    public SpiderSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-        _score = score;
-    }
     private WastePiles? _tempWaste;
     public override Task NewGameAsync()
     {
@@ -53,6 +47,7 @@ public class SpiderSolitaireMainGameClass : SolitaireGameClass<SpiderSolitaireSa
                 MoveCards(x - 1);
             }
         });
+        UpdateWastePiles();
     }
     private void MoveCards(int whichOne)
     {
@@ -72,11 +67,12 @@ public class SpiderSolitaireMainGameClass : SolitaireGameClass<SpiderSolitaireSa
             return;
         }
         MoveCards(whichOne);
-        if (_score.Score == HowManyCards)
+        if (Score.Score == HowManyCards)
         {
             await ShowWinAsync();
             return;
         }
+        UpdateWastePiles();
         await base.AfterMovingCardsAsync(whichOne);
     }
     protected override SpiderSolitaireSaveInfo CloneSavedGame()

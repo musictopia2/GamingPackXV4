@@ -10,10 +10,3 @@ public readonly partial record struct EnumRentCategory
         DoubleDouble = 3
     }
 }
-
-//public enum EnumRentCategory
-//{
-//    Alone,
-//    SingleDouble,
-//    DoubleDouble
-//}

@@ -1,13 +1,15 @@
-﻿@inherits SimpleActionView
-@if (CompleteContainer == null)
+﻿@if (CompleteContainer == null)
 {
     return;
 }
 <BaseFrameBlazor Text="Rules Information">
     <div style="height: @RealHeight; overflow: auto; width: 20vw;">
-        @foreach (var rule in CompleteContainer.GameContainer.SaveRoot.RuleList)
-        {
-            <div>@rule.Text()</div>
-        }
+        <StateContentView DataContext="CompleteContainer.GameContainer.SaveRoot.RuleList">
+            @foreach (var rule in CompleteContainer.GameContainer.SaveRoot.RuleList)
+            {
+                <div>@rule.Text()</div>
+            }
+        </StateContentView>
+        
     </div>
 </BaseFrameBlazor>

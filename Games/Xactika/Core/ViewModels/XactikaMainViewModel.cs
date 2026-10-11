@@ -1,78 +1,70 @@
 namespace Xactika.Core.ViewModels;
 [InstanceGame]
-public class XactikaMainViewModel : BasicCardGamesVM<XactikaCardInformation>
-{
-    private readonly XactikaVMData _model;
-    private readonly IGamePackageResolver _resolver;
-    private readonly XactikaGameContainer _gameContainer;
-    public XactikaMainViewModel(CommandContainer commandContainer,
+[UseStateChanged]
+public partial class XactikaMainViewModel(CommandContainer commandContainer,
         XactikaMainGameClass mainGame,
         XactikaVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         XactikaGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<XactikaCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _model = viewModel;
-        _resolver = resolver;
-        _gameContainer = gameContainer;
-        _model.Deck1.NeverAutoDisable = true;
-        _gameContainer.LoadBiddingAsync = LoadBiddingAsync;
-        _gameContainer.CloseBiddingAsync = CloseBiddingAsync;
-        _gameContainer.LoadShapeButtonAsync = LoadShapeAsync;
-        _gameContainer.CloseShapeButtonAsync = CloseShapeAsync;
+        viewModel.Deck1.NeverAutoDisable = true;
+        gameContainer.LoadBidding = LoadBidding;
+        gameContainer.CloseBidding = CloseBidding;
+        gameContainer.LoadShapeButton = LoadShape;
+        gameContainer.CloseShapeButton = CloseShape;
+        base.AdditionalInitialize();
     }
-    protected override async Task TryCloseAsync()
+    protected override async Task CloseAsync()
     {
-        await CloseBiddingAsync();
-        await CloseShapeAsync();
-        await base.TryCloseAsync();
+        CloseBidding();
+        CloseShape();
+        await base.CloseAsync();
     }
-    public async Task LoadShapeAsync()
+    public void LoadShape()
     {
         if (ShapeScreen != null)
         {
             return;
         }
-        ShapeScreen = _resolver.Resolve<XactikaSubmitShapeViewModel>();
-        await LoadScreenAsync(ShapeScreen);
+        ShapeScreen = Resolver.Resolve<XactikaSubmitShapeViewModel>();
     }
-    public async Task CloseShapeAsync()
+    public void CloseShape()
     {
         if (ShapeScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(ShapeScreen);
         ShapeScreen = null;
     }
-    public XactikaSubmitShapeViewModel? ShapeScreen { get; set; }
-    private async Task LoadBiddingAsync()
+    [StateProperty]
+    public partial XactikaSubmitShapeViewModel? ShapeScreen { get; set; }
+    private void LoadBidding()
     {
         if (BidScreen != null)
         {
             return;
         }
-        _model.TrickArea1.Visible = false;
-        _model.ShapeChoose1.Visible = false;
-        BidScreen = _resolver.Resolve<XactikaBidViewModel>();
-        await LoadScreenAsync(BidScreen);
+        viewModel.TrickArea1.Visible = false;
+        viewModel.ShapeChoose1.Visible = false;
+        BidScreen = Resolver.Resolve<XactikaBidViewModel>();
     }
-    private async Task CloseBiddingAsync()
+    private void CloseBidding()
     {
         if (BidScreen == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(BidScreen);
         BidScreen = null;
-        _model.TrickArea1.Visible = true;
+        viewModel.TrickArea1.Visible = true;
+        
     }
-    public XactikaBidViewModel? BidScreen { get; set; }
+    [StateProperty]
+    public partial XactikaBidViewModel? BidScreen { get; set; }
     protected override bool CanEnableDeck()
     {
         return false;

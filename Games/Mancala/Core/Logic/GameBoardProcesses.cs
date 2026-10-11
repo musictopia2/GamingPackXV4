@@ -1,29 +1,16 @@
 ﻿namespace Mancala.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class GameBoardProcesses
+public class GameBoardProcesses(IEventAggregator aggregator,
+    MancalaVMData vmdata,
+    BasicData basicData,
+    TestOptions test,
+    IAsyncDelayer delayer
+        )
 {
     private bool _didReverse;
     private PlayerPieceData? _currentPiece;
     private MancalaPlayerItem? _currentPlayer;
-    private readonly IEventAggregator _aggregator;
-    private readonly MancalaVMData _vmdata;
-    private readonly BasicData _basicData;
-    private readonly TestOptions _test;
-    private readonly IAsyncDelayer _delayer;
-    public GameBoardProcesses(IEventAggregator aggregator,
-        MancalaVMData vmdata,
-        BasicData basicData,
-        TestOptions test,
-        IAsyncDelayer delayer
-        )
-    {
-        _aggregator = aggregator;
-        _vmdata = vmdata;
-        _basicData = basicData;
-        _test = test;
-        _delayer = delayer;
-    }
     #region "delegates"
     //this is to stop the overflows.  this is what the main game process has to populate.  if i sent in the game, then overflow since the game needs this one too.  not worth doing container this time.  can rethink later.
     public Func<PlayerCollection<MancalaPlayerItem>>? PlayerList { get; set; }
@@ -36,10 +23,10 @@ public class GameBoardProcesses
     public Func<Task>? ShowWinAsync { get; set; }
     public Func<MancalaSaveInfo>? SaveRoot { get; set; }
     #endregion
-    public BasicList<SpaceInfo> GetSpaces => _vmdata.SpaceList.Values.ToBasicList();
+    public BasicList<SpaceInfo> GetSpaces => vmdata.SpaceList.Values.ToBasicList();
     internal void CreateSpaceList()
     {
-        _vmdata.SpaceList = new Dictionary<int, SpaceInfo>();
+        vmdata.SpaceList = [];
         14.Times(x =>
         {
             SpaceInfo space = new();
@@ -91,12 +78,12 @@ public class GameBoardProcesses
                 default:
                     break;
             }
-            _vmdata.SpaceList.Add(x, space);
+            vmdata.SpaceList.Add(x, space);
         });
     }
     public void RepaintBoard()
     {
-        _aggregator.RepaintBoard();
+        aggregator.RepaintBoard();
     }
     public void LoadSavedBoard()
     {
@@ -108,7 +95,7 @@ public class GameBoardProcesses
         int x = 0;
         bool wasReversed;
         int index;
-        int counts2 = _vmdata.SpaceList!.Values.Sum(items => items.Pieces);
+        int counts2 = vmdata.SpaceList!.Values.Sum(items => items.Pieces);
         if (counts2 != 48 && counts2 > 0)
         {
             throw new CustomBasicException($"Count Of {counts2} does not reconcile with 48 Part 4");
@@ -120,7 +107,7 @@ public class GameBoardProcesses
         {
             throw new CustomBasicException($"Count Of {Totals} does not reconcile with 48 part 7");
         }
-        foreach (var Space in _vmdata.SpaceList.Values)
+        foreach (var Space in vmdata.SpaceList.Values)
         {
             Space.Pieces = 0;
         }
@@ -138,7 +125,7 @@ public class GameBoardProcesses
             }
             if (index > 0)
             {
-                var tempSpace = _vmdata.SpaceList[index];
+                var tempSpace = vmdata.SpaceList[index];
                 tempSpace.Pieces = thisPlayer.HowManyPiecesAtHome;
             }
             thisPlayer.ObjectList.ForEach(ThisObject =>
@@ -151,11 +138,11 @@ public class GameBoardProcesses
                 {
                     index = ThisObject.Index + 7;
                 }
-                var tempSpace = _vmdata.SpaceList[index];
+                var tempSpace = vmdata.SpaceList[index];
                 tempSpace.Pieces = ThisObject.HowManyPieces;
             });
         });
-        int counts = _vmdata.SpaceList.Values.Sum(Items => Items.Pieces);
+        int counts = vmdata.SpaceList.Values.Sum(Items => Items.Pieces);
         if (counts != 48)
         {
             throw new CustomBasicException($"Count Of {counts} does not reconcile with 48 Part 5");
@@ -166,7 +153,7 @@ public class GameBoardProcesses
         PlayerList!.Invoke().ForEach(thisPlayer =>
         {
             thisPlayer.HowManyPiecesAtHome = 0;
-            thisPlayer.ObjectList = new();
+            thisPlayer.ObjectList = [];
             int x;
             for (x = 1; x <= 6; x++)
             {
@@ -181,21 +168,21 @@ public class GameBoardProcesses
     }
     internal void Reset()
     {
-        _vmdata.SpaceSelected = 0;
-        _vmdata.SpaceStarted = 0;
+        vmdata.SpaceSelected = 0;
+        vmdata.SpaceStarted = 0;
     }
     public async Task StartNewTurnAsync()
     {
         SaveRoot!.Invoke().IsStart = false;
         PopulateBoard();
-        _vmdata.PiecesAtStart = 0;
-        _vmdata.PiecesLeft = 0;
+        vmdata.PiecesAtStart = 0;
+        vmdata.PiecesLeft = 0;
         Reset();
         await ContinueTurnAsync!.Invoke();
     }
     private bool NeedsReversed(int playerConsidered)
     {
-        if (_basicData.MultiPlayer == true)
+        if (basicData.MultiPlayer == true)
         {
             var tempPlayer = PlayerList!.Invoke()[playerConsidered];
             if (tempPlayer.PlayerCategory == EnumPlayerCategory.OtherHuman)
@@ -213,28 +200,32 @@ public class GameBoardProcesses
     public async Task AnimateMoveAsync(int index)
     {
         _didReverse = NeedsReversed(WhoTurn!.Invoke());
-        _vmdata.SpaceStarted = index;
+        vmdata.SpaceStarted = index;
         int nums;
         int whatNum;
         whatNum = index;
-        var thisSpace = _vmdata.SpaceList![index]; // i think
+        var thisSpace = vmdata.SpaceList![index]; // i think
         nums = thisSpace.Pieces;
         if (nums == 0)
         {
             throw new CustomBasicException("Can't have 0 when animating move.");
         }
-        _vmdata.PiecesAtStart = nums;
+        vmdata.PiecesAtStart = nums;
         thisSpace.Pieces = 0;
         if (_currentPiece == null == true)
         {
             if (_didReverse == false)
+            {
                 _currentPiece = (from x in SingleInfo!.Invoke().ObjectList
                                  where x.Index == index
                                  select x).Single();
+            }
             else
+            {
                 _currentPiece = (from x in SingleInfo!.Invoke().ObjectList
                                  where x.Index == (index - 7)
                                  select x).Single();
+            }
             _currentPlayer = SingleInfo.Invoke();
         }
         _currentPlayer!.ObjectList.RemoveSpecificItem(_currentPiece!);
@@ -251,10 +242,10 @@ public class GameBoardProcesses
             {
                 ProcessMove(whatNum);
                 nums -= 1;
-                _vmdata.PiecesLeft = nums;
-                if (_test.NoAnimations == false)
+                vmdata.PiecesLeft = nums;
+                if (test.NoAnimations == false)
                 {
-                    await _delayer.DelayMilli(400);
+                    await delayer.DelayMilli(400);
                 }
                 if (nums == 0)
                 {
@@ -267,9 +258,9 @@ public class GameBoardProcesses
     }
     private void ProcessMove(int index)
     {
-        _vmdata.SpaceSelected = index;
+        vmdata.SpaceSelected = index;
         SpaceInfo thisSpace;
-        thisSpace = _vmdata.SpaceList![index];
+        thisSpace = vmdata.SpaceList![index];
         bool isOpponent;
         if (index != 14 && index != 7)
         {
@@ -334,7 +325,7 @@ public class GameBoardProcesses
     }
     internal void TransferBeadsToPlayers()
     {
-        if (_vmdata.SpaceList!.Values.Sum(xx => xx.Pieces) != 48)
+        if (vmdata.SpaceList!.Values.Sum(xx => xx.Pieces) != 48)
         {
             throw new CustomBasicException("Does not reconcile before transferring beads to players");
         }
@@ -344,11 +335,11 @@ public class GameBoardProcesses
             player.ObjectList.Clear();
             if (isReversed == false)
             {
-                player.HowManyPiecesAtHome = _vmdata.SpaceList[7].Pieces;
+                player.HowManyPiecesAtHome = vmdata.SpaceList[7].Pieces;
             }
             else
             {
-                player.HowManyPiecesAtHome = _vmdata.SpaceList[14].Pieces;
+                player.HowManyPiecesAtHome = vmdata.SpaceList[14].Pieces;
             }
             for (int i = 1; i <= 6; i++)
             {
@@ -361,10 +352,10 @@ public class GameBoardProcesses
                 {
                     index = i + 7;
                 }
-                if (_vmdata.SpaceList[index].Pieces > 0)
+                if (vmdata.SpaceList[index].Pieces > 0)
                 {
                     PlayerPieceData thisPiece = new();
-                    thisPiece.HowManyPieces = _vmdata.SpaceList[index].Pieces;
+                    thisPiece.HowManyPieces = vmdata.SpaceList[index].Pieces;
                     thisPiece.Index = i; //i think.
                     player.ObjectList.Add(thisPiece);
                 }
@@ -379,7 +370,7 @@ public class GameBoardProcesses
             return;
         }
         SpaceInfo thisSpace;
-        thisSpace = _vmdata.SpaceList![index];
+        thisSpace = vmdata.SpaceList![index];
         if (thisSpace.Pieces > 1)
         {
             await AnimateMoveAsync(index);
@@ -393,7 +384,7 @@ public class GameBoardProcesses
         int nums;
         nums = 14 - index;
         nums = Math.Abs(nums);
-        thisSpace = _vmdata.SpaceList[nums];
+        thisSpace = vmdata.SpaceList[nums];
         if (thisSpace.Pieces == 0)
         {
             await ContinueProcessesAsync(true);
@@ -425,7 +416,7 @@ public class GameBoardProcesses
     }
     private async Task GameOverProcessesAsync()
     {
-        _vmdata.Instructions = "";
+        vmdata.Instructions = "";
         if (PlayerList!.Invoke().First().HowManyPiecesAtHome == PlayerList!.Invoke().Last().HowManyPiecesAtHome)
         {
             await ShowTieAsync!.Invoke();
@@ -478,7 +469,7 @@ public class GameBoardProcesses
         var loopTo = y + 5;
         for (x = y; x <= loopTo; x++)
         {
-            thisSpace = _vmdata.SpaceList![x];
+            thisSpace = vmdata.SpaceList![x];
             if (thisSpace.Pieces > 0)
             {
                 return true;

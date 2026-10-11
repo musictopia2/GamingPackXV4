@@ -1,7 +1,7 @@
 namespace SpiderSolitaire.Blazor.Views;
 public partial class SpiderSolitaireMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnInitialized()
     {
         _labels.Clear();
@@ -19,6 +19,5 @@ public partial class SpiderSolitaireMainView
         WastePilesCP waste = (WastePilesCP)DataContext!.WastePiles1;
         var output = waste.Piles;
         return output;
-        //return (WastePilesCP)DataContext!.WastePiles1;
     }
 }

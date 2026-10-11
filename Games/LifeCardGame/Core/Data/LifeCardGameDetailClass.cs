@@ -18,7 +18,7 @@ public class LifeCardGameDetailClass : IGameInfo, ICardInfo<LifeCardGameCardInfo
     {
         get
         {
-            LifeCardGameGameContainer gameContainer = aa1.Resolver!.Resolve<LifeCardGameGameContainer>();
+            LifeCardGameGameContainer gameContainer = Resolver!.Resolve<LifeCardGameGameContainer>();
             return gameContainer.YearCards().Select(items => items.Deck).ToBasicList();
         }
     }
@@ -29,11 +29,11 @@ public class LifeCardGameDetailClass : IGameInfo, ICardInfo<LifeCardGameCardInfo
     bool ICardInfo<LifeCardGameCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<LifeCardGameCardInformation>.NoPass => false;
     bool ICardInfo<LifeCardGameCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<LifeCardGameCardInformation> ICardInfo<LifeCardGameCardInformation>.DummyHand { get; set; } = new DeckRegularDict<LifeCardGameCardInformation>();
+    DeckRegularDict<LifeCardGameCardInformation> ICardInfo<LifeCardGameCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<LifeCardGameCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<LifeCardGameCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<LifeCardGameCardInformation>.DiscardExcludeList(IListShuffler<LifeCardGameCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

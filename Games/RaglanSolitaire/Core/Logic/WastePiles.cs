@@ -1,9 +1,6 @@
 namespace RaglanSolitaire.Core.Logic;
-public class WastePiles : WastePilesCP
+public class WastePiles(CommandContainer command) : WastePilesCP(command)
 {
-    public WastePiles(CommandContainer command) : base(command)
-    {
-    }
     public override void ClearBoard(IDeckDict<SolitaireCard> thisCol)
     {
         base.ClearBoard(thisCol);
@@ -14,7 +11,9 @@ public class WastePiles : WastePilesCP
         {
             q++;
             if (q > 3)
+            {
                 z--;
+            }
             z.Times(x =>
             {
                 var thisCard = thisCol[y];

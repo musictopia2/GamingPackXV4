@@ -15,7 +15,7 @@ public class Pinochle2PlayerDetailClass : IGameInfo, ICardInfo<Pinochle2PlayerCa
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<Pinochle2PlayerCardInformation>.CardsToPassOut => 12;
-    BasicList<int> ICardInfo<Pinochle2PlayerCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<Pinochle2PlayerCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<Pinochle2PlayerCardInformation>.AddToDiscardAtBeginning => true;
     bool ICardInfo<Pinochle2PlayerCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<Pinochle2PlayerCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,7 +23,7 @@ public class Pinochle2PlayerDetailClass : IGameInfo, ICardInfo<Pinochle2PlayerCa
     bool ICardInfo<Pinochle2PlayerCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<Pinochle2PlayerCardInformation>.NoPass => false;
     bool ICardInfo<Pinochle2PlayerCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<Pinochle2PlayerCardInformation> ICardInfo<Pinochle2PlayerCardInformation>.DummyHand { get; set; } = new DeckRegularDict<Pinochle2PlayerCardInformation>();
+    DeckRegularDict<Pinochle2PlayerCardInformation> ICardInfo<Pinochle2PlayerCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<Pinochle2PlayerCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<Pinochle2PlayerCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -33,10 +33,9 @@ public class Pinochle2PlayerDetailClass : IGameInfo, ICardInfo<Pinochle2PlayerCa
     bool ITrickData.MustPlayTrump => false;
     EnumTrickStyle ITrickData.TrickStyle => EnumTrickStyle.None;
     bool ITrickData.HasDummy => false;
-
     BasicList<int> ICardInfo<Pinochle2PlayerCardInformation>.DiscardExcludeList(IListShuffler<Pinochle2PlayerCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<Pinochle2PlayerCardInformation>.AceLow => false;
     bool IBeginningRegularCards<Pinochle2PlayerCardInformation>.CustomDeck => true;

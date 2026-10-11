@@ -105,8 +105,23 @@ public class DealCardGameMainGameClass
                 };
                 player.SetData.Add(model);
             }
+            player.Money = 0;
+            player.Monopolies = 0;
+            player.BankedCards.Clear();
+            player.Payments.Clear();
+            player.AllPlayerStatus = EnumAllPlayerStatus.None;
         }
         SaveRoot.PlaysRemaining = 3; //start out with 3.
+        SaveRoot.ActionCardUsed = 0;
+        SaveRoot.GameStatus = EnumGameStatus.None;
+        SaveRoot.PlayerUsedAgainst = 0;
+        SaveRoot.RentCategory = default;
+        SaveRoot.PaymentOwed = 0;
+        SaveRoot.OpponentColorChosen = EnumColor.None;
+        SaveRoot.CardStolen = 0;
+        SaveRoot.YourColorChosen = EnumColor.None;
+        SaveRoot.OpponentTrade = 0;
+        SaveRoot.YourTrade = 0;
         return base.LastPartOfSetUpBeforeBindingsAsync();
     }
     protected override Task StartSetUpAsync(bool isBeginning)
@@ -483,6 +498,7 @@ public class DealCardGameMainGameClass
     public override async Task ContinueTurnAsync()
     {
         _model.PlaysRemaining = SaveRoot.PlaysRemaining; //to let the clients know.
+        CommandContainer.UpdateSpecificAction(DealCardGameActions.Main); //i think should always update upon continueturn.
         if (_fromAutoResume == false)
         {
             if (OtherTurn == 0)
@@ -646,7 +662,6 @@ public class DealCardGameMainGameClass
         SingleInfo = PlayerList.GetOtherPlayer();
         SingleInfo.Debt = owed;
         _model.ChosenPlayer = SingleInfo.NickName;
-        _command.UpdateAll();
         await Delay!.DelayMilli(700);
         _model.ChosenPlayer = "";
         AttemptToAutomatePayment(SingleInfo, owed);
@@ -829,7 +844,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
     private async Task ShowCardTemporarilyAsync(DealCardGameCardInformation card)
     {
         _model.ShownCard = card;
-        _command.UpdateAll();
+
         await Delay!.DelayMilli(400);
         _model.ShownCard = null;
     }
@@ -845,8 +860,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
     public async Task ProcessPaymentsAsync(BasicList<int> cards)
     {
         _fromAutoResume = false; //not anymore.
-        _command.ResetCustomStates();
-        _command.UpdateAll(); //i can see if it at least updates my screen.
+        //_command.ResetCustomStates();
         if (_gameContainer.CanSendMessage())
         {
             await _gameContainer.Network!.SendAllAsync("finishpayment", cards);
@@ -951,7 +965,6 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         _model.ChosenPlayer = chosen.NickName;
         var list = chosen.SetData.GetCards(color).ToRegularDeckDict();
         _model.StolenCards.HandList.ReplaceRange(list);
-        _command.UpdateAll();
         await Delay!.DelayMilli(700);
         _model.ChosenPlayer = "";
         _model.StolenCards.ClearHand();
@@ -1072,7 +1085,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         _gameContainer.PersonalInformation.RentInfo.Deck = card.Deck;
         _gameContainer.PersonalInformation.RentInfo.RentCategory = EnumRentCategory.NeedChoice; //i think
         await _privateAutoResume.SaveStateAsync(_gameContainer);
-        _command.UpdateAll();
+        CommandContainer.UpdateSpecificAction(DealCardGameActions.Main); //hopefully that simple.
     }
     public async Task StartStealingPropertyAsync(SetPlayerModel model, DealCardGameCardInformation card)
     {
@@ -1082,7 +1095,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         _gameContainer.PersonalInformation.StealInfo.CardPlayed = card.Deck;
         _gameContainer.PersonalInformation.StealInfo.CardChosen = 0;
         await _privateAutoResume.SaveStateAsync(_gameContainer);
-        _command.UpdateAll();
+        CommandContainer.UpdateSpecificAction(DealCardGameActions.Main);
     }
     public async Task StartTradingPropertyAsync(SetPlayerModel model, DealCardGameCardInformation card)
     {
@@ -1094,7 +1107,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         _gameContainer.PersonalInformation.TradeInfo.YourCard = 0;
         _gameContainer.PersonalInformation.TradeInfo.YourColor = EnumColor.None;
         await _privateAutoResume.SaveStateAsync(_gameContainer);
-        _command.UpdateAll();
+        CommandContainer.UpdateSpecificAction(DealCardGameActions.Main);
     }
     public async Task PossibleTradingPropertyAsync(TradePropertyModel trade)
     {
@@ -1117,6 +1130,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
             _gameContainer.PersonalInformation.TradeInfo.YourCard = 0;
             _gameContainer.PersonalInformation.TradeInfo.YourColor = EnumColor.None;
             await _privateAutoResume.SaveStateAsync(_gameContainer);
+            CommandContainer.UpdateSpecificAction(DealCardGameActions.Main);
         }
         if (playerChosen.MainHandList.Any(x => x.ActionCategory == EnumActionCategory.JustSayNo))
         {
@@ -1140,10 +1154,8 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         _model.TradeDisplay.WhoReceive = youReceive;
         DealCardGameCardInformation tradeReceive = _gameContainer.DeckList.GetSpecificItem(trade.YourCard);
         _model.TradeDisplay.TradeReceive = tradeReceive;
-        _command.UpdateAll();
         await Delay!.DelayMilli(1500);
         _model.TradeDisplay = null;
-        _command.UpdateAll();
         playerChosen.SetData.RemoveCardFromPlayerSet(trade.OpponentCard, trade.OpponentColor);
         int transferMoney;
         transferMoney = youReceive.ClaimedValue;
@@ -1157,6 +1169,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         SingleInfo.SetData.RemoveCardFromPlayerSet(trade.YourCard, trade.YourColor);
         playerChosen.Monopolies = playerChosen.HowManyMonopolies;
         SingleInfo.Monopolies = SingleInfo.HowManyMonopolies;
+        CommandContainer.UpdateSpecificAction(DealCardGameActions.AllProperties);
         await ContinueTurnAsync();
     }
     public async Task PossibleStealingPropertyAsync(StealPropertyModel steal)
@@ -1203,7 +1216,6 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         _model.ChosenPlayer = playerChosen.NickName;
         var cardStolen = _gameContainer.DeckList.GetSpecificItem(steal.CardChosen);
         _model.ShownCard = cardStolen;
-        _command.UpdateAll();
         await Delay!.DelayMilli(700);
         _model.ChosenPlayer = "";
         _model.ShownCard = null;
@@ -1215,6 +1227,7 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         SingleInfo!.Money += transferMoney;
         SingleInfo.AddSingleCardToPlayerPropertySet(cardStolen, steal.Color);
         SingleInfo.Monopolies = SingleInfo.HowManyMonopolies;
+        CommandContainer.UpdateSpecificAction(DealCardGameActions.AllProperties);
         await ContinueTurnAsync();
     }
     public async Task FinishOrganizingSetsAsync(BasicList<SetPropertiesModel> setData)
@@ -1243,7 +1256,5 @@ private static IEnumerable<List<DealCardGameCardInformation>> GetCardCombination
         SingleInfo!.MainHandList.RemoveObjectByDeck(thisCard.Deck);
         await AnimatePlayAsync(thisCard);
         await ContinueTurnAsync(); //hopefully this simple.
-        //var card = GetPlayerSelectedSingleCard(steal.CardPlayed);
-        //await AnimatePlayAsync(cardPlayed);
     }
 }

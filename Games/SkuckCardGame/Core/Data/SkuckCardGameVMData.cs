@@ -6,11 +6,11 @@ public partial class SkuckCardGameVMData : ITrickCardGamesData<SkuckCardGameCard
     , ITrickDummyHand<EnumSuitList, SkuckCardGameCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumSuitList TrumpSuit { get; set; }
+    public partial EnumSuitList TrumpSuit { get; set; }
     private readonly SkuckCardGameGameContainer _gameContainer;
     public SkuckCardGameVMData(CommandContainer command,
             BasicTrickAreaObservable<EnumSuitList, SkuckCardGameCardInformation> trickArea1,
@@ -39,7 +39,7 @@ public partial class SkuckCardGameVMData : ITrickCardGamesData<SkuckCardGameCard
     public HandObservable<SkuckCardGameCardInformation> PlayerHand1 { get; set; }
     public SingleObservablePile<SkuckCardGameCardInformation>? OtherPile { get; set; }
     [LabelColumn]
-    public int RoundNumber { get; set; }
+    public partial int RoundNumber { get; set; }
     private EnumStatusList _gameStatus;
     public EnumStatusList GameStatus
     {
@@ -53,7 +53,7 @@ public partial class SkuckCardGameVMData : ITrickCardGamesData<SkuckCardGameCard
         }
     }
     [LabelColumn]
-    public int BidAmount { get; set; } = -1;
+    public partial int BidAmount { get; set; } = -1;
     DeckRegularDict<SkuckCardGameCardInformation> ITrickDummyHand<EnumSuitList, SkuckCardGameCardInformation>.GetCurrentHandList()
     {
         DeckRegularDict<SkuckCardGameCardInformation> output = _gameContainer!.SingleInfo!.MainHandList.ToRegularDeckDict();

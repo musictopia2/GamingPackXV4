@@ -67,7 +67,7 @@ public class GameBoardProcesses
         {
             return;
         }
-        _spaceList = new Dictionary<int, SpaceInfo>();
+        _spaceList = [];
         int x;
         int y;
         int q = 0;
@@ -146,6 +146,7 @@ public class GameBoardProcesses
     {
         _gameContainer.PlayerList!.ForEach(thisPlayer => thisPlayer.PieceList.Clear());
         foreach (var thisSpace in _spaceList!.Values)
+        {
             if (thisSpace.ColorOwner != EnumColorChoice.None && thisSpace.WhatBoard == EnumBoardStatus.IsStart)
             {
                 thisSpace.Player = FindPlayer(thisSpace.ColorOwner);
@@ -159,6 +160,8 @@ public class GameBoardProcesses
             {
                 thisSpace.Player = 0;
             }
+        }
+
         Repaint();
     }
     private int FindPlayer(EnumColorChoice thisColor)
@@ -271,6 +274,7 @@ public class GameBoardProcesses
     {
         int newNum;
         if (willStart == false)
+        {
             if (thisSpace.WhatBoard != EnumBoardStatus.IsHome)
             {
                 newNum = lefts + 1;
@@ -279,6 +283,7 @@ public class GameBoardProcesses
             {
                 newNum = thisSpace.SpaceNumber + lefts;
             }
+        }
         else
         {
             newNum = lefts;
@@ -348,7 +353,7 @@ public class GameBoardProcesses
         {
             return; //ignore because did not even roll.
         }
-        MoveList = new();
+        MoveList = [];
         BasicList<int> firstCol = _gameContainer.SingleInfo!.PieceList.ToBasicList();
         if (firstCol.Count != 4)
         {
@@ -358,8 +363,9 @@ public class GameBoardProcesses
         {
             throw new CustomBasicException("The dice has to be from 1 to 6");
         }
-        BasicList<int> thisCol = new();
+        BasicList<int> thisCol = [];
         if (_gameContainer.SaveRoot.DiceNumber < 6)
+        {
             firstCol.ForEach(thisInt =>
             {
                 if (!_spaceList!.Values.Any(items => items.Index == thisInt && items.WhatBoard == EnumBoardStatus.IsStart))
@@ -367,6 +373,7 @@ public class GameBoardProcesses
                     thisCol.Add(thisInt);
                 }
             });
+        }
         else
         {
             thisCol = firstCol;

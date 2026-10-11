@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace ThinkTwice.Core.Logic;
 [SingletonGame]
 public class ThinkTwiceMainGameClass
@@ -126,6 +128,7 @@ public class ThinkTwiceMainGameClass
         {
             case "itemselected":
                 _model.ItemSelected = int.Parse(content);
+                CommandContainer.UpdateSpecificAction(ThinkTwiceActions.Score);
                 await ContinueTurnAsync();
                 break;
             case "score":
@@ -136,11 +139,11 @@ public class ThinkTwiceMainGameClass
                 await ChangeCategoryHoldAsync();
                 break;
             case "categorydice":
-                var firstList = await _categoriesDice.GetDiceList(content);
+                var firstList = await CategoriesDice.GetDiceList(content);
                 await RollCatsAsync(firstList);
                 break;
             case "mults":
-                var secondList = await _multiplier.GetDiceList(content);
+                var secondList = await Multiplier.GetDiceList(content);
                 await RollMultsAsync(secondList);
                 break;
             default:
@@ -155,6 +158,7 @@ public class ThinkTwiceMainGameClass
         _categoriesDice.NewTurn();
         SaveRoot!.Score = 0;
         _model!.ClearBoard(); //try without protected startturn (?)
+        CommandContainer.UpdateSpecificAction(ThinkTwiceActions.Score);
         await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
     }
     protected override async Task ProtectedAfterRollingAsync()

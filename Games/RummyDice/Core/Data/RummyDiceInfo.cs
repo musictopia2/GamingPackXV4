@@ -1,12 +1,15 @@
 ﻿namespace RummyDice.Core.Data;
-public class RummyDiceInfo : IRummmyObject<EnumColorType, EnumColorType>,
+
+[UseStateChanged]
+public partial class RummyDiceInfo : IRummmyObject<EnumColorType, EnumColorType>,
     IBasicDice<int>, IComparable<RummyDiceInfo>, ISelectableObject
 {
     public int HeightWidth { get; set; } = 44;
     public int Value { get; set; }
     public int Index { get; set; }
     public string Display { get; set; } = "";
-    public bool IsSelected { get; set; }
+    [StateProperty]
+    public partial bool IsSelected { get; set; }
     public bool Visible { get; set; } = true;
     public EnumColorType Color { get; set; }
     public bool IsWild { get; set; }

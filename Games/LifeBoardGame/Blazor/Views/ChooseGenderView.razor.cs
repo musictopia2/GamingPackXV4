@@ -1,7 +1,7 @@
 namespace LifeBoardGame.Blazor.Views;
 public partial class ChooseGenderView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private static string GetColor(EnumGender gender) => gender.Color;
     protected override void OnInitialized()
     {

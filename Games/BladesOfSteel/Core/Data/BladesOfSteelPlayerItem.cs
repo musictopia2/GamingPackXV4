@@ -5,9 +5,9 @@ public partial class BladesOfSteelPlayerItem : PlayerSingleHand<RegularSimpleCar
 {
     public RegularSimpleCard? FaceOff { get; set; }
     [ScoreColumn]
-    public int Score { get; set; }
-    public DeckRegularDict<RegularSimpleCard> AttackList { get; set; } = new();
-    public DeckRegularDict<RegularSimpleCard> DefenseList { get; set; } = new();
+    public partial int Score { get; set; }
+    public DeckRegularDict<RegularSimpleCard> AttackList { get; set; } = [];
+    public DeckRegularDict<RegularSimpleCard> DefenseList { get; set; } = [];
     [JsonIgnore]
     public PlayerAttackCP? AttackPile { get; set; }
     [JsonIgnore]

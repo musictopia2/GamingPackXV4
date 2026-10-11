@@ -10,7 +10,7 @@ public class GameBoardGraphicsCP
         CreateSpaces();
     }
     public static SizeF OriginalSize => new(571, 436);
-    public Dictionary<int, RectangleF> SpaceList = new();
+    public Dictionary<int, RectangleF> SpaceList = [];
     public static SizeF SpaceSize => new(30, 30);
     private void CreateRectangle(int id, float x, float y, float width, float height)
     {
@@ -50,9 +50,9 @@ public class GameBoardGraphicsCP
     }
     public RectangleF GetRectangleSpace(int space)
     {
-        if (SpaceList.ContainsKey(space))
+        if (SpaceList.TryGetValue(space, out RectangleF value))
         {
-            return SpaceList[space];
+            return value;
         }
         else
         {

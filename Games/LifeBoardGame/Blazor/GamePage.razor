@@ -15,18 +15,18 @@
     return;
 }
 <CascadingValue Value="_targetImageSize">
-    <ParentControl VM="LifeBoardGameMainViewModel">
+    <MainScreen>
         <LifeBoardGameMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<LifeBoardGamePlayerItem>">
-        <MultiplayerOpeningView P="LifeBoardGamePlayerItem" />
-    </ParentControl>
-    <ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, LifeBoardGamePlayerItem>">
-        <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="LifeBoardGamePlayerItem">
-            <CarPieceBlazor MainColor="@GetColor(Piece.EnumValue)" />
-        </BeginningChooseColorView>
-    </ParentControl>
-    <ParentControl VM="ChooseGenderViewModel">
+    </MainScreen>
+
+    <MultiplayerOpeningView P="LifeBoardGamePlayerItem" />
+    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="LifeBoardGamePlayerItem">
+        <CarPieceBlazor MainColor="@GetColor(Piece.EnumValue)" />
+    </BeginningChooseColorView>
+
+    <PromptView VM="ChooseGenderViewModel">
         <ChooseGenderView />
-    </ParentControl>
+    </PromptView>
+
+   
 </CascadingValue>

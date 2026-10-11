@@ -11,10 +11,7 @@ public class Spades2PlayerSaveInfo : BasicSavedTrickGamesClass<EnumSuitList, Spa
         {
             if (SetProperty(ref _gameStatus, value))
             {
-                if (_model != null)
-                {
-                    _model.GameStatus = value;
-                }
+                _model?.GameStatus = value;
             }
         }
     }
@@ -27,10 +24,7 @@ public class Spades2PlayerSaveInfo : BasicSavedTrickGamesClass<EnumSuitList, Spa
         {
             if (SetProperty(ref _roundNumber, value))
             {
-                if (_model != null)
-                {
-                    _model.RoundNumber = value;
-                }
+                _model?.RoundNumber = value;
             }
         }
     }

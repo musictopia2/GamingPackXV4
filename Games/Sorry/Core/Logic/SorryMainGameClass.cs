@@ -16,16 +16,13 @@ public class SorryMainGameClass
         SorryGameContainer gameContainer,
         DrawShuffleClass<CardInfo, SorryPlayerItem> shuffle,
         GameBoardProcesses gameBoard,
-        SorryGameContainer container,
         ISystemError error,
         IToast toast
         ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     {
         _model = model;
-        _command = command;
         _shuffle = shuffle;
         _gameBoard = gameBoard;
-        _container = container;
         _shuffle.AfterDrawingAsync = AfterDrawingAsync;
         _shuffle.CurrentPlayer = () => SingleInfo!;
         _shuffle.AfterFirstShuffle = TestCardOnTop;
@@ -39,15 +36,12 @@ public class SorryMainGameClass
         deck.PutCardOnTop(1);
     }
     private readonly SorryVMData _model;
-    private readonly CommandContainer _command;
     private readonly DrawShuffleClass<CardInfo, SorryPlayerItem> _shuffle;
     private readonly GameBoardProcesses _gameBoard;
-    private readonly SorryGameContainer _container;
-
     public override async Task FinishGetSavedAsync()
     {
         LoadControls();
-        BoardGameSaved();
+        GameSaved();
         _gameBoard.LoadSavedGame();
         _shuffle.SaveRoot = SaveRoot;
         if (SaveRoot.OurColor == EnumColorChoice.None && PlayerList.DidChooseColors())
@@ -100,7 +94,7 @@ public class SorryMainGameClass
         _gameBoard.ClearBoard();
         SaveRoot!.Instructions = "Waiting for cards to be shuffled";
         WhoTurn = WhoStarts;
-        _command.ManuelFinish = true;
+        CommandContainer.ManuelFinish = true;
         if (BasicData!.MultiPlayer == false)
         {
             await _shuffle!.FirstShuffleAsync(false); //do not autodraw this time.  not candyland.
@@ -165,24 +159,14 @@ public class SorryMainGameClass
         }
         await base.ContinueTurnAsync();
     }
-
-
     public override async Task MakeMoveAsync(int space)
-    {
-        
+    {    
         await _gameBoard.MakeMoveAsync(space);
     }
-
-    
-
-    //public override async Task MakeMoveAsync(int space)
-    //{
-    //    await _gameBoard.MakeMoveAsync(space);
-    //}
     public override async Task EndTurnAsync()
     {
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
-        _command.ManuelFinish = true;
+        CommandContainer.ManuelFinish = true;
         await StartNewTurnAsync();
     }
     internal async Task DrawCardAsync()
@@ -205,18 +189,4 @@ public class SorryMainGameClass
         }
         await _gameBoard.GetValidMovesAsync();
     }
-    protected override async Task ShowHumanCanPlayAsync()
-    {
-        await base.ShowHumanCanPlayAsync();
-        _command.UpdateAll();
-    }
-
-
-    
-
-
-
-
-
-
 }

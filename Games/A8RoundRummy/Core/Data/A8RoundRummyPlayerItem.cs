@@ -3,5 +3,5 @@ namespace A8RoundRummy.Core.Data;
 public partial class A8RoundRummyPlayerItem : PlayerSingleHand<A8RoundRummyCardInformation>
 {
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

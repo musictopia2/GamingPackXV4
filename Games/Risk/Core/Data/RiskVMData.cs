@@ -1,7 +1,7 @@
 namespace Risk.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
-public partial class RiskVMData : ISimpleBoardGamesData, IBasicEnableProcess
+public partial class RiskVMData : ISimpleBoardGamesData, IBasicEnableProcess, IStateChanged
 {
     private readonly CommandContainer _command;
     private readonly IGamePackageResolver _resolver;
@@ -30,7 +30,6 @@ public partial class RiskVMData : ISimpleBoardGamesData, IBasicEnableProcess
     private Task MovePicker_ChangedNumberValueAsync(int chosen)
     {
         ArmiesChosen = chosen;
-        _command.UpdateAll();
         return Task.CompletedTask;
     }
     private Task AttackPicker_ItemSelectedAsync(int selectedIndex, string selectedText)
@@ -46,27 +45,30 @@ public partial class RiskVMData : ISimpleBoardGamesData, IBasicEnableProcess
     public NumberPicker NumberPicker { get; set; }
     public int ArmiesChosen { get; set; }
     [LabelColumn]
-    public int ArmiesToPlace { get; set; }
+    public partial int ArmiesToPlace { get; set; }
     [LabelColumn]
-    public int BonusReenforcements { get; set; }
+    public partial int BonusReenforcements { get; set; }
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
     public DiceCup<AttackDice>? AttackCup { get; set; }
     public DiceCup<SimpleDice>? DefenseCup { get; set; }
     public bool RollingProgress { get; set; }
     public ListViewPicker AttackPicker;
     private RiskSaveInfo? _saveRoot;
+
+    public event Action? StateChanged;
+
     public void LoadCups(RiskSaveInfo saveRoot, bool autoResume)
     {
+        _saveRoot = saveRoot; //try to put here no matter what.
         if (AttackCup is not null && DefenseCup is not null && autoResume)
         {
             return;
         }
-        _saveRoot = saveRoot;
         AttackCup = new(_resolver, _command);
         DefenseCup = new(_resolver, _command);
         AttackCup.CommandActionString = "AttackCup";
@@ -76,6 +78,10 @@ public partial class RiskVMData : ISimpleBoardGamesData, IBasicEnableProcess
             AttackCup.HowManyDice = 0;
             DefenseCup.HowManyDice = 0;
         }
+    }
+    public void UpdateStatus()
+    {
+        StateChanged?.Invoke();
     }
     public bool CanEnableBasics()
     {

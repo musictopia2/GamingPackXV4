@@ -17,11 +17,8 @@ public class PersonalCompleteSets
     }
     private Task SelectFromHandAsync(DealCardGameCardInformation card, int index)
     {
-        if (_cardChosen is not null)
-        {
-            _cardChosen.IsSelected = false; //has to select the new one instead.
-            _cardChosen = null; //something else is chosen.
-        }
+        _cardChosen?.IsSelected = false; //has to select the new one instead.
+        _cardChosen = null; //something else is chosen.
         if (card.IsSelected)
         {
             card.IsSelected = false;

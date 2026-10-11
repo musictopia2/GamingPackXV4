@@ -7,9 +7,9 @@ public partial class SavannahVMData : IBasicCardGamesData<RegularSimpleCard>, IC
     private readonly CommandContainer _command;
     private readonly IGamePackageResolver _resolver;
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public SavannahVMData(CommandContainer command, IGamePackageResolver resolver)
     {
         Deck1 = new DeckObservablePile<RegularSimpleCard>(command);

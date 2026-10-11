@@ -10,10 +10,7 @@ public class SorryCardGameSaveInfo : BasicSavedCardClass<SorryCardGamePlayerItem
         {
             if (SetProperty(ref _upTo, value))
             {
-                if (_model != null)
-                {
-                    _model.UpTo = value;
-                }
+                _model?.UpTo = value;
             }
         }
     }
@@ -25,10 +22,7 @@ public class SorryCardGameSaveInfo : BasicSavedCardClass<SorryCardGamePlayerItem
         {
             if (SetProperty(ref _instructions, value))
             {
-                if (_model != null)
-                {
-                    _model.Instructions = value;
-                }
+                _model?.Instructions = value;
             }
         }
     }

@@ -89,17 +89,17 @@ public class CardGraphicsBlazor : BaseDeckGraphics<TeeItUpCardInformation>
     }
     private static BasicList<string> GetSingleList(string firstText)
     {
-        return new() { firstText };
+        return [firstText];
     }
     private static BasicList<string> GetPairList(string firstText, string secondText)
     {
-        return new() { firstText, secondText };
+        return [firstText, secondText];
     }
     private BasicList<string> GetTextList()
     {
         if (DeckObject == null)
         {
-            return new();
+            return [];
         }
         if (DeckObject.IsMulligan == true)
         {
@@ -111,11 +111,11 @@ public class CardGraphicsBlazor : BaseDeckGraphics<TeeItUpCardInformation>
         }
         if (DeckObject.Points == -3)
         {
-            return new() { "Albatross" };
+            return ["Albatross"];
         }
         if (DeckObject.Points == -2)
         {
-            return new() { "Eagle" };
+            return ["Eagle"];
         }
         if (DeckObject.Points == -1)
         {
@@ -161,6 +161,6 @@ public class CardGraphicsBlazor : BaseDeckGraphics<TeeItUpCardInformation>
         {
             return GetSingleList("In Ravine");
         }
-        return new(); //since runtime messages don't show up anyways (?)
+        return []; //since runtime messages don't show up anyways (?)
     }
 }

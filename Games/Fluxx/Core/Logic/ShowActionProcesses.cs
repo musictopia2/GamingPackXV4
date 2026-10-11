@@ -1,77 +1,64 @@
 ﻿namespace Fluxx.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class ShowActionProcesses : IShowActionProcesses
+public class ShowActionProcesses(ActionContainer actionContainer,
+    BasicActionLogic basicActionLogic,
+    FluxxGameContainer gameContainer
+        ) : IShowActionProcesses
 {
-    private readonly ActionContainer _actionContainer;
-    private readonly BasicActionLogic _basicActionLogic;
-    private readonly FluxxGameContainer _gameContainer;
-    public ShowActionProcesses(ActionContainer actionContainer,
-        BasicActionLogic basicActionLogic,
-        FluxxGameContainer gameContainer
-        )
-    {
-        _actionContainer = actionContainer;
-        _basicActionLogic = basicActionLogic;
-        _gameContainer = gameContainer;
-    }
+    //this may have to update something (not sure what yet).
     async Task IShowActionProcesses.ChoseOtherCardSelectedAsync(int deck)
     {
-        _actionContainer.OtherHand!.SelectOneFromDeck(deck);
-        _gameContainer.Command.UpdateAll();
-        if (_gameContainer.Test!.NoAnimations == false)
+        actionContainer.OtherHand!.SelectOneFromDeck(deck);
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(.5);
+            await gameContainer.Delay!.DelaySeconds(.5);
         }
-        await _basicActionLogic.ShowMainScreenAgainAsync();
+        await basicActionLogic.ShowMainScreenAgainAsync();
     }
     async Task IShowActionProcesses.ShowCardUseAsync(int deck)
     {
-        _actionContainer.TempHand!.SelectOneFromDeck(deck);
-        _gameContainer.Command.UpdateAll();
-        if (_gameContainer.Test!.NoAnimations == false)
+        actionContainer.TempHand!.SelectOneFromDeck(deck);
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(.5);
+            await gameContainer.Delay!.DelaySeconds(.5);
         }
-        await _basicActionLogic.ShowMainScreenAgainAsync();
+        await basicActionLogic.ShowMainScreenAgainAsync();
     }
     async Task IShowActionProcesses.ShowChosenForEverybodyGetsOneAsync(BasicList<int> selectedList, int selectedIndex)
     {
         selectedList.ForEach(thisItem =>
         {
-            _actionContainer.TempHand!.SelectOneFromDeck(thisItem);
+            actionContainer.TempHand!.SelectOneFromDeck(thisItem);
         });
-        _actionContainer.Player1!.SelectSpecificItem(selectedIndex);
-        _gameContainer.Command.UpdateAll();
-        if (_gameContainer.Test!.NoAnimations == false)
+        actionContainer.Player1!.SelectSpecificItem(selectedIndex);
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(1);
+            await gameContainer.Delay!.DelaySeconds(1);
         }
-        await _basicActionLogic.ShowMainScreenAgainAsync();
+        await basicActionLogic.ShowMainScreenAgainAsync();
     }
     async Task IShowActionProcesses.ShowDirectionAsync(int selectedIndex)
     {
-        _actionContainer.Direction1!.SelectSpecificItem(selectedIndex);
-        _gameContainer.Command.UpdateAll();
-        if (_gameContainer.Test!.NoAnimations == false)
+        actionContainer.Direction1!.SelectSpecificItem(selectedIndex);
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(.5);
+            await gameContainer.Delay!.DelaySeconds(.5);
         }
-        await _basicActionLogic.ShowMainScreenAgainAsync();
+        await basicActionLogic.ShowMainScreenAgainAsync();
     }
     async Task IShowActionProcesses.ShowLetsDoAgainAsync(int selectedIndex)
     {
-        _actionContainer.CardList1!.SelectSpecificItem(selectedIndex);
-        _gameContainer.Command.UpdateAll();
-        if (_gameContainer.Test!.NoAnimations == false)
+        actionContainer.CardList1!.SelectSpecificItem(selectedIndex);
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(.5);
+            await gameContainer.Delay!.DelaySeconds(.5);
         }
-        await _basicActionLogic.ShowMainScreenAgainAsync();
+        await basicActionLogic.ShowMainScreenAgainAsync();
     }
     async Task IShowActionProcesses.ShowPlayerForCardChosenAsync(int selectedIndex)
     {
-        _actionContainer.IndexPlayer = selectedIndex;
+        actionContainer.IndexPlayer = selectedIndex;
         await ShowTradeHandAsync(selectedIndex);
     }
     async Task IShowActionProcesses.ShowRulesSimplifiedAsync(BasicList<int> list)
@@ -80,33 +67,30 @@ public class ShowActionProcesses : IShowActionProcesses
         {
             return;
         }
-        _actionContainer.Rule1!.SelectSeveralItems(list);
-        _gameContainer.Command.UpdateAll();
-        if (_gameContainer.Test!.NoAnimations == false)
+        actionContainer.Rule1!.SelectSeveralItems(list);
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(1);
+            await gameContainer.Delay!.DelaySeconds(1);
         }
-        await _basicActionLogic.ShowMainScreenAgainAsync();
+        await basicActionLogic.ShowMainScreenAgainAsync();
     }
     async Task IShowActionProcesses.ShowRuleTrashedAsync(int selectedIndex)
     {
-        _actionContainer.Rule1!.SelectSpecificItem(selectedIndex);
-        _gameContainer.Command.UpdateAll();
-        if (_gameContainer.Test!.NoAnimations == false)
+        actionContainer.Rule1!.SelectSpecificItem(selectedIndex);
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(.75);
+            await gameContainer.Delay!.DelaySeconds(.75);
         }
-        await _basicActionLogic.ShowMainScreenAgainAsync();
+        await basicActionLogic.ShowMainScreenAgainAsync();
     }
     private async Task ShowTradeHandAsync(int selectedIndex)
     {
-        _actionContainer.Player1!.SelectSpecificItem(selectedIndex);
-        _gameContainer.Command.UpdateAll();
-        if (_gameContainer.Test!.NoAnimations == false)
+        actionContainer.Player1!.SelectSpecificItem(selectedIndex);
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(.75);
+            await gameContainer.Delay!.DelaySeconds(.75);
         }
-        await _basicActionLogic.ShowMainScreenAgainAsync();
+        await basicActionLogic.ShowMainScreenAgainAsync();
     }
     async Task IShowActionProcesses.ShowTradeHandAsync(int selectedIndex)
     {

@@ -4,18 +4,18 @@
 public class GameBoardProcesses : ISpacePosition
 {
     private readonly LifeBoardGameGameContainer _gameContainer;
-    private readonly BasicList<ShortcutInfo> _shortCutList = new();
-    private readonly BasicList<int> _stops = new();
+    private readonly BasicList<ShortcutInfo> _shortCutList = [];
+    private readonly BasicList<int> _stops = [];
     public GameBoardProcesses(LifeBoardGameGameContainer gameContainer)
     {
         _gameContainer = gameContainer;
-        _stops = new() { 25, 36, 81, 147 };
-        _shortCutList = new()
-        {
+        _stops = [25, 36, 81, 147];
+        _shortCutList =
+        [
             new ShortcutInfo() { FromSpace = 91, ToSpace = 96 },
             new ShortcutInfo() { FromSpace = 55, ToSpace = 62 },
             new ShortcutInfo() { FromSpace = 11, ToSpace = 15 }
-        };
+        ];
     }
     public int NewPosition
     {
@@ -352,6 +352,25 @@ public class GameBoardProcesses : ISpacePosition
     }
     public void ResetBoard()
     {
+        var save = _gameContainer.SaveRoot
+        ?? throw new CustomBasicException("SaveRoot was not set.");
+
+        save.TileList.Clear();
+        save.HouseList.Clear();
+        save.SpinList.Clear();
+
+        save.WasMarried = false;
+        save.GameStarted = false;
+        save.WasNight = false;
+        save.EndAfterSalary = false;
+        save.EndAfterStock = false;
+
+        save.MaxChosen = 0;
+        save.NewPosition = 0;
+        save.NumberRolled = 0;
+        save.SpinPosition = 0;
+        save.ChangePosition = 0;
+        save.TemporarySpaceSelected = 0;
         _gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.Distance = 0;
@@ -372,6 +391,11 @@ public class GameBoardProcesses : ISpacePosition
             thisPlayer.WhatTurn = EnumTurnInfo.NormalTurn;
             thisPlayer.TilesCollected = 0;
             thisPlayer.TileList.Clear();
+            thisPlayer.Career1 = "";
+            thisPlayer.Career2 = "";
+            thisPlayer.Married = false;
+            thisPlayer.ChildrenList.Clear();
+
         });
     }
 }

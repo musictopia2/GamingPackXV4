@@ -1,7 +1,6 @@
 ﻿namespace Skipbo.Core.Piles;
-public class StockViewModel : StockPileVM<SkipboCardInformation>
+public class StockViewModel(CommandContainer command) : StockPileVM<SkipboCardInformation>(command)
 {
-    public StockViewModel(CommandContainer command) : base(command) { }
     public override string NextCardInStock()
     {
         if (DidGoOut() == true)

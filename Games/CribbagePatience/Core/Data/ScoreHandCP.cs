@@ -1,9 +1,9 @@
 ﻿namespace CribbagePatience.Core.Data;
 public class ScoreHandCP
 {
-    public DeckRegularDict<CribbageCard> CardList { get; set; } = new ();
-    public BasicList<CribbageCombos> Scores { get; set; } = new();
-    public DeckRegularDict<CribbageCard> TempList { get; set; } = new ();
+    public DeckRegularDict<CribbageCard> CardList { get; set; } = [];
+    public BasicList<CribbageCombos> Scores { get; set; } = [];
+    public DeckRegularDict<CribbageCard> TempList { get; set; } = [];
     public EnumHandCategory HandCategory { get; set; }
     public string Text
     {

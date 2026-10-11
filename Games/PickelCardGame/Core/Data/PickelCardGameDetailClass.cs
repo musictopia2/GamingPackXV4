@@ -15,7 +15,7 @@ public class PickelCardGameDetailClass : IGameInfo, ICardInfo<PickelCardGameCard
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<PickelCardGameCardInformation>.CardsToPassOut => 10;
-    BasicList<int> ICardInfo<PickelCardGameCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<PickelCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<PickelCardGameCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<PickelCardGameCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<PickelCardGameCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,7 +23,7 @@ public class PickelCardGameDetailClass : IGameInfo, ICardInfo<PickelCardGameCard
     bool ICardInfo<PickelCardGameCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<PickelCardGameCardInformation>.NoPass => false;
     bool ICardInfo<PickelCardGameCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<PickelCardGameCardInformation> ICardInfo<PickelCardGameCardInformation>.DummyHand { get; set; } = new DeckRegularDict<PickelCardGameCardInformation>();
+    DeckRegularDict<PickelCardGameCardInformation> ICardInfo<PickelCardGameCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<PickelCardGameCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<PickelCardGameCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -35,7 +35,7 @@ public class PickelCardGameDetailClass : IGameInfo, ICardInfo<PickelCardGameCard
     bool ITrickData.HasDummy => false;
     BasicList<int> ICardInfo<PickelCardGameCardInformation>.DiscardExcludeList(IListShuffler<PickelCardGameCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<PickelCardGameCardInformation>.AceLow => false;
     bool IBeginningRegularCards<PickelCardGameCardInformation>.CustomDeck => true;

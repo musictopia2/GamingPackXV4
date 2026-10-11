@@ -1,12 +1,7 @@
 namespace Rook.Core.Data;
 [SingletonGame]
-public class RookDetailClass : IGameInfo, ICardInfo<RookCardInformation>, ITrickData
+public class RookDetailClass(RookDelegates delegates) : IGameInfo, ICardInfo<RookCardInformation>, ITrickData
 {
-    private readonly RookDelegates _delegates;
-    public RookDetailClass(RookDelegates delegates)
-    {
-        _delegates = delegates;
-    }
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
@@ -29,7 +24,7 @@ public class RookDetailClass : IGameInfo, ICardInfo<RookCardInformation>, ITrick
             return 12;
         }
     }
-    BasicList<int> ICardInfo<RookCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<RookCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<RookCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<RookCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<RookCardInformation>.ShowMessageWhenReshuffling => true;
@@ -37,7 +32,7 @@ public class RookDetailClass : IGameInfo, ICardInfo<RookCardInformation>, ITrick
     bool ICardInfo<RookCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<RookCardInformation>.NoPass => false;
     bool ICardInfo<RookCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<RookCardInformation> ICardInfo<RookCardInformation>.DummyHand { get; set; } = new DeckRegularDict<RookCardInformation>();
+    DeckRegularDict<RookCardInformation> ICardInfo<RookCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<RookCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<RookCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -46,9 +41,9 @@ public class RookDetailClass : IGameInfo, ICardInfo<RookCardInformation>, ITrick
     bool ITrickData.HasTrump => true;
     bool ITrickData.MustPlayTrump => false;
     EnumTrickStyle ITrickData.TrickStyle => EnumTrickStyle.None;
-    bool ITrickData.HasDummy => _delegates.IsDummy!.Invoke();
+    bool ITrickData.HasDummy => delegates.IsDummy!.Invoke();
     BasicList<int> ICardInfo<RookCardInformation>.DiscardExcludeList(IListShuffler<RookCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

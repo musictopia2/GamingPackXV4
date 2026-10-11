@@ -7,7 +7,7 @@ public partial class FirstView
     public FirstViewModel? DataContext { get; set; }
     private ICustomCommand ChooseCommand => DataContext?.ChooseFirstCardsCommand!;
     private static string ChooseMethod => nameof(FirstViewModel.ChooseFirstCardsAsync);
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnInitialized()
     {
         _labels.Clear();

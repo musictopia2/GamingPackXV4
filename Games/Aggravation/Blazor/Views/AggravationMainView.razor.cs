@@ -3,7 +3,7 @@ public partial class AggravationMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private AggravationGameContainer? _gameContainer;
     private GameBoardGraphicsCP? _graphicsData;
     protected override void OnInitialized()

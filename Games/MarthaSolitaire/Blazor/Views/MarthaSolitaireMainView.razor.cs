@@ -1,7 +1,7 @@
 namespace MarthaSolitaire.Blazor.Views;
 public partial class MarthaSolitaireMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnInitialized()
     {
         _labels.Clear();

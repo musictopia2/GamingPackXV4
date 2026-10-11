@@ -1,18 +1,9 @@
 ﻿namespace Candyland.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class CandylandBoardProcesses
+public class CandylandBoardProcesses(TestOptions test, IAsyncDelayer delayer, IEventAggregator aggregator)
 {
-    public CandylandBoardProcesses(TestOptions test, IAsyncDelayer delayer, IEventAggregator aggregator)
-    {
-        _test = test;
-        _delayer = delayer;
-        _aggregator = aggregator;
-    }
     private Dictionary<int, EnumCandyLandType>? _spaceList; //decided to use dictionary this time.
-    private readonly TestOptions _test;
-    private readonly IAsyncDelayer _delayer;
-    private readonly IEventAggregator _aggregator;
     private int FindNextPosition(int oldPos, int howMany, EnumCandyLandType thisCard)
     {
         int x;
@@ -48,11 +39,11 @@ public class CandylandBoardProcesses
     }
     public void NewTurn()
     {
-        _aggregator.Publish(new NewTurnEventModel());
+        aggregator.Publish(new NewTurnEventModel());
     }
     private void ContinueLoading()
     {
-        _spaceList = new Dictionary<int, EnumCandyLandType>();
+        _spaceList = [];
         EnumCandyLandType thisCard;
         int x;
         for (x = 1; x <= 126; x++)
@@ -276,10 +267,10 @@ public class CandylandBoardProcesses
             for (x = currents + 1; x <= loopTo; x++)
             {
                 mainGame.SingleInfo.SpaceNumber = x; // this will handle this as well
-                _aggregator.RepaintBoard();
-                if (_test.NoAnimations == false)
+                aggregator.RepaintBoard();
+                if (test.NoAnimations == false)
                 {
-                    await _delayer.DelayMilli(100);
+                    await delayer.DelayMilli(100);
                 }
             }
             bool extraSpace = false;
@@ -303,10 +294,10 @@ public class CandylandBoardProcesses
         for (x = currents - 1; x >= loopTo1; x += -1)
         {
             mainGame.SingleInfo.SpaceNumber = x;
-            _aggregator.RepaintBoard();
-            if (_test.NoAnimations == false)
+            aggregator.RepaintBoard();
+            if (test.NoAnimations == false)
             {
-                await _delayer.DelayMilli(100);
+                await delayer.DelayMilli(100);
             }
         }
     }
@@ -319,7 +310,7 @@ public class CandylandBoardProcesses
     }
     public bool IsValidMove(int newPosition, EnumCandyLandType whichCard, CandylandMainGameClass mainGame, int howMany = 1)
     {
-        if (_test.AllowAnyMove == true && mainGame.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
+        if (test.AllowAnyMove == true && mainGame.SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             return true; //human can make any move.  computer never can.
         }

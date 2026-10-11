@@ -31,6 +31,10 @@ public class MonopolyCardGameMainGameClass
         _privateAutoResume = privateAutoResume;
         _gameContainer.ProcessTrade = ProcessTrade;
     }
+    public async Task ForceAllowPlayAsync()
+    {
+        await ShowHumanCanPlayAsync();
+    }
     private bool _doContinue;
     public override async Task FinishGetSavedAsync()
     {
@@ -40,7 +44,7 @@ public class MonopolyCardGameMainGameClass
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
             var thisList = await js1.DeserializeObjectAsync<DeckRegularDict<MonopolyCardGameCardInformation>>(thisPlayer.TradeString);
-            thisPlayer.TradePile!.HandList = new DeckRegularDict<MonopolyCardGameCardInformation>(thisList);
+            thisPlayer.TradePile!.ReplaceHandList([.. thisList]);
         });
         PlayerList!.ForEach(player =>
         {
@@ -55,7 +59,7 @@ public class MonopolyCardGameMainGameClass
             StartProcessAfterDrawing5Cards();
         }
         var player = PlayerList.GetSelf();
-        _model.TempHand1.HandList = player.MainHandList; //trying to hook up.
+        _model.TempHand1.ReplaceHandList(player.MainHandList); //trying to hook up.
         bool rets;
         rets = await _privateAutoResume.HasAutoResumeAsync(_gameContainer, _model);
         if (rets)
@@ -67,6 +71,11 @@ public class MonopolyCardGameMainGameClass
     protected override async Task ComputerTurnAsync()
     {
         await Task.CompletedTask;
+    }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        CommandContainer.ReportAllCommandStates();
     }
     public override async Task PopulateSaveRootAsync()
     {
@@ -80,15 +89,12 @@ public class MonopolyCardGameMainGameClass
     }
     protected override Task StartSetUpAsync(bool isBeginning)
     {
+        _model.TempSets1.ClearBoard(); //i think.
+        _gameContainer.TempSets.Clear();
+        _model.Calculator1.ClearCalculator();
         if (isBeginning)
         {
             LoadTradePiles();
-        }
-        else
-        {
-            _model.TempSets1.ClearBoard(); //i think.
-            _gameContainer.TempSets.Clear();
-            _model.Calculator1.ClearCalculator();
         }
         SaveRoot!.ImmediatelyStartTurn = true;
         SaveRoot.GameStatus = EnumWhatStatus.DrawOrTrade;
@@ -103,7 +109,7 @@ public class MonopolyCardGameMainGameClass
             thisPlayer.TradePile!.ClearBoard(_model!.Deck1!.DrawCard());
         });
         var player = PlayerList.GetSelf();
-        _model.TempHand1.HandList = player.MainHandList;
+        _model.TempHand1.ReplaceHandList(player.MainHandList);
         await base.LastPartOfSetUpBeforeBindingsAsync();
     }
     async Task IMiscDataNM.MiscDataReceived(string status, string content)
@@ -119,7 +125,6 @@ public class MonopolyCardGameMainGameClass
                 var thisCol = await content.GetObjectsFromDataAsync(SingleInfo!.MainHandList);
                 thisCol.ForEach(thisCard => SingleInfo.TradePile!.AddCard(thisCard.Deck));
                 SingleInfo.TradePile!.SetPreviousStatus();
-                _command.UpdateAll();
                 Network!.IsEnabled = true;
                 return;
             case "trade2":
@@ -140,7 +145,6 @@ public class MonopolyCardGameMainGameClass
             case "putback":
                 SingleInfo = PlayerList.GetWhoPlayer();
                 await SingleInfo.TradePile!.PutBackAsync();
-                _command.UpdateAll();
                 Network!.IsEnabled = true;
                 return;
             default:
@@ -185,6 +189,7 @@ public class MonopolyCardGameMainGameClass
             }
             SaveRoot.GameStatus = EnumWhatStatus.Other;
             SaveRoot.ManuelStatus = EnumManuelStatus.OthersLayingDown;
+            _gameContainer.RefreshMainScreen?.Invoke();
         }
         await ContinueTurnAsync();
     }
@@ -197,11 +202,6 @@ public class MonopolyCardGameMainGameClass
             return;
         }
         await this.RoundOverNextAsync();
-    }
-    public async Task ForceAllowPlayAsync()
-    {
-        await ShowHumanCanPlayAsync();
-        _command.UpdateAll();
     }
     public override async Task EndTurnAsync()
     {
@@ -329,7 +329,6 @@ public class MonopolyCardGameMainGameClass
         });
         SingleInfo.PreviousMoney = newScore;
         SingleInfo.TotalMoney += newScore;
-        _command.UpdateAll(); //just in case its needed for blazor (?)
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.5);

@@ -13,10 +13,7 @@ public class CrazyEightsSaveInfo : BasicSavedCardClass<CrazyEightsPlayerItem, Re
                 if (_model != null)
                 {
                     _model.ChooseSuit = value;
-                    if (_aggregator is not null)
-                    {
-                        _aggregator.Publish(new ChooseSuitEventModel());
-                    }
+                    _aggregator?.Publish(new ChooseSuitEventModel());
                 }
             }
         }

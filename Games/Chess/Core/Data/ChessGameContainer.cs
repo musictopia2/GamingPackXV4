@@ -17,8 +17,8 @@ public class ChessGameContainer : BasicGameContainer<ChessPlayerItem, ChessSaveI
         CurrentPiece = EnumPieceType.None;
     }
     public AnimateBasicGameBoard Animates;
-    internal BasicList<MoveInfo> CompleteMoveList { get; set; } = new();
-    public BasicList<MoveInfo> CurrentMoveList { get; set; } = new(); //needs to be public so blazor ui can use it.
+    internal BasicList<MoveInfo> CompleteMoveList { get; set; } = [];
+    public BasicList<MoveInfo> CurrentMoveList { get; set; } = []; //needs to be public so blazor ui can use it.
     public BasicList<SpaceCP>? SpaceList;
     public EnumPieceType CurrentPiece { get; set; } //has to be public so blazor can use it.
     public bool CanUpdate { get; set; } = true;

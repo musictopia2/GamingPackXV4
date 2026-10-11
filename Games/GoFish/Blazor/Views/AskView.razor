@@ -1,4 +1,5 @@
-﻿@if (Model == null || DataContext == null || Model.AskList.ItemList.Count == 15)
+﻿@inherits ParameterGameView<AskViewModel>
+@if (Model == null || DataContext == null || Model.AskList.ItemList.Count == 15)
 {
     return;
 }

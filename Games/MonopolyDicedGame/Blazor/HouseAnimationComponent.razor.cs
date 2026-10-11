@@ -14,12 +14,12 @@ public partial class HouseAnimationComponent : IDisposable
     public void Dispose()
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
     {
-        DataContext!.CommandContainer.RemoveAction("housedice");
+        DataContext!.CommandContainer.RemoveSpecificAction("housedice");
     }
 
     protected override void OnInitialized()
     {
-        DataContext!.CommandContainer.AddAction(ShowChange, "housedice");
+        DataContext!.CommandContainer.AddSpecificAction("housedice", ShowChange);
         base.OnInitialized();
     }
     private void ShowChange()

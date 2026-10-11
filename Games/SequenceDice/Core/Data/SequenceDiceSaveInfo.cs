@@ -11,10 +11,7 @@ public class SequenceDiceSaveInfo : BasicSavedBoardDiceGameClass<SequenceDicePla
             if (SetProperty(ref _instructions, value))
             {
                 //can decide what to do when property changes
-                if (_model != null)
-                {
-                    _model.Instructions = value;
-                }
+                _model?.Instructions = value;
             }
 
         }

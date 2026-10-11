@@ -1,29 +1,24 @@
 ﻿namespace SkuckCardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class PlayChoiceProcesses : IPlayChoiceProcesses
+public class PlayChoiceProcesses(SkuckCardGameGameContainer gameContainer) : IPlayChoiceProcesses
 {
-    private readonly SkuckCardGameGameContainer _gameContainer;
-    public PlayChoiceProcesses(SkuckCardGameGameContainer gameContainer)
-    {
-        _gameContainer = gameContainer;
-    }
     async Task IPlayChoiceProcesses.ChooseToPassAsync()
     {
-        if (_gameContainer.WhoTurn == 1)
+        if (gameContainer.WhoTurn == 1)
         {
-            _gameContainer.WhoTurn = 2;
+            gameContainer.WhoTurn = 2;
         }
         else
         {
-            _gameContainer.WhoTurn = 1;
+            gameContainer.WhoTurn = 1;
         }
-        _gameContainer.SaveRoot!.WhatStatus = EnumStatusList.NormalPlay;
-        await _gameContainer.StartNewTrickAsync!.Invoke();
+        gameContainer.SaveRoot!.WhatStatus = EnumStatusList.NormalPlay;
+        await gameContainer.StartNewTrickAsync!.Invoke();
     }
     async Task IPlayChoiceProcesses.ChooseToPlayAsync()
     {
-        _gameContainer.SaveRoot!.WhatStatus = EnumStatusList.NormalPlay;
-        await _gameContainer.StartNewTrickAsync!.Invoke();
+        gameContainer.SaveRoot!.WhatStatus = EnumStatusList.NormalPlay;
+        await gameContainer.StartNewTrickAsync!.Invoke();
     }
 }

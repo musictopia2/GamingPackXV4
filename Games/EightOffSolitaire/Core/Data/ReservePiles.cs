@@ -1,9 +1,6 @@
 ﻿namespace EightOffSolitaire.Core.Data;
-public class ReservePiles : HandObservable<SolitaireCard>
+public class ReservePiles(CommandContainer command) : HandObservable<SolitaireCard>(command)
 {
-    public ReservePiles(CommandContainer command) : base(command)
-    {
-    }
     public int HowManyCards => HandList.Count;
     public void AddCard(SolitaireCard thisCard) => HandList.Add(thisCard);
     public void ClearBoard() => HandList.Clear();

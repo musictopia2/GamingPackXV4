@@ -12,7 +12,8 @@ public partial class ShowCardUI
     public EnumShowCategory ShowCategory { get; set; }
     private DetailCardObservable? _detail;
     private string _text = "";
-    protected override void OnParametersSet()
+
+    private void Refresh()
     {
         if (CompleteContainer == null)
         {
@@ -39,6 +40,12 @@ public partial class ShowCardUI
             default:
                 break;
         }
+    }
+
+    protected override void OnParametersSet()
+    {
+        Refresh();
+        
         base.OnParametersSet();
     }
 }

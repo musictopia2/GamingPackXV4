@@ -114,7 +114,7 @@ public static class Extensions
         public DeckRegularDict<LifeCardGameCardInformation> OpponentStory()
         {
             var newList = list.Where(items => items.PlayerCategory != EnumPlayerCategory.Self).ToBasicList();
-            DeckRegularDict<LifeCardGameCardInformation> output = new();
+            DeckRegularDict<LifeCardGameCardInformation> output = [];
             newList.ForEach(thisPlayer => output.AddRange(thisPlayer.LifeStory!.HandList));
             return output;
         }
@@ -143,10 +143,7 @@ public static class Extensions
             }
             if (thisMode == EnumSelectMode.ChoosePlayer)
             {
-                if (gameContainer.CloseOtherScreenAsync != null)
-                {
-                    await gameContainer.CloseOtherScreenAsync();
-                }
+                gameContainer.CloseOtherScreen?.Invoke();
             }
             else
             {
@@ -190,10 +187,7 @@ public static class Extensions
                 {
                     throw new Exception("Don't know for " + thisCard.Action.ToString());
                 }
-                if (gameContainer.LoadOtherScreenAsync != null)
-                {
-                    await gameContainer.LoadOtherScreenAsync();
-                }
+                gameContainer.LoadOtherScreen?.Invoke();
             }
             list.ForEach(thisPlayer =>
             {

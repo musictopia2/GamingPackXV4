@@ -1,26 +1,17 @@
 namespace GalaxyCardGame.Core.ViewModels;
 [InstanceGame]
-public partial class GalaxyCardGameMainViewModel : BasicCardGamesVM<GalaxyCardGameCardInformation>
-{
-    private readonly GalaxyCardGameMainGameClass _mainGame; //if we don't need, delete.
-    private readonly GalaxyCardGameVMData _model;
-    private readonly IToast _toast;
-    public GalaxyCardGameMainViewModel(CommandContainer commandContainer,
+public partial class GalaxyCardGameMainViewModel(CommandContainer commandContainer,
         GalaxyCardGameMainGameClass mainGame,
         GalaxyCardGameVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<GalaxyCardGameCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _toast = toast;
-        _model.Deck1.NeverAutoDisable = true;
-        _mainGame.PlayerList.ForEach(player =>
+        viewModel.Deck1.NeverAutoDisable = true;
+        mainGame.PlayerList.ForEach(player =>
         {
             if (player.PlanetHand == null)
             {
@@ -51,27 +42,33 @@ public partial class GalaxyCardGameMainViewModel : BasicCardGamesVM<GalaxyCardGa
                 return player.CanEnableMoon();
             }));
 
-            commandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
+            CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
 
         });
-        _model.TrickArea1.SendEnableProcesses(this, () => _mainGame.CanEnableTrickAreas);
-        CreateCommands(commandContainer);
+        viewModel.TrickArea1.SendEnableProcesses(this, () => mainGame.CanEnableTrickAreas);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
+    }
+    protected override Task CloseAsync()
+    {
+        CommandContainer.ExecutingChanged = null;
+        return base.CloseAsync();
     }
     partial void CreateCommands(CommandContainer command);
     private void CommandContainer_ExecutingChanged()
     {
-        if (_mainGame!.SaveRoot!.GameStatus == EnumGameStatus.PlaceSets)
+        if (mainGame!.SaveRoot!.GameStatus == EnumGameStatus.PlaceSets)
         {
-            _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectAsMany;
+            viewModel.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectAsMany;
         }
         else
         {
-            _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectOneOnly;
+            viewModel.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectOneOnly;
         }
     }
     public override bool CanEndTurn()
     {
-        return _mainGame!.CanEndTurn();
+        return mainGame!.CanEndTurn();
     }
     protected override bool CanEnableDeck()
     {
@@ -89,21 +86,21 @@ public partial class GalaxyCardGameMainViewModel : BasicCardGamesVM<GalaxyCardGa
     {
         return true;
     }
-    public bool CanMoon => _mainGame!.SingleInfo!.CanEnableMoon();
+    public bool CanMoon => mainGame!.SingleInfo!.CanEnableMoon();
     [Command(EnumCommandCategory.Game)]
     public async Task MoonAsync()
     {
-        var thisList = _model.PlayerHand1.ListSelectedObjects();
-        if (_mainGame!.HasValidMoon(thisList) == false)
+        var thisList = viewModel.PlayerHand1.ListSelectedObjects();
+        if (mainGame!.HasValidMoon(thisList) == false)
         {
-            _toast.ShowUserErrorToast("Invalid Moon");
+            Toast.ShowUserErrorToast("Invalid Moon");
             return;
         }
-        if (_mainGame.BasicData!.MultiPlayer)
+        if (mainGame.BasicData!.MultiPlayer)
         {
             var tempList = thisList.GetDeckListFromObjectList();
-            await _mainGame.Network!.SendAllAsync("newmoon", tempList);
+            await mainGame.Network!.SendAllAsync("newmoon", tempList);
         }
-        await _mainGame.PlayNewMoonAsync(thisList);
+        await mainGame.PlayNewMoonAsync(thisList);
     }
 }

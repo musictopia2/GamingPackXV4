@@ -14,7 +14,6 @@ global using CommonBasicLibraries.BasicUIProcesses;
 global using BasicGameFrameworkLibrary.Core.CommandClasses;
 global using BasicGameFrameworkLibrary.Core.ViewModels;
 global using BasicGameFrameworkLibrary.Core.ViewModelInterfaces;
-global using MVVMFramework.ViewModels;
 global using Checkers.Core.Logic;
 global using BasicGameFrameworkLibrary.Core.MiscProcesses;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.MapHelpers;
@@ -43,7 +42,8 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
 global using System.Drawing; //very common
 global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.CheckersChessHelpers;
 global using BasicGameFrameworkLibrary.Core.AnimationClasses;
-global using CheckersCP.Data;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using cs1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.GamePieces;
+global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;

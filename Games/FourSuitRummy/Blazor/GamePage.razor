@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="FourSuitRummyMainViewModel">
+    <MainScreen>
         <FourSuitRummyMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<FourSuitRummyPlayerItem>">
-        <MultiplayerOpeningView P="FourSuitRummyPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="FourSuitRummyPlayerItem" />
 </CascadingValue>

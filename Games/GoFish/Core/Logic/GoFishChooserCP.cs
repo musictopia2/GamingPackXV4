@@ -1,10 +1,10 @@
 ﻿namespace GoFish.Core.Logic;
-public class GoFishChooserCP : SimpleEnumPickerVM<EnumRegularCardValueList>
+public class GoFishChooserCP(CommandContainer command) : SimpleEnumPickerVM<EnumRegularCardValueList>(command, new CardValueListChooser())
 {
     public void LoadFromHandCardValues(GoFishPlayerItem thisPlayer) //its smart enough to take their hand part
     {
         var thisList = thisPlayer.MainHandList.GroupBy(items => items.Value).Select(Items => Items.Key).ToBasicList();
-        BasicList<BasicPickerData<EnumRegularCardValueList>> tempList = new();
+        BasicList<BasicPickerData<EnumRegularCardValueList>> tempList = [];
         thisList.ForEach(items =>
         {
             BasicPickerData<EnumRegularCardValueList> thisPiece = new();
@@ -15,5 +15,4 @@ public class GoFishChooserCP : SimpleEnumPickerVM<EnumRegularCardValueList>
         });
         ItemList.ReplaceRange(tempList);
     }
-    public GoFishChooserCP(CommandContainer command) : base(command, new CardValueListChooser()) { }
 }

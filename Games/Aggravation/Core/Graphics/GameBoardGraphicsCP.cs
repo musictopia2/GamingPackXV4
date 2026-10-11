@@ -4,7 +4,7 @@
 public class GameBoardGraphicsCP
 {
     public static SizeF OriginalSize => new(600, 600);
-    public Dictionary<int, RectangleF> SpaceList = new();
+    public Dictionary<int, RectangleF> SpaceList = [];
     public GameBoardGraphicsCP()
     {
         CreateSpaces();

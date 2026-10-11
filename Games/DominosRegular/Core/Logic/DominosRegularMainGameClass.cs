@@ -1,4 +1,3 @@
-
 namespace DominosRegular.Core.Logic;
 [SingletonGame]
 public class DominosRegularMainGameClass : DominosGameClass<SimpleDominoInfo, DominosRegularPlayerItem, DominosRegularSaveInfo>
@@ -19,11 +18,18 @@ public class DominosRegularMainGameClass : DominosGameClass<SimpleDominoInfo, Do
         ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     {
         _model = model;
+        _command = command;
         _toast = toast;
         DominosToPassOut = 6; //usually 6 but can be changed.
         _model.GameBoard1.DominoPileClicked = DominoPileClicked;
     }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        _model.GameBoard1.ReportCanExecuteChange();
+    }
     private readonly DominosRegularVMData _model;
+    private readonly CommandContainer _command;
     private readonly IToast _toast;
     private bool _didPlay;
     private bool _wentOut;

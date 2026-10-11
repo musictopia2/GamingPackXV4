@@ -14,7 +14,7 @@ public class Phase10DetailClass : IGameInfo, ICardInfo<Phase10CardInformation>
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<Phase10CardInformation>.CardsToPassOut => 10;
-    BasicList<int> ICardInfo<Phase10CardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<Phase10CardInformation>.PlayerExcludeList => [];
     bool ICardInfo<Phase10CardInformation>.AddToDiscardAtBeginning => true;
     bool ICardInfo<Phase10CardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<Phase10CardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,11 +22,11 @@ public class Phase10DetailClass : IGameInfo, ICardInfo<Phase10CardInformation>
     bool ICardInfo<Phase10CardInformation>.PlayerGetsCards => true;
     bool ICardInfo<Phase10CardInformation>.NoPass => false;
     bool ICardInfo<Phase10CardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<Phase10CardInformation> ICardInfo<Phase10CardInformation>.DummyHand { get; set; } = new DeckRegularDict<Phase10CardInformation>();
+    DeckRegularDict<Phase10CardInformation> ICardInfo<Phase10CardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<Phase10CardInformation>.HasDrawAnimation => true;
     bool ICardInfo<Phase10CardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<Phase10CardInformation>.DiscardExcludeList(IListShuffler<Phase10CardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

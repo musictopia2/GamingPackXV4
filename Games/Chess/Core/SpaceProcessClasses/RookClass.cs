@@ -19,7 +19,7 @@ public class RookClass : IChessMan
         SpaceCP? c;
         UpdateChecker();
         // up processes
-        BasicList<CheckersChessVector> output = new();
+        BasicList<CheckersChessVector> output = [];
         do
         {
             checkRow -= 1;

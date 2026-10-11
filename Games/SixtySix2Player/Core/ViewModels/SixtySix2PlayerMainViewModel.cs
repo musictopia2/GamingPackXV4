@@ -1,27 +1,24 @@
 namespace SixtySix2Player.Core.ViewModels;
 [InstanceGame]
-public partial class SixtySix2PlayerMainViewModel : BasicCardGamesVM<SixtySix2PlayerCardInformation>
-{
-    private readonly SixtySix2PlayerMainGameClass _mainGame; //if we don't need, delete.
-    private readonly SixtySix2PlayerVMData _model;
-    private readonly IToast _toast;
-    public SixtySix2PlayerMainViewModel(CommandContainer commandContainer,
+public partial class SixtySix2PlayerMainViewModel(CommandContainer commandContainer,
         SixtySix2PlayerMainGameClass mainGame,
         SixtySix2PlayerVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<SixtySix2PlayerCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _toast = toast;
-        _model.Deck1.NeverAutoDisable = true;
-        commandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
-        CreateCommands(commandContainer);
+        viewModel.Deck1.NeverAutoDisable = true;
+        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
+    }
+    protected override Task CloseAsync()
+    {
+        CommandContainer.ExecutingChanged = null;
+        return base.CloseAsync();
     }
     partial void CreateCommands(CommandContainer command);
     private void CommandContainer_ExecutingChanged()
@@ -32,102 +29,101 @@ public partial class SixtySix2PlayerMainViewModel : BasicCardGamesVM<SixtySix2Pl
         }
         if (CanAnnounceMarriage)
         {
-            _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectAsMany;
+            viewModel.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectAsMany;
         }
         else
         {
-            _model.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectOneOnly;
+            viewModel.PlayerHand1!.AutoSelect = EnumHandAutoType.SelectOneOnly;
         }
     }
-    public bool CanAnnounceMarriage => _model!.TrickArea1!.IsLead && _mainGame.SaveRoot!.CardsForMarriage.Count == 0;
+    public bool CanAnnounceMarriage => viewModel!.TrickArea1!.IsLead && mainGame.SaveRoot!.CardsForMarriage.Count == 0;
     [Command(EnumCommandCategory.Game)]
     public async Task AnnouceMarriageAsync()
     {
-        int howMany = _model.PlayerHand1.HowManySelectedObjects;
+        int howMany = viewModel.PlayerHand1.HowManySelectedObjects;
         if (howMany != 2)
         {
-            _toast.ShowUserErrorToast("Must choose 2 cards");
+            Toast.ShowUserErrorToast("Must choose 2 cards");
             return;
         }
-        var thisList = _model.PlayerHand1.ListSelectedObjects();
-        var thisMarriage = _mainGame!.WhichMarriage(thisList);
+        var thisList = viewModel.PlayerHand1.ListSelectedObjects();
+        var thisMarriage = mainGame!.WhichMarriage(thisList);
         if (thisMarriage == EnumMarriage.None)
         {
-            _toast.ShowUserErrorToast("This is not a valid marrige");
+            Toast.ShowUserErrorToast("This is not a valid marrige");
             return;
         }
-        if (_mainGame.CanShowMarriage(thisMarriage) == false)
+        if (mainGame.CanShowMarriage(thisMarriage) == false)
         {
-            _toast.ShowUserErrorToast("Cannot show marriage because the points will put you over 66 points.");
+            Toast.ShowUserErrorToast("Cannot show marriage because the points will put you over 66 points.");
             return;
         }
         var tempList = thisList.GetDeckListFromObjectList();
-        if (_mainGame.BasicData!.MultiPlayer)
+        if (mainGame.BasicData!.MultiPlayer)
         {
-            await _mainGame.Network!.SendAllAsync("announcemarriage", tempList);
+            await mainGame.Network!.SendAllAsync("announcemarriage", tempList);
         }
-        await _mainGame.AnnounceMarriageAsync(tempList);
+        await mainGame.AnnounceMarriageAsync(tempList);
     }
     public bool CanGoOut()
     {
-        if (_mainGame!.CanAnnounceMarriageAtBeginning == true || _model.TrickArea1!.IsLead && _mainGame.SaveRoot!.CardsForMarriage.Count == 0)
+        if (mainGame!.CanAnnounceMarriageAtBeginning == true || viewModel.TrickArea1!.IsLead && mainGame.SaveRoot!.CardsForMarriage.Count == 0)
         {
-            return _model.TrickArea1!.IsLead;
+            return viewModel.TrickArea1!.IsLead;
         }
         return false;
     }
     [Command(EnumCommandCategory.Game)]
     public async Task GoOutAsync()
     {
-        if (_mainGame.BasicData!.MultiPlayer)
+        if (mainGame.BasicData!.MultiPlayer)
         {
-            await _mainGame.Network!.SendAllAsync("goout");
+            await mainGame.Network!.SendAllAsync("goout");
         }
-        await _mainGame!.GoOutAsync();
+        await mainGame!.GoOutAsync();
     }
-    public string DeckCount => _model.Deck1.TextToAppear;
     protected override bool CanEnableDeck()
     {
         return false;
     }
     protected override bool CanEnablePile1()
     {
-        return _mainGame!.CanExchangeForDiscard();
+        return mainGame!.CanExchangeForDiscard();
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
-        if (_mainGame!.CanExchangeForDiscard() == false)
+        if (mainGame!.CanExchangeForDiscard() == false)
         {
             throw new CustomBasicException("Should have been disabled because cannot exchange for discard");
         }
-        int howMany = _model.PlayerHand1!.HowManySelectedObjects;
+        int howMany = viewModel.PlayerHand1!.HowManySelectedObjects;
         if (howMany == 0)
         {
-            _toast.ShowUserErrorToast("Must choose a card to exchange");
+            Toast.ShowUserErrorToast("Must choose a card to exchange");
             return;
         }
         if (howMany > 1)
         {
-            _toast.ShowUserErrorToast("Cannot choose more than one card to exchange");
+            Toast.ShowUserErrorToast("Cannot choose more than one card to exchange");
             return;
         }
-        int decks = _model.PlayerHand1!.ObjectSelected();
-        var thisCard = _mainGame!.SingleInfo!.MainHandList.GetSpecificItem(decks);
+        int decks = viewModel.PlayerHand1!.ObjectSelected();
+        var thisCard = mainGame!.SingleInfo!.MainHandList.GetSpecificItem(decks);
         if (thisCard.Value > EnumRegularCardValueList.Nine)
         {
-            _toast.ShowUserErrorToast("Must choose a nine to exchange");
+            Toast.ShowUserErrorToast("Must choose a nine to exchange");
             return;
         }
-        if (thisCard.Suit != _mainGame.SaveRoot!.TrumpSuit)
+        if (thisCard.Suit != mainGame.SaveRoot!.TrumpSuit)
         {
-            _toast.ShowUserErrorToast("Must choose the nine of the trump suit in order to exchange");
+            Toast.ShowUserErrorToast("Must choose the nine of the trump suit in order to exchange");
             return;
         }
-        if (_mainGame.BasicData!.MultiPlayer)
+        if (mainGame.BasicData!.MultiPlayer)
         {
-            await _mainGame.Network!.SendAllAsync("exchangediscard", thisCard.Deck);
+            await mainGame.Network!.SendAllAsync("exchangediscard", thisCard.Deck);
         }
-        await _mainGame!.ExchangeDiscardAsync(thisCard.Deck);
+        await mainGame!.ExchangeDiscardAsync(thisCard.Deck);
     }
     public override bool CanEnableAlways()
     {

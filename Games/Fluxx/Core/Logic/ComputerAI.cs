@@ -23,7 +23,7 @@ public static class ComputerAI
             throw new CustomBasicException("Must discard at least one keeper");
         }
         var firsts = gameContainer.SingleInfo!.KeeperList.GetRandomList(false, howMany);
-        return new DeckRegularDict<FluxxCardInformation>(firsts);
+        return [.. firsts];
     }
     public static DeckRegularDict<FluxxCardInformation> CardsToDiscardFromHand(FluxxGameContainer gameContainer, int howMany)
     {
@@ -84,7 +84,7 @@ public static class ComputerAI
         var howMany = gameContainer.Random.GetRandomNumber(maxs, 0); // can even choose 0 to discard
         if (howMany == 0)
         {
-            return new();
+            return [];
         }
         var tempList = actionContainer.GetTempRuleList();
         return tempList.GetRandomList(false, howMany).ToBasicList();
@@ -106,7 +106,7 @@ public static class ComputerAI
     }
     public static EnumDirection GetDirection()
     {
-        BasicList<EnumDirection> tempList = new() { EnumDirection.Left, EnumDirection.Right };
+        BasicList<EnumDirection> tempList = [EnumDirection.Left, EnumDirection.Right];
         return tempList.GetRandomItem();
     }
     public static int GoalToRemove(FluxxGameContainer gameContainer)

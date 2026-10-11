@@ -1,21 +1,4 @@
 namespace ChineseCheckers.Core.ViewModels;
-public class ChineseCheckersShellViewModel : BasicBoardGamesShellViewModel<ChineseCheckersPlayerItem>
+public class ChineseCheckersShellViewModel(IGamePackageResolver mainContainer, CommandContainer container, IGameInfo gameData, BasicData basicData, IMultiplayerSaveState save, TestOptions test, IEventAggregator aggregator, IToast toast) : BeginningColorShellViewModel<ChineseCheckersPlayerItem>(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
 {
-    public ChineseCheckersShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        BasicData basicData,
-        IMultiplayerSaveState save,
-        TestOptions test,
-        IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<ChineseCheckersMainViewModel>();
-        return model;
-    }
 }

@@ -2,7 +2,7 @@ namespace Skipbo.Core.Data;
 [SingletonGame]
 public class SkipboSaveInfo : BasicSavedCardClass<SkipboPlayerItem, SkipboCardInformation>, IMappable, ISaveInfo
 {
-    public BasicList<BasicPileInfo<SkipboCardInformation>> PublicPileList { get; set; } = new();
+    public BasicList<BasicPileInfo<SkipboCardInformation>> PublicPileList { get; set; } = [];
     private int _cardsToShuffle;
     public int CardsToShuffle
     {

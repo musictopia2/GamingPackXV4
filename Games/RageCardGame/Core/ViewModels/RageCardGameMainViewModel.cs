@@ -1,21 +1,17 @@
 namespace RageCardGame.Core.ViewModels;
 [InstanceGame]
-public class RageCardGameMainViewModel : BasicCardGamesVM<RageCardGameCardInformation>
-{
-    private readonly RageCardGameVMData _model;
-    public RageCardGameMainViewModel(CommandContainer commandContainer,
+public class RageCardGameMainViewModel(CommandContainer commandContainer,
         RageCardGameMainGameClass mainGame,
         RageCardGameVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<RageCardGameCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _model = viewModel;
-        _model.Deck1.NeverAutoDisable = true;
+        viewModel.Deck1.NeverAutoDisable = true;
+        base.AdditionalInitialize();
     }
     protected override bool CanEnableDeck()
     {

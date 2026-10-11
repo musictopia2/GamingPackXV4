@@ -44,10 +44,12 @@ public class GameBoardClass : BasicMultiplePilesCP<RegularSimpleCard>
     }
     public void UnselectCards()
     {
+        
         PileList!.ForConditionalItems(items => items.IsSelected == true, thisPile =>
         {
             thisPile.IsSelected = false;
             thisPile.ThisObject.IsUnknown = true;
+            
         });
     }
     public bool CardsGone => PileList!.All(items => items.ThisObject.Visible == false);

@@ -1,10 +1,10 @@
 ﻿namespace Skipbo.Core.ViewModels;
 [InstanceGame]
-public class PlayerPilesViewModel : ScreenViewModel, IBlankGameVM
+public class PlayerPilesViewModel
 {
     public readonly SkipboVMData Model;
     private readonly SkipboMainGameClass _mainGame;
-    public PlayerPilesViewModel(CommandContainer commandContainer, SkipboGameContainer gameContainer, SkipboVMData model, SkipboMainGameClass mainGame, IEventAggregator aggregator) : base(aggregator)
+    public PlayerPilesViewModel(CommandContainer commandContainer, SkipboGameContainer gameContainer, SkipboVMData model, SkipboMainGameClass mainGame) 
     {
         Model = model;
         Model.DiscardPiles = new DiscardPilesVM<SkipboCardInformation>(commandContainer);

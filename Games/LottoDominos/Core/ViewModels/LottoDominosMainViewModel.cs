@@ -1,68 +1,61 @@
 namespace LottoDominos.Core.ViewModels;
 [InstanceGame]
-public partial class LottoDominosMainViewModel : BasicMultiplayerMainVM, IHandleAsync<ChangeGameStatusEventModel>
-{
-    private readonly LottoDominosMainGameClass _mainGame; //if we don't need, delete.
-    private readonly IGamePackageResolver _resolver;
-    public LottoDominosVMData VMData { get; set; }
-    public LottoDominosMainViewModel(CommandContainer commandContainer,
+[EventAggregatorFromMemberClass(nameof(Aggregator))]
+public partial class LottoDominosMainViewModel(CommandContainer commandContainer,
         LottoDominosMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        LottoDominosVMData data
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        LottoDominosVMData data,
+        LottoDominosScreenState main
+        ) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator), IHandleAsync<ChangeGameStatusEventModel>
+{
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    public LottoDominosScreenState MainView => main;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _resolver = resolver;
-        VMData = data;
+        Subscribe();
+        base.AdditionalInitialize();
     }
-    public ChooseNumberViewModel? ChooseScreen { get; set; }
-    public MainBoardViewModel? BoardScreen { get; set; } //you have to do properties for screens.
-    public PlayerCollection<LottoDominosPlayerItem> GetPlayers => _mainGame.SaveRoot.PlayerList;
-    protected override async Task ActivateAsync()
+    public LottoDominosVMData VMData { get; set; } = data;
+    public PlayerCollection<LottoDominosPlayerItem> GetPlayers => mainGame.SaveRoot.PlayerList;
+    public ChooseNumberViewModel? ChooseNumber { get; private set; }
+    protected override async Task OpenAsync()
     {
-        if (_mainGame.SaveRoot.GameStatus == EnumStatus.ChooseNumber)
+        if (mainGame.SaveRoot.GameStatus == EnumStatus.ChooseNumber)
         {
-            ChooseScreen = _resolver.Resolve<ChooseNumberViewModel>();
-            await LoadScreenAsync(ChooseScreen);
+            ChooseNumber = Resolver.Resolve<ChooseNumberViewModel>();
+            MainView.MainPlay = false;
             return;
         }
-        if (_mainGame.SaveRoot.GameStatus == EnumStatus.NormalPlay)
+        if (mainGame.SaveRoot.GameStatus == EnumStatus.NormalPlay)
         {
-            BoardScreen = _resolver.Resolve<MainBoardViewModel>();
-            await LoadScreenAsync(BoardScreen);
+            ChooseNumber = null;
+            MainView.MainPlay = true;
             return;
         }
         throw new CustomBasicException("Rethink because no status found");
     }
-    protected override async Task TryCloseAsync()
+    protected override Task CloseAsync()
     {
-        if (ChooseScreen is not null)
-        {
-            await CloseSpecificChildAsync(ChooseScreen);
-        }
-        if (BoardScreen is not null)
-        {
-            await CloseSpecificChildAsync(BoardScreen);
-        }
-        await base.TryCloseAsync();
+        ChooseNumber = null;
+        MainView.MainPlay = false;
+        Unsubscribe();
+        return base.CloseAsync();
     }
+    
     async Task IHandleAsync<ChangeGameStatusEventModel>.HandleAsync(ChangeGameStatusEventModel message)
     {
-        if (_mainGame.SaveRoot.GameStatus != EnumStatus.NormalPlay)
+        if (mainGame.SaveRoot.GameStatus != EnumStatus.NormalPlay)
         {
             throw new CustomBasicException("Only normal play is supported to change status.  Otherwise, rethink");
         }
-        if (ChooseScreen == null)
+        if (ChooseNumber == null)
         {
             return;
         }
-        await CloseSpecificChildAsync(ChooseScreen);
-        ChooseScreen = null;
-        BoardScreen = _resolver.Resolve<MainBoardViewModel>();
-        await LoadScreenAsync(BoardScreen);
+        ChooseNumber = null;
+        MainView.MainPlay = true;
     }
 }

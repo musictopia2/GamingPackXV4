@@ -1,7 +1,8 @@
 ﻿namespace Millebournes.Core.ViewModels;
 [InstanceGame]
-public partial class CoupeViewModel : ScreenViewModel, IBlankGameVM
+public partial class CoupeViewModel
 {
+    private readonly CommandContainer _commandContainer;
     private readonly MillebournesVMData _model;
     private readonly MillebournesGameContainer _gameContainer;
     private readonly IToast _toast;
@@ -10,10 +11,9 @@ public partial class CoupeViewModel : ScreenViewModel, IBlankGameVM
         MillebournesVMData model, 
         MillebournesGameContainer gameContainer, 
         IToast toast,
-        MillebournesMainGameClass mainGame, 
-        IEventAggregator aggregator) : base(aggregator)
+        MillebournesMainGameClass mainGame)
     {
-        CommandContainer = commandContainer;
+        _commandContainer = commandContainer;
         _model = model;
         _gameContainer = gameContainer;
         _toast = toast;
@@ -22,25 +22,23 @@ public partial class CoupeViewModel : ScreenViewModel, IBlankGameVM
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task TryCloseAsync()
+    public void Close()
     {
         _model.Stops.TimeUp -= Stops_TimeUp;
-        return base.TryCloseAsync();
     }
-    public CommandContainer CommandContainer { get; set; }
-    private async Task CloseCoupeAsync()
+    private void CloseCoupe()
     {
-        if (_gameContainer.CloseCoupeAsync == null)
+        if (_gameContainer.CloseCoupe == null)
         {
             throw new CustomBasicException("Nobody is handling closing coupe.  Rethink");
         }
-        await _gameContainer.CloseCoupeAsync.Invoke();
+        _gameContainer.CloseCoupe.Invoke();
     }
     private async void Stops_TimeUp()
     {
-        await CloseCoupeAsync();
-        CommandContainer!.IsExecuting = true;
-        CommandContainer.ManuelFinish = true;
+        CloseCoupe();
+        _commandContainer!.IsExecuting = true;
+        _commandContainer.ManuelFinish = true;
         if (_gameContainer.BasicData!.MultiPlayer == false)
         {
             await _mainGame.EndPartAsync(false);
@@ -54,7 +52,7 @@ public partial class CoupeViewModel : ScreenViewModel, IBlankGameVM
     public async Task CoupeAsync()
     {
         _model.Stops!.PauseTimer();
-        await CloseCoupeAsync();
+        CloseCoupe();
         _gameContainer!.SingleInfo = _gameContainer.PlayerList!.GetSelf();
         _gameContainer.CurrentCP = _gameContainer.FindTeam(_gameContainer.SingleInfo.Team);
         bool rets = _mainGame.HasCoupe(out int newDeck);

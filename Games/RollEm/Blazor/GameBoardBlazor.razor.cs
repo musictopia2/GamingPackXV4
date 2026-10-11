@@ -5,7 +5,7 @@ public partial class GameBoardBlazor
     public string TargetHeight { get; set; } = "";
     [Parameter]
     public GameBoardGraphicsCP? BoardData { get; set; }
-    private BasicList<NumberInfo> _numbers = new();
+    private BasicList<NumberInfo> _numbers = [];
     protected override void OnParametersSet()
     {
         _numbers = BoardData!.GetNumberList;

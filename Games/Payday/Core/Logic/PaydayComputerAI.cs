@@ -3,7 +3,7 @@ public static class PaydayComputerAI
 {
     private static BasicList<PaydayPlayerItem> GetPossiblePlayerList(PaydayGameContainer mainGame, PaydayVMData model)
     {
-        BasicList<PaydayPlayerItem> output = new();
+        BasicList<PaydayPlayerItem> output = [];
         BasicList<string> tempList = model.PopUpList!.TextList.Select(items => items.DisplayText).ToBasicList();
         tempList.ForEach(Name =>
         {

@@ -3,5 +3,5 @@ namespace EightOffSolitaire.Core.Data;
 [Cloneable(explicitDeclaration: false)]
 public class EightOffSolitaireSaveInfo : SolitaireSavedClass, IMappable
 {
-    public DeckRegularDict<SolitaireCard> ReserveList { get; set; } = new();
+    public DeckRegularDict<SolitaireCard> ReserveList { get; set; } = [];
 }

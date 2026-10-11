@@ -7,4 +7,5 @@ public class RageDelgates
     public Func<Task>? CloseColorScreenAsync { get; set; }
     public Func<Task>? LoadBidScreenAsync { get; set; }
     public Func<Task>? CloseBidScreenAsync { get; set; }
+    public Func<EnumScreenCategory>? GetCategory { get; set; }
 }

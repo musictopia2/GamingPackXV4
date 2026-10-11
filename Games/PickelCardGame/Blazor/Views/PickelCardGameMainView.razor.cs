@@ -1,14 +1,14 @@
 namespace PickelCardGame.Blazor.Views;
 public partial class PickelCardGameMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private PickelCardGameVMData? _vmData;
     private PickelCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<PickelCardGameVMData>();
-        _gameContainer = aa1.Resolver.Resolve<PickelCardGameGameContainer>();
+        _vmData = Resolver!.Resolve<PickelCardGameVMData>();
+        _gameContainer = Resolver.Resolve<PickelCardGameGameContainer>();
         _labels.AddLabel("Turn", nameof(PickelCardGameVMData.NormalTurn))
              .AddLabel("Trump", nameof(PickelCardGameVMData.TrumpSuit))
              .AddLabel("Status", nameof(PickelCardGameVMData.Status));

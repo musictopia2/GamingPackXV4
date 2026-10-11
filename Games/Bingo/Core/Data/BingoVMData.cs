@@ -1,10 +1,12 @@
 namespace Bingo.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
+[UseStateChanged]
 public partial class BingoVMData : IViewModelData
 {
     public string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
-    public string NumberCalled { get; set; } = "";
+    public partial string Status { get; set; } = "";
+    [StateProperty]
+    public partial string NumberCalled { get; set; } = "";
 }

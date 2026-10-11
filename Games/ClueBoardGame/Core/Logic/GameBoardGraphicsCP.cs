@@ -63,7 +63,7 @@ public class GameBoardGraphicsCP
         public string Direction;
     }
 
-    public BasicList<Room> ArrRooms = new();
+    public BasicList<Room> ArrRooms = [];
     public Hashtable? ArrSquares;
     public static SizeF OriginalSize => new(576, 600);
     public static float SpaceSize => 24;
@@ -73,16 +73,16 @@ public class GameBoardGraphicsCP
         Room obj_TempRoom;
         Door obj_TempDoor;
         RectangleF tempRect;
-        ArrSquares = new();
+        ArrSquares = [];
         // *** Create the rooms
-        ArrRooms = new();
+        ArrRooms = [];
         // ******************************
         // *** Create the kitchen
         obj_TempRoom = new();
         obj_TempRoom.Name = "Kitchen";
         obj_TempRoom.FloorColor1 = cc1.Black;
         obj_TempRoom.FloorColor2 = cc1.White;
-        obj_TempRoom.MiscList = new();
+        obj_TempRoom.MiscList = [];
         obj_TempRoom.PieceArea = new(19, 19, 6, 7);
         tempRect = new(24, 18, 1, 1);
         obj_TempRoom.MiscList.Add(tempRect);
@@ -91,7 +91,7 @@ public class GameBoardGraphicsCP
         tempRect = new(16, 25, 2, 1);
         obj_TempRoom.MiscList.Add(tempRect);
         obj_TempRoom.TextPoint = new(20.5f, 22);
-        obj_TempRoom.Doors = new();
+        obj_TempRoom.Doors = [];
         obj_TempDoor.Direction = "Down";
         obj_TempDoor.Point = new(20, 19);
         obj_TempRoom.Doors.Add(obj_TempDoor);
@@ -102,11 +102,11 @@ public class GameBoardGraphicsCP
         obj_TempRoom.Name = "Ball Room";
         obj_TempRoom.FloorColor1 = cc1.SaddleBrown;
         obj_TempRoom.FloorColor2 = cc1.SaddleBrown;
-        obj_TempRoom.MiscList = new();
+        obj_TempRoom.MiscList = [];
         obj_TempRoom.PieceArea = new RectangleF(9, 18, 8, 6);
         tempRect = new RectangleF(10, 24, 5, 2);
         obj_TempRoom.MiscList.Add(tempRect);
-        obj_TempRoom.Doors = new();
+        obj_TempRoom.Doors = [];
         obj_TempDoor.Direction = "Left";
         obj_TempDoor.Point = new PointF(16, 20);
         obj_TempRoom.Doors.Add(obj_TempDoor);
@@ -126,14 +126,14 @@ public class GameBoardGraphicsCP
         obj_TempRoom.Name = "Conservatory";
         obj_TempRoom.FloorColor1 = cc1.Green;
         obj_TempRoom.FloorColor2 = cc1.White;
-        obj_TempRoom.MiscList = new();
+        obj_TempRoom.MiscList = [];
         obj_TempRoom.PieceArea = new RectangleF(1, 20, 5, 6);
         tempRect = new RectangleF(6, 21, 1, 5);
         obj_TempRoom.MiscList.Add(tempRect);
         tempRect = new RectangleF(7, 25, 2, 1);
         obj_TempRoom.MiscList.Add(tempRect);
         obj_TempRoom.TextPoint = new PointF(1, 23);
-        obj_TempRoom.Doors = new();
+        obj_TempRoom.Doors = [];
         obj_TempDoor.Direction = "Left";
         obj_TempDoor.Point = new PointF(5, 20);
         obj_TempRoom.Doors.Add(obj_TempDoor);
@@ -144,13 +144,13 @@ public class GameBoardGraphicsCP
         obj_TempRoom.Name = "Billiard Room";
         obj_TempRoom.FloorColor1 = cc1.DarkGreen;
         obj_TempRoom.FloorColor2 = cc1.DarkGreen;
-        obj_TempRoom.MiscList = new();
+        obj_TempRoom.MiscList = [];
         obj_TempRoom.PieceArea = new RectangleF(1, 13, 6, 5);
         tempRect = new RectangleF(1, 12, 1, 1);
         obj_TempRoom.MiscList.Add(tempRect);
         tempRect = new RectangleF(1, 18, 1, 1);
         obj_TempRoom.MiscList.Add(tempRect);
-        obj_TempRoom.Doors = new();
+        obj_TempRoom.Doors = [];
         obj_TempDoor.Direction = "Left";
         obj_TempDoor.Point = new PointF(6, 16);
         obj_TempRoom.Doors.Add(obj_TempDoor);
@@ -164,11 +164,11 @@ public class GameBoardGraphicsCP
         obj_TempRoom.Name = "Library";
         obj_TempRoom.FloorColor1 = cc1.Blue;
         obj_TempRoom.FloorColor2 = cc1.Blue;
-        obj_TempRoom.MiscList = new();
+        obj_TempRoom.MiscList = [];
         obj_TempRoom.PieceArea = new RectangleF(1, 7, 6, 5);
         tempRect = new RectangleF(7, 8, 1, 3);
         obj_TempRoom.MiscList.Add(tempRect);
-        obj_TempRoom.Doors = new();
+        obj_TempRoom.Doors = [];
         obj_TempDoor.Direction = "Up";
         obj_TempDoor.Point = new PointF(4, 11);
         obj_TempRoom.Doors.Add(obj_TempDoor);
@@ -182,7 +182,7 @@ public class GameBoardGraphicsCP
         obj_TempRoom.Name = "Study";
         obj_TempRoom.FloorColor1 = cc1.Green;
         obj_TempRoom.FloorColor2 = cc1.Green;
-        obj_TempRoom.MiscList = new();
+        obj_TempRoom.MiscList = [];
         obj_TempRoom.PieceArea = new RectangleF(1, 1, 7, 4);
         tempRect = new RectangleF(8, 1, 1, 1);
         obj_TempRoom.MiscList.Add(tempRect);
@@ -190,10 +190,10 @@ public class GameBoardGraphicsCP
         obj_TempRoom.MiscList.Add(tempRect);
         obj_TempDoor.Direction = "Up";
         obj_TempDoor.Point = new PointF(7, 4);
-        obj_TempRoom.Doors = new()
-        {
+        obj_TempRoom.Doors =
+        [
             obj_TempDoor
-        };
+        ];
         obj_TempRoom.TextPoint = new PointF(3, 3);
         ArrRooms.Add(obj_TempRoom);
         // ******************************
@@ -202,13 +202,13 @@ public class GameBoardGraphicsCP
         obj_TempRoom.Name = "Hall";
         obj_TempRoom.FloorColor1 = cc1.Maroon;
         obj_TempRoom.FloorColor2 = cc1.Maroon;
-        obj_TempRoom.MiscList = new();
+        obj_TempRoom.MiscList = [];
         obj_TempRoom.PieceArea = new RectangleF(10, 1, 6, 7);
         tempRect = new RectangleF(9, 1, 1, 1);
         obj_TempRoom.MiscList.Add(tempRect);
         tempRect = new RectangleF(16, 1, 1, 1);
         obj_TempRoom.MiscList.Add(tempRect);
-        obj_TempRoom.Doors = new();
+        obj_TempRoom.Doors = [];
         obj_TempDoor.Direction = "Right";
         obj_TempDoor.Point = new PointF(10, 5);
         obj_TempRoom.Doors.Add(obj_TempDoor);
@@ -225,11 +225,11 @@ public class GameBoardGraphicsCP
         obj_TempRoom.Name = "Lounge";
         obj_TempRoom.FloorColor1 = cc1.SeaGreen;
         obj_TempRoom.FloorColor2 = cc1.SeaGreen;
-        obj_TempRoom.MiscList = new();
+        obj_TempRoom.MiscList = [];
         obj_TempRoom.PieceArea = new RectangleF(18, 1, 7, 6);
         tempRect = new RectangleF(24, 7, 1, 1);
         obj_TempRoom.MiscList.Add(tempRect);
-        obj_TempRoom.Doors = new();
+        obj_TempRoom.Doors = [];
         obj_TempDoor.Direction = "Up";
         obj_TempDoor.Point = new PointF(18, 6);
         obj_TempRoom.Doors.Add(obj_TempDoor);
@@ -240,7 +240,7 @@ public class GameBoardGraphicsCP
         obj_TempRoom.Name = "Dining Room";
         obj_TempRoom.FloorColor1 = cc1.Brown;
         obj_TempRoom.FloorColor2 = cc1.Brown;
-        obj_TempRoom.MiscList = new();
+        obj_TempRoom.MiscList = [];
         obj_TempRoom.PieceArea = new RectangleF(17, 10, 8, 6);
         tempRect = new RectangleF(24, 9, 1, 1);
         obj_TempRoom.MiscList.Add(tempRect);
@@ -248,7 +248,7 @@ public class GameBoardGraphicsCP
         obj_TempRoom.MiscList.Add(tempRect);
         tempRect = new RectangleF(20, 16, 5, 1);
         obj_TempRoom.MiscList.Add(tempRect);
-        obj_TempRoom.Doors = new();
+        obj_TempRoom.Doors = [];
         obj_TempDoor.Direction = "Down";
         obj_TempDoor.Point = new PointF(18, 10);
         obj_TempRoom.Doors.Add(obj_TempDoor);
@@ -263,7 +263,7 @@ public class GameBoardGraphicsCP
         int int_Col;
         // ******************************
         // *** Create the spaces
-        ArrSquares = new Hashtable();
+        ArrSquares = [];
         ArrSquares.Add(new PointF(8, 2), "S" + Convert.ToString(ArrSquares.Count + 1));
         ArrSquares.Add(new PointF(9, 2), "S" + Convert.ToString(ArrSquares.Count + 1));
         ArrSquares.Add(new PointF(8, 3), "S" + Convert.ToString(ArrSquares.Count + 1));
@@ -515,7 +515,7 @@ public class GameBoardGraphicsCP
     }
     public BasicList<(RectangleF rect, int id)> ClickRoomList()
     {
-        BasicList<(RectangleF, int)> output = new();
+        BasicList<(RectangleF, int)> output = [];
         var bounds = new RectangleF(new PointF(0, 0), OriginalSize);
         RectangleF rect_Room;
         float dbl_SquareWidth;
@@ -543,7 +543,7 @@ public class GameBoardGraphicsCP
         float dbl_SquareHeight;
         dbl_SquareWidth = bounds.Width / 24f;
         dbl_SquareHeight = bounds.Height / 25f;
-        BasicList<(RectangleF, int)> output = new();
+        BasicList<(RectangleF, int)> output = [];
         for (int_Row = 1; int_Row <= 25; int_Row++)
         {
             for (int_Col = 1; int_Col <= 24; int_Col++)

@@ -1,38 +1,29 @@
 namespace Minesweeper.Core.ViewModels;
 [InstanceGame]
 [UseLabelGrid]
-public partial class MinesweeperMainViewModel : ScreenViewModel, IBasicEnableProcess, IBlankGameVM, IAggregatorContainer, ILevelVM
-{
-    private readonly BasicData _basicData;
-    private readonly MinesweeperMainGameClass _mainGame;
-    public MinesweeperMainViewModel(IEventAggregator aggregator,
-        CommandContainer commandContainer,
+public partial class MinesweeperMainViewModel(CommandContainer commandContainer,
         IGamePackageResolver resolver,
          LevelClass level,
-        BasicData basicData) : base(aggregator)
-    {
-        CommandContainer = commandContainer;
-        _basicData = basicData;
-        LevelChosen = level.Level; //at this point, can't choose level because its already chosen.
-        this.PopulateMinesNeeded();
-        _mainGame = resolver.ReplaceObject<MinesweeperMainGameClass>();
-        CreateCommands(commandContainer);
-    }
+        BasicData basicData,
+        IEventAggregator aggregator) : IBasicEnableProcess,
+    IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>, ILevelVM
+{
+    private MinesweeperMainGameClass _mainGame = null!;
+    private partial void Subscribe();
+    private partial void Unsubscribe();
     partial void CreateCommands(CommandContainer container);
-    public CommandContainer CommandContainer { get; set; }
-    IEventAggregator IAggregatorContainer.Aggregator => Aggregator;
     public bool CanEnableBasics()
     {
         return true;
     }
     [LabelColumn]
-    public int NumberOfMinesLeft { get; set; }
+    public partial int NumberOfMinesLeft { get; set; }
     [LabelColumn]
-    public int HowManyMinesNeeded { get; set; } = 10;
+    public partial int HowManyMinesNeeded { get; set; }
     public int Rows { get; set; } = 9;
     public int Columns { get; set; } = 10;
     [LabelColumn]
-    public EnumLevel LevelChosen { get; set; }
+    public partial EnumLevel LevelChosen { get; set; }
     public bool IsFlagging { get; set; }
     [Command(EnumCommandCategory.Plain)]
     public void ChangeFlag()
@@ -50,14 +41,28 @@ public partial class MinesweeperMainViewModel : ScreenViewModel, IBasicEnablePro
         }
         await _mainGame.ClickSingleSquareAsync(square);
     }
-    protected override async Task ActivateAsync()
+    
+    void IMainGameVM.Initialize()
     {
-        _basicData.GameDataLoading = false; //because no autoresume.
-        await base.ActivateAsync();
+        LevelChosen = level.Level; //at this point, can't choose level because its already chosen.
+        this.PopulateMinesNeeded();
+        _mainGame = resolver.ReplaceObject<MinesweeperMainGameClass>();
+        CreateCommands(commandContainer);
+        Subscribe();
+    }
+
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
+    {
+        basicData.GameDataLoading = false; //because no autoresume.
         NumberOfMinesLeft = _mainGame.NumberOfMines; //i think.
         _mainGame.NumberOfColumns = Columns;
         _mainGame.NumberOfRows = Rows;
         _mainGame.NumberOfMines = HowManyMinesNeeded;
         await _mainGame.NewGameAsync();
+    }
+
+    async Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        Unsubscribe();   
     }
 }

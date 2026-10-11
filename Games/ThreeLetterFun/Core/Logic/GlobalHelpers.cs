@@ -64,7 +64,7 @@ public class GlobalHelpers
     }
     private async Task<BasicList<ThreeLetterFunWordModel>> GetSavedWordsAsync()
     {
-        BasicList<ThreeLetterFunWordModel> output = new();
+        BasicList<ThreeLetterFunWordModel> output = [];
         var firstList = await _logic.GetWordsAsync(null, 3);
         firstList.ForEach(firstWord =>
         {
@@ -77,7 +77,7 @@ public class GlobalHelpers
     }
     private static BasicList<char> PrivateGetTiles(BasicList<SavedTile> thisList)
     {
-        BasicList<char> finList = new();
+        BasicList<char> finList = [];
         thisList.ForEach(thisTile =>
         {
             int x;

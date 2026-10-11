@@ -2,7 +2,7 @@ namespace Flinch.Core.Data;
 [SingletonGame]
 public class FlinchSaveInfo : BasicSavedCardClass<FlinchPlayerItem, FlinchCardInformation>, IMappable, ISaveInfo
 {
-    public BasicList<BasicPileInfo<FlinchCardInformation>> PublicPileList { get; set; } = new();
+    public BasicList<BasicPileInfo<FlinchCardInformation>> PublicPileList { get; set; } = [];
     private int _cardsToShuffle;
     public int CardsToShuffle
     {

@@ -3,11 +3,11 @@ namespace Rummy500.Core.Data;
 public partial class Rummy500PlayerItem : PlayerSingleHand<RegularRummyCard>
 {//anything needed is here
     [ScoreColumn]
-    public int PointsPlayed { get; set; }
+    public partial int PointsPlayed { get; set; }
     [ScoreColumn]
-    public int CardsPlayed { get; set; }
+    public partial int CardsPlayed { get; set; }
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

@@ -1,17 +1,8 @@
 ﻿namespace Backgammon.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class GameBoardProcesses
+public class GameBoardProcesses(BackgammonGameContainer gameContainer, GameBoardGraphicsCP graphicsBoard, BackgammonVMData model)
 {
-    private readonly BackgammonGameContainer _gameContainer;
-    private readonly GameBoardGraphicsCP _graphicsBoard;
-    private readonly BackgammonVMData _model;
-    public GameBoardProcesses(BackgammonGameContainer gameContainer, GameBoardGraphicsCP graphicsBoard, BackgammonVMData model)
-    {
-        _gameContainer = gameContainer;
-        _graphicsBoard = graphicsBoard;
-        _model = model;
-    }
     #region "Reverse Processes"
     internal static int GetReversedID(int oldID)
     {
@@ -35,20 +26,20 @@ public class GameBoardProcesses
     }
     private bool NeedsReversed(int playerConsidered)
     {
-        var tempPlayer = _gameContainer.PlayerList![playerConsidered];
+        var tempPlayer = gameContainer.PlayerList![playerConsidered];
         if (tempPlayer.PlayerCategory == EnumPlayerCategory.Computer)
         {
             return true;
         }
-        if (_gameContainer.BasicData!.MultiPlayer)
+        if (gameContainer.BasicData!.MultiPlayer)
         {
             return tempPlayer.PlayerCategory == EnumPlayerCategory.OtherHuman;
         }
-        if (_gameContainer.PlayerList.Any(items => items.PlayerCategory == EnumPlayerCategory.Computer))
+        if (gameContainer.PlayerList.Any(items => items.PlayerCategory == EnumPlayerCategory.Computer))
         {
             return false;
         }
-        return _gameContainer.WhoTurn != playerConsidered;
+        return gameContainer.WhoTurn != playerConsidered;
     }
     private TriangleClass GetTriangle(int player, int yourID, bool autoPopulate = true)
     {
@@ -62,7 +53,7 @@ public class GameBoardProcesses
         {
             newID = yourID;
         }
-        var thisTriangle = _gameContainer.TriangleList[newID];
+        var thisTriangle = gameContainer.TriangleList[newID];
         if (autoPopulate)
         {
             thisTriangle.PlayerOwns = player;
@@ -72,17 +63,17 @@ public class GameBoardProcesses
     #endregion
     private void PopulateDiceValues()
     {
-        var thisList = _model.Cup!.DiceList;
+        var thisList = model.Cup!.DiceList;
         if (thisList.Count != 2)
         {
             throw new CustomBasicException("There should be just 2 dice values");
         }
-        _gameContainer.FirstDiceValue = thisList.First().Value;
-        _gameContainer.SecondDiceValue = thisList.Last().Value;
+        gameContainer.FirstDiceValue = thisList.First().Value;
+        gameContainer.SecondDiceValue = thisList.Last().Value;
     }
     private void ClearTriangles()
     {
-        foreach (var thisTriangle in _gameContainer.TriangleList.Values)
+        foreach (var thisTriangle in gameContainer.TriangleList.Values)
         {
             thisTriangle.NumberOfTiles = 0;
             thisTriangle.PlayerOwns = 0;
@@ -92,7 +83,7 @@ public class GameBoardProcesses
     private void PopulateTriangles()
     {
         TriangleClass thisTriangle;
-        _gameContainer.PlayerList!.ForEach(thisPlayer =>
+        gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
             if (thisPlayer.CurrentTurnData!.PiecesAtHome > 0)
             {
@@ -174,14 +165,14 @@ public class GameBoardProcesses
     }
     private EnumStatusType CalculateStatus(int index)
     {
-        var thisSpace = _gameContainer.TriangleList[index];
+        var thisSpace = gameContainer.TriangleList[index];
         if (thisSpace.PlayerOwns == 0)
         {
             return EnumStatusType.CompletelyOpen;
         }
         if (thisSpace.NumberOfTiles == 1)
         {
-            if (thisSpace.PlayerOwns == _gameContainer.WhoTurn)
+            if (thisSpace.PlayerOwns == gameContainer.WhoTurn)
             {
                 return EnumStatusType.PlayerHasOne;
             }
@@ -190,7 +181,7 @@ public class GameBoardProcesses
                 return EnumStatusType.KnockOtherPlayer;
             }
         }
-        if (thisSpace.PlayerOwns == _gameContainer.WhoTurn)
+        if (thisSpace.PlayerOwns == gameContainer.WhoTurn)
         {
             return EnumStatusType.PlayerOwns;
         }
@@ -204,7 +195,7 @@ public class GameBoardProcesses
         }
         return whatNum * -1;
     }
-    private BasicList<int> ListSpacesFrom() => _gameContainer.TriangleList.Where(items => items.Value.PlayerOwns == _gameContainer.WhoTurn && items.Key > 0 && items.Key < 25).Select(items => items.Key).OrderBy(items => items).ToBasicList();
+    private BasicList<int> ListSpacesFrom() => gameContainer.TriangleList.Where(items => items.Value.PlayerOwns == gameContainer.WhoTurn && items.Key > 0 && items.Key < 25).Select(items => items.Key).OrderBy(items => items).ToBasicList();
     private bool CanStackUp(bool isReversed)
     {
         var thisList = ListSpacesFrom();
@@ -228,7 +219,7 @@ public class GameBoardProcesses
         {
             return new PointF(0, -11);
         }
-        var thisTriangle = _gameContainer.TriangleList[spaceNumber];
+        var thisTriangle = gameContainer.TriangleList[spaceNumber];
         int values;
         if (thisTriangle.NumberOfTiles > 5)
         {
@@ -281,10 +272,10 @@ public class GameBoardProcesses
         var tempPoint = CalculateDiffs(spaceNumber);
         var diffx = tempPoint.X;
         var diffy = tempPoint.Y;
-        var thisTriangle = _gameContainer.TriangleList[spaceNumber];
+        var thisTriangle = gameContainer.TriangleList[spaceNumber];
         if (thisTriangle.NumberOfTiles == 0)
         {
-            var tempRect = _graphicsBoard.GetRectangleSpace(spaceNumber);
+            var tempRect = graphicsBoard.GetRectangleSpace(spaceNumber);
             return CalculateFirstLocation(spaceNumber, tempRect);
         }
         var thisLocation = thisTriangle.Locations.Last();
@@ -295,10 +286,10 @@ public class GameBoardProcesses
     }
     private BasicList<MoveInfo> MovesWithSpecificNumber(int value)
     {
-        bool willReverse = _gameContainer.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self;
+        bool willReverse = gameContainer.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self;
         bool stacks;
         bool fromStart;
-        if (_gameContainer.SingleInfo.CurrentTurnData!.PiecesAtStart > 0)
+        if (gameContainer.SingleInfo.CurrentTurnData!.PiecesAtStart > 0)
         {
             stacks = false;
             fromStart = true;
@@ -314,7 +305,7 @@ public class GameBoardProcesses
         }
         EnumStatusType thisResult;
         MoveInfo thisMove;
-        BasicList<MoveInfo> thisList = new();
+        BasicList<MoveInfo> thisList = [];
         if (fromStart)
         {
             if (willReverse == false)
@@ -327,7 +318,7 @@ public class GameBoardProcesses
             }
             if (thisResult == EnumStatusType.Closed)
             {
-                return new(); //because no moves can be made
+                return []; //because no moves can be made
             }
             thisMove = new()
             {
@@ -344,12 +335,12 @@ public class GameBoardProcesses
                 thisMove.SpaceFrom = 27;
                 thisMove.SpaceTo = GetReversedID(value);
             }
-            return new() { thisMove };
+            return [thisMove];
         }
         var fromList = ListSpacesFrom();
         if (fromList.Count == 0)
         {
-            return new(); //because there was none.
+            return []; //because there was none.
         }
         int nextStart = 0;
         if (stacks)
@@ -407,13 +398,13 @@ public class GameBoardProcesses
     private void RepositionPieces()
     {
         var offsetSize = new PointF(3, 3);
-        foreach (var thisTriangle in _gameContainer.TriangleList.Values)
+        foreach (var thisTriangle in gameContainer.TriangleList.Values)
         {
             thisTriangle.Locations.Clear();
             if (thisTriangle.NumberOfTiles > 0)
             {
-                int index = _gameContainer.TriangleList.GetKey(thisTriangle);
-                var thisRect = _graphicsBoard.GetRectangleSpace(index);
+                int index = gameContainer.TriangleList.GetKey(thisTriangle);
+                var thisRect = graphicsBoard.GetRectangleSpace(index);
                 var tempPoint = CalculateDiffs(index);
                 var thisLocation = CalculateFirstLocation(index, thisRect);
                 var diffx = tempPoint.X;
@@ -429,44 +420,44 @@ public class GameBoardProcesses
                 });
             }
         }
-        _gameContainer.RefreshPieces = true; //maybe here (?)
+        gameContainer.RefreshPieces = true; //maybe here (?)
     }
     private async Task BackToStartAsync(int player, int index, int oldPosition)
     {
-        var thisPlayer = _gameContainer.PlayerList![player];
+        var thisPlayer = gameContainer.PlayerList![player];
         thisPlayer.CurrentTurnData!.PiecesOnBoard!.RemoveSpecificItem(oldPosition);
         thisPlayer.CurrentTurnData.PiecesAtStart++;
-        _gameContainer.Animates!.LocationTo = CalculateNewLocation(index);
+        gameContainer.Animates!.LocationTo = CalculateNewLocation(index);
         RepositionPieces();
-        int tempTurn = _gameContainer.WhoTurn;
-        _gameContainer.WhoTurn = tempTurn;
-        await _gameContainer.Animates.DoAnimateAsync();
-        _gameContainer.WhoTurn = tempTurn;
-        var thisTriangle = _gameContainer.TriangleList[index];
+        int tempTurn = gameContainer.WhoTurn;
+        gameContainer.WhoTurn = tempTurn;
+        await gameContainer.Animates.DoAnimateAsync();
+        gameContainer.WhoTurn = tempTurn;
+        var thisTriangle = gameContainer.TriangleList[index];
         thisTriangle.PlayerOwns = player;
         thisTriangle.NumberOfTiles += thisTriangle.NumberOfTiles;
         PopulateTriangles();
     }
     private void PopulateMoves()
     {
-        _gameContainer.MoveList.Clear();
+        gameContainer.MoveList.Clear();
         ClearTriangles();
         PopulateTriangles();
-        bool rets = _gameContainer.HadDoubles();
-        BasicList<int> thisList = new();
+        bool rets = gameContainer.HadDoubles();
+        BasicList<int> thisList = [];
         if (rets == true)
         {
-            thisList.Add(_gameContainer.FirstDiceValue);
+            thisList.Add(gameContainer.FirstDiceValue);
         }
         else
         {
-            if (_gameContainer.SaveRoot!.NumberUsed != _gameContainer.FirstDiceValue)
+            if (gameContainer.SaveRoot!.NumberUsed != gameContainer.FirstDiceValue)
             {
-                thisList.Add(_gameContainer.FirstDiceValue);
+                thisList.Add(gameContainer.FirstDiceValue);
             }
-            if (_gameContainer.SaveRoot.NumberUsed != _gameContainer.SecondDiceValue)
+            if (gameContainer.SaveRoot.NumberUsed != gameContainer.SecondDiceValue)
             {
-                thisList.Add(_gameContainer.SecondDiceValue);
+                thisList.Add(gameContainer.SecondDiceValue);
             }
         }
         if (thisList.Count == 0)
@@ -476,67 +467,67 @@ public class GameBoardProcesses
         thisList.ForEach(thisValue =>
         {
             var tempList = MovesWithSpecificNumber(thisValue);
-            _gameContainer.MoveList.AddRange(tempList);
+            gameContainer.MoveList.AddRange(tempList);
         });
         RepositionPieces();
     }
     private void LoadTriangles()
     {
-        _gameContainer.TriangleList = new System.Collections.Generic.Dictionary<int, TriangleClass>();
+        gameContainer.TriangleList = [];
         for (int x = 0; x <= 27; x++)
         {
             var thisTriangle = new TriangleClass();
-            _gameContainer.TriangleList.Add(x, thisTriangle);
+            gameContainer.TriangleList.Add(x, thisTriangle);
         }
     }
     public void ClearBoard()
     {
-        _gameContainer.PlayerList!.ForEach(thisPlayer =>
+        gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.CurrentTurnData = new()
             {
-                PiecesOnBoard = new() { 1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19 }
+                PiecesOnBoard = [1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19]
             };
         });
         LoadTriangles();
-        _gameContainer.MoveList = new();
+        gameContainer.MoveList = [];
         ClearTriangles();
         PopulateTriangles();
-        _gameContainer.SaveRoot!.SpaceHighlighted = -1;
-        _gameContainer.SaveRoot.NumberUsed = 0;
+        gameContainer.SaveRoot!.SpaceHighlighted = -1;
+        gameContainer.SaveRoot.NumberUsed = 0;
         RepositionPieces();
     }
-    private void Repaint()
+    public void Repaint()
     {
-        _gameContainer.RepaintBoard();
+        gameContainer.RepaintBoard();
     }
-    private bool CanEndGame() => _gameContainer.SingleInfo!.CurrentTurnData!.PiecesAtHome == 15;
+    private bool CanEndGame() => gameContainer.SingleInfo!.CurrentTurnData!.PiecesAtHome == 15;
     public async Task UndoAllMovesAsync()
     {
-        _gameContainer.SaveRoot!.NumberUsed = 0;
-        _gameContainer.SaveRoot.SpaceHighlighted = -1;
-        _gameContainer.MoveList.Clear();
-        _gameContainer.SaveRoot.MovesMade = 0;
-        _gameContainer.SaveRoot.MadeAtLeastOneMove = false;
-        _model.LastStatus = "You decided to undo all moves";
-        _gameContainer.PlayerList!.ForEach(player =>
+        gameContainer.SaveRoot!.NumberUsed = 0;
+        gameContainer.SaveRoot.SpaceHighlighted = -1;
+        gameContainer.MoveList.Clear();
+        gameContainer.SaveRoot.MovesMade = 0;
+        gameContainer.SaveRoot.MadeAtLeastOneMove = false;
+        model.LastStatus = "You decided to undo all moves";
+        gameContainer.PlayerList!.ForEach(player =>
         {
             player.CurrentTurnData = player.StartTurnData!.Clone();
         });
-        _gameContainer.SaveRoot.GameStatus = EnumGameStatus.MakingMoves;
+        gameContainer.SaveRoot.GameStatus = EnumGameStatus.MakingMoves;
         PopulateMoves();
         RepositionPieces();
         Repaint();
-        if (_gameContainer.DiceVisibleProcesses == null)
+        if (gameContainer.DiceVisibleProcesses == null)
         {
             throw new CustomBasicException("Nobody is handling dice visible.  Rethink");
         }
-        _gameContainer.DiceVisibleProcesses.Invoke();
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.DiceVisibleProcesses.Invoke();
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     public void ReloadSavedGame()
     {
-        if (_gameContainer is null)
+        if (gameContainer is null)
         {
             throw new CustomBasicException("Must have game container at least though");
         }
@@ -544,7 +535,7 @@ public class GameBoardProcesses
         LoadTriangles();
         PopulateDiceValues();
         PopulateMoves();
-        _gameContainer.DiceVisibleProcesses?.Invoke();
+        gameContainer.DiceVisibleProcesses?.Invoke();
         //_graphicsBoard.Saved = true; //could be iffy
         //_thisE.RepaintBoard();
         //await Task.Delay(1000); //problem is this time, needs the actual coordinates for positioning.
@@ -562,11 +553,11 @@ public class GameBoardProcesses
     //}
     public async Task StartNewTurnAsync()
     {
-        _gameContainer.SaveRoot!.NumberUsed = 0;
-        _gameContainer.MoveList.Clear();
-        _gameContainer.SaveRoot.MovesMade = 0;
-        _gameContainer.SaveRoot.MadeAtLeastOneMove = false;
-        foreach (var player in _gameContainer.PlayerList!)
+        gameContainer.SaveRoot!.NumberUsed = 0;
+        gameContainer.MoveList.Clear();
+        gameContainer.SaveRoot.MovesMade = 0;
+        gameContainer.SaveRoot.MadeAtLeastOneMove = false;
+        foreach (var player in gameContainer.PlayerList!)
         {
             player.StartTurnData = player.CurrentTurnData!.Clone();
         }
@@ -575,71 +566,71 @@ public class GameBoardProcesses
         PopulateMoves();
         RepositionPieces();
         Repaint();
-        if (_gameContainer.MoveList.Count == 0)
+        if (gameContainer.MoveList.Count == 0)
         {
-            _model.LastStatus = "No Moves Available";
-            if (_gameContainer.Test!.NoAnimations == false)
+            model.LastStatus = "No Moves Available";
+            if (gameContainer.Test!.NoAnimations == false)
             {
-                await _gameContainer.Delay!.DelaySeconds(.5);
+                await gameContainer.Delay!.DelaySeconds(.5);
             }
-            await _gameContainer.EndTurnAsync!.Invoke();
+            await gameContainer.EndTurnAsync!.Invoke();
             return;
         }
-        _gameContainer.SaveRoot.GameStatus = EnumGameStatus.MakingMoves;
-        _gameContainer.SaveRoot.SpaceHighlighted = -1;
+        gameContainer.SaveRoot.GameStatus = EnumGameStatus.MakingMoves;
+        gameContainer.SaveRoot.SpaceHighlighted = -1;
     }
     public bool IsValidMove(int space)
     {
-        if (_gameContainer.SaveRoot!.SpaceHighlighted == space)
+        if (gameContainer.SaveRoot!.SpaceHighlighted == space)
         {
             return true; //can always highlight/unhighlight
         }
-        if (_gameContainer.SaveRoot.SpaceHighlighted == -1)
+        if (gameContainer.SaveRoot.SpaceHighlighted == -1)
         {
-            return _gameContainer.MoveList.Any(items => items.SpaceFrom == space);
+            return gameContainer.MoveList.Any(items => items.SpaceFrom == space);
         }
-        return _gameContainer.MoveList.Any(items => items.SpaceFrom == _gameContainer.SaveRoot.SpaceHighlighted && items.SpaceTo == space);
+        return gameContainer.MoveList.Any(items => items.SpaceFrom == gameContainer.SaveRoot.SpaceHighlighted && items.SpaceTo == space);
     }
     public async Task MakeMoveAsync(int space)
     {
-        if (_gameContainer.SaveRoot!.SpaceHighlighted == space)
+        if (gameContainer.SaveRoot!.SpaceHighlighted == space)
         {
-            _gameContainer.SaveRoot.SpaceHighlighted = -1;
+            gameContainer.SaveRoot.SpaceHighlighted = -1;
             Repaint();
-            await _gameContainer.ContinueTurnAsync!.Invoke();
+            await gameContainer.ContinueTurnAsync!.Invoke();
             return;
         }
-        if (_gameContainer.SaveRoot.SpaceHighlighted == -1)
+        if (gameContainer.SaveRoot.SpaceHighlighted == -1)
         {
-            _gameContainer.SaveRoot.SpaceHighlighted = space;
+            gameContainer.SaveRoot.SpaceHighlighted = space;
             Repaint();
-            await _gameContainer.ContinueTurnAsync!.Invoke();
+            await gameContainer.ContinueTurnAsync!.Invoke();
             return;
         }
-        _gameContainer.MoveInProgress = true;
-        var thisMove = _gameContainer.MoveList.First(items => items.SpaceFrom == _gameContainer.SaveRoot.SpaceHighlighted && items.SpaceTo == space);
-        var thisTriangle = _gameContainer.TriangleList[_gameContainer.SaveRoot.SpaceHighlighted];
+        gameContainer.MoveInProgress = true;
+        var thisMove = gameContainer.MoveList.First(items => items.SpaceFrom == gameContainer.SaveRoot.SpaceHighlighted && items.SpaceTo == space);
+        var thisTriangle = gameContainer.TriangleList[gameContainer.SaveRoot.SpaceHighlighted];
         thisTriangle.NumberOfTiles--;
         var thisLocation = thisTriangle.Locations.Last();
         if (thisTriangle.NumberOfTiles == 0)
         {
             thisTriangle.PlayerOwns = 0;
         }
-        _gameContainer.Animates!.LocationFrom = thisLocation;
-        _gameContainer.Animates.LocationTo = CalculateNewLocation(space);
+        gameContainer.Animates!.LocationFrom = thisLocation;
+        gameContainer.Animates.LocationTo = CalculateNewLocation(space);
         RepositionPieces();
-        _gameContainer.RefreshPieces = true;
+        gameContainer.RefreshPieces = true;
         Repaint();
         await Task.Delay(10);
-        await _gameContainer.Animates.DoAnimateAsync();
-        var newTriangle = _gameContainer.TriangleList[space];
+        await gameContainer.Animates.DoAnimateAsync();
+        var newTriangle = gameContainer.TriangleList[space];
         if (newTriangle.NumberOfTiles == 1)
         {
-            if (newTriangle.PlayerOwns != _gameContainer.WhoTurn)
+            if (newTriangle.PlayerOwns != gameContainer.WhoTurn)
             {
                 var newPlayer = newTriangle.PlayerOwns;
-                newTriangle.PlayerOwns = _gameContainer.WhoTurn;
-                _gameContainer.Animates.LocationFrom = newTriangle.Locations.Single();
+                newTriangle.PlayerOwns = gameContainer.WhoTurn;
+                gameContainer.Animates.LocationFrom = newTriangle.Locations.Single();
                 if (NeedsReversed(newPlayer))
                 {
                     await BackToStartAsync(newPlayer, 27, GetReversedID(space));
@@ -656,10 +647,10 @@ public class GameBoardProcesses
         }
         else
         {
-            newTriangle.PlayerOwns = _gameContainer.WhoTurn;
+            newTriangle.PlayerOwns = gameContainer.WhoTurn;
             newTriangle.NumberOfTiles++;
         }
-        bool privateReverse = NeedsReversed(_gameContainer.WhoTurn);
+        bool privateReverse = NeedsReversed(gameContainer.WhoTurn);
         int newSpace;
         if (privateReverse)
         {
@@ -669,87 +660,87 @@ public class GameBoardProcesses
         {
             newSpace = space;
         }
-        if (_gameContainer.SaveRoot.SpaceHighlighted == 0 || _gameContainer.SaveRoot.SpaceHighlighted == 27)
+        if (gameContainer.SaveRoot.SpaceHighlighted == 0 || gameContainer.SaveRoot.SpaceHighlighted == 27)
         {
-            _gameContainer.SingleInfo!.CurrentTurnData!.PiecesAtStart--;
+            gameContainer.SingleInfo!.CurrentTurnData!.PiecesAtStart--;
         }
         else
         {
             if (privateReverse)
             {
-                _gameContainer.SaveRoot.SpaceHighlighted = GetReversedID(_gameContainer.SaveRoot.SpaceHighlighted);
+                gameContainer.SaveRoot.SpaceHighlighted = GetReversedID(gameContainer.SaveRoot.SpaceHighlighted);
             }
-            _gameContainer.SingleInfo!.CurrentTurnData!.PiecesOnBoard!.RemoveSpecificItem(_gameContainer.SaveRoot.SpaceHighlighted);
+            gameContainer.SingleInfo!.CurrentTurnData!.PiecesOnBoard!.RemoveSpecificItem(gameContainer.SaveRoot.SpaceHighlighted);
         }
         if (space == 25 || space == 26)
         {
-            _gameContainer.SingleInfo.CurrentTurnData.PiecesAtHome++;
+            gameContainer.SingleInfo.CurrentTurnData.PiecesAtHome++;
         }
         else
         {
-            _gameContainer.SingleInfo.CurrentTurnData.PiecesOnBoard!.Add(newSpace);
+            gameContainer.SingleInfo.CurrentTurnData.PiecesOnBoard!.Add(newSpace);
         }
-        _gameContainer.MoveInProgress = false;
+        gameContainer.MoveInProgress = false;
         RepositionPieces();
-        _gameContainer.SaveRoot.SpaceHighlighted = -1;
+        gameContainer.SaveRoot.SpaceHighlighted = -1;
         Repaint();
-        if (CanEndGame() || _gameContainer.Test.ImmediatelyEndGame)
+        if (CanEndGame() || gameContainer.Test.ImmediatelyEndGame)
         {
-            await _gameContainer.ShowWinAsync!.Invoke();
+            await gameContainer.ShowWinAsync!.Invoke();
             return;
         }
-        _gameContainer.SaveRoot.MovesMade++;
-        _gameContainer.SaveRoot.MadeAtLeastOneMove = true;
-        if (_gameContainer.HadDoubles() == false)
+        gameContainer.SaveRoot.MovesMade++;
+        gameContainer.SaveRoot.MadeAtLeastOneMove = true;
+        if (gameContainer.HadDoubles() == false)
         {
-            if (_gameContainer.SaveRoot.NumberUsed > 0)
+            if (gameContainer.SaveRoot.NumberUsed > 0)
             {
-                if (_gameContainer.DiceVisibleProcesses == null)
+                if (gameContainer.DiceVisibleProcesses == null)
                 {
                     throw new CustomBasicException("Nobody is handling dice visible.  Rethink");
                 }
-                _gameContainer.DiceVisibleProcesses.Invoke();
-                _gameContainer.SaveRoot.GameStatus = EnumGameStatus.EndingTurn;
-                await _gameContainer.ContinueTurnAsync!.Invoke();
+                gameContainer.DiceVisibleProcesses.Invoke();
+                gameContainer.SaveRoot.GameStatus = EnumGameStatus.EndingTurn;
+                await gameContainer.ContinueTurnAsync!.Invoke();
                 return;
             }
-            _gameContainer.SaveRoot.NumberUsed = thisMove.DiceNumber;
-            if (_gameContainer.DiceVisibleProcesses == null)
+            gameContainer.SaveRoot.NumberUsed = thisMove.DiceNumber;
+            if (gameContainer.DiceVisibleProcesses == null)
             {
                 throw new CustomBasicException("Nobody is handling dice visible.  Rethink");
             }
-            _gameContainer.DiceVisibleProcesses.Invoke();
+            gameContainer.DiceVisibleProcesses.Invoke();
             PopulateMoves();
-            if (_gameContainer.MoveList.Count == 0)
+            if (gameContainer.MoveList.Count == 0)
             {
-                _gameContainer.SaveRoot.GameStatus = EnumGameStatus.EndingTurn;
-                await _gameContainer.ContinueTurnAsync!.Invoke();
+                gameContainer.SaveRoot.GameStatus = EnumGameStatus.EndingTurn;
+                await gameContainer.ContinueTurnAsync!.Invoke();
                 return;
             }
-            _gameContainer.SaveRoot.GameStatus = EnumGameStatus.MakingMoves;
-            await _gameContainer.ContinueTurnAsync!.Invoke();
+            gameContainer.SaveRoot.GameStatus = EnumGameStatus.MakingMoves;
+            await gameContainer.ContinueTurnAsync!.Invoke();
             return; //i think old version could had this bug.
         }
-        if (_gameContainer.DiceVisibleProcesses == null)
+        if (gameContainer.DiceVisibleProcesses == null)
         {
             throw new CustomBasicException("Nobody is handling dice visible.  Rethink");
         }
-        _gameContainer.DiceVisibleProcesses.Invoke();
-        if (_gameContainer.SaveRoot.MovesMade == 4)
+        gameContainer.DiceVisibleProcesses.Invoke();
+        if (gameContainer.SaveRoot.MovesMade == 4)
         {
-            _gameContainer.SaveRoot.GameStatus = EnumGameStatus.EndingTurn;
-            await _gameContainer.ContinueTurnAsync!.Invoke(); //becase you made all 4 moves.
+            gameContainer.SaveRoot.GameStatus = EnumGameStatus.EndingTurn;
+            await gameContainer.ContinueTurnAsync!.Invoke(); //becase you made all 4 moves.
             return;
         }
         PopulateMoves();
         Repaint();
-        if (_gameContainer.MoveList.Count == 0)
+        if (gameContainer.MoveList.Count == 0)
         {
-            _gameContainer.SaveRoot.GameStatus = EnumGameStatus.EndingTurn;
-            await _gameContainer.ContinueTurnAsync!.Invoke();
+            gameContainer.SaveRoot.GameStatus = EnumGameStatus.EndingTurn;
+            await gameContainer.ContinueTurnAsync!.Invoke();
             return;
         }
-        _gameContainer.SaveRoot.GameStatus = EnumGameStatus.MakingMoves;
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        gameContainer.SaveRoot.GameStatus = EnumGameStatus.MakingMoves;
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
 }

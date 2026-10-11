@@ -1,4 +1,4 @@
-@inherits BasicGameView<SorryCardGameMainViewModel>
+@inherits CascadingGameView<SorryCardGameMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -15,9 +15,12 @@
             <SingleMiscPileBlazor PileAnimationTag="otherpile" SinglePile="_vmData.OtherPile" />
         </StackItem>
         <StackItem>
-            <div style="font-weight: bold; font-size: 8vh;">
-                @_vmData.UpTo
-            </div>
+            <StateContentView DataContext="_vmData">
+                <div style="font-weight: bold; font-size: 8vh;">
+                    @_vmData.UpTo
+                </div>
+            </StateContentView>
+            
         </StackItem>
     </StackLayout>
     <div>
@@ -27,7 +30,10 @@
         @foreach (var player in _playerList)
         {
             <StackItem>
-                <BoardBlazor Player="player" />
+                <StateContentView DataContext="player">
+                    <BoardBlazor Player="player" />
+                </StateContentView>
+                
             </StackItem>
         }
     </StackLayout>

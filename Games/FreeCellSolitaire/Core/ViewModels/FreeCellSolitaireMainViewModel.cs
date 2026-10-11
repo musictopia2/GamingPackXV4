@@ -1,6 +1,5 @@
 namespace FreeCellSolitaire.Core.ViewModels;
 [InstanceGame]
-[UseLabelGrid]
 public partial class FreeCellSolitaireMainViewModel : SolitaireMainViewModel<FreeCellSolitaireSaveInfo>
 {
     public FreePiles FreePiles1;

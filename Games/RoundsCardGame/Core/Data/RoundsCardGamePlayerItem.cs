@@ -3,9 +3,9 @@ namespace RoundsCardGame.Core.Data;
 public partial class RoundsCardGamePlayerItem : PlayerTrick<EnumSuitList, RoundsCardGameCardInformation>
 {
     [ScoreColumn]
-    public int RoundsWon { get; set; }
+    public partial int RoundsWon { get; set; }
     [ScoreColumn]
-    public int CurrentPoints { get; set; }
+    public partial int CurrentPoints { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

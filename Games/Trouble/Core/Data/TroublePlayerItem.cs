@@ -7,5 +7,5 @@ public partial class TroublePlayerItem : PlayerBoardGame<EnumColorChoice>
     {
         Color = EnumColorChoice.None;
     }
-    public BasicList<int> PieceList { get; set; } = new();
+    public BasicList<int> PieceList { get; set; } = [];
 }

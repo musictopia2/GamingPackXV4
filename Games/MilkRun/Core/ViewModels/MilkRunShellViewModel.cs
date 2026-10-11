@@ -1,21 +1,4 @@
 namespace MilkRun.Core.ViewModels;
-public class MilkRunShellViewModel : BasicMultiplayerShellViewModel<MilkRunPlayerItem>
+public class MilkRunShellViewModel(IGamePackageResolver mainContainer, CommandContainer container, IGameInfo gameData, BasicData basicData, IMultiplayerSaveState save, TestOptions test, IEventAggregator aggregator, IToast toast) : BasicMultiplayerShellViewModel<MilkRunPlayerItem>(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
 {
-    public MilkRunShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        BasicData basicData,
-        IMultiplayerSaveState save,
-        TestOptions test,
-        IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<MilkRunMainViewModel>();
-        return model;
-    }
 }

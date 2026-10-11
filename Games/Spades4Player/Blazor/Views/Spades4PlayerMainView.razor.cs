@@ -3,14 +3,14 @@ public partial class Spades4PlayerMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private Spades4PlayerVMData? _vmData;
     private Spades4PlayerGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<Spades4PlayerVMData>();
-        _gameContainer = aa1.Resolver.Resolve<Spades4PlayerGameContainer>();
+        _vmData = Resolver!.Resolve<Spades4PlayerVMData>();
+        _gameContainer = Resolver.Resolve<Spades4PlayerGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(Spades4PlayerVMData.NormalTurn))
             .AddLabel("Status", nameof(Spades4PlayerVMData.Status))

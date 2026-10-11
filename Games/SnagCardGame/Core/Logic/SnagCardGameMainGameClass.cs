@@ -63,7 +63,6 @@ public class SnagCardGameMainGameClass
             await Network!.SendAllAsync("cardchosen", Deck);
         }
         _model.TrickArea1!.SelectCard(Deck);
-        _command.UpdateAll();
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.5);
@@ -292,8 +291,8 @@ public class SnagCardGameMainGameClass
             secondPlayer.TotalPoints += points;
             firstPlayer.CurrentPoints = 0;
         }
-        DeckRegularDict<SnagCardGameCardInformation> humanList = new();
-        DeckRegularDict<SnagCardGameCardInformation> opponentList = new();
+        DeckRegularDict<SnagCardGameCardInformation> humanList = [];
+        DeckRegularDict<SnagCardGameCardInformation> opponentList = [];
         firstCol.ForEach(thisCard =>
         {
             thisCard.IsSelected = false;
@@ -338,7 +337,7 @@ public class SnagCardGameMainGameClass
     {
         var temps = firstCol.GroupOrderDescending(items => items.Suit).ToBasicList();
         EnumSuitList newSuit;
-        DeckRegularDict<SnagCardGameCardInformation> newCol = new();
+        DeckRegularDict<SnagCardGameCardInformation> newCol = [];
         temps.ForEach(thisItem =>
         {
             newSuit = thisItem.Key;

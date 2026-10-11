@@ -3,7 +3,7 @@ public static class ScoreModule
 {
     public static BasicList<ScoreColumnModel> GetScores()
     {
-        BasicList<ScoreColumnModel> output = new();
+        BasicList<ScoreColumnModel> output = [];
         output.AddColumn("Cards Left", true, nameof(RageCardGamePlayerItem.ObjectCount))
             .AddColumn("Bid Amount", true, nameof(RageCardGamePlayerItem.BidAmount), visiblePath: nameof(RageCardGamePlayerItem.RevealBid))
             .AddColumn("Tricks Won", true, nameof(RageCardGamePlayerItem.TricksWon))

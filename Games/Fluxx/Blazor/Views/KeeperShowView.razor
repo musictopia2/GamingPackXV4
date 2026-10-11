@@ -1,1 +1,2 @@
-﻿<KeeperBaseView K="KeeperShowViewModel" Command="DataContext!.CloseKeeperCommand" KeeperCategory="EnumKeeperCategory.Show" />
+﻿@inherits ParameterGameView<KeeperShowViewModel>
+<KeeperBaseView DataContext="DataContext" Command="DataContext!.CloseKeeperCommand" KeeperCategory="EnumKeeperCategory.Show" />

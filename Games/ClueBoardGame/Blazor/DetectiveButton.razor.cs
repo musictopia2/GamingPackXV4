@@ -27,7 +27,7 @@ public partial class DetectiveButton : GraphicsCommand
         CommandObject = PredictCommand();
         base.OnParametersSet();
     }
-    private ICustomCommand PredictCommand()
+    private BasicGameCommand PredictCommand()
     {
         return _detective!.Category switch
         {

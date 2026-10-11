@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace SnakesAndLadders.Core.Logic;
 [SingletonGame]
 public class SnakesAndLaddersMainGameClass : BasicGameClass<SnakesAndLaddersPlayerItem, SnakesAndLaddersSaveInfo>
@@ -16,7 +18,8 @@ public class SnakesAndLaddersMainGameClass : BasicGameClass<SnakesAndLaddersPlay
         GameBoardProcesses gameBoard1,
         SnakesAndLaddersGameContainer gameContainer,
         ISystemError error,
-        IToast toast
+        IToast toast,
+        CurrentPlayerPieceModel current
         ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     {
         _test = test;
@@ -24,9 +27,11 @@ public class SnakesAndLaddersMainGameClass : BasicGameClass<SnakesAndLaddersPlay
         Roll = roll;
         GameBoard1 = gameBoard1;
         _toast = toast;
+        _current = current;
         Roll.AfterRollingAsync = AfterRollingAsync;
         roll.CurrentPlayer = GetCurrentPlayer;
         GameBoard1.CurrentPlayer = GetCurrentPlayer;
+        Roll.CupModel = model; //use this game's VM data and cup
     }
     private SnakesAndLaddersPlayerItem GetCurrentPlayer() => SingleInfo!;
     internal StandardRollProcesses<SimpleDice, SnakesAndLaddersPlayerItem> Roll { get; set; }
@@ -34,6 +39,8 @@ public class SnakesAndLaddersMainGameClass : BasicGameClass<SnakesAndLaddersPlay
     private readonly TestOptions _test;
     private readonly SnakesAndLaddersVMData _model;
     private readonly IToast _toast;
+    private readonly CurrentPlayerPieceModel _current;
+
     public override Task FinishGetSavedAsync()
     {
         _model.LoadCup(SaveRoot, true);
@@ -41,6 +48,7 @@ public class SnakesAndLaddersMainGameClass : BasicGameClass<SnakesAndLaddersPlay
         _model.Cup!.CanShowDice = SaveRoot.HasRolled;
         var player = PlayerList.GetWhoPlayer();
         GameBoard1.UpdateSpaceFromAutoResume(player);
+        
         return Task.CompletedTask;
     }
     public async Task MakeMoveAsync(int space)
@@ -70,6 +78,12 @@ public class SnakesAndLaddersMainGameClass : BasicGameClass<SnakesAndLaddersPlay
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
+    public override Task ContinueTurnAsync()
+    {
+        _current.PlayerId = SingleInfo!.Id;
+        _current.SpaceNumber = SingleInfo!.SpaceNumber;
+        return base.ContinueTurnAsync();
+    }
     protected override async Task ComputerTurnAsync()
     {
         if (_test.NoAnimations == false)
@@ -88,12 +102,21 @@ public class SnakesAndLaddersMainGameClass : BasicGameClass<SnakesAndLaddersPlay
     {
         if (FinishUpAsync == null)
         {
-            throw new CustomBasicException("The loader never set the finish up code.  Rethink");
+            throw new CustomBasicException(
+                "The loader never set the finish up code.  Rethink");
         }
-        _model.LoadCup(SaveRoot!, false);
-        SaveRoot!.DiceList.MainContainer = MainContainer;
-        SaveRoot!.ImmediatelyStartTurn = true;
-        PlayerList!.ForEach(thisPlayer => thisPlayer.SpaceNumber = 0);
+
+        SaveRoot!.HasRolled = false;
+
+        _model.LoadCup(SaveRoot, false);
+        SaveRoot.DiceList.MainContainer = MainContainer;
+
+        _model.Cup!.CanShowDice = false;
+        _model.Cup.Visible = false;
+
+        SaveRoot.ImmediatelyStartTurn = true;
+        PlayerList!.ForEach(player => player.SpaceNumber = 0);
+
         await FinishUpAsync(isBeginning);
     }
     public override async Task StartNewTurnAsync()

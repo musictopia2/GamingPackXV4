@@ -4,7 +4,7 @@ public partial class RummyDiceHandVM : SimpleControlObservable
     public ControlCommand? BoardCommand { get; set; }
     public ControlCommand? DiceCommand { get; set; }
 
-    public BasicList<RummyDiceInfo> HandList = [];
+    public StateList<RummyDiceInfo> HandList = [];
     public int Index { get; set; } //index is needed so it puts to correct one.
     private readonly RummyDiceMainGameClass _mainGame;
     [Command(EnumCommandCategory.Control, Name = nameof(BoardCommand))]
@@ -45,8 +45,6 @@ public partial class RummyDiceHandVM : SimpleControlObservable
         BoardCommand!.ReportCanExecuteChange();
         DiceCommand!.ReportCanExecuteChange(); //i think you have to do manually since its a controlcommand.
     }
-    protected override void PrivateEnableAlways() { }
-
     public void PopulateTiles(BasicList<RummyDiceInfo> thisList)
     {
         HandList.ReplaceRange(thisList);
@@ -57,6 +55,7 @@ public partial class RummyDiceHandVM : SimpleControlObservable
         HandList.AddRange(thisList);
         HandList.ForEach(Items => Items.IsSelected = false); //make sure its all unselected.
         HandList.Sort();
+        
     }
     public BasicList<RummyDiceInfo> GetSelectedDiceAndRemove() //i think returning an interface is acceptable.
     {

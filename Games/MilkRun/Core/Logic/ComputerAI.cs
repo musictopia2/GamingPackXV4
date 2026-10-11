@@ -1,7 +1,7 @@
-﻿namespace MilkRun.Core.Data;
+﻿namespace MilkRun.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class ComputerAI
+public class ComputerAI(MilkRunGameContainer gameContainer)
 {
     public struct MoveInfo
     {
@@ -11,18 +11,14 @@ public class ComputerAI
         public EnumPileType Pile;
         public int Deck;
     }
-    private readonly MilkRunGameContainer _gameContainer;
-    public ComputerAI(MilkRunGameContainer gameContainer)
-    {
-        _gameContainer = gameContainer;
-    }
+
     private BasicList<MoveInfo> MoveList(int deck)
     {
-        BasicList<MoveInfo> output = new();
-        int selfPlayer = _gameContainer.PlayerList!.GetSelf().Id;
+        BasicList<MoveInfo> output = [];
+        int selfPlayer = gameContainer.PlayerList!.GetSelf().Id;
         int computerPlayer;
         MoveInfo thisMove;
-        if (_gameContainer.CanMakeMove == null)
+        if (gameContainer.CanMakeMove == null)
         {
             throw new CustomBasicException("Nobody is handling canmakemove.  Rethink");
         }
@@ -34,7 +30,7 @@ public class ComputerAI
         {
             computerPlayer = 1;
         }
-        if (_gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Deliveries, EnumMilkType.Chocolate))
+        if (gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Deliveries, EnumMilkType.Chocolate))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -43,7 +39,7 @@ public class ComputerAI
             thisMove.Pile = EnumPileType.Deliveries;
             output.Add(thisMove);
         }
-        if (_gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Go, EnumMilkType.Chocolate))
+        if (gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Go, EnumMilkType.Chocolate))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -52,7 +48,7 @@ public class ComputerAI
             thisMove.Pile = EnumPileType.Go;
             output.Add(thisMove);
         }
-        if (_gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Limit, EnumMilkType.Chocolate))
+        if (gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Limit, EnumMilkType.Chocolate))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -61,7 +57,7 @@ public class ComputerAI
             thisMove.Pile = EnumPileType.Limit;
             output.Add(thisMove);
         }
-        if (_gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Deliveries, EnumMilkType.Strawberry))
+        if (gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Deliveries, EnumMilkType.Strawberry))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -70,7 +66,7 @@ public class ComputerAI
             thisMove.Pile = EnumPileType.Deliveries;
             output.Add(thisMove);
         }
-        if (_gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Go, EnumMilkType.Strawberry))
+        if (gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Go, EnumMilkType.Strawberry))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -79,7 +75,7 @@ public class ComputerAI
             thisMove.Pile = EnumPileType.Go;
             output.Add(thisMove);
         }
-        if (_gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Limit, EnumMilkType.Strawberry))
+        if (gameContainer.CanMakeMove(computerPlayer, deck, EnumPileType.Limit, EnumMilkType.Strawberry))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -89,7 +85,7 @@ public class ComputerAI
             output.Add(thisMove);
         }
         //human player;
-        if (_gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Deliveries, EnumMilkType.Chocolate))
+        if (gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Deliveries, EnumMilkType.Chocolate))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -98,7 +94,7 @@ public class ComputerAI
             thisMove.Pile = EnumPileType.Deliveries;
             output.Add(thisMove);
         }
-        if (_gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Go, EnumMilkType.Chocolate))
+        if (gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Go, EnumMilkType.Chocolate))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -107,7 +103,7 @@ public class ComputerAI
             thisMove.Pile = EnumPileType.Go;
             output.Add(thisMove);
         }
-        if (_gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Limit, EnumMilkType.Chocolate))
+        if (gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Limit, EnumMilkType.Chocolate))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -116,7 +112,7 @@ public class ComputerAI
             thisMove.Pile = EnumPileType.Limit;
             output.Add(thisMove);
         }
-        if (_gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Deliveries, EnumMilkType.Strawberry))
+        if (gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Deliveries, EnumMilkType.Strawberry))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -125,7 +121,7 @@ public class ComputerAI
             thisMove.Pile = EnumPileType.Deliveries;
             output.Add(thisMove);
         }
-        if (_gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Go, EnumMilkType.Strawberry))
+        if (gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Go, EnumMilkType.Strawberry))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -134,7 +130,7 @@ public class ComputerAI
             thisMove.Pile = EnumPileType.Go;
             output.Add(thisMove);
         }
-        if (_gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Limit, EnumMilkType.Strawberry))
+        if (gameContainer.CanMakeMove(selfPlayer, deck, EnumPileType.Limit, EnumMilkType.Strawberry))
         {
             thisMove = new ();
             thisMove.Deck = deck;
@@ -147,8 +143,8 @@ public class ComputerAI
     }
     public MoveInfo MoveToMake()
     {
-        BasicList<MoveInfo> newList = new();
-        _gameContainer.SingleInfo!.MainHandList.ForEach(thisCard =>
+        BasicList<MoveInfo> newList = [];
+        gameContainer.SingleInfo!.MainHandList.ForEach(thisCard =>
         {
             newList.AddRange(MoveList(thisCard.Deck));
             MoveInfo thisMove = new();
@@ -158,5 +154,5 @@ public class ComputerAI
         });
         return newList.GetRandomItem();
     }
-    public bool CanDraw => _gameContainer.SaveRoot!.CardsDrawn < 2;
+    public bool CanDraw => gameContainer.SaveRoot!.CardsDrawn < 2;
 }

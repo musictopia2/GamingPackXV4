@@ -1,14 +1,14 @@
 namespace BladesOfSteel.Blazor.Views;
 public partial class BladesOfSteelMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     [CascadingParameter]
     public BladesOfSteelVMData? VMData { get; set; }
     private BladesOfSteelGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _gameContainer = aa1.Resolver!.Resolve<BladesOfSteelGameContainer>();
+        _gameContainer = Resolver!.Resolve<BladesOfSteelGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Main Turn", nameof(BladesOfSteelVMData.NormalTurn))
            .AddLabel("Other Turn", nameof(BladesOfSteelVMData.OtherPlayer))

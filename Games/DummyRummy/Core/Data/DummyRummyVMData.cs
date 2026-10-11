@@ -5,11 +5,11 @@ namespace DummyRummy.Core.Data;
 public partial class DummyRummyVMData : IBasicCardGamesData<RegularRummyCard>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public int UpTo { get; set; }
+    public partial int UpTo { get; set; }
     public DummyRummyVMData(CommandContainer command, IGamePackageResolver resolver)
     {
         Deck1 = new DeckObservablePile<RegularRummyCard>(command);

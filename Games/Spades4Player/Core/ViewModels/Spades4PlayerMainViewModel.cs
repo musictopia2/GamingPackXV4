@@ -1,31 +1,22 @@
 namespace Spades4Player.Core.ViewModels;
 [InstanceGame]
-public partial class Spades4PlayerMainViewModel : BasicCardGamesVM<Spades4PlayerCardInformation>
-{
-    private readonly Spades4PlayerMainGameClass _mainGame; //if we don't need, delete.
-    private readonly Spades4PlayerGameContainer _gameContainer; //if not needed, delete.
-    public Spades4PlayerMainViewModel(CommandContainer commandContainer,
+public partial class Spades4PlayerMainViewModel(CommandContainer commandContainer,
         Spades4PlayerMainGameClass mainGame,
         Spades4PlayerVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
-        Spades4PlayerGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<Spades4PlayerCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _gameContainer = gameContainer;
-        Model = viewModel;
         Model.Deck1.NeverAutoDisable = true;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     //anything else needed is here.
-    public Spades4PlayerVMData Model { get; private set; }
+    public Spades4PlayerVMData Model { get; private set; } = viewModel;
     partial void CreateCommands(CommandContainer command);
-    public EnumGameStatus GameStatus => _gameContainer.SaveRoot.GameStatus;
     protected override bool CanEnableDeck()
     {
         //todo:  decide whether to enable deck.
@@ -50,10 +41,10 @@ public partial class Spades4PlayerMainViewModel : BasicCardGamesVM<Spades4Player
     [Command(EnumCommandCategory.Plain)]
     public async Task BidAsync()
     {
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        if (mainGame.BasicData!.MultiPlayer == true)
         {
-            await _mainGame.Network!.SendAllAsync("bid", Model.BidAmount);
+            await mainGame.Network!.SendAllAsync("bid", Model.BidAmount);
         }
-        await _mainGame.ProcessBidAsync();
+        await mainGame.ProcessBidAsync();
     }
 }

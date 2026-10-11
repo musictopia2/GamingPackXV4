@@ -279,7 +279,6 @@ public class HuseHeartsMainGameClass
                     _model!.Blind1!.Visible = false;
                 }
                 _model!.Blind1!.HandList.MakeAllObjectsKnown();
-                _command.UpdateAll();
             }
         }
         await _aTrick!.AnimateWinAsync(wins);
@@ -381,7 +380,6 @@ public class HuseHeartsMainGameClass
     {
         SingleInfo!.CurrentScore -= 52;
         SingleInfo.PreviousScore = SingleInfo.CurrentScore;
-        _command.UpdateAll();
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.OtherHuman)
         {
             await _message.ShowMessageAsync($"{SingleInfo.NickName} chose to give him/herself -26 points");
@@ -404,7 +402,6 @@ public class HuseHeartsMainGameClass
         SingleInfo.PreviousScore = SingleInfo.CurrentScore;
         thisPlayer.CurrentScore += 26;
         thisPlayer.PreviousScore = thisPlayer.CurrentScore;
-        _command.UpdateAll();
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.OtherHuman)
         {
             await _message.ShowMessageAsync($"{SingleInfo.NickName} chose to give the other player 26 points");

@@ -8,9 +8,8 @@ public partial class StealTilesViewModel : BasicSubmitViewModel
         CommandContainer commandContainer,
         LifeBoardGameGameContainer gameContainer,
         LifeBoardGameVMData model,
-        IStolenTileProcesses processes,
-        IEventAggregator aggregator
-        ) : base(commandContainer, aggregator)
+        IStolenTileProcesses processes
+        ) : base(commandContainer)
     {
         if (gameContainer.SaveRoot.GameStatus != EnumWhatStatus.NeedStealTile)
         {

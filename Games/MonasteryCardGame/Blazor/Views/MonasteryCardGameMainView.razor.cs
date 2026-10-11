@@ -1,14 +1,14 @@
 namespace MonasteryCardGame.Blazor.Views;
 public partial class MonasteryCardGameMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private MonasteryCardGameVMData? _vmData;
     private MonasteryCardGameGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<MonasteryCardGameVMData>();
-        _gameContainer = aa1.Resolver.Resolve<MonasteryCardGameGameContainer>();
+        _vmData = Resolver!.Resolve<MonasteryCardGameVMData>();
+        _gameContainer = Resolver.Resolve<MonasteryCardGameGameContainer>();
         _labels.AddLabel("Turn", nameof(MonasteryCardGameVMData.NormalTurn))
              .AddLabel("Status", nameof(MonasteryCardGameVMData.Status));
         _scores.Clear();

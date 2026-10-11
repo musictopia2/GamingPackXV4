@@ -1,8 +1,9 @@
+
 namespace DummyRummy.Core.Logic;
 [SingletonGame]
 public class DummyRummyMainGameClass
     : CardGameClass<RegularRummyCard, DummyRummyPlayerItem, DummyRummySaveInfo>
-    , IMiscDataNM, ISerializable
+    , IMiscDataNM, ISerializable, IStartNewGame
 {
     private readonly DummyRummyVMData _model;
     private readonly CommandContainer _command;
@@ -300,7 +301,7 @@ public class DummyRummyMainGameClass
         SaveRoot!.UpTo = 0;
         return Task.CompletedTask;
     }
-    private bool HasSet(IDeckDict<RegularRummyCard> thisCol)
+    private bool HasSet(DeckRegularDict<RegularRummyCard> thisCol)
     {
         if (thisCol.Count < 3)
         {

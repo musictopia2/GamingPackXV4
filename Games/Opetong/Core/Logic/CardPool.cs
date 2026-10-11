@@ -36,7 +36,7 @@ public class CardPool : GameBoardObservable<RegularRummyCard>
         {
             throw new CustomBasicException("There must be 8 cards for the card pool");
         }
-        DeckRegularDict<RegularRummyCard> newCol = new();
+        DeckRegularDict<RegularRummyCard> newCol = [];
         thisCol.ForEach(oldCard =>
         {
             RegularRummyCard newCard = new();

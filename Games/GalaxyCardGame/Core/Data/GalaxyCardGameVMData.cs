@@ -5,11 +5,11 @@ namespace GalaxyCardGame.Core.Data;
 public partial class GalaxyCardGameVMData : ITrickCardGamesData<GalaxyCardGameCardInformation, EnumSuitList>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumSuitList TrumpSuit { get; set; }
+    public partial EnumSuitList TrumpSuit { get; set; }
     public GalaxyCardGameVMData(CommandContainer command,
             BasicTrickAreaObservable<EnumSuitList, GalaxyCardGameCardInformation> trickArea1
             )

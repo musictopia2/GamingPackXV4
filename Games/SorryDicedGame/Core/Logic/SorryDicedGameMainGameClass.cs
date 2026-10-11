@@ -1,7 +1,7 @@
 namespace SorryDicedGame.Core.Logic;
 [SingletonGame]
 public class SorryDicedGameMainGameClass
-    : SimpleBoardGameClass<SorryDicedGamePlayerItem, SorryDicedGameSaveInfo, EnumColorChoice, int>
+    : BasicGameWithColorsClass<SorryDicedGamePlayerItem, SorryDicedGameSaveInfo, EnumColorChoice>
     , IBeginningColors<EnumColorChoice, SorryDicedGamePlayerItem, SorryDicedGameSaveInfo>
     , IMiscDataNM, ISerializable, ISelectDiceNM
 {
@@ -29,12 +29,15 @@ public class SorryDicedGameMainGameClass
     private readonly SorryDicedGameVMData _model;
     private readonly CommandContainer _command;
     private readonly SorryCompleteDiceSet _completeDice;
+
+    public override bool CanMakeMainOptionsVisibleAtBeginning => PlayerList.DidChooseColors();
+
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
         SorryDicedGameGameContainer.IsGameOver = false;
         SorryDicedGameGameContainer.CanStart = PlayerList.DidChooseColors();
-        BoardGameSaved(); //i think.
+        GameSaved();
         return Task.CompletedTask;
     }
     private void LoadControls()
@@ -101,6 +104,7 @@ public class SorryDicedGameMainGameClass
         {
             PrepStartTurn();
             SaveRoot.DiceList.Clear();
+            _command.UpdateSpecificAction("sorrydice");
         }
         await ContinueTurnAsync(); //most of the time, continue turn.  can change to what is needed
     }
@@ -166,15 +170,13 @@ public class SorryDicedGameMainGameClass
         }
         _model.Instructions = $"Click on any piece with color {dice.Color} that is not home to take it";
     }
-    public override async Task MakeMoveAsync(int space)
-    {
-        await Task.CompletedTask;
-    }
+    
     public override async Task EndTurnAsync()
     {
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
+
     public override async Task AfterChoosingColorsAsync()
     {
         if (MiscDelegates.FillRestColors == null)
@@ -356,5 +358,10 @@ public class SorryDicedGameMainGameClass
     async Task ISelectDiceNM.SelectDiceReceivedAsync(int iD)
     {
         await SelectUnselectDiceAsync(iD);
+    }
+    public override Task PrepareNewGameAsync()
+    {
+        EraseColors();
+        return Task.CompletedTask;
     }
 }

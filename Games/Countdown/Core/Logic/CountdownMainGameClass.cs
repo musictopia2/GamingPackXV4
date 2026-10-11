@@ -60,6 +60,7 @@ public class CountdownMainGameClass
         thisNumber.IsSelected = true;
         CountdownVMData.ShowHints = false;
         Aggregator.RepaintBoard();
+        CommandContainer.UpdateSpecificAction(CountdownActions.Board);
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(1);
@@ -67,6 +68,7 @@ public class CountdownMainGameClass
         thisNumber.Used = true;
         thisNumber.IsSelected = false;
         Aggregator.RepaintBoard();
+        CommandContainer.UpdateSpecificAction(CountdownActions.Board);
         await EndTurnAsync();
     }
     public override Task FinishGetSavedAsync()
@@ -144,6 +146,7 @@ public class CountdownMainGameClass
     public override async Task StartNewTurnAsync()
     {
         PrepStartTurn();
+        CommandContainer.UpdateSpecificAction(CountdownActions.Board);
         if (BasicData.MultiPlayer == true)
         {
             if (SingleInfo!.CanSendMessage(BasicData) == false)
@@ -258,10 +261,10 @@ public class CountdownMainGameClass
         int subtractValue;
         addValue = firstValue + secondValue;
         subtractValue = firstValue - secondValue;
-        BasicList<int> thisList = new()
-        {
+        BasicList<int> thisList =
+        [
             addValue
-        };
+        ];
         if (subtractValue > 0)
         {
             thisList.Add(subtractValue);

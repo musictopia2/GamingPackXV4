@@ -1,13 +1,8 @@
 namespace DummyRummy.Core.Data;
 [SingletonGame]
-public class DummyRummyDetailClass : IGameInfo, ICardInfo<RegularRummyCard>,
+public class DummyRummyDetailClass(DummyRummyDelegates delegates) : IGameInfo, ICardInfo<RegularRummyCard>,
     IBeginningRegularCards<RegularRummyCard>
 {
-    private readonly DummyRummyDelegates _delegates;
-    public DummyRummyDetailClass(DummyRummyDelegates delegates)
-    {
-        _delegates = delegates;
-    }
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
@@ -19,8 +14,8 @@ public class DummyRummyDetailClass : IGameInfo, ICardInfo<RegularRummyCard>,
     bool IGameInfo.CanAutoSave => true;
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
-    int ICardInfo<RegularRummyCard>.CardsToPassOut => _delegates.CardsToPassOut!.Invoke();
-    BasicList<int> ICardInfo<RegularRummyCard>.PlayerExcludeList => new();
+    int ICardInfo<RegularRummyCard>.CardsToPassOut => delegates.CardsToPassOut!.Invoke();
+    BasicList<int> ICardInfo<RegularRummyCard>.PlayerExcludeList => [];
     bool ICardInfo<RegularRummyCard>.AddToDiscardAtBeginning => true;
     bool ICardInfo<RegularRummyCard>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<RegularRummyCard>.ShowMessageWhenReshuffling => true;
@@ -28,12 +23,12 @@ public class DummyRummyDetailClass : IGameInfo, ICardInfo<RegularRummyCard>,
     bool ICardInfo<RegularRummyCard>.PlayerGetsCards => true;
     bool ICardInfo<RegularRummyCard>.NoPass => false;
     bool ICardInfo<RegularRummyCard>.NeedsDummyHand => false;
-    DeckRegularDict<RegularRummyCard> ICardInfo<RegularRummyCard>.DummyHand { get; set; } = new DeckRegularDict<RegularRummyCard>();
+    DeckRegularDict<RegularRummyCard> ICardInfo<RegularRummyCard>.DummyHand { get; set; } = [];
     bool ICardInfo<RegularRummyCard>.HasDrawAnimation => true;
     bool ICardInfo<RegularRummyCard>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<RegularRummyCard>.DiscardExcludeList(IListShuffler<RegularRummyCard> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<RegularRummyCard>.AceLow => true;
     bool IBeginningRegularCards<RegularRummyCard>.CustomDeck => false;

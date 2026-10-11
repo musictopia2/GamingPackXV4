@@ -1,7 +1,6 @@
 ﻿namespace DutchBlitz.Core.Piles;
-public class StockViewModel : StockPileVM<DutchBlitzCardInformation>
+public class StockViewModel(CommandContainer command) : StockPileVM<DutchBlitzCardInformation>(command)
 {
-    public StockViewModel(CommandContainer command) : base(command) { }
     public override string NextCardInStock()
     {
         if (DidGoOut() == true)

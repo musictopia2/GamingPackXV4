@@ -11,7 +11,7 @@ public class CompleteFrameBlazor : ComponentBase
         }
         SvgRenderClass render = new();
         render.Allow0 = true;
-        ISvg svg = new SVG();
+        SVG svg = new ();
         svg.Width = "150";
         svg.Height = "100";
         int borderSize = 4;

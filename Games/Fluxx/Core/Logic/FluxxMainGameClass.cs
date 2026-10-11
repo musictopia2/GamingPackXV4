@@ -74,7 +74,7 @@ public class FluxxMainGameClass
     protected override void SetUpSelfHand()
     {
         _actionContainer.SetUpFrames();
-        _model.Keeper1!.HandList = SingleInfo!.KeeperList;
+        _model.Keeper1!.ReplaceHandList(SingleInfo!.KeeperList);
     }
     protected override void GetPlayerToContinueTurn() { }
     public int OtherTurn
@@ -172,14 +172,14 @@ public class FluxxMainGameClass
             {
                 bool isTrashed = _gameContainer.CurrentAction.Deck == EnumActionMain.TrashAKeeper;
                 var thisKeeper = ComputerAI.KeeperToStealTrash(_gameContainer, isTrashed);
-                _keeperContainer.ShowSelectedKeepers(new() { thisKeeper });
+                _keeperContainer.ShowSelectedKeepers([thisKeeper]);
                 await _finalKeeperProcesses.ProcessTrashStealKeeperAsync(thisKeeper, isTrashed);
                 return;
             }
             if (_gameContainer.CurrentAction.Deck == EnumActionMain.ExchangeKeepers)
             {
                 var keeperTuple = ComputerAI.ExchangeKeepers(_gameContainer);
-                _keeperContainer.ShowSelectedKeepers(new() { keeperTuple.Item1, keeperTuple.Item2 });
+                _keeperContainer.ShowSelectedKeepers([keeperTuple.Item1, keeperTuple.Item2]);
                 await _finalKeeperProcesses.ProcessExchangeKeepersAsync(keeperTuple.Item1, keeperTuple.Item2);
                 return;
             }
@@ -201,7 +201,7 @@ public class FluxxMainGameClass
                 case EnumActionMain.EverybodyGets1:
                     selectedIndex = ComputerAI.GetPlayerSelectedIndex(_actionContainer);
                     deck = ComputerAI.TempCardUse(_gameContainer);
-                    tempList = new() { deck };
+                    tempList = [deck];
                     await _showActionProcesses.ShowChosenForEverybodyGetsOneAsync(tempList, selectedIndex);
                     await _everybodyOneProcesses.EverybodyGetsOneAsync(tempList, selectedIndex);
                     break;
@@ -315,9 +315,9 @@ public class FluxxMainGameClass
         _gameContainer.QuePlayList.Clear();
         _gameContainer.QuePlayList = SaveRoot.QueList.GetNewObjectListFromDeckList(_gameContainer.DeckList!).ToRegularDeckDict();
         SingleInfo = PlayerList!.GetSelf();
-        _model.Keeper1!.HandList = SingleInfo.KeeperList;
+        _model.Keeper1!.ReplaceHandList(SingleInfo.KeeperList);
         _actionContainer.SetUpFrames();
-        _model.Goal1!.HandList = SaveRoot.GoalList;
+        _model.Goal1!.ReplaceHandList(SaveRoot.GoalList);
         _keeperContainer.LoadSavedGame();
     }
     protected override async Task AddCardAsync(FluxxCardInformation thisCard, FluxxPlayerItem tempPlayer)
@@ -366,7 +366,7 @@ public class FluxxMainGameClass
             case "stealkeeper":
                 KeeperPlayer thisKeep = await js1.DeserializeObjectAsync<KeeperPlayer>(content);
                 bool isTrashed = status == "trashkeeper";
-                BasicList<KeeperPlayer> tempList1 = new() { thisKeep };
+                BasicList<KeeperPlayer> tempList1 = [thisKeep];
                 _keeperContainer.ShowSelectedKeepers(tempList1);
                 if (Test!.NoAnimations == false)
                 {
@@ -534,10 +534,7 @@ public class FluxxMainGameClass
         }
         if (_gameContainer!.CurrentAction != null && _gameContainer.CurrentAction.Deck == EnumActionMain.Taxation)
         {
-            if (_gameContainer.LoadGiveAsync != null)
-            {
-                await _gameContainer.LoadGiveAsync();
-            }
+            _gameContainer.LoadPlay?.Invoke();
         }
         else if (thisPlayer == null)
         {

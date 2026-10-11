@@ -8,5 +8,5 @@ public partial class ConnectTheDotsPlayerItem : PlayerBoardGame<EnumColorChoice>
         Color = EnumColorChoice.None;
     }
     [ScoreColumn]
-    public int Score { get; set; }
+    public partial int Score { get; set; }
 }

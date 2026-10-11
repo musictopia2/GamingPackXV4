@@ -1,43 +1,26 @@
 namespace Minesweeper.Core.Logic;
 [SingletonGame]
-public class MinesweeperMainGameClass : IAggregatorContainer
+public class MinesweeperMainGameClass(ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IMessageBox message,
+    ISystemError error,
+    IToast toast,
+    IRandomGenerator rs
+        ) : IAggregatorContainer
 {
-    private readonly ISaveSinglePlayerClass _thisState;
-    private readonly IMessageBox _message;
-    private readonly ISystemError _error;
-    private readonly IToast _toast;
-    private readonly IRandomGenerator _rs;
-    private readonly CommandContainer _command;
     public int NumberOfColumns = 9;
     public int NumberOfRows = 9;
     public int NumberOfMines = 10;
-    private BasicList<MineSquareModel> _arr_Squares = new();
-    public MinesweeperMainGameClass(ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IMessageBox message,
-        ISystemError error,
-        IToast toast,
-        IRandomGenerator rs,
-        CommandContainer command
-        )
-    {
-        _thisState = thisState;
-        Aggregator = aggregator;
-        _message = message;
-        _error = error;
-        _toast = toast;
-        _rs = rs;
-        _command = command;
-    }
+    private BasicList<MineSquareModel> _arr_Squares = [];
     public BasicList<MineSquareModel> GetSquares()
     {
         return _arr_Squares;
     }
-    public IEventAggregator Aggregator { get; }
+    public IEventAggregator Aggregator { get; } = aggregator;
     public async Task NewGameAsync()
     {
         CreateSquares();
-        _command.UpdateAll();
+        //command.UpdateAll();
         await ProcessGameStateAsync(EnumGameStates.NotFinished);
     }
     private async Task ProcessGameStateAsync(EnumGameStates state)
@@ -48,14 +31,14 @@ public class MinesweeperMainGameClass : IAggregatorContainer
         }
         if (state == EnumGameStates.Won)
         {
-            _command.UpdateAll(); //has to update in this case.
-            await this.MessageGameOverAsync("Congratulations, you won the game!", _toast, _error);
+            //command.UpdateAll(); //has to update in this case.
+            await this.MessageGameOverAsync("Congratulations, you won the game!", toast, error);
             return;
         }
         if (state == EnumGameStates.Lost)
         {
-            _command.UpdateAll();
-            await this.MessageGameOverAsync("Sorry, you lost the game!", _toast, _error);
+            //command.UpdateAll();
+            await this.MessageGameOverAsync("Sorry, you lost the game!", toast, error);
             return;
         }
         throw new CustomBasicException("Rethink");
@@ -82,7 +65,10 @@ public class MinesweeperMainGameClass : IAggregatorContainer
         }
         thisSquare.IsFlipped = true;
         if (thisSquare.NeighborMines == 0)
+        {
             FlipAllNeighbors(thisSquare);
+        }
+
         if (NumberOfMines == CountUnflippedSquares())
         {
             await ProcessGameStateAsync(EnumGameStates.Won);
@@ -122,7 +108,7 @@ public class MinesweeperMainGameClass : IAggregatorContainer
         }
         else
         {
-            int_RandomInteger = _rs.GetRandomNumber(int_Span, 0);
+            int_RandomInteger = rs.GetRandomNumber(int_Span, 0);
         }
         return int_RandomInteger;
     }
@@ -197,10 +183,10 @@ public class MinesweeperMainGameClass : IAggregatorContainer
     }
     private void CreateSquares()
     {
-        BasicList<int> arr_Mines = new();
+        BasicList<int> arr_Mines = [];
         int int_Square;
         int int_SquareCount = 1;
-        _arr_Squares = new();
+        _arr_Squares = [];
         while (arr_Mines.Count < NumberOfMines)
         {
             int_Square = GetRandomInteger((NumberOfRows * NumberOfColumns));
@@ -232,9 +218,9 @@ public class MinesweeperMainGameClass : IAggregatorContainer
     }
     public async Task ShowWinAsync()
     {
-        _command.UpdateAll();
-        await _message.ShowMessageAsync("You Win");
-        await _thisState.DeleteSinglePlayerGameAsync();
-        await this.SendGameOverAsync(_error);
+        //command.UpdateAll();
+        await message.ShowMessageAsync("You Win");
+        await thisState.DeleteSinglePlayerGameAsync();
+        await this.SendGameOverAsync(error);
     }
 }

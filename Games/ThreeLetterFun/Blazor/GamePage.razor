@@ -14,18 +14,13 @@
     }
     return;
 }
-<ParentControl VM="ThreeLetterFunMainViewModel">
+<MainScreen>
     <ThreeLetterFunMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<ThreeLetterFunPlayerItem>">
-    <MultiplayerOpeningView P="ThreeLetterFunPlayerItem" />
-</ParentControl>
-<ParentControl VM="AdvancedOptionsViewModel">
-    <AdvancedOptionsView />
-</ParentControl>
-<ParentControl VM="CardsPlayerViewModel">
-    <CardsPlayerView />
-</ParentControl>
-<ParentControl VM="FirstOptionViewModel">
-    <FirstOptionView />
-</ParentControl>
+</MainScreen>
+
+<MultiplayerOpeningView P="ThreeLetterFunPlayerItem" />
+
+
+<PromptView VM="OpeningViewModel">
+    <OpeningView />
+</PromptView>

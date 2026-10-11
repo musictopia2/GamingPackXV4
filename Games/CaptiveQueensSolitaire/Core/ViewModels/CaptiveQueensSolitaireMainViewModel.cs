@@ -1,15 +1,11 @@
 namespace CaptiveQueensSolitaire.Core.ViewModels;
 [InstanceGame]
 [UseLabelGrid]
-public partial class CaptiveQueensSolitaireMainViewModel : SolitaireMainViewModel<CaptiveQueensSolitaireSaveInfo>
+public partial class CaptiveQueensSolitaireMainViewModel(IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver
+        ) : SolitaireMainViewModel<CaptiveQueensSolitaireSaveInfo>(aggregator, command, resolver)
 {
-    public CaptiveQueensSolitaireMainViewModel(IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver
-        )
-        : base(aggregator, command, resolver)
-    {
-    }
     protected override SolitaireGameClass<CaptiveQueensSolitaireSaveInfo> GetGame(IGamePackageResolver resolver)
     {
         return resolver.ReplaceObject<CaptiveQueensSolitaireMainGameClass>();

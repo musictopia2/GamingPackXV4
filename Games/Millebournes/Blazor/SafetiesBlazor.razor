@@ -2,21 +2,23 @@
 {
     return;
 }
-@foreach (var safety in Team.SafetyList)
-{
-    @if (safety.WasCoupe)
+<StateContentView DataContext="Team.SafetyList">
+    @foreach (var safety in Team.SafetyList)
     {
-        <div style="font-weight: bold">
-            @safety.SafetyName
-        </div>
+        @if (safety.WasCoupe)
+        {
+            <div style="font-weight: bold">
+                @safety.SafetyName
+            </div>
+        }
+        else
+        {
+            <div>
+                @safety.SafetyName
+            </div>
+        }
     }
-    else
-    {
-        <div>
-            @safety.SafetyName
-        </div>
-    }
-}
+</StateContentView>
 @if (Index == 1)
 {
     <GameButtonComponent StartOnNewLine="true"

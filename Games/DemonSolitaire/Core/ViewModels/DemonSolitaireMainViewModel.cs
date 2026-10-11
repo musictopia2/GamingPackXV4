@@ -15,11 +15,10 @@ public partial class DemonSolitaireMainViewModel : SolitaireMainViewModel<DemonS
         Heel1.DeckStyle = EnumDeckPileStyle.AlwaysKnown;
     }
     [LabelColumn]
-    public int StartingNumber { get; set; }
+    public partial int StartingNumber { get; set; }
     protected override void CommandExecutingChanged()
     {
         StartingNumber = MainPiles1!.StartNumber();
-
     }
     public DeckObservablePile<SolitaireCard> Heel1;
     protected override SolitaireGameClass<DemonSolitaireSaveInfo> GetGame(IGamePackageResolver resolver)

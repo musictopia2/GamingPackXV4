@@ -3,6 +3,7 @@
 [AutoReset]
 public class GenderProcesses : IGenderProcesses
 {
+    public Action? RefreshPlayer { get; set; }
     private readonly LifeBoardGameVMData _model;
     private readonly LifeBoardGameGameContainer _gameContainer;
     public Action<string>? SetTurn { get; set; }
@@ -34,6 +35,7 @@ public class GenderProcesses : IGenderProcesses
         }
         SetTurn(_gameContainer.SingleInfo.NickName);
         _model.GenderChooser.LoadEntireList(); //show here would be best now.
+        RefreshPlayer?.Invoke();
         _gameContainer.Aggregator.Publish(new NewTurnEventModel());
         await Task.Delay(300);
     }
@@ -58,15 +60,15 @@ public class GenderProcesses : IGenderProcesses
             await _gameContainer.Network!.SendAllAsync("gender", gender);
         }
         _model.GenderChooser.ChooseItem(gender);
-        _gameContainer.Command.ReportAll();
         if (_gameContainer.Test!.NoAnimations == false)
         {
             await _gameContainer.Delay!.DelayMilli(500);
         }
         _gameContainer.SingleInfo!.Gender = gender;
+        RefreshPlayer?.Invoke();
         if (_gameContainer.PlayerList!.Any(x => x.Gender == EnumGender.None) == false)
         {
-            await _gameContainer.Aggregator.PublishAsync(new StartEventModel());
+            await _gameContainer.Aggregator.PublishAsync(new ClosePromptEventModel());
             return;
         }
         if (_gameContainer.EndTurnAsync == null)

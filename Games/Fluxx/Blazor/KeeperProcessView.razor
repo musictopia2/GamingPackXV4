@@ -1,2 +1,3 @@
 ﻿@typeparam K
-<KeeperBaseView K=K Command="Command" KeeperCategory="EnumKeeperCategory.Process" />
+@inherits ParameterGameView<K>
+<KeeperBaseView Command="Command" DataContext="DataContext" KeeperCategory="EnumKeeperCategory.Process" />

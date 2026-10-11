@@ -1,6 +1,6 @@
 ﻿namespace Xactika.Core.ViewModels;
 [InstanceGame]
-public partial class XactikaBidViewModel : ScreenViewModel, IBlankGameVM
+public partial class XactikaBidViewModel 
 {
     public readonly XactikaVMData Model;
     private readonly XactikaGameContainer _gameContainer;
@@ -8,9 +8,8 @@ public partial class XactikaBidViewModel : ScreenViewModel, IBlankGameVM
     public XactikaBidViewModel(CommandContainer commandContainer,
         XactikaVMData model,
         XactikaGameContainer gameContainer,
-        IBidProcesses processes,
-        IEventAggregator aggregator
-        ) : base(aggregator)
+        IBidProcesses processes
+        ) 
     {
         CommandContainer = commandContainer;
         Model = model;

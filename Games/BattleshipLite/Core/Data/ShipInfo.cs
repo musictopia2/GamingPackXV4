@@ -1,13 +1,20 @@
 ﻿namespace BattleshipLite.Core.Data;
-public class ShipInfo : IBasicSpace
+[UseStateChanged]
+public partial class ShipInfo : IBasicSpace
 {
     public Vector Vector { get; set; }
-    public bool WasShip { get; set; } //you may or not not be the ship.
-    public EnumShipStatus ShipStatus { get; set; }
+    [StateProperty]
+    public partial bool WasShip { get; set; } //you may or not not be the ship.
+    [StateProperty]
+    public partial EnumShipStatus ShipStatus { get; set; }
+    public void UpdateShip()
+    {
+        StateChanged?.Invoke();
+    }
     private BattleshipLiteGameContainer? _gameContainer;
     public string FillColor()
     {
-        _gameContainer ??= aa1.Resolver!.Resolve<BattleshipLiteGameContainer>();
+        _gameContainer ??= Resolver!.Resolve<BattleshipLiteGameContainer>();
         if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.PlacingShips)
         {
             if (_gameContainer.PlayerList is null)

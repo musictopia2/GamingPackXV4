@@ -3,7 +3,6 @@ namespace AccordianSolitaire.Core.Logic;
 public class AccordianSolitaireMainGameClass : RegularDeckOfCardsGameClass<AccordianSolitaireCardInfo>, IAggregatorContainer
 {
     private readonly ISaveSinglePlayerClass _thisState;
-    private readonly CommandContainer _command;
     private readonly ISystemError _error;
     private readonly IToast _toast;
     internal AccordianSolitaireSaveInfo _saveRoot;
@@ -11,14 +10,12 @@ public class AccordianSolitaireMainGameClass : RegularDeckOfCardsGameClass<Accor
     public AccordianSolitaireMainGameClass(ISaveSinglePlayerClass thisState,
         IEventAggregator aggregator,
         IGamePackageResolver container,
-        CommandContainer command,
         ISystemError error,
         IToast toast
         )
     {
         _thisState = thisState;
         Aggregator = aggregator;
-        _command = command;
         _error = error;
         _toast = toast;
         _saveRoot = container.ReplaceObject<AccordianSolitaireSaveInfo>(); //can't create new one.  because if doing that, then anything that needs it won't have it.
@@ -30,7 +27,6 @@ public class AccordianSolitaireMainGameClass : RegularDeckOfCardsGameClass<Accor
         GameGoing = true;
         _board = board;
         await base.NewGameAsync(deck);
-        _command.UpdateAll();
     }
     public override Task NewGameAsync(DeckObservablePile<AccordianSolitaireCardInfo> deck)
     {

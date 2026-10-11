@@ -1,4 +1,5 @@
-﻿@if (DataContext == null || _player == null)
+﻿@inherits ParameterGameView<PlayerPilesViewModel>
+@if (DataContext is null || _player == null)
 {
     return;
 }

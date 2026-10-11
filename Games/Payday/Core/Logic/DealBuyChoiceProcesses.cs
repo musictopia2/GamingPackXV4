@@ -1,41 +1,32 @@
 ﻿namespace Payday.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class DealBuyChoiceProcesses : IDealBuyChoiceProcesses
+public class DealBuyChoiceProcesses(PaydayGameContainer gameContainer, PaydayVMData model, GameBoardProcesses gameBoard) : IDealBuyChoiceProcesses
 {
-    private readonly PaydayGameContainer _gameContainer;
-    private readonly PaydayVMData _model;
-    private readonly GameBoardProcesses _gameBoard;
-    public DealBuyChoiceProcesses(PaydayGameContainer gameContainer, PaydayVMData model, GameBoardProcesses gameBoard)
-    {
-        _gameContainer = gameContainer;
-        _model = model;
-        _gameBoard = gameBoard;
-    }
     async Task IDealBuyChoiceProcesses.ChoseDealOrBuyAsync()
     {
-        await _gameContainer.StartProcessPopUpAsync(_model);
-        _gameContainer.SaveRoot.OutCards.Add(_gameContainer.SaveRoot.CurrentMail!);
-        _gameContainer.SaveRoot.CurrentMail = new MailCard();
+        await gameContainer.StartProcessPopUpAsync(model);
+        gameContainer.SaveRoot.OutCards.Add(gameContainer.SaveRoot.CurrentMail!);
+        gameContainer.SaveRoot.CurrentMail = new MailCard();
         int nextSpace;
-        if (_model.PopUpChosen == "Buy")
+        if (model.PopUpChosen == "Buy")
         {
-            nextSpace = _gameBoard!.NextBuyerSpace();
+            nextSpace = gameBoard!.NextBuyerSpace();
         }
         else
         {
-            nextSpace = _gameBoard!.NextDealSpace();
+            nextSpace = gameBoard!.NextDealSpace();
         }
-        if (_gameContainer.BasicData!.MultiPlayer == false)
+        if (gameContainer.BasicData!.MultiPlayer == false)
         {
-            await _gameBoard.AnimateMoveAsync(nextSpace);
+            await gameBoard.AnimateMoveAsync(nextSpace);
             return;
         }
-        if (_gameContainer.SingleInfo!.CanSendMessage(_gameContainer.BasicData) == true)
+        if (gameContainer.SingleInfo!.CanSendMessage(gameContainer.BasicData) == true)
         {
-            await _gameBoard.AnimateMoveAsync(nextSpace);
+            await gameBoard.AnimateMoveAsync(nextSpace);
             return;
         }
-        _gameContainer.Network!.IsEnabled = true;
+        gameContainer.Network!.IsEnabled = true;
     }
 }

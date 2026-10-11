@@ -5,13 +5,13 @@ namespace CousinRummy.Core.Data;
 public partial class CousinRummyVMData : IBasicCardGamesData<RegularRummyCard>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string PhaseData { get; set; } = "";
+    public partial string PhaseData { get; set; } = "";
     [LabelColumn]
-    public string OtherLabel { get; set; } = "";
+    public partial string OtherLabel { get; set; } = "";
     public CousinRummyVMData(CommandContainer command, IGamePackageResolver resolver)
     {
         Deck1 = new DeckObservablePile<RegularRummyCard>(command);

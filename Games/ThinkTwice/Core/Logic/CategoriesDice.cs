@@ -1,20 +1,19 @@
 ﻿namespace ThinkTwice.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class CategoriesDice : ICompleteSingleDice<string>, IHoldDice, ISerializable
+[UseStateChanged]
+public partial class CategoriesDice : ICompleteSingleDice<string>, IHoldDice, ISerializable
 {
-    private bool _hold;
-    public bool Hold
+
+    [StateProperty]
+    public partial bool Hold { get; set; }
+
+    partial void OnHoldChanged(bool value)
     {
-        get { return _hold; }
-        set
-        {
-            if (SetProperty(ref _hold, value))
-            {
-                _gameContainer.SaveRoot!.CategoryHeld = value;
-            }
-        }
+        _gameContainer.SaveRoot!.CategoryHeld = value;
     }
+
+
     public CategoriesDice(ThinkTwiceGameContainer gameContainer)
     {
         _gameContainer = gameContainer;
@@ -23,44 +22,40 @@ public class CategoriesDice : ICompleteSingleDice<string>, IHoldDice, ISerializa
     readonly ThinkTwiceGameContainer _gameContainer;
     public int HeightWidth { get; } = 60;
     public IGamePackageResolver? MainContainer { get; set; }
-    private string _value = "";
-    public string Value
+    [StateProperty]
+    public partial string Value { get; set; } = "";
+
+    partial void OnValueChanged(string value)
     {
-        get { return _value; }
-        set
+        switch (value)
         {
-            if (SetProperty(ref _value, value))
-            {
-                switch (value)
-                {
-                    case "":
-                        _gameContainer.SaveRoot!.CategoryRolled = -1;
-                        return;
-                    case "D":
-                        _gameContainer.SaveRoot!.CategoryRolled = 1;
-                        return;
-                    case "E":
-                        _gameContainer.SaveRoot!.CategoryRolled = 2;
-                        return;
-                    case "H":
-                        _gameContainer.SaveRoot!.CategoryRolled = 3;
-                        return;
-                    case "L":
-                        _gameContainer.SaveRoot!.CategoryRolled = 4;
-                        return;
-                    case "O":
-                        _gameContainer.SaveRoot!.CategoryRolled = 5;
-                        return;
-                    case "S":
-                        _gameContainer.SaveRoot!.CategoryRolled = 6;
-                        return;
-                    default:
-                        throw new CustomBasicException("Value Not supported");
-                }
-            }
+            case "":
+                _gameContainer.SaveRoot!.CategoryRolled = -1;
+                return;
+            case "D":
+                _gameContainer.SaveRoot!.CategoryRolled = 1;
+                return;
+            case "E":
+                _gameContainer.SaveRoot!.CategoryRolled = 2;
+                return;
+            case "H":
+                _gameContainer.SaveRoot!.CategoryRolled = 3;
+                return;
+            case "L":
+                _gameContainer.SaveRoot!.CategoryRolled = 4;
+                return;
+            case "O":
+                _gameContainer.SaveRoot!.CategoryRolled = 5;
+                return;
+            case "S":
+                _gameContainer.SaveRoot!.CategoryRolled = 6;
+                return;
+            default:
+                throw new CustomBasicException("Value Not supported");
         }
     }
-    public bool Visible { get; set; }
+    [StateProperty]
+    public partial bool Visible { get; set; }
     public int Index { get; set; }
     private void FillText(int whichValue)
     {
@@ -124,7 +119,6 @@ public class CategoriesDice : ICompleteSingleDice<string>, IHoldDice, ISerializa
         await thisCol.ForEachAsync(async category =>
         {
             Populate(category);
-            _gameContainer.Command.UpdateAll();
             await _gameContainer.Delay.DelaySeconds(.07);
         });
     }
@@ -132,7 +126,7 @@ public class CategoriesDice : ICompleteSingleDice<string>, IHoldDice, ISerializa
     {
         await _gameContainer.Network!.SendAllAsync(category, thisList);
     }
-    public async Task<BasicList<string>> GetDiceList(string content)
+    public static async Task<BasicList<string>> GetDiceList(string content)
     {
         return await js1.DeserializeObjectAsync<BasicList<string>>(content);
     }

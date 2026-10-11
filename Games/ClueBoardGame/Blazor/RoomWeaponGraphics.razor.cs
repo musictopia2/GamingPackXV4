@@ -5,7 +5,7 @@ public partial class RoomWeaponGraphics
     public GameBoardGraphicsCP? GraphicsData { get; set; }
     
     [Parameter]
-    public BasicList<WeaponInfo> Weapons { get; set; } = new();
+    public BasicList<WeaponInfo> Weapons { get; set; } = [];
     [Parameter]
     public RoomInfo? Room { get; set; }
     

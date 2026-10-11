@@ -1,38 +1,27 @@
 ﻿namespace Fluxx.Core.Containers;
 [SingletonGame]
 [AutoReset]
-public class FluxxEvent : IFluxxEvent
+public class FluxxEvent(FluxxGameContainer gameContainer,
+    FluxxDelegates delegates,
+    ActionContainer actionContainer,
+    IDrawUseProcesses drawUseProcesses,
+    IPlayProcesses playProcesses,
+    IEverybodyOneProcesses everybodyOneProcesses,
+    IRotateTradeHandProcesses rotateTradeHandProcesses,
+    IFinalKeeperProcesses finalKeeperProcesses,
+    IFinalRuleProcesses finalRuleProcesses
+        ) : IFluxxEvent
 {
-    private readonly FluxxGameContainer _gameContainer;
-    private readonly FluxxDelegates _delegates;
-    private readonly ActionContainer _actionContainer;
-    private readonly IDrawUseProcesses _drawUseProcesses;
-    private readonly IPlayProcesses _playProcesses;
-    private readonly IEverybodyOneProcesses _everybodyOneProcesses;
-    private readonly IRotateTradeHandProcesses _rotateTradeHandProcesses;
-    private readonly IFinalKeeperProcesses _finalKeeperProcesses;
-    private readonly IFinalRuleProcesses _finalRuleProcesses;
-    public FluxxEvent(FluxxGameContainer gameContainer,
-        FluxxDelegates delegates,
-        ActionContainer actionContainer,
-        IDrawUseProcesses drawUseProcesses,
-        IPlayProcesses playProcesses,
-        IEverybodyOneProcesses everybodyOneProcesses,
-        IRotateTradeHandProcesses rotateTradeHandProcesses,
-        IFinalKeeperProcesses finalKeeperProcesses,
-        IFinalRuleProcesses finalRuleProcesses
-        )
-    {
-        _gameContainer = gameContainer;
-        _delegates = delegates;
-        _actionContainer = actionContainer;
-        _drawUseProcesses = drawUseProcesses;
-        _playProcesses = playProcesses;
-        _everybodyOneProcesses = everybodyOneProcesses;
-        _rotateTradeHandProcesses = rotateTradeHandProcesses;
-        _finalKeeperProcesses = finalKeeperProcesses;
-        _finalRuleProcesses = finalRuleProcesses;
-    }
+    private readonly FluxxGameContainer _gameContainer = gameContainer;
+    private readonly FluxxDelegates _delegates = delegates;
+    private readonly ActionContainer _actionContainer = actionContainer;
+    private readonly IDrawUseProcesses _drawUseProcesses = drawUseProcesses;
+    private readonly IPlayProcesses _playProcesses = playProcesses;
+    private readonly IEverybodyOneProcesses _everybodyOneProcesses = everybodyOneProcesses;
+    private readonly IRotateTradeHandProcesses _rotateTradeHandProcesses = rotateTradeHandProcesses;
+    private readonly IFinalKeeperProcesses _finalKeeperProcesses = finalKeeperProcesses;
+    private readonly IFinalRuleProcesses _finalRuleProcesses = finalRuleProcesses;
+
     async Task IFluxxEvent.CardChosenToPlayAtAsync(int deck, int selectedIndex)
     {
         int index = _actionContainer!.GetPlayerIndex(selectedIndex);
@@ -63,11 +52,11 @@ public class FluxxEvent : IFluxxEvent
             await _delegates.LoadMainScreenAsync();
             return;
         }
-        if (_delegates.LoadProperActionScreenAsync == null)
+        if (_delegates.LoadActionScreenAsync == null)
         {
             throw new CustomBasicException("Nobody is loading the action screen when closing out the keeper.  Rethink");
         }
-        await _delegates.LoadProperActionScreenAsync(_actionContainer);
+        await _delegates.LoadActionScreenAsync();
 
     }
     async Task IFluxxEvent.DirectionChosenAsync(int selectedIndex)

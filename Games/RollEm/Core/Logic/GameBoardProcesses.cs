@@ -1,15 +1,8 @@
 ﻿namespace RollEm.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class GameBoardProcesses
+public class GameBoardProcesses(RollEmGameContainer gameContainer, RollEmVMData model)
 {
-    private readonly RollEmGameContainer _gameContainer;
-    private readonly RollEmVMData _model;
-    public GameBoardProcesses(RollEmGameContainer gameContainer, RollEmVMData model)
-    {
-        _gameContainer = gameContainer;
-        _model = model;
-    }
     private static string GetSavedItem(NumberInfo thisNumber) //not sure if we eventually do enums.
     {
         if (thisNumber.IsCrossed == true)
@@ -24,24 +17,24 @@ public class GameBoardProcesses
     }
     public void SaveGame()
     {
-        _gameContainer.SaveRoot!.SpaceList = _gameContainer.NumberList!.Values.Select(items => GetSavedItem(items)).ToBasicList();
+        gameContainer.SaveRoot!.SpaceList = gameContainer.NumberList!.Values.Select(items => GetSavedItem(items)).ToBasicList();
     }
     public void ClearBoard()
     {
-        foreach (var item in _gameContainer.NumberList!.Values)
+        foreach (var item in gameContainer.NumberList!.Values)
         {
             item.IsCrossed = false;
             item.Recently = false;
         }
-        _model.Cup!.HowManyDice = 2;
-        _model.Cup.HideDice();
-        _model.Cup.CanShowDice = false;
-        _gameContainer.Aggregator.RepaintBoard(); //try this too.
+        model.Cup!.HowManyDice = 2;
+        model.Cup.HideDice();
+        model.Cup.CanShowDice = false;
+        gameContainer.Aggregator.RepaintBoard(); //try this too.
     }
     public void LoadSavedGame()
     {
         int x = 0;
-        _gameContainer.SaveRoot!.SpaceList.ForEach(items =>
+        gameContainer.SaveRoot!.SpaceList.ForEach(items =>
         {
             x++;
             if (items == "crossed")
@@ -57,19 +50,19 @@ public class GameBoardProcesses
                 throw new CustomBasicException("Wrong Text.  Rethink");
             }
         });
-        _gameContainer.Aggregator.RepaintBoard();
+        gameContainer.Aggregator.RepaintBoard();
     }
     private void CrossOffSaved(int x)
     {
-        _gameContainer.NumberList![x].IsCrossed = true;
+        gameContainer.NumberList![x].IsCrossed = true;
     }
     private void CrossOffTemp(int x)
     {
-        _gameContainer.NumberList![x].Recently = true;
+        gameContainer.NumberList![x].Recently = true;
     }
     private void CrossOffPreviousNumbers()
     {
-        var temps = _gameContainer.NumberList!.Values.Where(items => items.Recently == true).ToBasicList();
+        var temps = gameContainer.NumberList!.Values.Where(items => items.Recently == true).ToBasicList();
         temps.ForEach(items =>
         {
             items.Recently = false;
@@ -78,23 +71,23 @@ public class GameBoardProcesses
     }
     private void ClearPreviousNumbers()
     {
-        var temps = _gameContainer.NumberList!.Values.Where(items => items.Recently == true).ToBasicList();
+        var temps = gameContainer.NumberList!.Values.Where(items => items.Recently == true).ToBasicList();
         temps.ForEach(items =>
         {
             items.Recently = false;
         });
     }
-    private int HowManyRecently => _gameContainer.NumberList!.Values.Count(items => items.Recently == true);
-    private int RecentTotal => _gameContainer.NumberList!.Values.Where(items => items.Recently == true).Sum(Items => Items.Number);
-    public int CalculateScore => _gameContainer.NumberList!.Values.Where(items => items.IsCrossed == false && items.Number <= 9).Sum(Items => Items.Number);
-    private bool NeedOneDice => !_gameContainer.NumberList!.Values.Any(items => items.Number >= 7 && items.IsCrossed == false && items.Number <= 9);
+    private int HowManyRecently => gameContainer.NumberList!.Values.Count(items => items.Recently == true);
+    private int RecentTotal => gameContainer.NumberList!.Values.Where(items => items.Recently == true).Sum(Items => Items.Number);
+    public int CalculateScore => gameContainer.NumberList!.Values.Where(items => items.IsCrossed == false && items.Number <= 9).Sum(Items => Items.Number);
+    private bool NeedOneDice => !gameContainer.NumberList!.Values.Any(items => items.Number >= 7 && items.IsCrossed == false && items.Number <= 9);
     public async Task MakeMoveAsync(int Number)
     {
         CrossOffTemp(Number);
-        _gameContainer.Aggregator.RepaintBoard();
-        if (_gameContainer.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self && _gameContainer.Test!.NoAnimations == false)
+        gameContainer.Aggregator.RepaintBoard();
+        if (gameContainer.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self && gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(.5);
+            await gameContainer.Delay!.DelaySeconds(.5);
         }
     }
     public void FinishMove()
@@ -102,9 +95,9 @@ public class GameBoardProcesses
         CrossOffPreviousNumbers();
         if (NeedOneDice == true)
         {
-            _model.Cup!.HowManyDice = 1;
+            model.Cup!.HowManyDice = 1;
         }
-        _gameContainer.Aggregator.RepaintBoard();
+        gameContainer.Aggregator.RepaintBoard();
     }
     public bool IsMoveFinished()
     {
@@ -115,10 +108,10 @@ public class GameBoardProcesses
         }
         return false;
     }
-    public int GetDiceTotal => _model.Cup!.TotalDiceValue;
+    public int GetDiceTotal => model.Cup!.TotalDiceValue;
     public bool CanMakeMove(int number)
     {
-        if (_gameContainer.Test!.AllowAnyMove == true)
+        if (gameContainer.Test!.AllowAnyMove == true)
         {
             return true; //for testing.
         }
@@ -146,16 +139,16 @@ public class GameBoardProcesses
         ClearPreviousNumbers();
         if (doRefresh == true)
         {
-            _gameContainer.Aggregator.RepaintBoard();
+            gameContainer.Aggregator.RepaintBoard();
         }
     }
     public BasicList<int> GetNumberList()
     {
-        if (_gameContainer.NumberList!.Values.Any(items => items.Recently))
+        if (gameContainer.NumberList!.Values.Any(items => items.Recently))
         {
             throw new CustomBasicException("Cannot be recently checked when the computer is checking for numbers left");
         }
-        BasicList<NumberInfo> tempList = _gameContainer.NumberList.Values.Where(items => items.IsCrossed == false).ToBasicList();
+        BasicList<NumberInfo> tempList = gameContainer.NumberList.Values.Where(items => items.IsCrossed == false).ToBasicList();
         return tempList.Select(items => items.Number).ToBasicList();
     }
 }

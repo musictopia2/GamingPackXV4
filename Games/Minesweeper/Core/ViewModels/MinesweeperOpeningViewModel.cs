@@ -1,31 +1,35 @@
 ﻿namespace Minesweeper.Core.ViewModels;
 [InstanceGame]
-public class MinesweeperOpeningViewModel : ScreenViewModel, ILevelVM, IMainScreen, IBlankGameVM
+[UseStateChanged]
+public partial class MinesweeperOpeningViewModel(CommandContainer container,
+    IGamePackageResolver resolver,
+    LevelClass global,
+    IEventAggregator aggregator
+    ) : IPromptVM, ILevelVM,
+    IHandleAsync<OpenPromptEventModel>, IHandleAsync<ClosePromptEventModel>
 {
-    private EnumLevel _levelChosen = EnumLevel.Easy;
-    public EnumLevel LevelChosen
+    private partial void Subscribe();
+    private partial void Unsubscribe(); 
+    [StateProperty]
+    public partial EnumLevel LevelChosen { get; set; }
+    partial void OnLevelChosenChanged(EnumLevel value)
     {
-        get { return _levelChosen; }
-        set
-        {
-            if (SetProperty(ref _levelChosen, value))
-            {
-                this.PopulateMinesNeeded();
-                _global.Level = value;
-            }
-        }
+        _global.Level = value;
+        this.PopulateMinesNeeded();
     }
     public int HowManyMinesNeeded { get; set; }
-    public CommandContainer CommandContainer { get; set; }
-    public ListViewPicker LevelPicker;
-    private readonly LevelClass _global;
-    public MinesweeperOpeningViewModel(CommandContainer container, 
-        IGamePackageResolver resolver,
-        LevelClass global,
-        IEventAggregator aggregator) : base(aggregator)
+    public CommandContainer CommandContainer => container;
+    public ListViewPicker LevelPicker = null!;
+    private LevelClass _global = null!;
+    private Task LevelPicker_ItemSelectedAsync(int selectedIndex, string selectedText)
     {
+        LevelChosen = EnumLevel.FromValue(selectedIndex);
+        return Task.CompletedTask;
+    }
+    void IPromptVM.Initialize()
+    {
+        Subscribe();
         LevelPicker = new ListViewPicker(container, resolver); //hopefully this simple.
-        CommandContainer = container;
         LevelPicker.SelectionMode = ListViewPicker.EnumSelectionMode.SingleItem;
         LevelPicker.IndexMethod = ListViewPicker.EnumIndexMethod.OneBased;
         _global = global;
@@ -37,9 +41,13 @@ public class MinesweeperOpeningViewModel : ScreenViewModel, ILevelVM, IMainScree
         LevelPicker.SelectSpecificItem(LevelChosen.Value);
         LevelPicker.IsEnabled = true;
     }
-    private Task LevelPicker_ItemSelectedAsync(int selectedIndex, string selectedText)
+    async Task IHandleAsync<OpenPromptEventModel>.HandleAsync(OpenPromptEventModel message)
     {
-        LevelChosen = EnumLevel.FromValue(selectedIndex);
-        return Task.CompletedTask;
+        //not sure if i need anything here now.
+    }
+
+    async Task IHandleAsync<ClosePromptEventModel>.HandleAsync(ClosePromptEventModel message)
+    {
+        Unsubscribe();
     }
 }

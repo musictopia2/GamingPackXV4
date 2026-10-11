@@ -5,13 +5,13 @@ namespace Spades4Player.Core.Data;
 public partial class Spades4PlayerVMData : ITrickCardGamesData<Spades4PlayerCardInformation, EnumSuitList>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumSuitList TrumpSuit { get; set; }
+    public partial EnumSuitList TrumpSuit { get; set; }
     [LabelColumn]
-    public string TeamMate { get; set; } = "None"; //the players name.  only for ui.
+    public partial string TeamMate { get; set; } = "None"; //the players name.  only for ui.
     public Spades4PlayerVMData(CommandContainer command,
             SpadesTrickAreaCP trickArea1,
             IGamePackageResolver resolver

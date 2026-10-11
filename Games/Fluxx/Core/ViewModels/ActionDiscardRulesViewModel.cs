@@ -4,14 +4,13 @@
 public partial class ActionDiscardRulesViewModel : BasicActionScreen
 {
     [LabelColumn]
-    public int RulesToDiscard { get; set; }
+    public partial int RulesToDiscard { get; set; }
     public ActionDiscardRulesViewModel(FluxxGameContainer gameContainer,
         ActionContainer actionContainer,
         KeeperContainer keeperContainer,
         FluxxDelegates delegates,
         IFluxxEvent fluxxEvent,
-        BasicActionLogic basicActionLogic,
-        IEventAggregator aggregator) : base(gameContainer, actionContainer, keeperContainer, delegates, fluxxEvent, basicActionLogic, aggregator)
+        BasicActionLogic basicActionLogic) : base(gameContainer, actionContainer, keeperContainer, delegates, fluxxEvent, basicActionLogic)
     {
         RulesToDiscard = actionContainer.RulesToDiscard;
         CreateCommands(CommandContainer);

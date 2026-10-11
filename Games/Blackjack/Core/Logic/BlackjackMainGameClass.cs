@@ -1,34 +1,18 @@
 namespace Blackjack.Core.Logic;
 [SingletonGame]
-public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardInfo>, IAggregatorContainer
+public class BlackjackMainGameClass(ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IGamePackageResolver container,
+    IAsyncDelayer delayer,
+    IToast toast,
+    ISystemError error
+        ) : RegularDeckOfCardsGameClass<BlackjackCardInfo>, IAggregatorContainer
 {
-    private readonly ISaveSinglePlayerClass _thisState;
-    private readonly IAsyncDelayer _delayer;
-    private readonly IToast _toast;
-    private readonly ISystemError _error;
-    private readonly CommandContainer _command;
-    internal BlackjackSaveInfo _saveRoot;
+    internal BlackjackSaveInfo _saveRoot = container.ReplaceObject<BlackjackSaveInfo>();
     internal bool GameGoing { get; set; }
     private BlackjackMainViewModel? _model;
     private int _oneNeeded;
     private bool _computerStartChoice; //should have been boolean
-    public BlackjackMainGameClass(ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IGamePackageResolver container,
-        IAsyncDelayer delayer,
-        IToast toast,
-        ISystemError error,
-        CommandContainer command
-        )
-    {
-        _thisState = thisState;
-        Aggregator = aggregator;
-        _delayer = delayer;
-        _toast = toast;
-        _error = error;
-        _command = command;
-        _saveRoot = container.ReplaceObject<BlackjackSaveInfo>(); //can't create new one.  because if doing that, then anything that needs it won't have it.
-    }
     public override Task NewGameAsync(DeckObservablePile<BlackjackCardInfo> deck)
     {
         throw new CustomBasicException("You must send in the view model this time");
@@ -39,15 +23,15 @@ public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardI
         GameGoing = true;
         return base.NewGameAsync(deck);
     }
-    public IEventAggregator Aggregator { get; }
+    public IEventAggregator Aggregator { get; } = aggregator;
     public override async Task<bool> CanOpenSavedSinglePlayerGameAsync()
     {
-        return await _thisState.CanOpenSavedSinglePlayerGameAsync();
+        return await thisState.CanOpenSavedSinglePlayerGameAsync();
     }
     public override async Task OpenSavedGameAsync()
     {
         DeckList.OrderedObjects(); //i think
-        _saveRoot = await _thisState.RetrieveSinglePlayerGameAsync<BlackjackSaveInfo>();
+        _saveRoot = await thisState.RetrieveSinglePlayerGameAsync<BlackjackSaveInfo>();
         if (_saveRoot.DeckList.Count > 0)
         {
             var newList = _saveRoot.DeckList.GetNewObjectListFromDeckList(DeckList);
@@ -63,16 +47,16 @@ public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardI
         }
         _isBusy = true;
         _saveRoot.DeckList = DeckPile!.GetCardIntegers();
-        await _thisState.SaveSimpleSinglePlayerGameAsync(_saveRoot); //i think
+        await thisState.SaveSimpleSinglePlayerGameAsync(_saveRoot); //i think
         _isBusy = false;
     }
 
     public async Task ShowWinAsync()
     {
-        _toast.ShowSuccessToast("Congratulations, you won");
+        toast.ShowSuccessToast("Congratulations, you won");
         await Task.Delay(2000);
         GameGoing = false;
-        await this.SendGameOverAsync(_error);
+        await this.SendGameOverAsync(error);
     }
     protected override void AfterShuffle()
     {
@@ -89,7 +73,7 @@ public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardI
         _model.CanHitOrStay = false; // has to start that it can't hit or stay.
         for (x = 1; x <= 2; x++)
         {
-            newCol = new DeckRegularDict<BlackjackCardInfo>();
+            newCol = [];
             for (y = 1; y <= 2; y++)
             {
                 newCol.Add(_model.DeckPile.DrawCard());
@@ -122,7 +106,7 @@ public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardI
         {
             points = _model.HumanStack.CalculateScore(_model);
             _model.HumanPoints = points;
-            _command.UpdateAll();
+            //command.UpdateAll();
             if (points > 21)
             {
                 await PrivateGameOverAsync();
@@ -143,7 +127,7 @@ public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardI
     private async Task PrivateGameOverAsync()
     {
         string messageToShow;
-        _command.UpdateAll(); //so i can see the results before hand.
+        //command.UpdateAll(); //so i can see the results before hand.
         if (_model!.HumanPoints == 21)
         {
             messageToShow = "Congratuations, you won because you got 21 points exactly";
@@ -179,9 +163,9 @@ public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardI
             messageToShow = "Sorry, you lost because the dealer got more points than you had";
             _model.Losses += 1;
         }
-        _toast.ShowInfoToast(messageToShow);
+        toast.ShowInfoToast(messageToShow);
         await Task.Delay(2000);
-        await this.SendGameOverAsync(_error);
+        await this.SendGameOverAsync(error);
     }
     public async Task HumanSelectAsync(bool choicess)
     {
@@ -236,12 +220,14 @@ public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardI
     {
         _model!.SelectedYet = false;
         _model.ComputerStack!.Reveal(2);
-        _command.UpdateAll();
+        //iffy because i do want to see something here (if possible).
+
+        //command.UpdateAll();
         if (_computerStartChoice == false)
         {
             _model.ComputerPoints = _model.ComputerStack.CalculateScore(_model);
         }
-        await _delayer.DelaySeconds(0.55);
+        await delayer.DelaySeconds(0.55);
         if (_computerStartChoice == true)
         {
             _model.ComputerStack.AceChose(2, true);
@@ -251,7 +237,7 @@ public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardI
         _model.ComputerStack.ComputerSelectFirst(ref Choicess);
         _model.SelectedYet = true;
         _model.ComputerStack.Reveal(1);
-        _model.CommandContainer.UpdateAll();
+        //command.UpdateAll();
         if (Choicess == true)
         {
             _model.ComputerStack.AceChose(1, WillComputerChoose1());
@@ -259,8 +245,8 @@ public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardI
         do
         {
             _model.ComputerPoints = _model.ComputerStack.CalculateScore(_model);
-            _model.CommandContainer.UpdateAll();
-            await _delayer.DelaySeconds(0.5);
+            //command.UpdateAll();
+            await delayer.DelaySeconds(0.5);
             if (_model.ComputerPoints > _model.HumanPoints)
             {
                 await PrivateGameOverAsync();
@@ -278,13 +264,13 @@ public class BlackjackMainGameClass : RegularDeckOfCardsGameClass<BlackjackCardI
             }
             Choicess = false;
             _model.ComputerStack.HitMe(_model.DeckPile!.DrawCard(), ref Choicess);
-            _model.CommandContainer.UpdateAll();
+            //command.UpdateAll();
             if (Choicess == true)
             {
                 _model.ComputerStack.AceChose(1, WillComputerChoose1());
             }
-            _model.CommandContainer.UpdateAll();
-            await _delayer.DelaySeconds(0.5);
+            //command.UpdateAll();
+            await delayer.DelaySeconds(0.5);
         }
         while (true);
     }

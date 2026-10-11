@@ -1,11 +1,11 @@
 namespace PassOutDiceGame.Blazor.Views;
 public partial class PassOutDiceGameMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private GameBoardGraphicsCP? _graphicsData;
     protected override void OnInitialized()
     {
-        _graphicsData = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _graphicsData = Resolver!.Resolve<GameBoardGraphicsCP>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(PassOutDiceGameVMData.NormalTurn))
             .AddLabel("Status", nameof(PassOutDiceGameVMData.Status));

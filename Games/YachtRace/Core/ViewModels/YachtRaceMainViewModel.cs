@@ -1,29 +1,29 @@
 namespace YachtRace.Core.ViewModels;
 [InstanceGame]
-public partial class YachtRaceMainViewModel : DiceGamesVM<SimpleDice>
-{
-    private readonly YachtRaceMainGameClass _mainGame; //if we don't need, delete.
-    public YachtRaceVMData VMData { get; set; }
-    public YachtRaceMainViewModel(CommandContainer commandContainer,
+public partial class YachtRaceMainViewModel(CommandContainer commandContainer,
         YachtRaceMainGameClass mainGame,
         YachtRaceVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, roller, aggregator)
+        IEventAggregator aggregator) : DiceGamesVM<SimpleDice>(commandContainer, mainGame, viewModel, basicData, resolver, roller, aggregator)
+{
+    public YachtRaceVMData VMData { get; set; } = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = viewModel;
         CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
+    }
+    protected override Task CloseAsync()
+    {
+        CommandContainer.ExecutingChanged = null;
+        return base.CloseAsync();
     }
     partial void CreateCommands(CommandContainer command);
     private void CommandContainer_ExecutingChanged()
     {
-        if (_mainGame.HasRolled && CommandContainer.IsExecuting)
+        if (mainGame.HasRolled && CommandContainer.IsExecuting)
         {
             try
             {
@@ -35,13 +35,13 @@ public partial class YachtRaceMainViewModel : DiceGamesVM<SimpleDice>
                 throw;
             }
         }
-        else if (CommandContainer.IsExecuting == false && _mainGame.HasRolled)
+        else if (CommandContainer.IsExecuting == false && mainGame.HasRolled)
         {
             VMData.Stops.Start();
         }
     }
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
-    public PlayerCollection<YachtRacePlayerItem> PlayerList => _mainGame.PlayerList;
+    public PlayerCollection<YachtRacePlayerItem> PlayerList => mainGame.PlayerList;
     protected override bool CanEnableDice()
     {
         return true;
@@ -54,17 +54,15 @@ public partial class YachtRaceMainViewModel : DiceGamesVM<SimpleDice>
     {
         return true;
     }
-    public bool CanFiveKind => _mainGame.HasRolled;
+    public bool CanFiveKind => mainGame.HasRolled;
     [Command(EnumCommandCategory.Game)]
     public async Task FiveKindAsync()
     {
-        if (_mainGame!.HasYahtzee() == false)
+        if (mainGame!.HasYahtzee() == false)
         {
             VMData.ErrorMessage = "You do not have 5 of a kind";
-            CommandContainer.UpdateAll();
             await Task.Delay(200);
             VMData.ErrorMessage = "";
-            CommandContainer.UpdateAll();
             return;
         }
         VMData.Stops.Stop();
@@ -73,10 +71,10 @@ public partial class YachtRaceMainViewModel : DiceGamesVM<SimpleDice>
         {
             throw new CustomBasicException("Time cannot be 0");
         }
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        if (mainGame.BasicData!.MultiPlayer == true)
         {
-            await _mainGame.Network!.SendAllAsync("fivekind", howLong);
+            await mainGame.Network!.SendAllAsync("fivekind", howLong);
         }
-        await _mainGame.ProcessFiveKindAsync(howLong);
+        await mainGame.ProcessFiveKindAsync(howLong);
     }
 }

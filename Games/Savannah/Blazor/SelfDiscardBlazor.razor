@@ -9,18 +9,21 @@
 }
 
 <CascadingValue Value="this">
-    <fieldset style="@GetContainerStyle() @GetColorStyle();" disabled="@IsDisabled">
-        <legend style="float:none;">@DiscardPile.Text</legend>
-        <div style="@GetCardContainerStyle()" @onclick="ClickAsync">
-            @for (int i = 0; i < DiscardPile.HandList.Count; i++)
-            {
-                var card = DiscardPile.HandList[i];
-                <div style="@GetCardStyle(i, card)">
-                    <FlexibleDeckRenderComponent D="RegularSimpleCard" DeckObject="card" UseKey="true">
-                        @ChildContent!(card)
-                    </FlexibleDeckRenderComponent>
-                </div>
-            }
-        </div>
-    </fieldset>
+    <StateContentView DataContext="DiscardPile">
+        <fieldset style="@GetContainerStyle() @GetColorStyle();" disabled="@IsDisabled">
+            <legend style="float:none;">@DiscardPile.Text</legend>
+            <div style="@GetCardContainerStyle()" @onclick="ClickAsync">
+                @for (int i = 0; i < DiscardPile.HandList.Count; i++)
+                {
+                    var card = DiscardPile.HandList[i];
+                    <div style="@GetCardStyle(i, card)">
+                        <FlexibleDeckRenderComponent D="RegularSimpleCard" DeckObject="card" UseKey="true">
+                            @ChildContent!(card)
+                        </FlexibleDeckRenderComponent>
+                    </div>
+                }
+            </div>
+        </fieldset>
+    </StateContentView>
+    
 </CascadingValue>

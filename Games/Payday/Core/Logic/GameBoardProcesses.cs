@@ -1,7 +1,7 @@
 ﻿namespace Payday.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class GameBoardProcesses
+public class GameBoardProcesses(PaydayGameContainer gameContainer, GameBoardGraphicsCP boardGraphicsCP)
 {
     public EnumDay GetDayDetails(int day)
     {
@@ -17,7 +17,7 @@ public class GameBoardProcesses
     }
     private int FindNextSpace(EnumDay whichOne)
     {
-        var currentDay = _gameContainer.SingleInfo!.DayNumber;
+        var currentDay = gameContainer.SingleInfo!.DayNumber;
         var tempList = _dayList.Skip(currentDay);
         int x = 0;
         foreach (var thisItem in tempList)
@@ -34,15 +34,8 @@ public class GameBoardProcesses
     {
         return FindNextSpace(EnumDay.Deal);
     }
-    readonly BasicList<EnumDay> _dayList = new();
-    readonly PaydayGameContainer _gameContainer;
-    private readonly GameBoardGraphicsCP _graphicsBoard;
-    public GameBoardProcesses(PaydayGameContainer gameContainer, GameBoardGraphicsCP boardGraphicsCP)
-    {
-        _gameContainer = gameContainer;
-        _graphicsBoard = boardGraphicsCP;
-        _dayList = new()
-        {
+    readonly BasicList<EnumDay> _dayList =
+        [
             EnumDay.Mail,
             EnumDay.SweepStakes,
             EnumDay.Mail,
@@ -73,20 +66,20 @@ public class GameBoardProcesses
             EnumDay.ShoppingSpree,
             EnumDay.Buyer,
             EnumDay.WalkForCharity
-        };
-    }
+        ];
+
     public void MoveToLastSpace()
     {
-        _gameContainer.SingleInfo!.InGame = false;
+        gameContainer.SingleInfo!.InGame = false;
         PositionPieces();
     }
     private void PositionPieces()
     {
-        if (_gameContainer.PrivateSpaceList.Count == 0)
+        if (gameContainer.PrivateSpaceList.Count == 0)
         {
             LoadBoard();
         }
-        _gameContainer.PrivateSpaceList.ForEach(thisSpace =>
+        gameContainer.PrivateSpaceList.ForEach(thisSpace =>
         {
             pp1.ClearArea(thisSpace);
         });
@@ -94,16 +87,16 @@ public class GameBoardProcesses
         float spaceSize;
         PointF location;
         GameSpace tempSpace;
-        foreach (var thisPlayer in _gameContainer.PlayerList!)
+        foreach (var thisPlayer in gameContainer.PlayerList!)
         {
             if (thisPlayer.InGame == true)
             {
-                tempSpace = _gameContainer.PrivateSpaceList[thisPlayer.DayNumber];
+                tempSpace = gameContainer.PrivateSpaceList[thisPlayer.DayNumber];
                 spaceSize = tempSpace.Area.Width / 3.2f;
             }
             else
             {
-                tempSpace = _gameContainer.PrivateSpaceList[32];
+                tempSpace = gameContainer.PrivateSpaceList[32];
                 spaceSize = tempSpace.Area.Width / 7;
             }
             location = pp1.GetPosition(tempSpace, new SizeF(spaceSize, spaceSize));
@@ -112,11 +105,11 @@ public class GameBoardProcesses
             tempSpace.ColorList.Add(thisPlayer.Color.Color);
             pp1.AddPieceToArea(tempSpace, rectanglePiece);
         }
-        _gameContainer.Aggregator.RepaintBoard();
+        gameContainer.Aggregator.RepaintBoard();
     }
     public void ResetBoard()
     {
-        foreach (var thisPlayer in _gameContainer.PlayerList!)
+        foreach (var thisPlayer in gameContainer.PlayerList!)
         {
             thisPlayer.MoneyHas = 3500;
             thisPlayer.CurrentMonth = 1; // start out with month 1
@@ -124,6 +117,7 @@ public class GameBoardProcesses
             thisPlayer.Loans = 0;
             thisPlayer.Hand.Clear(); // clear out the cards
             thisPlayer.ChoseNumber = 0;
+            thisPlayer.InGame = true; //they are now in game.
         }
         PositionPieces();
     }
@@ -135,16 +129,16 @@ public class GameBoardProcesses
             GameSpace thisSpace = new();
             if (x >= 1 && x <= 31)
             {
-                thisSpace.Area = _graphicsBoard!.SpaceRectangle(x);
+                thisSpace.Area = boardGraphicsCP!.SpaceRectangle(x);
                 thisSpace.Index = x;
             }
             else if (x == 0)
             {
-                thisSpace.Area = _graphicsBoard!.StartingRectangle;
+                thisSpace.Area = boardGraphicsCP!.StartingRectangle;
             }
             else if (x == 32)
             {
-                thisSpace.Area = _graphicsBoard!.FinishRectangle;
+                thisSpace.Area = boardGraphicsCP!.FinishRectangle;
             }
             else
             {
@@ -154,12 +148,12 @@ public class GameBoardProcesses
             {
                 throw new CustomBasicException("No rectangle.  This means needs to rethink drawing or when creating spaces.");
             }
-            _gameContainer.PrivateSpaceList.Add(thisSpace);
+            gameContainer.PrivateSpaceList.Add(thisSpace);
         }
     }
     internal void ReloadSavedState()
     {
-        if (_gameContainer.PrivateSpaceList.Count == 0)
+        if (gameContainer.PrivateSpaceList.Count == 0)
         {
             LoadBoard();
         }
@@ -167,32 +161,32 @@ public class GameBoardProcesses
     }
     public void NewTurn()
     {
-        _gameContainer.Aggregator.Publish(new NewTurnEventModel());
-        _gameContainer.Aggregator.RepaintBoard();
-        if (_gameContainer.PrivateSpaceList.Count == 0)
+        gameContainer.Aggregator.Publish(new NewTurnEventModel());
+        gameContainer.Aggregator.RepaintBoard();
+        if (gameContainer.PrivateSpaceList.Count == 0)
         {
             LoadBoard();
         }
     }
     public void ClearJackPot()
     {
-        _gameContainer.SaveRoot!.LotteryAmount = 0;
-        _gameContainer.Aggregator.RepaintBoard();
+        gameContainer.SaveRoot!.LotteryAmount = 0;
+        gameContainer.Aggregator.RepaintBoard();
     }
     public void AddToJackPot(decimal Amount)
     {
-        _gameContainer.SaveRoot!.LotteryAmount += Amount;
-        _gameContainer.Aggregator.RepaintBoard();
+        gameContainer.SaveRoot!.LotteryAmount += Amount;
+        gameContainer.Aggregator.RepaintBoard();
     }
     public void HighlightDay(int day)
     {
-        _gameContainer.SaveRoot!.NumberHighlighted = day;
-        _gameContainer.Aggregator.RepaintBoard();
+        gameContainer.SaveRoot!.NumberHighlighted = day;
+        gameContainer.Aggregator.RepaintBoard();
     }
     public void UnhighlightDay()
     {
-        _gameContainer.SaveRoot!.NumberHighlighted = 0;
-        _gameContainer.Aggregator.RepaintBoard();
+        gameContainer.SaveRoot!.NumberHighlighted = 0;
+        gameContainer.Aggregator.RepaintBoard();
     }
     public async Task AnimateMoveAsync(int newDay)
     {
@@ -200,12 +194,12 @@ public class GameBoardProcesses
         {
             throw new CustomBasicException("Must be upto 31.  If 32 is needed; then rethinking is required");
         }
-        if (_gameContainer.SingleInfo!.CanSendMessage(_gameContainer.BasicData!))
+        if (gameContainer.SingleInfo!.CanSendMessage(gameContainer.BasicData!))
         {
-            await _gameContainer.Network!.SendMoveAsync(newDay);
+            await gameContainer.Network!.SendMoveAsync(newDay);
         }
         int x;
-        x = _gameContainer.SingleInfo!.DayNumber;
+        x = gameContainer.SingleInfo!.DayNumber;
         do
         {
             x += 1;
@@ -213,12 +207,11 @@ public class GameBoardProcesses
             {
                 x = 1;
             }
-            _gameContainer.SingleInfo.DayNumber = x;
+            gameContainer.SingleInfo.DayNumber = x;
             PositionPieces();
-            _gameContainer.Command.UpdateAll();
-            if (_gameContainer.Test!.NoAnimations == false)
+            if (gameContainer.Test!.NoAnimations == false)
             {
-                await _gameContainer.Delay.DelayMilli(200);
+                await gameContainer.Delay.DelayMilli(200);
             }
             if ((newDay >= 32 && x == 32) || x == newDay)
             {
@@ -227,10 +220,10 @@ public class GameBoardProcesses
         }
         while (true);
         UnhighlightDay();
-        if (_gameContainer.ResultsOfMoveAsync == null)
+        if (gameContainer.ResultsOfMoveAsync == null)
         {
             throw new CustomBasicException("Nobody is handling the resultsofmoveasync.  Rethink");
         }
-        await _gameContainer.ResultsOfMoveAsync.Invoke(newDay);
+        await gameContainer.ResultsOfMoveAsync.Invoke(newDay);
     }
 }

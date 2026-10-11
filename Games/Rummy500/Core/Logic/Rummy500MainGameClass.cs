@@ -1,50 +1,41 @@
 namespace Rummy500.Core.Logic;
 [SingletonGame]
-public class Rummy500MainGameClass
-    : CardGameClass<RegularRummyCard, Rummy500PlayerItem, Rummy500SaveInfo>
+public class Rummy500MainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    Rummy500VMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<RegularRummyCard> cardInfo,
+    CommandContainer command,
+    Rummy500GameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        )
+        : CardGameClass<RegularRummyCard, Rummy500PlayerItem, Rummy500SaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, IStartNewGame, ISerializable
 {
-    private readonly Rummy500VMData _model;
-    private readonly CommandContainer _command;
-    private readonly Rummy500GameContainer _gameContainer;
-    private readonly RummyProcesses<EnumSuitList, EnumRegularColorList, RegularRummyCard> _rummys;
-    public Rummy500MainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        Rummy500VMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<RegularRummyCard> cardInfo,
-        CommandContainer command,
-        Rummy500GameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _rummys = new();
-    }
+    private readonly RummyProcesses<EnumSuitList, EnumRegularColorList, RegularRummyCard> _rummys = new();
+
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
-        _model!.MainSets1!.ClearBoard();
+        currentMod!.MainSets1!.ClearBoard();
         int x = SaveRoot!.SetList.Count;
         x.Times(items =>
         {
-            RummySet thisSet = new(_gameContainer);
-            _model.MainSets1.CreateNewSet(thisSet);
+            RummySet thisSet = new(gameContainer);
+            currentMod.MainSets1.CreateNewSet(thisSet);
         });
-        _model.MainSets1.LoadSets(SaveRoot.SetList);
-        _model.DiscardList1!.HandList.ReplaceRange(SaveRoot.DiscardList);
+        currentMod.MainSets1.LoadSets(SaveRoot.SetList);
+        currentMod.DiscardList1!.HandList.ReplaceRange(SaveRoot.DiscardList);
         return base.FinishGetSavedAsync();
     }
     public override Task PopulateSaveRootAsync()
     {
-        SaveRoot!.SetList = _model!.MainSets1!.SavedSets();
-        SaveRoot.DiscardList = _model.DiscardList1!.HandList.ToRegularDeckDict();
+        SaveRoot!.SetList = currentMod!.MainSets1!.SavedSets();
+        SaveRoot.DiscardList = currentMod.DiscardList1!.HandList.ToRegularDeckDict();
         return base.PopulateSaveRootAsync();
     }
     private void LoadControls()
@@ -63,8 +54,8 @@ public class Rummy500MainGameClass
     protected override Task StartSetUpAsync(bool isBeginning)
     {
         LoadControls();
-        _model!.DiscardList1!.ClearDiscardList();
-        _model.MainSets1!.ClearBoard();
+        currentMod!.DiscardList1!.ClearDiscardList();
+        currentMod.MainSets1!.ClearBoard();
         SaveRoot!.MoreThanOne = false;
         PlayerList!.ForEach(thisPlayer =>
         {
@@ -87,7 +78,7 @@ public class Rummy500MainGameClass
                 break;
             case "newset":
                 SendNewSet sendNew = await js1.DeserializeObjectAsync<SendNewSet>(content);
-                var newList = sendNew.DeckList.GetNewObjectListFromDeckList(_gameContainer.DeckList!);
+                var newList = sendNew.DeckList.GetNewObjectListFromDeckList(gameContainer.DeckList!);
                 await CreateNewSetAsync(newList, sendNew.SetType, sendNew.UseSecond);
                 break;
             default:
@@ -106,7 +97,7 @@ public class Rummy500MainGameClass
     public bool CanProcessDiscard(out bool pickUp, ref int deck, out string message)
     {
         message = "";
-        if (_gameContainer.AlreadyDrew == false && _gameContainer.PreviousCard == 0)
+        if (gameContainer.AlreadyDrew == false && gameContainer.PreviousCard == 0)
         {
             pickUp = true;
         }
@@ -114,7 +105,7 @@ public class Rummy500MainGameClass
         {
             pickUp = false;
         }
-        var thisCol = _model!.PlayerHand1!.ListSelectedObjects();
+        var thisCol = currentMod!.PlayerHand1!.ListSelectedObjects();
         if (pickUp == true)
         {
             if (thisCol.Count > 0)
@@ -136,13 +127,13 @@ public class Rummy500MainGameClass
         }
         if (SaveRoot!.MoreThanOne == true)
         {
-            if (SingleInfo!.MainHandList.Any(items => items.Deck == _gameContainer.PreviousCard))
+            if (SingleInfo!.MainHandList.Any(items => items.Deck == gameContainer.PreviousCard))
             {
                 message = "Sorry, since you picked up more than one card from the discard pile, the one clicked must be used in a set";
                 return false;
             }
         }
-        if (thisCol.First().Deck == _gameContainer.PreviousCard)
+        if (thisCol.First().Deck == gameContainer.PreviousCard)
         {
             message = "Sorry, you cannot discard the one that was picked up since there is more than one card to choose from";
             return false;
@@ -156,18 +147,18 @@ public class Rummy500MainGameClass
         {
             return false;
         }
-        if (list.Any(x => x.Deck == _gameContainer.PreviousCard))
+        if (list.Any(x => x.Deck == gameContainer.PreviousCard))
         {
             return false;
         }
         var hand = SingleInfo!.MainHandList.ToRegularDeckDict();
         hand.RemoveGivenList(list);
-        return hand.Any(x => x.Deck == _gameContainer.PreviousCard);
+        return hand.Any(x => x.Deck == gameContainer.PreviousCard);
     }
     public override async Task DiscardAsync(RegularRummyCard thisCard)
     {
         SingleInfo!.MainHandList.RemoveObjectByDeck(thisCard.Deck);
-        _model!.DiscardList1!.AddToDiscard(thisCard);
+        currentMod!.DiscardList1!.AddToDiscard(thisCard);
         await EndTurnAsync();
     }
     public override async Task StartNewTurnAsync()
@@ -180,11 +171,11 @@ public class Rummy500MainGameClass
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects();
-        _model!.MainSets1!.EndTurn();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        currentMod!.MainSets1!.EndTurn();
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         if (SingleInfo.PlayerCategory != EnumPlayerCategory.Computer)
         {
-            if (SingleInfo.MainHandList.Count == 0 || _model!.Deck1!.IsEndOfDeck() == true)
+            if (SingleInfo.MainHandList.Count == 0 || currentMod!.Deck1!.IsEndOfDeck() == true)
             {
                 await EndRoundAsync();
                 return;
@@ -195,7 +186,7 @@ public class Rummy500MainGameClass
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
     {
-        _model!.DiscardList1!.AddToDiscard(_model.Deck1!.DrawCard());
+        currentMod!.DiscardList1!.AddToDiscard(currentMod.Deck1!.DrawCard());
         return base.LastPartOfSetUpBeforeBindingsAsync();
     }
     public override async Task EndRoundAsync()
@@ -222,7 +213,7 @@ public class Rummy500MainGameClass
     {
         PointInfo output = new();
         PointInfo temps;
-        _model!.MainSets1!.SetList.ForEach(thisSet =>
+        currentMod!.MainSets1!.SetList.ForEach(thisSet =>
         {
             temps = thisSet.GetPointInfo(player);
             output.Points += temps.Points;
@@ -237,14 +228,14 @@ public class Rummy500MainGameClass
     }
     public async Task PickupFromDiscardAsync(int deck)
     {
-        var thisList = _model!.DiscardList1!.DiscardListSelected(deck);
+        var thisList = currentMod!.DiscardList1!.DiscardListSelected(deck);
         await PickupFromDiscardAsync(thisList);
     }
     public async Task PickupFromDiscardAsync(IDeckDict<RegularRummyCard> thisCol)
     {
         var thisCard = thisCol.First();
-        _gameContainer.PreviousCard = thisCard.Deck;
-        _model!.DiscardList1!.RemoveFromPoint(thisCard.Deck);
+        gameContainer.PreviousCard = thisCard.Deck;
+        currentMod!.DiscardList1!.RemoveFromPoint(thisCard.Deck);
         thisCol.ForEach(tempCard =>
         {
             tempCard.Drew = true;
@@ -255,22 +246,20 @@ public class Rummy500MainGameClass
         {
             SortCards();
         }
-        _gameContainer.AlreadyDrew = true; //this counts as already drawing too.
+        gameContainer.AlreadyDrew = true; //this counts as already drawing too.
         await ContinueTurnAsync();
     }
     public DeckRegularDict<RegularRummyCard> AppendDiscardList(IDeckDict<RegularRummyCard> thisCol)
     {
-        DeckRegularDict<RegularRummyCard> output = new();
-        output.AddRange(thisCol);
-        output.AddRange(SingleInfo!.MainHandList);
+        DeckRegularDict<RegularRummyCard> output = [.. thisCol, .. SingleInfo!.MainHandList];
         return output;
     }
     public bool CardContainsRummy(int deck, IDeckDict<RegularRummyCard> newSet)
     {
         int x;
-        var thisCard = _gameContainer.DeckList!.GetSpecificItem(deck);
+        var thisCard = gameContainer.DeckList!.GetSpecificItem(deck);
         int plays;
-        foreach (var thisSet in _model!.MainSets1!.SetList)
+        foreach (var thisSet in currentMod!.MainSets1!.SetList)
         {
             for (x = 1; x <= 2; x++)
             {
@@ -336,20 +325,20 @@ public class Rummy500MainGameClass
     }
     public async Task CreateNewSetAsync(IDeckDict<RegularRummyCard> thisCol, EnumWhatSets setType, bool useSecond)
     {
-        DeckRegularDict<RegularRummyCard> newCol = new();
+        DeckRegularDict<RegularRummyCard> newCol = [];
         thisCol.ForEach(ThisCard => newCol.Add(SingleInfo!.MainHandList.GetSpecificItem(ThisCard.Deck)));
         SingleInfo!.MainHandList.RemoveGivenList(newCol);
-        RummySet thisSet = new(_gameContainer!);
+        RummySet thisSet = new(gameContainer!);
         thisSet.CreateNewSet(thisCol, setType, useSecond);
-        _model!.MainSets1!.CreateNewSet(thisSet);
+        currentMod!.MainSets1!.CreateNewSet(thisSet);
         UpdatePoints();
         await ContinueTurnAsync();
     }
     public async Task AddToSetAsync(int whatSet, int deck, int position)
     {
-        RummySet thisSet = _model!.MainSets1!.GetIndividualSet(whatSet);
+        RummySet thisSet = currentMod!.MainSets1!.GetIndividualSet(whatSet);
         SingleInfo!.MainHandList.RemoveObjectByDeck(deck);
-        RegularRummyCard thisCard = _gameContainer.DeckList!.GetSpecificItem(deck);
+        RegularRummyCard thisCard = gameContainer.DeckList!.GetSpecificItem(deck);
         thisSet.AddCard(thisCard, position);
         UpdatePoints();
         await ContinueTurnAsync();

@@ -15,17 +15,15 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="FirstViewModel">
+    <PromptView VM="FirstViewModel">
         <CascadingValue Value="@GetData">
             <FirstView />
         </CascadingValue>
-    </ParentControl>
-    <ParentControl VM="GolfCardGameMainViewModel">
+    </PromptView>
+    <MainScreen>
         <CascadingValue Value="@GetData">
             <GolfCardGameMainView />
         </CascadingValue>
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<GolfCardGamePlayerItem>">
-        <MultiplayerOpeningView P="GolfCardGamePlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="GolfCardGamePlayerItem" />
 </CascadingValue>

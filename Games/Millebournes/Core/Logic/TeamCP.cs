@@ -21,12 +21,12 @@ public class TeamCP
         _selfPlayer = thisPlayer.Id;
     }
     #region "Variables/Properties"
-    private BasicList<MillebournesCardInformation> _previouslyPlayed = new();
+    private BasicList<MillebournesCardInformation> _previouslyPlayed = [];
     public BasicMultiplePilesCP<MillebournesCardInformation> CardPiles;
     public EnumHazardType CurrentHazard { get; private set; }
     public bool CurrentSpeed { get; private set; }
     public int Miles { get; private set; }
-    public BasicList<SafetyInfo> SafetyList = new();
+    public StateList<SafetyInfo> SafetyList = [];
     public bool IsSelf { get; set; }
     public MillebournesCardInformation? CurrentCard;
     public int Wrongs { get; private set; }
@@ -694,9 +694,9 @@ public class TeamCP
     #region "autoresume processes"
     public void LoadSavedGame(SavedTeam thisSave)
     {
-        _previouslyPlayed = new();
+        _previouslyPlayed = [];
         CardPiles.PileList!.ReplaceRange(thisSave.SavedPiles);
-        SafetyList = new(thisSave.SafetyList);
+        SafetyList.ReplaceRange(thisSave.SafetyList);
         Wrongs = thisSave.Wrongs;
         HowMany200S = thisSave.Number200s;
         CurrentHazard = thisSave.CurrentHazard;

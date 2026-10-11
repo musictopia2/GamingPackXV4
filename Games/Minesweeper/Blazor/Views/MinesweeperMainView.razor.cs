@@ -1,7 +1,7 @@
 namespace Minesweeper.Blazor.Views;
 public partial class MinesweeperMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private string GetDisplay()
     {
         if (DataContext!.IsFlagging)

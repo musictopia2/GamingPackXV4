@@ -5,13 +5,13 @@ public partial class MonopolyListBlazor : IDisposable
     public MonopolyDicedGameMainViewModel? DataContext { get; set; }
     [Inject]
     private IToast? Toast { get; set; }
-    private BasicList<BasicDiceModel> DiceList { get; set; } = [];
+    private StateList<BasicDiceModel> DiceList { get; set; } = [];
     [Parameter]
     [EditorRequired]
     public string ImageHeight { get; set; } = "";
     protected override void OnInitialized()
     {
-        DataContext!.CommandContainer.AddAction(ShowChange, "monopolydice");
+        DataContext!.CommandContainer.AddSpecificAction("monopolydice", ShowChange);
         base.OnInitialized();
     }
     protected override void OnParametersSet()
@@ -37,6 +37,6 @@ public partial class MonopolyListBlazor : IDisposable
     public void Dispose()
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
     {
-        DataContext!.CommandContainer.RemoveAction("monopolydice");
+        DataContext!.CommandContainer.RemoveSpecificAction("monopolydice");
     }
 }

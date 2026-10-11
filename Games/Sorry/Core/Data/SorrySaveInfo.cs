@@ -2,10 +2,10 @@ namespace Sorry.Core.Data;
 [SingletonGame]
 public class SorrySaveInfo : BasicSavedGameClass<SorryPlayerItem>, ISavedCardList<CardInfo>, IMappable, ISaveInfo
 {
-    public BasicList<MoveInfo> MoveList { get; set; } = new();
+    public BasicList<MoveInfo> MoveList { get; set; } = [];
     public EnumColorChoice OurColor { get; set; }
     public int PreviousPiece { get; set; }
-    public BasicList<int> HighlightList { get; set; } = new();
+    public BasicList<int> HighlightList { get; set; } = [];
     public int MovesMade { get; set; }
     public int SpacesLeft { get; set; }
     public int PreviousSplit { get; set; }
@@ -42,15 +42,12 @@ public class SorrySaveInfo : BasicSavedGameClass<SorryPlayerItem>, ISavedCardLis
         {
             if (SetProperty(ref _instructions, value))
             {
-                if (_thisMod != null)
-                {
-                    _thisMod.Instructions = value;
-                }
+                _thisMod?.Instructions = value;
             }
         }
     }
     public bool AdvancedCardPreview { get; set; }
 
     public CardInfo? CurrentCard { get; set; }
-    public DeckRegularDict<CardInfo> CardList { get; set; } = new(); //i think.
+    public DeckRegularDict<CardInfo> CardList { get; set; } = []; //i think.
 }

@@ -18,7 +18,7 @@ public class HouseDice(MonopolyDicedGameGameContainer gameContainer) : IComplete
             .AddWeightedItem(EnumMiscType.Free, 4);
         return weights.GetRandomWeightedItem();
     }
-    public async Task<BasicList<EnumMiscType>> GetDiceList(string content)
+    public static async Task<BasicList<EnumMiscType>> GetDiceList(string content)
     {
         return await js1.DeserializeObjectAsync<BasicList<EnumMiscType>>(content);
     }

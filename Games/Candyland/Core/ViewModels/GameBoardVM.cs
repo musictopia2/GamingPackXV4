@@ -1,31 +1,24 @@
 ﻿namespace Candyland.Core.ViewModels;
 [SingletonGame]
 [AutoReset]
-public class GameBoardVM
+public class GameBoardVM(CandylandMainGameClass mainGame, CommandContainer command)
 {
-    public GameBoardVM(CandylandMainGameClass mainGame, CommandContainer command)
-    {
-        _mainGame = mainGame;
-        _command = command;
-    }
-    private readonly CandylandMainGameClass _mainGame;
-    private readonly CommandContainer _command;
     public async Task CastleAsync()
     {
-        _command.IsExecuting = true;
-        await _mainGame.GameOverAsync();
+        command.IsExecuting = true;
+        await mainGame.GameOverAsync();
     }
     public async Task MakeMoveAsync(int space)
     {
-        _command.IsExecuting = true;
-        await _mainGame!.MakeMoveAsync(space);
+        command.IsExecuting = true;
+        await mainGame!.MakeMoveAsync(space);
     }
     public bool IsCastleValid
     {
 
         get
         {
-            if (_mainGame.GameBoard1.IsValidMove(127, _mainGame.SaveRoot.CurrentCard!.WhichCard, _mainGame, _mainGame.SaveRoot.CurrentCard.HowMany))
+            if (mainGame.GameBoard1.IsValidMove(127, mainGame.SaveRoot.CurrentCard!.WhichCard, mainGame, mainGame.SaveRoot.CurrentCard.HowMany))
             {
                 return true;
             }
@@ -38,7 +31,7 @@ public class GameBoardVM
         {
             for (int x = 1; x <= 126; x++)
             {
-                if (_mainGame.GameBoard1.IsValidMove(x, _mainGame.SaveRoot.CurrentCard!.WhichCard, _mainGame, _mainGame.SaveRoot.CurrentCard.HowMany))
+                if (mainGame.GameBoard1.IsValidMove(x, mainGame.SaveRoot.CurrentCard!.WhichCard, mainGame, mainGame.SaveRoot.CurrentCard.HowMany))
                 {
                     return x;
                 }

@@ -1,0 +1,10 @@
+﻿@inherits CascadingGameView<OpeningViewModel>
+@if (DataContext is null)
+{
+    return;
+}
+<StateContentView DataContext=" DataContext">
+    <AdvancedOptionsView DataContext="DataContext.AdvancedOptionsVM" />
+    <CardsPlayerView DataContext="DataContext.CardsPlayerVM" />
+    <FirstOptionView DataContext="DataContext.FirstOptionVM" />
+</StateContentView>

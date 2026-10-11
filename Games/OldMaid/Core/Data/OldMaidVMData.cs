@@ -5,9 +5,9 @@ namespace OldMaid.Core.Data;
 public partial class OldMaidVMData : IBasicCardGamesData<RegularSimpleCard>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public OldMaidVMData(CommandContainer command)
     {
         Deck1 = new(command);

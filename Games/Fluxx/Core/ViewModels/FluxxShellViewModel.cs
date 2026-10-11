@@ -2,6 +2,7 @@ namespace Fluxx.Core.ViewModels;
 public class FluxxShellViewModel : BasicMultiplayerShellViewModel<FluxxPlayerItem>
 {
     private readonly FluxxDelegates _delegates;
+    private EnumActionScreen _currentAction = EnumActionScreen.None;
     public FluxxShellViewModel(IGamePackageResolver mainContainer,
         CommandContainer container,
         IGameInfo gameData,
@@ -15,82 +16,38 @@ public class FluxxShellViewModel : BasicMultiplayerShellViewModel<FluxxPlayerIte
         : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
     {
         delegates.LoadMainScreenAsync = LoadMainScreenAsync;
-        delegates.LoadProperActionScreenAsync = LoadActionScreenAsync;
+        delegates.LoadActionScreenAsync = LoadActionScreenAsync;
         delegates.LoadKeeperScreenAsync = LoadKeeperScreenAsync;
         delegates.CurrentScreen = GetCurrentScreenCategory;
         _delegates = delegates;
     }
     private async Task LoadMainScreenAsync()
     {
-        await StartNewGameAsync();
+        if (IsPromptOpened)
+        {
+            ClosePrompt(); //i think.
+        }
+        _currentAction = EnumActionScreen.None; //i think since you are now in main.
+        await LoadMainAsync();
         RefreshEnables();
     }
     private EnumActionScreen GetCurrentScreenCategory()
     {
-        if (MainVM != null)
-        {
-            return EnumActionScreen.None;
-        }
-        if (KeeperScreen != null)
-        {
-            return EnumActionScreen.KeeperScreen;
-        }
-        if (ActionScreen != null)
-        {
-            return EnumActionScreen.ActionScreen;
-        }
-        throw new CustomBasicException("Cannot find the screen used.  Rethink");
+        return _currentAction;
     }
-    protected override async Task StartNewGameAsync()
+    private async Task LoadActionScreenAsync()
     {
-        await CloseActionScreenAsync();
-        await CloseKeeperScreenAsync();
-        await base.StartNewGameAsync();
-    }
-    private async Task LoadActionScreenAsync(ActionContainer actionContainer)
-    {
-        if (ActionScreen != null)
+        if (_currentAction == EnumActionScreen.ActionScreen)
         {
             throw new CustomBasicException("Previous action was not loaded.  Rethink");
         }
-        await CloseMainAsync();
-        await CloseKeeperScreenAsync();
-        switch (actionContainer.ActionCategory)
+        if (IsPromptOpened)
         {
-            case EnumActionCategory.None:
-                break;
-            case EnumActionCategory.Rules:
-                break;
-            case EnumActionCategory.Directions:
-                break;
-            case EnumActionCategory.DoAgain:
-                break;
-            case EnumActionCategory.TradeHands:
-                break;
-            case EnumActionCategory.UseTake:
-                break;
-            case EnumActionCategory.Everybody1:
-                break;
-            case EnumActionCategory.DrawUse:
-                break;
-            case EnumActionCategory.FirstRandom:
-                break;
-            default:
-                break;
+            ClosePrompt();
         }
-        ActionScreen = actionContainer.ActionCategory switch
-        {
-            EnumActionCategory.Rules => MainContainer.Resolve<ActionDiscardRulesViewModel>(),
-            EnumActionCategory.Directions => MainContainer.Resolve<ActionDirectionViewModel>(),
-            EnumActionCategory.DoAgain => MainContainer.Resolve<ActionDoAgainViewModel>(),
-            EnumActionCategory.DrawUse => MainContainer.Resolve<ActionDrawUseViewModel>(),
-            EnumActionCategory.Everybody1 => MainContainer.Resolve<ActionEverybodyGetsOneViewModel>(),
-            EnumActionCategory.FirstRandom => MainContainer.Resolve<ActionFirstCardRandomViewModel>(),
-            EnumActionCategory.TradeHands => MainContainer.Resolve<ActionTradeHandsViewModel>(),
-            EnumActionCategory.UseTake => MainContainer.Resolve<ActionTakeUseViewModel>(),
-            _ => throw new CustomBasicException("Cannot figure out action screen.  Rethink")
-        };
-        await LoadScreenAsync(ActionScreen);
+        _currentAction = EnumActionScreen.ActionScreen;
+        await CloseMainAsync();
+        await OpenPromptAsync();
         RefreshEnables();
     }
     private void RefreshEnables()
@@ -101,53 +58,18 @@ public class FluxxShellViewModel : BasicMultiplayerShellViewModel<FluxxPlayerIte
         }
         _delegates.RefreshEnables.Invoke();
     }
-    private async Task LoadKeeperScreenAsync(KeeperContainer keeperContainer)
+    private async Task LoadKeeperScreenAsync()
     {
-        if (KeeperScreen != null)
+        if (_currentAction == EnumActionScreen.KeeperScreen)
         {
-            return;
+            return; //already loaded.  no need for error.
         }
-        await CloseActionScreenAsync();
+        if (IsPromptOpened)
+        {
+            ClosePrompt();
+        }
+        _currentAction = EnumActionScreen.KeeperScreen;
         await CloseMainAsync();
-        KeeperScreen = keeperContainer.Section switch
-        {
-            EnumKeeperSection.None => MainContainer.Resolve<KeeperShowViewModel>(),
-            EnumKeeperSection.Trash => MainContainer.Resolve<KeeperTrashViewModel>(),
-            EnumKeeperSection.Steal => MainContainer.Resolve<KeeperStealViewModel>(),
-            EnumKeeperSection.Exchange => MainContainer.Resolve<KeeperExchangeViewModel>(),
-            _ => throw new CustomBasicException("Not Supported"),
-        };
-        await LoadScreenAsync(KeeperScreen);
-    }
-    private async Task CloseMainAsync()
-    {
-        if (MainVM != null)
-        {
-            await CloseSpecificChildAsync(MainVM);
-            MainVM = null;
-        }
-    }
-    private async Task CloseActionScreenAsync()
-    {
-        if (ActionScreen != null)
-        {
-            await CloseSpecificChildAsync(ActionScreen);
-            ActionScreen = null;
-        }
-    }
-    private async Task CloseKeeperScreenAsync()
-    {
-        if (KeeperScreen != null)
-        {
-            await CloseSpecificChildAsync(KeeperScreen);
-            KeeperScreen = null;
-        }
-    }
-    public BasicActionScreen? ActionScreen { get; set; }
-    public BasicKeeperScreen? KeeperScreen { get; set; }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<FluxxMainViewModel>();
-        return model;
+        await OpenPromptAsync();   
     }
 }

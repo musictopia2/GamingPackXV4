@@ -83,7 +83,7 @@ public class GameBoardProcesses
         {
             return;
         }
-        _spaceList = new Dictionary<int, SpaceInfo>();
+        _spaceList = [];
         int x;
         int y;
         int q = 0;
@@ -431,7 +431,7 @@ public class GameBoardProcesses
         {
             return;
         }
-        MoveList = new();
+        MoveList = [];
         BasicList<int> firstCol = _gameContainer.SingleInfo!.PieceList.ToBasicList();
         if (firstCol.Count != 4)
         {
@@ -441,7 +441,7 @@ public class GameBoardProcesses
         {
             throw new CustomBasicException("The dice has to be from 1 to 6");
         }
-        BasicList<int> thisCol = new();
+        BasicList<int> thisCol = [];
         if (_gameContainer.SaveRoot.DiceNumber != 1 && _gameContainer.SaveRoot.DiceNumber != 6)
         {
             firstCol.ForEach(thisInt =>

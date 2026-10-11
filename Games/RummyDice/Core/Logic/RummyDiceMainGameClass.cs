@@ -1,4 +1,3 @@
-
 namespace RummyDice.Core.Logic;
 [SingletonGame]
 public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyDiceSaveInfo>
@@ -45,7 +44,7 @@ public class RummyDiceMainGameClass : BasicGameClass<RummyDicePlayerItem, RummyD
         SaveRoot.TempSets.ForEach(firsts =>
         {
             var thisItem = TempSets![x];
-            thisItem.HandList = firsts.ToBasicList();
+            thisItem.HandList = firsts.ToStateList;
             x++;
         });
         PrepStartTurn();

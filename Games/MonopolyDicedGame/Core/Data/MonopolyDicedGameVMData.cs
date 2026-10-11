@@ -4,16 +4,16 @@ namespace MonopolyDicedGame.Core.Data;
 public partial class MonopolyDicedGameVMData : IViewModelData
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
 
     [LabelColumn]
-    public int RollNumber { get; set; } = 1;
+    public partial int RollNumber { get; set; } = 1;
     [LabelColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
 
-    public BasicList<EnumMiscType> OtherActions { get; set; } = [];
+    public StateList<EnumMiscType> OtherActions { get;} = [];
     public HouseDice? HouseDice { get; set; }
     //any other ui related properties will be here.
     //can copy/paste for the actual view model.

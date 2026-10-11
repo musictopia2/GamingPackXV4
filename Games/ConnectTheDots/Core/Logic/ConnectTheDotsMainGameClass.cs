@@ -45,7 +45,7 @@ public class ConnectTheDotsMainGameClass
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
-        BoardGameSaved();
+        GameSaved();
         if (PlayerList.DidChooseColors())
         {
             _gameBoard.LoadGame();
@@ -63,8 +63,9 @@ public class ConnectTheDotsMainGameClass
     private void LoadControls()
     {
         if (IsLoaded == true)
+        {
             return;
-
+        }
         IsLoaded = true;
     }
     protected override async Task ComputerTurnAsync()

@@ -23,7 +23,7 @@ public static class Extensions
                 await gameContainer.Network!.SendAllAsync("popupchosen", model.PopUpChosen);
             }
             model.PopUpList.ShowOnlyOneSelectedItem(model.PopUpChosen);
-            gameContainer.Command.UpdateAll();
+            gameContainer.Command.UpdateSpecificAction(PaydayActions.Popups);
             if (gameContainer.Test.NoAnimations == false)
             {
                 await gameContainer.Delay.DelaySeconds(1.5);

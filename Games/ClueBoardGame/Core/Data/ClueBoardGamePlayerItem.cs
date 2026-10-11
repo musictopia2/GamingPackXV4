@@ -6,7 +6,7 @@ public partial class ClueBoardGamePlayerItem : PlayerBoardGame<EnumColorChoice>,
     {
         Color = EnumColorChoice.None;
     }
-    public DeckRegularDict<CardInfo> MainHandList { get; set; } = new DeckRegularDict<CardInfo>();
+    public DeckRegularDict<CardInfo> MainHandList { get; set; } = [];
     public override bool CanStartInGame
     {
         get
@@ -24,7 +24,7 @@ public partial class ClueBoardGamePlayerItem : PlayerBoardGame<EnumColorChoice>,
     }
     public int StartingTurnPosition { get; set; } //can be room, start, or space.
     public EnumStartStatus StartTurnStatus { get; set; }
-    public Dictionary<int, DetectiveInfo> DetectiveList { get; set; } = new();
+    public Dictionary<int, DetectiveInfo> DetectiveList { get; set; } = [];
     [JsonIgnore]
-    public DeckRegularDict<CardInfo> StartUpList { get; set; } = new DeckRegularDict<CardInfo>();
+    public DeckRegularDict<CardInfo> StartUpList { get; set; } = [];
 }

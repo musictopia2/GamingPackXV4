@@ -1,32 +1,27 @@
 namespace A21DiceGame.Core.ViewModels;
 [InstanceGame]
-public class A21DiceGameMainViewModel : DiceGamesVM<SimpleDice>
-{
-    private readonly A21DiceGameMainGameClass _mainGame; //if we don't need, delete.
-    public A21DiceGameVMData VMData { get; set; }
-    public A21DiceGameMainViewModel(CommandContainer commandContainer,
+public class A21DiceGameMainViewModel(CommandContainer commandContainer,
         A21DiceGameMainGameClass mainGame,
         A21DiceGameVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, roller, aggregator)
-    {
-        _mainGame = mainGame;
-        VMData = viewModel;
-    }
+        IEventAggregator aggregator) : DiceGamesVM<SimpleDice>(commandContainer, mainGame, viewModel, basicData, resolver, roller, aggregator)
+{
+    public A21DiceGameVMData VMData { get; set; } = viewModel;
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
-    public PlayerCollection<A21DiceGamePlayerItem> PlayerList => _mainGame.PlayerList;
+    public PlayerCollection<A21DiceGamePlayerItem> PlayerList => mainGame.PlayerList;
     protected override bool CanEnableDice()
     {
         return false; //if you can enable dice, change the routine.
     }
     public override bool CanEndTurn()
     {
-        return _mainGame!.SingleInfo!.NumberOfRolls > 0;
+        if (mainGame.SingleInfo is null)
+        {
+            return false;
+        }
+        return mainGame!.SingleInfo.NumberOfRolls > 0;
     }
     public override bool CanRollDice()
     {

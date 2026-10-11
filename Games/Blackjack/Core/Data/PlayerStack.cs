@@ -173,7 +173,7 @@ public class PlayerStack : HandObservable<BlackjackCardInfo>
         {
             hasChoice = true;// has to be second one to start with.  the original probably had that bug.
         }
-        HandList.ReplaceRange(thisCol); // i think
+        HandList.ReplaceRange(thisCol);
     }
     public PlayerStack(CommandContainer command) : base(command)
     {

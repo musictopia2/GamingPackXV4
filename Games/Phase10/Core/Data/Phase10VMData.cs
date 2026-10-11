@@ -5,11 +5,11 @@ namespace Phase10.Core.Data;
 public partial class Phase10VMData : IBasicCardGamesData<Phase10CardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string CurrentPhase { get; set; } = "";
+    public partial string CurrentPhase { get; set; } = "";
     public Phase10VMData(CommandContainer command, IGamePackageResolver resolver)
     {
         Deck1 = new(command);

@@ -1,9 +1,6 @@
 namespace FreeCellSolitaire.Core.Logic;
-public class WastePiles : WastePilesCP
+public class WastePiles(CommandContainer command) : WastePilesCP(command)
 {
-    public WastePiles(CommandContainer command) : base(command)
-    {
-    }
     public int FreePiles => Piles.PileList.Count(items => items.CardList.Count == 0);
     public override void ClearBoard(IDeckDict<SolitaireCard> thisCol)
     {

@@ -3,6 +3,7 @@ namespace PersianSolitaire.Core.Logic;
 public partial class PersianSolitaireMainGameClass : SolitaireGameClass<PersianSolitaireSaveInfo>, IHandle<ScoreModel>
 {
     readonly ScoreModel _model;
+    private readonly IEventAggregator _aggregator;
     public PersianSolitaireMainGameClass(ISolitaireData solitaireData1,
         ISaveSinglePlayerClass thisState,
         IEventAggregator aggregator,
@@ -14,6 +15,7 @@ public partial class PersianSolitaireMainGameClass : SolitaireGameClass<PersianS
         : base(solitaireData1, thisState, aggregator, score, command, toast, error)
     {
         _model = (ScoreModel)score;
+        _aggregator = aggregator;
         aggregator.ClearSingle<ScoreModel>(); //just in case.
         Subscribe();
     }
@@ -50,10 +52,7 @@ public partial class PersianSolitaireMainGameClass : SolitaireGameClass<PersianS
     }
     void IHandle<ScoreModel>.Handle(ScoreModel message)
     {
-        if (_newVM == null)
-        {
-            _newVM = (PersianSolitaireMainViewModel)_thisMod!;
-        }
+        _newVM ??= (PersianSolitaireMainViewModel)_thisMod!;
         _newVM.DealNumber = message.DealNumber;
         SolitairePilesCP.DealNumber = message.DealNumber;
         SaveRoot.DealNumber = message.DealNumber; //hopefully this simple.

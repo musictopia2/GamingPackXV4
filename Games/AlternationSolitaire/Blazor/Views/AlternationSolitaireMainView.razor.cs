@@ -1,7 +1,7 @@
 namespace AlternationSolitaire.Blazor.Views;
 public partial class AlternationSolitaireMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnInitialized()
     {
         _labels.Clear();

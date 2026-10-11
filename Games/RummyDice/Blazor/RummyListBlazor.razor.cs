@@ -8,10 +8,10 @@ public partial class RummyListBlazor : IDisposable
     public string TargetHeight { get; set; } = ""; //this is the height of the dice being used.
     [CascadingParameter]
     public RummyDiceMainViewModel? DataContext { get; set; }
-    private BasicList<RummyDiceInfo> DiceList { get; set; } = new();
+    private StateList<RummyDiceInfo> DiceList { get; set; } = [];
     protected override void OnInitialized()
     {
-        DataContext!.CommandContainer.AddAction(ShowChange, "rummydice");
+        DataContext!.CommandContainer.AddSpecificAction("rummydice", ShowChange);
         base.OnInitialized();
     }
     private void ShowChange()
@@ -21,7 +21,6 @@ public partial class RummyListBlazor : IDisposable
     protected override void OnParametersSet()
     {
         DiceList = DataContext!.MainGame.SaveRoot.DiceList;
-
         base.OnParametersSet();
     }
     private async Task OnClickAsync(RummyDiceInfo dice)
@@ -34,7 +33,7 @@ public partial class RummyListBlazor : IDisposable
         {
             if (disposing)
             {
-                DataContext!.CommandContainer.RemoveAction("rummydice");
+                DataContext!.CommandContainer.RemoveSpecificAction("rummydice");
             }
             _disposedValue = true;
         }

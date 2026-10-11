@@ -1,21 +1,16 @@
 ﻿namespace Savannah.Core.Logic;
-public class CustomDeck : IRegularDeckInfo
+public class CustomDeck(SavannahGameContainer gameContainer) : IRegularDeckInfo
 {
-    private readonly SavannahGameContainer _gameContainer;
-    public CustomDeck(SavannahGameContainer gameContainer)
-    {
-        _gameContainer = gameContainer;
-    }
-    int IRegularDeckInfo.HowManyDecks => _gameContainer.PlayerList!.Count;
+    int IRegularDeckInfo.HowManyDecks => gameContainer.PlayerList!.Count;
     bool IRegularDeckInfo.UseJokers => true;
-    int IRegularDeckInfo.GetExtraJokers => _gameContainer.PlayerList!.Count * 2;
+    int IRegularDeckInfo.GetExtraJokers => gameContainer.PlayerList!.Count * 2;
     int IRegularDeckInfo.LowestNumber => 1;
     int IRegularDeckInfo.HighestNumber => 13;
-    BasicList<ExcludeRCard> IRegularDeckInfo.ExcludeList => new();
+    BasicList<ExcludeRCard> IRegularDeckInfo.ExcludeList => [];
     BasicList<EnumSuitList> IRegularDeckInfo.SuitList => EnumSuitList.CompleteList;
     //eventually will change to allow jokers.
     int IDeckCount.GetDeckCount()
     {
-        return _gameContainer.DeckCount;
+        return gameContainer.DeckCount;
     }
 }

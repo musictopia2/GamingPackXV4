@@ -3,13 +3,13 @@ namespace Spades2Player.Core.Data;
 public partial class Spades2PlayerPlayerItem : PlayerTrick<EnumSuitList, Spades2PlayerCardInformation>
 {
     [ScoreColumn]
-    public int HowManyBids { get; set; }
+    public partial int HowManyBids { get; set; }
     [ScoreColumn]
-    public int Bags { get; set; }
+    public partial int Bags { get; set; }
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     private bool IsNil => HowManyBids == 0;
     public void CalculateScore()
     {

@@ -1,8 +1,10 @@
 ﻿namespace TicTacToe.Core.Data;
-public class SpaceInfoCP : IBasicSpace
+[UseStateChanged]
+public partial class SpaceInfoCP : IBasicSpace
 {
     public Vector Vector { get; set; }
-    public EnumSpaceType Status { get; set; }
+    [StateProperty]
+    public partial EnumSpaceType Status { get; set; }
     public void ClearSpace()
     {
         Status = EnumSpaceType.Blank;

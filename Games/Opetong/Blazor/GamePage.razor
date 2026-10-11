@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="OpetongMainViewModel">
+    <MainScreen>
         <OpetongMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<OpetongPlayerItem>">
-        <MultiplayerOpeningView P="OpetongPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="OpetongPlayerItem" />
 </CascadingValue>

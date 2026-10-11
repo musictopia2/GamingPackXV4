@@ -1,25 +1,17 @@
 ﻿namespace Rook.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, RookCardInformation, RookPlayerItem, RookSaveInfo>, IAdvancedTrickProcesses
+public class RookTrickAreaCP(RookGameContainer gameContainer, RookDelegates delegates) : PossibleDummyTrickObservable<EnumColorTypes, RookCardInformation, RookPlayerItem, RookSaveInfo>(gameContainer), IAdvancedTrickProcesses
 {
-    private readonly RookGameContainer _gameContainer;
-    private readonly RookDelegates _delegates;
-
-    public RookTrickAreaCP(RookGameContainer gameContainer, RookDelegates delegates) : base(gameContainer)
-    {
-        _gameContainer = gameContainer;
-        _delegates = delegates;
-    }
     protected override bool UseDummy { get; set; }
     protected override int GetCardIndex()
     {
-        var thisView = ViewList!.Single(items => items.Player == _gameContainer.WhoTurn && items.PossibleDummy == _gameContainer.SaveRoot!.DummyPlay);
+        var thisView = ViewList!.Single(items => items.Player == gameContainer.WhoTurn && items.PossibleDummy == gameContainer.SaveRoot!.DummyPlay);
         return ViewList!.IndexOf(thisView);
     }
     protected override void PopulateNewCard(RookCardInformation oldCard, ref RookCardInformation newCard)
     {
-        if (_delegates.IsDummy!() == false)
+        if (delegates.IsDummy!() == false)
         {
             return;
         }
@@ -27,11 +19,11 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
     }
     protected override void PopulateOldCard(RookCardInformation oldCard)
     {
-        if (_delegates.IsDummy!() == false)
+        if (delegates.IsDummy!() == false)
         {
             return;
         }
-        oldCard.IsDummy = _gameContainer.SaveRoot!.DummyPlay;
+        oldCard.IsDummy = gameContainer.SaveRoot!.DummyPlay;
     }
     protected override async Task ProcessCardClickAsync(RookCardInformation thisCard)
     {
@@ -40,25 +32,25 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
         {
             return;
         }
-        if (_gameContainer.SaveRoot!.DummyPlay && index == 0)
+        if (gameContainer.SaveRoot!.DummyPlay && index == 0)
         {
             await DummyClickAsync();
             return;
         }
-        if (index == 3 && _gameContainer.SaveRoot.DummyPlay == false)
+        if (index == 3 && gameContainer.SaveRoot.DummyPlay == false)
         {
             await DummyClickAsync();
             return;
         }
-        await _gameContainer.CardClickedAsync!.Invoke();
+        await gameContainer.CardClickedAsync!.Invoke();
     }
     private async Task DummyClickAsync()
     {
-        if (_gameContainer.PlayerList!.Count == 3)
+        if (gameContainer.PlayerList!.Count == 3)
         {
             return; //because somebody else is playing it.
         }
-        await _gameContainer.CardClickedAsync!.Invoke();
+        await gameContainer.CardClickedAsync!.Invoke();
     }
     private RookCardInformation GetWinningCard(int wins, bool isDummy)
     {
@@ -69,27 +61,27 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
     public async Task AnimateWinAsync(int wins, bool isDummy)
     {
         var thisCard = GetWinningCard(wins, isDummy);
-        _gameContainer.SaveRoot!.DummyPlay = isDummy;
+        gameContainer.SaveRoot!.DummyPlay = isDummy;
         WinCard = thisCard;
         await AnimateWinAsync();
     }
     protected override void BeforeFirstLoad()
     {
-        UseDummy = _gameContainer.PlayerList!.Count == 2;
+        UseDummy = gameContainer.PlayerList!.Count == 2;
     }
     protected override int GetMaxCount()
     {
-        if (_gameContainer.PlayerList!.Count == 2)
+        if (gameContainer.PlayerList!.Count == 2)
         {
             return base.GetMaxCount();
         }
-        return _gameContainer.PlayerList.Count; //i think
+        return gameContainer.PlayerList.Count; //i think
     }
     public void ClearBoard()
     {
-        DeckRegularDict<RookCardInformation> tempList = new();
+        DeckRegularDict<RookCardInformation> tempList = [];
         int x;
-        int self = _gameContainer.SelfPlayer;
+        int self = gameContainer.SelfPlayer;
         for (x = 1; x <= 4; x++)
         {
             RookCardInformation thisCard = new();
@@ -100,11 +92,11 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
             {
                 thisCard.Visible = true;
             }
-            else if (x == 3 && self == _gameContainer.SaveRoot!.WonSoFar)
+            else if (x == 3 && self == gameContainer.SaveRoot!.WonSoFar)
             {
                 thisCard.Visible = true;
             }
-            else if (x == 4 && self != _gameContainer.SaveRoot!.WonSoFar)
+            else if (x == 4 && self != gameContainer.SaveRoot!.WonSoFar)
             {
                 thisCard.Visible = true;
             }
@@ -113,7 +105,7 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
                 thisCard.Visible = false;
             }
             tempList.Add(thisCard);
-            if (_gameContainer.PlayerList!.Count ==3 && x== 3)
+            if (gameContainer.PlayerList!.Count ==3 && x== 3)
             {
                 break; //break out so it matches.
             }
@@ -124,10 +116,10 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
     }
     public void NewRound()
     {
-        if (_gameContainer.PlayerList!.Count == 2)
+        if (gameContainer.PlayerList!.Count == 2)
         {
-            int self = _gameContainer.SelfPlayer;
-            if (self == _gameContainer.SaveRoot!.WonSoFar)
+            int self = gameContainer.SelfPlayer;
+            if (self == gameContainer.SaveRoot!.WonSoFar)
             {
                 ViewList![2].Visible = true;
                 ViewList[3].Visible = false;
@@ -143,7 +135,7 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
     public void LoadGame()
     {
         ViewList = GetCoordinateList();
-        if (_gameContainer.SaveRoot!.TrickList.Count == 0)
+        if (gameContainer.SaveRoot!.TrickList.Count == 0)
         {
             NewRound();
             return;
@@ -157,28 +149,28 @@ public class RookTrickAreaCP : PossibleDummyTrickObservable<EnumColorTypes, Rook
         int index;
         int tempTurn;
         RookCardInformation lastCard;
-        tempTurn = _gameContainer.WhoTurn;
-        DeckRegularDict<RookCardInformation> otherList = new();
-        bool tempDummyPlay = _gameContainer.SaveRoot.DummyPlay;
+        tempTurn = gameContainer.WhoTurn;
+        DeckRegularDict<RookCardInformation> otherList = [];
+        bool tempDummyPlay = gameContainer.SaveRoot.DummyPlay;
         tempList.ForEach(thisCard =>
         {
             if (thisCard.Player == 0)
             {
                 throw new CustomBasicException("The Player Cannot Be 0");
             }
-            _gameContainer.WhoTurn = thisCard.Player;
-            _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-            _gameContainer.SaveRoot.DummyPlay = thisCard.IsDummy;
+            gameContainer.WhoTurn = thisCard.Player;
+            gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
+            gameContainer.SaveRoot.DummyPlay = thisCard.IsDummy;
             index = GetCardIndex();
-            lastCard = _gameContainer.GetBrandNewCard(thisCard.Deck);
+            lastCard = gameContainer.GetBrandNewCard(thisCard.Deck);
             lastCard.Player = thisCard.Player;
             lastCard.IsDummy = thisCard.IsDummy;
             TradeCard(index, lastCard);
             otherList.Add(lastCard);
         });
         OrderList.ReplaceRange(otherList);
-        _gameContainer.WhoTurn = tempTurn;
-        _gameContainer.SaveRoot.DummyPlay = tempDummyPlay;
+        gameContainer.WhoTurn = tempTurn;
+        gameContainer.SaveRoot.DummyPlay = tempDummyPlay;
     }
     public Task AnimateWinAsync(int wins)
     {

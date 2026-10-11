@@ -15,7 +15,7 @@ public class Rummy500DetailClass : IGameInfo, ICardInfo<RegularRummyCard>,
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<RegularRummyCard>.CardsToPassOut => 7;
-    BasicList<int> ICardInfo<RegularRummyCard>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<RegularRummyCard>.PlayerExcludeList => [];
     bool ICardInfo<RegularRummyCard>.AddToDiscardAtBeginning => true;
     bool ICardInfo<RegularRummyCard>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<RegularRummyCard>.ShowMessageWhenReshuffling => true;
@@ -23,12 +23,12 @@ public class Rummy500DetailClass : IGameInfo, ICardInfo<RegularRummyCard>,
     bool ICardInfo<RegularRummyCard>.PlayerGetsCards => true;
     bool ICardInfo<RegularRummyCard>.NoPass => false;
     bool ICardInfo<RegularRummyCard>.NeedsDummyHand => false;
-    DeckRegularDict<RegularRummyCard> ICardInfo<RegularRummyCard>.DummyHand { get; set; } = new DeckRegularDict<RegularRummyCard>();
+    DeckRegularDict<RegularRummyCard> ICardInfo<RegularRummyCard>.DummyHand { get; set; } = [];
     bool ICardInfo<RegularRummyCard>.HasDrawAnimation => true;
     bool ICardInfo<RegularRummyCard>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<RegularRummyCard>.DiscardExcludeList(IListShuffler<RegularRummyCard> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<RegularRummyCard>.AceLow => false;
     bool IBeginningRegularCards<RegularRummyCard>.CustomDeck => false;

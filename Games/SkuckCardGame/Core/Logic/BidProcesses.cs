@@ -1,22 +1,15 @@
 ﻿namespace SkuckCardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class BidProcesses : IBidProcesses
+public class BidProcesses(SkuckCardGameVMData model, SkuckCardGameGameContainer gameContainer) : IBidProcesses
 {
-    private readonly SkuckCardGameVMData _model;
-    private readonly SkuckCardGameGameContainer _gameContainer;
-    public BidProcesses(SkuckCardGameVMData model, SkuckCardGameGameContainer gameContainer)
-    {
-        _model = model;
-        _gameContainer = gameContainer;
-    }
     private bool HasException()
     {
-        if (_gameContainer.Test!.DoubleCheck == true)
+        if (gameContainer.Test!.DoubleCheck == true)
         {
             return true;
         }
-        int diffs = _gameContainer.PlayerList!.First().StrengthHand - _gameContainer.PlayerList!.Last().StrengthHand;
+        int diffs = gameContainer.PlayerList!.First().StrengthHand - gameContainer.PlayerList!.Last().StrengthHand;
         if (Math.Abs(diffs) >= 12)
         {
             return true;
@@ -25,22 +18,22 @@ public class BidProcesses : IBidProcesses
     }
     async Task IBidProcesses.ProcessBidAmountAsync()
     {
-        if (_model!.BidAmount == -1)
+        if (model!.BidAmount == -1)
         {
             throw new CustomBasicException("Did not choose a bid amount");
         }
-        _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-        SkuckCardGamePlayerItem player = _gameContainer.SingleInfo!;
+        gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
+        SkuckCardGamePlayerItem player = gameContainer.SingleInfo!;
         //var thisPlayer = _gameContainer.PlayerList![id];
-        player.BidAmount = _model.BidAmount;
-        int whoStarts = _gameContainer.WhoStarts;
+        player.BidAmount = model.BidAmount;
+        int whoStarts = gameContainer.WhoStarts;
         player.MainHandList.UnhighlightObjects();
-        _gameContainer.WhoTurn = await _gameContainer.PlayerList.CalculateWhoTurnAsync();
-        _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-        if (_gameContainer.SingleInfo.BidAmount == 0)
+        gameContainer.WhoTurn = await gameContainer.PlayerList.CalculateWhoTurnAsync();
+        gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
+        if (gameContainer.SingleInfo.BidAmount == 0)
         {
             
-            await _gameContainer.ContinueTurnAsync!.Invoke();
+            await gameContainer.ContinueTurnAsync!.Invoke();
             return;
         }
 
@@ -61,29 +54,29 @@ public class BidProcesses : IBidProcesses
         //}
         if (HasException() == true)
         {
-            _gameContainer!.Command!.ManuelFinish = true;
-            _gameContainer.SaveRoot!.WhatStatus = EnumStatusList.ChoosePlay;
-            _gameContainer.Command.IsExecuting = true; //make sure its executing no matter what as well.
-            if (_gameContainer.PlayerList.First().StrengthHand > _gameContainer.PlayerList.Last().StrengthHand)
+            gameContainer!.Command!.ManuelFinish = true;
+            gameContainer.SaveRoot!.WhatStatus = EnumStatusList.ChoosePlay;
+            gameContainer.Command.IsExecuting = true; //make sure its executing no matter what as well.
+            if (gameContainer.PlayerList.First().StrengthHand > gameContainer.PlayerList.Last().StrengthHand)
             {
-                _gameContainer.WhoTurn = 2;
+                gameContainer.WhoTurn = 2;
             }
             else
             {
-                _gameContainer.WhoTurn = 1; //to double check.
+                gameContainer.WhoTurn = 1; //to double check.
             }
-            _gameContainer.SingleInfo = _gameContainer.PlayerList.GetWhoPlayer();
-            await _gameContainer.StartNewTurnAsync!.Invoke();
+            gameContainer.SingleInfo = gameContainer.PlayerList.GetWhoPlayer();
+            await gameContainer.StartNewTurnAsync!.Invoke();
             return;
         }
-        _gameContainer.SaveRoot!.WhatStatus = EnumStatusList.NormalPlay;
-        if (_gameContainer.WhoTurn == 1)
+        gameContainer.SaveRoot!.WhatStatus = EnumStatusList.NormalPlay;
+        if (gameContainer.WhoTurn == 1)
         {
-            _gameContainer.WhoTurn = 2;
+            gameContainer.WhoTurn = 2;
         }
         else
         {
-            _gameContainer.WhoTurn = 1;
+            gameContainer.WhoTurn = 1;
         }
         //_gameContainer.SingleInfo = _gameContainer.PlayerList.GetWhoPlayer();
         //if (_gameContainer.SingleInfo.BidAmount == 0)
@@ -92,6 +85,6 @@ public class BidProcesses : IBidProcesses
         //    await _gameContainer.StartNewTurnAsync!.Invoke();
         //    return;
         //}
-        await _gameContainer.StartNewTrickAsync!.Invoke();
+        await gameContainer.StartNewTrickAsync!.Invoke();
     }
 }

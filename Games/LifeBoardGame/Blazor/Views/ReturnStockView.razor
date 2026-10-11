@@ -1,1 +1,6 @@
-﻿<BasicHandChooser B="ReturnStockViewModel" />
+﻿@inherits ParameterGameView<ReturnStockViewModel>
+@if (DataContext is null)
+{
+    return;
+}
+<BasicHandChooser B="ReturnStockViewModel" DataContext="DataContext" />

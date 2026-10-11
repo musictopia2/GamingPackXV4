@@ -1,41 +1,39 @@
 namespace PassOutDiceGame.Core.ViewModels;
 [InstanceGame]
-public class PassOutDiceGameMainViewModel : BoardDiceGameVM
-{
-    private readonly PassOutDiceGameMainGameClass _mainGame; //if we don't need, delete.
-    public PassOutDiceGameVMData VMData { get; set; }
-    private readonly GameBoardProcesses _gameBoard;
-    public PassOutDiceGameMainViewModel(CommandContainer commandContainer,
+public class PassOutDiceGameMainViewModel(CommandContainer commandContainer,
         PassOutDiceGameMainGameClass mainGame,
         PassOutDiceGameVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
         PassOutDiceGameGameContainer gameContainer,
         GameBoardProcesses gameBoard,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, roller, aggregator)
+        IEventAggregator aggregator) : BoardDiceGameVM(commandContainer, mainGame, basicData, resolver, roller, aggregator)
+{
+    public PassOutDiceGameVMData VMData { get; set; } = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = viewModel;
-        _gameBoard = gameBoard;
         gameContainer.MakeMoveAsync = MakeMoveAsync;
+        base.AdditionalInitialize();
+    }
+    protected override Task CloseAsync()
+    {
+        gameContainer.MakeMoveAsync = null;
+        return base.CloseAsync();
     }
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
-    public PlayerCollection<PassOutDiceGamePlayerItem> PlayerList => _mainGame.PlayerList;
+    public PlayerCollection<PassOutDiceGamePlayerItem> PlayerList => mainGame.PlayerList;
     private async Task MakeMoveAsync(int space)
     {
-        if (_gameBoard.IsValidMove(space) == false)
+        if (gameBoard.IsValidMove(space) == false)
         {
             return;
         }
-        if (_mainGame.BasicData.MultiPlayer)
+        if (mainGame.BasicData.MultiPlayer)
         {
-            await _mainGame.Network!.SendMoveAsync(space);
+            await mainGame.Network!.SendMoveAsync(space);
         }
-        await _mainGame.MakeMoveAsync(space);
+        await mainGame.MakeMoveAsync(space);
     }
     public override bool CanRollDice()
     {

@@ -15,7 +15,7 @@ public class SnagCardGameDetailClass : IGameInfo, ICardInfo<SnagCardGameCardInfo
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
     int ICardInfo<SnagCardGameCardInformation>.CardsToPassOut => 5;
-    BasicList<int> ICardInfo<SnagCardGameCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<SnagCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<SnagCardGameCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<SnagCardGameCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<SnagCardGameCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,7 +23,7 @@ public class SnagCardGameDetailClass : IGameInfo, ICardInfo<SnagCardGameCardInfo
     bool ICardInfo<SnagCardGameCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<SnagCardGameCardInformation>.NoPass => false;
     bool ICardInfo<SnagCardGameCardInformation>.NeedsDummyHand => true;
-    DeckRegularDict<SnagCardGameCardInformation> ICardInfo<SnagCardGameCardInformation>.DummyHand { get; set; } = new DeckRegularDict<SnagCardGameCardInformation>();
+    DeckRegularDict<SnagCardGameCardInformation> ICardInfo<SnagCardGameCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<SnagCardGameCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<SnagCardGameCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -35,7 +35,7 @@ public class SnagCardGameDetailClass : IGameInfo, ICardInfo<SnagCardGameCardInfo
     bool ITrickData.HasDummy => true;
     BasicList<int> ICardInfo<SnagCardGameCardInformation>.DiscardExcludeList(IListShuffler<SnagCardGameCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<SnagCardGameCardInformation>.AceLow => false;
     bool IBeginningRegularCards<SnagCardGameCardInformation>.CustomDeck => false;

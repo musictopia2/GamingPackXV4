@@ -59,7 +59,7 @@ public class ActionContainer : IEnableAlways, IBasicEnableProcess
         Direction1 = new ListViewPicker(command, resolver);
         Direction1.ItemSelectedAsync = Direction1_ItemSelectedAsync;
         Direction1.IndexMethod = ListViewPicker.EnumIndexMethod.ZeroBased;
-        Direction1.LoadTextList(new() { "Left", "Right" });
+        Direction1.LoadTextList(["Left", "Right"]);
         Rule1 = new ListViewPicker(command, resolver);
         Rule1.ItemSelectedAsync = Rule1_ItemSelectedAsync;
         Rule1.IndexMethod = ListViewPicker.EnumIndexMethod.ZeroBased;
@@ -80,7 +80,7 @@ public class ActionContainer : IEnableAlways, IBasicEnableProcess
             return ActionCategory == EnumActionCategory.DoAgain;
         });
     }
-    internal BasicList<int> PlayerIndexList { get; set; } = new();
+    internal BasicList<int> PlayerIndexList { get; set; } = [];
     internal int Loads { get; set; }
     public DetailCardObservable ActionDetail;
     public DetailCardObservable CurrentDetail;
@@ -88,7 +88,7 @@ public class ActionContainer : IEnableAlways, IBasicEnableProcess
     public ListViewPicker Rule1;
     public ListViewPicker Player1;
     public ListViewPicker CardList1;
-    public BasicList<int>? TempRuleList = new();
+    public BasicList<int>? TempRuleList = [];
     public HandObservable<GoalCard> PrivateGoals;
     public HandObservable<FluxxCardInformation> YourCards;
     public HandObservable<KeeperCard> YourKeepers;
@@ -187,9 +187,9 @@ public class ActionContainer : IEnableAlways, IBasicEnableProcess
         {
             throw new CustomBasicException("Needs to be set to self first");
         }
-        YourCards!.HandList = _gameContainer.SingleInfo.MainHandList;
-        YourKeepers!.HandList = _gameContainer.SingleInfo.KeeperList;
-        PrivateGoals!.HandList = _gameContainer.SaveRoot!.GoalList;
+        YourCards!.ReplaceHandList(_gameContainer.SingleInfo.MainHandList);
+        YourKeepers!.ReplaceHandList(_gameContainer.SingleInfo.KeeperList);
+        PrivateGoals!.ReplaceHandList(_gameContainer.SaveRoot!.GoalList);
     }
     public FluxxCardInformation GetCardToDoAgain(int selectedIndex)
     {

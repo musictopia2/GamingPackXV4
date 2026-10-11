@@ -1,7 +1,7 @@
 namespace KlondikeSolitaire.Blazor.Views;
 public partial class KlondikeSolitaireMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnInitialized()
     {
         _labels.Clear();

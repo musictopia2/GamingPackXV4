@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="SavannahMainViewModel">
+    <MainScreen>
         <SavannahMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<SavannahPlayerItem>">
-        <MultiplayerOpeningView P="SavannahPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="SavannahPlayerItem" />
 </CascadingValue>

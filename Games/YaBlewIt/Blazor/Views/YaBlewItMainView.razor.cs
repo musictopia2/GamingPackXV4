@@ -4,14 +4,14 @@ public partial class YaBlewItMainView
     private bool _showPopup;
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private YaBlewItVMData? _vmData;
     private YaBlewItGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<YaBlewItVMData>();
-        _gameContainer = aa1.Resolver.Resolve<YaBlewItGameContainer>();
+        _vmData = Resolver!.Resolve<YaBlewItVMData>();
+        _gameContainer = Resolver.Resolve<YaBlewItGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Prospector", nameof(YaBlewItVMData.NormalTurn))
             .AddLabel("Other Turn", nameof(YaBlewItVMData.OtherLabel))

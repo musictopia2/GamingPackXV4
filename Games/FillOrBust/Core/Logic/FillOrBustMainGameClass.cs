@@ -31,7 +31,6 @@ public class FillOrBustMainGameClass
     }
     protected override async Task AfterDrawingAsync()
     {
-        _command.UpdateAll();
         var thisCard = _model!.Pile1!.GetCardInfo();
         if (thisCard.IsOptional == true)
         {
@@ -422,7 +421,7 @@ public class FillOrBustMainGameClass
         BasicList<FillOrBustPlayerItem> tempList = PlayerList.OrderByDescending(items => items.TotalScore).ToBasicList();
         if (tempList.First().TotalScore > tempList[1].TotalScore)
         {
-            return new() { tempList.First().Id };
+            return [tempList.First().Id];
         }
         int highScore = tempList.First().TotalScore;
         return tempList.Where(Items => Items.TotalScore == highScore).Select(items => items.Id).ToBasicList();
@@ -453,7 +452,7 @@ public class FillOrBustMainGameClass
         int y;
         int lists;
         lists = thisCol.Count;
-        BasicList<SimpleDice> newList = new();
+        BasicList<SimpleDice> newList = [];
         for (x = 1; x <= 6; x++)
         {
             howMany = thisCol.Count(Items => Items.Value == x);

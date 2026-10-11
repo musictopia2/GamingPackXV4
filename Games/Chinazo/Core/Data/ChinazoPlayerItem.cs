@@ -3,9 +3,9 @@ namespace Chinazo.Core.Data;
 public partial class ChinazoPlayerItem : PlayerRummyHand<ChinazoCard>
 {
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [ScoreColumn]
-    public bool LaidDown { get; set; }
+    public partial bool LaidDown { get; set; }
 }

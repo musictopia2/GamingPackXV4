@@ -2,7 +2,8 @@ namespace LifeBoardGame.Blazor;
 public partial class BasicPlayerPicker<B>
     where B : BasicSubmitViewModel
 {
-    [CascadingParameter]
+    [Parameter]
+    [EditorRequired]
     public B? DataContext { get; set; }
 
     [CascadingParameter]

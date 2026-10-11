@@ -4,13 +4,13 @@ namespace DeadDie96.Core.Data;
 public partial class DeadDie96VMData : IBasicDiceGamesData<TenSidedDice>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
     [LabelColumn]
-    public int RollNumber { get; set; }
+    public partial int RollNumber { get; set; }
     private readonly IGamePackageResolver _resolver;
     private readonly CommandContainer _command;
     public DiceCup<TenSidedDice>? Cup { get; set; }

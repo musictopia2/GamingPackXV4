@@ -6,12 +6,12 @@ public partial class PaydayMainView
     private string RealHeight => $"{TargetHeight}vh";
     private static string GetColumns => $"{bb1.RepeatMinimum(1)} {bb1.RepeatAuto(1)}";
     private static string RowData => "20vh 52vh 15vh";
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private GameBoardGraphicsCP? _graphicsData;
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     protected override void OnInitialized()
     {
-        _graphicsData = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _graphicsData = Resolver!.Resolve<GameBoardGraphicsCP>();
         _labels.AddLabel("Main Turn", nameof(PaydayVMData.NormalTurn))
              .AddLabel("Other Turn", nameof(PaydayVMData.OtherLabel))
              .AddLabel("Progress", nameof(PaydayVMData.MonthLabel))

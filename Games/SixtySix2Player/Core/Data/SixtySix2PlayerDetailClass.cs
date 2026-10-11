@@ -15,7 +15,7 @@ public class SixtySix2PlayerDetailClass : IGameInfo, ICardInfo<SixtySix2PlayerCa
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
     int ICardInfo<SixtySix2PlayerCardInformation>.CardsToPassOut => 6;
-    BasicList<int> ICardInfo<SixtySix2PlayerCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<SixtySix2PlayerCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<SixtySix2PlayerCardInformation>.AddToDiscardAtBeginning => true;
     bool ICardInfo<SixtySix2PlayerCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<SixtySix2PlayerCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,7 +23,7 @@ public class SixtySix2PlayerDetailClass : IGameInfo, ICardInfo<SixtySix2PlayerCa
     bool ICardInfo<SixtySix2PlayerCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<SixtySix2PlayerCardInformation>.NoPass => false;
     bool ICardInfo<SixtySix2PlayerCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<SixtySix2PlayerCardInformation> ICardInfo<SixtySix2PlayerCardInformation>.DummyHand { get; set; } = new DeckRegularDict<SixtySix2PlayerCardInformation>();
+    DeckRegularDict<SixtySix2PlayerCardInformation> ICardInfo<SixtySix2PlayerCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<SixtySix2PlayerCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<SixtySix2PlayerCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -35,7 +35,7 @@ public class SixtySix2PlayerDetailClass : IGameInfo, ICardInfo<SixtySix2PlayerCa
     bool ITrickData.HasDummy => false;
     BasicList<int> ICardInfo<SixtySix2PlayerCardInformation>.DiscardExcludeList(IListShuffler<SixtySix2PlayerCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<SixtySix2PlayerCardInformation>.AceLow => false;
     bool IBeginningRegularCards<SixtySix2PlayerCardInformation>.CustomDeck => true;

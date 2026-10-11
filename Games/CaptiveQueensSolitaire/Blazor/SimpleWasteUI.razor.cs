@@ -9,8 +9,8 @@ public partial class SimpleWasteUI
         base.OnInitialized();
     }
     private SizeF _viewBox = new();
-    private readonly BasicList<PointF> _points = new();
-    protected override void OnParametersSet()
+    private readonly BasicList<PointF> _points = [];
+    private void Refresh()
     {
         Waste = (CustomWaste)DataContext!.WastePiles1;
         if (Waste.CardList.Count != 4)
@@ -27,6 +27,12 @@ public partial class SimpleWasteUI
         _points.Add(new PointF(tempSize, 0));
         _viewBox.Height = card.DefaultSize.Height * 2;
         _viewBox.Width = _viewBox.Height;
+    }
+
+    protected override void OnParametersSet()
+    {
+        Refresh();
+        
         base.OnParametersSet();
     }
 }

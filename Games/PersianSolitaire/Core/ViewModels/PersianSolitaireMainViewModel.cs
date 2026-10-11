@@ -4,7 +4,7 @@ namespace PersianSolitaire.Core.ViewModels;
 public partial class PersianSolitaireMainViewModel : SolitaireMainViewModel<PersianSolitaireSaveInfo>
 {
     [LabelColumn]
-    public int DealNumber { get; set; }
+    public partial int DealNumber { get; set; }
     private readonly WastePiles _tempWaste;
     private readonly ISolitaireData _thisData;
     public PersianSolitaireMainViewModel(IEventAggregator aggregator,

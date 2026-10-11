@@ -30,9 +30,9 @@ public partial class ItalianDominosVMData : IDominoGamesData<SimpleDominoInfo>
         return HandClickedAsync.Invoke(domino, index);
     }
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public Func<SimpleDominoInfo, Task>? DrewDominoAsync { get; set; }
     public HandObservable<SimpleDominoInfo> PlayerHand1 { get; set; }
     public DominosBoneYardClass<SimpleDominoInfo> BoneYard { get; set; }
@@ -47,9 +47,9 @@ public partial class ItalianDominosVMData : IDominoGamesData<SimpleDominoInfo>
         return true;
     }
     [LabelColumn]
-    public int UpTo { get; set; }
+    public partial int UpTo { get; set; }
     [LabelColumn]
-    public int NextNumber { get; set; }
+    public partial int NextNumber { get; set; }
     //any other ui related properties will be here.
     //can copy/paste for the actual view model.
 }

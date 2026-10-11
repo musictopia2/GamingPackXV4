@@ -33,9 +33,9 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
     public CardGraphicsBlazor()
     {
         _rightRect = new RectangleF(20, 0, 48, 113);
-        _sideList = new() { "Draw 1, Play 1", "Play 2", "Play 3", "Play 4", "Play All", "Keeper Limit 2", "Keeper Limit 3", "Keeper Limit 4", "Draw 2", "Draw 3", "Draw 4", "Draw 5", "Hand Limit 0", "Hand Limit 1", "Hand Limit 2", "No-Hand Bonus", "Poor Bonus", "Rich Bonus", "Reverse Order", "First Play Random", "X=X+1", "Double Agenda", "Milk", "The Rocket", "The Moon", "War", "Television", "The Toaster", "Money", "Love", "Dreams", "Peace", "Bread", "The Sun", "Cookies", "Time", "The Brain", "Death", "Sleep", "Chocolate", "Toast", "5 Keepers", "Time Is Money", "Bed Time", "All You Need Is Love", "Peace (No War)", "Baked Goods", "Dreamland", "Hearts And Minds", "Milk And Cookies", "Rocket To The Moon", "Hippyism", "Night and Day", "Squishy Chocolate", "Rocket Science", "Winning the Lottery", "The Appliances", "The Brain (No TV)", "Death By Chocolate", "Chocolate Cookies", "Chocolate Milk", "10 Cards in Hand", "War=Death", "Trash a New Rule", "Take Another Turn", "Trade Hands", "Trash a Keeper", "Exchange Keepers", "Steal a Keeper", "Use What You Take", "Let's Do That Again", "Scramble Keepers", "Rules Reset", "Empty the Trash", "Draw 3, Play 2", "Draw 2 & Use 'Em", "Everybody Gets 1", "Discard & Draw", "Let's Simplify", "Rotate Hands", "No Limits", "Taxation!", "Jackpot" };
-        _textList = new()
-        {
+        _sideList = ["Draw 1, Play 1", "Play 2", "Play 3", "Play 4", "Play All", "Keeper Limit 2", "Keeper Limit 3", "Keeper Limit 4", "Draw 2", "Draw 3", "Draw 4", "Draw 5", "Hand Limit 0", "Hand Limit 1", "Hand Limit 2", "No-Hand Bonus", "Poor Bonus", "Rich Bonus", "Reverse Order", "First Play Random", "X=X+1", "Double Agenda", "Milk", "The Rocket", "The Moon", "War", "Television", "The Toaster", "Money", "Love", "Dreams", "Peace", "Bread", "The Sun", "Cookies", "Time", "The Brain", "Death", "Sleep", "Chocolate", "Toast", "5 Keepers", "Time Is Money", "Bed Time", "All You Need Is Love", "Peace (No War)", "Baked Goods", "Dreamland", "Hearts And Minds", "Milk And Cookies", "Rocket To The Moon", "Hippyism", "Night and Day", "Squishy Chocolate", "Rocket Science", "Winning the Lottery", "The Appliances", "The Brain (No TV)", "Death By Chocolate", "Chocolate Cookies", "Chocolate Milk", "10 Cards in Hand", "War=Death", "Trash a New Rule", "Take Another Turn", "Trade Hands", "Trash a Keeper", "Exchange Keepers", "Steal a Keeper", "Use What You Take", "Let's Do That Again", "Scramble Keepers", "Rules Reset", "Empty the Trash", "Draw 3, Play 2", "Draw 2 & Use 'Em", "Everybody Gets 1", "Discard & Draw", "Let's Simplify", "Rotate Hands", "No Limits", "Taxation!", "Jackpot"];
+        _textList =
+        [
             "Play|2 cards|per turn.",
             "Play|3 cards|per turn.",
             "Play|4 cards|per turn.",
@@ -77,9 +77,9 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
             "Discard|Limit|Rules.",
             "All Players|Pick One|Card.",
             "Draw|3 extra|cards!"
-        };
-        _keeperList = new()
-        {
+        ];
+        _keeperList =
+        [
             "Milk",
             "Rocket",
             "Moon",
@@ -98,7 +98,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FluxxCardInformation>
             "Death",
             "Sleep",
             "Chocolate"
-        };
+        ];
         _locationList = Resources.SidePoints.GetResource<BasicList<PointF>>();
     }
     protected override void DrawImage()

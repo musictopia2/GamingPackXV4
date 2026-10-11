@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace DealCardGame.Blazor;
 public partial class ReadOnlyPlayerSetComponent
 {
@@ -24,7 +22,6 @@ public partial class ReadOnlyPlayerSetComponent
     [Parameter]
     public EventCallback<SetPlayerModel> OnSetClicked { get; set; }
     private static string Rows => gg1.RepeatSpreadOut(3);
-    private Assembly GetAssembly => Assembly.GetAssembly(GetType())!;
     private void PrivateClicked()
     {
         SetPlayerModel set = new()

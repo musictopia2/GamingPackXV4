@@ -3,7 +3,7 @@
 public partial class KeeperShowViewModel : BasicKeeperScreen
 {
     private readonly IFluxxEvent _fluxxEvent;
-    public KeeperShowViewModel(FluxxGameContainer gameContainer, KeeperContainer keeperContainer, IFluxxEvent fluxxEvent, IEventAggregator aggregator) : base(gameContainer, keeperContainer, aggregator)
+    public KeeperShowViewModel(FluxxGameContainer gameContainer, KeeperContainer keeperContainer, IFluxxEvent fluxxEvent) : base(gameContainer, keeperContainer)
     {
         _fluxxEvent = fluxxEvent;
         CreateCommands(CommandContainer);

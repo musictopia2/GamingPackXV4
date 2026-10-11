@@ -1,14 +1,14 @@
 namespace Opetong.Blazor.Views;
 public partial class OpetongMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private OpetongVMData? _vmData;
     private OpetongGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<OpetongVMData>();
-        _gameContainer = aa1.Resolver.Resolve<OpetongGameContainer>();
+        _vmData = Resolver!.Resolve<OpetongVMData>();
+        _gameContainer = Resolver.Resolve<OpetongGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(OpetongVMData.NormalTurn))
            .AddLabel("Status", nameof(OpetongVMData.Status))

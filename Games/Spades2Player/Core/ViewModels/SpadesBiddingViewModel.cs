@@ -1,19 +1,17 @@
 ﻿namespace Spades2Player.Core.ViewModels;
 [InstanceGame]
-public partial class SpadesBiddingViewModel : ScreenViewModel, IBlankGameVM
+public partial class SpadesBiddingViewModel
 {
     public readonly Spades2PlayerVMData Model;
     private readonly Spades2PlayerMainGameClass _mainGame;
-    public SpadesBiddingViewModel(CommandContainer commandContainer, Spades2PlayerVMData model, Spades2PlayerMainGameClass mainGame, IEventAggregator aggregator) : base(aggregator)
+    public SpadesBiddingViewModel(CommandContainer commandContainer, Spades2PlayerVMData model, Spades2PlayerMainGameClass mainGame)
     {
-        CommandContainer = commandContainer;
         Model = model;
         _mainGame = mainGame;
         Model.Bid1.ChangedNumberValueAsync = Bid1_ChangedNumberValueAsync;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    public CommandContainer CommandContainer { get; set; }
     private Task Bid1_ChangedNumberValueAsync(int chosen)
     {
         Model.BidAmount = chosen;

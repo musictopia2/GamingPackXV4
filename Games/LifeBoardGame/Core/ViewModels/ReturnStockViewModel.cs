@@ -7,9 +7,8 @@ public class ReturnStockViewModel : BasicSubmitViewModel
     public ReturnStockViewModel(CommandContainer commandContainer,
         LifeBoardGameGameContainer gameContainer,
         LifeBoardGameVMData model,
-        IReturnStockProcesses processes,
-        IEventAggregator aggregator
-        ) : base(commandContainer, aggregator)
+        IReturnStockProcesses processes
+        ) : base(commandContainer)
     {
         _gameContainer = gameContainer;
         _model = model;

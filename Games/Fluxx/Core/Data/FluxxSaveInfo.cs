@@ -2,11 +2,11 @@ namespace Fluxx.Core.Data;
 [SingletonGame]
 public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInformation>, IMappable, ISaveInfo
 {
-    public DeckRegularDict<GoalCard> GoalList { get; set; } = new();
-    public DeckRegularDict<RuleCard> RuleList { get; set; } = new();
-    public BasicList<int> DelayedPlayList { get; set; } = new();
+    public DeckRegularDict<GoalCard> GoalList { get; set; } = [];
+    public DeckRegularDict<RuleCard> RuleList { get; set; } = [];
+    public BasicList<int> DelayedPlayList { get; set; } = [];
     public bool DoAnalyze { get; set; }
-    public BasicList<int> QueList { get; set; } = new();
+    public BasicList<int> QueList { get; set; } = [];
     public SavedActionClass SavedActionData { get; set; } = new();
     public int CurrentAction { get; set; }
     private int _playsLeft;
@@ -17,10 +17,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _playsLeft, value))
             {
-                if (_model != null)
-                {
-                    _model.PlaysLeft = value;
-                }
+                _model?.PlaysLeft = value;
             }
         }
     }
@@ -32,10 +29,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _handLimit, value))
             {
-                if (_model != null)
-                {
-                    _model.HandLimit = value;
-                }
+                _model?.HandLimit = value;
             }
         }
     }
@@ -47,10 +41,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _keeperLimit, value))
             {
-                if (_model != null)
-                {
-                    _model.KeeperLimit = value;
-                }
+                _model?.KeeperLimit = value;
             }
         }
     }
@@ -62,10 +53,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _playLimit, value))
             {
-                if (_model != null)
-                {
-                    _model.PlayLimit = value;
-                }
+                _model?.PlayLimit = value;
             }
         }
     }
@@ -77,10 +65,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _anotherTurn, value))
             {
-                if (_model != null)
-                {
-                    _model.AnotherTurn = value;
-                }
+                _model?.AnotherTurn = value;
             }
         }
     }
@@ -92,10 +77,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _drawBonus, value))
             {
-                if (_model != null)
-                {
-                    _model.DrawBonus = value;
-                }
+                _model?.DrawBonus = value;
             }
         }
     }
@@ -107,10 +89,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _playBonus, value))
             {
-                if (_model != null)
-                {
-                    _model.PlayBonus = value;
-                }
+                _model?.PlayBonus = value;
             }
         }
     }
@@ -122,10 +101,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _cardsDrawn, value))
             {
-                if (_model != null)
-                {
-                    _model.CardsDrawn = value;
-                }
+                _model?.CardsDrawn = value;
             }
         }
     }
@@ -137,10 +113,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _cardsPlayed, value))
             {
-                if (_model != null)
-                {
-                    _model.CardsPlayed = value;
-                }
+                _model?.CardsPlayed = value;
             }
         }
     }
@@ -152,10 +125,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _drawRules, value))
             {
-                if (_model != null)
-                {
-                    _model.DrawRules = value;
-                }
+                _model?.DrawRules = value;
             }
         }
     }
@@ -167,10 +137,7 @@ public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInfor
         {
             if (SetProperty(ref _previousBonus, value))
             {
-                if (_model != null)
-                {
-                    _model.PreviousBonus = value;
-                }
+                _model?.PreviousBonus = value;
             }
         }
     }

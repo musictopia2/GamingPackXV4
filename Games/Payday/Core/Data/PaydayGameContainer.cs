@@ -1,19 +1,16 @@
 namespace Payday.Core.Data;
 [SingletonGame]
 [AutoReset]
-public class PaydayGameContainer : BasicGameContainer<PaydayPlayerItem, PaydaySaveInfo>
+public class PaydayGameContainer(BasicData basicData,
+    TestOptions test,
+    IGameInfo gameInfo,
+    IAsyncDelayer delay,
+    IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver,
+    IRandomGenerator random) : BasicGameContainer<PaydayPlayerItem, PaydaySaveInfo>(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
 {
-    public PaydayGameContainer(BasicData basicData,
-        TestOptions test,
-        IGameInfo gameInfo,
-        IAsyncDelayer delay,
-        IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver,
-        IRandomGenerator random) : base(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
-    {
-    }
-    public BasicList<GameSpace> PrivateSpaceList { get; set; } = new();
+    public BasicList<GameSpace> PrivateSpaceList { get; set; } = [];
     public static CardInformation GetCard(int deck)
     {
         CardInformation output;

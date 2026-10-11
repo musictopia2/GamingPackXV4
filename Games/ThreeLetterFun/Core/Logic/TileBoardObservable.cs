@@ -1,19 +1,15 @@
 ﻿namespace ThreeLetterFun.Core.Logic;
-public class TileBoardObservable : HandObservable<TileInformation>
+public class TileBoardObservable(CommandContainer command) : HandObservable<TileInformation>(command)
 {
-    public TileBoardObservable(CommandContainer command) : base(command)
-    {
-    }
     public void UpdateBoard()
     {
-        ThreeLetterFunSaveInfo saveroot = aa1.Resolver!.Resolve<ThreeLetterFunSaveInfo>();
+        ThreeLetterFunSaveInfo saveroot = Resolver!.Resolve<ThreeLetterFunSaveInfo>();
         if (saveroot.TileList.Count == 0)
         {
             HandList.Clear();
             return;
         }
-        BasicList<TileInformation> ThisList = new()
-        { saveroot.TileList.First(), saveroot.TileList[1] };
+        BasicList<TileInformation> ThisList = [saveroot.TileList.First(), saveroot.TileList[1]];
         HandList.ReplaceRange(ThisList);
     }
     public TileInformation? GetTile(bool isSelected)

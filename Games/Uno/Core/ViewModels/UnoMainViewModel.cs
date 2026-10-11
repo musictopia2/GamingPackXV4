@@ -1,71 +1,55 @@
 namespace Uno.Core.ViewModels;
 [InstanceGame]
-public class UnoMainViewModel : BasicCardGamesVM<UnoCardInformation>
-{
-    private readonly UnoMainGameClass _mainGame;
-    private readonly UnoVMData _model;
-    private readonly IGamePackageResolver _resolver;
-    private readonly UnoGameContainer _gameContainer;
-    private readonly IToast _toast;
-    public SayUnoViewModel? SayUnoScreen { get; set; }
-    public UnoMainViewModel(CommandContainer commandContainer,
+[UseStateChanged]
+public partial class UnoMainViewModel(CommandContainer commandContainer,
         UnoMainGameClass mainGame,
         UnoVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         UnoGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<UnoCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    [StateProperty]
+    public partial SayUnoViewModel? SayUnoScreen { get; set; }
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _resolver = resolver;
-        _gameContainer = gameContainer;
-        _toast = toast;
-        _model.Deck1.NeverAutoDisable = true;
-        _gameContainer.OpenSaidUnoAsync = LoadSayUnoAsync;
-        _gameContainer.CloseSaidUnoAsync = CloseSayUnoAsync;
+        viewModel.Deck1.NeverAutoDisable = true;
+        gameContainer.OpenSaidUnoAsync = LoadSayUnoAsync;
+        gameContainer.CloseSaidUnoAsync = CloseSayUnoAsync;
+        base.AdditionalInitialize();
     }
-    protected override async Task ActivateAsync()
+    protected override async Task OpenAsync()
     {
-        await base.ActivateAsync();
-        if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.WaitingForUno)
+        if (gameContainer.SaveRoot.GameStatus == EnumGameStatus.WaitingForUno)
         {
             await LoadSayUnoAsync();
         }
     }
-    protected override async Task TryCloseAsync()
+    protected override async Task CloseAsync()
     {
         await CloseSayUnoAsync();
-        await base.TryCloseAsync();
     }
     private async Task LoadSayUnoAsync()
     {
-        if (_gameContainer.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
+        if (gameContainer.SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
             return;
         }
-        SayUnoScreen = _resolver.Resolve<SayUnoViewModel>();
-        await LoadScreenAsync(SayUnoScreen);
+        SayUnoScreen = Resolver.Resolve<SayUnoViewModel>();
     }
     private async Task CloseSayUnoAsync()
     {
-        if (SayUnoScreen != null)
-        {
-            await CloseSpecificChildAsync(SayUnoScreen);
-            SayUnoScreen = null;
-        }
+        SayUnoScreen?.Close();
+        SayUnoScreen = null;
     }
     protected override bool CanEnableDeck()
     {
-        if (_mainGame!.SaveRoot!.GameStatus != EnumGameStatus.NormalPlay)
+        if (mainGame!.SaveRoot!.GameStatus != EnumGameStatus.NormalPlay)
         {
             return false;
         }
-        if (_gameContainer.AlreadyDrew == true)
+        if (gameContainer.AlreadyDrew == true)
         {
             return false;
         }
@@ -73,23 +57,23 @@ public class UnoMainViewModel : BasicCardGamesVM<UnoCardInformation>
     }
     protected override bool CanEnablePile1()
     {
-        return _mainGame!.SaveRoot!.GameStatus == EnumGameStatus.NormalPlay;
+        return mainGame!.SaveRoot!.GameStatus == EnumGameStatus.NormalPlay;
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
-        int deck = _model.PlayerHand1!.ObjectSelected();
+        int deck = viewModel.PlayerHand1!.ObjectSelected();
         if (deck == 0)
         {
-            _toast.ShowUserErrorToast("You must select a card first");
+            Toast.ShowUserErrorToast("You must select a card first");
             return;
         }
-        if (_mainGame!.CanPlay(deck) == false)
+        if (mainGame!.CanPlay(deck) == false)
         {
-            _toast.ShowUserErrorToast("Illegal Move");
-            _model.PlayerHand1.UnselectAllObjects();
+            Toast.ShowUserErrorToast("Illegal Move");
+            viewModel.PlayerHand1.UnselectAllObjects();
             return;
         }
-        await _mainGame.ProcessPlayAsync(deck);
+        await mainGame.ProcessPlayAsync(deck);
     }
     public override bool CanEnableAlways()
     {
@@ -97,11 +81,11 @@ public class UnoMainViewModel : BasicCardGamesVM<UnoCardInformation>
     }
     private bool CanDraw()
     {
-        return !_mainGame!.SingleInfo!.MainHandList.Any(x => _mainGame.CanPlay(x.Deck));
+        return !mainGame!.SingleInfo!.MainHandList.Any(x => mainGame.CanPlay(x.Deck));
     }
     public override bool CanEndTurn()
     {
-        if (_mainGame!.SaveRoot!.GameStatus != EnumGameStatus.NormalPlay)
+        if (mainGame!.SaveRoot!.GameStatus != EnumGameStatus.NormalPlay)
         {
             return false;
         }
@@ -109,6 +93,6 @@ public class UnoMainViewModel : BasicCardGamesVM<UnoCardInformation>
         {
             return false;
         }
-        return _gameContainer.AlreadyDrew;
+        return gameContainer.AlreadyDrew;
     }
 }

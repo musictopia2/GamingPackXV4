@@ -3,7 +3,7 @@ namespace Opetong.Core.Data;
 public partial class OpetongPlayerItem : PlayerRummyHand<RegularRummyCard>
 {
     [ScoreColumn]
-    public int SetsPlayed { get; set; }
+    public partial int SetsPlayed { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

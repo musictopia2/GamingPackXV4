@@ -14,16 +14,11 @@
     }
     return;
 }
-<ParentControl VM="ChessMainViewModel">
+<MainScreen>
     <ChessMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<ChessPlayerItem>">
-    <MultiplayerOpeningView P="ChessPlayerItem" />
-</ParentControl>
-<ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, ChessPlayerItem>">
-    
-    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="ChessPlayerItem">
-        @* if there is another piece, replace with proper piece. *@
-        <CheckerPiece HasImage="true" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" MainColor="@GetColor(Piece.EnumValue)" />
-    </BeginningChooseColorView>
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="ChessPlayerItem" />
+<BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="ChessPlayerItem">
+    @* if there is another piece, replace with proper piece. *@
+    <CheckerPiece HasImage="true" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" MainColor="@GetColor(Piece.EnumValue)" />
+</BeginningChooseColorView>

@@ -3,31 +3,31 @@ namespace Racko.Core.Data;
 public partial class RackoPlayerItem : PlayerSingleHand<RackoCardInformation>
 {
     [ScoreColumn]
-    public int ScoreRound { get; set; }
+    public partial int ScoreRound { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [ScoreColumn]
-    public bool CanShowValues { get; set; }
+    public partial bool CanShowValues { get; set; }
     [ScoreColumn]
-    public int Value1 { get; set; }
+    public partial int Value1 { get; set; }
     [ScoreColumn]
-    public int Value2 { get; set; }
+    public partial int Value2 { get; set; }
     [ScoreColumn]
-    public int Value3 { get; set; }
+    public partial int Value3 { get; set; }
     [ScoreColumn]
-    public int Value4 { get; set; }
+    public partial int Value4 { get; set; }
     [ScoreColumn]
-    public int Value5 { get; set; }
+    public partial int Value5 { get; set; }
     [ScoreColumn]
-    public int Value6 { get; set; }
+    public partial int Value6 { get; set; }
     [ScoreColumn]
-    public int Value7 { get; set; }
+    public partial int Value7 { get; set; }
     [ScoreColumn]
-    public int Value8 { get; set; }
+    public partial int Value8 { get; set; }
     [ScoreColumn]
-    public int Value9 { get; set; }
+    public partial int Value9 { get; set; }
     [ScoreColumn]
-    public int Value10 { get; set; }
+    public partial int Value10 { get; set; }
     public void UpdateAllValues()
     {
         if (MainHandList.Count == 0)

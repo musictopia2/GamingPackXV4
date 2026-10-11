@@ -76,7 +76,7 @@ public class BladesOfSteelMainGameClass
     }
     protected override void LinkHand()
     {
-        _model!.PlayerHand1!.HandList = SingleInfo!.MainHandList; //hopefully this is it.
+        _model!.PlayerHand1!.ReplaceHandList(SingleInfo!.MainHandList);
         PrepSort();
     }
     public override async Task DrawAsync()
@@ -348,8 +348,8 @@ public class BladesOfSteelMainGameClass
     {
         PlayerList!.ForEach(thisPlayer =>
         {
-            thisPlayer.DefensePile!.HandList = thisPlayer.DefenseList;
-            thisPlayer.AttackPile!.HandList = thisPlayer.AttackList;
+            thisPlayer.DefensePile!.ReplaceHandList(thisPlayer.DefenseList);
+            thisPlayer.AttackPile!.ReplaceHandList(thisPlayer.AttackList);
         });
         _model.OpponentFaceOffCard.ClearCards();
         _model.YourFaceOffCard.ClearCards();

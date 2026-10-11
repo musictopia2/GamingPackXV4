@@ -1,6 +1,6 @@
 ﻿namespace ThreeLetterFun.Core.ViewModels;
 [InstanceGame]
-public partial class FirstOptionViewModel : ScreenViewModel, IBlankGameVM, IHandleAsync<FirstOptionEventModel>, ISerializable
+public partial class FirstOptionViewModel : IHandleAsync<FirstOptionEventModel>, ISerializable
 {
     public ListViewPicker Option1;
     public FirstOptionViewModel(CommandContainer commandContainer,
@@ -9,35 +9,38 @@ public partial class FirstOptionViewModel : ScreenViewModel, IBlankGameVM, IHand
         IFirstOptionProcesses first,
         IEventAggregator aggregator,
         IMessageBox message
-        ) : base(aggregator)
+        ) 
     {
         CommandContainer = commandContainer;
         _basicData = basicData;
         _first = first;
+        _aggregator = aggregator;
         _message = message;
         Option1 = new ListViewPicker(commandContainer, resolver);
         Option1.ItemSelectedAsync = Option1_ItemSelectedAsync;
-        BasicList<string> list = new() { "Beginner", "Advanced" };
+        BasicList<string> list = ["Beginner", "Advanced"];
         Option1.IndexMethod = EnumIndexMethod.OneBased;
         Option1.LoadTextList(list);
         CreateCommands();
         CreateCommands(commandContainer);
+        Option1.ReportCanExecuteChange();
+        Unsubscribe(); //just in case.
+        Subscribe();
     }
+    private partial void Subscribe();
+    private partial void Unsubscribe();
     partial void CreateCommands();
     partial void CreateCommands(CommandContainer command);
-    protected override Task ActivateAsync()
-    {
-        Option1.ReportCanExecuteChange();
-        return base.ActivateAsync();
-    }
+    
     private readonly BasicData _basicData;
     private readonly IFirstOptionProcesses _first;
+    private readonly IEventAggregator _aggregator;
     private readonly IMessageBox _message;
     public EnumFirstOption OptionChosen { get; set; } = EnumFirstOption.None;
     [Command(EnumCommandCategory.Old)]
     public async Task DescriptionAsync()
     {
-        if (Aggregator is null)
+        if (_aggregator is null)
         {
             return;
         }

@@ -3,11 +3,16 @@
 /// this is the hint view model.  however, had to make it a gameboard so it fits the new pattern.
 /// </summary>
 [InstanceGame]
-public partial class GameBoardViewModel : ScreenViewModel, IBlankGameVM
+public partial class GameBoardViewModel : IStateChanged
 {
     private readonly GlobalClass _global;
     private readonly IFinishGuess _mainGame;
-    public BasicList<Guess> GuessList = new();
+
+
+    public BasicList<Guess> GuessList = [];
+
+    public event Action? StateChanged;
+
     internal Task NewGameAsync()
     {
         var tempList = new BasicList<Guess>();
@@ -16,7 +21,10 @@ public partial class GameBoardViewModel : ScreenViewModel, IBlankGameVM
         {
             Guess thisGuess = new();
             if (x == 1)
+            {
                 thisGuess.GetNewBeads();
+            }
+
             tempList.Add(thisGuess);
         });
         GuessList.ReplaceRange(tempList);
@@ -40,7 +48,7 @@ public partial class GameBoardViewModel : ScreenViewModel, IBlankGameVM
     {
         bead.ColorChosen = EnumColorPossibilities.None;
     }
-    public GameBoardViewModel(GlobalClass global, IFinishGuess mainGame, CommandContainer commandContainer, IEventAggregator aggregator) : base(aggregator)
+    public GameBoardViewModel(GlobalClass global, IFinishGuess mainGame, CommandContainer commandContainer)
     {
         _global = global;
         _mainGame = mainGame;
@@ -74,6 +82,7 @@ public partial class GameBoardViewModel : ScreenViewModel, IBlankGameVM
     {
         var nextGuess = GuessList.Where(items => items.IsCompleted == false).Take(1).Single();
         nextGuess.GetNewBeads();
+        StateChanged?.Invoke();
         return Task.CompletedTask; //hopefully no problem (?)
         //await _aggregator.ScrollToGuessAsync(nextGuess);
     }

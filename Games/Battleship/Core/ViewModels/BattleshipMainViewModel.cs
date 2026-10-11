@@ -1,43 +1,36 @@
 namespace Battleship.Core.ViewModels;
 [InstanceGame]
-public partial class BattleshipMainViewModel : BasicMultiplayerMainVM
-{
-    private readonly BattleshipMainGameClass _mainGame; //if we don't need, delete.
-    public BattleshipVMData VMData;
-    private readonly BasicData _basicData;
-    private readonly IToast _toast;
-    private readonly BattleshipComputerAI? _ai;
-    public BattleshipMainViewModel(CommandContainer commandContainer,
+[UseStateChanged]
+public partial class BattleshipMainViewModel(CommandContainer commandContainer,
         BattleshipMainGameClass mainGame,
         BattleshipVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        IToast toast) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+    public BattleshipVMData VMData = viewModel;
+    private BattleshipComputerAI? _ai = null;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = viewModel;
-        _basicData = basicData;
-        _toast = toast;
-        if (_basicData.MultiPlayer == false)
+        if (BasicData.MultiPlayer == false)
         {
-            _ai = resolver.Resolve<BattleshipComputerAI>();
+            _ai = Resolver.Resolve<BattleshipComputerAI>();
         }
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     public static int GamesPlayed { get; set; }
-    public bool ShipsHorizontal { get; set; } = true;
+    [StateProperty]
+    public partial bool ShipsHorizontal { get; set; } = true;
     private bool CanEnableShipOptions()
     {
         if (VMData.ShipDirectionsVisible == false)
         {
             return false;
         }
-        return _mainGame!.StatusOfGame == EnumStatusList.PlacingShips;
+        return mainGame!.StatusOfGame == EnumStatusList.PlacingShips;
     }
     public bool CanShipDirection() => CanEnableShipOptions();
     [Command(EnumCommandCategory.Game)]
@@ -47,51 +40,51 @@ public partial class BattleshipMainViewModel : BasicMultiplayerMainVM
     }
     public bool CanMakeMove(Vector space)
     {
-        if (_mainGame.StatusOfGame == EnumStatusList.None)
+        if (mainGame.StatusOfGame == EnumStatusList.None)
         {
-            _toast.ShowUserErrorToast("Unable to make move because status is none");
+            toast.ShowUserErrorToast("Unable to make move because status is none");
             return false;
         }
-        if (_mainGame.StatusOfGame == EnumStatusList.PlacingShips)
+        if (mainGame.StatusOfGame == EnumStatusList.PlacingShips)
         {
-            if (_mainGame.Ships.HasSelectedShip() == false)
+            if (mainGame.Ships.HasSelectedShip() == false)
             {
-                _toast.ShowUserErrorToast("Did not choose ship");
+                toast.ShowUserErrorToast("Did not choose ship");
                 return false;
             }
-            return _mainGame.Ships.CanPlaceShip(space, ShipsHorizontal);
+            return mainGame.Ships.CanPlaceShip(space, ShipsHorizontal);
         }
-        return _mainGame.GameBoard1.CanChooseSpace(space);
+        return mainGame.GameBoard1.CanChooseSpace(space);
     }
     [Command(EnumCommandCategory.Game)]
     public async Task MakeMoveAsync(Vector space)
     {
-        if (_mainGame!.StatusOfGame == EnumStatusList.PlacingShips)
+        if (mainGame!.StatusOfGame == EnumStatusList.PlacingShips)
         {
-            _mainGame.Ships!.PlaceShip(space, ShipsHorizontal);
-            if (_mainGame.Ships.IsFinished() == false)
+            mainGame.Ships!.PlaceShip(space, ShipsHorizontal);
+            if (mainGame.Ships.IsFinished() == false)
             {
                 return;
             }
-            await _mainGame.HumanFinishedPlacingShipsAsync();
+            await mainGame.HumanFinishedPlacingShipsAsync();
             return;
         }
-        _mainGame.CurrentSpace = space;
-        if (_basicData!.MultiPlayer == true)
+        mainGame.CurrentSpace = space;
+        if (BasicData!.MultiPlayer == true)
         {
-            await _mainGame.Network!.SendMoveAsync(space);
+            await mainGame.Network!.SendMoveAsync(space);
             CommandContainer!.ManuelFinish = true; //i think this is what i have to do now.
-            _mainGame.Network!.IsEnabled = true; //because has to see what it is.
+            mainGame.Network!.IsEnabled = true; //because has to see what it is.
             return;
         }
         bool hits = _ai!.HasHit(space);
         if (hits == true)
         {
-            await _mainGame.MakeMoveAsync(space, EnumWhatHit.Hit);
+            await mainGame.MakeMoveAsync(space, EnumWhatHit.Hit);
         }
         else
         {
-            await _mainGame.MakeMoveAsync(space, EnumWhatHit.Miss);
+            await mainGame.MakeMoveAsync(space, EnumWhatHit.Miss);
         }
     }
     public bool CanChooseShip()
@@ -102,6 +95,6 @@ public partial class BattleshipMainViewModel : BasicMultiplayerMainVM
     public void ChooseShip(EnumShipList ship)
     {
         VMData.ShipSelected = ship;
-        _mainGame.GameBoard1.HumanWaiting();
+        mainGame.GameBoard1.HumanWaiting();
     }
 }

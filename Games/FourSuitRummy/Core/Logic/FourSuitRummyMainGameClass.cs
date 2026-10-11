@@ -366,7 +366,7 @@ public class FourSuitRummyMainGameClass
     {
         SingleInfo!.MainSets!.AddNewSet(thisCol);
     }
-    private static bool HasRun(IDeckDict<RegularRummyCard> thisCol)
+    private static bool HasRun(DeckRegularDict<RegularRummyCard> thisCol)
     {
         if (thisCol.Count != 3)
         {
@@ -431,7 +431,7 @@ public class FourSuitRummyMainGameClass
     {
         BasicList<int> output = [];
         DeckRegularDict<RegularRummyCard> thisCollection;
-        IDeckDict<RegularRummyCard> tempCollection;
+        DeckRegularDict<RegularRummyCard> tempCollection;
         for (int x = 1; x <= _model!.TempSets!.HowManySets; x++)
         {
             tempCollection = _model.TempSets.ObjectList(x);

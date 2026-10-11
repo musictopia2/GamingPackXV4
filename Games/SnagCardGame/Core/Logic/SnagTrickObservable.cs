@@ -1,14 +1,8 @@
 ﻿namespace SnagCardGame.Core.Logic;
 [SingletonGame]
-public class SnagTrickObservable : BasicTrickAreaObservable<EnumSuitList, SnagCardGameCardInformation>,
+public class SnagTrickObservable(SnagCardGameGameContainer gameContainer) : BasicTrickAreaObservable<EnumSuitList, SnagCardGameCardInformation>(gameContainer.Command, gameContainer.Aggregator),
     ITrickPlay, IAdvancedTrickProcesses, IMultiplayerTrick<EnumSuitList, SnagCardGameCardInformation, SnagCardGamePlayerItem>
 {
-    private readonly SnagCardGameGameContainer _gameContainer;
-    public SnagTrickObservable(SnagCardGameGameContainer gameContainer) : base(gameContainer.Command, gameContainer.Aggregator)
-    {
-        _gameContainer = gameContainer;
-    }
-
     public BasicList<TrickCoordinate>? ViewList { get; set; }
     public void SelectCard(int deck)
     {
@@ -42,18 +36,18 @@ public class SnagTrickObservable : BasicTrickAreaObservable<EnumSuitList, SnagCa
     private int GetCardIndex()
     {
         var thisC = (from items in ViewList
-                     where items.Player == _gameContainer.WhoTurn && items.PossibleDummy == !_gameContainer.SaveRoot!.FirstCardPlayed
+                     where items.Player == gameContainer.WhoTurn && items.PossibleDummy == !gameContainer.SaveRoot!.FirstCardPlayed
                      select items).Single(); // maybe its opposite (?)
         return ViewList!.IndexOf(thisC); // hopefully this simple (?)
     }
     private BasicList<TrickCoordinate> GetCoordinateList()
     {
-        if (_gameContainer.PlayerList!.Count != 2)
+        if (gameContainer.PlayerList!.Count != 2)
         {
             throw new CustomBasicException("This is a 2 player game.");
         }
-        BasicList<TrickCoordinate> output = new();
-        int y = _gameContainer.SelfPlayer;
+        BasicList<TrickCoordinate> output = [];
+        int y = gameContainer.SelfPlayer;
         int x;
         TrickCoordinate thisPlayer;
         for (x = 1; x <= 2; x++)
@@ -105,17 +99,17 @@ public class SnagTrickObservable : BasicTrickAreaObservable<EnumSuitList, SnagCa
     }
     protected override async Task ProcessCardClickAsync(SnagCardGameCardInformation thisCard)
     {
-        if (_gameContainer.TakeCardAsync == null)
+        if (gameContainer.TakeCardAsync == null)
         {
             throw new CustomBasicException("Nobody is handling takecardasync.  Rethink");
         }
-        if (_gameContainer.SaveRoot!.GameStatus == EnumStatusList.ChooseCards)
+        if (gameContainer.SaveRoot!.GameStatus == EnumStatusList.ChooseCards)
         {
             if (thisCard.Visible == false || thisCard.IsUnknown == true)
             {
                 return;
             }
-            await _gameContainer.TakeCardAsync(thisCard.Deck);
+            await gameContainer.TakeCardAsync(thisCard.Deck);
             return;
         }
         int index = CardList.IndexOf(thisCard);
@@ -123,20 +117,20 @@ public class SnagTrickObservable : BasicTrickAreaObservable<EnumSuitList, SnagCa
         {
             return;
         }
-        if (_gameContainer.SaveRoot.FirstCardPlayed == true && index == 0)
+        if (gameContainer.SaveRoot.FirstCardPlayed == true && index == 0)
         {
-            await _gameContainer.CardClickedAsync!.Invoke();
+            await gameContainer.CardClickedAsync!.Invoke();
             return;
         }
-        if (_gameContainer.SaveRoot.FirstCardPlayed == false && index == 1)
+        if (gameContainer.SaveRoot.FirstCardPlayed == false && index == 1)
         {
-            await _gameContainer.CardClickedAsync!.Invoke();
+            await gameContainer.CardClickedAsync!.Invoke();
             return;
         }
     }
     public void ClearBoard()
     {
-        DeckRegularDict<SnagCardGameCardInformation> tempList = new();
+        DeckRegularDict<SnagCardGameCardInformation> tempList = [];
         for (int x = 1; x <= 4; x++)
         {
             SnagCardGameCardInformation thisCard = new();
@@ -146,13 +140,13 @@ public class SnagTrickObservable : BasicTrickAreaObservable<EnumSuitList, SnagCa
             thisCard.Visible = true;
             tempList.Add(thisCard);
         }
-        _gameContainer.SaveRoot!.TrickList.Clear();
+        gameContainer.SaveRoot!.TrickList.Clear();
         CardList.ReplaceRange(tempList);
         Visible = true;
     }
     public void LoadGame()
     {
-        var tempList = _gameContainer.SaveRoot!.TrickList.ToRegularDeckDict();
+        var tempList = gameContainer.SaveRoot!.TrickList.ToRegularDeckDict();
         ClearBoard();
         if (tempList.Count == 0)
         {
@@ -161,8 +155,8 @@ public class SnagTrickObservable : BasicTrickAreaObservable<EnumSuitList, SnagCa
         int index;
         int tempTurn;
         SnagCardGameCardInformation lastCard;
-        tempTurn = _gameContainer.WhoTurn;
-        DeckRegularDict<SnagCardGameCardInformation> otherList = new();
+        tempTurn = gameContainer.WhoTurn;
+        DeckRegularDict<SnagCardGameCardInformation> otherList = [];
         int x = 0;
         tempList.ForEach(thisCard =>
         {
@@ -170,32 +164,32 @@ public class SnagTrickObservable : BasicTrickAreaObservable<EnumSuitList, SnagCa
             {
                 throw new CustomBasicException("The Player Cannot Be 0");
             }
-            _gameContainer.WhoTurn = thisCard.Player;
-            _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
+            gameContainer.WhoTurn = thisCard.Player;
+            gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
             x++;
             if (x == 1)
             {
-                _gameContainer.SaveRoot.FirstCardPlayed = false;
+                gameContainer.SaveRoot.FirstCardPlayed = false;
             }
             else
             {
-                _gameContainer.SaveRoot.FirstCardPlayed = true;
+                gameContainer.SaveRoot.FirstCardPlayed = true;
             }
             index = GetCardIndex();
-            lastCard = _gameContainer.GetBrandNewCard(thisCard.Deck);
+            lastCard = gameContainer.GetBrandNewCard(thisCard.Deck);
             lastCard.Player = thisCard.Player;
             lastCard.IsUnknown = thisCard.IsUnknown;
             lastCard.Visible = thisCard.Visible;
             TradeCard(index, lastCard);
             otherList.Add(lastCard);
         });
-        _gameContainer.SaveRoot.TrickList.ReplaceRange(otherList);
-        _gameContainer.SaveRoot.FirstCardPlayed = true;
-        _gameContainer.WhoTurn = tempTurn;
+        gameContainer.SaveRoot.TrickList.ReplaceRange(otherList);
+        gameContainer.SaveRoot.FirstCardPlayed = true;
+        gameContainer.WhoTurn = tempTurn;
     }
     public void FirstLoad()
     {
-        if (_gameContainer.PlayerList!.Count != 2)
+        if (gameContainer.PlayerList!.Count != 2)
         {
             throw new CustomBasicException("Must have 2 players only.");
         }
@@ -218,8 +212,8 @@ public class SnagTrickObservable : BasicTrickAreaObservable<EnumSuitList, SnagCa
     }
     public async Task PlayCardAsync(int deck)
     {
-        SnagCardGameCardInformation thisCard = _gameContainer.GetSpecificCardFromDeck(deck);
-        thisCard.Player = _gameContainer.WhoTurn;
+        SnagCardGameCardInformation thisCard = gameContainer.GetSpecificCardFromDeck(deck);
+        thisCard.Player = gameContainer.WhoTurn;
         int index;
         index = GetCardIndex();
         if (index == -1)
@@ -227,18 +221,18 @@ public class SnagTrickObservable : BasicTrickAreaObservable<EnumSuitList, SnagCa
             throw new CustomBasicException("Index cannot be -1");
         }
         SnagCardGameCardInformation newCard;
-        newCard = _gameContainer.GetBrandNewCard(deck);
-        newCard.Player = _gameContainer.WhoTurn;
+        newCard = gameContainer.GetBrandNewCard(deck);
+        newCard.Player = gameContainer.WhoTurn;
         newCard.Visible = true;
-        _gameContainer.SaveRoot!.TrickList.Add(newCard);
+        gameContainer.SaveRoot!.TrickList.Add(newCard);
         TradeCard(index, newCard);
-        if (_gameContainer.SaveRoot.TrickList.Count == 3)
+        if (gameContainer.SaveRoot.TrickList.Count == 3)
         {
-            await _gameContainer.EndTrickAsync!.Invoke();
+            await gameContainer.EndTrickAsync!.Invoke();
         }
         else
         {
-            await _gameContainer.ContinueTrickAsync!.Invoke();
+            await gameContainer.ContinueTrickAsync!.Invoke();
         }
     }
     public Task AnimateWinAsync(int wins)
@@ -247,6 +241,6 @@ public class SnagTrickObservable : BasicTrickAreaObservable<EnumSuitList, SnagCa
     }
     public SnagCardGamePlayerItem GetSpecificPlayer(int id)
     {
-        return _gameContainer.PlayerList![id];
+        return gameContainer.PlayerList![id];
     }
 }

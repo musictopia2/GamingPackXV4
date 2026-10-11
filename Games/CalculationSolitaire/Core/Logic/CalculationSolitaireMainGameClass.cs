@@ -1,18 +1,14 @@
 namespace CalculationSolitaire.Core.Logic;
 [SingletonGame]
-public class CalculationSolitaireMainGameClass : SolitaireGameClass<CalculationSolitaireSaveInfo>
+public class CalculationSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<CalculationSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    public CalculationSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-    }
     protected async override Task ContinueOpenSavedAsync()
     {
         //anything else you need will be here
@@ -31,7 +27,7 @@ public class CalculationSolitaireMainGameClass : SolitaireGameClass<CalculationS
     }
     protected override void AfterShuffleCards()
     {
-        DeckRegularDict<SolitaireCard> output = new();
+        DeckRegularDict<SolitaireCard> output = [];
         4.Times(x =>
         {
             var temps = CardList!.Where(items => items.Value.Value == x).ToRegularDeckDict();

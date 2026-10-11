@@ -5,11 +5,11 @@ namespace Pinochle2Player.Core.Data;
 public partial class Pinochle2PlayerVMData : ITrickCardGamesData<Pinochle2PlayerCardInformation, EnumSuitList>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumSuitList TrumpSuit { get; set; }
+    public partial EnumSuitList TrumpSuit { get; set; }
     [LabelColumn]
     public string DeckCount => Deck1.TextToAppear;
     public Pinochle2PlayerVMData(CommandContainer command,
@@ -36,4 +36,8 @@ public partial class Pinochle2PlayerVMData : ITrickCardGamesData<Pinochle2Player
     public ScoreGuideViewModel Guide1;
     public HandObservable<Pinochle2PlayerCardInformation> YourMelds;
     public HandObservable<Pinochle2PlayerCardInformation> OpponentMelds;
+    public void RefreshDeckCount()
+    {
+        OnLabelValueChanged(nameof(DeckCount));
+    }
 }

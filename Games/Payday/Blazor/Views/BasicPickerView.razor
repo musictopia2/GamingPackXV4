@@ -1,15 +1,20 @@
 ﻿@typeparam V
-@if (VMData == null)
+@inherits BasicSubmitView<V>
+@if (VMData is null || DataContext is null)
 {
     return;
 }
-<StackLayout>
-    <StackItem>
-        <ListChooserBlazor TextHeight="6vh" ListPicker="VMData.PopUpList" />
-    </StackItem>
-    <StackItem>
-        <GameButtonComponent 
-                         CommandObject="SubmitCommand"
-                         Display="Submit" />
-    </StackItem>
-</StackLayout>
+<ActionContentView Key="@PaydayActions.Popups">
+
+    
+
+    <StackLayout>
+        <StackItem>
+            <ListChooserBlazor TextHeight="6vh" ListPicker="VMData.PopUpList" />
+        </StackItem>
+        <StackItem>
+            <GameButtonComponent CommandObject="SubmitCommand"
+                                 Display="Submit" />
+        </StackItem>
+    </StackLayout>
+</ActionContentView>

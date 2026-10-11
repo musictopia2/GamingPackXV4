@@ -93,25 +93,25 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         {
             case EnumCategory.Play2:
                 {
-                    thisList = new() { "Play 2", "numbers", "to help", "you reach", "21!" };
+                    thisList = ["Play 2", "numbers", "to help", "you reach", "21!"];
                     break;
                 }
 
             case EnumCategory.Slide:
                 {
-                    thisList = new() { DeckObject.Value.ToString(), "", "SLIDE" };
+                    thisList = [DeckObject.Value.ToString(), "", "SLIDE"];
                     break;
                 }
 
             case EnumCategory.Switch:
                 {
-                    thisList = new() { "Switch", "", "Direction" };
+                    thisList = ["Switch", "", "Direction"];
                     break;
                 }
 
             case EnumCategory.Take2:
                 {
-                    thisList = new() { "Take 2", "cards to", "add to", "your", "Hand!" };
+                    thisList = ["Take 2", "cards to", "add to", "your", "Hand!"];
                     break;
                 }
 
@@ -217,12 +217,12 @@ public class CardGraphicsBlazor : BaseDeckGraphics<SorryCardGameCardInformation>
         if (DeckObject.Sorry == EnumSorry.At21)
         {
             DrawRoundedRectangle(tempRect, cc1.Red);
-            otherList = new() { "Play When", "Opponent", "Reaches 21!" };
+            otherList = ["Play When", "Opponent", "Reaches 21!"];
         }
         else if (DeckObject.Sorry == EnumSorry.Regular)
         {
             DrawRoundedRectangle(tempRect, cc1.Gray);
-            otherList = new() { "Flip Another", "Player Back", "To Start" };
+            otherList = ["Flip Another", "Player Back", "To Start"];
         }
         else
         {

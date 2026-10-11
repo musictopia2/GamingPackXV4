@@ -1,7 +1,9 @@
 ﻿namespace Mastermind.Core.Data;
-public class Bead
+[UseStateChanged]
+public partial class Bead
 {
-    public EnumColorPossibilities ColorChosen { get; set; } = EnumColorPossibilities.None;
+    [StateProperty]
+    public partial EnumColorPossibilities ColorChosen { get; set; }
     public bool IsEnabled { get; set; }
     public bool DidCheck { get; set; }
     public Guess? CurrentGuess; // hopefully no binding.  however, this is needed so when i get the bead, i have the guess involved for this.

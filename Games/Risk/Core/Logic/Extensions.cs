@@ -75,10 +75,10 @@ public static class Extensions
                 throw new CustomBasicException("Must have between 1 and 3 armies");
             }
             container.SaveRoot!.ArmiesInBattle = howMany; //start with this.
-            BasicList<string> list = new()
-        {
+            BasicList<string> list =
+        [
             "1 Army"
-        };
+        ];
             if (howMany >= 2)
             {
                 list.Add("2 Armies");

@@ -3,7 +3,7 @@ namespace FillOrBust.Core.Data;
 public partial class FillOrBustPlayerItem : PlayerSingleHand<FillOrBustCardInformation>
 {
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

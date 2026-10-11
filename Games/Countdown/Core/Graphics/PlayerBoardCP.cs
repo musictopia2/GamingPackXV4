@@ -1,13 +1,9 @@
 ﻿namespace Countdown.Core.Graphics;
 [InstanceGame]
-public class PlayerBoardCP
+public class PlayerBoardCP(CountdownGameContainer gameContainer)
 {
-    public readonly CountdownGameContainer GameContainer;
-    private readonly BasicList<SimpleNumber> _thisList = new();
-    public PlayerBoardCP(CountdownGameContainer gameContainer)
-    {
-        GameContainer = gameContainer;
-    }
+    public readonly CountdownGameContainer GameContainer = gameContainer;
+    private readonly BasicList<SimpleNumber> _thisList = [];
     public SizeF OriginalSize = new(322, 100);
     public SizeF SpaceSize = new(60, 40);
     private void CreateSpaces(CountdownPlayerItem player)

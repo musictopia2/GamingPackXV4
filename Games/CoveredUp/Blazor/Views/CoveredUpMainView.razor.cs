@@ -3,14 +3,14 @@ public partial class CoveredUpMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private CoveredUpVMData? _vmData;
     private CoveredUpGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<CoveredUpVMData>();
-        _gameContainer = aa1.Resolver.Resolve<CoveredUpGameContainer>();
+        _vmData = Resolver!.Resolve<CoveredUpVMData>();
+        _gameContainer = Resolver.Resolve<CoveredUpGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(CoveredUpVMData.NormalTurn))
             .AddLabel("Round", nameof(CoveredUpVMData.Round))

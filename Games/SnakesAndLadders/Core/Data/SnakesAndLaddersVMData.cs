@@ -1,23 +1,16 @@
 namespace SnakesAndLadders.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
-public partial class SnakesAndLaddersVMData : IViewModelData, ICup<SimpleDice>, IBasicEnableProcess
+public partial class SnakesAndLaddersVMData(CommandContainer command, IGamePackageResolver resolver) : IViewModelData, ICup<SimpleDice>, IBasicEnableProcess
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
-    private readonly CommandContainer _command;
-    private readonly IGamePackageResolver _resolver;
+    public partial string Status { get; set; } = "";
     public DiceCup<SimpleDice>? Cup { get; set; }
-    public SnakesAndLaddersVMData(CommandContainer command, IGamePackageResolver resolver)
-    {
-        _command = command;
-        _resolver = resolver;
-    }
     public void LoadCup(SnakesAndLaddersSaveInfo saveRoot, bool autoResume)
     {
-        Cup = new DiceCup<SimpleDice>(saveRoot.DiceList, _resolver, _command);
+        Cup = new DiceCup<SimpleDice>(saveRoot.DiceList, resolver, command);
         Cup.SendEnableProcesses(this, () =>
         {
             return false; //because you can't click the dice.

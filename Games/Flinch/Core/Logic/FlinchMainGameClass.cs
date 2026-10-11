@@ -9,7 +9,7 @@ public class FlinchMainGameClass
     private readonly FlinchGameContainer _gameContainer;
     private readonly FlinchComputerAI _ai;
     private readonly IToast _toast;
-    internal BasicList<ComputerData> ComputerList { get; set; } = new();
+    internal BasicList<ComputerData> ComputerList { get; set; } = [];
     public FlinchMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
         BasicData basicData,
@@ -81,7 +81,7 @@ public class FlinchMainGameClass
     protected override void PrepStartTurn()
     {
         base.PrepStartTurn();
-        ComputerList = new();
+        ComputerList = [];
     }
     private void LoadControls()
     {
@@ -175,10 +175,7 @@ public class FlinchMainGameClass
     public override async Task StartNewTurnAsync()
     {
         await base.StartNewTurnAsync();
-        if (_gameContainer.LoadPlayerPilesAsync != null)
-        {
-            await _gameContainer.LoadPlayerPilesAsync.Invoke(); //i think.
-        }
+        _gameContainer.LoadPlayerPiles?.Invoke();
         await StartDrawingAsync();
     }
     public override async Task EndTurnAsync()
@@ -330,7 +327,6 @@ public class FlinchMainGameClass
         {
             throw new CustomBasicException($"After removing a card, must have less than 5 cards left for {SingleInfo.NickName}");
         }
-        _command.UpdateAll();
     }
     protected override async Task AfterDrawingAsync()
     {
@@ -403,7 +399,6 @@ public class FlinchMainGameClass
         await AnimateDiscardAsync(thisCard, pile, EnumAnimcationDirection.StartUpToCard);
         _model.DiscardPiles!.AddCardToPile(pile, thisCard);
         UpdateDiscardData(SingleInfo, pile);
-        _command.UpdateAll();
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.5);
@@ -524,13 +519,11 @@ public class FlinchMainGameClass
             await AnimateDiscardAsync(thisCard, discardNum, EnumAnimcationDirection.StartCardToUp);
             _model.DiscardPiles!.UnselectAllCards();
         }
-        _command.UpdateAll();
         if (pile > -1)
         {
             var npile = _model.PublicPiles!.PileList[pile];
             await Aggregator.AnimateCardAsync(thisCard, EnumAnimcationDirection.StartDownToCard, "public", npile);
             _model.PublicPiles.AddCardToPile(pile, thisCard);
-            _command.UpdateAll();
             if (_model.PublicPiles.NeedToRemovePile(pile))
             {
                 if (Test!.NoAnimations == false)

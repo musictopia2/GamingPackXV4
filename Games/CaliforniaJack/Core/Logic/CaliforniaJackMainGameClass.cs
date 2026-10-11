@@ -1,41 +1,30 @@
 namespace CaliforniaJack.Core.Logic;
 [SingletonGame]
-public class CaliforniaJackMainGameClass
-    : TrickGameClass<EnumSuitList, CaliforniaJackCardInformation, CaliforniaJackPlayerItem, CaliforniaJackSaveInfo>
+public class CaliforniaJackMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    CaliforniaJackVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<CaliforniaJackCardInformation> cardInfo,
+    CommandContainer command,
+    CaliforniaJackGameContainer gameContainer,
+    ITrickData trickData,
+    ITrickPlay trickPlay,
+    IAdvancedTrickProcesses aTrick,
+    ISystemError error,
+    IToast toast
+        )
+        : TrickGameClass<EnumSuitList, CaliforniaJackCardInformation, CaliforniaJackPlayerItem, CaliforniaJackSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
       , IStartNewGame, ISerializable
 {
-    private readonly CaliforniaJackVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly CaliforniaJackGameContainer _gameContainer; //if we don't need it, take it out.
-    private readonly IAdvancedTrickProcesses _aTrick;
-    public CaliforniaJackMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        CaliforniaJackVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<CaliforniaJackCardInformation> cardInfo,
-        CommandContainer command,
-        CaliforniaJackGameContainer gameContainer,
-        ITrickData trickData,
-        ITrickPlay trickPlay,
-        IAdvancedTrickProcesses aTrick,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _aTrick = aTrick;
-    }
     public override async Task FinishGetSavedAsync()
     {
         LoadControls();
         LoadVM();
         await base.FinishGetSavedAsync();
-        _aTrick!.LoadGame();
+        aTrick!.LoadGame();
     }
     private void LoadControls()
     {
@@ -71,10 +60,10 @@ public class CaliforniaJackMainGameClass
     }
     protected override async Task LastPartOfSetUpBeforeBindingsAsync()
     {
-        var thisCard = _model!.Deck1!.RevealCard();
+        var thisCard = currentMod!.Deck1!.RevealCard();
         SaveRoot!.TrumpSuit = thisCard.Suit;
         SaveRoot.CardList.Clear();
-        _aTrick!.ClearBoard();
+        aTrick!.ClearBoard();
         await base.LastPartOfSetUpBeforeBindingsAsync();
     }
     public override async Task StartNewTurnAsync()
@@ -86,7 +75,7 @@ public class CaliforniaJackMainGameClass
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         this.ShowTurn();
         await SaveStateAsync();
@@ -164,25 +153,24 @@ public class CaliforniaJackMainGameClass
         CaliforniaJackPlayerItem thisPlayer = PlayerList![wins];
         thisPlayer.TricksWon++;
         CalculatePointsSoFar(trickList, wins);
-        await _aTrick!.AnimateWinAsync(wins);
+        await aTrick!.AnimateWinAsync(wins);
         if (SingleInfo!.MainHandList.Count == 0)
         {
             await EndRoundAsync();
             return;
         }
-        _model!.PlayerHand1!.EndTurn();
+        currentMod!.PlayerHand1!.EndTurn();
         WhoTurn = wins;
         await StartNewTrickAsync();
     }
     private async Task StartNewTrickAsync()
     {
-        _aTrick!.ClearBoard();
-        _command.UpdateAll();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
-        if (_model.Deck1!.IsEndOfDeck() == false)
+        aTrick!.ClearBoard();
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
+        if (currentMod.Deck1!.IsEndOfDeck() == false)
         {
             CaliforniaJackCardInformation thisCard;
-            thisCard = _model.Deck1.DrawCard();
+            thisCard = currentMod.Deck1.DrawCard();
             SingleInfo = PlayerList!.GetWhoPlayer();
             SingleInfo.MainHandList.Add(thisCard);
             if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
@@ -190,7 +178,6 @@ public class CaliforniaJackMainGameClass
                 thisCard.Drew = true;
                 SortCards();
             }
-            _command.UpdateAll();
             if (Test!.NoAnimations == false)
             {
                 await Delay!.DelaySeconds(1);
@@ -204,9 +191,8 @@ public class CaliforniaJackMainGameClass
             {
                 tempPlayer = PlayerList[1];
             }
-            thisCard = _model.Deck1.DrawCard();
+            thisCard = currentMod.Deck1.DrawCard();
             tempPlayer.MainHandList.Add(thisCard);
-            _command.UpdateAll();
             if (tempPlayer.PlayerCategory == EnumPlayerCategory.Self)
             {
                 thisCard.Drew = true;
@@ -282,7 +268,7 @@ public class CaliforniaJackMainGameClass
             }
             return 1;
         }
-        return _gameContainer.Random.GetRandomNumber(2);
+        return gameContainer.Random.GetRandomNumber(2);
     }
     private async Task GameOverAsync()
     {

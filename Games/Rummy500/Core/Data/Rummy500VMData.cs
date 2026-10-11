@@ -5,9 +5,9 @@ namespace Rummy500.Core.Data;
 public partial class Rummy500VMData : IBasicCardGamesData<RegularRummyCard>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public Rummy500VMData(CommandContainer command)
     {
         Deck1 = new DeckObservablePile<RegularRummyCard>(command);

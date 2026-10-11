@@ -1,21 +1,4 @@
 namespace Checkers.Core.ViewModels;
-public class CheckersShellViewModel : BasicBoardGamesShellViewModel<CheckersPlayerItem>
+public class CheckersShellViewModel(IGamePackageResolver mainContainer, CommandContainer container, IGameInfo gameData, BasicData basicData, IMultiplayerSaveState save, TestOptions test, IEventAggregator aggregator, IToast toast) : BeginningColorShellViewModel<CheckersPlayerItem>(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
 {
-    public CheckersShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        BasicData basicData,
-        IMultiplayerSaveState save,
-        TestOptions test,
-        IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<CheckersMainViewModel>();
-        return model;
-    }
 }

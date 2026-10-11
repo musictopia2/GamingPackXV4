@@ -1,14 +1,14 @@
 namespace DummyRummy.Blazor.Views;
 public partial class DummyRummyMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private DummyRummyVMData? _vmData;
     private DummyRummyGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<DummyRummyVMData>();
-        _gameContainer = aa1.Resolver.Resolve<DummyRummyGameContainer>();
+        _vmData = Resolver!.Resolve<DummyRummyVMData>();
+        _gameContainer = Resolver.Resolve<DummyRummyGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(DummyRummyVMData.NormalTurn))
            .AddLabel("Status", nameof(DummyRummyVMData.Status))

@@ -1,15 +1,15 @@
 namespace Cribbage.Blazor.Views;
 public partial class CribbageMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private CribbageVMData? _vmData;
     private CribbageGameContainer? _gameContainer;
-    private readonly BasicList<LabelGridModel> _counts = new();
+    private readonly BasicList<LabelGridModel> _counts = [];
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<CribbageVMData>();
-        _gameContainer = aa1.Resolver.Resolve<CribbageGameContainer>();
+        _vmData = Resolver!.Resolve<CribbageVMData>();
+        _gameContainer = Resolver.Resolve<CribbageGameContainer>();
         _labels.AddLabel("Turn", nameof(CribbageVMData.NormalTurn))
             .AddLabel("Status", nameof(CribbageVMData.Status))
             .AddLabel("Dealer", nameof(CribbageVMData.Dealer));

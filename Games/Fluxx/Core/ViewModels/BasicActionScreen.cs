@@ -1,5 +1,5 @@
 ﻿namespace Fluxx.Core.ViewModels;
-public abstract partial class BasicActionScreen : ScreenViewModel, IBlankGameVM, IShowKeeperVM
+public abstract partial class BasicActionScreen : IShowKeeperVM
 {
     private readonly KeeperContainer _keeperContainer;
     private readonly FluxxDelegates _delegates;
@@ -8,9 +8,8 @@ public abstract partial class BasicActionScreen : ScreenViewModel, IBlankGameVM,
         KeeperContainer keeperContainer,
         FluxxDelegates delegates,
         IFluxxEvent fluxxEvent,
-        BasicActionLogic basicActionLogic,
-        IEventAggregator aggregator
-        ) : base(aggregator)
+        BasicActionLogic basicActionLogic
+        )
     {
         GameContainer = gameContainer;
         ActionContainer = actionContainer;
@@ -37,7 +36,7 @@ public abstract partial class BasicActionScreen : ScreenViewModel, IBlankGameVM,
             throw new CustomBasicException("Nobody is loading the keeper screen.  Rethink");
         }
         _keeperContainer.ShowKeepers();
-        await _delegates.LoadKeeperScreenAsync.Invoke(_keeperContainer);
+        await _delegates.LoadKeeperScreenAsync.Invoke();
     }
     public bool ButtonChooseCardVisible { get; set; }
 }

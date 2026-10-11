@@ -1,4 +1,5 @@
 ﻿namespace Xactika.Core.Logic;
+[UseStateChanged]
 public partial class ChooseShapeObservable : SimpleControlObservable
 {
     private readonly XactikaGameContainer _gameContainer;
@@ -8,7 +9,6 @@ public partial class ChooseShapeObservable : SimpleControlObservable
         CreateCommands();
     }
     partial void CreateCommands();
-
     private EnumShapes _shapeChosen = EnumShapes.None;
     public EnumShapes ShapeChosen
     {
@@ -25,9 +25,10 @@ public partial class ChooseShapeObservable : SimpleControlObservable
         }
     }
     public int HowMany { get; set; } = 0;
-    public bool Visible { get; set; }
+    [StateProperty]
+    public partial bool Visible { get; set; }
     public ControlCommand? ShapeSelectedCommand { get; set; }
-    public BasicList<PieceModel> PieceList { get; set; } = new();
+    public BasicList<PieceModel> PieceList { get; set; } = [];
     [Command(EnumCommandCategory.Control)]
     private void ProcessPieceSelected(PieceModel piece)
     {
@@ -49,7 +50,6 @@ public partial class ChooseShapeObservable : SimpleControlObservable
     {
         ShapeSelectedCommand!.ReportCanExecuteChange();
     }
-    protected override void PrivateEnableAlways() { }
     public void ChoosePiece(EnumShapes shape)
     {
         if (PieceList.Count > 0)
@@ -68,6 +68,7 @@ public partial class ChooseShapeObservable : SimpleControlObservable
             PieceList.ReplaceAllWithGivenItem(newPiece);
         }
         Visible = true;
+        OnStateChanged();
     }
     public void Reset()
     {
@@ -75,10 +76,11 @@ public partial class ChooseShapeObservable : SimpleControlObservable
         HowMany = 0;
         _gameContainer.SaveRoot!.ShapeChosen = EnumShapes.None;
         Visible = false;
+        OnStateChanged();
     }
     public void LoadPieceList(XactikaCardInformation card)
     {
-        BasicList<PieceModel> tempList = new();
+        BasicList<PieceModel> tempList = [];
         PieceModel thisPiece = new();
         thisPiece.HowMany = card.HowManyBalls;
         thisPiece.ShapeUsed = EnumShapes.Balls;
@@ -97,5 +99,6 @@ public partial class ChooseShapeObservable : SimpleControlObservable
         tempList.Add(thisPiece);
         PieceList.ReplaceRange(tempList);
         Visible = true;
+        OnStateChanged();
     }
 }

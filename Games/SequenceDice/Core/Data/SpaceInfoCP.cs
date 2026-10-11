@@ -1,10 +1,15 @@
 ﻿namespace SequenceDice.Core.Data;
-public class SpaceInfoCP : IBasicSpace
+
+[UseStateChanged]
+public partial class SpaceInfoCP : IBasicSpace
 {
     public Vector Vector { get; set; }
-    public int Player { get; set; }
-    public string Color { get; set; } = cs1.Transparent;
-    public bool WasRecent { get; set; }
+    [StateProperty]
+    public partial int Player { get; set; }
+    [StateProperty]
+    public partial string Color { get; set; } = cs1.Transparent;
+    [StateProperty]
+    public partial bool WasRecent { get; set; }
     public int Number { get; set; }
     public void ClearSpace()
     {

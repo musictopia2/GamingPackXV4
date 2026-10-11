@@ -21,7 +21,7 @@ public partial class RackoUI
     }
     private BasicList<RackoCardInformation>? _cardList;
     private BasicList<int>? _otherList;
-    protected override void OnParametersSet()
+    private void Refresh()
     {
         var selfPlayer = GameContainer!.PlayerList!.GetSelf();
         _cardList = selfPlayer.MainHandList.ToBasicList();
@@ -29,13 +29,19 @@ public partial class RackoUI
         int x;
         int starts = GameContainer.PlayerList.Count + 2;
         int diffs = starts;
-        _otherList = new();
+        _otherList = [];
         for (x = 1; x <= 10; x++)
         {
             _otherList.Add(starts);
             starts += diffs;
         }
         _otherList.Reverse();
+    }
+
+    protected override void OnParametersSet()
+    {
+        Refresh();
+        
         base.OnParametersSet();
     }
     private string GetLabel(RackoCardInformation card)

@@ -1,36 +1,30 @@
 ﻿namespace ClueBoardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class GameBoardProcesses
+public class GameBoardProcesses(ClueBoardGameGameContainer gameContainer, GameBoardGraphicsCP imageBoard)
 {
-    private readonly ClueBoardGameGameContainer _gameContainer;
-    private readonly GameBoardGraphicsCP _imageBoard;
-    public Dictionary<int, FieldInfo> FieldList = new();
-    public GameBoardProcesses(ClueBoardGameGameContainer gameContainer, GameBoardGraphicsCP imageBoard)
-    {
-        _gameContainer = gameContainer;
-        _imageBoard = imageBoard;
-    }
+    public Dictionary<int, FieldInfo> FieldList = [];
+
     public PredictionInfo Solution
     {
         get
         {
-            return _gameContainer.SaveRoot!.Solution;
+            return gameContainer.SaveRoot!.Solution;
         }
         set
         {
-            _gameContainer.SaveRoot!.Solution = value;
+            gameContainer.SaveRoot!.Solution = value;
         }
     }
     public Dictionary<int, MoveInfo> PreviousMoves //i think i can save as dictionary now.
     {
         get
         {
-            return _gameContainer.SaveRoot!.PreviousMoves;
+            return gameContainer.SaveRoot!.PreviousMoves;
         }
         set
         {
-            _gameContainer.SaveRoot!.PreviousMoves = value;
+            gameContainer.SaveRoot!.PreviousMoves = value;
         }
     }
     public void LoadSavedGame()
@@ -40,15 +34,15 @@ public class GameBoardProcesses
     }
     public void RepaintBoard()
     {
-        _gameContainer.RepaintBoard();
+        gameContainer.RepaintBoard();
     }
     public void NewTurn()
     {
-        _gameContainer.Aggregator.Publish(new NewTurnEventModel());
+        gameContainer.Aggregator.Publish(new NewTurnEventModel());
     }
     private bool CharacterOnSpace(int space)
     {
-        return _gameContainer.CharacterList.Values.Any(items => items.Space == space);
+        return gameContainer.CharacterList.Values.Any(items => items.Space == space);
     }
     private static int FindSpace(int whatNumber)
     {
@@ -89,7 +83,7 @@ public class GameBoardProcesses
     public void LoadCharacters(BasicList<EnumNameList> newCol)
     {
         int x;
-        _gameContainer.CharacterList.Clear();
+        gameContainer.CharacterList.Clear();
         int newSpace;
         for (x = 1; x <= newCol.Count; x++)
         {
@@ -108,7 +102,7 @@ public class GameBoardProcesses
             };
             thisCharacter.FirstSpace = newSpace;
             thisCharacter.FirstNumber = x;
-            _gameContainer.CharacterList.Add(thisCharacter);
+            gameContainer.CharacterList.Add(thisCharacter);
         }
     }
     public void LoadCharacters()
@@ -125,12 +119,12 @@ public class GameBoardProcesses
     }
     public void LoadColorsForCharacters()
     {
-        _gameContainer.PlayerList!.ForEach(thisPlayer => _gameContainer.CharacterList.PlayerChoseColor(thisPlayer));
+        gameContainer.PlayerList!.ForEach(thisPlayer => gameContainer.CharacterList.PlayerChoseColor(thisPlayer));
     }
     public void PlaceWeapons()
     {
-        _gameContainer.WeaponList.PlaceWeaponsInRooms();
-        if (_gameContainer.WeaponList.Values.Any(items => items.Room == 0))
+        gameContainer.WeaponList.PlaceWeaponsInRooms();
+        if (gameContainer.WeaponList.Values.Any(items => items.Room == 0))
         {
             throw new CustomBasicException("Failed to place weapons");
         }
@@ -138,7 +132,7 @@ public class GameBoardProcesses
     }
     public void ClearGame(bool alsoLoadCharacters = true)
     {
-        foreach (var thisCharacter in _gameContainer.CharacterList.Values)
+        foreach (var thisCharacter in gameContainer.CharacterList.Values)
         {
             thisCharacter.ComputerData.CluesGiven.Clear();
             thisCharacter.ComputerData.CluesReceived.Clear();
@@ -149,23 +143,23 @@ public class GameBoardProcesses
         if (alsoLoadCharacters)
         {
             LoadCharacters();
-            _gameContainer.CurrentCharacter = _gameContainer.CharacterList[1];
+            gameContainer.CurrentCharacter = gameContainer.CharacterList[1];
         }
         PlaceWeapons();
     }
     public void ResetMoves()
     {
-        PreviousMoves = new Dictionary<int, MoveInfo>();
+        PreviousMoves = [];
         var thisMove = new MoveInfo();
-        if (_gameContainer.CurrentCharacter!.Space > 0 || _gameContainer.CurrentCharacter.CurrentRoom > 0)
+        if (gameContainer.CurrentCharacter!.Space > 0 || gameContainer.CurrentCharacter.CurrentRoom > 0)
         {
-            if (_gameContainer.CurrentCharacter.Space > 0)
+            if (gameContainer.CurrentCharacter.Space > 0)
             {
-                thisMove.SpaceNumber = _gameContainer.CurrentCharacter.Space;
+                thisMove.SpaceNumber = gameContainer.CurrentCharacter.Space;
             }
             else
             {
-                thisMove.RoomNumber = _gameContainer.CurrentCharacter.CurrentRoom;
+                thisMove.RoomNumber = gameContainer.CurrentCharacter.CurrentRoom;
             }
         }
         PreviousMoves.Add(thisMove);
@@ -177,36 +171,36 @@ public class GameBoardProcesses
     public void ChooseScene()
     {
         Solution = new PredictionInfo();
-        WeaponInfo thisWeapon = _gameContainer.WeaponList.GetRandomItem();
+        WeaponInfo thisWeapon = gameContainer.WeaponList.GetRandomItem();
         if (thisWeapon.Name == "")
         {
             throw new CustomBasicException("Weapon must have name to be part of solution");
         }
         Solution.WeaponName = thisWeapon.Name;
-        var thisCharacter = _gameContainer.CharacterList.GetRandomItem();
+        var thisCharacter = gameContainer.CharacterList.GetRandomItem();
         Solution.CharacterName = thisCharacter.Name;
-        var thisRoom = _gameContainer.RoomList.GetRandomItem();
+        var thisRoom = gameContainer.RoomList.GetRandomItem();
         Solution.RoomName = thisRoom.Name;
     }
     public void ComputerMoveToSpace(int space)
     {
-        _gameContainer.CurrentCharacter!.Space = space;
-        if (_gameContainer.CurrentCharacter.Space > 0)
+        gameContainer.CurrentCharacter!.Space = space;
+        if (gameContainer.CurrentCharacter.Space > 0)
         {
             return;
         }
-        _gameContainer.CurrentCharacter.PreviousRoom = 0;
-        _gameContainer.CurrentCharacter.CurrentRoom = 0;
+        gameContainer.CurrentCharacter.PreviousRoom = 0;
+        gameContainer.CurrentCharacter.CurrentRoom = 0;
     }
     public void ComputerMoveToRoom(int room)
     {
-        _gameContainer.CurrentCharacter!.Space = 0;
-        _gameContainer.CurrentCharacter.PreviousRoom = room;
-        _gameContainer.CurrentCharacter.CurrentRoom = room;
+        gameContainer.CurrentCharacter!.Space = 0;
+        gameContainer.CurrentCharacter.PreviousRoom = room;
+        gameContainer.CurrentCharacter.CurrentRoom = room;
     }
     public BasicList<FieldInfo> GetBlockList()
     {
-        BasicList<FieldInfo> output = new();
+        BasicList<FieldInfo> output = [];
         int x = 0;
         foreach (var thisField in FieldList.Values)
         {
@@ -236,11 +230,11 @@ public class GameBoardProcesses
     }
     public BasicList<MoveInfo> GetPossibleMoveList()
     {
-        BasicList<MoveInfo> output = new();
+        BasicList<MoveInfo> output = [];
         MoveInfo thisMove;
-        if (_gameContainer.CurrentCharacter!.Space > 0)
+        if (gameContainer.CurrentCharacter!.Space > 0)
         {
-            var thisField = FieldList[_gameContainer.CurrentCharacter.Space];
+            var thisField = FieldList[gameContainer.CurrentCharacter.Space];
             foreach (var tempMove in thisField.Neighbors.Values)
             {
                 if (tempMove.SpaceNumber > 0)
@@ -260,17 +254,17 @@ public class GameBoardProcesses
             }
             return output;
         }
-        if (_gameContainer.CurrentCharacter.CurrentRoom == 0 && _gameContainer.CurrentCharacter.Space == 0)
+        if (gameContainer.CurrentCharacter.CurrentRoom == 0 && gameContainer.CurrentCharacter.Space == 0)
         {
-            if (CanMoveToRoom(_gameContainer.CurrentCharacter.FirstSpace))
+            if (CanMoveToRoom(gameContainer.CurrentCharacter.FirstSpace))
             {
                 thisMove = new ();
-                thisMove.SpaceNumber = _gameContainer.CurrentCharacter.FirstSpace;
+                thisMove.SpaceNumber = gameContainer.CurrentCharacter.FirstSpace;
                 output.Add(thisMove);
             }
             return output;
         }
-        int count = _gameContainer.RoomList.Count;
+        int count = gameContainer.RoomList.Count;
         count.Times(y =>
         {
             if (CanMoveToRoom(y))
@@ -280,7 +274,7 @@ public class GameBoardProcesses
                 output.Add(thisMove);
             }
         });
-        var thisRoom = _gameContainer.RoomList[_gameContainer.CurrentCharacter.CurrentRoom];
+        var thisRoom = gameContainer.RoomList[gameContainer.CurrentCharacter.CurrentRoom];
         count = thisRoom.DoorList.Count;
         count.Times(y =>
         {
@@ -295,9 +289,9 @@ public class GameBoardProcesses
     }
     public bool HasValidMoves(bool afterStartRoll)
     {
-        if (_gameContainer.CurrentCharacter!.Space > 0)
+        if (gameContainer.CurrentCharacter!.Space > 0)
         {
-            var thisField = FieldList[_gameContainer.CurrentCharacter.Space];
+            var thisField = FieldList[gameContainer.CurrentCharacter.Space];
             foreach (var tempMove in thisField.Neighbors.Values)
             {
                 if (tempMove.SpaceNumber > 0)
@@ -317,9 +311,9 @@ public class GameBoardProcesses
             }
             return false;
         }
-        if (_gameContainer.CurrentCharacter.CurrentRoom == 0 && _gameContainer.CurrentCharacter.Space == 0)
+        if (gameContainer.CurrentCharacter.CurrentRoom == 0 && gameContainer.CurrentCharacter.Space == 0)
         {
-            if (CanMoveToSpace(_gameContainer.CurrentCharacter.FirstSpace))
+            if (CanMoveToSpace(gameContainer.CurrentCharacter.FirstSpace))
             {
                 return true;
             }
@@ -329,7 +323,7 @@ public class GameBoardProcesses
         {
             //if you started to roll, then can't transfer rooms.
             //for now, i assume in all other cases, its needed.
-            for (int x = 1; x <= _gameContainer.RoomList.Count; x++)
+            for (int x = 1; x <= gameContainer.RoomList.Count; x++)
             {
                 if (CanMoveToRoom(x))
                 {
@@ -342,7 +336,7 @@ public class GameBoardProcesses
     
     private bool AnyMoveOutOfRoom()
     {
-        var thisRoom = _gameContainer.RoomList[_gameContainer.CurrentCharacter!.CurrentRoom];
+        var thisRoom = gameContainer.RoomList[gameContainer.CurrentCharacter!.CurrentRoom];
         for (int x = 1; x <= thisRoom.DoorList.Count; x++)
         {
             if (CanMoveToSpace(thisRoom.DoorList[x - 1]))
@@ -364,7 +358,7 @@ public class GameBoardProcesses
     //}
     public bool CanMoveToSpace(int space)
     {
-        if (space == _gameContainer.CurrentCharacter!.Space)
+        if (space == gameContainer.CurrentCharacter!.Space)
         {
             return false;
         }
@@ -378,9 +372,9 @@ public class GameBoardProcesses
                 }
             }
         }
-        if (_gameContainer.CurrentCharacter.CurrentRoom == 0 && _gameContainer.CurrentCharacter.Space == 0 && _gameContainer.CurrentCharacter.PreviousRoom == 0)
+        if (gameContainer.CurrentCharacter.CurrentRoom == 0 && gameContainer.CurrentCharacter.Space == 0 && gameContainer.CurrentCharacter.PreviousRoom == 0)
         {
-            if (space == _gameContainer.CurrentCharacter.FirstSpace)
+            if (space == gameContainer.CurrentCharacter.FirstSpace)
             {
                 if (CharacterOnSpace(space) == false)
                 {
@@ -389,9 +383,9 @@ public class GameBoardProcesses
             }
             return false;
         }
-        if (_gameContainer.CurrentCharacter.CurrentRoom == 0 && _gameContainer.CurrentCharacter.PreviousRoom == 0)
+        if (gameContainer.CurrentCharacter.CurrentRoom == 0 && gameContainer.CurrentCharacter.PreviousRoom == 0)
         {
-            var thisField = FieldList[_gameContainer.CurrentCharacter.Space];
+            var thisField = FieldList[gameContainer.CurrentCharacter.Space];
             foreach (var thisMove in thisField.Neighbors.Values)
             {
                 if (thisMove.SpaceNumber == space)
@@ -401,7 +395,7 @@ public class GameBoardProcesses
             }
             return false;
         }
-        var thisRoom = _gameContainer.RoomList[_gameContainer.CurrentCharacter.CurrentRoom];
+        var thisRoom = gameContainer.RoomList[gameContainer.CurrentCharacter.CurrentRoom];
         for (int x = 1; x <= thisRoom.DoorList.Count; x++)
         {
             if (thisRoom.DoorList[x - 1] == space)
@@ -413,16 +407,16 @@ public class GameBoardProcesses
     }
     public bool CanMoveToRoom(int room)
     {
-        var player = _gameContainer.PlayerList!.GetSelf();
-        if (_gameContainer.WhoTurn != player.Id)
+        var player = gameContainer.PlayerList!.GetSelf();
+        if (gameContainer.WhoTurn != player.Id)
         {
             return false; //because its not even your turn.
         }
-        if (_gameContainer.Test!.AllowAnyMove)
+        if (gameContainer.Test!.AllowAnyMove)
         {
             return true; //for testing.
         }
-        if (_gameContainer.CurrentCharacter!.PreviousRoom == room)
+        if (gameContainer.CurrentCharacter!.PreviousRoom == room)
         {
             return false;
         }
@@ -436,17 +430,17 @@ public class GameBoardProcesses
                 }
             }
         }
-        var thisRoom = _gameContainer.RoomList[room];
+        var thisRoom = gameContainer.RoomList[room];
         if (thisRoom.RoomPassage > 0)
         {
-            if (_gameContainer.CurrentCharacter.CurrentRoom == thisRoom.RoomPassage)
+            if (gameContainer.CurrentCharacter.CurrentRoom == thisRoom.RoomPassage)
             {
                 return true;
             }
         }
         for (int x = 1; x <= thisRoom.DoorList.Count; x++)
         {
-            if (thisRoom.DoorList[x - 1] == _gameContainer.CurrentCharacter.Space)
+            if (thisRoom.DoorList[x - 1] == gameContainer.CurrentCharacter.Space)
             {
                 return true;
             }
@@ -459,17 +453,17 @@ public class GameBoardProcesses
         thisMove = new ();
         thisMove.SpaceNumber = space;
         PreviousMoves.Add(thisMove);
-        int previousSpace = _gameContainer.CurrentCharacter!.Space;
-        if (_gameContainer.CurrentCharacter.Space == 0 && _gameContainer.CurrentCharacter.CurrentRoom > 0)
+        int previousSpace = gameContainer.CurrentCharacter!.Space;
+        if (gameContainer.CurrentCharacter.Space == 0 && gameContainer.CurrentCharacter.CurrentRoom > 0)
         {
-            _gameContainer.PreviousRoomForRefreshing = _gameContainer.CurrentCharacter.CurrentRoom;
+            gameContainer.PreviousRoomForRefreshing = gameContainer.CurrentCharacter.CurrentRoom;
         }
         else
         {
-            _gameContainer.PreviousRoomForRefreshing = 0;
+            gameContainer.PreviousRoomForRefreshing = 0;
         }
-        _gameContainer.CurrentCharacter.Space = space;
-        if (_gameContainer.CurrentCharacter.CurrentRoom == 0 && _gameContainer.CurrentCharacter.Space == 0 && _gameContainer.CurrentCharacter.PreviousRoom == 0)
+        gameContainer.CurrentCharacter.Space = space;
+        if (gameContainer.CurrentCharacter.CurrentRoom == 0 && gameContainer.CurrentCharacter.Space == 0 && gameContainer.CurrentCharacter.PreviousRoom == 0)
         {
             RepaintBoard();
             return;
@@ -479,28 +473,28 @@ public class GameBoardProcesses
             RepaintBoard();
             return;
         }
-        int currentRoom = _gameContainer.CurrentCharacter.CurrentRoom;
+        int currentRoom = gameContainer.CurrentCharacter.CurrentRoom;
         thisMove = new ();
         thisMove.RoomNumber = currentRoom;
         PreviousMoves.Add(thisMove);
-        _gameContainer.CurrentCharacter.PreviousRoom = 0;
-        _gameContainer.CurrentCharacter.CurrentRoom = 0;
+        gameContainer.CurrentCharacter.PreviousRoom = 0;
+        gameContainer.CurrentCharacter.CurrentRoom = 0;
         RepaintBoard();
     }
     public void MoveToRoom(int room)
     {
-        _gameContainer.SaveRoot!.MovesLeft = 0;
-        PreviousMoves = new ();
-        _gameContainer.CurrentCharacter!.Space = 0;
-        _gameContainer.CurrentCharacter.CurrentRoom = room;
-        _gameContainer.CurrentCharacter.PreviousRoom = room;
-        _gameContainer.PreviousRoomForRefreshing = room; //try this
+        gameContainer.SaveRoot!.MovesLeft = 0;
+        PreviousMoves = [];
+        gameContainer.CurrentCharacter!.Space = 0;
+        gameContainer.CurrentCharacter.CurrentRoom = room;
+        gameContainer.CurrentCharacter.PreviousRoom = room;
+        gameContainer.PreviousRoomForRefreshing = room; //try this
         RepaintBoard();
     }
     #region "Loading Board Processes"
     private void PopulateRoom(BasicList<int> doorList, int roomNumber, int newRoom = 0)
     {
-        RoomInfo thisRoom = _gameContainer.RoomList[roomNumber];
+        RoomInfo thisRoom = gameContainer.RoomList[roomNumber];
         thisRoom.RoomPassage = newRoom;
         thisRoom.DoorList = doorList.ToBasicList();
     }
@@ -550,8 +544,8 @@ public class GameBoardProcesses
         int x;
         for (x = 1; x <= 9; x++)
         {
-            var ThisRoom = _gameContainer.RoomList[x];
-            ThisRoom.Space = _imageBoard.RoomSpaceInfo(x);
+            var ThisRoom = gameContainer.RoomList[x];
+            ThisRoom.Space = imageBoard.RoomSpaceInfo(x);
             foreach (var ThisRect in ThisRoom.Space.ObjectList)
             {
                 try
@@ -575,8 +569,8 @@ public class GameBoardProcesses
         9.Times(x =>
         {
             RoomInfo thisRoom = new();
-            thisRoom.Name = _imageBoard.RoomName(x);
-            _gameContainer.RoomList.Add(thisRoom);
+            thisRoom.Name = imageBoard.RoomName(x);
+            gameContainer.RoomList.Add(thisRoom);
         });
         SetNeighborsFor(1, 0, 2, 3, 0);
         SetNeighborsFor(2, 0, 0, 4, 1);
@@ -758,58 +752,58 @@ public class GameBoardProcesses
         SetNeighborsFor(178, 179, 177, 175, 0);
         SetNeighborsFor(179, 161, 180, 178, 0);
         SetNeighborsFor(180, 162, 0, 177, 179);
-        BasicList<int> newCol = new()
-        {
+        BasicList<int> newCol =
+        [
             145
-        };
+        ];
         PopulateRoom(newCol, 1, 6);
-        newCol = new()
-        {
+        newCol =
+        [
             161,
             125,
             121,
             160
-        };
+        ];
         PopulateRoom(newCol, 2);
-        newCol = new()
-        {
+        newCol =
+        [
             158
-        };
+        ];
         PopulateRoom(newCol, 3, 8);
-        newCol = new()
-        {
+        newCol =
+        [
             105,
             76
-        };
+        ];
         PopulateRoom(newCol, 4);
-        newCol = new()
-        {
+        newCol =
+        [
             78,
             69
-        };
+        ];
         PopulateRoom(newCol, 5);
-        newCol = new()
-        {
+        newCol =
+        [
             9
-        };
+        ];
         PopulateRoom(newCol, 6, 1);
-        newCol = new()
-        {
+        newCol =
+        [
             7,
             30,
             31
-        };
+        ];
         PopulateRoom(newCol, 7);
-        newCol = new()
-        {
+        newCol =
+        [
             47
-        };
+        ];
         PopulateRoom(newCol, 8, 3);
-        newCol = new()
-        {
+        newCol =
+        [
             65,
             100
-        };
+        ];
         PopulateRoom(newCol, 9);
     }
     #endregion

@@ -1,6 +1,6 @@
 ﻿namespace LifeCardGame.Core.ViewModels;
 [InstanceGame]
-public partial class OtherViewModel : ScreenViewModel, IBlankGameVM
+public partial class OtherViewModel
 {
     private readonly LifeCardGameVMData _model;
     private readonly LifeCardGameMainGameClass _mainGame;
@@ -11,9 +11,8 @@ public partial class OtherViewModel : ScreenViewModel, IBlankGameVM
         LifeCardGameVMData model, 
         LifeCardGameMainGameClass mainGame, 
         LifeCardGameGameContainer gameContainer, 
-        IEventAggregator aggregator,
         IToast toast
-        ) : base(aggregator)
+        )
     {
         CommandContainer = commandContainer;
         _model = model;

@@ -20,8 +20,8 @@ public class LifeBoardGameSaveInfo : BasicSavedGameClass<LifeBoardGamePlayerItem
             }
         }
     }
-    public BasicList<TileInfo> TileList { get; set; } = new();
-    public DeckRegularDict<HouseInfo> HouseList { get; set; } = new();
+    public BasicList<TileInfo> TileList { get; set; } = [];
+    public DeckRegularDict<HouseInfo> HouseList { get; set; } = [];
     public bool WasMarried { get; set; }
     public bool GameStarted { get; set; }
     public bool WasNight { get; set; }
@@ -32,7 +32,7 @@ public class LifeBoardGameSaveInfo : BasicSavedGameClass<LifeBoardGamePlayerItem
     public int NumberRolled { get; set; }
     public int SpinPosition { get; set; }
     public int ChangePosition { get; set; }
-    public BasicList<int> SpinList { get; set; } = new(); //needs this so knows for entertainer getting 100,000 dollars.
+    public BasicList<int> SpinList { get; set; } = []; //needs this so knows for entertainer getting 100,000 dollars.
     public int TemporarySpaceSelected { get; set; }
     private LifeBoardGameVMData? _model;
     internal void LoadMod(LifeBoardGameVMData model)

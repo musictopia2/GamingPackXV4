@@ -1,12 +1,11 @@
 ﻿namespace RageCardGame.Core.ViewModels;
 [InstanceGame]
-public partial class RageBiddingViewModel : ScreenViewModel, IBlankGameVM
+public partial class RageBiddingViewModel
 {
     public readonly RageCardGameVMData Model;
     private readonly IBidProcesses _processes;
-    public RageBiddingViewModel(CommandContainer commandContainer, RageCardGameVMData model, IBidProcesses processes, RageCardGameGameContainer gameContainer, IEventAggregator aggregator) : base(aggregator)
+    public RageBiddingViewModel(CommandContainer commandContainer, RageCardGameVMData model, IBidProcesses processes, RageCardGameGameContainer gameContainer)
     {
-        CommandContainer = commandContainer;
         Model = model;
         _processes = processes;
         GameContainer = gameContainer;
@@ -15,7 +14,6 @@ public partial class RageBiddingViewModel : ScreenViewModel, IBlankGameVM
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    public CommandContainer CommandContainer { get; set; }
     public RageCardGameGameContainer GameContainer { get; }
     public bool CanBid => Model.BidAmount > -1;
     [Command(EnumCommandCategory.Plain)]

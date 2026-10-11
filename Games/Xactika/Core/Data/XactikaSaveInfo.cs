@@ -40,10 +40,7 @@ public class XactikaSaveInfo : BasicSavedTrickGamesClass<EnumShapes, XactikaCard
         {
             if (SetProperty(ref _roundNumber, value))
             {
-                if (_model != null)
-                {
-                    _model.RoundNumber = value;
-                }
+                _model?.RoundNumber = value;
             }
         }
     }
@@ -56,10 +53,7 @@ public class XactikaSaveInfo : BasicSavedTrickGamesClass<EnumShapes, XactikaCard
         {
             if (SetProperty(ref _shapeChosen, value))
             {
-                if (_model != null)
-                {
-                    _model.ShapeChosen = value;
-                }
+                _model?.ShapeChosen = value;
             }
         }
     }

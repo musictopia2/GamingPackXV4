@@ -7,7 +7,7 @@ public partial class SinglePileUI
     public PileInfoCP? SinglePile { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; }
-    private readonly BasicList<PointF> _points = new();
+    private readonly BasicList<PointF> _points = [];
     protected override void OnParametersSet()
     {
         RecalculatePositions();

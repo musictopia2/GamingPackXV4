@@ -1,0 +1,9 @@
+﻿@inherits CascadingGameView<RageCardGamePromptViewModel>
+<StateContentView DataContext="DataContext">
+    @if (DataContext is null)
+    {
+        return;
+    }
+    <RageBiddingView DataContext="DataContext.BidScreen" />
+    <RageColorView DataContext="DataContext.ColorScreen" />
+</StateContentView>

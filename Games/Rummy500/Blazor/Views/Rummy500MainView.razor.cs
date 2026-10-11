@@ -1,14 +1,14 @@
 namespace Rummy500.Blazor.Views;
 public partial class Rummy500MainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private Rummy500VMData? _vmData;
     private Rummy500GameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<Rummy500VMData>();
-        _gameContainer = aa1.Resolver.Resolve<Rummy500GameContainer>();
+        _vmData = Resolver!.Resolve<Rummy500VMData>();
+        _gameContainer = Resolver.Resolve<Rummy500GameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(Rummy500VMData.NormalTurn))
            .AddLabel("Status", nameof(Rummy500VMData.Status));

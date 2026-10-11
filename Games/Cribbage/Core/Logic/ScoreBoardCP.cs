@@ -1,8 +1,8 @@
 ﻿namespace Cribbage.Core.Logic;
 public class ScoreBoardCP
 {
-    private readonly BasicList<ScoreInfo> _tempList = new();
-    public BasicList<ScoreInfo> ScoreList = new();
+    private readonly BasicList<ScoreInfo> _tempList = [];
+    public StateList<ScoreInfo> ScoreList = [];
     public int TotalScore => _tempList.Sum(items => items.Score);
     public void AddScore(string description, int score)
     {

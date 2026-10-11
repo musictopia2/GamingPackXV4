@@ -53,6 +53,12 @@ public class LottoDominosMainGameClass : BasicGameClass<LottoDominosPlayerItem, 
         }
         IsLoaded = true;
     }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        _gameBoard.ReportCanExecuteChange();
+
+    }
     public override async Task SetUpGameAsync(bool isBeginning)
     {
         LoadControls();
@@ -128,7 +134,7 @@ public class LottoDominosMainGameClass : BasicGameClass<LottoDominosPlayerItem, 
     }
     public BasicList<int> GetNumberList()
     {
-        BasicList<int> output = new();
+        BasicList<int> output = [];
         for (int x = 0; x <= 6; x++)
         {
             if (PlayerList.Any(y => y.NumberChosen == x) == false)
@@ -182,7 +188,10 @@ public class LottoDominosMainGameClass : BasicGameClass<LottoDominosPlayerItem, 
     private void AddComputer(int deck)
     {
         if (BasicData.Client == true)
+        {
             return; //host does computer.
+        }
+
         if (SaveRoot!.ComputerList.ObjectExist(deck) == false)
         {
             SimpleDominoInfo thisDomino = _model.DominosList!.GetSpecificItem(deck);

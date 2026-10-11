@@ -1,6 +1,5 @@
 namespace EightOffSolitaire.Core.ViewModels;
 [InstanceGame]
-[UseLabelGrid]
 public partial class EightOffSolitaireMainViewModel : SolitaireMainViewModel<EightOffSolitaireSaveInfo>
 {
     [Command(EnumCommandCategory.Plain)]

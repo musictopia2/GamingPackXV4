@@ -67,7 +67,7 @@ public class ClockSolitaireMainGameClass : RegularDeckOfCardsGameClass<Solitaire
     }
     public async Task ShowWinAsync()
     {
-        _command.UpdateAll();
+        Aggregator.PublishAll(new BeforeGameOverEventModel());
         _toast.ShowSuccessToast("Congratulations, you won");
         await Task.Delay(2000);
         GameGoing = false;
@@ -75,7 +75,7 @@ public class ClockSolitaireMainGameClass : RegularDeckOfCardsGameClass<Solitaire
     }
     public async Task ShowLossAsync()
     {
-        _command.UpdateAll();
+        Aggregator.PublishAll(new BeforeGameOverEventModel());
         _toast.ShowWarningToast("Sorry, you lost");
         await Task.Delay(2000);
         GameGoing = false;

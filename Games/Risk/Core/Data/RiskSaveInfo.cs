@@ -11,10 +11,7 @@ public class RiskSaveInfo : BasicSavedGameClass<RiskPlayerItem>, ISavedCardList<
         {
             if (SetProperty(ref _armiesToPlace, value))
             {
-                if (_model is not null)
-                {
-                    _model.ArmiesToPlace = value;
-                }
+                _model?.ArmiesToPlace = value;
             }
         }
     }
@@ -26,10 +23,7 @@ public class RiskSaveInfo : BasicSavedGameClass<RiskPlayerItem>, ISavedCardList<
         {
             if (SetProperty(ref _bonusReenforcements, value))
             {
-                if (_model is not null)
-                {
-                    _model.BonusReenforcements = value;
-                }
+                _model?.BonusReenforcements = value;
             }
         }
     }
@@ -41,10 +35,7 @@ public class RiskSaveInfo : BasicSavedGameClass<RiskPlayerItem>, ISavedCardList<
         {
             if (SetProperty(ref _instructions, value))
             {
-                if (_model != null)
-                {
-                    _model.Instructions = value;
-                }
+                _model?.Instructions = value;
             }
         }
     }
@@ -55,7 +46,7 @@ public class RiskSaveInfo : BasicSavedGameClass<RiskPlayerItem>, ISavedCardList<
         _model.ArmiesToPlace = ArmiesToPlace;
         _model.BonusReenforcements = BonusReenforcements;
     }
-    public BasicList<TerritoryModel> TerritoryList { get; set; } = new();
+    public BasicList<TerritoryModel> TerritoryList { get; set; } = [];
     public int ArmiesInBattle { get; set; }
     public int NumberDefenseArmies { get; set; }
     public int PreviousTerritory { get; set; }
@@ -63,7 +54,7 @@ public class RiskSaveInfo : BasicSavedGameClass<RiskPlayerItem>, ISavedCardList<
     public bool ConqueredOne { get; set; }
     public EnumStageList Stage { get; set; }
     public int SetsReturned { get; set; }
-    public DeckRegularDict<RiskCardInfo> CardList { get; set; } = new();
+    public DeckRegularDict<RiskCardInfo> CardList { get; set; } = [];
     //looks like we need a way to ignore certain properties from my custom serialization system.
     //could make them fields.  however, i think that ignoring makes more sense.
 

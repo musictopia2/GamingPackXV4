@@ -377,7 +377,6 @@ public class CousinRummyMainGameClass
     {
         PlayerDraws = OtherTurn;
         LeftToDraw = 3;
-        _command.UpdateAll(); //try this too.
         await DrawAsync();
     }
     protected override async Task AfterDrawingAsync()

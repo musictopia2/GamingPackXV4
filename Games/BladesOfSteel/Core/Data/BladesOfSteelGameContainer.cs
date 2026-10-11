@@ -1,19 +1,16 @@
 namespace BladesOfSteel.Core.Data;
 [SingletonGame]
 [AutoReset] //usually needs reset
-public class BladesOfSteelGameContainer : CardGameContainer<RegularSimpleCard, BladesOfSteelPlayerItem, BladesOfSteelSaveInfo>
+public class BladesOfSteelGameContainer(BasicData basicData,
+    TestOptions test,
+    IGameInfo gameInfo,
+    IAsyncDelayer delay,
+    IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver,
+    IListShuffler<RegularSimpleCard> deckList,
+    IRandomGenerator random) : CardGameContainer<RegularSimpleCard, BladesOfSteelPlayerItem, BladesOfSteelSaveInfo>(basicData, test, gameInfo, delay, aggregator, command, resolver, deckList, random)
 {
-    public BladesOfSteelGameContainer(BasicData basicData,
-        TestOptions test,
-        IGameInfo gameInfo,
-        IAsyncDelayer delay,
-        IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver,
-        IListShuffler<RegularSimpleCard> deckList,
-        IRandomGenerator random) : base(basicData, test, gameInfo, delay, aggregator, command, resolver, deckList, random)
-    {
-    }
     internal int OtherTurn
     {
         get

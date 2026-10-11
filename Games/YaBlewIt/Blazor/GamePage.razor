@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="YaBlewItMainViewModel">
+    <MainScreen>
         <YaBlewItMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<YaBlewItPlayerItem>">
-        <MultiplayerOpeningView P="YaBlewItPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="YaBlewItPlayerItem" />
 </CascadingValue>

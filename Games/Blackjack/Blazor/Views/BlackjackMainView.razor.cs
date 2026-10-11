@@ -1,8 +1,8 @@
 namespace Blackjack.Blazor.Views;
 public partial class BlackjackMainView
 {
-    private BasicList<LabelGridModel> WinLabels { get; set; } = new();
-    private BasicList<LabelGridModel> PointLabels { get; set; } = new();
+    private BasicList<LabelGridModel> WinLabels { get; set; } = [];
+    private BasicList<LabelGridModel> PointLabels { get; set; } = [];
     protected override void OnInitialized()
     {
         WinLabels.Clear();

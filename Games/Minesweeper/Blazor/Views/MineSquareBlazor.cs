@@ -22,7 +22,7 @@ public class MineSquareBlazor : GraphicsCommand
             return;
         }
         Square = (MineSquareModel)CommandParameter;
-        ISvg svg = new SVG();
+        SVG svg = new ();
         SvgRenderClass render = new();
         CreateClick(svg);
         svg.ViewBox = "0 0 100 100"; //hopefully this simple.

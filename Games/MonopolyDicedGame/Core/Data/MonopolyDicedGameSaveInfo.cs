@@ -1,15 +1,19 @@
 namespace MonopolyDicedGame.Core.Data;
 [SingletonGame]
-public class MonopolyDicedGameSaveInfo : BasicSavedGameClass<MonopolyDicedGamePlayerItem>, IMappable, ISaveInfo
+[UseStateChanged]
+public partial class MonopolyDicedGameSaveInfo : BasicSavedGameClass<MonopolyDicedGamePlayerItem>, IMappable, ISaveInfo
 {
     readonly MonopolyDicedGameVMData _model;
     public MonopolyDicedGameSaveInfo()
     {
-        _model = aa1.Resolver!.Resolve<MonopolyDicedGameVMData>();
+        _model = Resolver!.Resolve<MonopolyDicedGameVMData>();
     }
-    public int NumberOfHouses { get; set; }
-    public bool HasHotel { get; set; } //if you have all 4 houses, then will be hotel.
-    public int NumberOfCops { get; set; }
+    [StateProperty]
+    public partial int NumberOfHouses { get; set; }
+    [StateProperty]
+    public partial bool HasHotel { get; set; } //if you have all 4 houses, then will be hotel.
+    [StateProperty]
+    public partial int NumberOfCops { get; set; }
     public int TotalGos { get; set; }
     public bool HasAtLeastOnePropertyMonopoly { get; set; }
 
@@ -19,7 +23,7 @@ public class MonopolyDicedGameSaveInfo : BasicSavedGameClass<MonopolyDicedGamePl
     //because too many.
 
     public BasicList<OwnedModel> Owns { get; set; } = [];
-    public BasicList<BasicDiceModel> DiceList { get; set; } = [];
+    public StateList<BasicDiceModel> DiceList { get; set; } = [];
     private int _currentScore;
     public int CurrentScore
     {
@@ -43,5 +47,9 @@ public class MonopolyDicedGameSaveInfo : BasicSavedGameClass<MonopolyDicedGamePl
                 _model.RollNumber = value;
             }
         }
+    }
+    public void UpdateBoard()
+    {
+        StateChanged?.Invoke();
     }
 }

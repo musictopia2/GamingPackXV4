@@ -1,9 +1,7 @@
 namespace Fluxx.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<FluxxShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<FluxxShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
 
     //protected override Task RegisterTestsAsync()
     //{

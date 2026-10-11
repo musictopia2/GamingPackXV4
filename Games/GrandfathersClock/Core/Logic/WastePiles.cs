@@ -1,9 +1,6 @@
 namespace GrandfathersClock.Core.Logic;
-public class WastePiles : WastePilesCP
+public class WastePiles(CommandContainer command) : WastePilesCP(command)
 {
-    public WastePiles(CommandContainer command) : base(command)
-    {
-    }
     public override void ClearBoard(IDeckDict<SolitaireCard> thisCol)
     {
         base.ClearBoard(thisCol);

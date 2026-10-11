@@ -1,18 +1,14 @@
 namespace CaptiveQueensSolitaire.Core.Logic;
 [SingletonGame]
-public class CaptiveQueensSolitaireMainGameClass : SolitaireGameClass<CaptiveQueensSolitaireSaveInfo>
+public class CaptiveQueensSolitaireMainGameClass(ISolitaireData solitaireData1,
+    ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IScoreData score,
+    CommandContainer command,
+    IToast toast,
+    ISystemError error
+        ) : SolitaireGameClass<CaptiveQueensSolitaireSaveInfo>(solitaireData1, thisState, aggregator, score, command, toast, error)
 {
-    public CaptiveQueensSolitaireMainGameClass(ISolitaireData solitaireData1,
-        ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IScoreData score,
-        CommandContainer command,
-        IToast toast,
-        ISystemError error
-        )
-        : base(solitaireData1, thisState, aggregator, score, command, toast, error)
-    {
-    }
     protected async override Task ContinueOpenSavedAsync()
     {
         //anything else you need will be here
@@ -31,13 +27,13 @@ public class CaptiveQueensSolitaireMainGameClass : SolitaireGameClass<CaptiveQue
     }
     protected override void AfterShuffleCards()
     {
-        DeckRegularDict<SolitaireCard> output = new()
-        {
+        DeckRegularDict<SolitaireCard> output =
+        [
             FindCardBySuitValue(EnumRegularCardValueList.Queen, EnumSuitList.Spades),
             FindCardBySuitValue(EnumRegularCardValueList.Queen, EnumSuitList.Diamonds),
             FindCardBySuitValue(EnumRegularCardValueList.Queen, EnumSuitList.Clubs),
             FindCardBySuitValue(EnumRegularCardValueList.Queen, EnumSuitList.Hearts)
-        };
+        ];
         CardList!.RemoveGivenList(output);
         output.Reverse();
         output.ForEach(thisCard => CardList.InsertBeginning(thisCard));

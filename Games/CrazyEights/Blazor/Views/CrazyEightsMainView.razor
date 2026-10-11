@@ -1,4 +1,4 @@
-@inherits BasicGameView<CrazyEightsMainViewModel>
+@inherits CascadingGameView<CrazyEightsMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -22,6 +22,6 @@
                       Columns="_scores"
                       Players="_gameContainer.SaveRoot.PlayerList" />
 </div>
-<ParentControl VM="ChooseSuitViewModel">
-    <ChooseSuitView />
-</ParentControl>
+<StateContentView DataContext="DataContext">
+    <ChooseSuitView DataContext="DataContext.SuitScreen" />
+</StateContentView>

@@ -7,9 +7,8 @@ public class ChooseSalaryViewModel : BasicSubmitViewModel
     public ChooseSalaryViewModel(CommandContainer commandContainer,
         LifeBoardGameGameContainer gameContainer,
         LifeBoardGameVMData model,
-        IBasicSalaryProcesses processes,
-        IEventAggregator aggregator
-        ) : base(commandContainer, aggregator)
+        IBasicSalaryProcesses processes
+        ) : base(commandContainer)
     {
         _gameContainer = gameContainer;
         _model = model;

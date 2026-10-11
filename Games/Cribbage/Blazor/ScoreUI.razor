@@ -1,34 +1,36 @@
-﻿@if (ScoreList == null || ScoreList.Count == 0)
-{
-    <div style="font-weight: bold; font-size: 25px;">
-        No Scores
-    </div>    
-    return;
-}
-<StackLayout>
-    <StackItem Length="200px">
-        <b>Score Description</b>
-    </StackItem>
-    <StackItem>
-        <b>Score</b>
-    </StackItem>
-</StackLayout>
-@foreach (var score in ScoreList)
-{
+﻿<StateContentView DataContext="ScoreList">
+    @if (ScoreList == null || ScoreList.Count == 0)
+    {
+        <div style="font-weight: bold; font-size: 25px;">
+            No Scores
+        </div>
+        return;
+    }
     <StackLayout>
         <StackItem Length="200px">
-            @score.Description
+            <b>Score Description</b>
         </StackItem>
         <StackItem>
-            @score.Score
+            <b>Score</b>
         </StackItem>
     </StackLayout>
-}
-<StackLayout>
-    <StackItem Length="200px">
-        <b>Total Score</b>
-    </StackItem>
-    <StackItem>
-        @ScoreList.Sum(x => x.Score)
-    </StackItem>
-</StackLayout>
+    @foreach (var score in ScoreList)
+    {
+        <StackLayout>
+            <StackItem Length="200px">
+                @score.Description
+            </StackItem>
+            <StackItem>
+                @score.Score
+            </StackItem>
+        </StackLayout>
+    }
+    <StackLayout>
+        <StackItem Length="200px">
+            <b>Total Score</b>
+        </StackItem>
+        <StackItem>
+            @ScoreList.Sum(x => x.Score)
+        </StackItem>
+    </StackLayout>
+</StateContentView>

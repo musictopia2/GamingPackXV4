@@ -50,7 +50,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
     }
     private static BasicList<PointF> GetCenterPoints(EnumCardValueList value)
     {
-        BasicList<PointF> arr_Current = new();
+        BasicList<PointF> arr_Current = [];
         if (value == EnumCardValueList.Three)
         {
             arr_Current.Add(new PointF(2, 1));
@@ -131,7 +131,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<FiveCrownsCardInformation>
     }
     private void DrawCenterSuits(RectangleF rect_Center)
     {
-        Hashtable arr_Rectangles = new(); // hashtable is supported with the .net standard 2.0.  collection is not
+        Hashtable arr_Rectangles = []; // hashtable is supported with the .net standard 2.0.  collection is not
         int int_Row;
         int int_Col;
         int int_Count;

@@ -1,9 +1,9 @@
 ﻿namespace Millebournes.Core.Data;
 public class SavedTeam
 {
-    public BasicList<MillebournesCardInformation> PreviousList { get; set; } = new();
-    public BasicList<BasicPileInfo<MillebournesCardInformation>> SavedPiles { get; set; } = new();
-    public BasicList<SafetyInfo> SafetyList { get; set; } = new();
+    public BasicList<MillebournesCardInformation> PreviousList { get; set; } = [];
+    public BasicList<BasicPileInfo<MillebournesCardInformation>> SavedPiles { get; set; } = [];
+    public BasicList<SafetyInfo> SafetyList { get; set; } = [];
     public int Wrongs { get; set; }
     public EnumHazardType CurrentHazard { get; set; }
     public bool CurrentSpeed { get; set; }

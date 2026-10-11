@@ -1,40 +1,33 @@
 ﻿namespace Fluxx.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class DrawUseProcesses : IDrawUseProcesses
+public class DrawUseProcesses(FluxxGameContainer gameContainer, IAnalyzeProcesses analyzeProcesses) : IDrawUseProcesses
 {
-    private readonly FluxxGameContainer _gameContainer;
-    private readonly IAnalyzeProcesses _analyzeProcesses;
-    public DrawUseProcesses(FluxxGameContainer gameContainer, IAnalyzeProcesses analyzeProcesses)
-    {
-        _gameContainer = gameContainer;
-        _analyzeProcesses = analyzeProcesses;
-    }
     async Task IDrawUseProcesses.DrawUsedAsync(int deck)
     {
-        if (_gameContainer.SingleInfo!.CanSendMessage(_gameContainer.BasicData!))
+        if (gameContainer.SingleInfo!.CanSendMessage(gameContainer.BasicData!))
         {
-            await _gameContainer.Network!.SendAllAsync("drawuse", deck);
+            await gameContainer.Network!.SendAllAsync("drawuse", deck);
         }
-        _gameContainer!.TempActionHandList.RemoveSpecificItem(deck);
-        var thisCard = _gameContainer.DeckList!.GetSpecificItem(deck);
-        _gameContainer.QuePlayList.Add(thisCard);
-        if (_gameContainer.TempActionHandList.Count == 1)
+        gameContainer!.TempActionHandList.RemoveSpecificItem(deck);
+        var thisCard = gameContainer.DeckList!.GetSpecificItem(deck);
+        gameContainer.QuePlayList.Add(thisCard);
+        if (gameContainer.TempActionHandList.Count == 1)
         {
-            if (_gameContainer.CurrentAction!.Deck == EnumActionMain.Draw3Play2OfThem)
+            if (gameContainer.CurrentAction!.Deck == EnumActionMain.Draw3Play2OfThem)
             {
-                _gameContainer.SaveRoot!.SavedActionData.TempDiscardList.Add(_gameContainer.TempActionHandList.Single());
+                gameContainer.SaveRoot!.SavedActionData.TempDiscardList.Add(gameContainer.TempActionHandList.Single());
             }
             else
             {
-                thisCard = _gameContainer.DeckList.GetSpecificItem(_gameContainer.TempActionHandList.Single());
-                _gameContainer.QuePlayList.Add(thisCard);
+                thisCard = gameContainer.DeckList.GetSpecificItem(gameContainer.TempActionHandList.Single());
+                gameContainer.QuePlayList.Add(thisCard);
             }
-            _gameContainer.TempActionHandList.Clear();
-            _gameContainer.CurrentAction = null;
-            await _analyzeProcesses.AnalyzeQueAsync();
+            gameContainer.TempActionHandList.Clear();
+            gameContainer.CurrentAction = null;
+            await analyzeProcesses.AnalyzeQueAsync();
             return;
         }
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
 }

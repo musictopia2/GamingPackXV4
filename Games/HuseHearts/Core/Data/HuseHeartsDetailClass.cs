@@ -1,13 +1,8 @@
 namespace HuseHearts.Core.Data;
 [SingletonGame]
-public class HuseHeartsDetailClass : IGameInfo, ICardInfo<HuseHeartsCardInformation>, ITrickData,
+public class HuseHeartsDetailClass(HuseHeartsDelegates delegates) : IGameInfo, ICardInfo<HuseHeartsCardInformation>, ITrickData,
     IBeginningRegularCards<HuseHeartsCardInformation>
 {
-    private readonly HuseHeartsDelegates _delegates;
-    public HuseHeartsDetailClass(HuseHeartsDelegates delegates)
-    {
-        _delegates = delegates;
-    }
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
@@ -20,7 +15,7 @@ public class HuseHeartsDetailClass : IGameInfo, ICardInfo<HuseHeartsCardInformat
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<HuseHeartsCardInformation>.CardsToPassOut => 16;
-    BasicList<int> ICardInfo<HuseHeartsCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<HuseHeartsCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<HuseHeartsCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<HuseHeartsCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<HuseHeartsCardInformation>.ShowMessageWhenReshuffling => true;
@@ -30,8 +25,8 @@ public class HuseHeartsDetailClass : IGameInfo, ICardInfo<HuseHeartsCardInformat
     bool ICardInfo<HuseHeartsCardInformation>.NeedsDummyHand => true;
     DeckRegularDict<HuseHeartsCardInformation> ICardInfo<HuseHeartsCardInformation>.DummyHand
     {
-        get => _delegates.GetDummyList!.Invoke();
-        set => _delegates.SetDummyList!(value);
+        get => delegates.GetDummyList!.Invoke();
+        set => delegates.SetDummyList!(value);
     }
     bool ICardInfo<HuseHeartsCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<HuseHeartsCardInformation>.CanSortCardsToBeginWith => true;
@@ -44,7 +39,7 @@ public class HuseHeartsDetailClass : IGameInfo, ICardInfo<HuseHeartsCardInformat
     bool ITrickData.HasDummy => true;
     BasicList<int> ICardInfo<HuseHeartsCardInformation>.DiscardExcludeList(IListShuffler<HuseHeartsCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<HuseHeartsCardInformation>.AceLow => false;
     bool IBeginningRegularCards<HuseHeartsCardInformation>.CustomDeck => false;

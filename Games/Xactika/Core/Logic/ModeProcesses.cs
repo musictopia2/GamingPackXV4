@@ -1,118 +1,109 @@
 ﻿namespace Xactika.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class ModeProcesses : IModeProcesses
+public class ModeProcesses(XactikaVMData model,
+    XactikaDelegates delegates,
+    XactikaGameContainer gameContainer,
+    IBidProcesses bidProcesses,
+    IShapeProcesses shapeProcesses
+        ) : IModeProcesses
 {
-    private readonly XactikaVMData _model;
-    private readonly XactikaDelegates _delegates;
-    private readonly XactikaGameContainer _gameContainer;
-    private readonly IBidProcesses _bidProcesses;
-    private readonly IShapeProcesses _shapeProcesses;
-    public ModeProcesses(XactikaVMData model,
-        XactikaDelegates delegates,
-        XactikaGameContainer gameContainer,
-        IBidProcesses bidProcesses,
-        IShapeProcesses shapeProcesses
-        )
-    {
-        _model = model;
-        _delegates = delegates;
-        _gameContainer = gameContainer;
-        _bidProcesses = bidProcesses;
-        _shapeProcesses = shapeProcesses;
-    }
     public async Task EnableOptionsAsync()
     {
-        await _gameContainer.SaveStateAsync!.Invoke();
+        await gameContainer.SaveStateAsync!.Invoke();
 
-        if (_delegates.LoadModeAsync == null)
+        if (delegates.LoadModeAsync == null)
         {
             throw new CustomBasicException("Nobody is loading the mode.  Rethink");
         }
-        await _delegates.LoadModeAsync();
+        await delegates.LoadModeAsync();
 
-        if (_gameContainer.BasicData!.MultiPlayer)
+        if (gameContainer.BasicData!.MultiPlayer)
         {
-            if (_gameContainer.BasicData.Client)
+            if (gameContainer.BasicData.Client)
             {
-                _gameContainer.Network!.IsEnabled = true; //has to wait for host to choose game option.
+                gameContainer.Network!.IsEnabled = true; //has to wait for host to choose game option.
                 return;
             }
         }
-        if (_gameContainer.ShowHumanCanPlayAsync == null)
+        if (gameContainer.ShowHumanCanPlayAsync == null)
         {
             throw new CustomBasicException("Nobody is showing human can play.  Rethink");
         }
-        await _gameContainer.ShowHumanCanPlayAsync!.Invoke(); //hopefully this simple.
+        await gameContainer.ShowHumanCanPlayAsync!.Invoke(); //hopefully this simple.
     }
-    private async Task LoadBidAsync()
+    private void LoadBid()
     {
-        if (_gameContainer.LoadBiddingAsync == null)
+        if (gameContainer.LoadBidding == null)
         {
             throw new CustomBasicException("Nobody is loading the bidding screen.  Rethink");
         }
-        await _gameContainer.LoadBiddingAsync.Invoke();
+        gameContainer.LoadBidding.Invoke();
     }
     public async Task ProcessGameOptionChosenAsync(EnumGameMode optionChosen, bool doShow)
     {
         if (doShow)
         {
-            _model!.ModeChoose1!.SelectSpecificItem((int)optionChosen);
-            if (_gameContainer.Test!.NoAnimations == false)
+            model!.ModeChoose1!.SelectSpecificItem((int)optionChosen);
+            if (gameContainer.Test!.NoAnimations == false)
             {
-                await _gameContainer.Delay!.DelaySeconds(.5);
+                await gameContainer.Delay!.DelaySeconds(.5);
             }
-            _gameContainer.SaveRoot!.GameMode = optionChosen;
+            gameContainer.SaveRoot!.GameMode = optionChosen;
         }
-        else if (optionChosen != _gameContainer.SaveRoot!.GameMode)
+        else if (optionChosen != gameContainer.SaveRoot!.GameMode)
         {
             throw new CustomBasicException("Had to show");
         }
-        if (_delegates.CloseModeAsync == null)
+        if (delegates.CloseModeAsync == null)
         {
             throw new CustomBasicException("Nobody is closing the game mode.  Rethink");
         }
-        await _delegates.CloseModeAsync.Invoke();
-        if (_gameContainer.SaveRoot.GameStatus != EnumStatusList.ChooseGameType)
+        await delegates.CloseModeAsync.Invoke();
+        if (gameContainer.SaveRoot.GameStatus != EnumStatusList.ChooseGameType)
         {
-            if (_gameContainer.SaveRoot.GameStatus == EnumStatusList.Bidding)
+            if (gameContainer.SaveRoot.GameStatus == EnumStatusList.Bidding)
             {
-                _model.TrickArea1!.Visible = false;
-                await LoadBidAsync();
-                await _bidProcesses.BeginBiddingAsync();
+                model.TrickArea1!.Visible = false;
+                LoadBid();
+                await bidProcesses.BeginBiddingAsync();
                 return;
             }
-            if (_gameContainer.SaveRoot.GameStatus == EnumStatusList.CallShape)
+            if (gameContainer.SaveRoot.GameStatus == EnumStatusList.CallShape)
             {
-                _model!.ShapeChoose1!.Visible = true;
-                await _shapeProcesses.FirstCallShapeAsync();
+                model!.ShapeChoose1!.Visible = true;
+                await shapeProcesses.FirstCallShapeAsync();
                 return;
             }
-            if (_gameContainer.SaveRoot.ClearTricks)
+            if (gameContainer.SaveRoot.ClearTricks)
             {
-                _gameContainer.SaveRoot.ClearTricks = false;
-                await _bidProcesses.EndBidAsync();
+                gameContainer.SaveRoot.ClearTricks = false;
+                await bidProcesses.EndBidAsync();
                 return;
             }
-            if (_gameContainer.SaveRoot.ShapeChosen != EnumShapes.None)
-                _model!.ShapeChoose1!.ChoosePiece(_gameContainer.SaveRoot.ShapeChosen);
-            _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-            if (_gameContainer.ShowTurn == null)
+            if (gameContainer.SaveRoot.ShapeChosen != EnumShapes.None)
+            {
+                model!.ShapeChoose1!.ChoosePiece(gameContainer.SaveRoot.ShapeChosen);
+            }
+            gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
+            if (gameContainer.ShowTurn == null)
             {
                 throw new CustomBasicException("Nobody is showing turn.  Rethink");
             }
-            _gameContainer.ShowTurn();
-            await _gameContainer.ContinueTurnAsync!.Invoke();
+            gameContainer.ShowTurn();
+            await gameContainer.ContinueTurnAsync!.Invoke();
             return;
         }
         if (optionChosen == EnumGameMode.ToBid)
         {
-            _gameContainer.SingleInfo = _gameContainer.PlayerList!.GetWhoPlayer();
-            _gameContainer.SaveRoot.GameStatus = EnumStatusList.Bidding;
-            await LoadBidAsync();
-            await _bidProcesses.PopulateBidAmountsAsync();
+            gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
+            gameContainer.SaveRoot.GameStatus = EnumStatusList.Bidding;
+            LoadBid();
+            await bidProcesses.PopulateBidAmountsAsync();
             return;
         }
-        await _bidProcesses.EndBidAsync();
+        ((IAdvancedTrickProcesses)model.TrickArea1).LoadGame();
+        model.TrickArea1.Visible = true; //try this too.
+        await bidProcesses.EndBidAsync();
     }
 }

@@ -1,13 +1,7 @@
 ﻿namespace Fluxx.Core.ViewModels;
-public abstract class BasicKeeperScreen : ScreenViewModel, IBlankGameVM
+public abstract class BasicKeeperScreen(FluxxGameContainer gameContainer, KeeperContainer keeperContainer)
 {
-    public BasicKeeperScreen(FluxxGameContainer gameContainer, KeeperContainer keeperContainer, IEventAggregator aggregator) : base(aggregator)
-    {
-        GameContainer = gameContainer;
-        KeeperContainer = keeperContainer;
-        CommandContainer = gameContainer.Command;
-    }
-    public CommandContainer CommandContainer { get; set; }
-    protected FluxxGameContainer GameContainer { get; }
-    protected KeeperContainer KeeperContainer { get; }
+    public CommandContainer CommandContainer { get; set; } = gameContainer.Command;
+    protected FluxxGameContainer GameContainer { get; } = gameContainer;
+    protected KeeperContainer KeeperContainer { get; } = keeperContainer;
 }

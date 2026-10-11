@@ -17,7 +17,7 @@ public class GameBoardGraphicsCP
         int x;
         int y;
         int z = 0;
-        gameContainer.NumberList = new Dictionary<int, NumberInfo>();
+        gameContainer.NumberList = [];
         for (x = 1; x <= 4; x++)
         {
             for (y = 1; y <= 3; y++)

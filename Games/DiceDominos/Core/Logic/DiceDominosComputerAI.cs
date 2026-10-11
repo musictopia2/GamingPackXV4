@@ -1,15 +1,11 @@
 ﻿namespace DiceDominos.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class DiceDominosComputerAI
+public class DiceDominosComputerAI(GameBoardCP gameBoard, DiceDominosGameContainer gameContainer)
 {
-    private readonly GameBoardCP _gameBoard;
-    private readonly DiceDominosGameContainer _gameContainer;
-    public DiceDominosComputerAI(GameBoardCP gameBoard, DiceDominosGameContainer gameContainer)
-    {
-        _gameBoard = gameBoard;
-        _gameContainer = gameContainer;
-    }
+    private readonly GameBoardCP _gameBoard = gameBoard;
+    private readonly DiceDominosGameContainer _gameContainer = gameContainer;
+
     private static int HowMany(int whatNumber, DeckRegularDict<SimpleDominoInfo> possibleList)
     {
         int nums = default;
@@ -24,7 +20,7 @@ public class DiceDominosComputerAI
     }
     public int Move()
     {
-        DeckRegularDict<SimpleDominoInfo> newList = new();
+        DeckRegularDict<SimpleDominoInfo> newList = [];
         var possibleList = _gameBoard.GetVisibleList();
         if (possibleList.Count == 0)
         {

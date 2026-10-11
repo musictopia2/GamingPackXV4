@@ -9,10 +9,11 @@ public partial class MonopolyCardGameMainView
     private MonopolyCardGamePlayerItem? _tradeOpponent;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<MonopolyCardGameVMData>();
-        _gameContainer = aa1.Resolver.Resolve<MonopolyCardGameGameContainer>();
+        _vmData = Resolver!.Resolve<MonopolyCardGameVMData>();
+        _gameContainer = Resolver.Resolve<MonopolyCardGameGameContainer>();
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();
         _gameContainer.StartCustomTrade = StartTrade;
+        _gameContainer.RefreshMainScreen = Refresh;
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(MonopolyCardGameVMData.NormalTurn))
            .AddLabel("Status", nameof(MonopolyCardGameVMData.Status));
@@ -22,9 +23,14 @@ public partial class MonopolyCardGameMainView
             .AddColumn("Total Money", true, nameof(MonopolyCardGamePlayerItem.TotalMoney), category: EnumScoreSpecialCategory.Currency);
         base.OnInitialized();
     }
+    private void Refresh()
+    {
+        InvokeAsync(StateHasChanged);
+    }
     private void StartTrade(MonopolyCardGamePlayerItem player)
     {
         _tradeOpponent = player;
+        Refresh();
     }
     private async Task CancelTradeAsync()
     {

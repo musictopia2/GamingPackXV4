@@ -1,7 +1,6 @@
 ﻿namespace DummyRummy.Core.Logic;
-public class DummySet : SetInfo<EnumSuitList, EnumRegularColorList, RegularRummyCard, SavedSet>
+public class DummySet(CommandContainer command) : SetInfo<EnumSuitList, EnumRegularColorList, RegularRummyCard, SavedSet>(command)
 {
-    public DummySet(CommandContainer command) : base(command) { }
     public override void LoadSet(SavedSet payLoad)
     {
         HandList.ReplaceRange(payLoad.CardList);

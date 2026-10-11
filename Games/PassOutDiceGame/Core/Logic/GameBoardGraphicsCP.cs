@@ -1,18 +1,14 @@
 ﻿namespace PassOutDiceGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class GameBoardGraphicsCP
+public class GameBoardGraphicsCP(PassOutDiceGameGameContainer gameContainer)
 {
     public static SizeF OriginalSize => new(100, 539);
     public static RectangleF GetBounds => new(new PointF(0, 0), OriginalSize);
-    public PassOutDiceGameGameContainer GameContainer;
-    public GameBoardGraphicsCP(PassOutDiceGameGameContainer gameContainer)
-    {
-        GameContainer = gameContainer;
-    }
+    public PassOutDiceGameGameContainer GameContainer = gameContainer;
     internal void CreateSpaceList()
     {
-        GameContainer.SpaceList = new Dictionary<int, SpaceInfo>();
+        GameContainer.SpaceList = [];
         int x;
         int y;
         int z = 0;

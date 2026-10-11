@@ -46,5 +46,5 @@ public partial class CalculatorCreaterComponent
     {
         Calculator1!.EnterPropertyFromCard(card);
     }
-    private string TextDivSize => "7vh";
+    private static string TextDivSize => "7vh";
 }

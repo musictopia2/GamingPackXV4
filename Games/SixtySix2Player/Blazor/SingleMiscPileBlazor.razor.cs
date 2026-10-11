@@ -8,5 +8,4 @@ public partial class SingleMiscPileBlazor
     [Parameter]
     public string PileAnimationTag { get; set; } = "maindiscard";
     private string RealHeight => $"{TargetHeight}vh";
-    private static string GetKey => Guid.NewGuid().ToString();
 }

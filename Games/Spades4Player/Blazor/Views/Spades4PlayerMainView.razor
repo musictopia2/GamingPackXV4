@@ -1,4 +1,4 @@
-@inherits BasicGameView<Spades4PlayerMainViewModel>
+@inherits CascadingGameView<Spades4PlayerMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -13,18 +13,20 @@
         <LabelGridComponent DataContext="_vmData" Labels="_labels" />
     </StackItem>
     <StackItem>
-        @if (DataContext.GameStatus == EnumGameStatus.Bidding)
-        {
-            <BiddingComponent DataContext="DataContext" />
-        }
-        else
-        {
-            <DeckOfCardsSeveralPlayersTrickBlazor P="Spades4PlayerPlayerItem"
-                                                  B="SpadesTrickAreaCP"
-                                                  T="Spades4PlayerCardInformation"
-                                                  DataContext="_vmData.TrickArea1"
-                                                  />
-        }
+        <StateContentView DataContext="_gameContainer.SaveRoot">
+            @if (_gameContainer.SaveRoot.GameStatus == EnumGameStatus.Bidding)
+            {
+                <BiddingComponent DataContext="DataContext" />
+            }
+            else
+            {
+                <DeckOfCardsSeveralPlayersTrickBlazor P="Spades4PlayerPlayerItem"
+                                                      B="SpadesTrickAreaCP"
+                                                      T="Spades4PlayerCardInformation"
+                                                      DataContext="_vmData.TrickArea1" />
+            }
+        </StateContentView>
+        
     </StackItem>
 </StackLayout>
 <div>

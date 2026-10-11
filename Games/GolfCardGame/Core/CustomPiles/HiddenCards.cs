@@ -29,6 +29,7 @@ public class HiddenCards : BasicMultiplePilesCP<RegularSimpleCard>
         var thisPile = PileList![pile];
         thisPile.ThisObject = newCard;
         thisPile.IsEnabled = false;
+        OnStateChanged();
     }
     public void RevealCards()
     {

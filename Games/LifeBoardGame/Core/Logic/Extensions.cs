@@ -71,7 +71,7 @@ public static class Extensions
         public DeckRegularDict<CareerInfo> GetCareerList()
         {
             var tempList = player.Hand.Where(items => items.Deck <= 9).Select(items => items.Deck).ToBasicList();
-            DeckRegularDict<CareerInfo> output = new();
+            DeckRegularDict<CareerInfo> output = [];
             foreach (var thisItem in tempList)
             {
                 output.Add(CardsModule.GetCareerCard(thisItem));
@@ -165,7 +165,7 @@ public static class Extensions
     {
         public DeckRegularDict<SalaryInfo> GetSalaryList(PlayerCollection<LifeBoardGamePlayerItem> playerList)
         {
-            DeckRegularDict<SalaryInfo> newList = new();
+            DeckRegularDict<SalaryInfo> newList = [];
             foreach (var thisItem in list)
             {
                 if (thisItem.SomeoneHasCard(playerList) == false)
@@ -206,7 +206,7 @@ public static class Extensions
     {
         public DeckRegularDict<HouseInfo> GetHouseList(PlayerCollection<LifeBoardGamePlayerItem> playerList)
         {
-            DeckRegularDict<HouseInfo> newList = new();
+            DeckRegularDict<HouseInfo> newList = [];
             foreach (var thisItem in list)
             {
                 if (thisItem.SomeoneHasCard(playerList) == false)

@@ -1,7 +1,5 @@
 namespace Fluxx.Blazor.Views;
-public partial class ActionFirstCardRandomView : SimpleActionView
+public partial class ActionFirstCardRandomView : SimpleActionView<ActionFirstCardRandomViewModel>
 {
-    [CascadingParameter]
-    public ActionFirstCardRandomViewModel? DataContext { get; set; }
     private ICustomCommand ChooseCommand => DataContext!.ChooseCardCommand!;
 }

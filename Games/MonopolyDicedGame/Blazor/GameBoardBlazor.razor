@@ -1,16 +1,16 @@
-﻿<CanvasLayout 
-ViewPort="@_size"
-    ContainerHeight="@TargetHeight"
-    ContainerWidth="@TargetHeight"
-              BackgroundColor="#6ecacc">
-    <PoliceBoardComponent PoliceUsed="@NumberOfCops" TargetImageHeight="@ImageHeight" />
-    <SimpleRepeater HowMany=8 Context="item">
-            <PropertyBoardBlazor IsEnabled=IsEnabled OnClicked="() => PossiblePropertyClick(item)" OwnList=OwnList Group="@item" TargetHeight="@ImageHeight" />
-    </SimpleRepeater>
-    <TrainSpaceBlazor IsEnabled=IsEnabled OnClicked=PossibleTrainClick OwnList="@OwnList" TargetHeight="@ImageHeight" />
-    <UtilitySpaceComponent IsEnabled=IsEnabled TargetImageHeight="@ImageHeight" OwnList="@OwnList" UtilityClicked="PossibleUtilityClick" />
-    <MiscSpaceComponent TargetImageHeight="@ImageHeight" MiscList="MiscList" />
-    <HouseSpaceComponent ImageHeight="@ImageHeight" HasHotel=HasHotel HousesOwned="HousesOwned" />
-    <HouseAnimationComponent HouseDice="HouseDice" ImageHeight="@ImageHeight" />
-    
-</CanvasLayout>
+﻿<StateContentView DataContext="SaveInfo">
+    <CanvasLayout ViewPort="@_size"
+                  ContainerHeight="@TargetHeight"
+                  ContainerWidth="@TargetHeight"
+                  BackgroundColor="#6ecacc">
+        <PoliceBoardComponent PoliceUsed="@SaveInfo.NumberOfCops" TargetImageHeight="@ImageHeight" />
+        <SimpleRepeater HowMany=8 Context="item">
+            <PropertyBoardBlazor IsEnabled=IsEnabled OnClicked="() => PossiblePropertyClick(item)" OwnList=SaveInfo.Owns Group="@item" TargetHeight="@ImageHeight" />
+        </SimpleRepeater>
+        <TrainSpaceBlazor IsEnabled=IsEnabled OnClicked=PossibleTrainClick OwnList="@SaveInfo.Owns" TargetHeight="@ImageHeight" />
+        <UtilitySpaceComponent IsEnabled=IsEnabled TargetImageHeight="@ImageHeight" OwnList="@SaveInfo.Owns" UtilityClicked="PossibleUtilityClick" />
+        <MiscSpaceComponent TargetImageHeight="@ImageHeight" MiscList="MiscList" />
+        <HouseSpaceComponent ImageHeight="@ImageHeight" HasHotel=SaveInfo.HasHotel HousesOwned="SaveInfo.NumberOfHouses" />
+        <HouseAnimationComponent HouseDice="HouseDice" ImageHeight="@ImageHeight" />
+    </CanvasLayout>
+</StateContentView>

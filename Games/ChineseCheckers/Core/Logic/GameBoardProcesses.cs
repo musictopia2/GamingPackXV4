@@ -37,10 +37,7 @@ public class GameBoardProcesses
     private Dictionary<int, SpaceInfo>? _spaceList;
     public async Task MakeMoveAsync(int index)
     {
-        if (_graphicsBoard is null)
-        {
-            _graphicsBoard = _gameContainer.Resolver.Resolve<GameBoardGraphicsCP>();
-        }
+        _graphicsBoard ??= _gameContainer.Resolver.Resolve<GameBoardGraphicsCP>();
         _currentSpace = index;
         if (WhoTurn > _gameContainer.PlayerList!.Count)
         {
@@ -184,7 +181,7 @@ public class GameBoardProcesses
     }
     private BasicList<MoveInfo> PossibleMovesWithPiece(SpaceInfo thisSpace)
     {
-        BasicList<MoveInfo> output = new();
+        BasicList<MoveInfo> output = [];
         SpaceInfo newSpace;
         SpaceInfo furtherSpace;
         bool haveItem;
@@ -369,7 +366,7 @@ public class GameBoardProcesses
     }
     private BasicList<MoveInfo> MoveList()
     {
-        BasicList<MoveInfo> output = new();
+        BasicList<MoveInfo> output = [];
         BasicList<MoveInfo> newCol;
         if (_gameContainer.SaveRoot!.PreviousSpace == 0)
         {
@@ -415,7 +412,7 @@ public class GameBoardProcesses
         _turnContinued = false;
         _gameContainer.SaveRoot!.PreviousSpace = 0;
         _currentSpace = 0;
-        PreviousMoves = new();
+        PreviousMoves = [];
         _gameContainer.Aggregator.RepaintBoard();
     }
     private bool CanWin()
@@ -464,7 +461,7 @@ public class GameBoardProcesses
     }
     private void PopulateSpaceList()
     {
-        _spaceList = new Dictionary<int, SpaceInfo>();
+        _spaceList = [];
         SpaceInfo thisSpace;
         int x;
         for (x = 1; x <= 121; x++)

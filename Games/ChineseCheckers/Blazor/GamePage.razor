@@ -14,14 +14,10 @@
     }
     return;
 }
-<ParentControl VM="ChineseCheckersMainViewModel">
+<MainScreen>
     <ChineseCheckersMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<ChineseCheckersPlayerItem>">
-    <MultiplayerOpeningView P="ChineseCheckersPlayerItem" />
-</ParentControl>
-<ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, ChineseCheckersPlayerItem>">
-    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="ChineseCheckersPlayerItem">
-        <MarblePiece MainColor="@GetColor(Piece.EnumValue)" />
-    </BeginningChooseColorView>
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="ChineseCheckersPlayerItem" />
+<BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="ChineseCheckersPlayerItem">
+    <MarblePiece MainColor="@GetColor(Piece.EnumValue)" />
+</BeginningChooseColorView>

@@ -1,4 +1,3 @@
-using System.Reflection; //needed because of assembly.  don't put under globals though.
 namespace SnakesAndLadders.Blazor;
 public partial class GameBoardBlazor
 {
@@ -13,7 +12,7 @@ public partial class GameBoardBlazor
             var firstList = PlayerList!.ToBasicList();
             firstList.RemoveAllOnly(x => x.SpaceNumber == 0);
             var nextList = firstList.GroupBy(x => x.SpaceNumber);
-            BasicList<SnakesAndLaddersPlayerItem> output = new();
+            BasicList<SnakesAndLaddersPlayerItem> output = [];
             foreach (var item in nextList)
             {
                 output.Add(item.Last());
@@ -26,8 +25,7 @@ public partial class GameBoardBlazor
         public RectangleF Bounds { get; set; }
         public string Fill { get; set; } = ""; //i think.
     }
-    private readonly Dictionary<int, TempSpace> _spaceList = new();
-    private Assembly GetAssembly => Assembly.GetAssembly(GetType())!;
+    private readonly Dictionary<int, TempSpace> _spaceList = [];
     private IToast? _toast;
     protected override void OnInitialized()
     {

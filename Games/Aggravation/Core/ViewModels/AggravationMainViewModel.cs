@@ -1,28 +1,19 @@
 namespace Aggravation.Core.ViewModels;
 [InstanceGame]
-public class AggravationMainViewModel : BoardDiceGameVM
-{
-    private readonly AggravationMainGameClass _mainGame; //if we don't need, delete.
-    public AggravationVMData VMData { get; set; }
-    public AggravationMainViewModel(CommandContainer commandContainer,
+public class AggravationMainViewModel(CommandContainer commandContainer,
         AggravationMainGameClass mainGame,
         AggravationVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, roller, aggregator)
-    {
-        _mainGame = mainGame;
-        VMData = viewModel;
-    }
+        IEventAggregator aggregator) : BoardDiceGameVM(commandContainer, mainGame, basicData, resolver, roller, aggregator)
+{
+    public AggravationVMData VMData { get; set; } = viewModel;
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
-    public PlayerCollection<AggravationPlayerItem> PlayerList => _mainGame.PlayerList;
+    public PlayerCollection<AggravationPlayerItem> PlayerList => mainGame.PlayerList;
     public override bool CanRollDice()
     {
-        return _mainGame.SaveRoot.DiceNumber == 0;
+        return mainGame.SaveRoot.DiceNumber == 0;
     }
     public override async Task RollDiceAsync() //if any changes, do here.
     {

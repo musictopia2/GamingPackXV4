@@ -37,8 +37,8 @@ public class GameBoardCP
     }
     private void PrivateInit()
     {
-        BasicList<string> tempList = new()
-        {
+        BasicList<string> tempList =
+        [
             "A",
             "B",
             "C",
@@ -49,15 +49,15 @@ public class GameBoardCP
             "H",
             "I",
             "J"
-        };
-        RowList = new Dictionary<int, string>();
+        ];
+        RowList = [];
         var loopTo = tempList.Count;
         int x;
         for (x = 1; x <= loopTo; x++)
         {
             RowList.Add(RowList.Count + 1, tempList[x - 1]);// because 0 based
         }
-        ColumnList = new Dictionary<int, string>();
+        ColumnList = [];
         for (x = 1; x <= 10; x++)
         {
             ColumnList.Add(ColumnList.Count + 1, x.ToString());

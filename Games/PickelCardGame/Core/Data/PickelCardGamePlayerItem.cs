@@ -3,11 +3,11 @@ namespace PickelCardGame.Core.Data;
 public partial class PickelCardGamePlayerItem : PlayerTrick<EnumSuitList, PickelCardGameCardInformation>
 {
     [ScoreColumn]
-    public EnumSuitList SuitDesired { get; set; }
+    public partial EnumSuitList SuitDesired { get; set; }
     [ScoreColumn]
-    public int BidAmount { get; set; }
+    public partial int BidAmount { get; set; }
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

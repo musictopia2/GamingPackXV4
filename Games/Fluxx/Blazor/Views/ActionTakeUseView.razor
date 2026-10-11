@@ -1,5 +1,4 @@
-﻿@inherits SimpleActionView
-
+﻿@inherits SimpleActionView<ActionTakeUseViewModel>
 @if (CompleteContainer == null || DataContext == null)
 {
     return;
@@ -14,6 +13,6 @@
                              StartOnNewLine="true"
                              Display="Choose Card" />
         }
-        <KeeperButton K="ActionTakeUseViewModel" @key="GetKey"  StartsOnNewLine="true" />
+        <KeeperButton DataContext="DataContext" @key="GetKey"  StartsOnNewLine="true" />
     </div>
 </FinalActionLayout>

@@ -1,8 +1,8 @@
 ﻿namespace GalaxyCardGame.Core.Logic;
-public class MoonClass : SetInfo<EnumSuitList, EnumRegularColorList, GalaxyCardGameCardInformation, SavedSet>
+public class MoonClass(CommandContainer command) : SetInfo<EnumSuitList, EnumRegularColorList, GalaxyCardGameCardInformation, SavedSet>(command)
 {
     public EnumWhatSets WhatSet { get; set; }
-    public MoonClass(CommandContainer command) : base(command) { }
+
     public void CreateNewMoon(IDeckDict<GalaxyCardGameCardInformation> thisCol, EnumWhatSets whatSet)
     {
         WhatSet = whatSet;

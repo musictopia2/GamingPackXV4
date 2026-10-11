@@ -1,28 +1,18 @@
 namespace Hearts.Core.ViewModels;
 [InstanceGame]
-public partial class HeartsMainViewModel : BasicCardGamesVM<HeartsCardInformation>
-{
-    private readonly HeartsMainGameClass _mainGame; //if we don't need, delete.
-    private readonly HeartsVMData _model;
-    private readonly IToast _toast;
-
-    public HeartsMainViewModel(CommandContainer commandContainer,
+public partial class HeartsMainViewModel(CommandContainer commandContainer,
         HeartsMainGameClass mainGame,
         HeartsVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
-        HeartsGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<HeartsCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _toast = toast;
-        _model.Deck1.NeverAutoDisable = true;
-        CreateCommands(commandContainer);
+        viewModel.Deck1.NeverAutoDisable = true;
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
     //anything else needed is here.
@@ -50,18 +40,18 @@ public partial class HeartsMainViewModel : BasicCardGamesVM<HeartsCardInformatio
     [Command(EnumCommandCategory.Game)]
     public async Task PassAsync()
     {
-        int cardsSelected = _model.PlayerHand1!.HowManySelectedObjects;
+        int cardsSelected = viewModel.PlayerHand1!.HowManySelectedObjects;
         if (cardsSelected != 3)
         {
-            _toast.ShowUserErrorToast("Must pass 3 cards");
+            Toast.ShowUserErrorToast("Must pass 3 cards");
             return;
         }
-        var tempList = _model.PlayerHand1.ListSelectedObjects().GetDeckListFromObjectList();
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        var tempList = viewModel.PlayerHand1.ListSelectedObjects().GetDeckListFromObjectList();
+        if (mainGame.BasicData!.MultiPlayer == true)
         {
-            await _mainGame.Network!.SendAllAsync("passcards", tempList);
+            await mainGame.Network!.SendAllAsync("passcards", tempList);
         }
-        await _mainGame!.CardsPassedAsync(tempList);
+        await mainGame!.CardsPassedAsync(tempList);
     }
     [Command(EnumCommandCategory.Plain)]
     public async Task MoonAsync(EnumMoonOptions option)
@@ -69,18 +59,18 @@ public partial class HeartsMainViewModel : BasicCardGamesVM<HeartsCardInformatio
         switch (option)
         {
             case EnumMoonOptions.GiveSelfMinus:
-                if (_mainGame.BasicData!.MultiPlayer == true)
+                if (mainGame.BasicData!.MultiPlayer == true)
                 {
-                    await _mainGame.Network!.SendAllAsync("takepointsaway");
+                    await mainGame.Network!.SendAllAsync("takepointsaway");
                 }
-                await _mainGame!.GiveSelfMinusPointsAsync();
+                await mainGame!.GiveSelfMinusPointsAsync();
                 break;
             case EnumMoonOptions.GiveEverybodyPlus:
-                if (_mainGame.BasicData!.MultiPlayer == true)
+                if (mainGame.BasicData!.MultiPlayer == true)
                 {
-                    await _mainGame.Network!.SendAllAsync("givepointseverybodyelse");
+                    await mainGame.Network!.SendAllAsync("givepointseverybodyelse");
                 }
-                await _mainGame!.GiveEverybodyElsePointsAsync();
+                await mainGame!.GiveEverybodyElsePointsAsync();
                 break;
             default:
                 throw new CustomBasicException("Not Supported");

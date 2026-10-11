@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="CribbageMainViewModel">
+    <MainScreen>
         <CribbageMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<CribbagePlayerItem>">
-        <MultiplayerOpeningView P="CribbagePlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="CribbagePlayerItem" />
 </CascadingValue>

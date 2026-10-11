@@ -4,9 +4,9 @@ namespace TileRummy.Core.Data;
 public partial class TileRummyVMData : IViewModelData, IEnableAlways
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public PoolCP Pool1;
     public TempSetsObservable<EnumColorType, EnumColorType, TileInfo> TempSets;
     public MainSets MainSets1;

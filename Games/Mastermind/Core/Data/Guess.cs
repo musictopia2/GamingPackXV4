@@ -1,11 +1,12 @@
 ﻿namespace Mastermind.Core.Data;
-public class Guess
+[UseStateChanged]
+public partial class Guess
 {
-    public BasicList<Bead> YourBeads = new();
+    public BasicList<Bead> YourBeads = [];
     public void GetNewBeads()
     {
         int x;
-        BasicList<Bead> tempList = new();
+        BasicList<Bead> tempList = [];
         for (x = 1; x <= 4; x++)
         {
             Bead thisBead = new();
@@ -16,6 +17,8 @@ public class Guess
         YourBeads.ReplaceRange(tempList);
     }
     public bool IsCompleted { get; set; }
-    public int HowManyBlacks { get; set; }
-    public int HowManyAquas { get; set; }
+    [StateProperty]
+    public partial int HowManyBlacks { get; set; }
+    [StateProperty]
+    public partial int HowManyAquas { get; set; }
 }

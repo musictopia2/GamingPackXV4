@@ -7,7 +7,7 @@ public partial class CalculatorResultsComponent
     private MonopolyCardGameGameContainer? _container;
     protected override void OnInitialized()
     {
-        _container = aa1.Resolver!.Resolve<MonopolyCardGameGameContainer>();
+        _container = Resolver!.Resolve<MonopolyCardGameGameContainer>();
     }
     private BasicList<MonopolyCardGameCardInformation> GetCards(CalculatorModel calculator)
     {

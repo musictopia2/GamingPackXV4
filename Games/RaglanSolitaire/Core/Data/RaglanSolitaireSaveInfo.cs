@@ -3,5 +3,5 @@ namespace RaglanSolitaire.Core.Data;
 [Cloneable(explicitDeclaration: false)]
 public class RaglanSolitaireSaveInfo : SolitaireSavedClass, IMappable
 {
-    public DeckRegularDict<SolitaireCard> StockCards { get; set; } = new ();
+    public DeckRegularDict<SolitaireCard> StockCards { get; set; } = [];
 }

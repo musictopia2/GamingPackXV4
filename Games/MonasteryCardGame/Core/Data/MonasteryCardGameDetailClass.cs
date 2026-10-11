@@ -15,7 +15,7 @@ public class MonasteryCardGameDetailClass : IGameInfo, ICardInfo<MonasteryCardIn
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<MonasteryCardInfo>.CardsToPassOut => 9;
-    BasicList<int> ICardInfo<MonasteryCardInfo>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<MonasteryCardInfo>.PlayerExcludeList => [];
     bool ICardInfo<MonasteryCardInfo>.AddToDiscardAtBeginning => true;
     bool ICardInfo<MonasteryCardInfo>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<MonasteryCardInfo>.ShowMessageWhenReshuffling => true;
@@ -23,12 +23,12 @@ public class MonasteryCardGameDetailClass : IGameInfo, ICardInfo<MonasteryCardIn
     bool ICardInfo<MonasteryCardInfo>.PlayerGetsCards => true;
     bool ICardInfo<MonasteryCardInfo>.NoPass => false;
     bool ICardInfo<MonasteryCardInfo>.NeedsDummyHand => false;
-    DeckRegularDict<MonasteryCardInfo> ICardInfo<MonasteryCardInfo>.DummyHand { get; set; } = new DeckRegularDict<MonasteryCardInfo>();
+    DeckRegularDict<MonasteryCardInfo> ICardInfo<MonasteryCardInfo>.DummyHand { get; set; } = [];
     bool ICardInfo<MonasteryCardInfo>.HasDrawAnimation => true;
     bool ICardInfo<MonasteryCardInfo>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<MonasteryCardInfo>.DiscardExcludeList(IListShuffler<MonasteryCardInfo> deckList)
     {
-        return new();
+        return [];
     }
     bool IBeginningRegularCards<MonasteryCardInfo>.AceLow => true;
     bool IBeginningRegularCards<MonasteryCardInfo>.CustomDeck => true;

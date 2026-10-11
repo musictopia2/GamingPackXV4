@@ -1,6 +1,6 @@
 ﻿namespace MonopolyCardGame.Core.Data;
 public struct TempInfo
 {
-    public DeckRegularDict<MonopolyCardGameCardInformation> CardList;
-    public int SetNumber;
+    public DeckRegularDict<MonopolyCardGameCardInformation> CardList { get; set; }
+    public int SetNumber { get; set; }
 }

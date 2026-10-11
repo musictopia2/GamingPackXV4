@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="CaliforniaJackMainViewModel">
+    <MainScreen>
         <CaliforniaJackMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<CaliforniaJackPlayerItem>">
-        <MultiplayerOpeningView P="CaliforniaJackPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="CaliforniaJackPlayerItem" />
 </CascadingValue>

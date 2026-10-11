@@ -27,7 +27,7 @@ public partial class EagleWingsSolitaireMainViewModel : SolitaireMainViewModel<E
         return _mainGame;
     }
     [LabelColumn]
-    public int StartingNumber { get; set; }
+    public partial int StartingNumber { get; set; }
     protected override void CommandExecutingChanged()
     {
         StartingNumber = MainPiles1!.StartNumber();

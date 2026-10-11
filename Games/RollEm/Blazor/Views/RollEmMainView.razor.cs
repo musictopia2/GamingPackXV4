@@ -3,12 +3,12 @@ public partial class RollEmMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private GameBoardGraphicsCP? _boardData;
     protected override void OnInitialized()
     {
-        _boardData = aa1.Resolver!.Resolve<GameBoardGraphicsCP>();
+        _boardData = Resolver!.Resolve<GameBoardGraphicsCP>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(RollEmVMData.NormalTurn))
                 .AddLabel("Round", nameof(RollEmVMData.Round))

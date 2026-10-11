@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="@TargetImageHeight">
-    <ParentControl VM="TileRummyMainViewModel">
+    <MainScreen>
         <TileRummyMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<TileRummyPlayerItem>">
-        <MultiplayerOpeningView P="TileRummyPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="TileRummyPlayerItem" />
 </CascadingValue>

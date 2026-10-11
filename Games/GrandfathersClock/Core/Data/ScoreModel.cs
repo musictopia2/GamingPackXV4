@@ -1,9 +1,9 @@
 namespace GrandfathersClock.Core.Data;
 [SingletonGame]
-public class ScoreModel : IScoreData, IClockVM
+public class ScoreModel(IEventAggregator aggregator) : IScoreData, IClockVM
 {
     private int _score;
-    private readonly IEventAggregator _aggregator;
+
     public int Score
     {
         get { return _score; }
@@ -18,12 +18,9 @@ public class ScoreModel : IScoreData, IClockVM
     }
     private void DoPublish(IScoreData data)
     {
-        _aggregator.Publish(data);
+        aggregator.Publish(data);
     }
-    public ScoreModel(IEventAggregator aggregator)
-    {
-        _aggregator = aggregator;
-    }
+
     Task IClockVM.ClockClickedAsync(int index)
     {
         throw new CustomBasicException("Rethinking may be necessary");

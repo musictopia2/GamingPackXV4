@@ -16,14 +16,14 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
         _mainGame = mainGame;
         _actionCard = _gameContainer.DeckList.GetSpecificItem(_gameContainer.SaveRoot.ActionCardUsed);
     }
-    public void AddAction(Action action)
-    {
-        _gameContainer.Command.CustomStateHasChanged += action;
-    }
-    public void RemoveAction()
-    {
-        _gameContainer.Command.ResetCustomStates();
-    }
+    //public void AddAction(Action action)
+    //{
+    //    _gameContainer.Command.CustomStateHasChanged += action;
+    //}
+    //public void RemoveAction()
+    //{
+    //    _gameContainer.Command.ResetCustomStates();
+    //}
     public DealCardGameCardInformation ActionCard => _actionCard;
     public CommandContainer GetCommandContainer => _gameContainer.Command;
     public DealCardGamePlayerItem GetSelf => _gameContainer.PlayerList!.GetSelf(); //i think.
@@ -39,13 +39,13 @@ public partial class JustSayNoViewModel : IBasicEnableProcess
         {
             await _mainGame.Network!.SendAllAsync("accept");
         }
-        RemoveAction();
+        //RemoveAction();
         await _mainGame.ProcessAcceptanceAsync();
     }
     [Command(EnumCommandCategory.Game)]
     public async Task RejectAsync()
     {
-        RemoveAction();
+        //RemoveAction();
         if (_mainGame.BasicData.MultiPlayer)
         {
             await _mainGame.Network!.SendAllAsync("reject");

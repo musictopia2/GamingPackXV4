@@ -1,20 +1,12 @@
 ﻿namespace DutchBlitz.Core.Logic;
-public class ComputerAI
+public class ComputerAI(DutchBlitzGameContainer gameContainer, DutchBlitzVMData model)
 {
-    private readonly DutchBlitzGameContainer _gameContainer;
-    private readonly DutchBlitzVMData _model;
-    public ComputerAI(DutchBlitzGameContainer gameContainer, DutchBlitzVMData model)
-    {
-        _moves = 0;
-        _gameContainer = gameContainer;
-        _model = model;
-    }
     public enum EnumMoveType
     {
         ContinueMove = 1, ToPublic, Transfer
     }
     private const int _maxMoves = 8;
-    private int _moves;
+    private int _moves = 0;
     public struct MoveInfo
     {
         public bool NewPublicPile { get; set; }
@@ -27,14 +19,14 @@ public class ComputerAI
     public void TransferCards()
     {
         _moves += 2;
-        var thisCard = _gameContainer.CurrentComputer!.StockList.First();
-        _gameContainer.CurrentComputer.Discard.Add(thisCard);
-        _gameContainer.CurrentComputer.StockList.RemoveSpecificItem(thisCard);
+        var thisCard = gameContainer.CurrentComputer!.StockList.First();
+        gameContainer.CurrentComputer.Discard.Add(thisCard);
+        gameContainer.CurrentComputer.StockList.RemoveSpecificItem(thisCard);
         UpdateComputerCount();
     }
     private void UpdateComputerCount()
     {
-        _gameContainer.SingleInfo!.StockLeft = _gameContainer.CurrentComputer!.StockList.Count;
+        gameContainer.SingleInfo!.StockLeft = gameContainer.CurrentComputer!.StockList.Count;
     }
     public DutchBlitzCardInformation CardToUseForPublic(MoveInfo thisMove)
     {
@@ -42,35 +34,35 @@ public class ComputerAI
         DutchBlitzCardInformation thisCard;
         if (thisMove.FromStock)
         {
-            thisCard = _gameContainer.CurrentComputer!.StockList.First();
-            _gameContainer.CurrentComputer.StockList.RemoveSpecificItem(thisCard);
+            thisCard = gameContainer.CurrentComputer!.StockList.First();
+            gameContainer.CurrentComputer.StockList.RemoveSpecificItem(thisCard);
             UpdateComputerCount();
             return thisCard;
         }
         if (thisMove.FromHand)
         {
-            thisCard = _gameContainer.CurrentComputer!.PileList.Last();
-            _gameContainer.CurrentComputer.PileList.RemoveSpecificItem(thisCard);
+            thisCard = gameContainer.CurrentComputer!.PileList.Last();
+            gameContainer.CurrentComputer.PileList.RemoveSpecificItem(thisCard);
             return thisCard;
         }
-        thisCard = _gameContainer.CurrentComputer!.Discard[thisMove.DiscardPile];
-        _gameContainer.CurrentComputer.Discard.RemoveSpecificItem(thisCard);
+        thisCard = gameContainer.CurrentComputer!.Discard[thisMove.DiscardPile];
+        gameContainer.CurrentComputer.Discard.RemoveSpecificItem(thisCard);
         return thisCard;
     }
     public void DrawCards()
     {
         _moves++;
-        if (_gameContainer.CurrentComputer!.DeckList.Count == 0)
+        if (gameContainer.CurrentComputer!.DeckList.Count == 0)
         {
-            _gameContainer.CurrentComputer.DeckList.ReplaceRange(_gameContainer.CurrentComputer.PileList);
-            _gameContainer.CurrentComputer.PileList.Clear();
+            gameContainer.CurrentComputer.DeckList.ReplaceRange(gameContainer.CurrentComputer.PileList);
+            gameContainer.CurrentComputer.PileList.Clear();
         }
         int incs;
-        if (_gameContainer.PlayerList!.Count == 2)
+        if (gameContainer.PlayerList!.Count == 2)
         {
             incs = 1;
         }
-        else if (_gameContainer.PlayerList!.Count == 3)
+        else if (gameContainer.PlayerList!.Count == 3)
         {
             incs = 2;
         }
@@ -80,13 +72,13 @@ public class ComputerAI
         }
         incs.Times(x =>
         {
-            if (_gameContainer.CurrentComputer.DeckList.Count == 0)
+            if (gameContainer.CurrentComputer.DeckList.Count == 0)
             {
                 return;
             }
-            var thisCard = _gameContainer.CurrentComputer.DeckList.First();
-            _gameContainer.CurrentComputer.PileList.Add(thisCard);
-            _gameContainer.CurrentComputer.DeckList.RemoveSpecificItem(thisCard);
+            var thisCard = gameContainer.CurrentComputer.DeckList.First();
+            gameContainer.CurrentComputer.PileList.Add(thisCard);
+            gameContainer.CurrentComputer.DeckList.RemoveSpecificItem(thisCard);
         });
     }
     public bool CanEndTurn => _moves >= _maxMoves;
@@ -110,19 +102,19 @@ public class ComputerAI
     public MoveInfo ComputerMove()
     {
         MoveInfo output = new();
-        var thisCard = _gameContainer.CurrentComputer!.StockList.First();
+        var thisCard = gameContainer.CurrentComputer!.StockList.First();
         if (thisCard.CardValue == 1)
         {
             output.FromStock = true;
             output.NewPublicPile = true;
             return output;
         }
-        int maxs = _model.PublicPiles1!.MaxPiles();
+        int maxs = model.PublicPiles1!.MaxPiles();
         int x;
         bool rets;
         for (x = 1; x <= maxs; x++)
         {
-            rets = _model.PublicPiles1.CanAddToPile(thisCard, x - 1); // 0 based i think
+            rets = model.PublicPiles1.CanAddToPile(thisCard, x - 1); // 0 based i think
             if (rets == true)
             {
                 output.FromStock = true;
@@ -130,14 +122,14 @@ public class ComputerAI
                 return output;
             }
         }
-        if (_gameContainer.CurrentComputer.Discard.Count < _gameContainer.MaxDiscard)
+        if (gameContainer.CurrentComputer.Discard.Count < gameContainer.MaxDiscard)
         {
             output.FromStock = true;
             output.AddDiscard = true;
             return output;
         }
         int y = 0;
-        foreach (var tempCard in _gameContainer.CurrentComputer.Discard)
+        foreach (var tempCard in gameContainer.CurrentComputer.Discard)
         {
             y++;
             if (tempCard.CardValue == 1)
@@ -148,7 +140,7 @@ public class ComputerAI
             }
             for (x = 1; x <= maxs; x++)
             {
-                rets = _model.PublicPiles1.CanAddToPile(tempCard, x - 1);
+                rets = model.PublicPiles1.CanAddToPile(tempCard, x - 1);
                 if (rets)
                 {
                     output.DiscardPile = y - 1;
@@ -157,9 +149,9 @@ public class ComputerAI
                 }
             }
         }
-        if (_gameContainer.CurrentComputer.PileList.Count > 0)
+        if (gameContainer.CurrentComputer.PileList.Count > 0)
         {
-            thisCard = _gameContainer.CurrentComputer.PileList.Last();
+            thisCard = gameContainer.CurrentComputer.PileList.Last();
             if (thisCard.CardValue == 1)
             {
                 output.FromHand = true;
@@ -168,7 +160,7 @@ public class ComputerAI
             }
             for (x = 1; x <= maxs; x++)
             {
-                rets = _model.PublicPiles1.CanAddToPile(thisCard, x - 1);
+                rets = model.PublicPiles1.CanAddToPile(thisCard, x - 1);
                 if (rets)
                 {
                     output.FromHand = true;

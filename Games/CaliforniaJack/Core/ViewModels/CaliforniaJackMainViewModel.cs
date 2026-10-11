@@ -1,23 +1,20 @@
 namespace CaliforniaJack.Core.ViewModels;
 [InstanceGame]
-public class CaliforniaJackMainViewModel : BasicCardGamesVM<CaliforniaJackCardInformation>
-{
-    private readonly CaliforniaJackVMData _model;
-    public CaliforniaJackMainViewModel(CommandContainer commandContainer,
+public class CaliforniaJackMainViewModel(CommandContainer commandContainer,
         CaliforniaJackMainGameClass mainGame,
         CaliforniaJackVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<CaliforniaJackCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    private CaliforniaJackVMData Model => viewModel;
+    protected override void AdditionalInitialize()
     {
-        _model = viewModel;
-        _model.Deck1.NeverAutoDisable = true;
-        _model.PlayerHand1!.Maximum = 6;
-        _model.Deck1!.DeckStyle = EnumDeckPileStyle.AlwaysKnown;
+        Model.Deck1.NeverAutoDisable = true;
+        Model.PlayerHand1!.Maximum = 6;
+        Model.Deck1!.DeckStyle = EnumDeckPileStyle.AlwaysKnown;
+        base.AdditionalInitialize();
     }
     protected override bool CanEnableDeck()
     {

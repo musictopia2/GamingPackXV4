@@ -1,10 +1,6 @@
 ﻿namespace TileRummy.Core.Logic;
-public class MainSets : MainSetsObservable<EnumColorType, EnumColorType, TileInfo, TileSet, SavedSet>
+public class MainSets(CommandContainer command) : MainSetsObservable<EnumColorType, EnumColorType, TileInfo, TileSet, SavedSet>(command)
 {
-    public MainSets(CommandContainer command) : base(command)
-    {
-
-    }
     public void RemoveSet(int index)
     {
         var thisSet = SetList[index];
@@ -24,7 +20,7 @@ public class MainSets : MainSetsObservable<EnumColorType, EnumColorType, TileInf
     }
     public bool PlayedAtLeastOneFromHand()
     {
-        BasicList<int> tempList = new();
+        BasicList<int> tempList = [];
         SetList.ForEach(thisTemp =>
         {
             thisTemp.HandList.ForEach(thisTile =>

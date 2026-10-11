@@ -3,17 +3,17 @@ namespace Cribbage.Core.Data;
 public partial class CribbagePlayerItem : PlayerSingleHand<CribbageCard>
 {
     [ScoreColumn]
-    public int ScoreRound { get; set; }
+    public partial int ScoreRound { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [ScoreColumn]
-    public bool IsSkunk { get; set; } = true;
+    public partial bool IsSkunk { get; set; } = true;
     [ScoreColumn]
-    public bool FinishedLooking { get; set; }
+    public partial bool FinishedLooking { get; set; }
     [ScoreColumn]
-    public int FirstPosition { get; set; }
+    public partial int FirstPosition { get; set; }
     [ScoreColumn]
-    public int SecondPosition { get; set; }
+    public partial int SecondPosition { get; set; }
     [ScoreColumn]
-    public bool ChoseCrib { get; set; }
+    public partial bool ChoseCrib { get; set; }
 }

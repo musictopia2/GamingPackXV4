@@ -34,11 +34,11 @@ public partial class BladesOfSteelVMData : IBasicCardGamesData<RegularSimpleCard
     public HandObservable<RegularSimpleCard> PlayerHand1 { get; set; }
     public SingleObservablePile<RegularSimpleCard>? OtherPile { get; set; }
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string OtherPlayer { get; set; } = "";
+    public partial string OtherPlayer { get; set; } = "";
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
 }

@@ -14,10 +14,10 @@ public class YaBlewItDetailClass : IGameInfo, ICardInfo<YaBlewItCardInformation>
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.LargeDevices; //default to smallest but can change as needed.
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
     int ICardInfo<YaBlewItCardInformation>.CardsToPassOut => 0; //pass out no cards. however, will later pass out a faulty card.
-    BasicList<int> ICardInfo<YaBlewItCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<YaBlewItCardInformation>.PlayerExcludeList => [];
     BasicList<int> ICardInfo<YaBlewItCardInformation>.DiscardExcludeList(IListShuffler<YaBlewItCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool ICardInfo<YaBlewItCardInformation>.AddToDiscardAtBeginning => false; //because the main turn has to draw a card.
     bool ICardInfo<YaBlewItCardInformation>.ReshuffleAllCardsFromDiscard => false;
@@ -26,7 +26,7 @@ public class YaBlewItDetailClass : IGameInfo, ICardInfo<YaBlewItCardInformation>
     bool ICardInfo<YaBlewItCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<YaBlewItCardInformation>.NoPass => true;
     bool ICardInfo<YaBlewItCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<YaBlewItCardInformation> ICardInfo<YaBlewItCardInformation>.DummyHand { get; set; } = new DeckRegularDict<YaBlewItCardInformation>();
+    DeckRegularDict<YaBlewItCardInformation> ICardInfo<YaBlewItCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<YaBlewItCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<YaBlewItCardInformation>.CanSortCardsToBeginWith => true;
 }

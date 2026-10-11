@@ -4,15 +4,12 @@ public partial class BasicNotebookComponent
     [Parameter]
     [EditorRequired]
     public Dictionary<int, DetectiveInfo> PersonalNotebook { get; set; } = [];
-
-
     [Parameter]
     [EditorRequired]
     public ICustomCommand? AddCommand { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; } = 15;
     private string RealHeight => $"{TargetHeight}vh";
-
     private BasicList<ClueCardGameCardInformation> GetCardsInCategory(EnumCardType category)
     {
         var list = PersonalNotebook.Where(x => x.Value.Category == category).ToBasicList();

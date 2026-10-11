@@ -4,8 +4,8 @@
 public class GameBoardGraphicsCP
 {
     public SizeF OriginalSize { get; private set; } = new SizeF(640, 640);
-    public readonly Dictionary<int, RectangleF> SpaceList = new(); //needs to be public now so blazor can read it.
-    public Dictionary<int, RectangleF> HomeSpaces = new();
+    public readonly Dictionary<int, RectangleF> SpaceList = []; //needs to be public now so blazor can read it.
+    public Dictionary<int, RectangleF> HomeSpaces = [];
     public RectangleF DiscardLocation { get; private set; }
     public RectangleF DeckLocation { get; private set; }
     public SorryGameContainer Container { get; set; }
@@ -33,7 +33,7 @@ public class GameBoardGraphicsCP
         RectangleF rect;
         PointF pt_Center = new(bounds.Left + (bounds.Width / 2), bounds.Top + (bounds.Height / 2));
         RectangleF obj_Space;
-        HomeSpaces = new Dictionary<int, RectangleF>();
+        HomeSpaces = [];
         DeckLocation = new RectangleF(pt_Center.X - CardSize().Width - (CardSize().Width / 10), pt_Center.Y - (CardSize().Height / 2), CardSize().Width, CardSize().Height);
         DiscardLocation = new RectangleF(pt_Center.X + (CardSize().Width / 10), pt_Center.Y - (CardSize().Height / 2), CardSize().Width, CardSize().Height);
         int spaceNumber;
@@ -174,6 +174,6 @@ public class GameBoardGraphicsCP
         var secondRect = new RectangleF(home.Location.X + (home.Width / 2), home.Location.Y, home.Width / 4, home.Height / 4);
         var thirdRect = new RectangleF(home.Location.X, home.Location.Y + (home.Height / 2), home.Width / 4, home.Height / 4);
         var fourthRect = new RectangleF(home.Location.X + (home.Width / 2), home.Location.Y + (home.Height / 2), home.Width / 4, home.Height / 4);
-        return new() { firstRect, secondRect, thirdRect, fourthRect };
+        return [firstRect, secondRect, thirdRect, fourthRect];
     }
 }

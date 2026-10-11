@@ -11,7 +11,7 @@ public class SavannahMainGameClass
     private bool _wasNew;
     private bool _willClearBoard;
     private bool _startTurn;
-    private readonly DeckRegularDict<RegularSimpleCard> _pileCards = new();
+    private readonly DeckRegularDict<RegularSimpleCard> _pileCards = [];
     public SavannahMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
         BasicData basicData,
@@ -50,6 +50,8 @@ public class SavannahMainGameClass
         var self = PlayerList.GetSelf();
         _model.SelfDiscard = self.SelfDiscard;
         LoadPlayerStockPiles(self);
+        _model.Cup!.CanShowDice = true;
+        _model.Cup.Visible = true;
         //anything else needed is here.
         return base.FinishGetSavedAsync();
     }
@@ -195,6 +197,7 @@ public class SavannahMainGameClass
     public override async Task EndTurnAsync()
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
+        SingleInfo.Update();
         SingleInfo.MainHandList.UnhighlightObjects(); //i think this is best.
         if (SingleInfo.PlayerCategory == EnumPlayerCategory.Self)
         {
@@ -307,7 +310,7 @@ public class SavannahMainGameClass
     }
     private DeckRegularDict<RegularSimpleCard> RemainingCards()
     {
-        DeckRegularDict<RegularSimpleCard> output = new();
+        DeckRegularDict<RegularSimpleCard> output = [];
         foreach (var player in PlayerList)
         {
             output.AddRange(player.DiscardList.ToBasicList());
@@ -324,7 +327,7 @@ public class SavannahMainGameClass
     {
         int maxs = _gameContainer.DeckCount;
         DeckRegularDict<RegularSimpleCard> remains = RemainingCards();
-        DeckRegularDict<RegularSimpleCard> output = new();
+        DeckRegularDict<RegularSimpleCard> output = [];
         for (int i = 1; i <= maxs; i++)
         {
             if (remains.ObjectExist(i) == false)
@@ -351,7 +354,6 @@ public class SavannahMainGameClass
         card.IsSelected = false;
         SingleInfo.MainHandList.RemoveSpecificItem(card);
         SingleInfo.DiscardList.Add(card);
-        _command.UpdateAll();
         await EndTurnAsync(); //no need for animations for this.
     }
     public override async Task DiscardAsync(RegularSimpleCard thisCard)
@@ -390,7 +392,7 @@ public class SavannahMainGameClass
             message.Invoke("You must choose a card to play");
             return output;
         }
-        BasicList<int> temps = new() { reserveSelected, discardSelected, handSelected };
+        BasicList<int> temps = [reserveSelected, discardSelected, handSelected];
         temps.RemoveAllOnly(x => x == 0);
         if (temps.Count > 1)
         {
@@ -459,7 +461,14 @@ public class SavannahMainGameClass
         var thisPile = _model.PublicPiles.PileList![play.Pile];
         await Aggregator.AnimateCardAsync(card, EnumAnimcationDirection.StartDownToCard, "public", thisPile);
         _model.PublicPiles.AddCardToPile(play.Pile, card); //hopefully this is still okay.
-        _command.UpdateAll();
+        if (play.WhichType == EnumSelectType.FromDiscard)
+        {
+            PlayerList[play.Player].Update();
+        }
+        else
+        {
+            SingleInfo!.Update();
+        }
         if (DidGoOut())
         {
             await ShowWinAsync();
@@ -477,6 +486,13 @@ public class SavannahMainGameClass
             return;
         }
         await ContinueTurnAsync();
+    }
+    private void UpdatePlayers()
+    {
+        foreach (var player in PlayerList)
+        {
+            player.Update();
+        }
     }
     private async Task RefreshBoardAsync()
     {

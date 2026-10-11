@@ -1,6 +1,6 @@
 namespace Savannah.Core.Data;
 [UseScoreboard]
-public partial class SavannahPlayerItem : PlayerSingleHand<RegularSimpleCard>
+public partial class SavannahPlayerItem : PlayerSingleHand<RegularSimpleCard>, IStateChanged
 {
     [ScoreColumn]
     public int DiscardLeft => DiscardList.Count; //try this way.
@@ -40,9 +40,17 @@ public partial class SavannahPlayerItem : PlayerSingleHand<RegularSimpleCard>
         }
     }
     public int WhenToStackDiscards { get; set; }
-    public DeckRegularDict<RegularSimpleCard> ReserveList { get; set; } = new();
-    public DeckRegularDict<RegularSimpleCard> DiscardList { get; set; } = new();
+    public DeckRegularDict<RegularSimpleCard> ReserveList { get; set; } = [];
+    public DeckRegularDict<RegularSimpleCard> DiscardList { get; set; } = [];
 
     [JsonIgnore]
     public SelfDiscardCP? SelfDiscard { get; set; }
+    public event Action? StateChanged;
+    public void Update()
+    {
+        StateChanged?.Invoke();
+        OnScoreValueChanged(nameof(DiscardLeft));
+        OnScoreValueChanged(nameof(ReserveLeft));
+        OnScoreValueChanged(nameof(NextReserve));
+    }
 }

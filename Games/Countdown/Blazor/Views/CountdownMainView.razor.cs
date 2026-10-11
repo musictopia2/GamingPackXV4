@@ -3,11 +3,11 @@ public partial class CountdownMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private CountdownGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _gameContainer = aa1.Resolver!.Resolve<CountdownGameContainer>();
+        _gameContainer = Resolver!.Resolve<CountdownGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(CountdownVMData.NormalTurn))
                  .AddLabel("Round", nameof(CountdownVMData.Round))

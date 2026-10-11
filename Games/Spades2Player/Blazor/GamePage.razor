@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="Spades2PlayerMainViewModel">
+    <MainScreen>
         <Spades2PlayerMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<Spades2PlayerPlayerItem>">
-        <MultiplayerOpeningView P="Spades2PlayerPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="Spades2PlayerPlayerItem" />
 </CascadingValue>

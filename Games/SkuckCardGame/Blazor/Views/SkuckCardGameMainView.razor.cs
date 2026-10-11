@@ -1,15 +1,15 @@
 namespace SkuckCardGame.Blazor.Views;
 public partial class SkuckCardGameMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private SkuckCardGameVMData? _vmData;
     private SkuckCardGameGameContainer? _gameContainer;
-    private BasicList<SkuckCardGamePlayerItem> _players = new();
+    private BasicList<SkuckCardGamePlayerItem> _players = [];
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<SkuckCardGameVMData>();
-        _gameContainer = aa1.Resolver.Resolve<SkuckCardGameGameContainer>();
+        _vmData = Resolver!.Resolve<SkuckCardGameVMData>();
+        _gameContainer = Resolver.Resolve<SkuckCardGameGameContainer>();
         _players = _gameContainer.PlayerList!.GetAllPlayersStartingWithSelf();
         _labels.Clear();
         _labels.AddLabel("Round", nameof(SkuckCardGameVMData.RoundNumber))

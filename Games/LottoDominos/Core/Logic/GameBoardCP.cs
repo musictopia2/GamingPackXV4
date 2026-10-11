@@ -5,7 +5,6 @@ public class GameBoardCP : GameBoardObservable<SimpleDominoInfo>
 {
     private readonly IAsyncDelayer _delayer;
     private readonly LottoDominosVMData _model;
-    private readonly CommandContainer _command;
     public GameBoardCP(CommandContainer container,
         IAsyncDelayer delayer,
         LottoDominosVMData model
@@ -17,7 +16,6 @@ public class GameBoardCP : GameBoardObservable<SimpleDominoInfo>
         _model = model;
         Text = "Dominos"; //just do here since its inherited anyways.
         Visible = true;
-        _command = container;
     }
     internal Func<int, Task>? MakeMoveAsync { get; set; }
     protected override Task ClickProcessAsync(SimpleDominoInfo domino)
@@ -44,7 +42,6 @@ public class GameBoardCP : GameBoardObservable<SimpleDominoInfo>
     {
         SimpleDominoInfo thisDomino = ObjectList.GetSpecificItem(deck);
         thisDomino.IsUnknown = false;
-        _command.UpdateAll(); //to show up on blazor.
         await _delayer.DelaySeconds(2);
         thisDomino.IsUnknown = true;
     }

@@ -263,7 +263,10 @@ public class RackoMainGameClass
             await ContinueTurnAsync();
             return;
         }
-        SingleInfo.MainHandList.ReplaceItem(thisCard, newCard);
+        var cards = SingleInfo.MainHandList.ToRegularDeckDict();
+        int index = cards.IndexOf(thisCard);
+        cards[index] = newCard;
+        SingleInfo.MainHandList.ReplaceRange(cards);
         if (SingleInfo.MainHandList.ObjectExist(thisCard.Deck))
         {
             throw new CustomBasicException("Failed To Replace Card");

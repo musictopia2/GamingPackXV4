@@ -34,7 +34,7 @@ public class CardGraphicsBlazor : BaseDeckGraphics<MilkRunCardInformation>
         var secondRect = new RectangleF(4, 35, 42, 28);
         DrawRectangle(firstRect, cc1.DeepPink);
         DrawRectangle(secondRect, cc1.Chocolate);
-        BasicList<RectangleF> thisList = new();
+        BasicList<RectangleF> thisList = [];
         float fontSize = DefaultSize.Height / 3.2f;
         string color = cc1.Aqua;
         thisList.Add(firstRect);

@@ -29,14 +29,14 @@ public partial class StealingViewModel : IBasicEnableProcess
         _gameContainer.PersonalInformation.StealInfo.Color = EnumColor.None;
         _gameContainer.PersonalInformation.StealInfo.PlayerId = 0;
         _gameContainer.PersonalInformation.StealInfo.CardChosen = 0;
-        _gameContainer.Command.ResetCustomStates();
+        //_gameContainer.Command.ResetCustomStates();
         await _privateAutoResume.SaveStateAsync(_gameContainer);
-        _gameContainer.Command.UpdateAll(); //i think.
+        _gameContainer.Command.UpdateSpecificAction(DealCardGameActions.Main);
     }
-    public void AddAction(Action action)
-    {
-        _gameContainer.Command.CustomStateHasChanged += action;
-    }
+    //public void AddAction(Action action)
+    //{
+    //    _gameContainer.Command.CustomStateHasChanged += action;
+    //}
     [Command(EnumCommandCategory.Game)]
     public async Task StealAsync()
     { 
@@ -49,7 +49,7 @@ public partial class StealingViewModel : IBasicEnableProcess
         {
             await _gameContainer.Network!.SendAllAsync("stealproperty", _gameContainer.PersonalInformation.StealInfo);
         }
-        _gameContainer.Command.ResetCustomStates();
+        //_gameContainer.Command.ResetCustomStates();
         await _mainGame.PossibleStealingPropertyAsync(_gameContainer.PersonalInformation.StealInfo);
     }
     public bool CanEnableBasics()

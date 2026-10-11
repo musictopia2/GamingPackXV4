@@ -2,8 +2,8 @@ namespace ClockSolitaire.Core.Data;
 [SingletonGame]
 public class ClockSolitaireSaveInfo : IMappable, ISaveInfo
 {
-    public BasicList<int> DeckList { get; set; } = new();
-    public BasicList<ClockInfo> SavedClocks { get; set; } = new();
+    public BasicList<int> DeckList { get; set; } = [];
+    public BasicList<ClockInfo> SavedClocks { get; set; } = [];
     public int CurrentCard { get; set; }
     public int PreviousOne { get; set; }
     private int _cardsLeft;

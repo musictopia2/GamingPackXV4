@@ -1,25 +1,16 @@
 namespace DeadDie96.Core.ViewModels;
 [InstanceGame]
-public class DeadDie96MainViewModel : DiceGamesVM<TenSidedDice>
-{
-    private readonly DeadDie96MainGameClass _mainGame; //if we don't need, delete.
-    public DeadDie96VMData VMData { get; set; }
-    public DeadDie96MainViewModel(CommandContainer commandContainer,
+public class DeadDie96MainViewModel(CommandContainer commandContainer,
         DeadDie96MainGameClass mainGame,
         DeadDie96VMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IStandardRollProcesses roller,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, roller, aggregator)
-    {
-        _mainGame = mainGame;
-        VMData = viewModel;
-    }
+        IEventAggregator aggregator) : DiceGamesVM<TenSidedDice>(commandContainer, mainGame, viewModel, basicData, resolver, roller, aggregator)
+{
+    public DeadDie96VMData VMData { get; set; } = viewModel;
     public DiceCup<TenSidedDice> GetCup => VMData.Cup!;
-    public PlayerCollection<DeadDie96PlayerItem> PlayerList => _mainGame.PlayerList;
+    public PlayerCollection<DeadDie96PlayerItem> PlayerList => mainGame.PlayerList;
     protected override bool CanEnableDice()
     {
         return false; //if you can enable dice, change the routine.

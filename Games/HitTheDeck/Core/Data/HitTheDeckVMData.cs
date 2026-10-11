@@ -2,22 +2,16 @@ namespace HitTheDeck.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
 [AutoReset]
-public partial class HitTheDeckVMData : IBasicCardGamesData<HitTheDeckCardInformation>
+public partial class HitTheDeckVMData(CommandContainer command) : IBasicCardGamesData<HitTheDeckCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string NextPlayer { get; set; } = "";
-    public HitTheDeckVMData(CommandContainer command)
-    {
-        Deck1 = new(command);
-        Pile1 = new(command);
-        PlayerHand1 = new(command);
-    }
-    public DeckObservablePile<HitTheDeckCardInformation> Deck1 { get; set; }
-    public SingleObservablePile<HitTheDeckCardInformation> Pile1 { get; set; }
-    public HandObservable<HitTheDeckCardInformation> PlayerHand1 { get; set; }
+    public partial string NextPlayer { get; set; } = "";
+    public DeckObservablePile<HitTheDeckCardInformation> Deck1 { get; set; } = new(command);
+    public SingleObservablePile<HitTheDeckCardInformation> Pile1 { get; set; } = new(command);
+    public HandObservable<HitTheDeckCardInformation> PlayerHand1 { get; set; } = new(command);
     public SingleObservablePile<HitTheDeckCardInformation>? OtherPile { get; set; }
 }

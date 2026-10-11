@@ -1,42 +1,31 @@
 namespace RoundsCardGame.Core.Logic;
 [SingletonGame]
-public class RoundsCardGameMainGameClass
-    : TrickGameClass<EnumSuitList, RoundsCardGameCardInformation, RoundsCardGamePlayerItem, RoundsCardGameSaveInfo>
+public class RoundsCardGameMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    RoundsCardGameVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<RoundsCardGameCardInformation> cardInfo,
+    CommandContainer command,
+    RoundsCardGameGameContainer gameContainer,
+    ITrickData trickData,
+    ITrickPlay trickPlay,
+    IAdvancedTrickProcesses aTrick,
+    ISystemError error,
+    IToast toast
+        )
+        : TrickGameClass<EnumSuitList, RoundsCardGameCardInformation, RoundsCardGamePlayerItem, RoundsCardGameSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
         , IStartNewGame, ISerializable
 {
-    private readonly RoundsCardGameVMData _model;
-    private readonly CommandContainer _command;
-    private readonly IAdvancedTrickProcesses _aTrick;
-    private readonly IToast _toast;
-    public RoundsCardGameMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        RoundsCardGameVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<RoundsCardGameCardInformation> cardInfo,
-        CommandContainer command,
-        RoundsCardGameGameContainer gameContainer,
-        ITrickData trickData,
-        ITrickPlay trickPlay,
-        IAdvancedTrickProcesses aTrick,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _aTrick = aTrick;
-        _toast = toast;
-    }
     public override async Task FinishGetSavedAsync()
     {
         LoadControls();
         LoadVM();
-        _model.TrickArea1!.Visible = true;
+        currentMod.TrickArea1!.Visible = true;
         await base.FinishGetSavedAsync();
-        _aTrick!.LoadGame();
+        aTrick!.LoadGame();
     }
     private void LoadControls()
     {
@@ -99,8 +88,8 @@ public class RoundsCardGameMainGameClass
             thisPlayer.TricksWon = 0;
             thisPlayer.RoundsWon = 0;
         });
-        _model.TrickArea1!.Visible = true;
-        _aTrick!.ClearBoard();
+        currentMod.TrickArea1!.Visible = true;
+        aTrick!.ClearBoard();
         return base.StartSetUpAsync(isBeginning);
     }
     protected override Task LastPartOfSetUpBeforeBindingsAsync()
@@ -117,7 +106,7 @@ public class RoundsCardGameMainGameClass
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         SingleInfo.MainHandList.UnhighlightObjects();
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         this.ShowTurn();
         await SaveStateAsync();
@@ -127,7 +116,7 @@ public class RoundsCardGameMainGameClass
     {
         var leadCard = thisCol.First();
         var thisCard = thisCol.Last();
-        var tempCard = _model!.Pile1!.GetCardInfo();
+        var tempCard = currentMod!.Pile1!.GetCardInfo();
         var trumpSuit = tempCard.Suit;
         var trumpNumber = tempCard.Value;
         if (thisCard.Value == trumpNumber)
@@ -161,7 +150,7 @@ public class RoundsCardGameMainGameClass
         int wins = WhoWonTrick(trickList);
         RoundsCardGamePlayerItem thisPlayer = PlayerList![wins];
         thisPlayer.TricksWon++;
-        await _aTrick!.AnimateWinAsync(wins);
+        await aTrick!.AnimateWinAsync(wins);
         trickList.ForEach(card =>
         {
             card.Player = wins;
@@ -171,8 +160,8 @@ public class RoundsCardGameMainGameClass
         if (SingleInfo!.MainHandList.Count == 0)
         {
             thisPlayer.TricksWon++; //gets a double one this time.
-            var thisList = _model!.Pile1!.DiscardList();
-            thisList.Add(_model!.Pile1!.GetCardInfo());
+            var thisList = currentMod!.Pile1!.DiscardList();
+            thisList.Add(currentMod!.Pile1!.GetCardInfo());
             thisList.ForEach(card =>
             {
                 card.Player = wins;
@@ -182,11 +171,11 @@ public class RoundsCardGameMainGameClass
             await EndRoundAsync();
             return;
         }
-        _model!.PlayerHand1!.EndTurn();
+        currentMod!.PlayerHand1!.EndTurn();
         SingleInfo = PlayerList.GetSelf();
         if (SingleInfo.MainHandList.Count == 4)
         {
-            if (_model!.Deck1!.IsEndOfDeck() == false)
+            if (currentMod!.Deck1!.IsEndOfDeck() == false)
             {
                 StartNextPart(true);
             }
@@ -200,8 +189,8 @@ public class RoundsCardGameMainGameClass
     }
     private async Task StartNewTrickAsync()
     {
-        _aTrick!.ClearBoard();
-        _command!.ManuelFinish = true; //because it could be somebody else's turn.
+        aTrick.ClearBoard();
+        CommandContainer!.ManuelFinish = true; //because it could be somebody else's turn.
         await StartNewTurnAsync();
     }
     private void CalculateMajority()
@@ -219,7 +208,7 @@ public class RoundsCardGameMainGameClass
     private void StartNextPart(bool drawExtraCards)
     {
         CalculateMajority();
-        _toast.ShowInfoToast("Round is over.  Look at the scores then continue");
+        Toast.ShowInfoToast("Round is over.  Look at the scores then continue");
         if (drawExtraCards == true)
         {
             int x;
@@ -227,12 +216,12 @@ public class RoundsCardGameMainGameClass
             {
                 foreach (var thisPlayer in PlayerList!)
                 {
-                    var thisCard = _model!.Deck1!.DrawCard();
+                    var thisCard = currentMod!.Deck1!.DrawCard();
                     thisPlayer.MainHandList.Add(thisCard);
                 }
             }
-            var newCard = _model!.Deck1!.DrawCard();
-            _model!.Pile1!.AddCard(newCard);
+            var newCard = currentMod!.Deck1!.DrawCard();
+            currentMod!.Pile1!.AddCard(newCard);
         }
         PlayerList!.ForEach(thisPlayer =>
         {

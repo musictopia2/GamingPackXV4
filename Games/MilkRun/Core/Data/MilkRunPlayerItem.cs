@@ -1,14 +1,18 @@
 namespace MilkRun.Core.Data;
+
+[UseStateChanged]
 public partial class MilkRunPlayerItem : PlayerSingleHand<MilkRunCardInformation>
 {//anything needed is here
-    public BasicList<BasicPileInfo<MilkRunCardInformation>> ChocolateSavedList { get; set; } = new();
-    public BasicList<BasicPileInfo<MilkRunCardInformation>> StrawberrySavedList { get; set; } = new();
+    public BasicList<BasicPileInfo<MilkRunCardInformation>> ChocolateSavedList { get; set; } = [];
+    public BasicList<BasicPileInfo<MilkRunCardInformation>> StrawberrySavedList { get; set; } = [];
     [JsonIgnore]
     public BasicMultiplePilesCP<MilkRunCardInformation>? StrawberryPiles { get; set; }
     [JsonIgnore]
     public BasicMultiplePilesCP<MilkRunCardInformation>? ChocolatePiles { get; set; }
-    public int ChocolateDeliveries { get; set; }
-    public int StrawberryDeliveries { get; set; }
+    [StateProperty]
+    public partial int ChocolateDeliveries { get; set; }
+    [StateProperty]
+    public partial int StrawberryDeliveries { get; set; }
     public bool ReachedChocolateGoal
     {
         get
@@ -106,7 +110,7 @@ public partial class MilkRunPlayerItem : PlayerSingleHand<MilkRunCardInformation
                 throw new CustomBasicException("There should only be 3 piles for chocolate");
             }
         });
-        _thisE = mainGame.MainContainer.Resolve<EventAggregator>();
+        _thisE = mainGame.MainContainer.Resolve<IEventAggregator>();
     }
     private async Task ChocolatePiles_PileClickedAsync(int index, BasicPileInfo<MilkRunCardInformation> mainPile)
     {
@@ -124,7 +128,7 @@ public partial class MilkRunPlayerItem : PlayerSingleHand<MilkRunCardInformation
     }
     public DeckRegularDict<MilkRunCardInformation> GetPileCardList()
     {
-        DeckRegularDict<MilkRunCardInformation> output = new();
+        DeckRegularDict<MilkRunCardInformation> output = [];
         int x;
         MilkRunCardInformation thisCard;
         for (x = 1; x <= 2; x++)

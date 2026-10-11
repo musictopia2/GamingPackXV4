@@ -11,7 +11,7 @@ public static class BasicExtensions
                 throw new CustomBasicException("Cannot scramble the keepers");
             }
             var firstKeeperTempList = playerList.Select(items => items.KeeperList).ToBasicList();
-            DeckRegularDict<KeeperCard> output = new();
+            DeckRegularDict<KeeperCard> output = [];
             firstKeeperTempList.ForEach(thisItem => output.AddRange(thisItem));
             output.ShuffleList();
             if (output.Count != thisList.Sum(items => items))
@@ -34,7 +34,7 @@ public static class BasicExtensions
     {
         public DeckRegularDict<FluxxCardInformation> GetFluxxCardListFromDeck(FluxxGameContainer gameContainer)
         {
-            DeckRegularDict<FluxxCardInformation> output = new();
+            DeckRegularDict<FluxxCardInformation> output = [];
             cardList.ForEach(thisDeck =>
             {
                 output.Add(gameContainer.DeckList!.GetSpecificItem(thisDeck));

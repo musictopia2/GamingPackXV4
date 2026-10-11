@@ -1,14 +1,14 @@
 namespace SixtySix2Player.Blazor.Views;
 public partial class SixtySix2PlayerMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private SixtySix2PlayerVMData? _vmData;
     private SixtySix2PlayerGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<SixtySix2PlayerVMData>();
-        _gameContainer = aa1.Resolver.Resolve<SixtySix2PlayerGameContainer>();
+        _vmData = Resolver!.Resolve<SixtySix2PlayerVMData>();
+        _gameContainer = Resolver.Resolve<SixtySix2PlayerGameContainer>();
         _labels.AddLabel("Turn", nameof(SixtySix2PlayerVMData.NormalTurn))
             .AddLabel("Trump", nameof(SixtySix2PlayerVMData.TrumpSuit))
             .AddLabel("Deck Count", nameof(SixtySix2PlayerVMData.DeckCount))

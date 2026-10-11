@@ -1,11 +1,11 @@
-@inherits BasicGameView<MinesweeperMainViewModel>
+@inherits CascadingGameView<MinesweeperMainViewModel>
 <StackLayout>
     <StackItem>
         <GameboardBlazor StateChanged="ShowChange" />
     </StackItem>
     <StackItem>
         <GameButtonComponent  Display="@GetDisplay()"
-                             AfterChange="ShowChange" CommandObject="DataContext!.ChangeFlagCommand"
+                             CommandObject="DataContext!.ChangeFlagCommand"
                              BackgroundColor="@BackgroundColor()" />
         <div>
             <LabelGridComponent DataContext="DataContext" Labels="_labels" />

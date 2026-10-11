@@ -1,19 +1,13 @@
 namespace CalculationSolitaire.Core.ViewModels;
 [InstanceGame]
-[UseLabelGrid]
-public partial class CalculationSolitaireMainViewModel : SolitaireMainViewModel<CalculationSolitaireSaveInfo>
+public partial class CalculationSolitaireMainViewModel(IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver
+        ) : SolitaireMainViewModel<CalculationSolitaireSaveInfo>(aggregator, command, resolver)
 {
-    public CalculationSolitaireMainViewModel(IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver
-        )
-        : base(aggregator, command, resolver)
+    protected override void AdditionalInitialize()
     {
-    }
-    protected override Task ActivateAsync()
-    {
-        DeckPile!.DeckStyle = EnumDeckPileStyle.AlwaysKnown;
-        return base.ActivateAsync();
+        DeckPile.DeckStyle = EnumDeckPileStyle.AlwaysKnown;
     }
     protected override SolitaireGameClass<CalculationSolitaireSaveInfo> GetGame(IGamePackageResolver resolver)
     {

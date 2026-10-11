@@ -1,15 +1,12 @@
 namespace SnakesAndLadders.Core.Data;
 [SingletonGame]
-public class SnakesAndLaddersGameContainer : BasicGameContainer<SnakesAndLaddersPlayerItem, SnakesAndLaddersSaveInfo>
+public class SnakesAndLaddersGameContainer(BasicData basicData,
+    TestOptions test,
+    IGameInfo gameInfo,
+    IAsyncDelayer delay,
+    IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver,
+    IRandomGenerator random) : BasicGameContainer<SnakesAndLaddersPlayerItem, SnakesAndLaddersSaveInfo>(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
 {
-    public SnakesAndLaddersGameContainer(BasicData basicData,
-        TestOptions test,
-        IGameInfo gameInfo,
-        IAsyncDelayer delay,
-        IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver,
-        IRandomGenerator random) : base(basicData, test, gameInfo, delay, aggregator, command, resolver, random)
-    {
-    }
 }

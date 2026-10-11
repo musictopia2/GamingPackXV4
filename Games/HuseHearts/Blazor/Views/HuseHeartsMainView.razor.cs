@@ -1,14 +1,14 @@
 namespace HuseHearts.Blazor.Views;
 public partial class HuseHeartsMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private HuseHeartsVMData? _vmData;
     private HuseHeartsGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<HuseHeartsVMData>();
-        _gameContainer = aa1.Resolver.Resolve<HuseHeartsGameContainer>();
+        _vmData = Resolver!.Resolve<HuseHeartsVMData>();
+        _gameContainer = Resolver.Resolve<HuseHeartsGameContainer>();
         _labels.AddLabel("Turn", nameof(HuseHeartsVMData.NormalTurn))
             .AddLabel("Status", nameof(HuseHeartsVMData.Status))
             .AddLabel("Round", nameof(HuseHeartsVMData.RoundNumber));

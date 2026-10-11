@@ -1,17 +1,12 @@
 ﻿namespace SolitaireBoardGame.Core.Logic; 
 [SingletonGame]
-public class SolitaireGameEventHandler : ISolitaireBoardEvents
+public class SolitaireGameEventHandler(IToast toast) : ISolitaireBoardEvents
 {
-    private readonly IToast _toast;
-    public SolitaireGameEventHandler(IToast toast)
-    {
-        _toast = toast;
-    }
     async Task ISolitaireBoardEvents.PiecePlacedAsync(GameSpace space, SolitaireBoardGameMainGameClass game)
     {
         if (game.IsValidMove(space) == false)
         {
-            _toast.ShowUserErrorToast("Illegal Move");
+            toast.ShowUserErrorToast("Illegal Move");
             await game.UnselectPieceAsync(space);
             return;
         }

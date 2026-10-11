@@ -1,17 +1,25 @@
 namespace Froggies.Core.ViewModels;
 [InstanceGame]
 [UseLabelGrid]
-public partial class FroggiesMainViewModel : ScreenViewModel, IBasicEnableProcess, IBlankGameVM, IAggregatorContainer
+[UseStateChanged]
+public partial class FroggiesMainViewModel(CommandContainer commandContainer,
+        IGamePackageResolver resolver,
+         LevelClass level,
+        BasicData basicData,
+        IEventAggregator aggregator) : IBasicEnableProcess,
+    IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>
 {
-    private readonly BasicData _basicData;
-    public readonly FroggiesMainGameClass MainGame;
-    public int DrawVersion { get; set; } = 1;
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    public FroggiesMainGameClass MainGame = null!;
+    [StateProperty]
+    public partial int DrawVersion { get; set; } = 1;
     [LabelColumn]
-    public int StartingFrogs { get; set; }
+    public partial int StartingFrogs { get; set; }
     [LabelColumn]
-    public int NumberOfFrogs { get; set; }
+    public partial int NumberOfFrogs { get; set; }
     [LabelColumn]
-    public int MovesLeft { get; set; }
+    public partial int MovesLeft { get; set; }
     [Command(EnumCommandCategory.Plain)]
     public async Task MakeMoveAsync(LilyPadModel lily)
     {
@@ -29,33 +37,29 @@ public partial class FroggiesMainViewModel : ScreenViewModel, IBasicEnableProces
         DrawVersion++;
         MovesLeft = MainGame.MovesLeft();
     }
-    public FroggiesMainViewModel(IEventAggregator aggregator,
-        CommandContainer commandContainer,
-        IGamePackageResolver resolver,
-        LevelClass level,
-        BasicData basicData) : base(aggregator)
-    {
-        CommandContainer = commandContainer;
-        StartingFrogs = level.NumberOfFrogs;
-        NumberOfFrogs = level.NumberOfFrogs;
-        CommandContainer = commandContainer;
-        _basicData = basicData;
-        MainGame = resolver.ReplaceObject<FroggiesMainGameClass>(); //hopefully this works.  means you have to really rethink.
-        CreateCommands(commandContainer);
-    }
     partial void CreateCommands(CommandContainer command);
-    public CommandContainer CommandContainer { get; set; }
-    IEventAggregator IAggregatorContainer.Aggregator => Aggregator;
     public Action? StateHasChanged { get; set; }
     public bool CanEnableBasics()
     {
         return true; //because maybe you can't enable it.
     }
-    protected override async Task ActivateAsync()
+    void IMainGameVM.Initialize()
     {
-        _basicData.GameDataLoading = false;
-        await base.ActivateAsync();
+        Subscribe();
+        StartingFrogs = level.NumberOfFrogs;
+        NumberOfFrogs = level.NumberOfFrogs;
+        MainGame = resolver.ReplaceObject<FroggiesMainGameClass>();
+        CreateCommands(commandContainer);
+    }
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
+    {
+        basicData.GameDataLoading = false;
         await MainGame.NewGameAsync(this); //this may have to be before (?)
         StateHasChanged?.Invoke();
+    }
+
+    async Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        Unsubscribe();
     }
 }

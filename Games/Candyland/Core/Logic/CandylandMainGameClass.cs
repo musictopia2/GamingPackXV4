@@ -138,6 +138,7 @@ public class CandylandMainGameClass : BasicGameClass<CandylandPlayerItem, Candyl
                 await Network!.SendAllAsync("space", space);
             }
         }
+        RefreshBoard(); //try this.
         await GameBoard1!.MakeMoveAsync(space, this);
         if (CandylandBoardProcesses.WillMissNextTurn(this) == true)
         {
@@ -171,13 +172,23 @@ public class CandylandMainGameClass : BasicGameClass<CandylandPlayerItem, Candyl
         }
         await ContinueTurnAsync();
     }
+    public override async Task ContinueTurnAsync()
+    {
+        await base.ContinueTurnAsync();
+        RefreshBoard();
+    }
+    private void RefreshBoard()
+    {
+        Aggregator.PublishAll(new CandylandRefreshEvent());
+    }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        //Aggregator.Publish(new CandylandRefreshEvent());
+    }
     public async Task FinishStartAsync()
     {
-        SingleInfo = PlayerList!.GetWhoPlayer();
-        if (SingleInfo == null)
-        {
-            throw new CustomBasicException("Can't register new turn if we don't have a player yet");
-        }
+        SingleInfo = PlayerList!.GetWhoPlayer() ?? throw new CustomBasicException("Can't register new turn if we don't have a player yet");
         GameBoard1!.NewTurn();
 
         if (SaveRoot!.DidDraw == false)
@@ -187,6 +198,6 @@ public class CandylandMainGameClass : BasicGameClass<CandylandPlayerItem, Candyl
             return;
         }
         SaveRoot.CurrentCard!.Visible = true;
-        Aggregator.Publish(SaveRoot.CurrentCard);
+        Aggregator.PublishAll(SaveRoot.CurrentCard);
     }
 }

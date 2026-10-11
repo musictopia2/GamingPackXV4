@@ -1,14 +1,9 @@
 namespace Racko.Core.Cards;
-public class RackoDeckCount : IDeckCount
+public class RackoDeckCount(RackoDelegates delegates) : IDeckCount
 {
-    private readonly RackoDelegates _delegates;
-    public RackoDeckCount(RackoDelegates delegates)
-    {
-        _delegates = delegates;
-    }
     public int GetDeckCount()
     {
-        int count = _delegates.PlayerCount!.Invoke();
+        int count = delegates.PlayerCount!.Invoke();
         if (count == 2)
         {
             return 40;

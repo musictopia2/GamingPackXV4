@@ -1,14 +1,7 @@
 ﻿namespace Uno.Core.Logic;
 [SingletonGame]
-public class UnoComputerAI
+public class UnoComputerAI(UnoGameContainer gameContainer, UnoVMData model)
 {
-    private readonly UnoGameContainer _gameContainer;
-    private readonly UnoVMData _model;
-    public UnoComputerAI(UnoGameContainer gameContainer, UnoVMData model)
-    {
-        _gameContainer = gameContainer;
-        _model = model;
-    }
     public int ComputerMove()
     {
         DeckRegularDict<UnoCardInformation> moveList;
@@ -72,18 +65,18 @@ public class UnoComputerAI
 
     private DeckRegularDict<UnoCardInformation> ValidMoveList()
     {
-        if (_gameContainer.CanPlay == null)
+        if (gameContainer.CanPlay == null)
         {
             throw new CustomBasicException("Nobody is handling the canplay.  Rethink");
         }
-        return (from x in _gameContainer.SingleInfo!.MainHandList!
-                where _gameContainer!.CanPlay(x.Deck) == true
+        return (from x in gameContainer.SingleInfo!.MainHandList!
+                where gameContainer!.CanPlay(x.Deck) == true
                 select x).ToRegularDeckDict();
     }
     private int ColorMatches(DeckRegularDict<UnoCardInformation> moveList)
     {
         var tempList = moveList.ToRegularDeckDict(); //to make a copy.
-        tempList.KeepConditionalItems(x => x.Color == _gameContainer.SaveRoot.CurrentColor);
+        tempList.KeepConditionalItems(x => x.Color == gameContainer.SaveRoot.CurrentColor);
         if (tempList.Count == 0)
         {
             return 0;
@@ -93,7 +86,7 @@ public class UnoComputerAI
     private int NumberMatches(DeckRegularDict<UnoCardInformation> moveList)
     {
         UnoCardInformation currents;
-        currents = _model.Pile1.CurrentCard;
+        currents = model.Pile1.CurrentCard;
         if (currents.Number == -4)
         {
             return 0;
@@ -151,9 +144,9 @@ public class UnoComputerAI
     private bool SomeoneLow()
     {
 
-        foreach (var player in _gameContainer.PlayerList!)
+        foreach (var player in gameContainer.PlayerList!)
         {
-            if (player.MainHandList.Count > 1 && player.NickName != _gameContainer.SingleInfo!.NickName)
+            if (player.MainHandList.Count > 1 && player.NickName != gameContainer.SingleInfo!.NickName)
             {
                 return true;
             }
@@ -162,7 +155,7 @@ public class UnoComputerAI
     }
     public EnumColorTypes ColorChosen()
     {
-        var firstLinq = from Cards in _gameContainer.SingleInfo!.MainHandList
+        var firstLinq = from Cards in gameContainer.SingleInfo!.MainHandList
                         where Cards.Color != EnumColorTypes.ZOther
                         select Cards;
         var bestColor = firstLinq.GroupBy(cards => cards.Color);

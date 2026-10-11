@@ -3,13 +3,13 @@ public partial class ChessMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private GameBoardGraphicsCP? GameBoard { get; set; }
     private ChessGameContainer? GameContainer { get; set; }
     protected override void OnInitialized()
     {
-        GameBoard = aa1.Resolver!.Resolve<GameBoardGraphicsCP>(); //hopefully this simple this time.
-        GameContainer = aa1.Resolver.Resolve<ChessGameContainer>();
+        GameBoard = Resolver!.Resolve<GameBoardGraphicsCP>(); //hopefully this simple this time.
+        GameContainer = Resolver.Resolve<ChessGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(ChessVMData.NormalTurn))
                 .AddLabel("Instructions", nameof(ChessVMData.Instructions))

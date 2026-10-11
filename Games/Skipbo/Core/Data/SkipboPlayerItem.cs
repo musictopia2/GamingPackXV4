@@ -2,20 +2,20 @@ namespace Skipbo.Core.Data;
 [UseScoreboard]
 public partial class SkipboPlayerItem : PlayerSingleHand<SkipboCardInformation>
 {
-    public BasicList<BasicPileInfo<SkipboCardInformation>> DiscardList { get; set; } = new();
-    public DeckRegularDict<SkipboCardInformation> StockList { get; set; } = new DeckRegularDict<SkipboCardInformation>();
+    public BasicList<BasicPileInfo<SkipboCardInformation>> DiscardList { get; set; } = [];
+    public DeckRegularDict<SkipboCardInformation> StockList { get; set; } = [];
     [ScoreColumn]
-    public string InStock { get; set; } = "";
+    public partial string InStock { get; set; } = "";
     [ScoreColumn]
-    public int StockLeft { get; set; }
+    public partial int StockLeft { get; set; }
     [ScoreColumn]
-    public string Discard1 { get; set; } = "";
+    public partial string Discard1 { get; set; } = "";
     [ScoreColumn]
-    public string Discard2 { get; set; } = "";
+    public partial string Discard2 { get; set; } = "";
     [ScoreColumn]
-    public string Discard3 { get; set; } = "";
+    public partial string Discard3 { get; set; } = "";
     [ScoreColumn]
-    public string Discard4 { get; set; } = "";
+    public partial string Discard4 { get; set; } = "";
     [ScoreColumn]
-    public string Discard5 { get; set; } = "";
+    public partial string Discard5 { get; set; } = "";
 }

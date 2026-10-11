@@ -22,9 +22,9 @@ public partial class OpetongVMData : IBasicCardGamesData<RegularRummyCard>
     public HandObservable<RegularRummyCard> PlayerHand1 { get; set; }
     public SingleObservablePile<RegularRummyCard>? OtherPile { get; set; }
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
 }

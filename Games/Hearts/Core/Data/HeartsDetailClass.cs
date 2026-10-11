@@ -15,7 +15,7 @@ public class HeartsDetailClass : IGameInfo, ICardInfo<HeartsCardInformation>, IT
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
     int ICardInfo<HeartsCardInformation>.CardsToPassOut => 13; //change to what you need.
-    BasicList<int> ICardInfo<HeartsCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<HeartsCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<HeartsCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<HeartsCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<HeartsCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,10 +23,10 @@ public class HeartsDetailClass : IGameInfo, ICardInfo<HeartsCardInformation>, IT
     bool ICardInfo<HeartsCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<HeartsCardInformation>.NoPass => false;
     bool ICardInfo<HeartsCardInformation>.NeedsDummyHand => false; //no dummy hand.
-    DeckRegularDict<HeartsCardInformation> ICardInfo<HeartsCardInformation>.DummyHand { get; set; } = new DeckRegularDict<HeartsCardInformation>();
+    DeckRegularDict<HeartsCardInformation> ICardInfo<HeartsCardInformation>.DummyHand { get; set; } = [];
     BasicList<int> ICardInfo<HeartsCardInformation>.DiscardExcludeList(IListShuffler<HeartsCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool ICardInfo<HeartsCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<HeartsCardInformation>.CanSortCardsToBeginWith => true;

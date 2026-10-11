@@ -1,81 +1,74 @@
 namespace DutchBlitz.Core.ViewModels;
 [InstanceGame]
-public partial class DutchBlitzMainViewModel : BasicCardGamesVM<DutchBlitzCardInformation>
-{
-    private readonly DutchBlitzMainGameClass _mainGame;
-    private readonly DutchBlitzVMData _model;
-    private readonly DutchBlitzGameContainer _gameContainer;
-    public DutchBlitzMainViewModel(CommandContainer commandContainer,
+public partial class DutchBlitzMainViewModel(CommandContainer commandContainer,
         DutchBlitzMainGameClass mainGame,
         DutchBlitzVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         DutchBlitzGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<DutchBlitzCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _gameContainer = gameContainer;
-        _model.Deck1.NeverAutoDisable = true;
+        viewModel.Deck1.NeverAutoDisable = true;
         CanSendDrawMessage = false;
-        CreateCommands(commandContainer);
+        CreateCommands(CommandContainer);
+        base.AdditionalInitialize();
     }
     partial void CreateCommands(CommandContainer command);
-    protected override Task ActivateAsync()
+    protected override Task OpenAsync()
     {
-        if (_model.DiscardPiles == null)
+        if (viewModel.DiscardPiles == null)
         {
             throw new CustomBasicException("No discard piles.  Rethink");
         }
-        _model.DiscardPiles.PileClickedAsync = DiscardPiles_PileClickedAsync;
-        _model.StockPile.StockFrame.SendEnableProcesses(this, () => _model.StockPile.CardsLeft() > 0);
-        _model.StockPile.StockClickedAsync = StockPile_StockClickedAsync;
-        _model.PublicPiles1.PileClickedAsync = PublicPiles1_PileClickedAsync;
-        _model.PublicPiles1.NewPileClickedAsync = PublicPiles1_NewPileClickedAsync;
+        viewModel.DiscardPiles.PileClickedAsync = DiscardPiles_PileClickedAsync;
+        viewModel.StockPile.StockFrame.SendEnableProcesses(this, () => viewModel.StockPile.CardsLeft() > 0);
+        viewModel.StockPile.StockClickedAsync = StockPile_StockClickedAsync;
+        viewModel.PublicPiles1.PileClickedAsync = PublicPiles1_PileClickedAsync;
+        viewModel.PublicPiles1.NewPileClickedAsync = PublicPiles1_NewPileClickedAsync;
         CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
-        _model.Stops.TimeUp += Stops_TimeUp; //iffy.  but can't do anything about it for now though (?)
-        return base.ActivateAsync();
+        viewModel.Stops.TimeUp += Stops_TimeUp; //iffy.  but can't do anything about it for now though (?)
+
+        return base.OpenAsync();
     }
     private void CommandContainer_ExecutingChanged()
     {
         if (CommandContainer!.IsExecuting)
         {
-            if (_model.DidStartTimer == true)
+            if (viewModel.DidStartTimer == true)
             {
-                _model.Stops!.PauseTimer();
+                viewModel.Stops!.PauseTimer();
             }
         }
         else
         {
-            if (_model.DidStartTimer)
+            if (viewModel.DidStartTimer)
             {
-                _model.Stops!.ContinueTimer();
+                viewModel.Stops!.ContinueTimer();
             }
         }
     }
     private async void Stops_TimeUp()
     {
-        if (_model.DidStartTimer == false)
+        if (viewModel.DidStartTimer == false)
         {
             return;
         }
-        _model.DidStartTimer = false;
+        viewModel.DidStartTimer = false;
         CommandContainer!.IsExecuting = true;
         CommandContainer.ManuelFinish = true;
-        if (_mainGame.BasicData!.MultiPlayer == true)
+        if (mainGame.BasicData!.MultiPlayer == true)
         {
-            await _mainGame.Network!.SendEndTurnAsync();
+            await mainGame.Network!.SendEndTurnAsync();
         }
-        await _mainGame!.EndTurnAsync();
+        await mainGame!.EndTurnAsync();
     }
-    protected override Task TryCloseAsync()
+    protected override Task CloseAsync()
     {
-        _model.Stops.TimeUp -= Stops_TimeUp;
-        return base.TryCloseAsync();
+        viewModel.Stops.TimeUp -= Stops_TimeUp;
+        return base.CloseAsync();
     }
     private bool _didClickOld = false;
     private async Task PublicPiles1_NewPileClickedAsync()
@@ -94,55 +87,54 @@ public partial class DutchBlitzMainViewModel : BasicCardGamesVM<DutchBlitzCardIn
     }
     private async Task StockPile_StockClickedAsync()
     {
-        int nums = _model.StockPile!.CardSelected();
+        int nums = viewModel.StockPile!.CardSelected();
         if (nums > 0)
         {
-            _model.StockPile.UnselectCard();
+            viewModel.StockPile.UnselectCard();
             return;
         }
-        _mainGame!.UnselectCards();
-        _model.StockPile.SelectCard();
-        CommandContainer.UpdateAll();
+        mainGame!.UnselectCards();
+        viewModel.StockPile.SelectCard();
         await Task.CompletedTask;
     }
     private async Task DiscardPiles_PileClickedAsync(int index, BasicPileInfo<DutchBlitzCardInformation> thisPile)
     {
         DutchBlitzCardInformation thisCard;
-        if (_model.DiscardPiles!.HasCard(index) == false)
+        if (viewModel.DiscardPiles!.HasCard(index) == false)
         {
-            if (_model.StockPile!.CardSelected() > 0)
+            if (viewModel.StockPile!.CardSelected() > 0)
             {
-                thisCard = _model.StockPile.GetCard();
-                _model.StockPile.RemoveCard();
-                _model.DiscardPiles.AddToEmptyDiscard(thisCard);
-                _mainGame!.SingleInfo!.StockLeft--;
-                await _mainGame.SendStockAsync();
+                thisCard = viewModel.StockPile.GetCard();
+                viewModel.StockPile.RemoveCard();
+                viewModel.DiscardPiles.AddToEmptyDiscard(thisCard);
+                mainGame!.SingleInfo!.StockLeft--;
+                await mainGame.SendStockAsync();
                 return;
             }
-            if (_model.Pile1!.CardSelected() == 0)
+            if (viewModel.Pile1!.CardSelected() == 0)
             {
                 await SendErrorMessageAsync("Sorry, no card was selected");
                 return;
             }
-            thisCard = _model.Pile1.GetCardInfo();
+            thisCard = viewModel.Pile1.GetCardInfo();
             thisCard.IsSelected = false;
             thisCard.Drew = false;
-            _model.DiscardPiles.AddToEmptyDiscard(thisCard);
-            _model.Pile1.RemoveFromPile();
+            viewModel.DiscardPiles.AddToEmptyDiscard(thisCard);
+            viewModel.Pile1.RemoveFromPile();
             return;
         }
-        thisCard = _model.DiscardPiles.GetLastCard(index);
+        thisCard = viewModel.DiscardPiles.GetLastCard(index);
         if (thisCard.IsSelected)
         {
-            _model.DiscardPiles.SelectUnselectSinglePile(index);
+            viewModel.DiscardPiles.SelectUnselectSinglePile(index);
             return;
         }
-        _mainGame!.UnselectCards();
-        _model.DiscardPiles.SelectUnselectSinglePile(index);
+        mainGame!.UnselectCards();
+        viewModel.DiscardPiles.SelectUnselectSinglePile(index);
     }
     protected override bool CanEnableDeck()
     {
-        if (_model.Deck1!.IsEndOfDeck() && _model.Pile1!.DiscardList().Count > 1)
+        if (viewModel.Deck1!.IsEndOfDeck() && viewModel.Pile1!.DiscardList().Count > 1)
         {
             return false;
         }
@@ -150,22 +142,22 @@ public partial class DutchBlitzMainViewModel : BasicCardGamesVM<DutchBlitzCardIn
     }
     protected override bool CanEnablePile1()
     {
-        return !_model.Pile1!.PileEmpty();
+        return !viewModel.Pile1!.PileEmpty();
     }
     protected override async Task ProcessDiscardClickedAsync()
     {
         await Task.CompletedTask;
-        if (_model.Pile1!.GetCardInfo().Deck == 0)
+        if (viewModel.Pile1!.GetCardInfo().Deck == 0)
         {
             return;
         }
-        if (_model.Pile1.CardSelected() > 0)
+        if (viewModel.Pile1.CardSelected() > 0)
         {
-            _model.Pile1.IsSelected(false);
+            viewModel.Pile1.IsSelected(false);
             return;
         }
-        _mainGame!.UnselectCards();
-        _model.Pile1.IsSelected(true);
+        mainGame!.UnselectCards();
+        viewModel.Pile1.IsSelected(true);
     }
     public override bool CanEnableAlways()
     {
@@ -173,61 +165,63 @@ public partial class DutchBlitzMainViewModel : BasicCardGamesVM<DutchBlitzCardIn
     }
     private async Task SendErrorMessageAsync(string message)
     {
-        _model.ErrorMessage = message;
-        if (_gameContainer.Test!.NoAnimations == false)
+        viewModel.ErrorMessage = message;
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer!.Delay!.DelayMilli(200);
+            await gameContainer!.Delay!.DelayMilli(200);
         }
-        _model.ErrorMessage = "";
+        viewModel.ErrorMessage = "";
     }
     private async Task ProcessHumanPileAsync(int pile)
     {
-        if (_mainGame!.HumanHasSelected() == false)
+        if (mainGame!.HumanHasSelected() == false)
         {
             await SendErrorMessageAsync("No card was selected");
             return;
         }
-        if (_mainGame.CanHumanPlayCard(pile) == false)
+        if (mainGame.CanHumanPlayCard(pile) == false)
         {
             await SendErrorMessageAsync("Illegal move");
             return;
         }
         DutchBlitzCardInformation thisCard;
-        thisCard = _mainGame.HumanCardToUse(out bool _, out bool sends);
+        thisCard = mainGame.HumanCardToUse(out bool _, out bool sends);
         if (sends)
         {
-            await _mainGame.SendStockAsync();
+            await mainGame.SendStockAsync();
         }
         if (pile == -1)
         {
-            if (_mainGame.BasicData!.MultiPlayer)
-                await _mainGame.Network!.SendAllAsync("newpile", thisCard.Deck);
-            await _mainGame.AddNewPublicPileAsync(thisCard);
+            if (mainGame.BasicData!.MultiPlayer)
+            {
+                await mainGame.Network!.SendAllAsync("newpile", thisCard.Deck);
+            }
+            await mainGame.AddNewPublicPileAsync(thisCard);
             return;
         }
-        if (_mainGame.BasicData!.MultiPlayer)
+        if (mainGame.BasicData!.MultiPlayer)
         {
             SendExpand temps = new();
             temps.Deck = thisCard.Deck;
             temps.Pile = pile;
-            await _mainGame.Network!.SendAllAsync("expandpile", temps);
+            await mainGame.Network!.SendAllAsync("expandpile", temps);
         }
-        await _mainGame.ExpandPublicPileAsync(thisCard, pile);
+        await mainGame.ExpandPublicPileAsync(thisCard, pile);
     }
     [Command(EnumCommandCategory.Game)]
     public async Task DutchAsync()
     {
-        if (_mainGame!.HasBlitz == false)
+        if (mainGame!.HasBlitz == false)
         {
             await SendErrorMessageAsync("Sorry, you still have cards in your stock pile.  Therefore, the round has not ended yet");
             return;
         }
-        if (_mainGame.BasicData!.MultiPlayer)
+        if (mainGame.BasicData!.MultiPlayer)
         {
-            await _mainGame.Network!.SendAllAsync("blitz");
+            await mainGame.Network!.SendAllAsync("blitz");
         }
-        _model.Stops.PauseTimer();
-        _model.DidStartTimer = false; //because you got blitz.
-        await _mainGame.BlitzAsync();
+        viewModel.Stops.PauseTimer();
+        viewModel.DidStartTimer = false; //because you got blitz.
+        await mainGame.BlitzAsync();
     }
 }

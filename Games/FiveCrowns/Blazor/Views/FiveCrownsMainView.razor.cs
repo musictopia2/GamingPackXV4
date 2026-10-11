@@ -3,14 +3,14 @@ public partial class FiveCrownsMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private FiveCrownsVMData? _vmData;
     private FiveCrownsGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<FiveCrownsVMData>();
-        _gameContainer = aa1.Resolver.Resolve<FiveCrownsGameContainer>();
+        _vmData = Resolver!.Resolve<FiveCrownsVMData>();
+        _gameContainer = Resolver.Resolve<FiveCrownsGameContainer>();
         _labels.AddLabel("Turn", nameof(FiveCrownsVMData.NormalTurn))
              .AddLabel("Status", nameof(FiveCrownsVMData.Status))
              .AddLabel("Up To", nameof(FiveCrownsVMData.UpTo));

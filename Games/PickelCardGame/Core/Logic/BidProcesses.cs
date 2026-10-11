@@ -1,25 +1,16 @@
 ﻿namespace PickelCardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class BidProcesses : IBidProcesses
+public class BidProcesses(PickelCardGameVMData model, PickelCardGameGameContainer gameContainer, PickelDelegates delegates) : IBidProcesses
 {
-    private readonly PickelCardGameVMData _model;
-    private readonly PickelCardGameGameContainer _gameContainer;
-    private readonly PickelDelegates _delegates;
-    public BidProcesses(PickelCardGameVMData model, PickelCardGameGameContainer gameContainer, PickelDelegates delegates)
-    {
-        _model = model;
-        _gameContainer = gameContainer;
-        _delegates = delegates;
-    }
     public bool CanPass()
     {
         int temps;
-        if (_gameContainer.WhoTurn == 1)
+        if (gameContainer.WhoTurn == 1)
         {
             temps = 2;
         }
-        else if (_gameContainer.WhoTurn == 2 && _gameContainer.PlayerList!.Count == 3)
+        else if (gameContainer.WhoTurn == 2 && gameContainer.PlayerList!.Count == 3)
         {
             temps = 3;
         }
@@ -27,7 +18,7 @@ public class BidProcesses : IBidProcesses
         {
             temps = 1; //has to do manually because otherwise, can't do it since its a function to determine whether to enable.  that can't be async unfortunately
         }
-        if (temps == _gameContainer.WhoStarts && _gameContainer.SaveRoot!.WonSoFar == 0)
+        if (temps == gameContainer.WhoStarts && gameContainer.SaveRoot!.WonSoFar == 0)
         {
             return false;
         }
@@ -35,68 +26,69 @@ public class BidProcesses : IBidProcesses
     }
     public async Task PassBidAsync()
     {
-        if (_gameContainer.SingleInfo!.CanSendMessage(_gameContainer.BasicData!) == true)
+        if (gameContainer.SingleInfo!.CanSendMessage(gameContainer.BasicData!) == true)
         {
-            await _gameContainer.Network!.SendAllAsync("pass");
+            await gameContainer.Network!.SendAllAsync("pass");
         }
         await ContinueBidProcessAsync();
     }
     private async Task EndBidAsync()
     {
-        if (_delegates.CloseBiddingAsync == null)
+        if (delegates.CloseBiddingAsync == null)
         {
             throw new CustomBasicException("Nobody is closing the bidding.  Rethink");
         }
-        _gameContainer.SaveRoot!.GameStatus = EnumStatusList.Normal;
-        await _delegates.CloseBiddingAsync.Invoke();
-        var ThisPlayer = _gameContainer.PlayerList![_gameContainer.SaveRoot.WonSoFar];
-        _gameContainer.SaveRoot.TrumpSuit = ThisPlayer.SuitDesired;
-        if (_gameContainer.StartNewTrickAsync == null)
+        gameContainer.SaveRoot!.GameStatus = EnumStatusList.Normal;
+        model.TrickArea1.Visible = true;
+        ((IAdvancedTrickProcesses)model.TrickArea1).LoadGame();
+        await delegates.CloseBiddingAsync.Invoke();
+        var ThisPlayer = gameContainer.PlayerList![gameContainer.SaveRoot.WonSoFar];
+        gameContainer.SaveRoot.TrumpSuit = ThisPlayer.SuitDesired;
+        if (gameContainer.StartNewTrickAsync == null)
         {
             throw new CustomBasicException("Nobody is handling startnewtrick.  Rethink");
         }
-        await _gameContainer.StartNewTrickAsync();
+        await gameContainer.StartNewTrickAsync();
     }
     private async Task ContinueBidProcessAsync()
     {
-        if (_gameContainer.SaveRoot!.HighestBid == 10)
+        if (gameContainer.SaveRoot!.HighestBid == 10)
         {
             await EndBidAsync();
             return;
         }
-        _gameContainer.WhoTurn = await _gameContainer.PlayerList!.CalculateWhoTurnAsync();
-        if (_gameContainer.WhoTurn == _gameContainer.WhoStarts)
+        gameContainer.WhoTurn = await gameContainer.PlayerList!.CalculateWhoTurnAsync();
+        if (gameContainer.WhoTurn == gameContainer.WhoStarts)
         {
             await EndBidAsync();
             return;
         }
-        _gameContainer.SingleInfo = _gameContainer.PlayerList.GetWhoPlayer();
+        gameContainer.SingleInfo = gameContainer.PlayerList.GetWhoPlayer();
         await PopulateBidsAsync();
-        await _gameContainer.StartNewTurnAsync!.Invoke();
+        await gameContainer.StartNewTurnAsync!.Invoke();
     }
     public async Task ProcessBidAsync()
     {
-        if (_gameContainer.SingleInfo!.CanSendMessage(_gameContainer.BasicData!) == true)
+        if (gameContainer.SingleInfo!.CanSendMessage(gameContainer.BasicData!) == true)
         {
             SendBid thisSend = new()
             {
-                Bid = _model!.BidAmount,
-                Suit = _model.TrumpSuit
+                Bid = model!.BidAmount,
+                Suit = model.TrumpSuit
             };
-            await _gameContainer.Network!.SendAllAsync("bid", thisSend);
+            await gameContainer.Network!.SendAllAsync("bid", thisSend);
         }
-        _gameContainer.SingleInfo!.BidAmount = _model!.BidAmount;
-        _gameContainer.SingleInfo.SuitDesired = _model.TrumpSuit;
-        _gameContainer.SaveRoot!.HighestBid = _model.BidAmount;
-        _gameContainer.SaveRoot.WonSoFar = _gameContainer.WhoTurn;
-        _gameContainer.Command.UpdateAll();
-        if (_gameContainer.Test!.NoAnimations == false)
+        gameContainer.SingleInfo!.BidAmount = model!.BidAmount;
+        gameContainer.SingleInfo.SuitDesired = model.TrumpSuit;
+        gameContainer.SaveRoot!.HighestBid = model.BidAmount;
+        gameContainer.SaveRoot.WonSoFar = gameContainer.WhoTurn;
+        if (gameContainer.Test!.NoAnimations == false)
         {
-            await _gameContainer.Delay!.DelaySeconds(1);
+            await gameContainer.Delay!.DelaySeconds(1);
         }
-        _gameContainer.PlayerList!.ForEach(thisPlayer =>
+        gameContainer.PlayerList!.ForEach(thisPlayer =>
         {
-            if (thisPlayer.Equals(_gameContainer.SingleInfo) == false)
+            if (thisPlayer.Equals(gameContainer.SingleInfo) == false)
             {
                 thisPlayer.SuitDesired = EnumSuitList.None; //because somebody overrided it.
                 thisPlayer.BidAmount = 0;
@@ -107,30 +99,31 @@ public class BidProcesses : IBidProcesses
     }
     public void ResetBids()
     {
-        _model.BidAmount = -1;
-        _gameContainer!.SaveRoot!.TrumpSuit = EnumSuitList.None;
-        _model.Bid1!.UnselectAll();
-        _model.Suit1!.UnselectAll();
+        model.BidAmount = -1;
+        gameContainer!.SaveRoot!.TrumpSuit = EnumSuitList.None;
+        model.Bid1!.UnselectAll();
+        model.Suit1!.UnselectAll();
     }
     public void SelectBidAndSuit(int bid, EnumSuitList suit)
     {
-        _model.BidAmount = bid;
-        _gameContainer!.SaveRoot!.TrumpSuit = suit;
-        _model.Bid1!.SelectNumberValue(bid);
-        _model.Suit1!.SelectSpecificItem(suit);
+        model.BidAmount = bid;
+        gameContainer!.SaveRoot!.TrumpSuit = suit;
+        model.Bid1!.SelectNumberValue(bid);
+        model.Suit1!.SelectSpecificItem(suit);
     }
     public async Task PopulateBidsAsync()
     {
         ResetBids();
-        if (_delegates.LoadBiddingAsync == null)
-        {
-            throw new CustomBasicException("Nobody is loadin bids.  Rethink");
-        }
-        await _delegates.LoadBiddingAsync.Invoke();
-        if (_gameContainer!.SaveRoot!.HighestBid == 0)
+        //if (_delegates.LoadBiddingAsync == null)
+        //{
+        //    throw new CustomBasicException("Nobody is loading bids.  Rethink");
+        //}
+        //await _delegates.LoadBiddingAsync.Invoke();
+        if (gameContainer!.SaveRoot!.HighestBid == 0)
         {
             throw new CustomBasicException("The highest bid cannot be 0");
         }
-        _model.Bid1!.LoadNormalNumberRangeValues(_gameContainer.SaveRoot.HighestBid + 1, 10);
+        model.Bid1!.LoadNormalNumberRangeValues(gameContainer.SaveRoot.HighestBid + 1, 10);
+        //well see when the shell loads the screen.
     }
 }

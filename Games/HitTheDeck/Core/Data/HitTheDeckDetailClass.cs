@@ -14,7 +14,7 @@ public class HitTheDeckDetailClass : IGameInfo, ICardInfo<HitTheDeckCardInformat
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<HitTheDeckCardInformation>.CardsToPassOut => 7;
-    BasicList<int> ICardInfo<HitTheDeckCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<HitTheDeckCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<HitTheDeckCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<HitTheDeckCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<HitTheDeckCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,7 +22,7 @@ public class HitTheDeckDetailClass : IGameInfo, ICardInfo<HitTheDeckCardInformat
     bool ICardInfo<HitTheDeckCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<HitTheDeckCardInformation>.NoPass => false;
     bool ICardInfo<HitTheDeckCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<HitTheDeckCardInformation> ICardInfo<HitTheDeckCardInformation>.DummyHand { get; set; } = new DeckRegularDict<HitTheDeckCardInformation>();
+    DeckRegularDict<HitTheDeckCardInformation> ICardInfo<HitTheDeckCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<HitTheDeckCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<HitTheDeckCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<HitTheDeckCardInformation>.DiscardExcludeList(IListShuffler<HitTheDeckCardInformation> deckList)

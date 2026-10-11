@@ -1,10 +1,13 @@
 ﻿namespace ThinkTwice.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class Multiplier(ThinkTwiceGameContainer gameContainer) : ICompleteSingleDice<int>, ISerializable
+[UseStateChanged]
+public partial class Multiplier(ThinkTwiceGameContainer gameContainer) : ICompleteSingleDice<int>, ISerializable
 {
-    public int Value { get; set; } = -1;
-    public bool Visible { get; set; }
+    [StateProperty]
+    public partial int Value { get; set; } = -1;
+    [StateProperty]
+    public partial bool Visible { get; set; }
     public int Index { get; set; }
     public int HeightWidth { get; } = 60;
     public void LoadSavedGame()
@@ -34,11 +37,10 @@ public class Multiplier(ThinkTwiceGameContainer gameContainer) : ICompleteSingle
         await thisCol.ForEachAsync(async items =>
         {
             Populate(items);
-            gameContainer.Command.UpdateAll();
             await gameContainer.Delay.DelaySeconds(.07);
         });
     }
-    public async Task<BasicList<int>> GetDiceList(string content)
+    public static async Task<BasicList<int>> GetDiceList(string content)
     {
         return await js1.DeserializeObjectAsync<BasicList<int>>(content);
     }

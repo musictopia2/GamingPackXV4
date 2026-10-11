@@ -1,4 +1,4 @@
-@inherits BasicGameView<SequenceDiceMainViewModel>
+@inherits CascadingGameView<SequenceDiceMainViewModel>
 @if (_saveRoot == null)
 {
     return;
@@ -12,8 +12,11 @@
                        TargetSpaceHeight="50"
                        TargetSpaceWidth="50">
             <ItemTemplate Context="Space">
-                <SpaceBlazor CommandParameter="Space"
-                             CommandObject="MoveCommand" />
+                <StateContentView DataContext="Space">
+                    <SpaceBlazor CommandParameter="Space"
+                                 CommandObject="MoveCommand" />
+                </StateContentView>
+                
             </ItemTemplate>
         </GridGameBoard>
     </GridItem>

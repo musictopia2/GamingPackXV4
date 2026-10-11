@@ -3,7 +3,7 @@ public partial class SorryMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private GameBoardGraphicsCP? _graphics;
     protected override void OnInitialized()
     {

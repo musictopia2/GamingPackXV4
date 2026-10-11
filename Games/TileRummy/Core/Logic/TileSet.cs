@@ -1,14 +1,9 @@
-﻿
-namespace TileRummy.Core.Logic;
-public class TileSet : SetInfo<EnumColorType, EnumColorType, TileInfo, SavedSet>
+﻿namespace TileRummy.Core.Logic;
+public class TileSet(CommandContainer command, RummyProcesses<EnumColorType, EnumColorType, TileInfo> rummys) : SetInfo<EnumColorType, EnumColorType, TileInfo, SavedSet>(command)
 {
     private bool _isNew;
     private EnumWhatSets _setType;
-    private readonly RummyProcesses<EnumColorType, EnumColorType, TileInfo> _rummys;
-    public TileSet(CommandContainer command, RummyProcesses<EnumColorType, EnumColorType, TileInfo> rummys) : base(command)
-    {
-        _rummys = rummys;
-    }
+    private readonly RummyProcesses<EnumColorType, EnumColorType, TileInfo> _rummys = rummys;
     public override void LoadSet(SavedSet payLoad)
     {
         HandList.ReplaceRange(payLoad.TileList);

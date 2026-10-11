@@ -1,5 +1,5 @@
-@inherits BasicGameView<SnakesAndLaddersMainViewModel>
-@if (DataContext!.CurrentPlayer == null)
+@inherits CascadingGameView<SnakesAndLaddersMainViewModel>
+@if (_current.PlayerId == 0)
 {
     return; //hopefully this works too.
 }
@@ -8,11 +8,14 @@
         <GameBoardBlazor PlayerList="DataContext!.GetPlayerList" />
     </StackItem>
     <StackItem>
-        <GameButtonComponent CommandObject="DataContext.RollDiceCommand" Display="Roll Dice" />
-        <BasePieceGraphics TargetHeight="10vh"
-                           LongestSize="50">
-            <PieceGraphicsBlazor Index="@DataContext!.CurrentPlayer.Id" Number="@DataContext.CurrentPlayer.SpaceNumber" />
-        </BasePieceGraphics>
+        <GameButtonComponent CommandObject="DataContext!.RollDiceCommand" Display="Roll Dice" />
+        <StateContentView DataContext="_current">
+            <BasePieceGraphics TargetHeight="10vh"
+                               LongestSize="50">
+                <PieceGraphicsBlazor Index="@_current.PlayerId" Number="@_current.SpaceNumber" />
+            </BasePieceGraphics>
+        </StateContentView>
+        
         <DiceListConrolBlazor Cup="DataContext!.GetCup" D="SimpleDice" />
         <div>
             <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />

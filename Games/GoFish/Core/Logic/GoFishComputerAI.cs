@@ -9,7 +9,7 @@ public static class GoFishComputerAI
     public static BasicList<RegularSimpleCard> PairToPlay(GoFishSaveInfo saveRoot)
     {
         GoFishPlayerItem singleInfo = saveRoot.PlayerList.GetWhoPlayer();
-        BasicList<RegularSimpleCard> output = new();
+        BasicList<RegularSimpleCard> output = [];
         foreach (var firstCard in singleInfo.MainHandList)
         {
             foreach (var secondCard in singleInfo.MainHandList)
@@ -25,6 +25,6 @@ public static class GoFishComputerAI
                 }
             }
         }
-        return new();
+        return [];
     }
 }

@@ -1,6 +1,7 @@
 namespace Payday.Core.Data;
 [SingletonGame]
 [UseLabelGrid]
+[UseStateChanged]
 public partial class PaydayVMData : IDiceBoardGamesData
 {
     public string PopUpChosen { get; set; } = "";
@@ -45,19 +46,20 @@ public partial class PaydayVMData : IDiceBoardGamesData
             PopUpChosen = list.Single();
             PopUpList.SelectSpecificItem(1);
         }
+        _command.UpdateSpecificAction(PaydayActions.Popups);
     }
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
-    [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Status { get; set; } = "";
+    [StateProperty]
+    public partial string Instructions { get; set; } = "";
     [LabelColumn] //just in case.
-    public EnumStatus GameStatus { get; set; }
+    public partial EnumStatus GameStatus { get; set; }
     [LabelColumn]
-    public string MonthLabel { get; set; } = "";
+    public partial string MonthLabel { get; set; } = "";
     [LabelColumn]
-    public string OtherLabel { get; set; } = "";
+    public partial string OtherLabel { get; set; } = "";
     public DiceCup<SimpleDice>? Cup { get; set; }
     public void LoadCup(ISavedDiceList<SimpleDice> saveRoot, bool autoResume)
     {

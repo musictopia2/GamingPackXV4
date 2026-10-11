@@ -46,7 +46,7 @@ public class ChessMainGameClass
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
-        BoardGameSaved();
+        GameSaved();
         _autoResume = true;
         return Task.CompletedTask;
     }

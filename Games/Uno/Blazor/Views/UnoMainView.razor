@@ -1,4 +1,4 @@
-@inherits BasicGameView<UnoMainViewModel>
+@inherits CascadingGameView<UnoMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -15,9 +15,8 @@
                              Display="End Turn" />
     </StackItem>
     <StackItem>
-        <ParentControl VM="SayUnoViewModel">
-            <SayUnoView />
-        </ParentControl>
+        <SayUnoView DataContext="DataContext.SayUnoScreen" />
+        
     </StackItem>
 </StackLayout>
 <div>

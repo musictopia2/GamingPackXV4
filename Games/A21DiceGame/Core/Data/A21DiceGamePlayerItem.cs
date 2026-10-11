@@ -3,9 +3,9 @@ namespace A21DiceGame.Core.Data;
 public partial class A21DiceGamePlayerItem : SimplePlayer
 {
     [ScoreColumn]
-    public bool IsFaceOff { get; set; }
+    public partial bool IsFaceOff { get; set; }
     [ScoreColumn]
-    public int Score { get; set; }
+    public partial int Score { get; set; }
     [ScoreColumn]
-    public int NumberOfRolls { get; set; }
+    public partial int NumberOfRolls { get; set; }
 }

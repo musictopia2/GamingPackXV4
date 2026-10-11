@@ -7,17 +7,17 @@ public partial class RageCardGameVMData : ITrickCardGamesData<RageCardGameCardIn
     private readonly RageCardGameGameContainer _gameContainer;
     private readonly IToast _toast;
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumColor TrumpSuit { get; set; }
+    public partial EnumColor TrumpSuit { get; set; }
     [LabelColumn]
-    public int BidAmount { get; set; } = -1;
+    public partial int BidAmount { get; set; } = -1;
     [LabelColumn]
-    public string Lead { get; set; } = "";
+    public partial string Lead { get; set; } = "";
     [LabelColumn]
-    public EnumColor ColorChosen { get; set; }
+    public partial EnumColor ColorChosen { get; set; }
     public RageCardGameVMData(CommandContainer command,
             SpecificTrickAreaObservable trickArea1,
             IGamePackageResolver resolver,

@@ -1,21 +1,4 @@
 namespace Bingo.Core.ViewModels;
-public class BingoShellViewModel : BasicMultiplayerShellViewModel<BingoPlayerItem>
+public class BingoShellViewModel(IGamePackageResolver mainContainer, CommandContainer container, IGameInfo gameData, BasicData basicData, IMultiplayerSaveState save, TestOptions test, IEventAggregator aggregator, IToast toast) : BasicMultiplayerShellViewModel<BingoPlayerItem>(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
 {
-    public BingoShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        BasicData basicData,
-        IMultiplayerSaveState save,
-        TestOptions test,
-        IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<BingoMainViewModel>();
-        return model;
-    }
 }

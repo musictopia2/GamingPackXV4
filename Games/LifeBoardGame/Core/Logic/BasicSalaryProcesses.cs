@@ -1,50 +1,43 @@
 ﻿namespace LifeBoardGame.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class BasicSalaryProcesses : IBasicSalaryProcesses
+public class BasicSalaryProcesses(LifeBoardGameVMData model, LifeBoardGameGameContainer gameContainer) : IBasicSalaryProcesses
 {
-    private readonly LifeBoardGameVMData _model;
-    private readonly LifeBoardGameGameContainer _gameContainer;
-    public BasicSalaryProcesses(LifeBoardGameVMData model, LifeBoardGameGameContainer gameContainer)
-    {
-        _model = model;
-        _gameContainer = gameContainer;
-    }
     public async Task ChoseSalaryAsync(int salary)
     {
-        if (_gameContainer.CanSendMessage())
+        if (gameContainer.CanSendMessage())
         {
-            await _gameContainer.Network!.SendAllAsync("chosesalary", salary);
+            await gameContainer.Network!.SendAllAsync("chosesalary", salary);
         }
-        if (_gameContainer.GameStatus == EnumWhatStatus.NeedTradeSalary)
+        if (gameContainer.GameStatus == EnumWhatStatus.NeedTradeSalary)
         {
             throw new CustomBasicException("I think if the salary is being traded; must use TradedSalary method instead");
         }
-        else if (_gameContainer.GameStatus == EnumWhatStatus.NeedChooseSalary)
+        else if (gameContainer.GameStatus == EnumWhatStatus.NeedChooseSalary)
         {
             var thisSalary = CardsModule.GetSalaryCard(salary);
-            await _gameContainer.ShowCardAsync(thisSalary);
-            _gameContainer.SingleInfo!.Hand.Add(thisSalary);
-            _gameContainer.SingleInfo.Salary = thisSalary.PayCheck;
-            PopulatePlayerProcesses.FillInfo(_gameContainer.SingleInfo);
+            await gameContainer.ShowCardAsync(thisSalary);
+            gameContainer.SingleInfo!.Hand.Add(thisSalary);
+            gameContainer.SingleInfo.Salary = thisSalary.PayCheck;
+            PopulatePlayerProcesses.FillInfo(gameContainer.SingleInfo);
         }
-        if (_gameContainer.SaveRoot.EndAfterSalary)
+        if (gameContainer.SaveRoot.EndAfterSalary)
         {
-            _gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
+            gameContainer.GameStatus = EnumWhatStatus.NeedToEndTurn;
         }
         else
         {
-            _gameContainer.GameStatus = EnumWhatStatus.NeedToSpin;
+            gameContainer.GameStatus = EnumWhatStatus.NeedToSpin;
         }
-        await _gameContainer.ContinueTurnAsync!.Invoke();
+        await gameContainer.ContinueTurnAsync!.Invoke();
     }
     public Task LoadSalaryListAsync()
     {
-        _model.HandList.Text = "List Of Salaries";
-        _model.Instructions = "Choose a salary";
-        var firstList = _gameContainer.Random.GenerateRandomList(27, 9, 19);
-        var tempList = firstList.GetSalaryList(_gameContainer.PlayerList!);
-        var careerList = _gameContainer.SingleInfo!.GetCareerList();
+        model.HandList.Text = "List Of Salaries";
+        model.Instructions = "Choose a salary";
+        var firstList = gameContainer.Random.GenerateRandomList(27, 9, 19);
+        var tempList = firstList.GetSalaryList(gameContainer.PlayerList!);
+        var careerList = gameContainer.SingleInfo!.GetCareerList();
         if (careerList.Count == 0)
         {
             throw new CustomBasicException("Must have a career in order to load the salary list");
@@ -63,10 +56,9 @@ public class BasicSalaryProcesses : IBasicSalaryProcesses
             career = careerList.First();
         }
         tempList.KeepConditionalItems(items => items.WhatGroup == career.Scale1 || items.WhatGroup == career.Scale2);
-        _model.HandList.HandList.Clear();
-        _gameContainer.Command.UpdateAll();
-        _model.HandList.HandList.ReplaceRange(tempList);
-        _model.HandList.AutoSelect = EnumHandAutoType.SelectOneOnly;
+        model.HandList.HandList.Clear();
+        model.HandList.HandList.ReplaceRange(tempList);
+        model.HandList.AutoSelect = EnumHandAutoType.SelectOneOnly;
         return Task.CompletedTask;
     }
 }

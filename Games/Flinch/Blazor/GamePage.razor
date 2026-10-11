@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="FlinchMainViewModel">
+    <MainScreen>
         <FlinchMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<FlinchPlayerItem>">
-        <MultiplayerOpeningView P="FlinchPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="FlinchPlayerItem" />
 </CascadingValue>

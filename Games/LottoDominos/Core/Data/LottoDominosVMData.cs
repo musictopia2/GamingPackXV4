@@ -4,13 +4,8 @@ namespace LottoDominos.Core.Data;
 public partial class LottoDominosVMData : IViewModelData
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
-    internal DominosBasicShuffler<SimpleDominoInfo> DominosList { get; set; }
-    //looks like the shuffler has to be here.
-    public LottoDominosVMData()
-    {
-        DominosList = new();
-    }
+    public partial string Status { get; set; } = "";
+    internal DominosBasicShuffler<SimpleDominoInfo> DominosList { get; set; } = [];
 }

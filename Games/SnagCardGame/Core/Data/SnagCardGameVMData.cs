@@ -5,13 +5,13 @@ namespace SnagCardGame.Core.Data;
 public partial class SnagCardGameVMData : ITrickCardGamesData<SnagCardGameCardInformation, EnumSuitList>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumSuitList TrumpSuit { get; set; }
+    public partial EnumSuitList TrumpSuit { get; set; }
     [LabelColumn]
-    public string Instructions { get; set; } = "";
+    public partial string Instructions { get; set; } = "";
     public SnagCardGameVMData(CommandContainer command,
            SnagTrickObservable trickArea1,
            SnagCardGameGameContainer gameContainer

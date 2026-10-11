@@ -1,11 +1,11 @@
 ﻿namespace GoFish.Core.ViewModels;
 [InstanceGame]
-public partial class AskViewModel : ScreenViewModel, IBlankGameVM, IBasicEnableProcess
+public partial class AskViewModel :  IBasicEnableProcess
 {
     private readonly GoFishVMData _model;
     private readonly GoFishGameContainer _gameContainer;
     private readonly IAskProcesses _processes;
-    public AskViewModel(CommandContainer commandContainer, GoFishVMData model, GoFishGameContainer gameContainer, IAskProcesses processes, IEventAggregator aggregator) : base(aggregator)
+    public AskViewModel(CommandContainer commandContainer, GoFishVMData model, GoFishGameContainer gameContainer, IAskProcesses processes)
     {
         CommandContainer = commandContainer;
         _model = model;

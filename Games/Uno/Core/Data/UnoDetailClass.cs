@@ -14,7 +14,7 @@ public class UnoDetailClass : IGameInfo, ICardInfo<UnoCardInformation>
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<UnoCardInformation>.CardsToPassOut => 7;
-    BasicList<int> ICardInfo<UnoCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<UnoCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<UnoCardInformation>.AddToDiscardAtBeginning => true;
     bool ICardInfo<UnoCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<UnoCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,7 +22,7 @@ public class UnoDetailClass : IGameInfo, ICardInfo<UnoCardInformation>
     bool ICardInfo<UnoCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<UnoCardInformation>.NoPass => false;
     bool ICardInfo<UnoCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<UnoCardInformation> ICardInfo<UnoCardInformation>.DummyHand { get; set; } = new DeckRegularDict<UnoCardInformation>();
+    DeckRegularDict<UnoCardInformation> ICardInfo<UnoCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<UnoCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<UnoCardInformation>.CanSortCardsToBeginWith => true;
     BasicList<int> ICardInfo<UnoCardInformation>.DiscardExcludeList(IListShuffler<UnoCardInformation> deckList)

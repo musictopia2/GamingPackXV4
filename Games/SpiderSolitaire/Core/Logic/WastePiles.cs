@@ -1,9 +1,6 @@
 namespace SpiderSolitaire.Core.Logic;
-public class WastePiles : WastePilesCP
+public class WastePiles(CommandContainer command) : WastePilesCP(command)
 {
-    public WastePiles(CommandContainer command) : base(command)
-    {
-    }
     public override void ClearBoard(IDeckDict<SolitaireCard> thisCol)
     {
         base.ClearBoard(thisCol);
@@ -57,7 +54,7 @@ public class WastePiles : WastePilesCP
         var output = Piles.ListGivenCards(PreviousSelected);
         if (output.Count == 0)
         {
-            return new DeckRegularDict<SolitaireCard>(); //decided this instead of error.
+            return []; //decided this instead of error.
         }
         return output.ListValidCardsSameSuit();
     }

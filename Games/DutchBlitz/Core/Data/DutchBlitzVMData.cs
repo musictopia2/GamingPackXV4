@@ -5,9 +5,9 @@ namespace DutchBlitz.Core.Data;
 public partial class DutchBlitzVMData : IBasicCardGamesData<DutchBlitzCardInformation>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public DutchBlitzVMData(CommandContainer command, DutchBlitzGameContainer gameContainer)
     {
         Deck1 = new(command);
@@ -23,7 +23,7 @@ public partial class DutchBlitzVMData : IBasicCardGamesData<DutchBlitzCardInform
         OtherPile = Pile1;
     }
     [LabelColumn]
-    public string ErrorMessage { get; set; } = ""; //i think.
+    public partial string ErrorMessage { get; set; } = ""; //i think.
     public StockViewModel StockPile;
     public DiscardPilesVM<DutchBlitzCardInformation>? DiscardPiles;
     public PublicViewModel PublicPiles1;

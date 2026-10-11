@@ -6,17 +6,22 @@ public partial class GameBoardBlazor : ComponentBase
     [Parameter]
     public string ImageHeight { get; set; } = ""; //i am forced to do this too unfortunately.
     [Parameter]
-    public BasicList<EnumMiscType> MiscList { get; set; } = [];
+    public StateList<EnumMiscType> MiscList { get; set; } = [];
+
+
     [Parameter]
-    public int NumberOfCops { get; set; }
+    [EditorRequired]
+    public MonopolyDicedGameSaveInfo SaveInfo { get; set; }
+    //[Parameter]
+    //public int NumberOfCops { get; set; }
     [Parameter]
     public HouseDice? HouseDice { get; set; }
-    [Parameter]
-    public bool HasHotel { get; set; }
-    [Parameter]
-    public int HousesOwned { get; set; }
-    [Parameter]
-    public BasicList<OwnedModel> OwnList { get; set; } = [];
+    //[Parameter]
+    //public bool HasHotel { get; set; }
+    //[Parameter]
+    //public int HousesOwned { get; set; }
+    //[Parameter]
+    //public BasicList<OwnedModel> OwnList { get; set; } = [];
 
     //[Parameter]
     //public int TrainsOwned { get; set; }

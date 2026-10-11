@@ -1,8 +1,11 @@
 ﻿namespace MonopolyDicedGame.Core.Data;
-public class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer<int>, IComparable<BasicDiceModel>
+
+[UseStateChanged]
+public partial class BasicDiceModel : IBasicDice<int>, ISelectableObject, IDiceContainer<int>, IComparable<BasicDiceModel>
 {
     public int HeightWidth => 50;
-    public bool IsSelected { get; set; }
+    [StateProperty]
+    public partial bool IsSelected { get; set; }
     public int Value { get; set; }
     public int Index { get; set; }
     public bool Visible { get; set; } = true;

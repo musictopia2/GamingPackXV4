@@ -5,19 +5,19 @@ namespace SixtySix2Player.Core.Data;
 public partial class SixtySix2PlayerVMData : ITrickCardGamesData<SixtySix2PlayerCardInformation, EnumSuitList>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     [LabelColumn]
-    public EnumSuitList TrumpSuit { get; set; }
+    public partial EnumSuitList TrumpSuit { get; set; }
     [LabelColumn]
-    public int BonusPoints { get; set; }
+    public partial int BonusPoints { get; set; }
     [LabelColumn]
     public string DeckCount => Deck1.TextToAppear;
     public static BasicList<ScoreValuePair> GetDescriptionList()
     {
-        return new()
-        {
+        return
+        [
             new ScoreValuePair("Marriage In Trumps (K, Q announced)", 40),
             new ScoreValuePair("Marriage In Any Other Suit (K, Q announced)", 20),
             new ScoreValuePair("Each Ace", 11),
@@ -26,7 +26,11 @@ public partial class SixtySix2PlayerVMData : ITrickCardGamesData<SixtySix2Player
             new ScoreValuePair("Each Queen", 3),
             new ScoreValuePair("Each Jack", 2),
             new ScoreValuePair("Last Trick", 10)
-        };
+        ];
+    }
+    public void RefreshDeckCount()
+    {
+        OnLabelValueChanged(nameof(DeckCount));
     }
     public SixtySix2PlayerVMData(CommandContainer command,
             TwoPlayerTrickObservable<EnumSuitList, SixtySix2PlayerCardInformation, SixtySix2PlayerPlayerItem, SixtySix2PlayerSaveInfo> trickArea1

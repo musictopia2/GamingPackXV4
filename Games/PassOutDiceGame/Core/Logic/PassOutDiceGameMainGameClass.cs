@@ -1,39 +1,36 @@
 namespace PassOutDiceGame.Core.Logic;
 [SingletonGame]
-public class PassOutDiceGameMainGameClass
-    : BoardDiceGameClass<PassOutDiceGamePlayerItem, PassOutDiceGameSaveInfo, EnumColorChoice, int>
+public class PassOutDiceGameMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    PassOutDiceGameVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    PassOutDiceGameGameContainer container,
+    StandardRollProcesses<SimpleDice, PassOutDiceGamePlayerItem> roller,
+    GameBoardProcesses gameBoard,
+    ISystemError error,
+    IToast toast
+        )
+        : BoardDiceGameClass<PassOutDiceGamePlayerItem, PassOutDiceGameSaveInfo, EnumColorChoice, int>(resolver, aggregator, basic, test, model, state, delay, command, container, roller, error, toast)
     , ISerializable
 {
-    private readonly PassOutDiceGameVMData _model;
-    private readonly CommandContainer _command;
-    private readonly GameBoardProcesses _gameBoard;
-    public PassOutDiceGameMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        PassOutDiceGameVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        PassOutDiceGameGameContainer container,
-        StandardRollProcesses<SimpleDice, PassOutDiceGamePlayerItem> roller,
-        GameBoardProcesses gameBoard,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, container, roller, error, toast)
-    {
-        _model = model;
-        _command = command;
-        _gameBoard = gameBoard;
-    }
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
         AfterRestoreDice();
-        BoardGameSaved();
-        SaveRoot.LoadMod(_model);
-        _gameBoard.LoadSavedGame();
+        GameSaved();
+        SaveRoot.LoadMod(model);
+        gameBoard.LoadSavedGame();
         return Task.CompletedTask;
+    }
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        container.RepaintBoard();
+
     }
     private void LoadControls()
     {
@@ -51,7 +48,7 @@ public class PassOutDiceGameMainGameClass
     {
         if (PlayerList.DidChooseColors() == true)
         {
-            _gameBoard.SaveGame();
+            gameBoard.SaveGame();
         }
         return base.PopulateSaveRootAsync();
     }
@@ -63,7 +60,7 @@ public class PassOutDiceGameMainGameClass
             throw new CustomBasicException("The loader never set the finish up code.  Rethink");
         }
         SetUpDice();
-        SaveRoot.LoadMod(_model);
+        SaveRoot.LoadMod(model);
         SaveRoot.PreviousSpace = 0;
         SaveRoot!.ImmediatelyStartTurn = true;
         await FinishUpAsync(isBeginning);
@@ -91,6 +88,7 @@ public class PassOutDiceGameMainGameClass
                 return;
             }
             SaveRoot.DidRoll = true;
+            SetDiceVisible(true); //new method now.
             await Roller.RollDiceAsync();
             return;
         }
@@ -98,13 +96,13 @@ public class PassOutDiceGameMainGameClass
     }
     public override async Task MakeMoveAsync(int space)
     {
-        _gameBoard.MakeMove(space);
+        gameBoard.MakeMove(space);
         if (Test!.ImmediatelyEndGame)
         {
             await ShowWinAsync();
             return;
         }
-        int wons = _gameBoard.WhoWon;
+        int wons = gameBoard.WhoWon;
         if (wons > 0)
         {
             SingleInfo = PlayerList[wons]; //i think should be whoever actually won.
@@ -115,13 +113,14 @@ public class PassOutDiceGameMainGameClass
     }
     public override async Task EndTurnAsync()
     {
+        SetDiceVisible(false); //because turn is over.
         WhoTurn = await PlayerList!.CalculateWhoTurnAsync();
-        _command.ManuelFinish = true;
+        CommandContainer.ManuelFinish = true;
         await StartNewTurnAsync();
     }
     public override async Task AfterChoosingColorsAsync()
     {
-        _gameBoard.ClearBoard();
+        gameBoard.ClearBoard();
         await EndTurnAsync();
     }
     public override async Task AfterRollingAsync()

@@ -3,7 +3,7 @@ namespace LottoDominos.Core.Data;
 public partial class LottoDominosPlayerItem : SimplePlayer
 {
     [ScoreColumn]
-    public int NumberChosen { get; set; } = -1;
+    public partial int NumberChosen { get; set; } = -1;
     [ScoreColumn]
-    public int NumberWon { get; set; }
+    public partial int NumberWon { get; set; }
 }

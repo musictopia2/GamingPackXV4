@@ -1,35 +1,27 @@
 namespace Spades4Player.Core.Logic;
 [SingletonGame]
-public class Spades4PlayerMainGameClass
-    : TrickGameClass<EnumSuitList, Spades4PlayerCardInformation, Spades4PlayerPlayerItem, Spades4PlayerSaveInfo>
+public class Spades4PlayerMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    Spades4PlayerVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<Spades4PlayerCardInformation> cardInfo,
+    CommandContainer command,
+    Spades4PlayerGameContainer gameContainer,
+    ITrickData trickData,
+    ITrickPlay trickPlay,
+    IAdvancedTrickProcesses aTrick,
+    ISystemError error,
+    IToast toast
+        )
+        : TrickGameClass<EnumSuitList, Spades4PlayerCardInformation, Spades4PlayerPlayerItem, Spades4PlayerSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
         , IMiscDataNM, IStartNewGame, ISerializable
 {
-    private readonly Spades4PlayerVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly Spades4PlayerGameContainer _gameContainer; //if we don't need it, take it out.
-    private readonly IAdvancedTrickProcesses _aTrick;
-    public Spades4PlayerMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        Spades4PlayerVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<Spades4PlayerCardInformation> cardInfo,
-        CommandContainer command,
-        Spades4PlayerGameContainer gameContainer,
-        ITrickData trickData,
-        ITrickPlay trickPlay,
-        IAdvancedTrickProcesses aTrick,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _aTrick = aTrick;
-    }
+    private readonly Spades4PlayerVMData _model = currentMod;
+    private readonly Spades4PlayerGameContainer _gameContainer = gameContainer; //if we don't need it, take it out.
+    private readonly IAdvancedTrickProcesses _aTrick = aTrick;
     public override async Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -132,7 +124,6 @@ public class Spades4PlayerMainGameClass
         if (SingleInfo!.PlayerCategory != EnumPlayerCategory.Self)
         {
             _model!.Bid1!.SelectNumberValue(_model.BidAmount);
-            _command.UpdateAll();
             if (Test!.NoAnimations == false)
             {
                 await Delay!.DelaySeconds(.5);
@@ -174,7 +165,7 @@ public class Spades4PlayerMainGameClass
         //anything else is here.  varies by game.
 
 
-        _command.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer.ManuelFinish = true; //because it could be somebody else's turn.
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
@@ -216,7 +207,7 @@ public class Spades4PlayerMainGameClass
     private async Task StartNewTrickAsync() //done i think.
     {
         _aTrick!.ClearBoard();
-        _command!.ManuelFinish = true; //because it could be somebody else's turn.
+        CommandContainer!.ManuelFinish = true; //because it could be somebody else's turn.
         await StartNewTurnAsync(); //hopefully this simple.
     }
     Task IStartNewGame.ResetAsync()
@@ -243,7 +234,6 @@ public class Spades4PlayerMainGameClass
                 cats.AddToString(thisPlayer.NickName, ",");
             });
             await ShowWinAsync(cats.GetInfo());
-            _command.UpdateAll(); //may fix the problem with not showing the ui for the win.
             return;
         }
         await this.RoundOverNextAsync();

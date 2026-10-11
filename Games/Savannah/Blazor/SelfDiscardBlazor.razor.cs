@@ -6,7 +6,7 @@ public partial class SelfDiscardBlazor
     [CascadingParameter]
     public int TargetHeight { get; set; }
     private static double Divider => 5;
-    private bool IsDisabled => !DiscardPile!.IsEnabled;
+    private bool IsDisabled => DiscardPile!.IsEnabled == false;
     private string GetColorStyle()
     {
         if (IsDisabled == false)
@@ -15,7 +15,7 @@ public partial class SelfDiscardBlazor
         }
         return $"color:{cc1.LightGray.ToWebColor}; border-color: {cc1.LightGray.ToWebColor}";
     }
-    private string GetContainerStyle()
+    private static string GetContainerStyle()
     {
         return "overflow-x: auto; width: 100%; margin-right: 10px;";
     }
@@ -28,7 +28,6 @@ public partial class SelfDiscardBlazor
 
         var card = new RegularSimpleCard();
         double cardWidth = card.DefaultSize.Width;
-        double cardHeight = card.DefaultSize.Height;
         double containerWidth;
 
         containerWidth = (cardWidth / Divider) * 6 + cardWidth * 2  / Divider;

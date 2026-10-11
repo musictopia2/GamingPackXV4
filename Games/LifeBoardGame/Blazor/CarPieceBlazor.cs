@@ -14,6 +14,9 @@ public class CarPieceBlazor : ComponentBase
     public string MainColor { get; set; } = cc1.Transparent; //has to be this way so its compatible with the processes for the color pickers
     [Parameter]
     public LifeBoardGamePlayerItem? Player { get; set; } //if player is used, then no need for colorused.
+
+
+
     protected override void OnInitialized()
     {
         MainGraphics!.OriginalSize = new SizeF(136, 248);
@@ -66,8 +69,8 @@ public class CarPieceBlazor : ComponentBase
     }
     private void DrawPegs(ISvg svg)
     {
-        BasicList<PegInfo> pegs = new()
-        {
+        BasicList<PegInfo> pegs =
+        [
             new PegInfo()
             {
                 CX = 42.311111,
@@ -116,7 +119,7 @@ public class CarPieceBlazor : ComponentBase
                 RY = 15.111115
             },
 
-        };
+        ];
         FigureOutGenders();
         foreach (var peg in pegs)
         {
@@ -147,7 +150,7 @@ public class CarPieceBlazor : ComponentBase
             _genderList.Add(x);
         });
     }
-    private readonly BasicList<EnumGender> _genderList = new();
+    private readonly BasicList<EnumGender> _genderList = [];
     private void DrawSinglePeg(ISvg svg, PegInfo peg, int index)
     {
         DrawPeg(svg, peg, cc1.Black.ToWebColor);

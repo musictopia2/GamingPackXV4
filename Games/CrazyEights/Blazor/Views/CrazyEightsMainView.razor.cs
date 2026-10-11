@@ -1,8 +1,8 @@
 namespace CrazyEights.Blazor.Views;
 public partial class CrazyEightsMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private CrazyEightsVMData? _vmData;
     private CrazyEightsGameContainer? _gameContainer;
     protected override void OnInitialized()

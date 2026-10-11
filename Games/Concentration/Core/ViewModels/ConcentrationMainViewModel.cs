@@ -1,28 +1,29 @@
 namespace Concentration.Core.ViewModels;
 [InstanceGame]
-public class ConcentrationMainViewModel : BasicCardGamesVM<RegularSimpleCard>
-{
-    private readonly ConcentrationMainGameClass _mainGame; //if we don't need, delete.
-    public ConcentrationVMData VMData { get; set; }
-    public ConcentrationMainViewModel(CommandContainer commandContainer,
+public class ConcentrationMainViewModel(CommandContainer commandContainer,
         ConcentrationMainGameClass mainGame,
         ConcentrationVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<RegularSimpleCard>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    public ConcentrationVMData VMData { get; set; } = viewModel;
+    
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = viewModel;
-        viewModel.Deck1.NeverAutoDisable = true;
-        viewModel.GameBoard1.PileClickedAsync = GameBoard1_PileClickedAsync;
+        VMData.Deck1.NeverAutoDisable = true;
+        VMData.GameBoard1.PileClickedAsync = GameBoard1_PileClickedAsync;
+        base.AdditionalInitialize();
+    }
+    protected override Task CloseAsync()
+    {
+        VMData.GameBoard1.PileClickedAsync = null;
+        return base.CloseAsync();
     }
     private async Task GameBoard1_PileClickedAsync(int index, BasicPileInfo<RegularSimpleCard> thisPile)
     {
-        await _mainGame.SelectCardAsync(thisPile.ThisObject.Deck);
+        await mainGame.SelectCardAsync(thisPile.ThisObject.Deck);
     }
     protected override bool CanEnableDeck()
     {

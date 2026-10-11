@@ -1,4 +1,4 @@
-@inherits BasicGameView<MillebournesMainViewModel>
+@inherits CascadingGameView<MillebournesMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -17,9 +17,7 @@
                     <SingleMiscPileBlazor SinglePile="_vmData.Pile1" PileAnimationTag="" />
                 </StackItem>
                 <StackItem>
-                    <ParentControl VM="CoupeViewModel">
-                        <CoupeView />
-                    </ParentControl>
+                    <CoupeView DataContext="DataContext.CoupeScreen" />
                 </StackItem>
             </StackLayout>
             <div>

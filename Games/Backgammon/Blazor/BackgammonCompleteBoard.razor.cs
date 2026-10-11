@@ -1,6 +1,8 @@
 namespace Backgammon.Blazor;
 public partial class BackgammonCompleteBoard
 {
+
+
     [CascadingParameter]
     public GameBoardGraphicsCP? GraphicsData { get; set; } //decided to cascade it because something else needs it as well.
     [Parameter]

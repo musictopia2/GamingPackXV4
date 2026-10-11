@@ -5,5 +5,5 @@ public class SavannahSaveInfo : BasicSavedCardClass<SavannahPlayerItem, RegularS
     public DiceList<SimpleDice> DiceList { get; set; } = new();
     public bool ChoseOtherPlayer { get; set; }
     public int TimesReshuffled { get; set; }
-    public BasicList<BasicPileInfo<RegularSimpleCard>> PublicPileList { get; set; } = new();
+    public BasicList<BasicPileInfo<RegularSimpleCard>> PublicPileList { get; set; } = [];
 }

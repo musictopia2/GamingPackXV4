@@ -3,10 +3,13 @@
         @foreach (var item in DiceList)
         {
             <StackItem>
-                <SorryDiceComponent TargetHeight="@ImageHeight" 
-                    CommandObject="DiceCommand"
-                    CommandParameter="item"
-                    Dice="item" />
+                <StateContentView DataContext="item">
+                    <SorryDiceComponent TargetHeight="@ImageHeight"
+                                        CommandObject="DiceCommand"
+                                        CommandParameter="item"
+                                        Dice="item" />
+                </StateContentView>
+                
             </StackItem>
         }
     </StackLayout>

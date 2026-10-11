@@ -1,16 +1,15 @@
 ﻿namespace Froggies.Core.Data;
-public class LilyPadModel
+[UseStateChanged]
+public partial class LilyPadModel(int x, int y, bool pHasFrog)
 {
-    public int Row { get; set; }
-    public int Column { get; set; }
-    public bool HasFrog { get; set; }
-    public bool IsSelected { get; set; }
-    public bool IsTarget { get; set; }
-    public bool StartedWithFrog { get; set; } //i think this way may be fine now.
-    public LilyPadModel(int x, int y, bool pHasFrog)
-    {
-        Column = x;
-        Row = y;
-        HasFrog = pHasFrog;
-    }
+    public int Row { get; set; } = y;
+    public int Column { get; set; } = x;
+    [StateProperty]
+    public partial bool HasFrog { get; set; } = pHasFrog;
+    [StateProperty]
+    public partial bool IsSelected { get; set; }
+    [StateProperty]
+    public partial bool IsTarget { get; set; }
+    [StateProperty]
+    public partial bool StartedWithFrog { get; set; }
 }

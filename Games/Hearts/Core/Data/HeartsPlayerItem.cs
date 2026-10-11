@@ -3,12 +3,12 @@ namespace Hearts.Core.Data;
 public partial class HeartsPlayerItem : PlayerTrick<EnumSuitList, HeartsCardInformation>
 {
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int PreviousScore { get; set; }
+    public partial int PreviousScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
     [ScoreColumn]
-    public bool HadPoints { get; set; }
-    public BasicList<int> CardsPassed { get; set; } = new();
+    public partial bool HadPoints { get; set; }
+    public BasicList<int> CardsPassed { get; set; } = [];
 }

@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="YahtzeeHandsDownMainViewModel">
+    <MainScreen>
         <YahtzeeHandsDownMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<YahtzeeHandsDownPlayerItem>">
-        <MultiplayerOpeningView P="YahtzeeHandsDownPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="YahtzeeHandsDownPlayerItem" />
 </CascadingValue>

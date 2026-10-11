@@ -7,9 +7,8 @@ public class ChooseStockViewModel : BasicSubmitViewModel
     public ChooseStockViewModel(CommandContainer commandContainer,
         LifeBoardGameGameContainer gameContainer,
         LifeBoardGameVMData model,
-        IChooseStockProcesses processes,
-        IEventAggregator aggregator
-        ) : base(commandContainer, aggregator)
+        IChooseStockProcesses processes
+        ) : base(commandContainer)
     {
         _gameContainer = gameContainer;
         _model = model;

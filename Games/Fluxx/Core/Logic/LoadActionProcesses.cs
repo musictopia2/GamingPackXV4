@@ -1,34 +1,23 @@
 ﻿namespace Fluxx.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class LoadActionProcesses : ILoadActionProcesses
+public class LoadActionProcesses(ActionContainer actionContainer,
+    FluxxVMData model,
+    BasicActionLogic basicActionLogic,
+    FluxxGameContainer gameContainer
+        ) : ILoadActionProcesses
 {
-    private readonly ActionContainer _actionContainer;
-    private readonly FluxxVMData _model;
-    private readonly BasicActionLogic _basicActionLogic;
-    private readonly FluxxGameContainer _gameContainer;
-    public LoadActionProcesses(ActionContainer actionContainer,
-        FluxxVMData model,
-        BasicActionLogic basicActionLogic,
-        FluxxGameContainer gameContainer
-        )
-    {
-        _actionContainer = actionContainer;
-        _model = model;
-        _basicActionLogic = basicActionLogic;
-        _gameContainer = gameContainer;
-    }
     void ILoadActionProcesses.LoadDirections()
     {
-        _actionContainer.ActionCategory = EnumActionCategory.Directions;
-        _actionContainer.Direction1!.UnselectAll();
-        _actionContainer.IndexDirection = -1;
+        actionContainer.ActionCategory = EnumActionCategory.Directions;
+        actionContainer.Direction1!.UnselectAll();
+        actionContainer.IndexDirection = -1;
     }
     void ILoadActionProcesses.LoadDoAgainCards()
     {
-        _actionContainer.ActionCategory = EnumActionCategory.DoAgain;
-        var firstList = _model.Pile1!.DiscardList();
-        DeckRegularDict<FluxxCardInformation> secondList = new();
+        actionContainer.ActionCategory = EnumActionCategory.DoAgain;
+        var firstList = model.Pile1!.DiscardList();
+        DeckRegularDict<FluxxCardInformation> secondList = [];
         firstList.ForEach(x =>
         {
             if (x.Deck == 0)
@@ -44,92 +33,92 @@ public class LoadActionProcesses : ILoadActionProcesses
         {
             throw new CustomBasicException("Must have at least one card to do again.  Otherwise; can't do again");
         }
-        _actionContainer.IndexCard = -1;
-        _actionContainer.CardList1!.LoadTextList(tempList);
+        actionContainer.IndexCard = -1;
+        actionContainer.CardList1!.LoadTextList(tempList);
     }
     void ILoadActionProcesses.LoadDrawUse()
     {
-        _actionContainer.ActionCategory = EnumActionCategory.DrawUse;
-        _basicActionLogic.LoadTempCards();
-        _actionContainer.ButtonChooseCardVisible = true;
+        actionContainer.ActionCategory = EnumActionCategory.DrawUse;
+        basicActionLogic.LoadTempCards();
+        actionContainer.ButtonChooseCardVisible = true;
     }
     void ILoadActionProcesses.LoadEverybodyGetsOne()
     {
-        _actionContainer.ActionCategory = EnumActionCategory.Everybody1;
-        _basicActionLogic.LoadTempCards();
-        if (_gameContainer.EverybodyGetsOneList.Count == 0)
+        actionContainer.ActionCategory = EnumActionCategory.Everybody1;
+        basicActionLogic.LoadTempCards();
+        if (gameContainer.EverybodyGetsOneList.Count == 0)
         {
-            _basicActionLogic.LoadPlayers(true);
+            basicActionLogic.LoadPlayers(true);
             return;
         }
-        var tempLists = _gameContainer.PlayersLeftForEverybodyGetsOne();
+        var tempLists = gameContainer.PlayersLeftForEverybodyGetsOne();
         if (tempLists.Count < 2)
         {
             throw new CustomBasicException("Cannot load everybody gets one because less than 2 players");
         }
-        _actionContainer.PlayerIndexList.Clear();
-        if (_gameContainer.IncreaseAmount() == 1)
+        actionContainer.PlayerIndexList.Clear();
+        if (gameContainer.IncreaseAmount() == 1)
         {
-            _actionContainer.TempHand!.AutoSelect = EnumHandAutoType.SelectAsMany;
+            actionContainer.TempHand!.AutoSelect = EnumHandAutoType.SelectAsMany;
         }
-        _actionContainer.IndexPlayer = -1;
-        BasicList<string> firstList = new();
+        actionContainer.IndexPlayer = -1;
+        BasicList<string> firstList = [];
         tempLists.ForEach(thisPlayer =>
         {
-            _actionContainer.PlayerIndexList.Add(thisPlayer.Id);
+            actionContainer.PlayerIndexList.Add(thisPlayer.Id);
             firstList.Add($"{thisPlayer.NickName}, {thisPlayer.MainHandList.Count} cards in hand, {thisPlayer.Id}");
         });
-        _actionContainer.Player1!.LoadTextList(firstList);
+        actionContainer.Player1!.LoadTextList(firstList);
     }
     void ILoadActionProcesses.LoadFirstRandom()
     {
-        _actionContainer.ActionCategory = EnumActionCategory.FirstRandom;
-        _actionContainer.OtherHand.Visible = true;
-        var turnPlayer = _gameContainer.PlayerList!.GetWhoPlayer();
-        _basicActionLogic.LoadOtherCards(turnPlayer);
-        _actionContainer.ActionFrameText = $"{_gameContainer.SingleInfo!.NickName} will choose a card for {turnPlayer.NickName}";
+        actionContainer.ActionCategory = EnumActionCategory.FirstRandom;
+        actionContainer.OtherHand.Visible = true;
+        var turnPlayer = gameContainer.PlayerList!.GetWhoPlayer();
+        basicActionLogic.LoadOtherCards(turnPlayer);
+        actionContainer.ActionFrameText = $"{gameContainer.SingleInfo!.NickName} will choose a card for {turnPlayer.NickName}";
     }
     void ILoadActionProcesses.LoadRules()
     {
-        _actionContainer.ActionCategory = EnumActionCategory.Rules;
-        var tempList = _gameContainer.SaveRoot!.RuleList.Where(items => items.Category != EnumRuleCategory.Basic).Select(items => items.Text()).ToBasicList();
+        actionContainer.ActionCategory = EnumActionCategory.Rules;
+        var tempList = gameContainer.SaveRoot!.RuleList.Where(items => items.Category != EnumRuleCategory.Basic).Select(items => items.Text()).ToBasicList();
         if (tempList.Count == 0)
         {
             throw new CustomBasicException("Cannot load the rules because there are no rules");
         }
-        if (_gameContainer.CurrentAction!.Deck == EnumActionMain.TrashANewRule)
+        if (gameContainer.CurrentAction!.Deck == EnumActionMain.TrashANewRule)
         {
-            _actionContainer.Rule1!.SelectionMode = ListViewPicker.EnumSelectionMode.SingleItem;
-            _actionContainer.RulesToDiscard = 1;
+            actionContainer.Rule1!.SelectionMode = ListViewPicker.EnumSelectionMode.SingleItem;
+            actionContainer.RulesToDiscard = 1;
         }
         else
         {
-            _actionContainer.Rule1!.SelectionMode = ListViewPicker.EnumSelectionMode.MultipleItems;
-            _actionContainer.RulesToDiscard = tempList.RulesThatCanBeDiscarded;
+            actionContainer.Rule1!.SelectionMode = ListViewPicker.EnumSelectionMode.MultipleItems;
+            actionContainer.RulesToDiscard = tempList.RulesThatCanBeDiscarded;
         }
-        _actionContainer.Rule1.LoadTextList(tempList);
+        actionContainer.Rule1.LoadTextList(tempList);
     }
     void ILoadActionProcesses.LoadTradeHands()
     {
-        _actionContainer.ActionCategory = EnumActionCategory.TradeHands;
-        _basicActionLogic.LoadPlayers(false);
-        _actionContainer.ButtonChoosePlayerVisible = true;
+        actionContainer.ActionCategory = EnumActionCategory.TradeHands;
+        basicActionLogic.LoadPlayers(false);
+        actionContainer.ButtonChoosePlayerVisible = true;
     }
     void ILoadActionProcesses.LoadUseTake()
     {
-        _actionContainer.ActionCategory = EnumActionCategory.UseTake;
-        _basicActionLogic.LoadPlayers(false);
-        if (_actionContainer.IndexPlayer > -1)
+        actionContainer.ActionCategory = EnumActionCategory.UseTake;
+        basicActionLogic.LoadPlayers(false);
+        if (actionContainer.IndexPlayer > -1)
         {
-            _actionContainer.OtherHand!.Visible = true;
-            int index = _actionContainer.GetPlayerIndex(_actionContainer.IndexPlayer);
-            var thisPlayer = _gameContainer.PlayerList![index];
-            _actionContainer.ActionFrameText = "Other Cards";
-            _basicActionLogic.LoadOtherCards(thisPlayer);
+            actionContainer.OtherHand!.Visible = true;
+            int index = actionContainer.GetPlayerIndex(actionContainer.IndexPlayer);
+            var thisPlayer = gameContainer.PlayerList![index];
+            actionContainer.ActionFrameText = "Other Cards";
+            basicActionLogic.LoadOtherCards(thisPlayer);
         }
         else
         {
-            _actionContainer.ButtonChoosePlayerVisible = true;
+            actionContainer.ButtonChoosePlayerVisible = true;
         }
     }
 }

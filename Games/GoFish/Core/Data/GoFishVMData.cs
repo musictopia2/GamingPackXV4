@@ -5,9 +5,9 @@ namespace GoFish.Core.Data;
 public partial class GoFishVMData : IBasicCardGamesData<RegularSimpleCard>
 {
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public GoFishVMData(CommandContainer command)
     {
         Deck1 = new DeckObservablePile<RegularSimpleCard>(command);

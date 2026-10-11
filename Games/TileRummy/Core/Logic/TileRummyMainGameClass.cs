@@ -1,37 +1,30 @@
 namespace TileRummy.Core.Logic;
 [SingletonGame]
-public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRummySaveInfo>
+public class TileRummyMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    TileRummyVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    TileRummyGameContainer gameContainer,
+    ISystemError error,
+    IToast toast,
+    IMessageBox message
+        ) : BasicGameClass<TileRummyPlayerItem, TileRummySaveInfo>(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     , ICommonMultiplayer<TileRummyPlayerItem, TileRummySaveInfo>
     , IMiscDataNM, ISerializable
 {
-    public TileRummyMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        TileRummyVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        TileRummyGameContainer gameContainer,
-        ISystemError error,
-        IToast toast,
-        IMessageBox message
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
-    {
-        _model = model;
-        _command = command;
-        _message = message;
-        _rummys = new RummyProcesses<EnumColorType, EnumColorType, TileInfo>();
-    }
-    private readonly TileRummyVMData _model;
-    private readonly CommandContainer _command;
-    private readonly IMessageBox _message;
-    internal RummyProcesses<EnumColorType, EnumColorType, TileInfo> _rummys;
+    private readonly TileRummyVMData _model = model;
+    private readonly CommandContainer _command = command;
+    private readonly IMessageBox _message = message;
+    internal RummyProcesses<EnumColorType, EnumColorType, TileInfo> _rummys = new();
     private void PassOutTiles()
     {
         PlayerList!.ForEach(thisPlayer => thisPlayer.MainHandList.ReplaceRange(_model!.Pool1!.FirstDraw()));
         SingleInfo = PlayerList.GetSelf();
-        _model!.PlayerHand1!.HandList = SingleInfo.MainHandList;
+        _model.PlayerHand1.ReplaceHandList(SingleInfo.MainHandList);
         SingleInfo.DoInit(Aggregator);
         SingleInfo.MainHandList.Sort(); //i think.
         _model.Pool1!.PopulateTotals();
@@ -56,7 +49,7 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
             }
         });
         SingleInfo = PlayerList.GetSelf();
-        _model.PlayerHand1!.HandList = SingleInfo.MainHandList;
+        _model.PlayerHand1.ReplaceHandList(SingleInfo.MainHandList);
         SingleInfo.MainHandList.Sort();
         _model.Pool1.PopulateTotals();
         SingleInfo.DoInit(Aggregator);
@@ -295,7 +288,7 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
         int tilesLeft = 1111;
         int whoWon = 0;
         int currents;
-        BasicList<int> tieList = new();
+        BasicList<int> tieList = [];
         PlayerList!.ForEach(thisPlayer =>
         {
             lefts = thisPlayer.ObjectCount;
@@ -308,10 +301,10 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
             else if (currents == minPoints && lefts < tilesLeft)
             {
                 tilesLeft = lefts;
-                tieList = new()
-                {
+                tieList =
+                [
                     thisPlayer.Id
-                };
+                ];
                 whoWon = thisPlayer.Id;
             }
             else if (currents == minPoints && lefts == tilesLeft)
@@ -345,7 +338,7 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
         {
             _model!.TempSets!.ClearBoard();
         }
-        DeckRegularDict<TileInfo> tempList = new();
+        DeckRegularDict<TileInfo> tempList = [];
         SaveRoot!.YourTiles.ForEach(thisIndex =>
         {
             var thisTile = PoolCP.GetTile(thisIndex);
@@ -402,7 +395,7 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
     }
     public DeckRegularDict<TileInfo> GetSelectedList()
     {
-        DeckRegularDict<TileInfo> output = new();
+        DeckRegularDict<TileInfo> output = [];
         var thisList = _model!.PlayerHand1!.ListSelectedObjects();
         output.AddRange(thisList);
         var newList = _model.TempSets!.ListSelectedObjects();
@@ -524,12 +517,12 @@ public class TileRummyMainGameClass : BasicGameClass<TileRummyPlayerItem, TileRu
     {
         IDeckDict<TileInfo> tempCollection;
         DeckRegularDict<TileInfo> thisCollection;
-        newList = new();
+        newList = [];
         int totalPoints = 0;
         for (int x = 1; x <= 4; x++)
         {
             tempCollection = WhatSet(x);
-            thisCollection = new DeckRegularDict<TileInfo>();
+            thisCollection = [];
             if (tempCollection.Count > 0)
             {
                 thisCollection.AddRange(tempCollection);

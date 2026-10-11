@@ -1,4 +1,4 @@
-@inherits BasicGameView<SavannahMainViewModel>
+@inherits CascadingGameView<SavannahMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -7,9 +7,6 @@
     <StackItem>
         <DeckOfCardsMultiplePilesBlazor AnimationTag="public" Piles="@_vmData.PublicPiles" R="RegularSimpleCard" />
     </StackItem>
-    @*<StackItem Style="margin-left: 20px;">
-        <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard" SinglePile="_vmData.Pile1" />
-    </StackItem>*@
     <StackItem>
         <DeckOfCardsDrawPileBlazor R="RegularSimpleCard" DeckPile="_vmData.Deck1" />
     </StackItem>
@@ -17,7 +14,12 @@
 <StackLayout ItemSpacing="5px">
     <StackItem Length="1fr">
         <SelfDiscardBlazor DiscardPile="_vmData.SelfDiscard" Context="DeckObject">
-            <DeckOfCardsImageBlazor Location="@Location" TargetHeight="@HeightString" CommandParameter="DeckObject" DeckObject="DeckObject" CommandObject="_vmData.SelfDiscard!.ObjectSingleClickCommand" R="RegularSimpleCard" />
+            <DeckOfCardsImageBlazor Location="@Location"
+                                    TargetHeight="@HeightString"
+                                    CommandParameter="DeckObject"
+                                    DeckObject="DeckObject"
+                                    CommandObject="_vmData.SelfDiscard!.ObjectSingleClickCommand"
+                                    R="RegularSimpleCard" />
         </SelfDiscardBlazor>
     </StackItem>
     <StackItem Length="auto">

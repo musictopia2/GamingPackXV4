@@ -243,7 +243,9 @@ public class PlayProcesses : IPlayProcesses
                 break;
         }
         if (thisCard.Deck != EnumActionMain.EmptyTheTrash && thisCard.Deck != EnumActionMain.DiscardDraw && thisCard.Deck != EnumActionMain.Jackpot && thisCard.Deck != EnumActionMain.ScrambleKeepers)
+        {
             await _analyzeProcesses.AnalyzeQueAsync();
+        }
     }
     private async Task ResetRulesAsync()
     {
@@ -335,7 +337,7 @@ public class PlayProcesses : IPlayProcesses
     {
         if (_gameContainer.SingleInfo!.CanSendMessage(_gameContainer.BasicData!))
         {
-            BasicList<int> newList = new() { deck, player };
+            BasicList<int> newList = [deck, player];
             await _gameContainer.Network!.SendAllAsync("usetake", newList);
         }
         await PlayRandomCardAsync(deck, player);

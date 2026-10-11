@@ -1,4 +1,4 @@
-@inherits BasicGameView<XactikaMainViewModel>
+@inherits CascadingGameView<XactikaMainViewModel>
 @if (_vmData == null || DataContext == null || _gameContainer == null)
 {
     return;
@@ -11,15 +11,12 @@
             </StackItem>
             <StackItem>
                 <ChooseShapeBlazor TargetHeight="15vh"
-                               ShapeData="_vmData.ShapeChoose1" />
-                <ParentControl VM="XactikaSubmitShapeViewModel">
-                    <div>
-                        <XactikaSubmitShapeView />
-                    </div>
-                </ParentControl>
-                <ParentControl VM="XactikaBidViewModel">
-                    <XactikaBidView />
-                </ParentControl>
+                                   ShapeData="_vmData.ShapeChoose1" />
+                
+                <div>
+                    <XactikaSubmitShapeView DataContext="DataContext.ShapeScreen" />
+                </div>
+                <XactikaBidView DataContext="DataContext.BidScreen" />
             </StackItem>
         </StackLayout>
         <div>

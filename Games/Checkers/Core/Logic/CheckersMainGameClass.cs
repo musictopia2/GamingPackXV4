@@ -1,4 +1,3 @@
-
 namespace Checkers.Core.Logic;
 [SingletonGame]
 public class CheckersMainGameClass
@@ -54,7 +53,7 @@ public class CheckersMainGameClass
         {
             await _gameBoard.LoadPreviousGameAsync();
         }
-        BoardGameSaved();
+        GameSaved();
     }
     private void LoadControls()
     {

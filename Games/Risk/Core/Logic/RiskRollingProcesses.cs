@@ -8,7 +8,7 @@ public class RiskRollingProcesses
     public RiskRollingProcesses(RiskGameContainer container)
     {
         _container = container;
-        _data = aa1.Resolver!.Resolve<RiskVMData>();
+        _data = Resolver!.Resolve<RiskVMData>();
         _container.SentAttackProcessesAsync = ShowRollingAsync;
     }
     public async Task RollDiceAsync()
@@ -16,6 +16,7 @@ public class RiskRollingProcesses
         SetDice();
         var defenseList = _data.DefenseCup!.RollDice();
         var attackList = _data.AttackCup!.RollDice();
+        _data.UpdateStatus(); //try this.
         SendAttackResult results = new(attackList, defenseList);
         if (_container.BasicData.MultiPlayer)
         {
@@ -38,7 +39,7 @@ public class RiskRollingProcesses
     }
     private async Task ShowRollingAsync(SendAttackResult results)
     {
-        _data = aa1.Resolver!.Resolve<RiskVMData>();
+        _data = Resolver!.Resolve<RiskVMData>();
         SetDice();
         await _data.AttackCup!.ShowRollingAsync(results.AttackList);
         await _data.DefenseCup!.ShowRollingAsync(results.DefenseList);

@@ -1,30 +1,20 @@
 namespace Mastermind.Core.Logic;
 [SingletonGame]
-public class MastermindMainGameClass : IAggregatorContainer, IFinishGuess
+public class MastermindMainGameClass(IEventAggregator aggregator,
+    ISystemError error,
+    IToast toast,
+    GlobalClass global,
+    LevelClass level
+        ) : IAggregatorContainer, IFinishGuess
 {
-    private readonly ISystemError _error;
-    private readonly IToast _toast;
-    private readonly GlobalClass _global;
-    private readonly LevelClass _level;
-    public MastermindMainGameClass(IEventAggregator aggregator,
-        ISystemError error,
-        IToast toast,
-        GlobalClass global,
-        LevelClass level
-        )
-    {
-        Aggregator = aggregator;
-        _error = error;
-        _toast = toast;
-        _global = global;
-        _level = level;
-    }
-    public IEventAggregator Aggregator { get; }
+    private readonly LevelClass _level = level;
+
+    public IEventAggregator Aggregator { get; } = aggregator;
     public async Task NewGameAsync(GameBoardViewModel guess)
     {
         bool canRepeat = _level.LevelChosen == 2 || _level.LevelChosen == 4 || _level.LevelChosen == 6;
         int level = _level.LevelChosen;
-        BasicList<Bead> possibleList = new();
+        BasicList<Bead> possibleList = [];
         if (level == 5 || level == 6)
         {
             possibleList.Add(new Bead(EnumColorPossibilities.Aqua));
@@ -57,32 +47,32 @@ public class MastermindMainGameClass : IAggregatorContainer, IFinishGuess
                 tempList.Add(ThisBead); // can have repeat
             }
         }
-        _global.Solution = tempList.ToBasicList();
+        global.Solution = tempList.ToBasicList();
         await guess.NewGameAsync();
         await guess.StartNewGuessAsync();
-        _global.ColorList = possibleList.Select(items => items.ColorChosen).ToBasicList();
+        global.ColorList = possibleList.Select(items => items.ColorChosen).ToBasicList();
     }
     public async Task GiveUpAsync()
     {
-        _toast.ShowWarningToast("Sorry you are giving up");
-        await this.SendGameOverAsync(_error);
+        toast.ShowWarningToast("Sorry you are giving up");
+        await this.SendGameOverAsync(error);
     }
     async Task IFinishGuess.FinishGuessAsync(int howManyCorrect, GameBoardViewModel board)
     {
         bool handled = false;
         if (howManyCorrect == 4)
         {
-            _toast.ShowSuccessToast("Congratuations, you won");
+            toast.ShowSuccessToast("Congratuations, you won");
             handled = true;
         }
         if (board.GuessList.Last().IsCompleted)
         {
-            _toast.ShowWarningToast("You ran out of guesses."); //maybe warning.  if i need something else, rethink.
+            toast.ShowWarningToast("You ran out of guesses."); //maybe warning.  if i need something else, rethink.
             handled = true;
         }
         if (handled)
         {
-            await this.SendGameOverAsync(_error);
+            await this.SendGameOverAsync(error);
             return;
         }
         await board.StartNewGuessAsync();

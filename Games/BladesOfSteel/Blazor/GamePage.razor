@@ -14,18 +14,17 @@
     }
     return;
 }
-<ParentControl VM="FaceoffViewModel">
+<PromptView VM="FaceoffViewModel">
     <CascadingValue Value="GetData">
         <FaceoffView />
     </CascadingValue>
-</ParentControl>
+</PromptView>
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="BladesOfSteelMainViewModel">
+
+    <MainScreen>
         <CascadingValue Value="GetData">
             <BladesOfSteelMainView />
         </CascadingValue>
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<BladesOfSteelPlayerItem>">
-        <MultiplayerOpeningView P="BladesOfSteelPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="BladesOfSteelPlayerItem" />
 </CascadingValue>

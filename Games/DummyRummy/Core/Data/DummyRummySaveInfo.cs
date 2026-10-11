@@ -27,5 +27,5 @@ public class DummyRummySaveInfo : BasicSavedCardClass<DummyRummyPlayerItem, Regu
     public int PlayerWentOut { get; set; }
     public bool SetsCreated { get; set; }
     public int PointsObtained { get; set; }
-    public BasicList<SavedSet> SetList { get; set; } = new();
+    public BasicList<SavedSet> SetList { get; set; } = [];
 }

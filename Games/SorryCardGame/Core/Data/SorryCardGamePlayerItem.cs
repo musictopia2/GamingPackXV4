@@ -1,5 +1,7 @@
 namespace SorryCardGame.Core.Data;
-public partial class SorryCardGamePlayerItem : PlayerSingleHand<SorryCardGameCardInformation>, IPlayerBoardGame<EnumColorChoices>
+
+[UseStateChanged]
+public partial class SorryCardGamePlayerItem : PlayerSingleHand<SorryCardGameCardInformation>, IPlayerWithColor<EnumColorChoices>
 {
     public EnumColorChoices Color { get; set; } = EnumColorChoices.None;
     public bool DidChooseColor => Color != EnumColorChoices.None;
@@ -8,25 +10,22 @@ public partial class SorryCardGamePlayerItem : PlayerSingleHand<SorryCardGameCar
         Color = EnumColorChoices.None;
     }
     public bool OtherTurn { get; set; }
-    private int _howManyAtHome;
-    public int HowManyAtHome
+    [StateProperty]
+    public partial int HowManyAtHome { get; set; }
+
+
+    partial void OnHowManyAtHomeChanged(int value)
     {
-        get { return _howManyAtHome; }
-        set
+        if (HowManyAtHome > 4)
         {
-            if (SetProperty(ref _howManyAtHome, value))
-            {
-                if (value > 4)
-                {
-                    throw new CustomBasicException("There can't ever be more than 4 at home.");
-                }
-                if (value < 0)
-                {
-                    throw new CustomBasicException("There can't ever be less than 0 at home.");
-                }
-            }
+            throw new CustomBasicException("There can't ever be more than 4 at home.");
+        }
+        if (HowManyAtHome < 0)
+        {
+            throw new CustomBasicException("There can't ever be less than 0 at home.");
         }
     }
+
     SorryCardGameMainGameClass? _mainGame;
     [Command(EnumCommandCategory.Plain)]
     public async Task SorryPlayerAsync()

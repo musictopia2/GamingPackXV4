@@ -3,5 +3,5 @@ namespace SinisterSix.Core.Data;
 public partial class SinisterSixPlayerItem : SimplePlayer
 {
     [ScoreColumn]
-    public int Score { get; set; }
+    public partial int Score { get; set; }
 }

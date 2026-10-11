@@ -1,14 +1,14 @@
 namespace CaliforniaJack.Blazor.Views;
 public partial class CaliforniaJackMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private CaliforniaJackVMData? _vmData;
     private CaliforniaJackGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<CaliforniaJackVMData>();
-        _gameContainer = aa1.Resolver.Resolve<CaliforniaJackGameContainer>();
+        _vmData = Resolver!.Resolve<CaliforniaJackVMData>();
+        _gameContainer = Resolver.Resolve<CaliforniaJackGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(CaliforniaJackVMData.NormalTurn))
              .AddLabel("Trump", nameof(CaliforniaJackVMData.TrumpSuit))

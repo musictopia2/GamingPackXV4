@@ -51,11 +51,11 @@ public class GoalCard : FluxxCardInformation
     }
     private static BasicList<Tuple<EnumKeeper, bool>> GetRegularGoals(EnumKeeper Keeper1, EnumKeeper Keeper2)
     {
-        BasicList<Tuple<EnumKeeper, bool>> thisList = new()
-        {
+        BasicList<Tuple<EnumKeeper, bool>> thisList =
+        [
             new Tuple<EnumKeeper, bool>(Keeper1, false),
             new Tuple<EnumKeeper, bool>(Keeper2, false)
-        };
+        ];
         return thisList;
     }
     private Tuple<EnumSpecialGoalSpecial, BasicList<Tuple<EnumKeeper, bool>>>? _goal;
@@ -71,7 +71,7 @@ public class GoalCard : FluxxCardInformation
     }
     private Tuple<EnumSpecialGoalSpecial, BasicList<Tuple<EnumKeeper, bool>>> PrivateGetGoalInfo()
     {
-        BasicList<Tuple<EnumKeeper, bool>> thisList = new();
+        BasicList<Tuple<EnumKeeper, bool>> thisList = [];
         EnumSpecialGoalSpecial thisSpecial;
         thisSpecial = SpecialGoal();
         switch (Deck)

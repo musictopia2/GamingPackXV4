@@ -4,12 +4,14 @@ public static class ComputerAI
     public static int HowManyToBid(PickelCardGameVMData model, IBidProcesses processes)
     {
         if (processes.CanPass() == false)
-            return model.Bid1!.NumberToChoose();
-        return model.Bid1!.NumberToChoose(false);
+        {
+            return model.Bid1.NumberToChoose();
+        }
+        return model.Bid1.NumberToChoose(false);
     }
     public static EnumSuitList SuitToCall(PickelCardGameVMData model)
     {
-        return model.Suit1!.ItemToChoose();
+        return model.Suit1.ItemToChoose();
     }
     public static int CardToPlay(PickelCardGameMainGameClass mainGame)
     {

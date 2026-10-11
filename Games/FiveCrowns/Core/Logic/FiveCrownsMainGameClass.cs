@@ -214,7 +214,7 @@ public class FiveCrownsMainGameClass
             }
         });
     }
-    private int CalculatePoints(IDeckDict<FiveCrownsCardInformation> thisCol)
+    private int CalculatePoints(DeckRegularDict<FiveCrownsCardInformation> thisCol)
     {
         if (thisCol.Count == 0)
         {
@@ -286,7 +286,7 @@ public class FiveCrownsMainGameClass
         SaveRoot!.UpTo = 0;
         return Task.CompletedTask;
     }
-    private bool HasSet(IDeckDict<FiveCrownsCardInformation> thisCol)
+    private bool HasSet(DeckRegularDict<FiveCrownsCardInformation> thisCol)
     {
         if (thisCol.Count < 3)
         {

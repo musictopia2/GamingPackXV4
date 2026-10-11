@@ -1,6 +1,8 @@
 namespace BattleshipLite.Core.Data;
 [SingletonGame]
-public class BattleshipLiteSaveInfo : BasicSavedGameClass<BattleshipLitePlayerItem>, IMappable, ISaveInfo
+[UseStateChanged]
+public partial class BattleshipLiteSaveInfo : BasicSavedGameClass<BattleshipLitePlayerItem>, IMappable, ISaveInfo
 {
-    public EnumGameStatus GameStatus { get; set; }
+    [StateProperty]
+    public partial EnumGameStatus GameStatus { get; set; }
 }

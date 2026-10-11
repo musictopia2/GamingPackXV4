@@ -6,7 +6,7 @@ public partial class TradingComponent
     {
         DataContext = aa1.Resolver!.Resolve<TradingViewModel>();
         _hand = GetYourCards();
-        DataContext.AddAction(StateHasChanged);
+        //DataContext.AddAction(StateHasChanged);
     }
     private HandObservable<DealCardGameCardInformation>? _hand;
     public BasicGameCommand TradeCommand => DataContext!.TradeCommand!;
@@ -15,10 +15,7 @@ public partial class TradingComponent
     private DealCardGameCardInformation? _yourChosenCard;
     private void OpponentPropertyChosen(PropertyCardModel property)
     {
-        //DataContext!.TradeInfo.PlayerId = property.PlayerId;
         DataContext!.TradeInfo.OpponentCard = property.Card.Deck;
-        //DataContext!.StealInfo.PlayerId = property.PlayerId;
-        //DataContext.StealInfo.CardChosen = property.Card.Deck;
         _tradeChosenCard = property.Card;
     }
     private string YourText => $"{DataContext!.GetYourPlayer.NickName} chosen";
@@ -69,6 +66,7 @@ public partial class TradingComponent
         DataContext!.TradeInfo.YourCard = card.Deck;
         var property = DataContext.GetYourPlayer.GetPropertyFromCard(card.Deck);
         DataContext.TradeInfo.YourColor = property!.Color;
+        InvokeAsync(StateHasChanged);
         //StateHasChanged(); //i think.
         return Task.CompletedTask;
     }

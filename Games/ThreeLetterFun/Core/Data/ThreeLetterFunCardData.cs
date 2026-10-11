@@ -1,12 +1,14 @@
 ﻿namespace ThreeLetterFun.Core.Data;
-public class ThreeLetterFunCardData : SimpleDeckObject, IDeckObject, IAdvancedDIContainer
+
+[UseStateChanged]
+public partial class ThreeLetterFunCardData : SimpleDeckObject, IDeckObject, IAdvancedDIContainer
 {
     public IGamePackageResolver? MainContainer { get; set; } //hopefully it will ignore because its a resolver (if not, can put in there as well).
     private ThreeLetterFunDeckInfo? _deckInfo;
     private GlobalHelpers? _thisGlobal;
     private ThreeLetterFunMainGameClass? _mainGame; //iffy.
-    private BasicList<char> _completeList = new();
-    private BasicList<char> _charList = new();
+    private BasicList<char> _completeList = [];
+    private BasicList<char> _charList = [];
     public BasicList<char> CharList
     {
         get { return _charList; }
@@ -19,7 +21,8 @@ public class ThreeLetterFunCardData : SimpleDeckObject, IDeckObject, IAdvancedDI
         }
     }
     public BasicList<char> GetCompleteList => _completeList.ToBasicList();
-    public EnumClickPosition ClickLocation { get; set; } = EnumClickPosition.None;
+    [StateProperty]
+    public partial EnumClickPosition ClickLocation { get; set; } = EnumClickPosition.None;
     public void ReloadSaved()
     {
         _completeList = CharList.ToBasicList();
@@ -50,8 +53,9 @@ public class ThreeLetterFunCardData : SimpleDeckObject, IDeckObject, IAdvancedDI
         output.CharList = CharList.ToBasicList(); //i think.
         return output;
     }
-    public BasicList<TileInformation> Tiles { get; set; } = new();
-    public int HiddenValue { get; set; }
+    public BasicList<TileInformation> Tiles { get; set; } = [];
+    [StateProperty]
+    public partial int HiddenValue { get; set; }
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
     public void ClearTiles()
     {

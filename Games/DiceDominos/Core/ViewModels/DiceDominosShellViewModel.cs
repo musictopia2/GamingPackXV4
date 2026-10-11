@@ -1,21 +1,4 @@
 namespace DiceDominos.Core.ViewModels;
-public class DiceDominosShellViewModel : BasicMultiplayerShellViewModel<DiceDominosPlayerItem>
+public class DiceDominosShellViewModel(IGamePackageResolver mainContainer, CommandContainer container, IGameInfo gameData, BasicData basicData, IMultiplayerSaveState save, TestOptions test, IEventAggregator aggregator, IToast toast) : BasicMultiplayerShellViewModel<DiceDominosPlayerItem>(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
 {
-    public DiceDominosShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        BasicData basicData,
-        IMultiplayerSaveState save,
-        TestOptions test,
-        IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<DiceDominosMainViewModel>();
-        return model;
-    }
 }

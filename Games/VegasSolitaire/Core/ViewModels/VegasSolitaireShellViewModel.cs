@@ -1,18 +1,5 @@
 namespace VegasSolitaire.Core.ViewModels;
-public class VegasSolitaireShellViewModel : SinglePlayerShellViewModel
+public class VegasSolitaireShellViewModel(IGamePackageResolver mainContainer, CommandContainer container, ISaveSinglePlayerClass saves, IEventAggregator aggregator) : SinglePlayerShellViewModel(mainContainer, container, saves, aggregator)
 {
-    protected override bool AlwaysNewGame => true; //most games allow new game always.
-    public VegasSolitaireShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo GameData,
-        ISaveSinglePlayerClass saves,
-        IEventAggregator aggregator
-        ) : base(mainContainer, container, GameData, saves, aggregator)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<VegasSolitaireMainViewModel>();
-        return model;
-    }
+    protected override bool AlwaysNewGame => true;
 }

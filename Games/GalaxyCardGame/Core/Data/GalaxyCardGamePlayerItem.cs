@@ -7,7 +7,7 @@ public partial class GalaxyCardGamePlayerItem : PlayerTrick<EnumSuitList, Galaxy
     public string PlanetData { get; set; } = "";
     [JsonIgnore]
     public MainSetsObservable<EnumSuitList, EnumRegularColorList, GalaxyCardGameCardInformation, MoonClass, SavedSet>? Moons { get; set; }
-    public BasicList<SavedSet> SavedMoonList { get; set; } = new();
+    public BasicList<SavedSet> SavedMoonList { get; set; } = [];
     private GalaxyCardGameMainGameClass? _mainGame;
     private GalaxyCardGameVMData? _model;
     private IToast? _toast;

@@ -1,15 +1,8 @@
 ﻿namespace Skipbo.Core.Logic;
 [SingletonGame]
 [AutoReset]
-public class SkipboComputerAI
+public class SkipboComputerAI(SkipboGameContainer gameContainer, SkipboVMData model)
 {
-    private readonly SkipboGameContainer _gameContainer;
-    private readonly SkipboVMData _model;
-    public SkipboComputerAI(SkipboGameContainer gameContainer, SkipboVMData model)
-    {
-        _gameContainer = gameContainer;
-        _model = model;
-    }
     private struct DiscardPileInfo
     {
         public int Number1; // most recent
@@ -35,14 +28,14 @@ public class SkipboComputerAI
     private BasicList<ComputerData>? _startList;
     public BasicList<ComputerData> ComputerMoves()
     {
-        BasicList<ComputerData> output = new();
+        BasicList<ComputerData> output = [];
         _startList = ValidMoveList();
         if (_startList.Count == 0)
         {
             return output;
         }
         int x = default;
-        BasicList<MoveInfo> possibleList = new();
+        BasicList<MoveInfo> possibleList = [];
         MoveInfo tempMove;
         foreach (var thisMove in _startList)
         {
@@ -72,18 +65,18 @@ public class SkipboComputerAI
     }
     private BasicList<ComputerData> ValidMoveList()
     {
-        BasicList<ComputerData> thisList = new();
+        BasicList<ComputerData> thisList = [];
         ComputerData thisComputer;
         int x;
-        if (_gameContainer.IsValidMove == null)
+        if (gameContainer.IsValidMove == null)
         {
             throw new CustomBasicException("Nobody is handling the isvalidmove.  Rethink");
         }
-        foreach (var tempCard in _gameContainer.SingleInfo!.MainHandList)
+        foreach (var tempCard in gameContainer.SingleInfo!.MainHandList)
         {
             for (x = 1; x <= 4; x++)
             {
-                if (_gameContainer.IsValidMove(x - 1, tempCard.Deck) == true)
+                if (gameContainer.IsValidMove(x - 1, tempCard.Deck) == true)
                 {
                     thisComputer = new ();
                     thisComputer.ThisCard = tempCard;
@@ -96,7 +89,7 @@ public class SkipboComputerAI
         }
         SkipboCardInformation thisCard;
         int y;
-        var thisDiscard = _model.DiscardPiles;
+        var thisDiscard = model.DiscardPiles;
         DeckRegularDict<SkipboCardInformation> cardList;
         for (x = 1; x <= 4; x++)
         {
@@ -106,7 +99,7 @@ public class SkipboComputerAI
                 thisCard = thisDiscard.GetLastCard(x - 1);
                 for (y = 1; y <= 4; y++)
                 {
-                    if (_gameContainer.IsValidMove(y - 1, thisCard.Deck) == true)
+                    if (gameContainer.IsValidMove(y - 1, thisCard.Deck) == true)
                     {
                         thisComputer = new ();
                         thisComputer.ThisCard = thisCard;
@@ -118,10 +111,10 @@ public class SkipboComputerAI
                 }
             }
         }
-        thisCard = _model.StockPile!.GetCard();
+        thisCard = model.StockPile!.GetCard();
         for (x = 1; x <= 4; x++)
         {
-            if (_gameContainer.IsValidMove(x - 1, thisCard.Deck) == true)
+            if (gameContainer.IsValidMove(x - 1, thisCard.Deck) == true)
             {
                 thisComputer = new ();
                 thisComputer.ThisCard = thisCard;
@@ -135,21 +128,17 @@ public class SkipboComputerAI
     }
     private void CopyDiscards(bool alsoHand)
     {
-        var thisDiscard = _model.DiscardPiles;
+        var thisDiscard = model.DiscardPiles;
         thisDiscard!.CopyDiscards(out _tempDiscards);
         if (alsoHand == false)
         {
             return;
         }
-        _tempHand = new DeckRegularDict<SkipboCardInformation>();
-        foreach (var thisCard in _gameContainer.SingleInfo!.MainHandList)
-        {
-            _tempHand.Add(thisCard);
-        }
+        _tempHand = [.. gameContainer.SingleInfo!.MainHandList];
     }
     private static BasicList<MoveInfo> StockList(BasicList<MoveInfo> possibleMoves)
     {
-        BasicList<MoveInfo> output = new();
+        BasicList<MoveInfo> output = [];
         foreach (var tempItem in possibleMoves)
         {
             foreach (var tempMove in tempItem.MoveList)
@@ -168,7 +157,7 @@ public class SkipboComputerAI
     }
     private bool AllDiscardEmpty()
     {
-        var thisDiscard = _model.DiscardPiles;
+        var thisDiscard = model.DiscardPiles;
         int x;
         for (x = 1; x <= HowManyDiscards; x++)
         {
@@ -182,7 +171,7 @@ public class SkipboComputerAI
     private int EmptyDiscardPile()
     {
         int x;
-        var thisDiscard = _model.DiscardPiles;
+        var thisDiscard = model.DiscardPiles;
         for (x = 1; x <= HowManyDiscards; x++)
         {
             if (thisDiscard!.PileList![x - 1].ObjectList.Count == 0)
@@ -194,9 +183,9 @@ public class SkipboComputerAI
     }
     private void FillDiscardList()
     {
-        _tempDiscardList = new();
+        _tempDiscardList = [];
         DiscardPileInfo thisTemp;
-        var thisDiscard = _model.DiscardPiles;
+        var thisDiscard = model.DiscardPiles;
         SkipboCardInformation thisCard;
         for (var x = 1; x <= HowManyDiscards; x++)
         {
@@ -228,11 +217,11 @@ public class SkipboComputerAI
         {
             if (thisTemp.Number1 == 50)
             {
-                var wildList = _gameContainer.SingleInfo!.MainHandList.Where(Items => Items.IsWild == true).ToRegularDeckDict();
-                if (wildList.Count == _gameContainer.SingleInfo.MainHandList.Count)
+                var wildList = gameContainer.SingleInfo!.MainHandList.Where(Items => Items.IsWild == true).ToRegularDeckDict();
+                if (wildList.Count == gameContainer.SingleInfo.MainHandList.Count)
                 {
                     // this means there are only wilds
-                    thisCard = _gameContainer.SingleInfo.MainHandList.First();
+                    thisCard = gameContainer.SingleInfo.MainHandList.First();
                     output.Deck = thisCard.Deck;
                     output.Pile = thisTemp.Pile;
                     return output;
@@ -248,14 +237,14 @@ public class SkipboComputerAI
         output.Pile = 0;
         ComputerDiscardInfo thisDiscard;
         int newNums = default;
-        BasicList<ComputerDiscardInfo> newList = new();
+        BasicList<ComputerDiscardInfo> newList = [];
         SkipboCardInformation thisCard;
         foreach (var thisTemp in _tempDiscardList!)
         {
             if (thisTemp.Number1 < 13 && thisTemp.Number1 > 1)
             {
                 newNums = thisTemp.Number1 - 1;
-                var Filters = _gameContainer.SingleInfo!.MainHandList.Where(Items => Items.Number == newNums).ToRegularDeckDict();
+                var Filters = gameContainer.SingleInfo!.MainHandList.Where(Items => Items.Number == newNums).ToRegularDeckDict();
                 if (Filters.Count > 0)
                 {
                     thisCard = Filters.First();
@@ -281,7 +270,7 @@ public class SkipboComputerAI
         {
             return output;
         }
-        BasicList<ComputerDiscardInfo> newList = new(); // i think
+        BasicList<ComputerDiscardInfo> newList = []; // i think
         int newNums = default;
         ComputerDiscardInfo thisDiscard;
         SkipboCardInformation thisCard;
@@ -290,7 +279,7 @@ public class SkipboComputerAI
             if (thisTemp.Number2 < 13 && thisTemp.Number2 > 1)
             {
                 newNums = thisTemp.Number1 - 1;
-                var Filters = _gameContainer.SingleInfo!.MainHandList.Where(Items => Items.Number == newNums).ToRegularDeckDict();
+                var Filters = gameContainer.SingleInfo!.MainHandList.Where(Items => Items.Number == newNums).ToRegularDeckDict();
                 if (Filters.Count > 0)
                 {
                     thisCard = Filters.First();
@@ -321,13 +310,13 @@ public class SkipboComputerAI
             return output;
         }
         ComputerDiscardInfo thisDiscard;
-        BasicList<ComputerDiscardInfo> newList = new();
+        BasicList<ComputerDiscardInfo> newList = [];
         SkipboCardInformation thisCard;
         foreach (var thisTemp in sames)
         {
             if (thisTemp.Number1 < 13)
             {
-                var Filters = _gameContainer.SingleInfo!.MainHandList.Where(Items => Items.Number == thisTemp.Number1).ToRegularDeckDict();
+                var Filters = gameContainer.SingleInfo!.MainHandList.Where(Items => Items.Number == thisTemp.Number1).ToRegularDeckDict();
                 if (Filters.Count > 0)
                 {
                     thisCard = Filters.First();
@@ -346,7 +335,7 @@ public class SkipboComputerAI
     }
     private BasicList<DiscardPileInfo> StackList()
     {
-        BasicList<DiscardPileInfo> output = new();
+        BasicList<DiscardPileInfo> output = [];
         foreach (var thisTemp in _tempDiscardList!)
         {
             if (thisTemp.Number1 == (thisTemp.Number2 - 1) && thisTemp.Number1 > 0 && thisTemp.Number2 > 0)
@@ -358,7 +347,7 @@ public class SkipboComputerAI
     }
     private BasicList<DiscardPileInfo> NoStackNoSame()
     {
-        BasicList<DiscardPileInfo> output = new();
+        BasicList<DiscardPileInfo> output = [];
         foreach (var thisTemp in _tempDiscardList!)
         {
             if (thisTemp.Number1 > 0 && thisTemp.Number2 > 0 && thisTemp.Number1 < 13 && thisTemp.Number2 < 13)
@@ -373,7 +362,7 @@ public class SkipboComputerAI
     }
     private BasicList<DiscardPileInfo> SameList()
     {
-        BasicList<DiscardPileInfo> output = new();
+        BasicList<DiscardPileInfo> output = [];
         foreach (var thisTemp in _tempDiscardList!)
         {
             if (thisTemp.Number1 == thisTemp.Number2 && thisTemp.Number1 > 0 && thisTemp.Number2 > 0)
@@ -395,11 +384,11 @@ public class SkipboComputerAI
             return output;
         }
         ComputerDiscardInfo thisDiscard;
-        BasicList<ComputerDiscardInfo> newList = new();
+        BasicList<ComputerDiscardInfo> newList = [];
         SkipboCardInformation thisCard;
         foreach (var thisTemp in ones)
         {
-            var filters = _gameContainer.SingleInfo!.MainHandList.Where(Items => Items.Number == thisTemp.Number1).ToRegularDeckDict();
+            var filters = gameContainer.SingleInfo!.MainHandList.Where(Items => Items.Number == thisTemp.Number1).ToRegularDeckDict();
             if (filters.Count > 0)
             {
                 thisCard = filters.First();
@@ -419,7 +408,7 @@ public class SkipboComputerAI
             newNums = thisTemp.Number1 - 1;
             if (newNums > 0 && newNums < 12)
             {
-                var Filters = _gameContainer.SingleInfo!.MainHandList.Where(xx => xx.Number == newNums).ToRegularDeckDict();
+                var Filters = gameContainer.SingleInfo!.MainHandList.Where(xx => xx.Number == newNums).ToRegularDeckDict();
                 if (Filters.Count > 0)
                 {
                     thisCard = Filters.First();
@@ -448,24 +437,24 @@ public class SkipboComputerAI
     }
     private int BestCardForEmpty()
     {
-        if (_gameContainer.SingleInfo!.MainHandList.Count == 1)
+        if (gameContainer.SingleInfo!.MainHandList.Count == 1)
         {
-            return _gameContainer.SingleInfo.MainHandList.First().Deck;
+            return gameContainer.SingleInfo.MainHandList.First().Deck;
         }
-        int wilds = _gameContainer.SingleInfo.MainHandList.Count(x => x.IsWild == true);
-        if (wilds == _gameContainer.SingleInfo.MainHandList.Count)
+        int wilds = gameContainer.SingleInfo.MainHandList.Count(x => x.IsWild == true);
+        if (wilds == gameContainer.SingleInfo.MainHandList.Count)
         {
-            return _gameContainer.SingleInfo.MainHandList.First().Deck;
+            return gameContainer.SingleInfo.MainHandList.First().Deck;
         }
         DeckRegularDict<SkipboCardInformation> tempCol =
-            _gameContainer.SingleInfo.MainHandList.Where(x => x.IsWild == false).ToRegularDeckDict();
+            gameContainer.SingleInfo.MainHandList.Where(x => x.IsWild == false).ToRegularDeckDict();
         int whatNum = MostOf(out int howMany, tempCol);
         int ask1;
         if (howMany == 1)
         {
             do
             {
-                ask1 = _gameContainer.Random.GetRandomNumber(12);
+                ask1 = gameContainer.Random.GetRandomNumber(12);
                 howMany = tempCol.Count(x => x.Number == ask1);
                 if (howMany > 0)
                 {
@@ -628,11 +617,11 @@ public class SkipboComputerAI
         output.WhichType = EnumCardType.IsNone;
         output.Discard = 0;
         string stockNumber;
-        stockNumber = _gameContainer.SingleInfo!.InStock;
+        stockNumber = gameContainer.SingleInfo!.InStock;
         if (stockNumber == "W" || int.Parse(stockNumber) == nextNumber)
         {
             output.Pile = pile;
-            output.ThisCard = _model.StockPile!.GetCard();
+            output.ThisCard = model.StockPile!.GetCard();
             output.WhichType = EnumCardType.Stock;
             output.Discard = -1;
             return output;
@@ -703,7 +692,7 @@ public class SkipboComputerAI
     private MoveInfo ResultsOfMove(BasicList<ComputerData> whatList, int whichOne)
     {
         MoveInfo output = new();
-        output.MoveList = new();
+        output.MoveList = [];
         ComputerData thisMove;
         int numberNext;
         SkipboCardInformation thisCard;
@@ -712,7 +701,7 @@ public class SkipboComputerAI
         if (thisMove.WhichType == EnumCardType.Stock)
         {
             tempMove = new ();
-            tempMove.MoveList = new();
+            tempMove.MoveList = [];
             thisCard = thisMove.ThisCard!;
             if (thisCard.IsWild == true)
             {
@@ -724,13 +713,13 @@ public class SkipboComputerAI
             }
             tempMove.Value = 500;
             tempMove.StartNum = whichOne;
-            tempMove.MoveList = new()
-            {
+            tempMove.MoveList =
+            [
                 thisMove
-            };
+            ];
             return tempMove;
         }
-        numberNext = _model.PublicPiles!.NextNumberNeeded(thisMove.Pile);
+        numberNext = model.PublicPiles!.NextNumberNeeded(thisMove.Pile);
         ComputerData newMove;
         output.MoveList.Add(thisMove);
         CopyDiscards(true);
@@ -747,9 +736,8 @@ public class SkipboComputerAI
             {
                 if (output.NumberOfWilds > 0)
                 {
-                    BasicList<ComputerData> tempCol = new();
-                    tempCol.AddRange(output.MoveList);
-                    output.MoveList = new();
+                    BasicList<ComputerData> tempCol = [.. output.MoveList];
+                    output.MoveList = [];
                     foreach (var newTempMove in tempCol)
                     {
                         thisCard = newTempMove.ThisCard!;
@@ -811,7 +799,7 @@ public class SkipboComputerAI
         {
             NewValue += 20;
             _tempDiscards!.RemoveCard(newMove.Discard, newMove.ThisCard!.Deck);
-            if (_model.DiscardPiles!.PileList![newMove.Discard].ObjectList.Count == 0)
+            if (model.DiscardPiles!.PileList![newMove.Discard].ObjectList.Count == 0)
             {
                 throw new CustomBasicException("Cannot be 0 for the discards");
             }

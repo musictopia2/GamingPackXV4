@@ -1,5 +1,4 @@
-﻿
-namespace ClockSolitaire.Core.Logic;
+﻿namespace ClockSolitaire.Core.Logic;
 public class ClockBoard : ClockObservable
 {
     public ClockBoard(IClockVM thisMod,

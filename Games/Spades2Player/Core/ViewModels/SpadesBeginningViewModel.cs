@@ -1,17 +1,15 @@
 ﻿namespace Spades2Player.Core.ViewModels;
 [InstanceGame]
-public partial class SpadesBeginningViewModel : ScreenViewModel, IBlankGameVM
+public partial class SpadesBeginningViewModel
 {
     private readonly Spades2PlayerMainGameClass _mainGame;
-    public SpadesBeginningViewModel(CommandContainer commandContainer, Spades2PlayerMainGameClass mainGame, Spades2PlayerVMData model, IEventAggregator aggregator) : base(aggregator)
+    public SpadesBeginningViewModel(CommandContainer commandContainer, Spades2PlayerMainGameClass mainGame, Spades2PlayerVMData model)
     {
-        CommandContainer = commandContainer;
         _mainGame = mainGame;
         Model = model;
         CreateCommands(commandContainer);
     }
     partial void CreateCommands(CommandContainer command);
-    public CommandContainer CommandContainer { get; set; }
     public Spades2PlayerVMData Model { get; }
     [Command(EnumCommandCategory.Plain)]
     public async Task TakeCardAsync()

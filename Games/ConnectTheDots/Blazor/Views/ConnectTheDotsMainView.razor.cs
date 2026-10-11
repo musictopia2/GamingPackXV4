@@ -3,8 +3,8 @@ public partial class ConnectTheDotsMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private GameBoardGraphicsCP? _graphics;
     private ConnectTheDotsGameContainer? _container;
     protected override void OnInitialized()

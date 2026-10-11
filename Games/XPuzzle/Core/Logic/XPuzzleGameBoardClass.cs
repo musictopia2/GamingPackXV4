@@ -1,21 +1,27 @@
 ﻿namespace XPuzzle.Core.Logic;
 [InstanceGame] //i think its best to do as instance.
-public class XPuzzleGameBoardClass : IAdvancedDIContainer
+public class XPuzzleGameBoardClass : IAdvancedDIContainer, IAggregatorContainer
 {
-    private EnumMoveList _results = EnumMoveList.None;
     private XPuzzleSaveInfo _games;
     private readonly IRandomGenerator _rs;
     private readonly ISaveSinglePlayerClass _thisSave;
+    private readonly IEventAggregator _aggregator;
+    private readonly ISystemError _error;
     public IGamePackageResolver? MainContainer { get; set; }
     public XPuzzleGameBoardClass(IGamePackageResolver container,
         XPuzzleSaveInfo saveroot,
         IRandomGenerator random,
-        ISaveSinglePlayerClass saves)
+        ISaveSinglePlayerClass saves,
+        IEventAggregator aggregator,
+        ISystemError error
+        )
     {
         MainContainer = container;
         _games = saveroot;
         _rs = random;
         _thisSave = saves;
+        _aggregator = aggregator;
+        _error = error;
         _games.SpaceList.SetContainer(container);
     }
     private Vector PreviousOpen
@@ -30,14 +36,7 @@ public class XPuzzleGameBoardClass : IAdvancedDIContainer
         }
     }
     public IGamePackageGeneratorDI? GeneratorContainer { get; set; }
-    public EnumMoveList Results()
-    {
-        if (_results == EnumMoveList.None)
-        {
-            throw new CustomBasicException("No move was made");
-        }
-        return _results;
-    }
+    IEventAggregator IAggregatorContainer.Aggregator => _aggregator;
     public async Task NewGameAsync()
     {
         if (await _thisSave.CanOpenSavedSinglePlayerGameAsync() == false)
@@ -61,10 +60,8 @@ public class XPuzzleGameBoardClass : IAdvancedDIContainer
     }
     public async Task MakeMoveAsync(XPuzzleSpaceInfo thisSpace)
     {
-        _results = EnumMoveList.None;
         if (IsValidMove(thisSpace) == false)
         {
-            _results = EnumMoveList.TurnOver;
             return;
         }
         XPuzzleSpaceInfo previousSpace;
@@ -76,12 +73,12 @@ public class XPuzzleGameBoardClass : IAdvancedDIContainer
         PreviousOpen = thisSpace.Vector;
         if (HasWon() == true)
         {
-            _results = EnumMoveList.Won; //no saving of game.
             await _thisSave.DeleteSinglePlayerGameAsync();
+            //let this do game over too now.
+            await this.SendGameOverAsync(_error);
             return;
         }
         await _thisSave.SaveSimpleSinglePlayerGameAsync(_games);
-        _results = EnumMoveList.MadeMove;
     }
     public bool IsValidMove(int row, int column)
     {

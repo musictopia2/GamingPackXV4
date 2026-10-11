@@ -30,6 +30,35 @@ public class RiskMainGameClass
         _shuffle.CurrentPlayer = CurrentPlayer;
         _shuffle.AfterDrawingAsync = AfterDrawingAsync; //i think needs to end turn.
     }
+    private void ResetForNewGame()
+    {
+        SaveRoot.Stage = EnumStageList.None;
+        SaveRoot.SetsReturned = 0;
+        SaveRoot.PreviousTerritory = 0;
+        SaveRoot.CurrentTerritory = 0;
+        SaveRoot.ArmiesInBattle = 0;
+        SaveRoot.NumberDefenseArmies = 0;
+        SaveRoot.ArmiesToPlace = 0;
+        SaveRoot.BonusReenforcements = 0;
+        SaveRoot.ConqueredOne = false;
+        SaveRoot.Instructions = "";
+        SaveRoot.CurrentCard = null;
+
+        SaveRoot.TerritoryList.Clear();
+        SaveRoot.CardList.Clear();
+
+        foreach (var player in PlayerList)
+        {
+            player.MainHandList.Clear();
+            player.StartUpList.Clear();
+            player.ReinforcementsGained = 0;
+            player.ArmiesToBegin = 0;
+        }
+
+        _model.PlayerHand1.ClearHand();
+        _model.ArmiesChosen = 0;
+        _model.RollingProgress = false;
+    }
     private void RemoveCardsFromDeck(IListShuffler<RiskCardInfo> deck)
     {
         if (deck is DeckRegularDict<RiskCardInfo> improvs)
@@ -46,6 +75,12 @@ public class RiskMainGameClass
         {
             throw new CustomBasicException("Must use deck regular dictionary");
         }
+    }
+    //this is workaround for now.
+    protected override async Task ShowHumanCanPlayAsync()
+    {
+        await base.ShowHumanCanPlayAsync();
+        _model.NumberPicker.ReportCanExecuteChange(); //try this.
     }
     private RiskPlayerItem CurrentPlayer()
     {
@@ -74,7 +109,7 @@ public class RiskMainGameClass
         LoadControls();
         LoadCups(true);
         _shuffle.SaveRoot = SaveRoot;
-        BoardGameSaved();
+        GameSaved();
         SetHand();
         await PopulateTerritoriesAsync();
     }
@@ -83,7 +118,7 @@ public class RiskMainGameClass
         if (PlayerList.DidChooseColors())
         {
             SingleInfo = PlayerList.GetSelf();
-            _model.PlayerHand1.HandList = SingleInfo.MainHandList;
+            _model.PlayerHand1.ReplaceHandList(SingleInfo.MainHandList);
             SingleInfo = PlayerList.GetWhoPlayer(); //i think.
         }
     }
@@ -137,14 +172,17 @@ public class RiskMainGameClass
                 {
                     throw new CustomBasicException("Must have send attack result"); //in newer version of c#, hopefully null checks are even better
                 }
+                _model.UpdateStatus();
                 await _container.SentAttackProcessesAsync.Invoke(result);
                 break;
             case nameof(IMultiplayerModel.AttackArmies):
                 SaveRoot.ArmiesInBattle = int.Parse(content);
                 Network!.IsEnabled = true; //to wait for next message now i think.
+                _model.UpdateStatus();
                 break;
             case nameof(IMultiplayerModel.SelectTerritory):
                 TerritoryModel territory = _container.GetTerritory(int.Parse(content));
+                _model.UpdateStatus();
                 await _gameBoardProcesses.TerritorySelectedAsync(territory, false);
                 break;
             case nameof(IMultiplayerModel.ToNextStep):
@@ -259,6 +297,7 @@ public class RiskMainGameClass
             }
         }
         await base.ContinueTurnAsync();
+        _model.UpdateStatus();
     }
     public override Task MakeMoveAsync(int space)
     {
@@ -288,6 +327,9 @@ public class RiskMainGameClass
         {
             throw new CustomBasicException("Nobody is handling filling the rest of the colors.  Rethink");
         }
+
+        ResetForNewGame();
+
         MiscDelegates.FillRestColors.Invoke();
         await PopulateTerritoriesAsync();
         SaveRoot.TerritoryList = PlayerList.GetTerritories();

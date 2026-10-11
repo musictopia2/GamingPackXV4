@@ -1,7 +1,7 @@
 namespace Backgammon.Blazor.Views;
 public partial class BackgammonMainView
 {
-    private readonly BasicList<LabelGridModel> _labels = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
     private GameBoardGraphicsCP? _graphicsData;
     private static string GetColumns => $"{bb1.RepeatMinimum(1)} {bb1.RepeatAuto(1)}";
     protected override void OnInitialized()

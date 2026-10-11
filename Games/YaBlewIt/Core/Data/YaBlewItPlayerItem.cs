@@ -3,7 +3,12 @@ namespace YaBlewIt.Core.Data;
 public partial class YaBlewItPlayerItem : PlayerSingleHand<YaBlewItCardInformation>
 {
     [ScoreColumn]
-    public EnumColors CursedGem { get; set; }
+    public partial EnumColors CursedGem { get; set; }
     [ScoreColumn]
     public int TotalScore => MainHandList.TotalPoints(this);
+    public void Update()
+    {
+        OnScoreValueChanged(nameof(TotalScore));
+    }
+
 }

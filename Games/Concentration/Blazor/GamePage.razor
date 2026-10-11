@@ -15,10 +15,8 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="ConcentrationMainViewModel">
+    <MainScreen>
         <ConcentrationMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<ConcentrationPlayerItem>">
-        <MultiplayerOpeningView P="ConcentrationPlayerItem" />
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="ConcentrationPlayerItem" />
 </CascadingValue>

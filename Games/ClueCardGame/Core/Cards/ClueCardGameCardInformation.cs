@@ -4,7 +4,7 @@ public class ClueCardGameCardInformation : SimpleDeckObject, IDeckObject, ICompa
     public EnumCardType WhatType { get; set; }
     public EnumCardValues CardValue { get; set; }
     public string Name { get; set; } = "";
-    private static BasicList<string> __names = ["Mrs. Peacock", 
+    private static readonly BasicList<string> _names = ["Mrs. Peacock", 
         "Mr. Green", "Professor Plum", "Miss Scarlet",
         "Mrs. White", "Colonel Mustard",
         "Candlestick", "Knife",
@@ -45,7 +45,7 @@ public class ClueCardGameCardInformation : SimpleDeckObject, IDeckObject, ICompa
                 }
         }
         CardValue = chosen.ToEnum<EnumCardValues>();
-        Name = __names[chosen - 1];
+        Name = _names[chosen - 1];
     }
     public override string GetKey()
     {

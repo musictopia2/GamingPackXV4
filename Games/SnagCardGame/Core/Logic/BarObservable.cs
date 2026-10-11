@@ -56,7 +56,7 @@ public class BarObservable : HandObservable<SnagCardGameCardInformation>
         {
             thisList.Reverse();
         }
-        DeckRegularDict<SnagCardGameCardInformation> tempList = new();
+        DeckRegularDict<SnagCardGameCardInformation> tempList = [];
         thisList.ForEach(thisCard =>
         {
             var newCard = new SnagCardGameCardInformation();
@@ -83,7 +83,7 @@ public class BarObservable : HandObservable<SnagCardGameCardInformation>
             {
                 return HandList.ToRegularDeckDict();
             }
-            return new DeckRegularDict<SnagCardGameCardInformation>() { HandList.First(), HandList[1] };
+            return [HandList.First(), HandList[1]];
         }
     }
 }

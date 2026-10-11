@@ -14,7 +14,7 @@ public class XactikaDetailClass : IGameInfo, ICardInfo<XactikaCardInformation>, 
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
     int ICardInfo<XactikaCardInformation>.CardsToPassOut => 8;
-    BasicList<int> ICardInfo<XactikaCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<XactikaCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<XactikaCardInformation>.AddToDiscardAtBeginning => false;
     bool ICardInfo<XactikaCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<XactikaCardInformation>.ShowMessageWhenReshuffling => true;
@@ -22,7 +22,7 @@ public class XactikaDetailClass : IGameInfo, ICardInfo<XactikaCardInformation>, 
     bool ICardInfo<XactikaCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<XactikaCardInformation>.NoPass => false;
     bool ICardInfo<XactikaCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<XactikaCardInformation> ICardInfo<XactikaCardInformation>.DummyHand { get; set; } = new DeckRegularDict<XactikaCardInformation>();
+    DeckRegularDict<XactikaCardInformation> ICardInfo<XactikaCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<XactikaCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<XactikaCardInformation>.CanSortCardsToBeginWith => true;
     bool ITrickData.FirstPlayerAnySuit => true;
@@ -34,6 +34,6 @@ public class XactikaDetailClass : IGameInfo, ICardInfo<XactikaCardInformation>, 
     bool ITrickData.HasDummy => false;
     BasicList<int> ICardInfo<XactikaCardInformation>.DiscardExcludeList(IListShuffler<XactikaCardInformation> deckList)
     {
-        return new();
+        return [];
     }
 }

@@ -3,10 +3,10 @@ namespace FourSuitRummy.Core.Data;
 public partial class FourSuitRummyPlayerItem : PlayerRummyHand<RegularRummyCard>
 {
     [ScoreColumn]
-    public int CurrentScore { get; set; }
+    public partial int CurrentScore { get; set; }
     [ScoreColumn]
-    public int TotalScore { get; set; }
-    public BasicList<SavedSet> SetList { get; set; } = new();
+    public partial int TotalScore { get; set; }
+    public BasicList<SavedSet> SetList { get; set; } = [];
     [JsonIgnore]
     public MainSets? MainSets { get; set; }
 }

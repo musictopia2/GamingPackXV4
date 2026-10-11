@@ -15,16 +15,12 @@
     return;
 }
 <CascadingValue Value="TargetHeight">
-    <ParentControl VM="ClueBoardGameMainViewModel">
+    <MainScreen>
         <ClueBoardGameMainView />
-    </ParentControl>
-    <ParentControl VM="MultiplayerOpeningViewModel<ClueBoardGamePlayerItem>">
-        <MultiplayerOpeningView P="ClueBoardGamePlayerItem" />
-    </ParentControl>
-    <ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, ClueBoardGamePlayerItem>">
-        <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="ClueBoardGamePlayerItem">
-            @* if there is another piece, replace with proper piece. *@
-            <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
-        </BeginningChooseColorView>
-    </ParentControl>
+    </MainScreen>
+    <MultiplayerOpeningView P="ClueBoardGamePlayerItem" />
+    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="ClueBoardGamePlayerItem">
+        @* if there is another piece, replace with proper piece. *@
+        <PawnPiece MainColor="@GetColor(Piece.EnumValue)" />
+    </BeginningChooseColorView>
 </CascadingValue>

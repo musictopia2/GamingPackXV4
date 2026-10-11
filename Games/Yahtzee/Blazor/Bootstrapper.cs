@@ -1,11 +1,7 @@
 namespace Yahtzee.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<YahtzeeShellViewModel<SimpleDice>>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<YahtzeeShellViewModel<SimpleDice>>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         IBasicDiceGamesData<SimpleDice>.NeedsRollIncrement = true;

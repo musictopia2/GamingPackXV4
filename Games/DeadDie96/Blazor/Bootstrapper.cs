@@ -1,12 +1,8 @@
 //i think this is the most common things i like to do
 namespace DeadDie96.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<DeadDie96ShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<DeadDie96ShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
 	  IBasicDiceGamesData<SimpleDice>.NeedsRollIncrement = true;

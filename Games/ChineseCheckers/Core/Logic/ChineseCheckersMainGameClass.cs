@@ -79,7 +79,7 @@ public class ChineseCheckersMainGameClass
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
-        BoardGameSaved();
+        GameSaved();
         SaveRoot.Init(_gameContainer);
         _gameBoard.LoadSavedGame();
         return Task.CompletedTask;

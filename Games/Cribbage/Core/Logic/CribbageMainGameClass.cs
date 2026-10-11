@@ -8,7 +8,7 @@ public class CribbageMainGameClass
     private readonly CommandContainer _command;
     private readonly CribbageGameContainer _gameContainer;
     private readonly RummyProcesses<EnumSuitList, EnumRegularColorList, CribbageCard> _rummys;
-    private readonly BasicList<CribbageCombos> _comboList = new();
+    private readonly BasicList<CribbageCombos> _comboList = [];
     public CribbageMainGameClass(IGamePackageResolver mainContainer,
         IEventAggregator aggregator,
         BasicData basicData,
@@ -539,7 +539,7 @@ public class CribbageMainGameClass
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
         this.ShowTurn();
-        DeckRegularDict<CribbageCard> newList = new();
+        DeckRegularDict<CribbageCard> newList = [];
         BasicList<CribbageCombos> thisCol;
         if (SaveRoot!.WhatStatus == EnumGameStatus.GetResultsHand)
         {
@@ -571,7 +571,6 @@ public class CribbageMainGameClass
         });
         _model.TotalScore = _model.ScoreBoard1.TotalScore;
         _model.ScoreBoard1.ShowScores();
-        _gameContainer.Command.UpdateAll();
         if (_model.TotalScore > 0 && Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(1.5);
@@ -591,9 +590,9 @@ public class CribbageMainGameClass
         }
         _model!.PlayerHand1!.HandList.ReplaceRange(SingleInfo.MainHandList); //for some strange reason, i am forced to put to other.  otherwise, it deletes the other.
     }
-    private BasicList<CribbageCombos> ListCribbageCombos(IDeckDict<CribbageCard> thisCol)
+    private BasicList<CribbageCombos> ListCribbageCombos(DeckRegularDict<CribbageCard> thisCol)
     {
-        BasicList<CribbageCombos> output = new();
+        BasicList<CribbageCombos> output = [];
         var mostSuits = thisCol.GroupOrderDescending(items => items.Suit);
         bool hadFourFlush;
         bool hadFiveFlush;
@@ -720,7 +719,7 @@ public class CribbageMainGameClass
     }
     public BasicList<CribbageCombos> ListComboPointsInPlay(int numberSoFar, out bool startOver, out int whoNext)
     {
-        BasicList<CribbageCombos> output = new();
+        BasicList<CribbageCombos> output = [];
         startOver = false;
         whoNext = 0;
         if (_model!.MainFrame!.HandList.Count == 0 && numberSoFar == 0)
@@ -738,13 +737,13 @@ public class CribbageMainGameClass
         {
             startOver = true;
         }
-        DeckRegularDict<CribbageCard> newCol = new();
+        DeckRegularDict<CribbageCard> newCol = [];
         int y;
         foreach (var thisCombo in _comboList!)
         {
             if (thisCombo.CardsToUse > 0)
             {
-                newCol = new DeckRegularDict<CribbageCard>();
+                newCol = [];
                 y = _model.MainFrame.HandList.Count;
                 for (int x = 1; x <= thisCombo.CardsToUse; x++)
                 {
@@ -941,9 +940,7 @@ public class CribbageMainGameClass
     #region "rummy functions"
     public int Find15Combos(IDeckDict<CribbageCard> thisCol)
     {
-        DeckRegularDict<CribbageCard> newCol = new();
-        newCol.AddRange(thisCol);
-        newCol.Add(_model!.Pile1!.GetCardInfo());
+        DeckRegularDict<CribbageCard> newCol = [.. thisCol, _model!.Pile1!.GetCardInfo()];
         int firstNumber;
         int secondNumber;
         int output = 0;
@@ -985,7 +982,7 @@ public class CribbageMainGameClass
         var newCol = thisCol.ToRegularDeckDict();
         int output = 0;
         CribbageCard newCard;
-        DeckRegularDict<CribbageCard> finals = new();
+        DeckRegularDict<CribbageCard> finals = [];
         if (fromPlay == false)
         {
             newCol.Add(_model!.Pile1!.GetCardInfo());
@@ -1034,7 +1031,7 @@ public class CribbageMainGameClass
     public int HowManyLongerRun(IDeckDict<CribbageCard> thisCol, bool fromPlay)
     {
         var newCol = thisCol.ToRegularDeckDict();
-        DeckRegularDict<CribbageCard> finals = new();
+        DeckRegularDict<CribbageCard> finals = [];
         if (fromPlay == false)
         {
             newCol.Add(_model!.Pile1!.GetCardInfo());
@@ -1053,7 +1050,7 @@ public class CribbageMainGameClass
     public bool HadProperKind(IDeckDict<CribbageCard> thisCol, CribbageCombos thisCombo, bool fromPlay)
     {
         var newCol = thisCol.ToRegularDeckDict();
-        DeckRegularDict<CribbageCard> finals = new();
+        DeckRegularDict<CribbageCard> finals = [];
         if (fromPlay == false)
         {
             newCol.Add(_model!.Pile1!.GetCardInfo());
@@ -1077,7 +1074,7 @@ public class CribbageMainGameClass
     public bool HadProperStraight(IDeckDict<CribbageCard> thisCol, CribbageCombos thisCombo, bool fromPlay)
     {
         var newCol = thisCol.ToRegularDeckDict();
-        DeckRegularDict<CribbageCard> finals = new();
+        DeckRegularDict<CribbageCard> finals = [];
         if (fromPlay == false)
         {
             newCol.Add(_model!.Pile1!.GetCardInfo());
@@ -1108,7 +1105,7 @@ public class CribbageMainGameClass
         }
         return true;
     }
-    private bool IsMultiMove(CribbageCombos thisCombo, IDeckDict<CribbageCard> thisCol)
+    private bool IsMultiMove(CribbageCombos thisCombo, DeckRegularDict<CribbageCard> thisCol)
     {
         var newCol = thisCol.ToRegularDeckDict();
         newCol.Add(_model!.Pile1!.GetCardInfo());

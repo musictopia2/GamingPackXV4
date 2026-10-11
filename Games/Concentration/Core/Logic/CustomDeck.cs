@@ -10,7 +10,7 @@ public class CustomDeck : IRegularDeckInfo
     {
         get
         {
-            BasicList<ExcludeRCard> output = new();
+            BasicList<ExcludeRCard> output = [];
             output.AppendExclude(EnumSuitList.Clubs, 1)
                 .AppendExclude(EnumSuitList.Spades, 1);
             return output;

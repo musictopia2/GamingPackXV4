@@ -14,16 +14,11 @@
     }
     return;
 }
-<ParentControl VM="CheckersMainViewModel">
+<MainScreen>
     <CheckersMainView />
-</ParentControl>
-<ParentControl VM="MultiplayerOpeningViewModel<CheckersPlayerItem>">
-    <MultiplayerOpeningView P="CheckersPlayerItem" />
-</ParentControl>
-<ParentControl VM="BeginningChooseColorViewModel<EnumColorChoice, CheckersPlayerItem>">
-    
-    <BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="CheckersPlayerItem">
-        @* if there is another piece, replace with proper piece. *@
-        <CheckerPiece HasImage="true" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" MainColor="@GetColor(Piece.EnumValue)" />
-    </BeginningChooseColorView>
-</ParentControl>
+</MainScreen>
+<MultiplayerOpeningView P="CheckersPlayerItem" />
+<BeginningChooseColorView E="EnumColorChoice" Context="Piece" P="CheckersPlayerItem">
+    @* if there is another piece, replace with proper piece. *@
+    <CheckerPiece HasImage="true" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" MainColor="@GetColor(Piece.EnumValue)" />
+</BeginningChooseColorView>

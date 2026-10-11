@@ -1,17 +1,16 @@
 namespace Mastermind.Core.ViewModels;
 [InstanceGame]
-public partial class MastermindMainViewModel : ConductorViewModel, IBasicEnableProcess, IBlankGameVM, IAggregatorContainer
-{
-    public MastermindMainViewModel(IEventAggregator aggregator,
-        CommandContainer commandContainer,
+public partial class MastermindMainViewModel(CommandContainer commandContainer,
         IGamePackageResolver resolver,
-        LevelClass level,
-        BasicData basicData
-        ) : base(aggregator)
+         LevelClass level,
+        BasicData basicData,
+        IEventAggregator aggregator) : IBasicEnableProcess,
+    IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>
+{
+    void IMainGameVM.Initialize()
     {
+        Subscribe();
         LevelChosen = level.LevelChosen;
-        CommandContainer = commandContainer;
-        _basicData = basicData;
         _global = resolver.ReplaceObject<GlobalClass>();
         CustomColorClass colorClass = new(_global);
         _mainGame = resolver.ReplaceObject<MastermindMainGameClass>();
@@ -20,14 +19,15 @@ public partial class MastermindMainViewModel : ConductorViewModel, IBasicEnableP
         Color1.AutoSelectCategory = EnumAutoSelectCategory.AutoEvent;
         Color1.IsEnabled = true;
         Color1.ItemClickedAsync = Color1_ItemClickedAsync;
-        CreateCommands(CommandContainer);
+        CreateCommands(commandContainer);
     }
+    private partial void Subscribe();
+    private partial void Unsubscribe();
     partial void CreateCommands(CommandContainer command);
-    private readonly BasicData _basicData;
-    private readonly MastermindMainGameClass _mainGame;
-    private readonly GlobalClass _global;
+    private MastermindMainGameClass _mainGame = null!;
+    private GlobalClass _global = null!;
     public int LevelChosen { get; set; }
-    public SimpleEnumPickerVM<EnumColorPossibilities> Color1;
+    public SimpleEnumPickerVM<EnumColorPossibilities> Color1 = null!;
     public bool CanGiveUp
     {
         get
@@ -55,20 +55,20 @@ public partial class MastermindMainViewModel : ConductorViewModel, IBasicEnableP
         MainBoard.SelectedColorForCurrentGuess(piece);
         return Task.CompletedTask;
     }
-    public CommandContainer CommandContainer { get; set; }
-    IEventAggregator IAggregatorContainer.Aggregator => Aggregator;
-    private GameBoardViewModel MainBoard { get; set; }
+    public GameBoardViewModel MainBoard { get; set; } = null!;
     public bool CanEnableBasics()
     {
         return true; //because maybe you can't enable it.
     }
-    protected override async Task ActivateAsync()
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
     {
-        _basicData.GameDataLoading = false;
-        await base.ActivateAsync();
-        await LoadScreenAsync(MainBoard); //i think i forgot this too.
+        basicData.GameDataLoading = false;
         await _mainGame.NewGameAsync(MainBoard);
         Color1.LoadEntireList();
-        CommandContainer.UpdateAll();
+        //commandContainer.UpdateAll();
+    }
+    async Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        Unsubscribe();
     }
 }

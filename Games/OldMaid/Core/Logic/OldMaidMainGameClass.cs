@@ -87,7 +87,7 @@ public class OldMaidMainGameClass
     }
     private DeckRegularDict<RegularSimpleCard> ComputerPairList()
     {
-        DeckRegularDict<RegularSimpleCard> output = new();
+        DeckRegularDict<RegularSimpleCard> output = [];
         foreach (var firstCard in SingleInfo!.MainHandList)
         {
             foreach (var secondCard in SingleInfo.MainHandList)
@@ -146,6 +146,20 @@ public class OldMaidMainGameClass
         await LinkOtherPlayerAsync();
         await ContinueTurnAsync();
     }
+    //public override Task ContinueTurnAsync()
+    //{
+    //    if (SaveRoot.RemovePairs)
+    //    {
+    //        var player = PlayerList.GetSelf();
+
+    //        bool linked = ReferenceEquals(
+    //            _model.PlayerHand1.HandList,
+    //            player.MainHandList);
+
+    //        _model.Status = linked ? "Hand linked" : "Hand NOT linked";
+    //    }
+    //    return base.ContinueTurnAsync();
+    //}
     public override async Task EndTurnAsync()
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
@@ -176,7 +190,7 @@ public class OldMaidMainGameClass
         }
         await StartNewTurnAsync();
     }
-    public async Task ProcessPlayAsync(int card1, int card2)
+    public async Task ProcessPlayAsync(int card1, int card2, bool canContinue = true)
     {
         if (SingleInfo!.CanSendMessage(BasicData!) == true)
         {
@@ -190,6 +204,10 @@ public class OldMaidMainGameClass
         secondCard.Drew = false;
         secondCard.IsSelected = false;
         _model!.Pile1!.AddCard(secondCard);
+        if (canContinue == false)
+        {
+            return;
+        }
         await ContinueTurnAsync();
     }
     internal static bool IsValidMove(IDeckDict<RegularSimpleCard> thisCol)
