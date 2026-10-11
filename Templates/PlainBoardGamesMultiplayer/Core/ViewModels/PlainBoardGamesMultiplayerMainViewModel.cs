@@ -1,22 +1,15 @@
 namespace PlainBoardGamesMultiplayer.Core.ViewModels;
 [InstanceGame]
-public class PlainBoardGamesMultiplayerMainViewModel : BasicMultiplayerMainVM
+public class PlainBoardGamesMultiplayerMainViewModel(CommandContainer commandContainer,
+    PlainBoardGamesMultiplayerMainGameClass mainGame,
+    BasicData basicData,
+    IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    PlainBoardGamesMultiplayerVMData data
+        ) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
 {
-    private readonly PlainBoardGamesMultiplayerMainGameClass _mainGame; //if we don't need, delete.
-    public PlainBoardGamesMultiplayerVMData VMData { get; set; }
-    public PlainBoardGamesMultiplayerMainViewModel(CommandContainer commandContainer,
-        PlainBoardGamesMultiplayerMainGameClass mainGame,
-        BasicData basicData,
-        TestOptions test,
-        IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        PlainBoardGamesMultiplayerVMData data
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
-    {
-        _mainGame = mainGame;
-        VMData = data;
-    }
+    private readonly PlainBoardGamesMultiplayerMainGameClass _mainGame = mainGame; //if we don't need, delete.
+    public PlainBoardGamesMultiplayerVMData VMData { get; set; } = data;
     //anything else needed is here.
 
 }

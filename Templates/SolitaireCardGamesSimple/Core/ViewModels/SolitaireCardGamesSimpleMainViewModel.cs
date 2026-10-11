@@ -1,15 +1,11 @@
 namespace SolitaireCardGamesSimple.Core.ViewModels;
 [InstanceGame]
 [UseLabelGrid]
-public partial class SolitaireCardGamesSimpleMainViewModel : SolitaireMainViewModel<SolitaireCardGamesSimpleSaveInfo>
+public partial class SolitaireCardGamesSimpleMainViewModel(IEventAggregator aggregator,
+    CommandContainer command,
+    IGamePackageResolver resolver
+        ) : SolitaireMainViewModel<SolitaireCardGamesSimpleSaveInfo>(aggregator, command, resolver)
 {
-    public SolitaireCardGamesSimpleMainViewModel(IEventAggregator aggregator,
-        CommandContainer command,
-        IGamePackageResolver resolver
-        )
-        : base(aggregator, command, resolver)
-    {
-    }
     protected override SolitaireGameClass<SolitaireCardGamesSimpleSaveInfo> GetGame(IGamePackageResolver resolver)
     {
         return resolver.ReplaceObject<SolitaireCardGamesSimpleMainGameClass>();

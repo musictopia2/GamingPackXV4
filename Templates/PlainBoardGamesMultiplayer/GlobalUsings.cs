@@ -14,7 +14,6 @@ global using CommonBasicLibraries.BasicUIProcesses;
 global using BasicGameFrameworkLibrary.Core.CommandClasses;
 global using BasicGameFrameworkLibrary.Core.ViewModels;
 global using BasicGameFrameworkLibrary.Core.ViewModelInterfaces;
-global using MVVMFramework.ViewModels;
 global using PlainBoardGamesMultiplayer.Core.Logic;
 global using BasicGameFrameworkLibrary.Core.MiscProcesses;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.MapHelpers;
@@ -41,3 +40,4 @@ global using BasicGameFrameworkLibrary.Blazor.Helpers;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfaceModels;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
 global using System.Drawing; //very common
+global using BasicGameFrameworkLibrary.Core.SystemEventModels;

@@ -3,8 +3,8 @@ public partial class DominoBonesMultiplayerGamesMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     protected override void OnInitialized()
     {
         _labels.Clear();
@@ -12,7 +12,7 @@ public partial class DominoBonesMultiplayerGamesMainView
             .AddLabel("Status", nameof(DominoBonesMultiplayerGamesVMData.Status));
         base.OnInitialized();
     }
-    public SimpleDominoInfo GetDomino
+    public static SimpleDominoInfo GetDomino
     {
         get
         {

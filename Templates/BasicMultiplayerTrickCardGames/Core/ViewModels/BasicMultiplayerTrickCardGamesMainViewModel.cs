@@ -1,26 +1,19 @@
 namespace BasicMultiplayerTrickCardGames.Core.ViewModels;
 [InstanceGame]
-public class BasicMultiplayerTrickCardGamesMainViewModel : BasicCardGamesVM<BasicMultiplayerTrickCardGamesCardInformation>
-{
-    private readonly BasicMultiplayerTrickCardGamesMainGameClass _mainGame; //if we don't need, delete.
-    private readonly BasicMultiplayerTrickCardGamesVMData _model;
-    private readonly BasicMultiplayerTrickCardGamesGameContainer _gameContainer; //if not needed, delete.
-    public BasicMultiplayerTrickCardGamesMainViewModel(CommandContainer commandContainer,
+public class BasicMultiplayerTrickCardGamesMainViewModel(CommandContainer commandContainer,
         BasicMultiplayerTrickCardGamesMainGameClass mainGame,
         BasicMultiplayerTrickCardGamesVMData viewModel,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         BasicMultiplayerTrickCardGamesGameContainer gameContainer,
         IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+        IToast toast) : BasicCardGamesVM<BasicMultiplayerTrickCardGamesCardInformation>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
+{
+    private readonly BasicMultiplayerTrickCardGamesVMData _viewModel = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        _model = viewModel;
-        _gameContainer = gameContainer;
-        _model.Deck1.NeverAutoDisable = true;
+        _viewModel.Deck1.NeverAutoDisable = true;
+        base.AdditionalInitialize();
     }
     //anything else needed is here.
     protected override bool CanEnableDeck()

@@ -1,33 +1,30 @@
 namespace DiceBoardGamesMultiplayer.Core.Logic;
 [SingletonGame]
-public class DiceBoardGamesMultiplayerMainGameClass
-    : BoardDiceGameClass<DiceBoardGamesMultiplayerPlayerItem, DiceBoardGamesMultiplayerSaveInfo, EnumColorChoice, int>
+public class DiceBoardGamesMultiplayerMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    DiceBoardGamesMultiplayerVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    DiceBoardGamesMultiplayerGameContainer container,
+    StandardRollProcesses<SimpleDice, DiceBoardGamesMultiplayerPlayerItem> roller,
+    ISystemError error,
+    IToast toast
+        )
+        : BoardDiceGameClass<DiceBoardGamesMultiplayerPlayerItem, DiceBoardGamesMultiplayerSaveInfo, EnumColorChoice, int>(resolver, aggregator, basic, test, model, state, delay, command, container, roller, error, toast)
     , IMiscDataNM, ISerializable
 {
-    private readonly DiceBoardGamesMultiplayerVMData _model;
-    public DiceBoardGamesMultiplayerMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        DiceBoardGamesMultiplayerVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        DiceBoardGamesMultiplayerGameContainer container,
-        StandardRollProcesses<SimpleDice, DiceBoardGamesMultiplayerPlayerItem> roller,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, container, roller, error, toast)
-    {
-        _model = model;
-    }
+    private readonly DiceBoardGamesMultiplayerVMData _model = model;
+
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
         AfterRestoreDice();
-        BoardGameSaved(); //i think.
+        GameSaved(); //i think.
         SaveRoot.LoadMod(_model); //we usually need this.
-                                  //anything else needed is here.
+        //anything else needed is here.
         return Task.CompletedTask;
     }
     private void LoadControls()

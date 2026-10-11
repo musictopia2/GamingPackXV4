@@ -1,26 +1,18 @@
 namespace SinglePlayerCardGames.Core.Logic;
 [SingletonGame]
-public class SinglePlayerCardGamesMainGameClass : RegularDeckOfCardsGameClass<SinglePlayerCardGamesCardInfo>, IAggregatorContainer
+public class SinglePlayerCardGamesMainGameClass(ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IGamePackageResolver container,
+    IMessageBox message,
+    ISystemError error
+        ) : RegularDeckOfCardsGameClass<SinglePlayerCardGamesCardInfo>, IAggregatorContainer
 {
-    private readonly ISaveSinglePlayerClass _thisState;
-    private readonly IMessageBox _message;
-    private readonly ISystemError _error;
-    internal SinglePlayerCardGamesSaveInfo _saveRoot;
-    public SinglePlayerCardGamesMainGameClass(ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IGamePackageResolver container,
-        IMessageBox message,
-        ISystemError error
-        )
-    {
-        _thisState = thisState;
-        Aggregator = aggregator;
-        _message = message;
-        _error = error;
-        _saveRoot = container.ReplaceObject<SinglePlayerCardGamesSaveInfo>(); //can't create new one.  because if doing that, then anything that needs it won't have it.
-    }
+    private readonly ISaveSinglePlayerClass _thisState = thisState;
+    private readonly IMessageBox _message = message;
+    private readonly ISystemError _error = error;
+    internal SinglePlayerCardGamesSaveInfo _saveRoot = container.ReplaceObject<SinglePlayerCardGamesSaveInfo>();
     internal bool GameGoing { get; set; }
-    public IEventAggregator Aggregator { get; }
+    public IEventAggregator Aggregator { get; } = aggregator;
     public override async Task<bool> CanOpenSavedSinglePlayerGameAsync()
     {
         return await _thisState.CanOpenSavedSinglePlayerGameAsync();

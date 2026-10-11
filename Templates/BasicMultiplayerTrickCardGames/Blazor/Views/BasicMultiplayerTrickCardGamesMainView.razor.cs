@@ -3,14 +3,14 @@ public partial class BasicMultiplayerTrickCardGamesMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private BasicMultiplayerTrickCardGamesVMData? _vmData;
     private BasicMultiplayerTrickCardGamesGameContainer? _gameContainer;
     protected override void OnInitialized()
     {
-        _vmData = aa1.Resolver!.Resolve<BasicMultiplayerTrickCardGamesVMData>();
-        _gameContainer = aa1.Resolver.Resolve<BasicMultiplayerTrickCardGamesGameContainer>();
+        _vmData = Resolver!.Resolve<BasicMultiplayerTrickCardGamesVMData>();
+        _gameContainer = Resolver.Resolve<BasicMultiplayerTrickCardGamesGameContainer>();
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(BasicMultiplayerTrickCardGamesVMData.NormalTurn))
             .AddLabel("Trump", nameof(BasicMultiplayerTrickCardGamesVMData.TrumpSuit))

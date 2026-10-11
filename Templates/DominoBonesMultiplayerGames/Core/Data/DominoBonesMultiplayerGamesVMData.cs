@@ -30,9 +30,9 @@ public partial class DominoBonesMultiplayerGamesVMData : IDominoGamesData<Simple
         return HandClickedAsync.Invoke(domino, index);
     }
     [LabelColumn]
-    public string NormalTurn { get; set; } = "";
+    public partial string NormalTurn { get; set; } = "";
     [LabelColumn]
-    public string Status { get; set; } = "";
+    public partial string Status { get; set; } = "";
     public Func<SimpleDominoInfo, Task>? DrewDominoAsync { get; set; }
     public HandObservable<SimpleDominoInfo> PlayerHand1 { get; set; }
     public DominosBoneYardClass<SimpleDominoInfo> BoneYard { get; set; }

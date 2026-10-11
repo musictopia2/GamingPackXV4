@@ -1,22 +1,21 @@
 namespace BasicMultiplayerGames.Core.ViewModels;
 [InstanceGame]
-public class BasicMultiplayerGamesMainViewModel : BasicMultiplayerMainVM
-{
-    private readonly BasicMultiplayerGamesMainGameClass _mainGame; //if we don't need, delete.
-    public BasicMultiplayerGamesVMData VMData { get; set; }
-    public BasicMultiplayerGamesMainViewModel(CommandContainer commandContainer,
+public class BasicMultiplayerGamesMainViewModel(CommandContainer commandContainer,
         BasicMultiplayerGamesMainGameClass mainGame,
         BasicData basicData,
-        TestOptions test,
         IGamePackageResolver resolver,
         IEventAggregator aggregator,
         BasicMultiplayerGamesVMData data
-        )
-        : base(commandContainer, mainGame, basicData, test, resolver, aggregator)
+        ) : BasicMultiplayerMainVM(commandContainer, mainGame, basicData, resolver, aggregator)
+{
+    public BasicMultiplayerGamesVMData VMData { get; set; } = data;
+    protected override Task CloseAsync()
     {
-        _mainGame = mainGame;
-        VMData = data;
+        return Task.CompletedTask;
     }
-    //anything else needed is here.
 
+    protected override Task OpenAsync()
+    {
+        return Task.CompletedTask;
+    }
 }

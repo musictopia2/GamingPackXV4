@@ -1,35 +1,29 @@
 namespace BasicMultiplayerTrickCardGames.Core.Logic;
 [SingletonGame]
-public class BasicMultiplayerTrickCardGamesMainGameClass
-    : TrickGameClass<EnumSuitList, BasicMultiplayerTrickCardGamesCardInformation, BasicMultiplayerTrickCardGamesPlayerItem, BasicMultiplayerTrickCardGamesSaveInfo>
+public class BasicMultiplayerTrickCardGamesMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    BasicMultiplayerTrickCardGamesVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<BasicMultiplayerTrickCardGamesCardInformation> cardInfo,
+    CommandContainer command,
+    BasicMultiplayerTrickCardGamesGameContainer gameContainer,
+    ITrickData trickData,
+    ITrickPlay trickPlay,
+    IAdvancedTrickProcesses aTrick,
+    ISystemError error,
+    IToast toast
+        )
+        : TrickGameClass<EnumSuitList, BasicMultiplayerTrickCardGamesCardInformation, BasicMultiplayerTrickCardGamesPlayerItem, BasicMultiplayerTrickCardGamesSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
         , IMiscDataNM, IStartNewGame, ISerializable
 {
-    private readonly BasicMultiplayerTrickCardGamesVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly BasicMultiplayerTrickCardGamesGameContainer _gameContainer; //if we don't need it, take it out.
-    private readonly IAdvancedTrickProcesses _aTrick;
-    public BasicMultiplayerTrickCardGamesMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        BasicMultiplayerTrickCardGamesVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<BasicMultiplayerTrickCardGamesCardInformation> cardInfo,
-        CommandContainer command,
-        BasicMultiplayerTrickCardGamesGameContainer gameContainer,
-        ITrickData trickData,
-        ITrickPlay trickPlay,
-        IAdvancedTrickProcesses aTrick,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, trickData, trickPlay, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-        _aTrick = aTrick;
-    }
+    private readonly BasicMultiplayerTrickCardGamesVMData _model = currentMod;
+    private readonly CommandContainer _command = command; //most of the time, needs this.  if not needed, take out.
+    private readonly BasicMultiplayerTrickCardGamesGameContainer _gameContainer = gameContainer; //if we don't need it, take it out.
+    private readonly IAdvancedTrickProcesses _aTrick = aTrick;
+
     public override async Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -85,7 +79,7 @@ public class BasicMultiplayerTrickCardGamesMainGameClass
         WhoTurn = await PlayerList.CalculateWhoTurnAsync();
         await StartNewTurnAsync();
     }
-    private int WhoWonTrick(DeckRegularDict<BasicMultiplayerTrickCardGamesCardInformation> thisCol)
+    private static int WhoWonTrick(DeckRegularDict<BasicMultiplayerTrickCardGamesCardInformation> thisCol)
     {
 
         return 0; //has to do the work here.

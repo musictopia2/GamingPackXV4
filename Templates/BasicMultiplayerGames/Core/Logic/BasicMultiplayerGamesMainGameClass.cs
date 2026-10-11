@@ -1,29 +1,23 @@
 namespace BasicMultiplayerGames.Core.Logic;
 [SingletonGame]
-public class BasicMultiplayerGamesMainGameClass : BasicGameClass<BasicMultiplayerGamesPlayerItem, BasicMultiplayerGamesSaveInfo>
+public class BasicMultiplayerGamesMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    BasicMultiplayerGamesVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    IRandomGenerator rs,
+    BasicMultiplayerGamesGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        ) : BasicGameClass<BasicMultiplayerGamesPlayerItem, BasicMultiplayerGamesSaveInfo>(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     , ICommonMultiplayer<BasicMultiplayerGamesPlayerItem, BasicMultiplayerGamesSaveInfo>
     , IMiscDataNM
 {
-    public BasicMultiplayerGamesMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        BasicMultiplayerGamesVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        IRandomGenerator rs,
-        BasicMultiplayerGamesGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
-    {
-        _model = model;
-        _rs = rs;
-    }
-
-    private readonly BasicMultiplayerGamesVMData? _model;
-    private readonly IRandomGenerator _rs; //if we don't need, take out.
+    private readonly BasicMultiplayerGamesVMData? _model = model;
+    private readonly IRandomGenerator _rs = rs; //if we don't need, take out.
 
     public override Task FinishGetSavedAsync()
     {
@@ -39,6 +33,12 @@ public class BasicMultiplayerGamesMainGameClass : BasicGameClass<BasicMultiplaye
         }
 
         IsLoaded = true; //i think needs to be here.
+    }
+    //change to how you end the turn.  otherwise, nothing happens.
+    public override async Task EndTurnAsync()
+    {
+        WhoTurn = await PlayerList!.CalculateWhoTurnAsync(true);
+        await StartNewTurnAsync();
     }
     protected override async Task ComputerTurnAsync()
     {

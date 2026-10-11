@@ -1,23 +1,17 @@
 namespace BasicMultiplayerDiceGames.Core.ViewModels;
 [InstanceGame]
-public class BasicMultiplayerDiceGamesMainViewModel : DiceGamesVM<SimpleDice>
+public class BasicMultiplayerDiceGamesMainViewModel(CommandContainer commandContainer,
+    BasicMultiplayerDiceGamesMainGameClass mainGame,
+    BasicMultiplayerDiceGamesVMData viewModel,
+    BasicData basicData,
+    IGamePackageResolver resolver,
+    IStandardRollProcesses roller,
+    IEventAggregator aggregator
+        ) : DiceGamesVM<SimpleDice>(commandContainer, mainGame, viewModel, basicData, resolver, roller, aggregator)
 {
-    private readonly BasicMultiplayerDiceGamesMainGameClass _mainGame; //if we don't need, delete.
-    public BasicMultiplayerDiceGamesVMData VMData { get; set; }
-    public BasicMultiplayerDiceGamesMainViewModel(CommandContainer commandContainer,
-        BasicMultiplayerDiceGamesMainGameClass mainGame,
-        BasicMultiplayerDiceGamesVMData viewModel,
-        BasicData basicData,
-        TestOptions test,
-        IGamePackageResolver resolver,
-        IStandardRollProcesses roller,
-        IEventAggregator aggregator
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, roller, aggregator)
-    {
-        _mainGame = mainGame;
-        VMData = viewModel;
-    }
+    private readonly BasicMultiplayerDiceGamesMainGameClass _mainGame = mainGame; //if we don't need, delete.
+    public BasicMultiplayerDiceGamesVMData VMData { get; set; } = viewModel;
+
     public DiceCup<SimpleDice> GetCup => VMData.Cup!;
     public PlayerCollection<BasicMultiplayerDiceGamesPlayerItem> PlayerList => _mainGame.PlayerList;
     protected override bool CanEnableDice()

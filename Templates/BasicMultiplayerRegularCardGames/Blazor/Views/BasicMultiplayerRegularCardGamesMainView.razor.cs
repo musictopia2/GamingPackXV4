@@ -3,8 +3,8 @@ public partial class BasicMultiplayerRegularCardGamesMainView
 {
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
-    private readonly BasicList<LabelGridModel> _labels = new();
-    private readonly BasicList<ScoreColumnModel> _scores = new();
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
     private BasicMultiplayerRegularCardGamesVMData? _vmData;
     private BasicMultiplayerRegularCardGamesGameContainer? _gameContainer;
     protected override void OnInitialized()

@@ -15,7 +15,7 @@ public class BasicMultiplayerTrickCardGamesDetailClass : IGameInfo, ICardInfo<Ba
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
     int ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.CardsToPassOut => 7; //change to what you need.
-    BasicList<int> ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.AddToDiscardAtBeginning => true;
     bool ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.ReshuffleAllCardsFromDiscard => false;
     bool ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.ShowMessageWhenReshuffling => true;
@@ -23,10 +23,10 @@ public class BasicMultiplayerTrickCardGamesDetailClass : IGameInfo, ICardInfo<Ba
     bool ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.NoPass => false;
     bool ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<BasicMultiplayerTrickCardGamesCardInformation> ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.DummyHand { get; set; } = new DeckRegularDict<BasicMultiplayerTrickCardGamesCardInformation>();
+    DeckRegularDict<BasicMultiplayerTrickCardGamesCardInformation> ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.DummyHand { get; set; } = [];
     BasicList<int> ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.DiscardExcludeList(IListShuffler<BasicMultiplayerTrickCardGamesCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<BasicMultiplayerTrickCardGamesCardInformation>.CanSortCardsToBeginWith => true;

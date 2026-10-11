@@ -1,12 +1,8 @@
 //i think this is the most common things i like to do
 namespace SinglePlayerCardGames.Blazor;
-public class Bootstrapper : SinglePlayerBootstrapper<SinglePlayerCardGamesShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : SinglePlayerBootstrapper<SinglePlayerCardGamesShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
-    public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
-    {
-    }
-    
-
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

@@ -1,18 +1,22 @@
 namespace SinglePlayerCardGames.Core.ViewModels;
 [InstanceGame]
-public class SinglePlayerCardGamesMainViewModel : ScreenViewModel, IBasicEnableProcess, IBlankGameVM, IAggregatorContainer
+public partial class SinglePlayerCardGamesMainViewModel(IEventAggregator aggregator, CommandContainer commandContainer, IGamePackageResolver resolver)
+    : IBasicEnableProcess, IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>
 {
-    private readonly SinglePlayerCardGamesMainGameClass _mainGame;
-    public DeckObservablePile<SinglePlayerCardGamesCardInfo> DeckPile { get; set; }
-    public SinglePlayerCardGamesMainViewModel(IEventAggregator aggregator, CommandContainer commandContainer, IGamePackageResolver resolver) : base(aggregator)
+    private SinglePlayerCardGamesMainGameClass _mainGame = null!;
+    public DeckObservablePile<SinglePlayerCardGamesCardInfo> DeckPile { get; set; } = null!;
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    void IMainGameVM.Initialize()
     {
-        CommandContainer = commandContainer;
-        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
+        Subscribe();
+        commandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SinglePlayerCardGamesCardInfo>>();
         DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
         _mainGame = resolver.ReplaceObject<SinglePlayerCardGamesMainGameClass>();
     }
+
     private static async Task DeckPile_DeckClickedAsync()
     {
         //if we click on deck, will do code for this.
@@ -20,7 +24,7 @@ public class SinglePlayerCardGamesMainViewModel : ScreenViewModel, IBasicEnableP
     }
     private async void CommandContainer_ExecutingChanged()
     {
-        if (CommandContainer.IsExecuting)
+        if (commandContainer.IsExecuting)
         {
             return;
         }
@@ -31,15 +35,18 @@ public class SinglePlayerCardGamesMainViewModel : ScreenViewModel, IBasicEnableP
             await _mainGame.SaveStateAsync();
         }
     }
-    public CommandContainer CommandContainer { get; set; }
-    IEventAggregator IAggregatorContainer.Aggregator => Aggregator;
     public bool CanEnableBasics()
     {
         return true;
     }
-    protected override async Task ActivateAsync()
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
     {
-        await base.ActivateAsync();
         await _mainGame.NewGameAsync(DeckPile);
+    }
+
+    async Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        commandContainer.ExecutingChanged = null;
+        Unsubscribe();
     }
 }

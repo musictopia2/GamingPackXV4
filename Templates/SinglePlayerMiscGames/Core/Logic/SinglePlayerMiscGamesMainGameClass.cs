@@ -1,27 +1,20 @@
 ﻿namespace SinglePlayerMiscGames.Core.Logic;
 [SingletonGame]
-public class SinglePlayerMiscGamesMainGameClass : IAggregatorContainer
+public class SinglePlayerMiscGamesMainGameClass(ISaveSinglePlayerClass thisState,
+    IEventAggregator aggregator,
+    IGamePackageResolver container,
+    BasicData data,
+    IMessageBox message,
+    ISystemError error
+        ) : IAggregatorContainer
 {
-    private readonly ISaveSinglePlayerClass _thisState;
-    private readonly IMessageBox _message;
-    private readonly ISystemError _error;
-    internal SinglePlayerMiscGamesSaveInfo _saveRoot;
-    public SinglePlayerMiscGamesMainGameClass(ISaveSinglePlayerClass thisState,
-        IEventAggregator aggregator,
-        IGamePackageResolver container,
-        IMessageBox message,
-        ISystemError error
-        )
-    {
-        _thisState = thisState;
-        Aggregator = aggregator;
-        _message = message;
-        _error = error;
-        _saveRoot = container.ReplaceObject<SinglePlayerMiscGamesSaveInfo>(); //can't create new one.  because if doing that, then anything that needs it won't have it.
-    }
+    private readonly ISaveSinglePlayerClass _thisState = thisState;
+    private readonly IMessageBox _message = message;
+    private readonly ISystemError _error = error;
+    internal SinglePlayerMiscGamesSaveInfo _saveRoot = container.ReplaceObject<SinglePlayerMiscGamesSaveInfo>();
     private bool _opened;
     internal bool _gameGoing;
-    public IEventAggregator Aggregator { get; }
+    public IEventAggregator Aggregator { get; } = aggregator;
     public async Task NewGameAsync()
     {
         _gameGoing = true;
@@ -34,6 +27,7 @@ public class SinglePlayerMiscGamesMainGameClass : IAggregatorContainer
                 return;
             }
         }
+        data.GameDataLoading = false; //needs this otherwise, if doing new game, would be stuck forever (bad).
     }
     private async Task RestoreGameAsync()
     {

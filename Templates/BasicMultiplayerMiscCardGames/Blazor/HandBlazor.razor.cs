@@ -28,6 +28,4 @@ public partial class HandBlazor
     /// </summary>
     [Parameter]
     public string TargetImageSize { get; set; } = "";
-
-    private static string GetKey => Guid.NewGuid().ToString();
 }

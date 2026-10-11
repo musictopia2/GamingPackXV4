@@ -104,4 +104,10 @@ public class CustomWaste : IWaste, ISerializable
     {
         throw new NotImplementedException();
     }
+
+    void IWaste.UpdatePiles()
+    {
+        //if you need to update, do here.
+
+    }
 }

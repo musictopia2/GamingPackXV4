@@ -1,26 +1,23 @@
 namespace BasicMultiplayerDiceGames.Core.Logic;
 [SingletonGame]
-public class BasicMultiplayerDiceGamesMainGameClass
-    : DiceGameClass<SimpleDice, BasicMultiplayerDiceGamesPlayerItem, BasicMultiplayerDiceGamesSaveInfo>
+public class BasicMultiplayerDiceGamesMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    BasicMultiplayerDiceGamesVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    BasicMultiplayerDiceGamesGameContainer gameContainer,
+    StandardRollProcesses<SimpleDice, BasicMultiplayerDiceGamesPlayerItem> roller,
+    ISystemError error,
+    IToast toast
+        )
+        : DiceGameClass<SimpleDice, BasicMultiplayerDiceGamesPlayerItem, BasicMultiplayerDiceGamesSaveInfo>(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
     , IMiscDataNM, ISerializable
 {
-    private readonly BasicMultiplayerDiceGamesVMData? _model;
-    public BasicMultiplayerDiceGamesMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        BasicMultiplayerDiceGamesVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        BasicMultiplayerDiceGamesGameContainer gameContainer,
-        StandardRollProcesses<SimpleDice, BasicMultiplayerDiceGamesPlayerItem> roller,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, currentMod, state, delay, command, gameContainer, roller, error, toast)
-    {
-        _model = currentMod;
-    }
+    private readonly BasicMultiplayerDiceGamesVMData? _model = currentMod;
+
     public override Task FinishGetSavedAsync()
     {
         LoadControls();

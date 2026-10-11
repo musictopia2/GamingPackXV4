@@ -1,21 +1,13 @@
 namespace DominoBonesMultiplayerGames.Core.ViewModels;
-public class DominoBonesMultiplayerGamesShellViewModel : BasicMultiplayerShellViewModel<DominoBonesMultiplayerGamesPlayerItem>
+public class DominoBonesMultiplayerGamesShellViewModel(IGamePackageResolver main,
+    CommandContainer command,
+    IGameInfo gameData,
+    BasicData basicData,
+    IMultiplayerSaveState save,
+    TestOptions test,
+    IEventAggregator aggregator,
+    IToast toast
+        ) : BasicMultiplayerShellViewModel<DominoBonesMultiplayerGamesPlayerItem>(main, command, gameData, basicData, save, test, aggregator, toast)
 {
-    public DominoBonesMultiplayerGamesShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo gameData,
-        BasicData basicData,
-        IMultiplayerSaveState save,
-        TestOptions test,
-        IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(mainContainer, container, gameData, basicData, save, test, aggregator, toast)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<DominoBonesMultiplayerGamesMainViewModel>();
-        return model;
-    }
+    
 }

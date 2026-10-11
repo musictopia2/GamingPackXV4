@@ -1,30 +1,25 @@
 namespace BasicMultiplayerRegularCardGames.Core.Logic;
 [SingletonGame]
-public class BasicMultiplayerRegularCardGamesMainGameClass
-    : CardGameClass<RegularSimpleCard, BasicMultiplayerRegularCardGamesPlayerItem, BasicMultiplayerRegularCardGamesSaveInfo>
+public class BasicMultiplayerRegularCardGamesMainGameClass(IGamePackageResolver mainContainer,
+    IEventAggregator aggregator,
+    BasicData basicData,
+    TestOptions test,
+    BasicMultiplayerRegularCardGamesVMData currentMod,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    ICardInfo<RegularSimpleCard> cardInfo,
+    CommandContainer command,
+    BasicMultiplayerRegularCardGamesGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        )
+        : CardGameClass<RegularSimpleCard, BasicMultiplayerRegularCardGamesPlayerItem, BasicMultiplayerRegularCardGamesSaveInfo>(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
     , IMiscDataNM, ISerializable
 {
-    private readonly BasicMultiplayerRegularCardGamesVMData _model;
-    private readonly CommandContainer _command; //most of the time, needs this.  if not needed, take out.
-    private readonly BasicMultiplayerRegularCardGamesGameContainer _gameContainer; //if we don't need it, take it out.
-    public BasicMultiplayerRegularCardGamesMainGameClass(IGamePackageResolver mainContainer,
-        IEventAggregator aggregator,
-        BasicData basicData,
-        TestOptions test,
-        BasicMultiplayerRegularCardGamesVMData currentMod,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        ICardInfo<RegularSimpleCard> cardInfo,
-        CommandContainer command,
-        BasicMultiplayerRegularCardGamesGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(mainContainer, aggregator, basicData, test, currentMod, state, delay, cardInfo, command, gameContainer, error, toast)
-    {
-        _model = currentMod;
-        _command = command;
-        _gameContainer = gameContainer;
-    }
+    private readonly BasicMultiplayerRegularCardGamesVMData _model = currentMod;
+    private readonly CommandContainer _command = command; //most of the time, needs this.  if not needed, take out.
+    private readonly BasicMultiplayerRegularCardGamesGameContainer _gameContainer = gameContainer; //if we don't need it, take it out.
+
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
@@ -34,8 +29,9 @@ public class BasicMultiplayerRegularCardGamesMainGameClass
     private void LoadControls()
     {
         if (IsLoaded == true)
+        {
             return;
-
+        }
         IsLoaded = true; //i think needs to be here.
     }
     protected override async Task ComputerTurnAsync()

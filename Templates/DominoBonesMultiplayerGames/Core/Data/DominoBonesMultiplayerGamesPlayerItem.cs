@@ -3,5 +3,5 @@ namespace DominoBonesMultiplayerGames.Core.Data;
 public partial class DominoBonesMultiplayerGamesPlayerItem : PlayerSingleHand<SimpleDominoInfo>
 {
     [ScoreColumn] //does not hurt making as scorecolumn
-    public int TotalScore { get; set; }
+    public partial int TotalScore { get; set; }
 }

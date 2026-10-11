@@ -1,18 +1,9 @@
 namespace SolitaireCardGamesSimple.Core.ViewModels;
-public class SolitaireCardGamesSimpleShellViewModel : SinglePlayerShellViewModel
+public class SolitaireCardGamesSimpleShellViewModel(IGamePackageResolver main,
+    CommandContainer command,
+    ISaveSinglePlayerClass saves,
+    IEventAggregator aggregator
+        ) : SinglePlayerShellViewModel(main, command, saves, aggregator)
 {
     protected override bool AlwaysNewGame => true; //most games allow new game always.
-    public SolitaireCardGamesSimpleShellViewModel(IGamePackageResolver mainContainer,
-        CommandContainer container,
-        IGameInfo GameData,
-        ISaveSinglePlayerClass saves,
-        IEventAggregator aggregator
-        ) : base(mainContainer, container, GameData, saves, aggregator)
-    {
-    }
-    protected override IMainScreen GetMainViewModel()
-    {
-        var model = MainContainer.Resolve<SolitaireCardGamesSimpleMainViewModel>();
-        return model;
-    }
 }

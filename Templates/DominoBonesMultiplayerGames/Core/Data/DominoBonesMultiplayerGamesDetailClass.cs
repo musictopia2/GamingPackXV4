@@ -4,7 +4,7 @@ public class DominoBonesMultiplayerGamesDetailClass : IGameInfo
 {
     EnumGameType IGameInfo.GameType => EnumGameType.NewGame;
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
-    EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.HumanOnly;
+    EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
     string IGameInfo.GameName => "Game";
     int IGameInfo.NoPlayers => 0;

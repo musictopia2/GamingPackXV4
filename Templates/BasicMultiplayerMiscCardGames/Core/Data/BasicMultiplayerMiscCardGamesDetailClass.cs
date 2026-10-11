@@ -14,10 +14,10 @@ public class BasicMultiplayerMiscCardGamesDetailClass : IGameInfo, ICardInfo<Bas
     EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
     EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
     int ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.CardsToPassOut => 7; //change to what you need.
-    BasicList<int> ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.PlayerExcludeList => new();
+    BasicList<int> ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.PlayerExcludeList => [];
     BasicList<int> ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.DiscardExcludeList(IListShuffler<BasicMultiplayerMiscCardGamesCardInformation> deckList)
     {
-        return new();
+        return [];
     }
     bool ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.AddToDiscardAtBeginning => true;
     bool ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.ReshuffleAllCardsFromDiscard => false;
@@ -26,7 +26,7 @@ public class BasicMultiplayerMiscCardGamesDetailClass : IGameInfo, ICardInfo<Bas
     bool ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.PlayerGetsCards => true;
     bool ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.NoPass => false;
     bool ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.NeedsDummyHand => false;
-    DeckRegularDict<BasicMultiplayerMiscCardGamesCardInformation> ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.DummyHand { get; set; } = new DeckRegularDict<BasicMultiplayerMiscCardGamesCardInformation>();
+    DeckRegularDict<BasicMultiplayerMiscCardGamesCardInformation> ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.DummyHand { get; set; } = [];
     bool ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.HasDrawAnimation => true;
     bool ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.CanSortCardsToBeginWith => true;
 }

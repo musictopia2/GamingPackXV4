@@ -1,32 +1,26 @@
 namespace PlainBoardGamesMultiplayer.Core.Logic;
 [SingletonGame]
-public class PlainBoardGamesMultiplayerMainGameClass
-    : SimpleBoardGameClass<PlainBoardGamesMultiplayerPlayerItem, PlainBoardGamesMultiplayerSaveInfo, EnumColorChoice, int>
+public class PlainBoardGamesMultiplayerMainGameClass(IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    BasicData basic,
+    TestOptions test,
+    PlainBoardGamesMultiplayerVMData model,
+    IMultiplayerSaveState state,
+    IAsyncDelayer delay,
+    CommandContainer command,
+    PlainBoardGamesMultiplayerGameContainer gameContainer,
+    ISystemError error,
+    IToast toast
+        )
+        : SimpleBoardGameClass<PlainBoardGamesMultiplayerPlayerItem, PlainBoardGamesMultiplayerSaveInfo, EnumColorChoice, int>(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
     , IBeginningColors<EnumColorChoice, PlainBoardGamesMultiplayerPlayerItem, PlainBoardGamesMultiplayerSaveInfo>
     , IMiscDataNM, ISerializable
 {
-    public PlainBoardGamesMultiplayerMainGameClass(IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        BasicData basic,
-        TestOptions test,
-        PlainBoardGamesMultiplayerVMData model,
-        IMultiplayerSaveState state,
-        IAsyncDelayer delay,
-        CommandContainer command,
-        PlainBoardGamesMultiplayerGameContainer gameContainer,
-        ISystemError error,
-        IToast toast
-        ) : base(resolver, aggregator, basic, test, model, state, delay, command, gameContainer, error, toast)
-    {
-        _model = model;
-    }
-
-    private readonly PlainBoardGamesMultiplayerVMData? _model;
-
+    private readonly PlainBoardGamesMultiplayerVMData? _model = model;
     public override Task FinishGetSavedAsync()
     {
         LoadControls();
-        BoardGameSaved(); //i think.
+        GameSaved(); //i think.
         //anything else needed is here.
         return Task.CompletedTask;
     }

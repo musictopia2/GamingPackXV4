@@ -1,22 +1,20 @@
 namespace BasicMultiplayerRegularCardGames.Core.ViewModels;
 [InstanceGame]
-public class BasicMultiplayerRegularCardGamesMainViewModel : BasicCardGamesVM<RegularSimpleCard>
+public class BasicMultiplayerRegularCardGamesMainViewModel(CommandContainer commandContainer,
+    BasicMultiplayerRegularCardGamesMainGameClass mainGame,
+    BasicMultiplayerRegularCardGamesVMData viewModel,
+    BasicData basicData,
+    IGamePackageResolver resolver,
+    IEventAggregator aggregator,
+    IToast toast
+        ) : BasicCardGamesVM<RegularSimpleCard>(commandContainer, mainGame, viewModel, basicData, resolver, aggregator, toast)
 {
-    private readonly BasicMultiplayerRegularCardGamesMainGameClass _mainGame; //if we don't need, delete.
-    public BasicMultiplayerRegularCardGamesVMData VMData { get; set; }
-    public BasicMultiplayerRegularCardGamesMainViewModel(CommandContainer commandContainer,
-        BasicMultiplayerRegularCardGamesMainGameClass mainGame,
-        BasicMultiplayerRegularCardGamesVMData viewModel,
-        BasicData basicData,
-        TestOptions test,
-        IGamePackageResolver resolver,
-        IEventAggregator aggregator,
-        IToast toast
-        )
-        : base(commandContainer, mainGame, viewModel, basicData, test, resolver, aggregator, toast)
+    private readonly BasicMultiplayerRegularCardGamesMainGameClass _mainGame = mainGame; //if we don't need, delete.
+    public BasicMultiplayerRegularCardGamesVMData VMData { get; set; } = viewModel;
+    protected override void AdditionalInitialize()
     {
-        _mainGame = mainGame;
-        VMData = viewModel;
+        //any additional initialize is here.
+        base.AdditionalInitialize();
     }
     //anything else needed is here.
     //if i need something extra, will add to template as well.
