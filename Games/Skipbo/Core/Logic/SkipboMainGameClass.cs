@@ -343,9 +343,11 @@ public class SkipboMainGameClass
         }
         thisCard.Drew = false;
         thisCard.IsSelected = false;
+        await RefreshCardsAsync(_model.PlayerHand1!);
         await AnimateDiscardAsync(thisCard, pile, EnumAnimcationDirection.StartUpToCard);
         _model.DiscardPiles!.AddCardToPile(pile, thisCard);
         UpdateDiscardData(SingleInfo, pile);
+        await RefreshCardsAsync(_model.DiscardPiles);
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.5);
@@ -405,6 +407,11 @@ public class SkipboMainGameClass
         whatType = EnumCardType.IsNone;
         return 0;
     }
+    private Task RefreshCardsAsync(object target)
+    {
+        return Aggregator!.PublishAllAsync(
+            new SkipboCardsChangedEventModel { Target = target });
+    }
     public async Task PlayOnPileAsync(int pile, int deck, EnumCardType whichType, int discardNum)
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
@@ -432,14 +439,17 @@ public class SkipboMainGameClass
         if (whichType == EnumCardType.MyCards)
         {
             RemoveFromHand(deck);
+            await RefreshCardsAsync(_model.PlayerHand1!);
         }
         else if (whichType == EnumCardType.Stock)
         {
             _model.StockPile!.RemoveCard();
             _ = SingleInfo.StockList.RemoveObjectByDeck(thisCard.Deck);
-            await AnimateStockAsync(thisCard);
             SingleInfo.StockLeft = _model.StockPile.CardsLeft();
             SingleInfo.InStock = _model.StockPile.NextCardInStock();
+            await RefreshCardsAsync(_model.StockPile.StockFrame);
+            await AnimateStockAsync(thisCard);
+            await RefreshCardsAsync(_model.StockPile.StockFrame);
         }
         else
         {
@@ -453,8 +463,10 @@ public class SkipboMainGameClass
             }
             _model.DiscardPiles.RemoveCard(discardNum, deck);
             UpdateDiscardData(SingleInfo, discardNum);
-            await AnimateDiscardAsync(thisCard, discardNum, EnumAnimcationDirection.StartCardToUp);
             _model.DiscardPiles.UnselectAllCards();
+            await RefreshCardsAsync(_model.DiscardPiles);
+            await AnimateDiscardAsync(thisCard, discardNum, EnumAnimcationDirection.StartCardToUp);
+            await RefreshCardsAsync(_model.DiscardPiles);
         }
         var thisPile = _model.PublicPiles.PileList![pile];
         if (thisCard.IsWild == true)
@@ -462,14 +474,12 @@ public class SkipboMainGameClass
             thisCard.Number = thisPile.ObjectList.Count + 1;
         }
         await Aggregator.AnimateCardAsync(thisCard, EnumAnimcationDirection.StartDownToCard, "public", thisPile);
-        _model.PublicPiles.AddCardToPile(pile, thisCard); //hopefully this is still okay.
+        _model.PublicPiles.AddCardToPile(pile, thisCard);
+        await RefreshCardsAsync(_model.PublicPiles);
         if (_model.PublicPiles.NeedToRemovePile(pile))
         {
-            if (Test!.NoAnimations == false)
-            {
-                await Delay!.DelaySeconds(1);
-            }
             RemoveFromPile(pile);
+            await RefreshCardsAsync(_model.PublicPiles);
         }
         if (whichType == EnumCardType.Stock)
         {
