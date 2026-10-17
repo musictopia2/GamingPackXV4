@@ -9,7 +9,7 @@
     <RunPostBuildAppCondition Condition="'$(Configuration)' == 'Release'">true</RunPostBuildAppCondition>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.1" />
+    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.2" />
     <PackageReference Include="Musictopia2.GamePackageSerializeGenerator" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.13" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.33.1" />
