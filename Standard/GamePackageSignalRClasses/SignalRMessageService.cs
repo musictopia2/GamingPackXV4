@@ -8,7 +8,7 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
         ) : IGameNetwork //not necessarily local anymore.
 {
     private readonly Queue<SentMessage> _messages = new();
-    private readonly object _synLock = new();
+    private readonly Lock _synLock = new();
     private SimpleClientClass? _client1;
     private IOpeningMessenger? _thisOpen;
     public string NickName { get; set; } = "";
@@ -16,12 +16,12 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
     public Task InitAsync()
     {
         _client1 = new SimpleClientClass(thisTCP, gameInfo, toast);
-        _client1.OnReceivedMessage += Client1_OnReceivedMessage!;
+        _client1.OnReceivedMessage += Client1_OnReceivedMessage;
         _client1.NickName = NickName;
         _thisOpen = resolver.Resolve<IOpeningMessenger>();
         return Task.CompletedTask;
     }
-    private async void Client1_OnReceivedMessage(object sender, CustomEventHandler e)
+    private async void Client1_OnReceivedMessage(object? sender, CustomEventHandler e)
     {
         switch (e.Category)
         {
@@ -144,7 +144,7 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
         await _client1!.SendMessageAsync(output);
     }
     public async Task SendSeveralSetsAsync<T>(T thisList, string finalPart)
-        where T: IBasicList<string>
+        where T : IBasicList<string>
     {
         SentMessage output = StartNewMessage(finalPart);
         output.Body = await js1.SerializeObjectAsync(thisList);
@@ -274,13 +274,30 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
             _messages.Clear();
         }
     }
+
+
     public async Task BackToMainAsync()
     {
-        if (_client1 is null)
+        SimpleClientClass? client = _client1;
+        _client1 = null;
+
+        if (client is null)
         {
-            return; //because nothing was done anyways.  this will mean will not require internet access for future.
+            return;
         }
-        await _client1.BackToMainAsync();
+
+        client.OnReceivedMessage -= Client1_OnReceivedMessage;
+
+        try
+        {
+            await client.BackToMainAsync();
+        }
+        finally
+        {
+            ClearMessages();
+            _thisOpen = null;
+            IsEnabled = false;
+        }
     }
     async Task IGameNetwork.DisconnectEverybodyAsync()
     {
