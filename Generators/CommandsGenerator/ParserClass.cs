@@ -111,10 +111,43 @@ internal class ParserClass
                 {
                     command.WrongReturnType = true;
                 }
-                m.TryGetAttribute(aa.CommandAttribute, out var attributes);
-                command.Category = attributes.AttributePropertyValue<EnumCommandCategory>(aa.GetCategoryInfo);
-                string? tempCommandName = attributes.AttributePropertyValue<string>(aa.GetNameInfo);
-                string? tempCanName = attributes.AttributePropertyValue<string>(aa.GetCanInfo);
+
+                if (!m.TryGetAttribute(aa.CommandAttribute, out var attributes))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    command.Category = attributes.AttributePropertyValue<EnumCommandCategory>(aa.GetCategoryInfo);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Failed reading GetCategoryInfo", ex);
+                }
+                string? tempCommandName;
+                try
+                {
+                    tempCommandName = attributes.AttributePropertyValue<string>(aa.GetNameInfo);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Failed reading GetNameInfo", ex);
+                }
+                string? tempCanName;
+                try
+                {
+                    tempCanName = attributes.AttributePropertyValue<string>(aa.GetCanInfo);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Failed reading GetCanInfo", ex);
+                }
+
+                //command.Category = attributes.AttributePropertyValue<EnumCommandCategory>(aa.GetCategoryInfo);
+
+                //string? tempCommandName = attributes.AttributePropertyValue<string>(aa.GetNameInfo);
+                //string? tempCanName = attributes.AttributePropertyValue<string>(aa.GetCanInfo);
                 if (command.Category != EnumCommandCategory.Plain && info.AdvancedCategory == EnumAdvancedCategory.PlainCommand)
                 {
                     command.RequiresPlain = true;

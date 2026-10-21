@@ -73,7 +73,13 @@ public class MySourceGenerator : IIncrementalGenerator
         }
         catch (Exception ex)
         {
-            context.AddSource("errors.g", $"//{ex.Message}");
+
+
+            context.AddSource("errors.g", "//" + ex.ToString()
+    .Replace("\r\n", "\n")
+    .Replace("\r", "\n")
+    .Replace("\n", "\n//"));
+            // context.AddSource("errors.g", $"//{ex.Message}");
         }
     }
 }
