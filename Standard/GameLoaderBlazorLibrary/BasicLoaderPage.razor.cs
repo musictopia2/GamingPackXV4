@@ -129,7 +129,6 @@ public partial class BasicLoaderPage : IAsyncDisposable
             await nets.BackToMainAsync();
         }
         DataContext!.GameName = "";
-        _previousGame = await GetAutomatedGameToLoadAsync(); //i think needs to be here now.
         StateHasChanged();
     }
     private void ClosedSettings()
