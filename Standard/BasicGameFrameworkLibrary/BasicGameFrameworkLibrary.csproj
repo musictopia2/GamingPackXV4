@@ -5,6 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <FeedType>Public</FeedType>
     <RunPostBuildAppCondition Condition="'$(Configuration)' == 'Release'">true</RunPostBuildAppCondition>
+	  <StaticWebAssetBasePath>_content/BasicGameFrameworkLibrary</StaticWebAssetBasePath>
+	  <PackageId>Musictopia2.BasicGameFrameworkLibrary</PackageId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="10.0.2" />
