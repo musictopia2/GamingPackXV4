@@ -29,6 +29,12 @@ public partial class BasicLoaderPage : IAsyncDisposable
         }
         return "";
     }
+    private async Task SelectGameAsync(string game)
+    {
+        await JS!.SaveLatestGameAsync(game, BlazorUIHelpers.Toast!);
+        _previousGame = game;
+        DataContext!.ChoseGame(game);
+    }
     private async Task OnUpdateAvailableAsync()
     {
         _updateAvailable = true;

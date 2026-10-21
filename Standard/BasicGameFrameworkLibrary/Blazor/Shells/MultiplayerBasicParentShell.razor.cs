@@ -88,7 +88,6 @@ public partial class MultiplayerBasicParentShell
     {
         if (_loadedGame == false && GameData!.GameName != "")
         {
-            await JS!.SaveLatestGameAsync(GameData!.GameName, Toast!);
             _loadedGame = true;
         }
         if (BasicData == null || JS == null || _hadNickName)

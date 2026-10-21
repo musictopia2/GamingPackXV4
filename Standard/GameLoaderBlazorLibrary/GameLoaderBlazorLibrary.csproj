@@ -6,10 +6,12 @@
     <Version>9.0.1</Version>
     <FeedType>Public</FeedType>
     <RunPostBuildAppCondition Condition="'$(Configuration)' == 'Release'">true</RunPostBuildAppCondition>
+	  <StaticWebAssetBasePath>_content/GameLoaderBlazorLibrary</StaticWebAssetBasePath>
+	  <PackageId>Musictopia2.GameLoaderBlazorLibrary</PackageId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="10.0.2" />
-    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.2" />
+    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.4" />
   </ItemGroup>
   <ItemGroup>
     <SupportedPlatform Include="browser" />

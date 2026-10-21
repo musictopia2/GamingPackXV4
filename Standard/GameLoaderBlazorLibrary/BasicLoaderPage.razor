@@ -60,7 +60,7 @@
                 @if (CanShowGameList())
                 {
                     <WrapLayout ColumnWidth="22vw" Margins="3px" RenderList="DataContext.GameList" Context="game">
-                        <GameButtonComponent Width="95%" CustomCallBack="() => DataContext.ChoseGame(game)" Display="@game" />
+                        <GameButtonComponent Width="95%" CustomCallBack="() => SelectGameAsync(game)" Display="@game" />
                     </WrapLayout>
                 }
             </MainContent>
