@@ -144,12 +144,27 @@ public class SimpleClientClass
             await _hubConnection.InvokeAsync("ReconnectionAsync", NickName);
         }
     }
+
+
     private async Task PrivateDisconnectAsync()
     {
-        await _hubConnection!.StopAsync();
-        await _hubConnection.DisposeAsync();
+        HubConnection? connection = _hubConnection;
         _hubConnection = null;
         _isConnected = false;
+
+        if (connection is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await connection.StopAsync();
+        }
+        finally
+        {
+            await connection.DisposeAsync();
+        }
     }
     public async Task HostGameAsync()
     {
@@ -169,20 +184,19 @@ public class SimpleClientClass
     }
     public async Task BackToMainAsync()
     {
-        if (_isConnected == false)
+        try
         {
-            return;
+            if (_hubConnection is not null &&
+                _hubConnection.State == HubConnectionState.Connected &&
+                !string.IsNullOrWhiteSpace(NickName))
+            {
+                await _hubConnection.InvokeAsync("BackToMain", NickName);
+            }
         }
-        if (_hubConnection == null)
+        finally
         {
-            return;
+            await PrivateDisconnectAsync();
         }
-        if (NickName == "")
-        {
-            return; //i guess if there was no nick name, its okay.
-        }
-        await _hubConnection.InvokeAsync("BackToMain", NickName);
-        //i don't think there is any need to do the rest this time (?)
     }
     public async Task StartGameAsync()
     {
