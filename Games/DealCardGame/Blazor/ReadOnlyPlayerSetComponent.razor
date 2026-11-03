@@ -6,18 +6,18 @@
             </div>
         </GridItem>
         <GridItem Column="1" Row="2">
-            <div style="height: 3vh;">
+            <div style="height: @Pixels;">
                 <StackLayout>
                     <StackItem Length="3vh">
                         @if (HasHouse)
                         {
-                            <ResourceImage FileName="house.svg" X="0" Y="0" Height="3vh" Width="3vh" Fixed=true />
+                            <ResourceImage FileName="house.svg" X="0" Y="0" Height="@Pixels" Width="@Pixels" Fixed=true />
                         }
                     </StackItem>
                     <StackItem Length="3vh">
                         @if (HasHotel)
                         {
-                            <ResourceImage FileName="hotel.svg" X="0" Y="0" Height="3vh" Width="3vh" Fixed=true />
+                            <ResourceImage FileName="hotel.svg" X="0" Y="0" Height="@Pixels" Width="@Pixels" Fixed=true />
                         }
                     </StackItem>
                 </StackLayout>

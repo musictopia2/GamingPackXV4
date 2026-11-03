@@ -37,3 +37,4 @@ global using BasicGameFrameworkLibrary.Blazor.Extensions;
 global using System.Threading.Tasks;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using ll1 = BasicGameFrameworkLibrary.Blazor.Helpers.LayoutInfo;

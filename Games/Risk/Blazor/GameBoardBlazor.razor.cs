@@ -9,7 +9,8 @@ public partial class GameBoardBlazor
     [Parameter]
     public BasicList<TerritoryModel> Territories { get; set; } = [];
     [Parameter]
-    public string TargetHeight { get; set; } = "85vh"; //default at this but can change.
+    public double HeightPercent { get; set; } = 100;
+    private string TargetHeight => HeightPercent.HeightPixels;
     [Parameter]
     public EventCallback<TerritoryModel> OnTerritoryClicked { get; set; }
     private BasicList<TerritoryModel> UnselectedList => Territories.GetUnselectedTerritories(_gameContainer);

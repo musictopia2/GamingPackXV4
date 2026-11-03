@@ -5,5 +5,5 @@ public partial class RuleUI
     public CompleteContainerClass? CompleteContainer { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; } = 15;
-    private string RealHeight => $"{TargetHeight}vh";
+    private string RealHeight => $"{TargetHeight.HeightPixels}px";
 }

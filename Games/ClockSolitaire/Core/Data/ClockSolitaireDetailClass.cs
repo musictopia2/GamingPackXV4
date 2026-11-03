@@ -1,4 +1,4 @@
-namespace ClockSolitaire.Core.Data;
+﻿namespace ClockSolitaire.Core.Data;
 [SingletonGame]
 public class ClockSolitaireDetailClass : IGameInfo
 {
@@ -6,11 +6,12 @@ public class ClockSolitaireDetailClass : IGameInfo
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.Solitaire;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleOnly;
-    string IGameInfo.GameName => "Clock Solitaire";
+    public const string GameName = "Clock Solitaire";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 0;
     int IGameInfo.MaxPlayers => 0;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet; //default to smallest but can change as needed.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout; //may reconsider if i decide to rethink the cards for phone.
 }

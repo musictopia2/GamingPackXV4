@@ -6,7 +6,7 @@
                 <StackItem>
                     <div @onclick="() => SelectDiceAsync(item)">
                         <StateContentView DataContext="item">
-                            <BasicDiceBlazor TargetHeight="@ImageHeight" Dice="item" />
+                            <BasicDiceBlazor HeightPercent="HeightPercent" Dice="item" />
                         </StateContentView>
                     </div>
                 </StackItem>

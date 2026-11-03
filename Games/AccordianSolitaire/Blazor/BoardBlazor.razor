@@ -7,7 +7,7 @@
     @foreach (var card in DataContext.GameBoard1!.HandList)
     {
         <FlexibleDeckRenderComponent D="AccordianSolitaireCardInfo" DeckObject="card">
-            <DeckOfCardsImageBlazor R="AccordianSolitaireCardInfo" CommandParameter="card" DeckObject="card" TargetHeight="@HeightString" CommandObject="DataContext.GameBoard1.ObjectSingleClickCommand" />
+            <DeckOfCardsImageBlazor R="AccordianSolitaireCardInfo" CommandParameter="card" DeckObject="card" HeightPixels="@HeightPixels" CommandObject="DataContext.GameBoard1.ObjectSingleClickCommand" />
         </FlexibleDeckRenderComponent>
     }
 </SimpleControlView>

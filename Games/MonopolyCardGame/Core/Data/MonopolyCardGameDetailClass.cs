@@ -1,4 +1,4 @@
-namespace MonopolyCardGame.Core.Data;
+﻿namespace MonopolyCardGame.Core.Data;
 [SingletonGame]
 public class MonopolyCardGameDetailClass : IGameInfo, ICardInfo<MonopolyCardGameCardInformation>
 {
@@ -6,13 +6,14 @@ public class MonopolyCardGameDetailClass : IGameInfo, ICardInfo<MonopolyCardGame
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly;
-    string IGameInfo.GameName => "Monopoly Card Game";
+    public const string GameName = "Monopoly Card Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<MonopolyCardGameCardInformation>.CardsToPassOut => 10;
     BasicList<int> ICardInfo<MonopolyCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<MonopolyCardGameCardInformation>.AddToDiscardAtBeginning => false;

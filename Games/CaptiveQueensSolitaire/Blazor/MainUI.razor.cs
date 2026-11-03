@@ -47,7 +47,8 @@ public partial class MainUI
         Refresh();
         base.OnParametersSet();
     }
-    private string TargetWidth => (TargetHeight * 6).WidthString<SolitaireCard>();
+    private string TargetWidth =>
+        (TargetHeight.HeightPixels * 6).WidthString<SolitaireCard>();
     private string GetViewBox()
     {
         return $"0 0 {_viewSize.Width} {_viewSize.Height}";

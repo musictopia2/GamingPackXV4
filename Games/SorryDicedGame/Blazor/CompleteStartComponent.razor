@@ -5,28 +5,31 @@
         return;
     }
 
-    <BaseFrameBlazor Text="Start">
-        <GridTwoByTwo ColumnLength="@Columns">
-            @{
-                int row = 1;
-                int column = 1;
-            }
-            @foreach (var player in Players)
-            {
-                <GridItem Column="column" Row="row">
-                    <TemporaryBoard HowMany="@HowMany(player)" ImageHeight="@ImageHeight" OnChoseColor=PrivateChoseColorAsync ColorUsed="player.Color" />
-                </GridItem>
-                column++;
-                if (column > 2)
-                {
-                    column = 1;
-                    row = 2;
+    <BaseFrameBlazor>
+        <LegendContent>
+            Start
+        </LegendContent>
+        <ChildContent>
+            <GridTwoByTwo ColumnLength="@Columns">
+                @{
+                    int row = 1;
+                    int column = 1;
                 }
-            }
-        </GridTwoByTwo>
+                @foreach (var player in Players)
+                {
+                    <GridItem Column="column" Row="row">
+                        <TemporaryBoard HowMany="@HowMany(player)" ImageHeight="@ImageHeight" OnChoseColor=PrivateChoseColorAsync ColorUsed="player.Color" />
+                    </GridItem>
+                    column++;
+                    if (column > 2)
+                    {
+                        column = 1;
+                        row = 2;
+                    }
+                }
+            </GridTwoByTwo>
+        </ChildContent>
+        
     </BaseFrameBlazor>
 
-    <RefreshComponent CanRender=_canRender>
-        
-    </RefreshComponent>
 </StateContentView>

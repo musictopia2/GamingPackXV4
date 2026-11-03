@@ -1,6 +1,9 @@
 ﻿namespace Minesweeper.Blazor.Views;
-internal record MineRecord(bool Flagged, bool IsFlipped, bool Pressed);
-public class MineSquareBlazor : GraphicsCommand
+internal record MineRecord(
+    bool Flagged,
+    bool IsFlipped,
+    bool Pressed,
+    bool WasClickedMine); public class MineSquareBlazor : GraphicsCommand
 {
     [CascadingParameter]
     private GameboardBlazor? MainBoard { get; set; }
@@ -8,7 +11,7 @@ public class MineSquareBlazor : GraphicsCommand
     private MineRecord? _previous;
     private MineRecord GetRecord()
     {
-        return new MineRecord(Square!.Flagged, Square.IsFlipped, Square.Pressed);
+        return new MineRecord(Square!.Flagged, Square.IsFlipped, Square.Pressed, Square.WasClickedMine);
     }
     protected override void OnAfterRender(bool firstRender)
     {
@@ -26,7 +29,7 @@ public class MineSquareBlazor : GraphicsCommand
         SvgRenderClass render = new();
         CreateClick(svg);
         svg.ViewBox = "0 0 100 100"; //hopefully this simple.
-        svg.Height = MainBoard!.GetViewHeight();
+        svg.Height = MainBoard!.GetSpaceSize();
         Defs defs;
         LinearGradient linear;
         Stop stop;
@@ -34,6 +37,14 @@ public class MineSquareBlazor : GraphicsCommand
         Path path;
         if (Square.IsFlipped)
         {
+            if (Square.WasClickedMine)
+            {
+                Rect background = new();
+                background.Width = "100";
+                background.Height = "100";
+                background.Fill = "yellow";
+                svg.Children.Add(background);
+            }
             if (Square.IsMine || Square.Flagged)
             {
 
@@ -82,7 +93,7 @@ public class MineSquareBlazor : GraphicsCommand
                 text.Content = Square.NeighborMines.ToString();
                 svg.Children.Add(text);
             }
-            if (Square.Flagged)
+            if (Square.Flagged && Square.IsMine == false)
             {
                 path = new();
                 path.PopulateStrokesToStyles("rgb(0,0,0)", 5);

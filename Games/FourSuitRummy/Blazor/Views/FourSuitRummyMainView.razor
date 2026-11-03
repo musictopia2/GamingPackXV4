@@ -4,12 +4,12 @@
     return;
 }
 <CascadingValue Value="_gameContainer">
-    <div style="height: 13vh">
+    <div style="height: @HeightPixels">
         <DeckOfCardsHandBlazor AdditionalSpacing="1" R="RegularRummyCard" Hand="_vmData.PlayerHand1" />
     </div>
     <StackLayout>
         <StackItem>
-            <GameButtonComponent Display="Play Sets" CommandObject="PlayCommand" />
+            <GameActionButton Display="Play Sets" CommandObject="PlayCommand" />
         </StackItem>
         <StackItem>
             <DeckOfCardsDrawPileBlazor R="RegularRummyCard" DeckPile="_vmData.Deck1" />
@@ -29,7 +29,7 @@
     <StackLayout>
         <StackItem>
             <DeckOfCardsTempSetsBlazor RU="RegularRummyCard"
-                                       TargetContainerSize="50vh"
+                                       HeightPercent="50"
                                        TempPiles="_vmData.TempSets" />
         </StackItem>
         <StackItem>

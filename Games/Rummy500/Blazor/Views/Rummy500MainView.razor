@@ -5,7 +5,7 @@
 }
 <StackLayout>
     <StackItem>
-        <DeckOfCardsHandBlazor TargetContainerSize="87vh" Divider="1.7" HandType="EnumHandList.Vertical" R="RegularRummyCard" Hand="_vmData.DiscardList1" />
+        <DeckOfCardsHandBlazor TargetContainerSize="@ContainerSize" Divider="1.7" HandType="EnumHandList.Vertical" R="RegularRummyCard" Hand="_vmData.DiscardList1" />
     </StackItem>
     <StackItem>
         <div>
@@ -24,9 +24,10 @@
                 <LabelGridComponent DataContext="_vmData" Labels="_labels" />
             </StackItem>
             <StackItem>
-                <GameButtonComponent CommandObject = "DiscardCommand"
+                <GameActionButton CommandObject = "DiscardCommand"
                                      Display="Discard Current" />
-                <GameButtonComponent CommandObject="CreateSetCommand"
+                <GameActionButton CommandObject="CreateSetCommand"
+                            StartOnNewLine="true"
                                      Display="Create New Rummy Set" />
             </StackItem>
         </StackLayout>
@@ -35,7 +36,7 @@
                                             RU="RegularRummyCard"
                                             SE="RummySet"
                                             T="SavedSet"
-                                            ContainerHeight="40vh"
+                                            HeightPercent=45
                                             DataContext="_vmData.MainSets1" />
         </div>
     </StackItem>

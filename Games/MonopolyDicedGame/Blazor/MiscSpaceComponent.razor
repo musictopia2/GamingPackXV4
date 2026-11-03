@@ -4,13 +4,16 @@
             var vector = GetSpaceInfo(item);
             var category = GetType(item);
         }
-        <SpaceBlazor MarginLeft="4" MarginTop="5" Row="vector.Row" Column="vector.Column">
-            @if (category == EnumMiscType.None)
-            {
-                <ColorSpaceComponent Color="@GetActionColor" TargetImageHeight="@TargetImageHeight" />
-                return;
-            }
-            <MiscDiceBlazor TargetHeight="@TargetImageHeight" Category="@category" />
+        <SpaceBlazor MarginLeft="4" MarginTop="5"
+                     Row="vector.Row" Column="vector.Column">
+            <ColorSpaceComponent Color="@GetActionColor"
+                                 HeightPercent="HeightPercent">
+                @if (category != EnumMiscType.None)
+                {
+                    <MiscDiceBlazor HeightPercent="HeightPercent"
+                                    Category="@category" />
+                }
+            </ColorSpaceComponent>
         </SpaceBlazor>
     </SimpleRepeater>
 </StateContentView>

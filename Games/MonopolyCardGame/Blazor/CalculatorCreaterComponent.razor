@@ -1,11 +1,11 @@
 ﻿<div style="overflow: auto; width: 95vw;">
     @foreach (var item in YourCards)
     {
-        <CardGraphicsBlazor DeckObject="item" TargetHeight="15vh" />
+        <CardGraphicsBlazor DeckObject="item" HeightPercent="18" />
     }
 </div>
 <div>
-    <GameButtonComponent CustomCallBack="Cancel" Display="Cancel" />
+    <GameActionButton CustomCallBack="Cancel" Display="Cancel" />
 </div>
 @if (Calculator1!.Status == EnumCalculatorStatus.ChooseCardCategory)
 {
@@ -16,7 +16,7 @@
         @foreach (var item in StartCards)
         {
             <div style="display: inline-block;" @onclick="() => ChoseCard(item)">
-                <CardGraphicsBlazor DeckObject="item" TargetHeight="25vh" />
+                <CardGraphicsBlazor DeckObject="item" HeightPercent="30" />
             </div>
         }
     </div>
@@ -56,7 +56,7 @@
     @foreach (var item in _properties)
     {
         <div @onclick="() => ChoseProperty(item)" style="display: inline-block;">
-            <CardGraphicsBlazor DeckObject="item" TargetHeight="30vh" />
+            <CardGraphicsBlazor DeckObject="item" HeightPercent="35" />
         </div>
     }
     return;

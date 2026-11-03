@@ -1,12 +1,19 @@
 @inherits CascadingGameView<BisleySolitaireMainViewModel>
 @if (DataContext!.DeckPile != null)
 {
-    <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
+    <GameActionButton CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
     <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
-    <div>
-        <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetMainPiles()" />
-    </div>
-    <div style="margin-top: -15.4vh;">
-        <DeckOfCardsMultiplePilesBlazor R="SolitaireCard" Piles="@GetWastePiles()" />
-    </div>
+
+    <GridEvenContent Rows="5" Columns="13" Inline="true">
+        <DeckOfCardsMultiplePilesBlazor
+            R="SolitaireCard"
+            Piles="@GetMainPiles()"
+            UseOwnGrid="false" />
+
+        <DeckOfCardsMultiplePilesBlazor
+            R="SolitaireCard"
+            Piles="@GetWastePiles()"
+            UseOwnGrid="false"
+            RowOffset="1" />
+    </GridEvenContent>
 }

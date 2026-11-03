@@ -21,6 +21,11 @@ public partial class LifeCardGameMainViewModel(CommandContainer commandContainer
         CreateCommands();
         CreateCommands(CommandContainer);
         base.AdditionalInitialize();
+        if (gameContainer.PlayerList!.Any(player =>
+            player.LifeStory?.Mode == EnumSelectMode.ChooseCard))
+        {
+            LoadOtherScreen();
+        }
     }
     partial void CreateCommands();
     partial void CreateCommands(CommandContainer command);

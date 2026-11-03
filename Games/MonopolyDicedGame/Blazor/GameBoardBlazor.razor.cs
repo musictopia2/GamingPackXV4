@@ -3,8 +3,11 @@ public partial class GameBoardBlazor : ComponentBase
 {
     [Parameter]
     public string TargetHeight { get; set; } = "";
+
+
     [Parameter]
-    public string ImageHeight { get; set; } = ""; //i am forced to do this too unfortunately.
+    public double HeightPercent { get; set; }
+
     [Parameter]
     public StateList<EnumMiscType> MiscList { get; set; } = [];
 

@@ -1,4 +1,4 @@
-namespace GrandfathersClock.Core.Data;
+﻿namespace GrandfathersClock.Core.Data;
 [SingletonGame]
 public class BasicData : IGameInfo, ISolitaireData
 {
@@ -20,11 +20,12 @@ public class BasicData : IGameInfo, ISolitaireData
     bool IGameInfo.CanHaveExtraComputerPlayers => throw new NotImplementedException();
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.Solitaire;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleOnly;
-    string IGameInfo.GameName => "Grandfather's Clock"; //replace with real name.
+    public const string GameName = "Grandfather's Clock";
+    string IGameInfo.GameName => GameName; //replace with real name.
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 0;
     int IGameInfo.MaxPlayers => 0;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //most solitaire games has to be landscape.
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
 }

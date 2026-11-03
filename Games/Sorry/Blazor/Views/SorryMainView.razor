@@ -1,8 +1,8 @@
 @inherits CascadingGameView<SorryMainViewModel>
 <StackLayout>
-    <StackItem Length="30vw">
+    <StackItem Length="40vw">
         <div>
-            <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
+            <GameActionButton Display="End Turn" CommandObject="EndCommand" />
         </div>
         <div>
             <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
@@ -16,11 +16,11 @@
         @if (TestData!.AdvancedTestOptions && DataContext!.DidDraw == false)
         {
             <div>
-                <GameButtonComponent Display="Lock Draw Card" CommandObject="LockCardCommand" />
+                <GameActionButton Display="Lock Draw Card" CommandObject="LockCardCommand" />
             </div>
         }
     </StackItem>
     <StackItem>
-        <GameBoardBlazor GraphicsData="_graphics" TargetHeight="88vh" />
+        <GameBoardBlazor GraphicsData="_graphics" TargetHeight="100" />
     </StackItem>
 </StackLayout>

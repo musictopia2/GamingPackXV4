@@ -12,4 +12,6 @@ public partial class PassOutDiceGameMainView
         base.OnInitialized();
     }
     private ICustomCommand EndCommand => DataContext!.EndTurnCommand!;
+    private static double _height => 30;
+    private static string Pixels => _height.HeightPixels;
 }

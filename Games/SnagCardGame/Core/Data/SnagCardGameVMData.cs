@@ -20,6 +20,7 @@ public partial class SnagCardGameVMData : ITrickCardGamesData<SnagCardGameCardIn
         Deck1 = new(command);
         Pile1 = new(command);
         PlayerHand1 = new(command);
+        PlayerHand1.Maximum = 5;
         TrickArea1 = trickArea1;
         Bar1 = new BarObservable(gameContainer);
         Human1 = new HandObservable<SnagCardGameCardInformation>(command);

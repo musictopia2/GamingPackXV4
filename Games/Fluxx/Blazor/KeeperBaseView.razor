@@ -16,13 +16,13 @@
     <GridItem Column="1" ColumnSpan="3" Row="@BottomRow">
         @if (KeeperCategory == EnumKeeperCategory.Show)
         {
-            <GameButtonComponent
+            <GameActionButton
                                  Display="Close Keeper Screen"
                                  CommandObject="Command" />
         }
         else if (KeeperCategory == EnumKeeperCategory.Process)
         {
-            <GameButtonComponent
+            <GameActionButton
                                  Display="@CompleteContainer.KeeperContainer.ButtonText"
                                  CommandObject="Command" />
         }

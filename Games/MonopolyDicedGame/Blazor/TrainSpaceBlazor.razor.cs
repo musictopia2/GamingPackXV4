@@ -3,7 +3,7 @@ public partial class TrainSpaceBlazor
 {
     [Parameter]
     [EditorRequired]
-    public string TargetHeight { get; set; } = "";
+    public double HeightPercent { get; set; }
     [Parameter]
     public BasicList<OwnedModel> OwnList { get; set; } = []; //this will filter out the trains.
     [Parameter]

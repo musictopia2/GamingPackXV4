@@ -10,5 +10,5 @@ public partial class GamePage
     [CascadingParameter]
     public MultiplayerBasicParentShell? Shell { get; set; }
     private static string GetColor(EnumColorChoice color) => color.Color;
-    public int TargetHeight { get; set; } = 17; //can adjust as needed;
+    public int TargetHeight { get; set; } = 23;
 }

@@ -31,7 +31,10 @@
        {
            <StateContentView DataContext="player.PlayerBoard">
                 <TextCardBoardBlazor D="RegularSimpleCard" DataContext="player.PlayerBoard!" Context="card">
-                    @card.DisplayValue
+                    <GameLabel>
+                        @card.DisplayValue
+                    </GameLabel>
+                    
                 </TextCardBoardBlazor>
            </StateContentView>
        }

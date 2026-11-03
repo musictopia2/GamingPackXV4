@@ -7,7 +7,7 @@ public partial class GameBoardBlazor
     [Parameter]
     public ChineseCheckersGameContainer? Container { get; set; }
     [Parameter]
-    public string TargetHeight { get; set; } = "";
+    public double TargetHeight { get; set; }
     private static string Color(ChineseCheckersPlayerItem player)
     {
         string output = player.Color.Color;

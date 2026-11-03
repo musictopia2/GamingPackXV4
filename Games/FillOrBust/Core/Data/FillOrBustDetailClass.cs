@@ -1,4 +1,4 @@
-namespace FillOrBust.Core.Data;
+﻿namespace FillOrBust.Core.Data;
 [SingletonGame]
 public class FillOrBustDetailClass : IGameInfo, ICardInfo<FillOrBustCardInformation>
 {
@@ -6,13 +6,14 @@ public class FillOrBustDetailClass : IGameInfo, ICardInfo<FillOrBustCardInformat
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.HumanOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Fill Or Bust";
+    public const string GameName = "Fill Or Bust";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 8;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<FillOrBustCardInformation>.CardsToPassOut => 0;
     BasicList<int> ICardInfo<FillOrBustCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<FillOrBustCardInformation>.AddToDiscardAtBeginning => false;

@@ -11,10 +11,10 @@
         <StackItem>
             <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
             <div>
-                <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
+                <GameActionButton CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
             </div>
             <div>
-                <GameButtonComponent CommandObject="DataContext.NewDealCommand" Display="New Deal" />
+                <GameActionButton CommandObject="DataContext.NewDealCommand" Display="New Deal" />
             </div>
         </StackItem>
     </StackLayout>

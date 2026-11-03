@@ -8,7 +8,5 @@ public partial class PlayerUI
     [Parameter]
     public ICustomCommand? Command { get; set; }
     [Parameter]
-    public string ItemHeight { get; set; } = "5vh";
-    [Parameter]
     public int ItemWidth { get; set; } = 200;
 }

@@ -2,10 +2,20 @@
     @DisplayName
 </div>
 <div>
-    <BaseFrameBlazor Text="@_mainPlayer!.NickName">
-        <CardGraphicsBlazor TargetHeight="15vh" DeckObject="_yourCard" />
+    <BaseFrameBlazor>
+        <LegendContent>
+            @_mainPlayer!.NickName
+        </LegendContent>
+        <ChildContent>
+            <CardGraphicsBlazor HeightPercent="ImageHeight" DeckObject="_yourCard" />
+        </ChildContent>
     </BaseFrameBlazor>
     <BaseFrameBlazor Text="@_tradePlayer!.NickName">
-        <CardGraphicsBlazor TargetHeight="15vh" DeckObject="_opponentCard" />
+        <LegendContent>
+            @_tradePlayer!.NickName
+        </LegendContent>
+        <ChildContent>
+            <CardGraphicsBlazor HeightPercent="ImageHeight" DeckObject="_opponentCard" />
+        </ChildContent>
     </BaseFrameBlazor>
 </div>

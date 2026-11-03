@@ -4,7 +4,7 @@ public class SorryDiceComponent : GraphicsCommand
     [Parameter]
     public SorryDiceModel? Dice { get; set; }
     [Parameter]
-    public string TargetHeight { get; set; } = "4vh";
+    public double HeightPercent { get; set; } = 4;
     private static Rect StartRect()
     {
         Rect output = new();
@@ -93,8 +93,8 @@ public class SorryDiceComponent : GraphicsCommand
     {
         SvgRenderClass render = new();
         SVG svg = new ();
-        svg.Width = TargetHeight;
-        svg.Height = TargetHeight;
+        svg.Width = HeightPercent.HeightPixels;
+        svg.Height = HeightPercent.HeightPixels;
         svg.ViewBox = "0 0 40 40";
         CreateGrapics(svg);
         CreateClick(svg);

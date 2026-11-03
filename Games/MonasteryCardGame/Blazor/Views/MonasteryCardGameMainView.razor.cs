@@ -12,7 +12,7 @@ public partial class MonasteryCardGameMainView
         _labels.AddLabel("Turn", nameof(MonasteryCardGameVMData.NormalTurn))
              .AddLabel("Status", nameof(MonasteryCardGameVMData.Status));
         _scores.Clear();
-        _scores.AddColumn("Cards", false, nameof(MonasteryCardGamePlayerItem.ObjectCount))
+        _scores.AddColumn("Cards", false, nameof(MonasteryCardGamePlayerItem.ObjectCount), numberOfDigits: 2)
             .AddColumn("Done", false, nameof(MonasteryCardGamePlayerItem.FinishedCurrentMission), category: EnumScoreSpecialCategory.TrueFalse);
         int x;
         for (x = 1; x <= 9; x++)

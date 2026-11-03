@@ -2,7 +2,7 @@ namespace ThinkTwice.Blazor;
 public partial class ButtonDiceBlazor
 {
     [CascadingParameter]
-    public string TargetHeight { get; set; } = ""; //try this way this time.
+    public double TargetHeight { get; set; }
     [Parameter]
     public bool WillHold { get; set; }
     [Parameter]

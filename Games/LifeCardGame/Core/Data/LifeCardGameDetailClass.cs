@@ -1,4 +1,4 @@
-namespace LifeCardGame.Core.Data;
+﻿namespace LifeCardGame.Core.Data;
 [SingletonGame]
 public class LifeCardGameDetailClass : IGameInfo, ICardInfo<LifeCardGameCardInformation>
 {
@@ -6,13 +6,14 @@ public class LifeCardGameDetailClass : IGameInfo, ICardInfo<LifeCardGameCardInfo
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly;
-    string IGameInfo.GameName => "Life Card Game";
+    public const string GameName = "Life Card Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<LifeCardGameCardInformation>.CardsToPassOut => 5;
     BasicList<int> ICardInfo<LifeCardGameCardInformation>.PlayerExcludeList
     {

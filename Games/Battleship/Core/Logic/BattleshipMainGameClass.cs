@@ -56,7 +56,7 @@ public class BattleshipMainGameClass(IGamePackageResolver resolver,
         if (StatusOfGame == EnumStatusList.PlacingShips)
         {
             model.NormalTurn = "None";
-            model.Status = "Please place your ships by clicking on the ship and cliking on the grid where you want to place them.";
+            model.Status = "Please place your ships by clicking on the ship and clicking on the grid where you want to place them.";
             CommandContainer.ManuelFinish = false;
             CommandContainer.IsExecuting = false; //at this point, show its done so you can do what you need to do in order to choose ships.
             if (BasicData.MultiPlayer == false)

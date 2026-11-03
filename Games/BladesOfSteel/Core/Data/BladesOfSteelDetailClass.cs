@@ -1,4 +1,4 @@
-namespace BladesOfSteel.Core.Data;
+﻿namespace BladesOfSteel.Core.Data;
 [SingletonGame]
 public class BladesOfSteelDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     IBeginningRegularCards<RegularSimpleCard>
@@ -7,13 +7,14 @@ public class BladesOfSteelDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Blades Of Steel";
+    public const string GameName = "Blades Of Steel";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 2;
     bool IGameInfo.CanAutoSave => true; //risking autoresume.  if there are any bugs, has to figure out how to fix now.  which helps in fixing bugs with the tie.
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<RegularSimpleCard>.CardsToPassOut => 0;
     BasicList<int> ICardInfo<RegularSimpleCard>.PlayerExcludeList => [];
     bool ICardInfo<RegularSimpleCard>.AddToDiscardAtBeginning => false;

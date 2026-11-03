@@ -1,8 +1,0 @@
-﻿@inherits AbstractHandBlazor<ComboCardInfo>
-<BaseHandBlazor D="ComboCardInfo" Hand="Hand" HeightPixels="RealHeight()" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
-                PaddingRight="120"
-                HandType="HandType" TargetContainerSize="@TargetContainerSize" Context="DeckObject">
-    <ComboGraphicsBlazor DeckObject="DeckObject"
-                        HeightPixels="RealHeight()"
-                        @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
-</BaseHandBlazor>

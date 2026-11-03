@@ -1,12 +1,10 @@
 namespace Backgammon.Blazor;
 public partial class BackgammonCompleteBoard
 {
-
-
     [CascadingParameter]
     public GameBoardGraphicsCP? GraphicsData { get; set; } //decided to cascade it because something else needs it as well.
     [Parameter]
-    public string TargetHeight { get; set; } = "";
+    public double TargetHeight { get; set; }
     private string GetColor() => GetColor(GraphicsData!.GameContainer.SingleInfo!);
     private static string GetColor(BackgammonPlayerItem player)
     {

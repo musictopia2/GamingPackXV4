@@ -1,4 +1,4 @@
-namespace CoveredUp.Core.Data;
+﻿namespace CoveredUp.Core.Data;
 [SingletonGame]
 public class CoveredUpDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     IBeginningRegularCards<RegularSimpleCard>
@@ -7,13 +7,14 @@ public class CoveredUpDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly; //this means the computer will end their turn.  means most testing will be multiplayer testing.
-    string IGameInfo.GameName => "Covered Up";
+    public const string GameName = "Covered Up";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<RegularSimpleCard>.CardsToPassOut => 8; //change to what you need.
     BasicList<int> ICardInfo<RegularSimpleCard>.PlayerExcludeList => [];
     BasicList<int> ICardInfo<RegularSimpleCard>.DiscardExcludeList(IListShuffler<RegularSimpleCard> deckList)

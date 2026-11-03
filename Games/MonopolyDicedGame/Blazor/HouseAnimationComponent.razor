@@ -1,10 +1,9 @@
 ﻿<SpaceBlazor MarginTop="5" MarginLeft="25" Row="5" Column="6">
-    @if (HouseDice!.Value == EnumMiscType.None)
-    {
-        <ColorSpaceComponent TargetImageHeight="@ImageHeight" />
-    }
-    else
-    {
-        <MiscDiceBlazor TargetHeight="@ImageHeight" Category="@HouseDice.Value" />
-    }
+    <ColorSpaceComponent HeightPercent="HeightPercent">
+        @if (HouseDice!.Value != EnumMiscType.None)
+        {
+            <MiscDiceBlazor HeightPercent="HeightPercent"
+                            Category="@HouseDice.Value" />
+        }
+    </ColorSpaceComponent>
 </SpaceBlazor>

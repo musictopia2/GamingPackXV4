@@ -3,22 +3,27 @@
 {
     return;
 }
-<BaseFrameBlazor Text="Bid Info">
-    <div>
+<BaseFrameBlazor>
+    <LegendContent>
+        Bid Info
+    </LegendContent>
+    <ChildContent>
+        <div>
         <NumberChooserBlazor NumberPicker="DataContext.Model.Bid1" />
     </div>
     <div>
         <EnumPickerBlazor E="EnumSuitList"
                           Context="piece"
-                          TargetSize="16vh"
                           ListPicker="DataContext.Model.Suit1">
             <DeckPiece Suit="piece.EnumValue" />
         </EnumPickerBlazor>
     </div>
     <div>
-        <GameButtonComponent CommandObject="BidCommand"
+        <GameActionButton CommandObject="BidCommand"
                              Display="Place Bid" />
-        <GameButtonComponent CommandObject="PassCommand"
+        <GameActionButton CommandObject="PassCommand"
                              Display="Pass" />
     </div>
+    </ChildContent>
+    
 </BaseFrameBlazor>

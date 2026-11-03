@@ -8,14 +8,6 @@ public partial class BattleshipLiteMainView
     private BasicList<string> _columnList = [];
     [CascadingParameter]
     private MediaQueryListComponent? Media { get; set; }
-    private string GetVH()
-    {
-        if (Media!.DeviceCategory == EnumDeviceCategory.Phone)
-        {
-            return "65vh";
-        }
-        return "75vh";
-    }
     protected override void OnInitialized()
     {
         _labels.Clear();

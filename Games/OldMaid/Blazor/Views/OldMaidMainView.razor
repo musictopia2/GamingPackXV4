@@ -8,7 +8,7 @@
         <StateContentView DataContext="DataContext">
             @if (DataContext.OpponentScreen is not null)
             {
-                <DeckOfCardsHandBlazor Divider="2" R="RegularSimpleCard" Hand="_vmData.OpponentCards1" />
+                <DeckOfCardsHandBlazor Divider="1.4" R="RegularSimpleCard" Hand="_vmData.OpponentCards1" />
             }
         </StateContentView>
     </StackItem>
@@ -17,14 +17,14 @@
     </StackItem>
     
     <StackItem>
-        <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
+        <GameActionButton Display="End Turn" CommandObject="EndCommand" />
     </StackItem>
     <StackItem>
-        <GameButtonComponent Display="Remove Pairs Automatically" CommandObject="RemovePairsCommand" />
+        <GameActionButton Display="Remove Pairs Automatically" CommandObject="RemovePairsCommand" />
     </StackItem>
 </StackLayout>
 <div>
-    <DeckOfCardsHandBlazor Divider="2" R="RegularSimpleCard" Hand="_vmData.PlayerHand1" />
+    <DeckOfCardsHandBlazor Divider="1.4" R="RegularSimpleCard" Hand="_vmData.PlayerHand1" />
 </div>
 <div>
     <LabelGridComponent DataContext="@_vmData" Labels="_labels" />

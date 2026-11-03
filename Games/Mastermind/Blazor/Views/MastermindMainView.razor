@@ -7,19 +7,19 @@
         
     </StackItem>
     <StackItem Style="background-color: brown;">
-        <EnumPickerBlazor E="EnumColorPossibilities" Context="Piece" Rows="10" TargetSize="11vh" ListPicker="DataContext!.Color1">
+        <EnumPickerBlazor E="EnumColorPossibilities" Context="Piece" Rows="10" SizeCategory="EnumSize.Small" ListPicker="DataContext!.Color1">
             <CirclePiece MainColor="@Piece.ColorFromEnum" />
         </EnumPickerBlazor>
     </StackItem>
     <StackItem>
         <div>
-            <GameButtonComponent CommandObject="DataContext!.AcceptCommand" Display="Accept" />
+            <GameActionButton CommandObject="DataContext!.AcceptCommand" Display="Accept" />
         </div>
         <div>
-            <GameButtonComponent CommandObject="DataContext.GiveUpCommand" Display="Give Up" />
+            <GameActionButton CommandObject="DataContext.GiveUpCommand" Display="Give Up" />
         </div>
-        <div>
+        <GameLabel StartsOnNewLine="true">
             Level Chosen: @DataContext!.LevelChosen
-        </div>
+        </GameLabel>
     </StackItem>
 </StackLayout>

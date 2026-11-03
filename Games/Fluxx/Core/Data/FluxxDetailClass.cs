@@ -1,4 +1,4 @@
-namespace Fluxx.Core.Data;
+﻿namespace Fluxx.Core.Data;
 [SingletonGame]
 public class FluxxDetailClass : IGameInfo, ICardInfo<FluxxCardInformation>, INewCard<FluxxCardInformation>
 {
@@ -6,13 +6,14 @@ public class FluxxDetailClass : IGameInfo, ICardInfo<FluxxCardInformation>, INew
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Fluxx";
+    public const string GameName = "Fluxx";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4; //originally was 6 but had to reduce to 4.  otherwise, not enough room.
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.LargeDevices;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<FluxxCardInformation>.CardsToPassOut => 3;
     BasicList<int> ICardInfo<FluxxCardInformation>.PlayerExcludeList => [1];
     bool ICardInfo<FluxxCardInformation>.AddToDiscardAtBeginning => false;

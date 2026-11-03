@@ -47,14 +47,22 @@ public class LifeCardGameMainGameClass
     private int _otherPlayerDraws;
     public override async Task FinishGetSavedAsync()
     {
-        CreateLifeStories(); //even for autoresume needs to be done now.  if autoresume, can later resume it.
+        CreateLifeStories();
+
         await PlayerList!.ForEachAsync(async thisPlayer =>
         {
-            var thisList = await js1.DeserializeObjectAsync<DeckRegularDict<LifeCardGameCardInformation>>(thisPlayer.LifeString);
+            var thisList = await js1.DeserializeObjectAsync<
+                DeckRegularDict<LifeCardGameCardInformation>>(
+                    thisPlayer.LifeString);
+
             thisPlayer.LifeStory!.ReplaceHandList([.. thisList]);
         });
-        await PlayerList.RepositionCardsAsync(this, _gameContainer, _model); //i think.
+
         await base.FinishGetSavedAsync();
+
+        await PlayerList.RepositionCardsAsync(this, _gameContainer, _model);
+
+        PlayerList.ForEach(player => player.LifeStory!.RefreshCards());
     }
     private void CreateLifeStories()
     {

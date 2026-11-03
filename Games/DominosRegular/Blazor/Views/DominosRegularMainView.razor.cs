@@ -28,5 +28,4 @@ public partial class DominosRegularMainView
         }
     }
     private ICustomCommand EndTurnCommand => DataContext!.EndTurnCommand!;
-    private string GetTargetString => TargetHeight.HeightString();
 }

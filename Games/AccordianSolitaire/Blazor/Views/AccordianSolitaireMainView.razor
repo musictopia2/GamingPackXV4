@@ -3,8 +3,8 @@
     @if (DataContext!.DeckPile != null)
     {
         <BoardBlazor />
-        <div>
+        <GameLabel>
             Score: @DataContext.Score
-        </div>
+        </GameLabel>
     }
 </StateContentView>

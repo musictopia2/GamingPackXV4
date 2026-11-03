@@ -1,7 +1,7 @@
 @inherits AbstractHandBlazor<FiveCrownsCardInformation>
-<BaseHandBlazor D="FiveCrownsCardInformation" Hand="Hand" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
-                HandType="HandType" TargetContainerSize="@TargetContainerSize" TargetImageSize="@TargetImageSize" Context="DeckObject">
+<BaseHandBlazor D="FiveCrownsCardInformation" Hand="Hand" HeightPixels="RealHeight()" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
+                HandType="HandType" TargetContainerSize="@TargetContainerSize"  Context="DeckObject">
     <CardGraphicsBlazor DeckObject="DeckObject"
-        TargetHeight="@RealHeight()"
+        HeightPixels="RealHeight()"
         @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
 </BaseHandBlazor>

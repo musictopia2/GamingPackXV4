@@ -5,13 +5,19 @@
     </div>
     return;
 }
-<BaseFrameBlazor Text="Bid Info">
-    <div>
-        <NumberChooserBlazor TextHeight="12vh" Columns="6" NumberPicker="DataContext.Model.Bid1" />
+<BaseFrameBlazor>
+    <LegendContent>
+        Bid Info
+    </LegendContent>
+    <ChildContent>
+        <div>
+        <NumberChooserBlazor Columns="6" NumberPicker="DataContext.Model.Bid1" />
     </div>
     <div>
-        <GameButtonComponent CommandObject="BidCommand"
+        <GameActionButton CommandObject="BidCommand"
                              Display="Place Bid" />
         
     </div>
+    </ChildContent>
+    
 </BaseFrameBlazor>

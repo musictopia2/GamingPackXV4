@@ -2,12 +2,12 @@
                           AnimationTag="@AnimationTag"
                           Piles="@Piles">
     <CanvasTemplate Context="Card">
-        <CardGraphicsBlazor TargetHeight="@RealHeight" DeckObject="Card" />
+        <CardGraphicsBlazor HeightPercent="TargetHeight" DeckObject="Card" />
     </CanvasTemplate>
     <MainTemplate Context="Pile">
         <PrivateBasicIndividualPileBlazor Context="Card" D="MillebournesCardInformation" IndividualPile="Pile">
             <CardGraphicsBlazor ClickBlank="true"
-                                TargetHeight="@RealHeight"
+                                HeightPercent="TargetHeight"
                                 DeckObject="Card"
                                 CommandParameter="Pile"
                                 CommandObject="Piles!.PileCommand" />

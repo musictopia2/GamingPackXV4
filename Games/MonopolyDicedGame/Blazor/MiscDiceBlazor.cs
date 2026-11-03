@@ -4,7 +4,11 @@ public class MiscDiceBlazor : ComponentBase
     [Parameter]
     public EnumMiscType Category { get; set; }
     [Parameter]
-    public string TargetHeight { get; set; } = "4vh";
+    public double HeightPercent { get; set; } = 6;
+
+    private string TargetHeight => HeightPercent.HeightPixels;
+
+
     [Parameter]
     public int NumberOfHouses { get; set; }
     private static Rect StartRect()

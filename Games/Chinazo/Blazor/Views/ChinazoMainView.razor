@@ -11,11 +11,11 @@
         <DeckOfCardsHandBlazor R="ChinazoCard" TargetContainerSize="50vw" Hand="_vmData.PlayerHand1" />
     </GridItem>
     <GridItem Column="2">
-        <GameButtonComponent CommandObject="PassCommand"
+        <GameActionButton CommandObject="PassCommand"
                              Display="Pass" />
-        <GameButtonComponent CommandObject="TakeCommand"
+        <GameActionButton CommandObject="TakeCommand"
                              Display="Take" />
-        <GameButtonComponent CommandObject="LayDownCommand"
+        <GameActionButton CommandObject="LayDownCommand"
                              Display="Lay Down"
                              StartOnNewLine="true" />
     </GridItem>
@@ -34,14 +34,14 @@
 <StackLayout>
     <StackItem>
         <DeckOfCardsTempSetsBlazor RU="ChinazoCard"
-                                   TargetContainerSize="45vh"
+                                   HeightPercent=50
                                    TempPiles="_vmData.TempSets" />
     </StackItem>
     <StackItem>
         <DeckOfCardsMainRummySetsBlazor RU="ChinazoCard"
                                         SE="PhaseSet"
                                         T="SavedSet"
-                                        ContainerHeight="45vh"
+                                        HeightPercent=50
                                         DataContext="_vmData.MainSets" />
     </StackItem>
 </StackLayout>

@@ -14,10 +14,10 @@ public partial class RookMainView
             .AddLabel("Status", nameof(RookVMData.Status))
             .AddLabel("Team", nameof(RookVMData.TeamMate));
         _scores.Clear();
-        _scores.AddColumn("Bid Amount", true, nameof(RookPlayerItem.BidAmount))
-            .AddColumn("Tricks Won", false, nameof(RookPlayerItem.TricksWon))
-            .AddColumn("Current Score", false, nameof(RookPlayerItem.CurrentScore))
-            .AddColumn("Total Score", false, nameof(RookPlayerItem.TotalScore));
+        _scores.AddColumn("Bid Amount", true, nameof(RookPlayerItem.BidAmount), numberOfDigits: 2)
+            .AddColumn("Tricks Won", false, nameof(RookPlayerItem.TricksWon), numberOfDigits: 2)
+            .AddColumn("Current Score", false, nameof(RookPlayerItem.CurrentScore), numberOfDigits: 3)
+            .AddColumn("Total Score", false, nameof(RookPlayerItem.TotalScore), numberOfDigits: 3);
         base.OnInitialized();
     }
     private ICustomCommand ChooseNestCommand => DataContext!.ChooseNestCommand!;

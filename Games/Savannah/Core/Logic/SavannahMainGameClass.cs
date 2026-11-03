@@ -36,11 +36,6 @@ public class SavannahMainGameClass
         _gameContainer.UnselectAllPilesAsync = UnselectAllPilesAsync;
         _gameContainer.DiscardAsync = DiscardToSelfAsync;
     }
-    protected override async Task ShowHumanCanPlayAsync()
-    {
-        await base.ShowHumanCanPlayAsync();
-        CommandContainer.ReportAllCommandStates(); //try this.
-    }
     public override Task FinishGetSavedAsync()
     {
         LoadControls();

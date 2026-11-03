@@ -1,4 +1,4 @@
-namespace A8RoundRummy.Core.Data;
+﻿namespace A8RoundRummy.Core.Data;
 [SingletonGame]
 public class A8RoundRummyDetailClass : IGameInfo, ICardInfo<A8RoundRummyCardInformation>
 {
@@ -6,13 +6,14 @@ public class A8RoundRummyDetailClass : IGameInfo, ICardInfo<A8RoundRummyCardInfo
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly;
-    string IGameInfo.GameName => "8 Round Rummy";
+    public const string GameName = "8 Round Rummy";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 6;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<A8RoundRummyCardInformation>.CardsToPassOut => 7;
     BasicList<int> ICardInfo<A8RoundRummyCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<A8RoundRummyCardInformation>.AddToDiscardAtBeginning => true;

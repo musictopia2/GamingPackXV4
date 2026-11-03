@@ -2,6 +2,18 @@
 <BowlingCompleteScoresheetBlazor MainGame="@DataContext!.MainGame" />
 <BowlingDiceListBlazor DiceList="DataContext.MainGame.DiceBoard!.DiceList" />
 <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
-<RollComponent CommandObject="DataContext.RollCommand" />
-<GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ContinueTurnCommand" Display="Contine" />
-<GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.EndTurnCommand" Display="End Turn"  />
+<div style="display: flex; flex-direction: row; align-items: center;
+    flex-wrap: nowrap; gap: 0.35rem; white-space: nowrap;">
+
+    <div style="flex: 0 0 auto;">
+        <RollComponent CommandObject="DataContext.RollCommand" />
+    </div>
+
+    <GameActionButton CommandObject="DataContext.ContinueTurnCommand"
+                      Display="Continue"
+                      UseSuggestedWidth="false" />
+
+    <GameActionButton CommandObject="DataContext.EndTurnCommand"
+                      Display="End Turn"
+                      UseSuggestedWidth="false" />
+</div>

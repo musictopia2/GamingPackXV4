@@ -7,6 +7,7 @@ public partial class FourSuitRummyMainView
     private readonly BasicList<ScoreColumnModel> _scores = [];
     private FourSuitRummyVMData? _vmData;
     private FourSuitRummyGameContainer? _gameContainer;
+    private static string HeightPixels => $"{18.HeightPixels}px";
     protected override void OnInitialized()
     {
         _vmData = Resolver!.Resolve<FourSuitRummyVMData>();

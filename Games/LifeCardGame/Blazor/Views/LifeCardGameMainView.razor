@@ -18,9 +18,9 @@
                 </StackItem>
             </StackLayout>
             <div>
-                <GameButtonComponent CommandObject="YearsCommand"
+                <GameActionButton CommandObject="YearsCommand"
                                      Display="Years Passed" />
-                <GameButtonComponent CommandObject="PlayCardCommand"
+                <GameActionButton CommandObject="PlayCardCommand"
                                      Display="Play Card" />
                 <OtherView DataContext="DataContext.OtherScreen" />
             </div>
@@ -43,7 +43,7 @@
                     <StackItem>
                         <HandBlazor Hand="player.LifeStory"
                                     HandType="EnumHandList.Vertical"
-                                    TargetContainerSize="85vh"
+                                    TargetContainerSize="@Pixels"
                                     LegendExtraWidth="20"
                                     Divider="3.5" />
                     </StackItem>

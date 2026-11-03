@@ -1,6 +1,9 @@
 @inherits CascadingGameView<ClockSolitaireMainViewModel>
 <MainClockBlazor DataContext="DataContext!.Clock1">
     <StateContentView DataContext="DataContext">
-        Cards: @DataContext!.CardsLeft
+        <GameLabel>
+            Cards: @DataContext!.CardsLeft
+        </GameLabel>
+        
     </StateContentView>
 </MainClockBlazor>

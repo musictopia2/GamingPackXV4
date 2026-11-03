@@ -9,17 +9,18 @@ public partial class GamePage
     public BasicData? BasicData { get; set; }
     [CascadingParameter]
     public MultiplayerBasicParentShell? Shell { get; set; }
-    [CascadingParameter]
-    private MediaQueryListComponent? Media { get; set; }
-    private int TargetHeight
+    private static int TargetHeight
     {
         get
         {
-            if (Media!.DeviceCategory == EnumDeviceCategory.Phone)
+            if (ll1.LayoutMode == EnumGameLayoutMode.Compact)
             {
-                return 13;
+                return 18;
             }
-            return 16;
+
+            return 22;
+
+            
         }
     }
 }

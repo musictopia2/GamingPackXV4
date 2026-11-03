@@ -28,9 +28,9 @@
             <DeckOfCardsHandBlazor R="CribbageCard" Hand="_vmData.PlayerHand1" />
         </div>
         <div>
-            <GameButtonComponent Display="Continue" CommandObject="ContinueCommand" />
-            <GameButtonComponent Display="To Crib" CommandObject="CribCommand" />
-            <GameButtonComponent Display="Play" CommandObject="PlayCommand" />
+            <GameActionButton Display="Continue" CommandObject="ContinueCommand" />
+            <GameActionButton Display="To Crib" CommandObject="CribCommand" />
+            <GameActionButton Display="Play" CommandObject="PlayCommand" />
         </div>
         <div>
             <LabelGridComponent DataContext="_vmData" Labels="_labels" />
@@ -44,6 +44,7 @@
     </GridItem>
     <GridItem Column="2">
         <ScoreBoardBlazor P="CribbagePlayerItem"
+                          SizeCategory="EnumSize.Small"
                           Columns="_scores"
                           Players="_gameContainer.SaveRoot.PlayerList" />
     </GridItem>

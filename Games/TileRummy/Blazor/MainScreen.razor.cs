@@ -1,3 +1,4 @@
+
 namespace TileRummy.Blazor;
 public partial class MainScreen : IHandle<OpenMainEventModel>,
     IHandle<CloseMainEventModel>, IDisposable

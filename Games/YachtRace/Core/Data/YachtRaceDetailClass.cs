@@ -1,4 +1,4 @@
-namespace YachtRace.Core.Data;
+﻿namespace YachtRace.Core.Data;
 [SingletonGame]
 public class YachtRaceDetailClass : IGameInfo
 {
@@ -6,11 +6,12 @@ public class YachtRaceDetailClass : IGameInfo
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.HumanOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Yacht Race";
+    public const string GameName = "Yacht Race";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 10;
     bool IGameInfo.CanAutoSave => false;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
 }

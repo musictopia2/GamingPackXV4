@@ -20,27 +20,35 @@
         <StackLayout>
             <StackItem>
                 <DeckOfCardsHandBlazor R="SnagCardGameCardInformation"
-                    AdditionalSpacing="1"
+                    Divider="1.5"
                     Hand="_vmData.Human1" />
             </StackItem>
             <StackItem>
                 <DeckOfCardsHandBlazor R="SnagCardGameCardInformation"
-                    AdditionalSpacing="1"
+                    Divider="1.5"
                     Hand="_vmData.Opponent1" />
             </StackItem>
         </StackLayout>
         <div>
-            <DeckOfCardsHandBlazor R="SnagCardGameCardInformation"
-                AdditionalSpacing="1"
-                Hand="_vmData.PlayerHand1" />
+            <StackLayout>
+                <StackItem>
+                    <DeckOfCardsHandBlazor R="SnagCardGameCardInformation"
+                                           AdditionalSpacing="1"
+                                           Hand="_vmData.PlayerHand1" />
+                </StackItem>
+                <StackItem>
+                    <div>
+                        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+                    </div>
+                    <div>
+                        <ScoreBoardBlazor P="SnagCardGamePlayerItem"
+                                          Columns="_scores"
+                                          Players="_gameContainer.SaveRoot.PlayerList" />
+                    </div>
+                </StackItem>
+            </StackLayout>
+            
         </div>
-        <div>
-            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
-        </div>
-        <div>
-            <ScoreBoardBlazor P="SnagCardGamePlayerItem"
-                              Columns="_scores"
-                              Players="_gameContainer.SaveRoot.PlayerList" />
-        </div>
+        
     </StackItem>
 </StackLayout>

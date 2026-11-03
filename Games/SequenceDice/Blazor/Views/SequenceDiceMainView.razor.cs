@@ -21,4 +21,6 @@ public partial class SequenceDiceMainView
     private static string ColumnText => "50vw 50vw"; //could adjust as needed.
     private ICustomCommand MoveCommand => DataContext!.MakeMoveCommand!;
     private ICustomCommand RollCommand => DataContext!.RollDiceCommand!;
+    private static double _height => 30;
+    private static string Pixels => _height.HeightPixels;
 }

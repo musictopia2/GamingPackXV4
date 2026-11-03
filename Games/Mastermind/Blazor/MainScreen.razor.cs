@@ -14,6 +14,7 @@ public partial class MainScreen : IHandle<OpenMainEventModel>,
     protected override void OnInitialized()
     {
         _aggregator.Publish(new AskMainEventModel());
+        gg1.ButtonSize = EnumSize.Large;
     }
     private partial void Subscribe();
     private partial void Unsubscribe();

@@ -2,7 +2,7 @@
     <SvgBoard TargetHeight="@ImageHeight" BoardSize="TargetSize">
         @if (HasPiece)
         {
-            <BasePieceGraphics Location="new(2, 2)" TargetSize="36">
+            <BasePieceGraphics LongestSize="36" Location="new(2, 2)" >
                 <PawnPiece MainColor="@ColorUsed.Color" />
             </BasePieceGraphics>
         }

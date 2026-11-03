@@ -1,4 +1,4 @@
-namespace CousinRummy.Core.Data;
+﻿namespace CousinRummy.Core.Data;
 [SingletonGame]
 public class CousinRummyDetailClass : IGameInfo, ICardInfo<RegularRummyCard>,
     IBeginningRegularCards<RegularRummyCard>, IRegularDeckWild
@@ -7,13 +7,14 @@ public class CousinRummyDetailClass : IGameInfo, ICardInfo<RegularRummyCard>,
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Cousin Rummy";
+    public const string GameName = "Cousin Rummy";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<RegularRummyCard>.CardsToPassOut => 12;
     BasicList<int> ICardInfo<RegularRummyCard>.PlayerExcludeList => [];
     bool ICardInfo<RegularRummyCard>.AddToDiscardAtBeginning => true;

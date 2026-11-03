@@ -33,7 +33,7 @@ public partial class SelfDiscardBlazor
         containerWidth = (cardWidth / Divider) * 6 + cardWidth * 2  / Divider;
 
 
-        return $"position: relative; width: {containerWidth}px; height: {TargetHeight}vh; overflow: hidden;";
+        return $"position: relative; width: {containerWidth}px; height: {TargetHeight.HeightPixels}px; overflow: hidden;";
     }
    
     private string GetCardStyle(int index, RegularSimpleCard card)

@@ -1,4 +1,4 @@
-namespace YaBlewIt.Core.Data;
+﻿namespace YaBlewIt.Core.Data;
 [SingletonGame]
 public class YaBlewItDetailClass : IGameInfo, ICardInfo<YaBlewItCardInformation>
 {
@@ -6,13 +6,14 @@ public class YaBlewItDetailClass : IGameInfo, ICardInfo<YaBlewItCardInformation>
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked; //can't be networked only.   otherwise, can't test.
-    string IGameInfo.GameName => "Ya Blew It";
+    public const string GameName = "Ya Blew It";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 6;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.LargeDevices; //default to smallest but can change as needed.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<YaBlewItCardInformation>.CardsToPassOut => 0; //pass out no cards. however, will later pass out a faulty card.
     BasicList<int> ICardInfo<YaBlewItCardInformation>.PlayerExcludeList => [];
     BasicList<int> ICardInfo<YaBlewItCardInformation>.DiscardExcludeList(IListShuffler<YaBlewItCardInformation> deckList)

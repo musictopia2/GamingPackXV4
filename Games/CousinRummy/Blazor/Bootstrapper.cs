@@ -2,6 +2,9 @@ namespace CousinRummy.Blazor;
 public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
     string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<CousinRummyShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
+
+
+    
     protected override Task ConfigureAsync(IGamePackageRegister register)
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);

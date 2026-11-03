@@ -2,6 +2,8 @@ namespace DealCardGame.Blazor;
 public partial class TradingComponent
 {
     private TradingViewModel? DataContext { get; set; }
+    [CascadingParameter]
+    public int ImageHeight { get; set; }
     protected override void OnInitialized()
     {
         DataContext = aa1.Resolver!.Resolve<TradingViewModel>();

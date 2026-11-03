@@ -20,4 +20,8 @@ public partial class RollEmMainView
     }
     private ICustomCommand EndCommand => DataContext!.EndTurnCommand!;
     private ICustomCommand RollCommand => DataContext!.RollDiceCommand!;
+
+    private static double _height => 30;
+    private static string Pixels => _height.HeightPixels;
+
 }

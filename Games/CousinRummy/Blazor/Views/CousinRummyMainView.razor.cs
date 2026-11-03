@@ -16,10 +16,10 @@ public partial class CousinRummyMainView
             .AddLabel("O.Turn", nameof(CousinRummyVMData.OtherLabel))
             .AddLabel("Phase", nameof(CousinRummyVMData.PhaseData));
         _scores.Clear();
-        _scores.AddColumn("Cards Left", false, nameof(CousinRummyPlayerItem.ObjectCount))
-            .AddColumn("Tokens Left", false, nameof(CousinRummyPlayerItem.TokensLeft))
-            .AddColumn("Current Score", false, nameof(CousinRummyPlayerItem.CurrentScore))
-            .AddColumn("Total Score", false, nameof(CousinRummyPlayerItem.TotalScore));
+        _scores.AddColumn("Cards Left", false, nameof(CousinRummyPlayerItem.ObjectCount), numberOfDigits: 2)
+            .AddColumn("Tokens Left", false, nameof(CousinRummyPlayerItem.TokensLeft), numberOfDigits: 2)
+            .AddColumn("Current Score", false, nameof(CousinRummyPlayerItem.CurrentScore), numberOfDigits: 4)
+            .AddColumn("Total Score", false, nameof(CousinRummyPlayerItem.TotalScore), numberOfDigits: 4);
         base.OnInitialized();
     }
     private ICustomCommand InitCommand => DataContext!.FirstSetsCommand!;

@@ -1,5 +1,9 @@
 ﻿@inherits CascadingGameView<FroggiesOpeningViewModel>
-<p style="font-size: 2em">Choose How Many Frogs</p>
+
+<GameLabel SizeCategory="EnumSize.Large">
+    Choose How Many Frogs
+</GameLabel>
+
 <div>
-    <NumberChooserBlazor TextHeight="13vh" NumberPicker="DataContext!.LevelPicker" />
+    <NumberChooserBlazor SizeCategory="EnumSize.Small" NumberPicker="DataContext!.LevelPicker" />
 </div>

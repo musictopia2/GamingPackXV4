@@ -264,6 +264,29 @@ public class HitTheDeckMainGameClass(IGamePackageResolver mainContainer,
         }
         return base.DrawAsync();
     }
+
+    protected override Task AfterReshuffleAsync()
+    {
+        if (_isCutting == false)
+        {
+            return base.AfterReshuffleAsync();
+        }
+
+        DoDraw = false;
+
+        // Clear the buried discards now placed in the shuffled deck.
+        // Preserve the current face-up card.
+        _model.Pile1!.CardsReshuffled();
+
+        if (BasicData!.MultiPlayer && CanProcessPlay == false)
+        {
+            // The other end must wait for the following "cutdeck" message.
+            Network!.IsEnabled = true;
+        }
+
+        return Task.CompletedTask;
+    }
+
     public async Task ProcessPlayAsync(int deck)
     {
         if (SingleInfo!.MainHandList.ObjectExist(deck))

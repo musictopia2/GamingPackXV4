@@ -21,6 +21,10 @@ public partial class ReadOnlyPlayerSetComponent
     public int PlayerId { get; set; }
     [Parameter]
     public EventCallback<SetPlayerModel> OnSetClicked { get; set; }
+    private static double _height => 4;
+
+    private static string Pixels => _height.HeightPixels;
+
     private static string Rows => gg1.RepeatSpreadOut(3);
     private void PrivateClicked()
     {

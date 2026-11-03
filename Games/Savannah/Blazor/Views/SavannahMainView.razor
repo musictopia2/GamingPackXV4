@@ -15,7 +15,7 @@
     <StackItem Length="1fr">
         <SelfDiscardBlazor DiscardPile="_vmData.SelfDiscard" Context="DeckObject">
             <DeckOfCardsImageBlazor Location="@Location"
-                                    TargetHeight="@HeightString"
+                                    HeightPercent="TargetHeight"
                                     CommandParameter="DeckObject"
                                     DeckObject="DeckObject"
                                     CommandObject="_vmData.SelfDiscard!.ObjectSingleClickCommand"
@@ -31,26 +31,28 @@
         }
         @foreach (var player in list)
         {
-            <OpponentDiscardBlazor Player="player" IsEnabled="DataContext.CanEnablePlayer" Context="DeckObject">
-                <DeckOfCardsImageBlazor CommandParameter="player" DeckObject="DeckObject" TargetHeight="@HeightString" CommandObject="PlayerCommand" R="RegularSimpleCard" />
+            <OpponentDiscardBlazor Player="player" IsEnabled="@(() => DataContext.CanEnablePlayer)" Context="DeckObject">
+                <DeckOfCardsImageBlazor CommandParameter="player" DeckObject="DeckObject" HeightPercent="TargetHeight" CommandObject="PlayerCommand" R="RegularSimpleCard" />
             </OpponentDiscardBlazor>
         }
     </StackItem>
 </StackLayout>
 <StackLayout ItemSpacing="5px">
     <StackItem>
-        <DeckOfCardsHandBlazor TargetImageSize="@HeightString" R="RegularSimpleCard" Hand="_vmData.PlayerHand1" />
+        <DeckOfCardsHandBlazor HeightPixels="HeightPixels" R="RegularSimpleCard" Hand="_vmData.PlayerHand1" />
     </StackItem>
 
     <StackItem>
-        <DiceListConrolBlazor D="SimpleDice" Cup="@_vmData.Cup" TargetHeight="18vh" />
+        <DiceListConrolBlazor D="SimpleDice" Cup="@_vmData.Cup" PercentHeight="22" />
     </StackItem>
+    
 </StackLayout>
 <div>
-    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    <LabelGridComponent SizeCategory="Size" DataContext="_vmData" Labels="_labels" />
 </div>
 <div>
     <ScoreBoardBlazor P="SavannahPlayerItem"
+                      SizeCategory="Size"
                       Columns="_scores"
                       Players="_gameContainer.SaveRoot.PlayerList" />
 </div>

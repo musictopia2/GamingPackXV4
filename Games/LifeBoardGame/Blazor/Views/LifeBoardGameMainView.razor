@@ -5,7 +5,7 @@
         <StackLayout>
             <StackItem>
                 <LifeCompleteGameBoardBlazor BoardProcesses="_boardProcesses"
-                                             TargetHeight="75vh"
+                                             TargetHeight="75"
                                              GraphicsData="_graphicsData" />
             </StackItem>
             <StackItem>
@@ -51,7 +51,7 @@
         <div>
             <StackLayout>
                 <StackItem Length="25vw">
-                    <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+                    <LabelGridComponent SizeCategory="EnumSize.Small" DataContext="DataContext!.VMData" Labels="_labels" />
                 </StackItem>
                 <StackItem>
                     Space Details:

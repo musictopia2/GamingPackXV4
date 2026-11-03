@@ -14,9 +14,9 @@ public partial class ChinazoMainView
             .AddLabel("Other Turn", nameof(ChinazoVMData.OtherLabel))
             .AddLabel("Phase", nameof(ChinazoVMData.PhaseData));
         _scores.Clear();
-        _scores.AddColumn("C Left", false, nameof(ChinazoPlayerItem.ObjectCount))
-            .AddColumn("C Score", false, nameof(ChinazoPlayerItem.CurrentScore))
-            .AddColumn("T Score", false, nameof(ChinazoPlayerItem.TotalScore));
+        _scores.AddColumn("C Left", false, nameof(ChinazoPlayerItem.ObjectCount), numberOfDigits: 2)
+            .AddColumn("C Score", false, nameof(ChinazoPlayerItem.CurrentScore), numberOfDigits: 4)
+            .AddColumn("T Score", false, nameof(ChinazoPlayerItem.TotalScore), numberOfDigits: 4);
         base.OnInitialized();
     }
     private ICustomCommand PassCommand => DataContext!.PassCommand!;

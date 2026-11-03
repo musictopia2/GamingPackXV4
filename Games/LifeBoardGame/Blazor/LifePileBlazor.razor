@@ -1,8 +1,8 @@
 ﻿<BaseSingleMiscPileBlazor D="LifeBaseCard" PileAnimationTag="MainDiscard" SinglePile="SinglePile">
 <CanvasTemplate Context="Card">
-    <LifeCardBlazor TargetHeight="@RealHeight" DeckObject="Card" />
+    <LifeCardBlazor HeightPercent="@TargetHeight" DeckObject="Card" />
 </CanvasTemplate>
 <MainTemplate Context="Card">
-    <LifeCardBlazor TargetHeight="@RealHeight" DeckObject="Card" CommandParameter="Card" CommandObject="SinglePile!.PileObjectClickedCommand" />
+     <LifeCardBlazor HeightPercent="@TargetHeight" DeckObject="Card" CommandParameter="Card" CommandObject="SinglePile!.PileObjectClickedCommand" />
 </MainTemplate>
 </BaseSingleMiscPileBlazor>

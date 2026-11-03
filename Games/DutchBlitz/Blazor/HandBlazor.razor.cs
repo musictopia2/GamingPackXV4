@@ -1,32 +1,27 @@
 namespace DutchBlitz.Blazor;
-
-public partial class HandBlazor
+public partial class HandBlazor : IHandleAsync<DutchBlitzCardsChangedEventModel>, IDisposable
 {
-    [Parameter]
-    public HandObservable<DutchBlitzCardInformation>? Hand { get; set; }
+    private IEventAggregator? _aggregator;
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    protected override void OnInitialized()
+    {
+        _aggregator = Resolver!.Resolve<IEventAggregator>();
+        Subscribe();
+        base.OnInitialized();
+    }
+    async Task IHandleAsync<DutchBlitzCardsChangedEventModel>.HandleAsync(DutchBlitzCardsChangedEventModel message)
+    {
+        if (ReferenceEquals(message.Target, Hand))
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+    public void Dispose()
+    {
+        Unsubscribe();
+        GC.SuppressFinalize(this);
+    }
 
-    [Parameter]
-    public EnumHandList HandType { get; set; } = EnumHandList.Horizontal;
-
-    [Parameter]
-    public double Divider { get; set; } = 1;
-
-    [Parameter]
-    public double AdditionalSpacing { get; set; } = -5;
-
-    /// <summary>
-    /// this is where you usually set a percentage which represents how high or wide the container is.
-    /// if hand type is horizontal, then its the width
-    /// otherwise, its the height
-    /// </summary>
-    [Parameter]
-
-    public string TargetContainerSize { get; set; } = ""; //if not set, will keep going forever.
-    /// <summary>
-    /// this is where you set the percentage which represents how big the images are
-    /// if horizontal is used, then its the height.  otherwise, its the width.
-    /// 
-    /// </summary>
-    [Parameter]
-    public string TargetImageSize { get; set; } = "";
+    
 }

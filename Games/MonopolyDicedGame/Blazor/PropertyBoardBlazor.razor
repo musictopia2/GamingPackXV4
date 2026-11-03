@@ -4,16 +4,20 @@
 @foreach (var item in list)
 {
     var dice = GetDice(item.Own);
-    <SpaceBlazor OnClicked="PossibleClick" Column="item.Column" Row="item.Row">
-        @if (item.Own.Group != Group)
-        {
-            <ColorSpaceComponent Color="@Group.Color"
-                TargetImageHeight="@TargetHeight"
-            >
-                <ValueSpaceComponent TargetHeight="@TargetHeight" Value="@Group.MonopolyValue" />
-            </ColorSpaceComponent>
-            return;
-        }
-        <BasicDiceBlazor TargetHeight="@TargetHeight" Dice="dice" />
+    <SpaceBlazor OnClicked="PossibleClick"
+                 Column="item.Column" Row="item.Row">
+        <ColorSpaceComponent Color="@Group.Color"
+                             HeightPercent="HeightPercent">
+            @if (item.Own.Group != Group)
+            {
+                <ValueSpaceComponent HeightPercent="HeightPercent"
+                                     Value="@Group.MonopolyValue" />
+            }
+            else
+            {
+                <BasicDiceBlazor HeightPercent="HeightPercent"
+                                 Dice="dice" />
+            }
+        </ColorSpaceComponent>
     </SpaceBlazor>
 }

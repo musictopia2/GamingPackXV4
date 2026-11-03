@@ -3,7 +3,7 @@ public partial class ThinkTwiceMainView
 {
     private readonly BasicList<LabelGridModel> _labels = [];
     private readonly BasicList<ScoreColumnModel> _scores = [];
-    private readonly string _diceHeight = "15vh";
+    //private readonly string _diceHeight = "15vh";
     private ThinkTwiceGameContainer? _gameContainer;
     private CategoriesDice? _categories;
     private Multiplier? _multiplier;
@@ -34,4 +34,6 @@ public partial class ThinkTwiceMainView
         }
         await _gameContainer!.CategoryClicked!.Invoke();
     }
+    private static double _height => 20;
+    private static string Pixels => _height.HeightPixels;
 }

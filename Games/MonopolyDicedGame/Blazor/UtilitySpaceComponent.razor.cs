@@ -6,7 +6,7 @@ public partial class UtilitySpaceComponent
     [Parameter]
     public EventCallback<EnumUtilityType> UtilityClicked { get; set; } //we need to know which one was clicked.
     [Parameter]
-    public string TargetImageHeight { get; set; } = "";
+    public double HeightPercent { get; set; }
     [Parameter]
     [EditorRequired]
     public bool IsEnabled { get; set; }

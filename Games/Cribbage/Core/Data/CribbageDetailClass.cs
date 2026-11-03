@@ -1,4 +1,4 @@
-namespace Cribbage.Core.Data;
+﻿namespace Cribbage.Core.Data;
 [SingletonGame]
 public class CribbageDetailClass(CribbageDelegates delegates) : IGameInfo, ICardInfo<CribbageCard>,
     IBeginningRegularCards<CribbageCard>
@@ -7,13 +7,14 @@ public class CribbageDetailClass(CribbageDelegates delegates) : IGameInfo, ICard
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Cribbage";
+    public const string GameName = "Cribbage";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 3;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<CribbageCard>.CardsToPassOut
     {
         get

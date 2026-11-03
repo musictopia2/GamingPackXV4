@@ -1,4 +1,4 @@
-namespace RummyDice.Core.Data;
+﻿namespace RummyDice.Core.Data;
 [SingletonGame]
 public class RummyDiceDetailClass : IGameInfo
 {
@@ -6,11 +6,12 @@ public class RummyDiceDetailClass : IGameInfo
     bool IGameInfo.CanHaveExtraComputerPlayers => false; //if you can have extra computer players, here.
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.HumanOnly; //if not pass and play, then put computer only.
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Rummy Dice"; //put in the name of the game here.
+    public const string GameName = "Rummy Dice";
+    string IGameInfo.GameName => GameName; //put in the name of the game here.
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 8; //if different, put here.
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet; //decided to now allow phone because it ended up being a really bad experience.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
 }

@@ -1,4 +1,4 @@
-namespace RageCardGame.Core.Data;
+﻿namespace RageCardGame.Core.Data;
 [SingletonGame]
 public class RageCardGameDetailClass(RageDelgates delgates) : IGameInfo, ICardInfo<RageCardGameCardInformation>, ITrickData
 {
@@ -6,13 +6,14 @@ public class RageCardGameDetailClass(RageDelgates delgates) : IGameInfo, ICardIn
     bool IGameInfo.CanHaveExtraComputerPlayers => true;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Rage Card Game";
+    public const string GameName = "Rage Card Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 8;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<RageCardGameCardInformation>.CardsToPassOut => delgates.CardsToPassOut!.Invoke();
     BasicList<int> ICardInfo<RageCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<RageCardGameCardInformation>.AddToDiscardAtBeginning => false;

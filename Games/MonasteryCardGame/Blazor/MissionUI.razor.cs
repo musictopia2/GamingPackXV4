@@ -1,8 +1,7 @@
 namespace MonasteryCardGame.Blazor;
 public partial class MissionUI
 {
-    [Parameter]
-    public string MissionColumnWidth { get; set; } = "";
+    
     [Parameter]
     public StateList<MissionList>? Missions { get; set; }
     [CascadingParameter]

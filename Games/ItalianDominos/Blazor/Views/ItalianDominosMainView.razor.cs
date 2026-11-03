@@ -31,5 +31,4 @@ public partial class ItalianDominosMainView
             return output;
         }
     }
-    private string RealHeight => $"{TargetHeight}vh";
 }

@@ -1,4 +1,4 @@
-namespace Xactika.Core.Data;
+﻿namespace Xactika.Core.Data;
 [SingletonGame]
 public class XactikaDetailClass : IGameInfo, ICardInfo<XactikaCardInformation>, ITrickData
 {
@@ -6,13 +6,14 @@ public class XactikaDetailClass : IGameInfo, ICardInfo<XactikaCardInformation>, 
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Xactika";
+    public const string GameName = "Xactika";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<XactikaCardInformation>.CardsToPassOut => 8;
     BasicList<int> ICardInfo<XactikaCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<XactikaCardInformation>.AddToDiscardAtBeginning => false;

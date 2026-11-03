@@ -29,6 +29,7 @@ public partial class MinesweeperMainViewModel(CommandContainer commandContainer,
     public void ChangeFlag()
     {
         IsFlagging = !IsFlagging; //no need for game visible because that is not responsible for it.
+        commandContainer.UpdateSpecificAction(MinesweeperActions.Command);
     }
     [Command(EnumCommandCategory.Plain)]
     public async Task MakeMoveAsync(MineSquareModel square)
@@ -37,9 +38,11 @@ public partial class MinesweeperMainViewModel(CommandContainer commandContainer,
         {
             MinesweeperMainGameClass.FlagSingleSquare(square);
             NumberOfMinesLeft = _mainGame.GetMinesLeft();
+            commandContainer.UpdateSpecificAction(MinesweeperActions.Board);
             return;
         }
         await _mainGame.ClickSingleSquareAsync(square);
+        commandContainer.UpdateSpecificAction(MinesweeperActions.Board);
     }
     
     void IMainGameVM.Initialize()

@@ -1,4 +1,4 @@
-namespace Rook.Core.Data;
+﻿namespace Rook.Core.Data;
 [SingletonGame]
 public class RookDetailClass(RookDelegates delegates) : IGameInfo, ICardInfo<RookCardInformation>, ITrickData
 {
@@ -6,13 +6,14 @@ public class RookDetailClass(RookDelegates delegates) : IGameInfo, ICardInfo<Roo
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Rook";
+    public const string GameName = "Rook";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<RookCardInformation>.CardsToPassOut
     {
         get

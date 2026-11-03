@@ -2,13 +2,15 @@
 <StackLayout ItemSpacing="10px">
     <StackItem>
         <GameBoardBlazor BoardData="_boardData"
-                         TargetHeight="85vh" />
+                         TargetHeight="95" />
     </StackItem>
     <StackItem>
-        <div class="@cc1.CenteredFlex" style="height: 22vh">
-            <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
-            <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
-            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+        <div>
+            <GameActionButton SizeCategory="EnumSize.Large" CommandObject="RollCommand" Display="Roll Dice" />
+            <GameActionButton SizeCategory="EnumSize.Large" CommandObject="EndCommand" Display="End Turn" />
+        </div>
+        <div class="@cc1.CenteredFlex" style="height: @Pixels">
+            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" PercentHeight="_height" />
         </div>
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
         <div>

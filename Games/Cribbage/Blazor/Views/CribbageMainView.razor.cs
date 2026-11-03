@@ -18,10 +18,10 @@ public partial class CribbageMainView
         _scores.Clear();
         _scores.AddColumn("Cards Left", false, nameof(CribbagePlayerItem.ObjectCount))
             .AddColumn("Is Skunk Hole", false, nameof(CribbagePlayerItem.IsSkunk), category: EnumScoreSpecialCategory.TrueFalse)
-            .AddColumn("First Position", false, nameof(CribbagePlayerItem.FirstPosition))
-            .AddColumn("Second Position", false, nameof(CribbagePlayerItem.SecondPosition))
-            .AddColumn("Score Round", false, nameof(CribbagePlayerItem.ScoreRound))
-            .AddColumn("Score Game", false, nameof(CribbagePlayerItem.TotalScore));
+            .AddColumn("Position 1", false, nameof(CribbagePlayerItem.FirstPosition), numberOfDigits: 3)
+            .AddColumn("Position 2", false, nameof(CribbagePlayerItem.SecondPosition), numberOfDigits: 3)
+            .AddColumn("Score Round", false, nameof(CribbagePlayerItem.ScoreRound), numberOfDigits: 3)
+            .AddColumn("Score Game", false, nameof(CribbagePlayerItem.TotalScore), numberOfDigits: 3);
         base.OnInitialized();
     }
     private ICustomCommand ContinueCommand => DataContext!.ContinueCommand!;

@@ -1,10 +1,10 @@
 @inherits CascadingGameView<A21DiceGameMainViewModel>
-<div class="@cc1.CenteredFlex" style="height: 22vh">
-    <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
-    <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
-    <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+<div class="@cc1.CenteredFlex" style="height: @HeightPixels">
+    <GameActionButton SizeCategory="EnumSize.Large" CommandObject="RollCommand" Display="Roll Dice" />
+    <GameActionButton SizeCategory="EnumSize.Large" CommandObject="EndCommand" Display="End Turn" />
+    <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" PercentHeight="35" />
 </div>
-<LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+<LabelGridComponent SizeCategory="EnumSize.Large" DataContext="DataContext.VMData" Labels="_labels" />
 <div>
-    <ScoreBoardBlazor P="A21DiceGamePlayerItem" Columns="@_scores" Players="@DataContext!.PlayerList" />
+    <ScoreBoardBlazor SizeCategory="EnumSize.Large" P="A21DiceGamePlayerItem" Columns="@_scores" Players="@DataContext!.PlayerList" />
 </div>

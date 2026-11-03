@@ -1,4 +1,4 @@
-namespace ClueCardGame.Core.Data;
+﻿namespace ClueCardGame.Core.Data;
 [SingletonGame]
 public class ClueCardGameDetailClass : IGameInfo, ICardInfo<ClueCardGameCardInformation>
 {
@@ -6,13 +6,14 @@ public class ClueCardGameDetailClass : IGameInfo, ICardInfo<ClueCardGameCardInfo
     bool IGameInfo.CanHaveExtraComputerPlayers => true;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Clue Card Game";
+    public const string GameName = "Clue Card Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 4;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<ClueCardGameCardInformation>.CardsToPassOut => 3; //change to what you need.
     BasicList<int> ICardInfo<ClueCardGameCardInformation>.PlayerExcludeList => ClueCardGameMainGameClass.ExcludeList;
     BasicList<int> ICardInfo<ClueCardGameCardInformation>.DiscardExcludeList(IListShuffler<ClueCardGameCardInformation> deckList)

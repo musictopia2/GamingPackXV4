@@ -35,5 +35,4 @@ public partial class MultiplePilesBlazor : IHandleAsync<SkipboCardsChangedEventM
     public string AnimationTag { get; set; } = "";
     [Parameter]
     public bool Inline { get; set; } = true;
-    private string RealHeight => TargetHeight.HeightString();
 }

@@ -5,13 +5,13 @@
     OnCardChosen="OpponentPropertyChosen"
 />
 <div>
-    <GameButtonComponent Display="Cancel" CommandObject="CancelCommand" />
-    <GameButtonComponent Display="Steal" CommandObject="StealCommand" />
+    <GameActionButton Display="Cancel" CommandObject="CancelCommand" />
+    <GameActionButton Display="Steal" CommandObject="StealCommand" />
 </div>
 @if (_chosenCard is null)
 {
     return;
 }
 <div>
-    <CardGraphicsBlazor DeckObject="_chosenCard" TargetHeight="20vh" />
+    <CardGraphicsBlazor DeckObject="_chosenCard" HeightPercent="25" />
 </div>

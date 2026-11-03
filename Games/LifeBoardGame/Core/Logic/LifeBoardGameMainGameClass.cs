@@ -27,7 +27,7 @@ public class LifeBoardGameMainGameClass(IGamePackageResolver resolver,
     , IBeginningColors<EnumColorChoice, LifeBoardGamePlayerItem, LifeBoardGameSaveInfo>
     , IMiscDataNM, ISerializable
 {
-    public override Task FinishGetSavedAsync()
+    public override async Task FinishGetSavedAsync()
     {
         LoadControls();
         GameSaved();
@@ -77,8 +77,11 @@ public class LifeBoardGameMainGameClass(IGamePackageResolver resolver,
                     model.GameDetails = boardProcesses.GetSpaceDetails(SingleInfo.Position);
                 }
             }
+            if (SaveRoot.GameStatus == EnumWhatStatus.NeedTradeSalary)
+            {
+                tradeSalaryProcesses.LoadOtherPlayerSalaries(); //try this too.
+            }
         }
-        return Task.CompletedTask;
     }
     protected override async Task ShowHumanCanPlayAsync()
     {
@@ -335,6 +338,9 @@ public class LifeBoardGameMainGameClass(IGamePackageResolver resolver,
     {
         if (PlayerList.DidChooseColors() && SaveRoot.GameStatus != EnumWhatStatus.NeedChooseGender)
         {
+
+            
+
             switch (SaveRoot.GameStatus)
             {
                 case EnumWhatStatus.NeedChooseHouse:

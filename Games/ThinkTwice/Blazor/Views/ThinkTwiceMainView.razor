@@ -3,9 +3,9 @@
 {
     return;
 }
-<CascadingValue Value="@_diceHeight">
-    <div style="margin: 5px; height: @_diceHeight">
-        <StackLayout ItemSpacing="@_diceHeight">
+<CascadingValue Value="@_height">
+    <div style="margin: 5px; height: @Pixels">
+        <StackLayout ItemSpacing="@Pixels">
             <StateContentView DataContext="_categories">
                 @if (_categories.Visible == true)
                 {
@@ -29,12 +29,12 @@
     </div>
 </CascadingValue>
 <div>
-    <GameButtonComponent CommandObject="MultiCommand" Display="Roll Multiplier Dice" />
+    <GameActionButton CommandObject="MultiCommand" Display="Roll Multiplier Dice" />
 </div>
-<div class="@cc1.CenteredFlex" style="height: 22vh">
-    <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
-    <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
-    <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+<div class="@cc1.CenteredFlex" style="height: @Pixels">
+    <GameActionButton CommandObject="RollCommand" Display="Roll Dice" />
+    <GameActionButton CommandObject="EndCommand" Display="End Turn" />
+    <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" PercentHeight="@_height" />
 </div>
 <StackLayout>
     <StackItem>

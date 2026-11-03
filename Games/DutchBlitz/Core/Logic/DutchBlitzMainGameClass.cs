@@ -364,18 +364,25 @@ public class DutchBlitzMainGameClass(IGamePackageResolver mainContainer,
         }
         await Network!.SendAllAsync("stock", SingleInfo!.StockLeft);
     }
+
+    internal Task RefreshCardsAsync(object target)
+    {
+        return Aggregator!.PublishAllAsync(
+            new DutchBlitzCardsChangedEventModel { Target = target });
+    }
+
     public async Task AddNewPublicPileAsync(DutchBlitzCardInformation thisCard)
     {
         thisCard.Player = WhoTurn;
         thisCard.Drew = false;
         thisCard.IsUnknown = false;
         thisCard.IsSelected = false;
-
-
         _model!.PublicPiles1!.CreateNewPile(thisCard);
+        await RefreshCardsAsync(_model.PublicPiles1);
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Computer && Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.25);
+            await RefreshCardsAsync(_model.PublicPiles1);
         }
         await ContinueTurnAsync();
     }
@@ -386,13 +393,16 @@ public class DutchBlitzMainGameClass(IGamePackageResolver mainContainer,
         thisCard.IsSelected = false;
         thisCard.IsUnknown = false;
         _model!.PublicPiles1!.AddCardToPile(index, thisCard);
+        await RefreshCardsAsync(_model.PublicPiles1);
         if (_model.PublicPiles1.NeedToRemovePile(index))
         {
+
             if (Test!.NoAnimations == false)
             {
                 await Delay!.DelaySeconds(1);
             }
             var thisList = _model.PublicPiles1.EmptyPileList(index);
+            await RefreshCardsAsync(_model.PublicPiles1);
             _otherList.AddRange(thisList);
         }
         else

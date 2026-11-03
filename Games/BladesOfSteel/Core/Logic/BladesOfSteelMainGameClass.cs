@@ -323,10 +323,8 @@ public class BladesOfSteelMainGameClass
             LoadPlayerControls();
         }
         LoadControls();
-        if (_model!.MainDefense1!.HasCards == true)
-        {
-            throw new CustomBasicException("Cannot start setup when there are cards in defense");
-        }
+        _model.MainDefense1.ClearHand();
+        SaveRoot.MainDefenseList.Clear();
         PlayerList!.ForEach(thisPlayer =>
         {
             thisPlayer.MainHandList.Clear();

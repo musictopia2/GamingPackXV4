@@ -5,5 +5,4 @@ public partial class ChancePileBlazor
     public int TargetHeight { get; set; } = 15;
     [Parameter]
     public SingleObservablePile<ChanceCardInfo>? SinglePile { get; set; }
-    private string RealHeight => $"{TargetHeight}vh";
 }

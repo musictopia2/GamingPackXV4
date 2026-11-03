@@ -1,9 +1,9 @@
 ﻿@inherits CascadingGameView<MinesweeperOpeningViewModel>
 <div style="margin-top:5px;">
-
-    <ListChooserBlazor ListPicker="DataContext!.LevelPicker" />
+    <ListChooserBlazor ListPicker="DataContext!.LevelPicker" SizeCategory="EnumSize.Large" />
     <StateContentView DataContext="DataContext">
-        <p>Mines Needed @DataContext.HowManyMinesNeeded</p>
+        <GameLabel SizeCategory="EnumSize.Large">
+            Mines Needed @DataContext.HowManyMinesNeeded
+        </GameLabel>
     </StateContentView>
-    
 </div>

@@ -12,4 +12,7 @@ public partial class RailRoadChooserComponent
     {
         OnChose.InvokeAsync(HowMany);
     }
+
+   
+
 }

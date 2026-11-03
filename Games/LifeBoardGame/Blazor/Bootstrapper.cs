@@ -7,6 +7,7 @@ public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
     {
         Core.DIFinishProcesses.GlobalDIAutoRegisterClass.RegisterNonSavedClasses(GetDIContainer);
         Core.DIFinishProcesses.SpecializedRegistrationHelpers.RegisterCommonMultplayerClasses(GetDIContainer);
+
         Core.DIFinishProcesses.AutoResetClass.RegisterAutoResets();
         //anything that needs to be registered will be here.
         return Task.CompletedTask;

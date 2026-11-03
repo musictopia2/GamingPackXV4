@@ -8,10 +8,10 @@
         <DeckOfCardsHandBlazor R="RegularRummyCard" Hand="_vmData.PlayerHand1" />
     </StackItem>
     <StackItem>
-        <GameButtonComponent CommandObject="LayDownCommand"
+        <GameActionButton CommandObject="LayDownCommand"
                              Display="Lay Down"
                              StartOnNewLine="true" />
-        <GameButtonComponent CommandObject="BackCommand"
+        <GameActionButton CommandObject="BackCommand"
                              Display="Back"
                              StartOnNewLine="true" />
     </StackItem>
@@ -33,14 +33,14 @@
 <StackLayout>
     <StackItem>
         <DeckOfCardsTempSetsBlazor RU="RegularRummyCard"
-                                   TargetContainerSize="58vh"
+                                   HeightPercent="65"
                                    TempPiles="_vmData.TempSets" />
     </StackItem>
     <StackItem>
         <DeckOfCardsMainRummySetsBlazor RU="RegularRummyCard"
                                         SE="DummySet"
                                         T="SavedSet"
-                                        ContainerHeight="58vh"
+                                        HeightPercent="65"
                                         DataContext="_vmData.MainSets" />
     </StackItem>
 </StackLayout>

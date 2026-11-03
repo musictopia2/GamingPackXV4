@@ -1,4 +1,4 @@
-namespace ChineseCheckers.Core.Logic;
+﻿namespace ChineseCheckers.Core.Logic;
 [SingletonGame]
 public class ChineseCheckersMainGameClass
     : SimpleBoardGameClass<ChineseCheckersPlayerItem, ChineseCheckersSaveInfo, EnumColorChoice, int>
@@ -98,6 +98,7 @@ public class ChineseCheckersMainGameClass
     }
     public override async Task SetUpGameAsync(bool isBeginning)
     {
+        ChineseCheckersBoardLayout.ValidatePlayerCount(PlayerList.Count);
         LoadControls();
         if (FinishUpAsync == null)
         {

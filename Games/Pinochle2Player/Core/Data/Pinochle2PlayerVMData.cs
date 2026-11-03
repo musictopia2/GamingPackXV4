@@ -11,7 +11,7 @@ public partial class Pinochle2PlayerVMData : ITrickCardGamesData<Pinochle2Player
     [LabelColumn]
     public partial EnumSuitList TrumpSuit { get; set; }
     [LabelColumn]
-    public string DeckCount => Deck1.TextToAppear;
+    public string DeckCount => Deck1.TextCount.ToString();
     public Pinochle2PlayerVMData(CommandContainer command,
             BasicTrickAreaObservable<EnumSuitList, Pinochle2PlayerCardInformation> trickArea1
             )

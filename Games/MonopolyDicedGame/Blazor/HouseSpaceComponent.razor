@@ -1,16 +1,15 @@
-﻿<SpaceBlazor MarginLeft=25 MarginTop=-4 Column="6" Row="7">
-    @if (HousesOwned == 0 && HasHotel == false)
-    {
-        <ColorSpaceComponent TargetImageHeight="@ImageHeight" />
-        return;
-    }
-    @if (HasHotel)
-    {
-        <MiscDiceBlazor TargetHeight="@ImageHeight" Category="EnumMiscType.Hotel" />
-        return;
-    }
-    @if (HousesOwned > 0)
-    {
-        <MiscDiceBlazor NumberOfHouses=@HousesOwned TargetHeight="@ImageHeight" Category="EnumMiscType.RegularHouse" />
-    }
+﻿<SpaceBlazor MarginLeft="25" MarginTop="-4" Column="6" Row="7">
+    <ColorSpaceComponent HeightPercent="HeightPercent">
+        @if (HasHotel)
+        {
+            <MiscDiceBlazor HeightPercent="HeightPercent"
+                            Category="EnumMiscType.Hotel" />
+        }
+        else if (HousesOwned > 0)
+        {
+            <MiscDiceBlazor NumberOfHouses="@HousesOwned"
+                            HeightPercent="HeightPercent"
+                            Category="EnumMiscType.RegularHouse" />
+        }
+    </ColorSpaceComponent>
 </SpaceBlazor>

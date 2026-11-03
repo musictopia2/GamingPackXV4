@@ -8,14 +8,14 @@
     <HandBlazor TargetContainerSize="45vw" Hand="DataContext!.VMData.Payments" />
 </div>
 <div>
-    <GameButtonComponent Display="Start Over" CommandObject="StartOverCommand" />
-    <GameButtonComponent Display="Add Payments" CommandObject="AddPaymentsCommand" />
-    <GameButtonComponent Display="Finish Payments" CommandObject="FinishPaymentCommand" />
+    <GameActionButton Display="Start Over" CommandObject="StartOverCommand" />
+    <GameActionButton Display="Add Payments" CommandObject="AddPaymentsCommand" />
+    <GameActionButton Display="Finish Payments" CommandObject="FinishPaymentCommand" />
 </div>
 <div>
     <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
 </div>
 <div>
-    <GameButtonComponent Display="Add All Cards For Payment" CommandObject="AddAllCommand" />
-    <GameButtonComponent Display="Put Back Selected Cards" CommandObject="PutSelectedBackCommand" />
+    <GameActionButton Display="Add All Cards For Payment" CommandObject="AddAllCommand" />
+    <GameActionButton Display="Put Back Selected Cards" CommandObject="PutSelectedBackCommand" />
 </div>

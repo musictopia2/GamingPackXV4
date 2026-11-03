@@ -1,4 +1,4 @@
-namespace CrazyEights.Core.Data;
+﻿namespace CrazyEights.Core.Data;
 [SingletonGame]
 public class CrazyEightsDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     IBeginningRegularCards<RegularSimpleCard>
@@ -7,13 +7,14 @@ public class CrazyEightsDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     bool IGameInfo.CanHaveExtraComputerPlayers => true;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Crazy Eights";
+    public const string GameName = "Crazy Eights";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<RegularSimpleCard>.CardsToPassOut => 7;
     BasicList<int> ICardInfo<RegularSimpleCard>.PlayerExcludeList => [];
     bool ICardInfo<RegularSimpleCard>.AddToDiscardAtBeginning => true;

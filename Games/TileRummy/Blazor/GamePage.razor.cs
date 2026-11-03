@@ -9,5 +9,5 @@ public partial class GamePage
     public BasicData? BasicData { get; set; }
     [CascadingParameter]
     public MultiplayerBasicParentShell? Shell { get; set; }
-    public int TargetImageHeight { get; set; } = 6;
+    public int TargetImageHeight { get; set; } = 10;
 }

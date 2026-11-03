@@ -2,16 +2,17 @@
 <StackLayout>
     <StackItem>
         <BaseBoneyardPileBlazor D="TileInfo"
+                                LegendSizingText="Pool (99)"
                                 LI="TileShuffler"
                                 BoneyardPile="DataContext!.GetPool">
-            <TileRummyImageBlazor TargetHeight="7vh" DeckObject="GetTile" />
+            <TileRummyImageBlazor HeightPercent="8" DeckObject="GetTile" />
         </BaseBoneyardPileBlazor>
     </StackItem>
     <StackItem>
-        <GameButtonComponent StartOnNewLine="true" CommandObject="FirstSetCommand" FontSize="2vh" Display="Create First Sets" />
-        <GameButtonComponent StartOnNewLine="true" CommandObject="CreateNewSetCommand" FontSize="2vh" Display="Create New Set" />
-        <GameButtonComponent StartOnNewLine="true" CommandObject="ResetCommand" FontSize="2vh" Display="Reset Moves" />
-        <GameButtonComponent StartOnNewLine="true" CommandObject="EndCommand" FontSize="2vh" Display="End Turn" />
+        <GameActionButton StartOnNewLine="true" CommandObject="FirstSetCommand" Display="Create First Sets" />
+        <GameActionButton StartOnNewLine="true" CommandObject="CreateNewSetCommand" Display="Create New Set" />
+        <GameActionButton StartOnNewLine="true" CommandObject="ResetCommand" Display="Reset Moves" />
+        <GameActionButton StartOnNewLine="true" CommandObject="EndCommand" Display="End Turn" />
         <div>
             <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
         </div>
@@ -20,7 +21,7 @@
         </div>
     </StackItem>
     <StackItem>
-        <TileRummyTempSetBlazor TargetContainerSize="20vh" TempPiles="DataContext!.GetTempTiles" />
+        <TileRummyTempSetBlazor HeightPercent="22" TempPiles="DataContext!.GetTempTiles" />
     </StackItem>
 </StackLayout>
 <div>
@@ -29,5 +30,5 @@
     </BaseHandBlazor>
 </div>
 <div>
-    <TileRummyMainSetBlazor ContainerHeight="35vh" ContainerWidth="90vw" DataContext="DataContext.GetMainSets" />
+    <TileRummyMainSetBlazor HeightPercent="40" ContainerWidth="90vw" DataContext="DataContext.GetMainSets" />
 </div>

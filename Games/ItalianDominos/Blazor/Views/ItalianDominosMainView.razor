@@ -1,19 +1,18 @@
 @inherits CascadingGameView<ItalianDominosMainViewModel>
 <BaseBoneyardPileBlazor D="SimpleDominoInfo" BoneyardPile="DataContext!.BoneYard" LI="DominosBasicShuffler<SimpleDominoInfo>">
-    <BasicDominoBlazor D="SimpleDominoInfo" DeckObject="GetDomino" TargetHeight="10vh" />
+    <BasicDominoBlazor D="SimpleDominoInfo" DeckObject="GetDomino" HeightPercent="@TargetHeight" />
 </BaseBoneyardPileBlazor>
 <div>
-    <BaseHandBlazor Hand="DataContext.PlayerHand" TargetImageSize="@RealHeight" TargetContainerSize="95vw" Divider="1.05" Context="Domino" D="SimpleDominoInfo">
+    <BaseHandBlazor Hand="DataContext.PlayerHand" TargetContainerSize="95vw" Divider="1.05" Context="Domino" D="SimpleDominoInfo">
         <BasicDominoBlazor D="SimpleDominoInfo"
 
-             DeckObject="Domino" 
-             TargetHeight="@RealHeight"
+             DeckObject="Domino"
              CommandObject="DataContext.PlayerHand.ObjectSingleClickCommand" CommandParameter="Domino" />
     </BaseHandBlazor>
 </div>
 <StackLayout>
     <StackItem>
-        <GameButtonComponent CommandObject="PlayCommand" Display="Play" />
+        <GameActionButton CommandObject="PlayCommand" Display="Play" />
     </StackItem>
     <StackItem>
         <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />

@@ -12,11 +12,11 @@
     </StackItem>
     <StackItem>
         <DeckOfCardsTempSetsBlazor RU="RegularRummyCard"
-                               TargetContainerSize="30vh"
+                               HeightPercent="35"
                                TempPiles="_vmData.TempSets" />
     </StackItem>
     <StackItem>
-        <GameButtonComponent Display="Lay Down Single Set" CommandObject="LayCommand" />
+        <GameActionButton Display="Lay Down Single Set" CommandObject="LayCommand" />
     </StackItem>
     <StackItem>
         <div>
@@ -37,6 +37,6 @@
                                     RU="RegularRummyCard"
                                     SE="RummySet"
                                     T="SavedSet"
-                                    ContainerHeight="30vh"
+                                    HeightPercent="35"
                                     DataContext="_vmData.MainSets" />
 </div>

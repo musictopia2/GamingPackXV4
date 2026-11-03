@@ -1,9 +1,0 @@
-@inherits CascadingGameView<DeadDie96MainViewModel>
-<div class="@cc1.CenteredFlex" style="height: @Pixels ">
-    <GameActionButton SizeCategory="EnumSize.Large" CommandObject="RollCommand" Display="Roll Dice" />
-    <DiceListConrolBlazor D="TenSidedDice" Cup="@DataContext!.GetCup" PercentHeight="@_height" />
-</div>
-<LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
-<div>
-    <ScoreBoardBlazor P="DeadDie96PlayerItem" Columns="@_scores" Players="@DataContext!.PlayerList" />
-</div>

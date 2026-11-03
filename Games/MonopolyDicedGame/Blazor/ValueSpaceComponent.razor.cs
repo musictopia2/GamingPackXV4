@@ -6,7 +6,8 @@ public partial class ValueSpaceComponent
     public int Value { get; set; }
     [Parameter]
     [EditorRequired]
-    public string TargetHeight { get; set; } = "";
+    public double HeightPercent { get; set; }
+    private string TargetHeight => HeightPercent.HeightPixels;
     private static string Color => cc1.White;
     private static string Border => cc1.Black;
 }

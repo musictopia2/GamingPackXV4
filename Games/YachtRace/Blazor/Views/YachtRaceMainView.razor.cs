@@ -17,4 +17,6 @@ public partial class YachtRaceMainView
     }
     private ICustomCommand EndCommand => DataContext!.FiveKindCommand!;
     private ICustomCommand RollCommand => DataContext!.RollDiceCommand!;
+    private static double _height => 30;
+    private static string Pixels => _height.HeightPixels;
 }

@@ -6,6 +6,14 @@ public partial class MonopolyDicedGameMainView
     private readonly BasicList<LabelGridModel> _labels = [];
     private readonly BasicList<ScoreColumnModel> _scores = [];
     private MonopolyDicedGameGameContainer? _container;
+
+
+    private static double _used = 95;
+
+
+    private static string Pixels => _used.HeightPixels;
+
+
     private HouseDice? _house; //hopefully still okay.
     protected override void OnInitialized()
     {

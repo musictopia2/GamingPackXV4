@@ -16,4 +16,6 @@ public partial class CountdownMainView
     }
     private ICustomCommand EndCommand => DataContext!.EndTurnCommand!;
     private ICustomCommand HintsCommand => DataContext!.HintCommand!;
+    private static double _height => 25;
+    private static string Pixels => _height.HeightPixels;
 }

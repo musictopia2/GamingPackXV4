@@ -1,4 +1,4 @@
-namespace MonasteryCardGame.Core.Data;
+﻿namespace MonasteryCardGame.Core.Data;
 [SingletonGame]
 public class MonasteryCardGameDetailClass : IGameInfo, ICardInfo<MonasteryCardInfo>,
     IBeginningRegularCards<MonasteryCardInfo>
@@ -7,13 +7,14 @@ public class MonasteryCardGameDetailClass : IGameInfo, ICardInfo<MonasteryCardIn
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly;
-    string IGameInfo.GameName => "Monastery Card Game";
+    public const string GameName = "Monastery Card Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<MonasteryCardInfo>.CardsToPassOut => 9;
     BasicList<int> ICardInfo<MonasteryCardInfo>.PlayerExcludeList => [];
     bool ICardInfo<MonasteryCardInfo>.AddToDiscardAtBeginning => true;

@@ -6,7 +6,10 @@
     </StackItem>
     <StateContentView DataContext="DataContext">
         <StackItem>
-            Score: @DataContext!.Score
+            <CompactLabel>
+                Score: @DataContext!.Score
+            </CompactLabel>
+            
         </StackItem>
     </StateContentView>
 </StackLayout>

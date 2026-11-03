@@ -54,5 +54,4 @@ public partial class BoardBlazor
         }
         base.OnParametersSet();
     }
-    private string RealHeight => $"{TargetHeight}vh";
 }

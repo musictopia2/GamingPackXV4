@@ -3,15 +3,20 @@
 {
     return;
 }
-<BaseFrameBlazor Text="Trump Info">
-    <EnumPickerBlazor E="EnumSuitList"
+<BaseFrameBlazor>
+    <LegendContent>
+        Trump Info
+    </LegendContent>
+    <ChildContent>
+        <EnumPickerBlazor E="EnumSuitList"
                           Context="piece"
-                          TargetSize="16vh"
                           ListPicker="DataContext.Model.Suit1">
             <DeckPiece Suit="piece.EnumValue" />
         </EnumPickerBlazor>
     <div>
-        <GameButtonComponent CommandObject="TrumpCommand"
+        <GameActionButton CommandObject="TrumpCommand"
                              Display="Choose Trump Suit" />
     </div>
+    </ChildContent>
+    
 </BaseFrameBlazor>

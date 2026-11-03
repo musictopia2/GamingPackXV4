@@ -13,7 +13,7 @@ public partial class SixtySix2PlayerVMData : ITrickCardGamesData<SixtySix2Player
     [LabelColumn]
     public partial int BonusPoints { get; set; }
     [LabelColumn]
-    public string DeckCount => Deck1.TextToAppear;
+    public string DeckCount => Deck1.TextCount.ToString();
     public static BasicList<ScoreValuePair> GetDescriptionList()
     {
         return

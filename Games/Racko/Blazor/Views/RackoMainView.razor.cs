@@ -19,7 +19,7 @@ public partial class RackoMainView
         int x;
         for (x = 1; x <= 10; x++)
         {
-            _scores.AddColumn("Section" + x, false, "Value" + x, nameof(RackoPlayerItem.CanShowValues));// 2 bindings.
+            _scores.AddColumn("S" + x, false, "Value" + x, nameof(RackoPlayerItem.CanShowValues), numberOfDigits: 2);// 2 bindings.
         }
         base.OnInitialized();
     }

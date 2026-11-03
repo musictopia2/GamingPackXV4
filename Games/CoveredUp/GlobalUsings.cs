@@ -57,3 +57,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelp
 global using BasicBlazorLibrary.Components.MediaQueries.ParentClasses;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using ll1 = BasicGameFrameworkLibrary.Blazor.Helpers.LayoutInfo;

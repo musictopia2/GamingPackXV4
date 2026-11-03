@@ -18,24 +18,24 @@
     <HandBlazor Hand="_vmData.PlayerHand1" TargetContainerSize="95vw" />
 </div>
 <div>
-    <GameButtonComponent CommandObject="PlayCommand"
+    <GameActionButton CommandObject="PlayCommand"
                          Display="Play Card" />
-    <GameButtonComponent CommandObject="EndCommand"
+    <GameActionButton CommandObject="EndCommand"
                          Display="End Turn" />
-    <GameButtonComponent CommandObject="PassCommand"
+    <GameActionButton CommandObject="PassCommand"
                          Display="Pass" />
-    <GameButtonComponent CommandObject="RollCommand"
+    <GameActionButton CommandObject="RollCommand"
                          Display="Roll Dice" />
-    <GameButtonComponent CommandObject="TakeClaimCommand"
+    <GameActionButton CommandObject="TakeClaimCommand"
                          Display="Take Claim" />
-    <GameButtonComponent CommandObject="GambleCommand"
+    <GameActionButton CommandObject="GambleCommand"
                          Display="Gamble" />
-    <GameButtonComponent CustomCallBack = "OpenPopup"
+    <GameActionButton CustomCallBack = "OpenPopup"
                          Display="Open Score Guide" />
     
 </div>
-<div style="height: 14vh;">
-    <DiceListConrolBlazor D="EightSidedDice" Cup="@DataContext.VMData.Cup" TargetHeight="14vh" />
+<div style="height: @Pixels;">
+    <DiceListConrolBlazor D="EightSidedDice" Cup="@DataContext.VMData.Cup"  PercentHeight="@_height" />
 </div>
 <div>
     <LabelGridComponent DataContext="_vmData" Labels="_labels" />

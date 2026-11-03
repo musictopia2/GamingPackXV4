@@ -4,7 +4,8 @@
         <StackItem>
             <CheckersChessBoardBlazor E="EnumColorChoice"
                                       S="SpaceCP"
-                                      TargetHeight="88vh"
+                                      HeightPercent="100"
+                                      
                                       CanRenderSpace="GameContainer!.CanUpdate"
                                       GameBoard="GameBoard">
                 <MainPiece Context="Piece">
@@ -28,8 +29,8 @@
             </CheckersChessBoardBlazor>
         </StackItem>
         <StackItem>
-            <GameButtonComponent Display="End Turn" CommandObject="EndCommand" />
-            <GameButtonComponent Display="Show Tie" CommandObject="TieCommand" />
+            <GameActionButton Display="End Turn" CommandObject="EndCommand" />
+            <GameActionButton Display="Show Tie" CommandObject="TieCommand" />
             <div>
                 <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
             </div>

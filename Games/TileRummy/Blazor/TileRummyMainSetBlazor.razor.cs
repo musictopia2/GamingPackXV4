@@ -8,5 +8,5 @@ public partial class TileRummyMainSetBlazor
     [Parameter]
     public string ContainerWidth { get; set; } = "";
     [Parameter]
-    public string ContainerHeight { get; set; } = "";
+    public double HeightPercent { get; set; }
 }

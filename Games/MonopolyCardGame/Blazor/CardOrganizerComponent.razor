@@ -23,18 +23,18 @@
     @GetInstructions()
 </div>
 <div>
-    <GameButtonComponent Display="Put Back"
+    <GameActionButton Display="Put Back"
                          CommandObject="PutBackCommand" />
     @if (Status == EnumManuelStatus.OrganizingCards)
     {
-        <GameButtonComponent Display="Finish Organizing Cards" CustomCallBack="FinishedOrganizingAsync" />
+        <GameActionButton Display="Finish Organizing Cards" CustomCallBack="FinishedOrganizingAsync" />
     }
     else if (Status == EnumManuelStatus.Final || Status == EnumManuelStatus.OthersLayingDown)
     {
-        <GameButtonComponent CommandObject="ManuelCommand" Display="Play Monopolies" />
+        <GameActionButton CommandObject="ManuelCommand" Display="Play Monopolies" />
     }
-    <GameButtonComponent Display="Add To Calculator" CustomCallBack="CreateNewCalculator" />
-    <GameButtonComponent Display="Clear Calculator" CustomCallBack="ClearCalculator" />
+    <GameActionButton Display="Add To Calculator" CustomCallBack="CreateNewCalculator" />
+    <GameActionButton Display="Clear Calculator" CustomCallBack="ClearCalculator" />
 </div>
 <StackLayout>
     <StackItem>

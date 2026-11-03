@@ -33,6 +33,7 @@ public class FlinchMainGameClass
         _model.PublicPiles.PileClickedAsync = PublicPiles_PileClickedAsync;
         _gameContainer.IsValidMove = IsValidMove;
     }
+
     private async Task PublicPiles_PileClickedAsync(int index)
     {
         if (SaveRoot!.GameStatus == EnumStatusList.DiscardAll)
@@ -396,6 +397,7 @@ public class FlinchMainGameClass
         }
         thisCard.Drew = false;
         thisCard.IsSelected = false;
+        await RefreshCardsAsync(_model.PlayerHand1!);
         await AnimateDiscardAsync(thisCard, pile, EnumAnimcationDirection.StartUpToCard);
         _model.DiscardPiles!.AddCardToPile(pile, thisCard);
         UpdateDiscardData(SingleInfo, pile);
@@ -403,6 +405,7 @@ public class FlinchMainGameClass
         {
             await Delay!.DelaySeconds(.5);
         }
+        await RefreshCardsAsync(_model.DiscardPiles);
         if (SaveRoot!.GameStatus == EnumStatusList.DiscardAll && SingleInfo.MainHandList.Count > 0)
         {
             await ContinueTurnAsync();
@@ -465,6 +468,11 @@ public class FlinchMainGameClass
         whatType = EnumCardType.IsNone;
         return 0;
     }
+    private Task RefreshCardsAsync(object target)
+    {
+        return Aggregator!.PublishAllAsync(
+            new FlinchChangedEventModel { Target = target });
+    }
     public async Task PlayOnPileAsync(int pile, int deck, EnumCardType whichType, int discardNum)
     {
         SingleInfo = PlayerList!.GetWhoPlayer();
@@ -495,12 +503,15 @@ public class FlinchMainGameClass
         if (whichType == EnumCardType.MyCards)
         {
             RemoveFromHand(deck);
+            await RefreshCardsAsync(_model.PlayerHand1!);
         }
         else if (whichType == EnumCardType.Stock)
         {
             _model.StockPile!.RemoveCard();
             _ = SingleInfo.StockList.RemoveObjectByDeck(thisCard.Deck);
+            await RefreshCardsAsync(_model.StockPile.StockFrame);
             await AnimateStockAsync(thisCard);
+            await RefreshCardsAsync(_model.StockPile.StockFrame);
             SingleInfo.StockLeft = _model.StockPile.CardsLeft();
             SingleInfo.InStock = _model.StockPile.NextCardInStock();
         }
@@ -516,14 +527,17 @@ public class FlinchMainGameClass
             }
             _model.DiscardPiles!.RemoveCard(discardNum, deck);
             UpdateDiscardData(SingleInfo, discardNum);
+            _model.DiscardPiles.UnselectAllCards();
+            await RefreshCardsAsync(_model.DiscardPiles);
             await AnimateDiscardAsync(thisCard, discardNum, EnumAnimcationDirection.StartCardToUp);
-            _model.DiscardPiles!.UnselectAllCards();
+            await RefreshCardsAsync(_model.DiscardPiles);
         }
         if (pile > -1)
         {
             var npile = _model.PublicPiles!.PileList[pile];
             await Aggregator.AnimateCardAsync(thisCard, EnumAnimcationDirection.StartDownToCard, "public", npile);
             _model.PublicPiles.AddCardToPile(pile, thisCard);
+            await RefreshCardsAsync(_model.PublicPiles.PileList);
             if (_model.PublicPiles.NeedToRemovePile(pile))
             {
                 if (Test!.NoAnimations == false)
@@ -531,11 +545,13 @@ public class FlinchMainGameClass
                     await Delay!.DelaySeconds(1);
                 }
                 RemoveFromPile(pile);
+                await RefreshCardsAsync(_model.PublicPiles.PileList);
             }
         }
         else
         {
             _model.PublicPiles!.CreateNewPile(thisCard);
+            await RefreshCardsAsync(_model.PublicPiles.PileList);
         }
         if (whichType == EnumCardType.Stock)
         {

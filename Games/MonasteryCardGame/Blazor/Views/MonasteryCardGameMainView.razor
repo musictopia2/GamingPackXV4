@@ -20,14 +20,14 @@
 <StackLayout>
     <StackItem>
         <DeckOfCardsTempSetsBlazor RU="MonasteryCardInfo"
-                                   TargetContainerSize="40vh"
+                                   HeightPercent=45
                                    TempPiles="_vmData.TempSets" />
     </StackItem>
     <StackItem>
         <DeckOfCardsMainRummySetsBlazor RU="MonasteryCardInfo"
                                         SE="RummySet"
                                         T="SavedSet"
-                                        ContainerHeight="40vh"
+                                        HeightPercent="45"
                                         DataContext="_vmData.MainSets" />
     </StackItem>
 </StackLayout>
@@ -40,7 +40,7 @@
     </StackItem>
     <StackItem>
         <StateContentView DataContext="_vmData">
-            <MissionUI MissionColumnWidth="20vw"
+            <MissionUI 
                        Missions="_vmData.CompleteMissions" />
         </StateContentView>
     </StackItem>

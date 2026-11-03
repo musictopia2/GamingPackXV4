@@ -7,6 +7,8 @@ public partial class DisplayStolenPropertyComponent
     private string DisplayName => PlayerToDisplay!.PlayerCategory == EnumPlayerCategory.Self ? "Your Property Being Stolen" : "Play Just Say No To Continue To Steal This";
     private DealCardGameGameContainer? _gameContainer;
     private DealCardGameCardInformation? _displayCard;
+    [CascadingParameter]
+    public int ImageHeight { get; set; }
     protected override void OnInitialized()
     {
         _gameContainer = aa1.Resolver!.Resolve<DealCardGameGameContainer>();

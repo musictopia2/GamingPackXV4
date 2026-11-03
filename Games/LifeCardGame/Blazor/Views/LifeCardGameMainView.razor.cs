@@ -22,4 +22,6 @@ public partial class LifeCardGameMainView
     }
     private ICustomCommand YearsCommand => DataContext!.YearsPassedCommand!;
     private ICustomCommand PlayCardCommand => DataContext!.PlayCardCommand!;
+    private static int _height = 100;
+    private static string Pixels => $"{_height.HeightPixels}px";
 }

@@ -1,4 +1,4 @@
-namespace Spades4Player.Core.Data;
+﻿namespace Spades4Player.Core.Data;
 [SingletonGame]
 public class Spades4PlayerDetailClass : IGameInfo, ICardInfo<Spades4PlayerCardInformation>, ITrickData,
     IBeginningRegularCards<Spades4PlayerCardInformation>
@@ -7,13 +7,14 @@ public class Spades4PlayerDetailClass : IGameInfo, ICardInfo<Spades4PlayerCardIn
     bool IGameInfo.CanHaveExtraComputerPlayers => true;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked; //otherwise, can't play
-    string IGameInfo.GameName => "Spades";
+    public const string GameName = "Spades";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 4;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<Spades4PlayerCardInformation>.CardsToPassOut => 13; //change to what you need.
     BasicList<int> ICardInfo<Spades4PlayerCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<Spades4PlayerCardInformation>.AddToDiscardAtBeginning => false;

@@ -8,14 +8,13 @@
         <GameBoardBlazor PlayerList="DataContext!.GetPlayerList" />
     </StackItem>
     <StackItem>
-        <GameButtonComponent CommandObject="DataContext!.RollDiceCommand" Display="Roll Dice" />
+        <GameActionButton CommandObject="DataContext!.RollDiceCommand" Display="Roll Dice" />
         <StateContentView DataContext="_current">
-            <BasePieceGraphics TargetHeight="10vh"
+            <BasePieceGraphics HeightPercent="12"
                                LongestSize="50">
                 <PieceGraphicsBlazor Index="@_current.PlayerId" Number="@_current.SpaceNumber" />
             </BasePieceGraphics>
         </StateContentView>
-        
         <DiceListConrolBlazor Cup="DataContext!.GetCup" D="SimpleDice" />
         <div>
             <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />

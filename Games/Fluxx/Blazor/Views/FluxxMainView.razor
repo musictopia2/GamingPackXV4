@@ -16,9 +16,9 @@
 </StackLayout>
 <StackLayout ItemSpacing="0px">
     <StackItem>
-        <GameButtonComponent CommandObject="EndCommand"
+        <GameActionButton CommandObject="EndCommand"
                              Display="End Turn" />
-        <GameButtonComponent CommandObject="DiscardCommand"
+        <GameActionButton CommandObject="DiscardCommand"
                              Display="Discard" />
     </StackItem>
     <StackItem>
@@ -26,9 +26,9 @@
         <PlayView DataContext="DataContext.PlayGiveScreen as PlayViewModel" />
     </StackItem>
     <StackItem>
-        <GameButtonComponent CommandObject="UnselectCommand"
+        <GameActionButton CommandObject="UnselectCommand"
                              Display="Unselect All" />
-        <GameButtonComponent CommandObject="SelectCommand"
+        <GameActionButton CommandObject="SelectCommand"
                              Display="Select All" />
     </StackItem>
     <StackItem>
@@ -58,6 +58,6 @@
                           Players="_gameContainer.SaveRoot.PlayerList" />
     </GridItem>
     <GridItem Column="2" Row="1" RowSpan="2">
-        <DetailGameInformationBlazor DataContext="_vmData" Labels="_labels" Text="Additional Information" Width="25vw" />
+        <DetailGameInformationBlazor DataContext="_vmData" Labels="_labels" Text="Additional Information" SuggestContentWidth="true" />
     </GridItem>
 </GridContainer>

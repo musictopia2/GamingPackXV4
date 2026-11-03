@@ -5,6 +5,11 @@ public partial class A21DiceGameMainView
     public TestOptions? TestData { get; set; }
     private readonly BasicList<LabelGridModel> _labels = [];
     private readonly BasicList<ScoreColumnModel> _scores = [];
+
+    private static double _height = 35;
+
+    private static string HeightPixels => _height.HeightPixels;
+
     protected override void OnInitialized()
     {
         _labels.Clear();

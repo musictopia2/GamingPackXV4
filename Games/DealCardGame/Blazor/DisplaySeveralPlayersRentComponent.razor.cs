@@ -13,6 +13,10 @@ public partial class DisplaySeveralPlayersRentComponent
     [Parameter]
     [EditorRequired]
     public BasicList<DealCardGamePlayerItem> Players { get; set; } = [];
+
+    [CascadingParameter]
+    public int ImageHeight { get; set; }
+
     private decimal Balance(DealCardGamePlayerItem player)
     {
         if (player.Money >= Owed)

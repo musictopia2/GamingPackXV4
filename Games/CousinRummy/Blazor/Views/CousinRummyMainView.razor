@@ -9,10 +9,10 @@
 <GridContainer Rows="@GetFirstRows" Columns="35vw 60vw" RowGap="5px" ColumnGap="5px" Inline="true">
     <GridItem>
         <div>
-            <GameButtonComponent CommandObject="InitCommand"
+            <GameActionButton CommandObject="InitCommand"
                                  StartOnNewLine="true"
                                  Display="Lay Down Initial Sets" />
-            <GameButtonComponent CommandObject="OtherCommand"
+            <GameActionButton CommandObject="OtherCommand"
                                  StartOnNewLine="true"
                                  Display="Lay Down Other Sets" />
         </div>
@@ -25,12 +25,12 @@
             <StackItem>
                 <GridContainer Rows="@GetFirstRows" Columns="@GetSecondColumns" RowGap="5px" ColumnGap="5px" Inline="true">
                     <GridItem>
-                        <GameButtonComponent CommandObject="PassCommand"
+                        <GameActionButton CommandObject="PassCommand"
                                              StartOnNewLine="true"
                                              Display="Pass" />
                     </GridItem>
                     <GridItem Column="2">
-                        <GameButtonComponent CommandObject="BuyCommand"
+                        <GameActionButton CommandObject="BuyCommand"
                                              StartOnNewLine="true"
                                              Display="Buy" />
                     </GridItem>
@@ -49,7 +49,7 @@
     </GridItem>
     <GridItem Column="2">
         <DeckOfCardsTempSetsBlazor RU="RegularRummyCard"
-                                   TargetContainerSize="50vh"
+                                   HeightPercent="50"
                                    TempPiles="_vmData.TempSets" />
     </GridItem>
     <GridItem Row="2" Column="1" ColumnSpan="2">
@@ -57,7 +57,7 @@
                                         SE="PhaseSet"
                                         T="SavedSet"
                                         Divider="2.5"
-                                        ContainerHeight="23vh"
+                                        HeightPercent="27"
                                         DataContext="_vmData.MainSets" />
     </GridItem>
 </GridContainer>

@@ -1,7 +1,0 @@
-@inherits AbstractHandBlazor<Phase10CardInformation>
-<BaseHandBlazor D="Phase10CardInformation" Hand="Hand" HeightPixels="RealHeight()" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
-                HandType="HandType" TargetContainerSize="@TargetContainerSize" Context="DeckObject">
-    <CardGraphicsBlazor DeckObject="DeckObject"
-                        HeightPixels="RealHeight()"
-                        @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
-</BaseHandBlazor>

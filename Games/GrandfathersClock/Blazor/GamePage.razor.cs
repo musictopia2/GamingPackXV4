@@ -1,5 +1,5 @@
 namespace GrandfathersClock.Blazor;
 public partial class GamePage
 {
-    public int TargetHeight { get; set; } = 11;
+    public int TargetHeight { get; set; } = 14;
 }

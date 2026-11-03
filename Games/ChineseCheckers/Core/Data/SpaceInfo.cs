@@ -7,6 +7,7 @@ public class SpaceInfo
     public int UpRight { get; set; }
     public int DownRight { get; set; }
     public int DownLeft { get; set; }
+    public int HomeRegion { get; set; } //1 = bottom, then clockwise; 0 = center
     public int Player { get; set; } //this is the player who owns the space
     public EnumColorChoice WhatColor { get; set; } //color of the starting spaces
     public EnumColorChoice DestinationColor { get; set; } //color of the destination spaces

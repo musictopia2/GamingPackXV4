@@ -16,6 +16,7 @@ public partial class MainScreen : IHandle<OpenMainEventModel>,
     protected override void OnInitialized()
     {
         _aggregator.Publish(new AskMainEventModel());
+        gg1.LabelSize = EnumSize.Small;
     }
     private partial void Subscribe();
     private partial void Unsubscribe();

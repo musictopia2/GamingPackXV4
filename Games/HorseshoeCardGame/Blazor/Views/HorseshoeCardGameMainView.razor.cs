@@ -15,10 +15,10 @@ public partial class HorseshoeCardGameMainView
         _labels.AddLabel("Turn", nameof(HorseshoeCardGameVMData.NormalTurn))
             .AddLabel("Status", nameof(HorseshoeCardGameVMData.Status));
         _scores.Clear();
-        _scores.AddColumn("Cards Left", false, nameof(HorseshoeCardGamePlayerItem.ObjectCount))
-            .AddColumn("Tricks Won", false, nameof(HorseshoeCardGamePlayerItem.TricksWon))
-            .AddColumn("Previous Score", false, nameof(HorseshoeCardGamePlayerItem.PreviousScore))
-            .AddColumn("Total Score", false, nameof(HorseshoeCardGamePlayerItem.TotalScore));
+        _scores.AddColumn("Cards Left", false, nameof(HorseshoeCardGamePlayerItem.ObjectCount), numberOfDigits: 2)
+            .AddColumn("Tricks Won", false, nameof(HorseshoeCardGamePlayerItem.TricksWon), numberOfDigits: 2)
+            .AddColumn("Previous Score", false, nameof(HorseshoeCardGamePlayerItem.PreviousScore), numberOfDigits: 2)
+            .AddColumn("Total Score", false, nameof(HorseshoeCardGamePlayerItem.TotalScore), numberOfDigits: 2);
         base.OnInitialized();
     }
 }

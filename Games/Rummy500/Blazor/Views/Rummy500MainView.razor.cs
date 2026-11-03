@@ -22,4 +22,5 @@ public partial class Rummy500MainView
     }
     private ICustomCommand DiscardCommand => DataContext!.DiscardCurrentCommand!;
     private ICustomCommand CreateSetCommand => DataContext!.CreateSetCommand!;
+    private static string ContainerSize => $"{100.HeightPixels}px";
 }

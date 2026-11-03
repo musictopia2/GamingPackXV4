@@ -106,6 +106,7 @@ public class ThreeLetterFunMainGameClass : BasicGameClass<ThreeLetterFunPlayerIt
     }
     public override async Task FinishGetSavedAsync()
     {
+        await _global.WaitAsync();
         LoadControls();
         _model.PlayerWon = "";
         if (SaveRoot!.CanStart == false)

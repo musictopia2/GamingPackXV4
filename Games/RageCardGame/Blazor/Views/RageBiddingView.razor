@@ -4,10 +4,10 @@
     return;
 }
 <div style="margin: 5px">
-    <NumberChooserBlazor NumberPicker="DataContext.Model.Bid1" />
+    <NumberChooserBlazor SizeCategory="EnumSize.Large" NumberPicker="DataContext.Model.Bid1" />
 </div>
 <div>
-    <GameButtonComponent CommandObject="BidCommand"
+    <GameActionButton CommandObject="BidCommand"
                          StartOnNewLine="true"
                          Display="Place Bid" />
 </div>

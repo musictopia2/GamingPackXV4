@@ -1,4 +1,4 @@
-namespace DemonSolitaire.Core.Data;
+﻿namespace DemonSolitaire.Core.Data;
 [SingletonGame]
 public class BasicData : IGameInfo, ISolitaireData
 {
@@ -20,11 +20,12 @@ public class BasicData : IGameInfo, ISolitaireData
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.Solitaire;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleOnly;
-    string IGameInfo.GameName => "Demon Solitaire"; //replace with real name.
+    public const string GameName = "Demon Solitaire";
+    string IGameInfo.GameName => GameName; //replace with real name.
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 0;
     int IGameInfo.MaxPlayers => 0;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet; //not enough room for phone unfortunately.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
 }

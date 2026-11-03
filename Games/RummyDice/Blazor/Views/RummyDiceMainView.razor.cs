@@ -7,6 +7,11 @@ public partial class RummyDiceMainView
     private readonly BasicList<ScoreColumnModel> _scores = [];
     protected override void OnInitialized()
     {
+        string extras = "";
+        if (ll1.LayoutMode is not EnumGameLayoutMode.Compact)
+        {
+            extras = "Score ";
+        }
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(RummyDiceVMData.NormalTurn))
             .AddLabel("Status", nameof(RummyDiceVMData.Status))
@@ -14,8 +19,8 @@ public partial class RummyDiceMainView
                  .AddLabel("Roll", nameof(RummyDiceVMData.RollNumber))
                  .AddLabel("Score", nameof(RummyDiceVMData.Score));
         _scores.Clear();
-        _scores.AddColumn("Score Round", true, nameof(RummyDicePlayerItem.ScoreRound))
-            .AddColumn("Score Game", true, nameof(RummyDicePlayerItem.ScoreGame))
+        _scores.AddColumn($"{extras}Round", true, nameof(RummyDicePlayerItem.ScoreRound))
+            .AddColumn($"{extras}Game", true, nameof(RummyDicePlayerItem.ScoreGame))
             .AddColumn("Phase", true, nameof(RummyDicePlayerItem.Phase));
         base.OnInitialized();
     }
@@ -23,4 +28,9 @@ public partial class RummyDiceMainView
     private ICustomCommand PutBackCommand => DataContext!.BoardCommand!;
     private ICustomCommand RollCommand => DataContext!.RollCommand!;
     private ICustomCommand ScoreCommand => DataContext!.CheckCommand!;
+
+    private static double _defaultSize = ll1.LayoutMode == EnumGameLayoutMode.Compact ? 12 : 18;
+
+    private static string HeightPixels => _defaultSize.HeightPixels;
+
 }

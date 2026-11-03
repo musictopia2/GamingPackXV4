@@ -1,4 +1,4 @@
-namespace SnagCardGame.Core.Data;
+﻿namespace SnagCardGame.Core.Data;
 [SingletonGame]
 public class SnagCardGameDetailClass : IGameInfo, ICardInfo<SnagCardGameCardInformation>, ITrickData,
     IBeginningRegularCards<SnagCardGameCardInformation>
@@ -7,13 +7,14 @@ public class SnagCardGameDetailClass : IGameInfo, ICardInfo<SnagCardGameCardInfo
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Snag Card Game";
+    public const string GameName = "Snag Card Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 2;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<SnagCardGameCardInformation>.CardsToPassOut => 5;
     BasicList<int> ICardInfo<SnagCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<SnagCardGameCardInformation>.AddToDiscardAtBeginning => false;

@@ -4,6 +4,8 @@ public partial class PoliceBoardComponent
     [Parameter]
     public int PoliceUsed { get; set; }
     [Parameter]
-    public string TargetImageHeight { get; set; } = "";
-   
+    [EditorRequired]
+    public double HeightPercent { get; set; }
+    private string TargetHeight => HeightPercent.HeightPixels;
+
 }

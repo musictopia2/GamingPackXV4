@@ -2,7 +2,7 @@ namespace Countdown.Blazor;
 public partial class GameBoardBlazor
 {
     [Parameter]
-    public string TargetHeight { get; set; } = "";
+    public double TargetHeight { get; set; } 
     [Parameter]
     public CountdownGameContainer? GameContainer { get; set; }
     private BasicList<CountdownPlayerItem> _players = [];

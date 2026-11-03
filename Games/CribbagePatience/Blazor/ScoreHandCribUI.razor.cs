@@ -5,5 +5,5 @@ public partial class ScoreHandCribUI
     public ScoreHandCP? Score { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; } = 0;
-    private string HeightString => $"{TargetHeight}vh";
+    private int HeightPixels => ll1.GetHeight(TargetHeight);
 }

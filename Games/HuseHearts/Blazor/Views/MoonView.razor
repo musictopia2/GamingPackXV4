@@ -3,11 +3,19 @@
 {
     return;
 }
-<BaseFrameBlazor Text="Shoot Moon Options">
-    <GameButtonComponent CommandObject="MoonCommand"
+<BaseFrameBlazor>
+    <LegendContent>
+        Shoot Moon Options
+    </LegendContent>
+    <ChildContent>
+        <GameActionButton CommandObject="MoonCommand"
+                          UseSuggestedWidth="true"
                          CommandParameter="EnumMoonOptions.GiveEverybodyPlus"
                          Display="Give Other Players 26 Points" />
-    <GameButtonComponent CommandObject="MoonCommand"
-                         CommandParameter="EnumMoonOptions.GiveSelfMinus"
-                         Display="Reduce your score by 26 points" />
+        <GameActionButton CommandObject="MoonCommand"
+                            UseSuggestedWidth="true"
+                             CommandParameter="EnumMoonOptions.GiveSelfMinus"
+                             Display="Reduce your score by 26 points" />
+    </ChildContent>
+    
 </BaseFrameBlazor>

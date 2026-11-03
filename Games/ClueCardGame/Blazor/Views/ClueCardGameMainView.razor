@@ -15,13 +15,13 @@
             <LabelGridComponent DataContext="_vmData" Labels="_labels" />
             <StackLayout>
                 <StackItem Length="1fr">
-                    <GameButtonComponent Display="@MakeDisplay" Width="100%" CommandObject="MakeCommand" />
+                    <GameActionButton Display="@MakeDisplay" UseSuggestedWidth=true CommandObject="MakeCommand" />
                 </StackItem>
                 <StackItem Length="1fr">
-                    <GameButtonComponent Display="End Turn" Width="100%" CommandObject="EndTurnCommand" />
+                    <GameActionButton Display="End Turn" UseSuggestedWidth="true" CommandObject="EndTurnCommand" />
                 </StackItem>
                 <StackItem Length="1fr">
-                    <GameButtonComponent Display="@ToggleDisplay" Width="100%" CommandObject="ToggleCommand" />
+                    <GameActionButton Display="@ToggleDisplay" UseSuggestedWidth="true" CommandObject="ToggleCommand" />
                 </StackItem>
             </StackLayout>
 

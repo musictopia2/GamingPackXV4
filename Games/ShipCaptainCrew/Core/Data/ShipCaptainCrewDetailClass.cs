@@ -1,4 +1,4 @@
-namespace ShipCaptainCrew.Core.Data;
+﻿namespace ShipCaptainCrew.Core.Data;
 [SingletonGame]
 public class ShipCaptainCrewDetailClass : IGameInfo
 {
@@ -8,11 +8,12 @@ public class ShipCaptainCrewDetailClass : IGameInfo
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
     //looks like i can't have / in the name since it uses that to decide how to save.
     //can change if i ever put into a database.
-    string IGameInfo.GameName => "Ship Captain Crew";
+    public const string GameName = "Ship Captain Crew";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 10;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
 }

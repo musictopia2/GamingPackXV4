@@ -6,7 +6,7 @@
     {
         return;
     }
-    <svg @onclick="@Submit" height="@TargetHeight.HeightString()" viewBox="@GetViewBox()">
+    <svg @onclick="@Submit" height="@TargetHeight.HeightPixels" viewBox="@GetViewBox()">
         @{
             SolitaireCard? currentCard = null;
             if (SinglePile!.CardList.Count > 0)

@@ -1,4 +1,4 @@
-namespace Blackjack.Core.Data;
+﻿namespace Blackjack.Core.Data;
 [SingletonGame]
 public class BlackjackDetailClass : IGameInfo
 {
@@ -6,11 +6,12 @@ public class BlackjackDetailClass : IGameInfo
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.Solitaire;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleOnly;
-    string IGameInfo.GameName => "Blackjack";
+    public const string GameName = "Blackjack";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 0;
     int IGameInfo.MaxPlayers => 0;
     bool IGameInfo.CanAutoSave => false;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
 }

@@ -10,15 +10,15 @@
     </div>
     <StackLayout>
         <StackItem>
-            <div style="width: 50vw; height: 40vh; overflow: auto">
-                <ListChooserBlazor TextWidth="400" TextHeight="3vh" ListPicker="CompleteContainer.ActionContainer.Rule1" />
+            <div style="width: 50vw; height: @_realHeight; overflow: auto">
+                <ListChooserBlazor TextWidth="400" SizeCategory="EnumSize.Small" ListPicker="CompleteContainer.ActionContainer.Rule1" />
             </div>
         </StackItem>
         <StackItem>
-            <GameButtonComponent StartOnNewLine="true"
+            <GameActionButton StartOnNewLine="true"
                                  CommandObject="ViewCommand"
                                  Display="View Card" />
-            <GameButtonComponent StartOnNewLine="true"
+            <GameActionButton StartOnNewLine="true"
                                  CommandObject="DiscardCommand"
                                  Display="Discard Selected Rule(s)" />
             <KeeperButton DataContext="DataContext" @key="GetKey" StartsOnNewLine="true" />

@@ -1,4 +1,3 @@
-using System.Reflection;
 namespace Sorry.Blazor;
 public partial class GameBoardBlazor
 {
@@ -17,8 +16,7 @@ public partial class GameBoardBlazor
     [Parameter]
     public GameBoardGraphicsCP? GraphicsData { get; set; } //this includes the container that is needed as well.
     [Parameter]
-    public string TargetHeight { get; set; } = "";
-    private Assembly GetAssembly => Assembly.GetAssembly(GetType())!;
+    public double TargetHeight { get; set; }
     private static string GetColor(SorryPlayerItem player) => player.Color.Color;
     private async Task SpaceClicked(int space)
     {

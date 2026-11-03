@@ -30,6 +30,7 @@ public partial class LifeBoardGameMainViewModel(CommandContainer commandContaine
         {
             throw new CustomBasicException("You cannot start college career because its in production");
         }
+        _gameStatus = mainGame.SaveRoot.GameStatus;
         base.AdditionalInitialize();
     }
 
@@ -351,6 +352,10 @@ public partial class LifeBoardGameMainViewModel(CommandContainer commandContaine
     }
     private void ChangeScreens(EnumWhatStatus oldStatus, EnumWhatStatus newStatus)
     {
+
+
+
+
         if (oldStatus == EnumWhatStatus.NeedTradeSalary)
         {
             CloseTradeSalary();

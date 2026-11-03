@@ -1,3 +1,4 @@
+
 namespace Savannah.Blazor.Views;
 public partial class SavannahMainView
 {
@@ -33,6 +34,9 @@ public partial class SavannahMainView
         }
     }
     private ICustomCommand PlayerCommand => DataContext!.ClickPlayerDiscardCommand!;
-    private string HeightString => $"{TargetHeight}vh";
+    private int HeightPixels => TargetHeight.HeightPixels;
     private static PointF Location => new(10, -300);
+
+    private static EnumSize Size => ll1.LayoutMode == EnumGameLayoutMode.Compact ? EnumSize.Small : EnumSize.Standard;
+
 }

@@ -3,15 +3,20 @@
 {
     return;
 }
-<BaseFrameBlazor Text="Direction">
-    <FinalActionLayout>
-        <div>
-            <ListChooserBlazor ListPicker="CompleteContainer.ActionContainer.Direction1" />
-        </div>
-        <div>
-            <GameButtonComponent CommandObject="DirectionCommand"
-                                 Display="Choose Direction" />
-            <KeeperButton @key="GetKey" DataContext="DataContext"  />
-        </div>
-    </FinalActionLayout>
+<BaseFrameBlazor>
+    <LegendContent>
+        Direction
+    </LegendContent>
+    <ChildContent>
+        <FinalActionLayout>
+            <div>
+                <ListChooserBlazor ListPicker="CompleteContainer.ActionContainer.Direction1" />
+            </div>
+            <div>
+                <GameActionButton CommandObject="DirectionCommand"
+                                  Display="Choose Direction" />
+                <KeeperButton @key="GetKey" DataContext="DataContext" />
+            </div>
+        </FinalActionLayout>
+    </ChildContent>
 </BaseFrameBlazor>

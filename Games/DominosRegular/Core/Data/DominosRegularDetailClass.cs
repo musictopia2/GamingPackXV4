@@ -1,4 +1,4 @@
-namespace DominosRegular.Core.Data;
+﻿namespace DominosRegular.Core.Data;
 [SingletonGame]
 public class DominosRegularDetailClass : IGameInfo
 {
@@ -6,11 +6,12 @@ public class DominosRegularDetailClass : IGameInfo
     bool IGameInfo.CanHaveExtraComputerPlayers => true;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Dominos (Regular)";
+    public const string GameName = "Dominos (Regular)";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
 }

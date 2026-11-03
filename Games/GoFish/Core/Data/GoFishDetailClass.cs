@@ -1,4 +1,4 @@
-namespace GoFish.Core.Data;
+﻿namespace GoFish.Core.Data;
 [SingletonGame]
 public class GoFishDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     IBeginningRegularCards<RegularSimpleCard>
@@ -7,13 +7,14 @@ public class GoFishDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly;
-    string IGameInfo.GameName => "Go Fish";
+    public const string GameName = "Go Fish";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 2;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<RegularSimpleCard>.CardsToPassOut => 7;
     BasicList<int> ICardInfo<RegularSimpleCard>.PlayerExcludeList => [];
     bool ICardInfo<RegularSimpleCard>.AddToDiscardAtBeginning => false;

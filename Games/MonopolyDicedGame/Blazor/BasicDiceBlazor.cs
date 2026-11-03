@@ -3,8 +3,12 @@ public class BasicDiceBlazor : GraphicsCommand
 {
     [Parameter]
     public BasicDiceModel? Dice { get; set; }
+
+
     [Parameter]
-    public string TargetHeight { get; set; } = "4vh";
+    public double HeightPercent { get; set; } = 6;
+    private string TargetHeight => HeightPercent.HeightPixels;
+
     [Parameter]
     public bool OnBoardNotOwned { get; set; } //if on board and not owned, will be different.
     private static Rect StartRect()

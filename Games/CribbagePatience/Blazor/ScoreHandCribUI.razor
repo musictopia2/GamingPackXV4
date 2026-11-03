@@ -1,20 +1,28 @@
-﻿<BaseFrameBlazor PaddingHeight="10" Text="@Score!.Text">
-    <StackLayout ItemSpacing="10px">
-        <StackItem>
-            <div class="handGrid">
-                @foreach (var card in Score.CardList)
+﻿<BaseFrameBlazor PaddingHeight="10">
+    <LegendContent>
+        <CompactLabel>
+            @Score!.Text
+        </CompactLabel>
+    </LegendContent>
+    <ChildContent>
+        <StackLayout ItemSpacing="10px">
+            <StackItem>
+                <div class="handGrid">
+                    @foreach (var card in Score!.CardList)
+                    {
+                        <div>
+                            <DeckOfCardsImageBlazor HeightPixels="HeightPixels" R="CribbageCard" DeckObject="card" />
+                        </div>
+                    }
+                </div>
+            </StackItem>
+            <StackItem>
+                @foreach (var score in Score!.Scores)
                 {
-                    <div>
-                        <DeckOfCardsImageBlazor TargetHeight="@HeightString" R="CribbageCard" DeckObject="card" />
-                    </div>
+                    <div>@score.Description - @score.Points</div>
                 }
-            </div>
-        </StackItem>
-        <StackItem>
-            @foreach (var score in Score.Scores)
-            {
-                <div>@score.Description - @score.Points</div>
-            }
-        </StackItem>
-    </StackLayout>
+            </StackItem>
+        </StackLayout>
+    </ChildContent>
+    
 </BaseFrameBlazor>

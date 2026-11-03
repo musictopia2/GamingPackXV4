@@ -1,9 +1,21 @@
-﻿.boldsmaller{
-    font-weight: bold;
-    font-size: 1.5rem;
-    margin-top: 20px;
+.score-guide {
+    min-width: 0;
+    font-size: clamp(0.75rem, 2vh, 1rem);
+    line-height: 1.15;
 }
-.boldregular{
+
+.score-guide ::deep fieldset {
+    display: block;
+    min-width: 0;
+}
+
+.boldsmaller {
     font-weight: bold;
-    font-size: 2rem;
+    font-size: 1em;
+    margin-top: 0.4em;
+}
+
+.boldregular {
+    font-weight: bold;
+    font-size: 1.125em;
 }

@@ -1,9 +1,9 @@
 @using BasicBlazorLibrary.Components.Arrows;
 @inherits CascadingGameView<ClueBoardGameMainViewModel>
-<GridContainer RowGap="5px" Columns="auto auto 10vw 1fr">
+<GridContainer RowGap="5px" Columns="auto auto calc(10vw + 10px) 1fr">
     <GridItem>
         <GameBoardBlazor GraphicsData="_graphicsData"
-                         TargetHeight="88vh" />
+                         TargetHeight="100" />
 
     </GridItem>
     <GridItem Column="2">
@@ -30,7 +30,7 @@
         </div>
         <GridContainer Columns="auto auto">
             <ActionContentView Key="@ClueActions.Turn">
-                <BasePieceGraphics LongestSize="50" TargetHeight="4.5vh">
+                <BasePieceGraphics LongestSize="50" HeightPercent="5">
                     <PawnPiece MainColor="@GetColor()" />
                 </BasePieceGraphics>
             </ActionContentView>
@@ -41,22 +41,22 @@
         <ActionContentView Key="@ClueActions.Given">
             <CluePileBlazor SinglePile="DataContext!.GetPile" />
         </ActionContentView>
-        <GameButtonComponent CommandObject="RollCommand" StartOnNewLine="true" Display="Roll Dice" />
-        <div style="margin-left: -10px;">
+        <GameActionButton CommandObject="RollCommand" StartOnNewLine="true" Display="Roll Dice" />
+        <div style="width: max-content; margin: 0 5px;">
             <ArrowCompleteComponent ArrowCategory="EnumArrowCategory.All"
                                     DownClicked="DataContext!.DownArrowAsync"
                                     UpClicked="DataContext.UpArrowAsync"
                                     LeftClicked="DataContext.LeftArrowAsync"
                                     RightClicked="DataContext.RightArrowAsync"
                                     BackgroundColor="aqua"
-                                    TargetHeight="6vh" />
+                                    TargetHeight="@Arrows" />
         </div>
-        <div class="@css1.CenteredFlex" style="font-size: 8vh; color: white">
+        <div class="@css1.CenteredFlex" style="font-size: @Pixels; color: white">
             <StateContentView DataContext="DataContext.VMData">
                 @DataContext!.VMData.LeftToMove
             </StateContentView>
             
-            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="8vh" />
+            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" PercentHeight="@_height" />
         </div>
         
         <div style="font-weight: bold;">
@@ -72,16 +72,16 @@
         
     </GridItem>
     <GridItem Column="4">
-        <div style="margin-top: 30vh">
-            <GameButtonComponent CommandObject="AccusationCommand" StartOnNewLine="true" Display="Accusation" />
+        <div style="margin-top: @Fins">
+            <GameActionButton CommandObject="AccusationCommand" StartOnNewLine="true" Display="Accusation" />
             <div style="margin-top: 30px;">
 
             </div>
-            <GameButtonComponent CommandObject="StartOverCommand" StartOnNewLine="true" Display="Start Over" />
-            <GameButtonComponent CommandObject="PredictCommand" StartOnNewLine="true" Display="Predict" />
+            <GameActionButton CommandObject="StartOverCommand" StartOnNewLine="true" Display="Start Over" />
+            <GameActionButton CommandObject="PredictCommand" StartOnNewLine="true" Display="Predict" />
             
-            <GameButtonComponent CommandObject="EndCommand" StartOnNewLine="true" Display="End Turn" />
-            <LabelGridComponent DataContext="DataContext!.VMData" Labels="_clues" />
+            <GameActionButton CommandObject="EndCommand" StartOnNewLine="true" Display="End Turn" />
+            <LabelGridComponent SizeCategory="EnumSize.Small" DataContext="DataContext!.VMData" Labels="_clues" />
         </div>
     </GridItem>
 </GridContainer>

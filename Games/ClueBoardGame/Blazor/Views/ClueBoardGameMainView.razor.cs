@@ -28,4 +28,12 @@ public partial class ClueBoardGameMainView
         var player = _graphicsData!.GameContainer!.PlayerList!.GetWhoPlayer();
         return player.Color.Color;
     }
+    private static double _height => 12;
+    private static string Pixels => _height.HeightPixels;
+    private static double _others => 30;
+    private static string Fins => _others.HeightPixels;
+
+    private static double _firsts = 8;
+    private static string Arrows => _firsts.HeightPixels;
+
 }

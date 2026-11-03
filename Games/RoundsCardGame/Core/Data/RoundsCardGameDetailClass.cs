@@ -1,4 +1,4 @@
-namespace RoundsCardGame.Core.Data;
+﻿namespace RoundsCardGame.Core.Data;
 [SingletonGame]
 public class RoundsCardGameDetailClass : IGameInfo, ICardInfo<RoundsCardGameCardInformation>, ITrickData,
     IBeginningRegularCards<RoundsCardGameCardInformation>
@@ -7,13 +7,14 @@ public class RoundsCardGameDetailClass : IGameInfo, ICardInfo<RoundsCardGameCard
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Rounds Card Game";
+    public const string GameName = "Rounds Card Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 2;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<RoundsCardGameCardInformation>.CardsToPassOut => 9;
     BasicList<int> ICardInfo<RoundsCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<RoundsCardGameCardInformation>.AddToDiscardAtBeginning => true;

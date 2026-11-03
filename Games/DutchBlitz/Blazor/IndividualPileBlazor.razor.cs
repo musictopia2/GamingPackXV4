@@ -7,7 +7,6 @@ public partial class IndividualPileBlazor
     public int TargetHeight { get; set; }
     [Parameter]
     public BasicPileInfo<DutchBlitzCardInformation>? IndividualPile { get; set; }
-    private string RealHeight => TargetHeight.HeightString();
     //private DutchBlitzCardInformation? _card;
     //protected override void OnParametersSet()
     //{

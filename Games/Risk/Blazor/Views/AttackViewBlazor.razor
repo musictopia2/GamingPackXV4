@@ -10,13 +10,13 @@
     {
         <ListChooserBlazor ListPicker="DataContext!.VMData.AttackPicker" TotalColumns="4" />
 
-        <GameButtonComponent CommandObject="RollCommand" StartOnNewLine="true" Display="Roll" />
+        <GameActionButton CommandObject="RollCommand" StartOnNewLine="true" Display="Roll" />
         return;
     }
     <DefenseArmyComponent HowManyArmies="@_container.SaveRoot.NumberDefenseArmies" Color="@_defenseColor" />
     <AttackArmyComponent HowManyArmies="@_container.SaveRoot.ArmiesInBattle" Color="@_attackColor" />
-    <DiceListConrolBlazor Cup="@DataContext!.VMData.DefenseCup" D="SimpleDice" TargetHeight="20vh" />
+    <DiceListConrolBlazor Cup="@DataContext!.VMData.DefenseCup" D="SimpleDice" PercentHeight="25" />
     <div>
-        <DiceListConrolBlazor Cup="@DataContext!.VMData.AttackCup" D="AttackDice" TargetHeight="20vh" />
+        <DiceListConrolBlazor Cup="@DataContext!.VMData.AttackCup" D="AttackDice" PercentHeight="25" />
     </div>
 </StateContentView>

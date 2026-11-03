@@ -3,20 +3,26 @@
 {
     return;
 }
+<StackLayout>
+    <StackItem>
+        <div>
+            <DeckOfCardsDrawPileBlazor R="GermanWhistCardInformation" DeckPile="_vmData.Deck1" />
+        </div>
+        <div>
+            <DeckOfCardsTwoPlayerTrickBlazor T="GermanWhistCardInformation" DataContext="_vmData.TrickArea1" />
+        </div>
+    </StackItem>
+    <StackItem>
+        <div>
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </div>
+        <div>
+            <ScoreBoardBlazor P="GermanWhistPlayerItem"
+                              Columns="_scores"
+                              Players="_gameContainer.SaveRoot.PlayerList" />
+        </div>
+    </StackItem>
+</StackLayout>
 <div>
-    <DeckOfCardsDrawPileBlazor R="GermanWhistCardInformation" DeckPile="_vmData.Deck1" />
-</div>
-<div>
-    <DeckOfCardsTwoPlayerTrickBlazor T="GermanWhistCardInformation" DataContext="_vmData.TrickArea1" />
-</div>
-<div>
-    <DeckOfCardsHandBlazor AdditionalSpacing="1" R="GermanWhistCardInformation" Hand="_vmData.PlayerHand1" />
-</div>
-<div>
-    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
-</div>
-<div>
-    <ScoreBoardBlazor P="GermanWhistPlayerItem"
-                      Columns="_scores"
-                      Players="_gameContainer.SaveRoot.PlayerList" />
+    <DeckOfCardsHandBlazor R="GermanWhistCardInformation" Hand="_vmData.PlayerHand1" />
 </div>

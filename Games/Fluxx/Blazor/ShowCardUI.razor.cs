@@ -7,7 +7,6 @@ public partial class ShowCardUI
     public CompleteContainerClass? CompleteContainer { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; } = 15;
-    private string RealHeight => $"{TargetHeight}vh";
     [Parameter]
     public EnumShowCategory ShowCategory { get; set; }
     private DetailCardObservable? _detail;

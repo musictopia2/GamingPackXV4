@@ -1,4 +1,4 @@
-namespace CaptiveQueensSolitaire.Core.Data;
+﻿namespace CaptiveQueensSolitaire.Core.Data;
 [SingletonGame]
 public class BasicData : IGameInfo, ISolitaireData
 {
@@ -20,11 +20,12 @@ public class BasicData : IGameInfo, ISolitaireData
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.Solitaire;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleOnly;
-    string IGameInfo.GameName => "Captive Queens Solitaire"; //replace with real name.
+    public const string GameName = "Captive Queens Solitaire";
+    string IGameInfo.GameName => GameName; //replace with real name.
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 0;
     int IGameInfo.MaxPlayers => 0;
     bool IGameInfo.CanAutoSave => false; //start out as false until we fix the bugs.
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet; //even using smaller cards did not help with the corruption for the layout.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //most solitaire games has to be landscape.
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
 }

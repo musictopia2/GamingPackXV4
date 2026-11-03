@@ -3,8 +3,8 @@
 {
     return;
 }
-<GridContainer Columns="70vw auto">
-    <GridItem>
+<div class="game-layout">
+    <div class="play-area">
         <StackLayout>
             <StackItem>
                 <DeckOfCardsSingleMiscPileBlazor R="Pinochle2PlayerCardInformation" SinglePile="_vmData.Pile1" />
@@ -21,15 +21,19 @@
         </div>
         <StackLayout>
             <StackItem>
-                <GameButtonComponent StartOnNewLine="true"
+                <GameActionButton StartOnNewLine="true"
                                      CommandObject="MeldCommand"
                                      Display="Meld" />
-                <GameButtonComponent StartOnNewLine="true"
+                <GameActionButton StartOnNewLine="true"
                                      CommandObject="EndCommand"
                                      Display="End Turn" />
+                <ScoreBoardBlazor P="Pinochle2PlayerPlayerItem"
+                                  Columns="_scores"
+                                  Players="_gameContainer.SaveRoot.PlayerList" />
+
             </StackItem>
             <StackItem>
-                <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+                <LabelGridComponent SizeCategory=EnumSize.Small DataContext="_vmData" Labels="_labels" />
             </StackItem>
             <StackItem>
                  <DeckOfCardsHandBlazor HandType="EnumHandList.Vertical"
@@ -45,16 +49,10 @@
                                        TargetContainerSize="50vh"
                                        R="Pinochle2PlayerCardInformation" />
             </StackItem>
-            <StackItem>
-                <ScoreBoardBlazor P="Pinochle2PlayerPlayerItem"
-                                  Columns="_scores"
-                                  Players="_gameContainer.SaveRoot.PlayerList" />
-            </StackItem>
+            
         </StackLayout>
-    </GridItem>
-    <GridItem Column="2">
-        <div>
-            <GuideUI GameData="_vmData" />
-        </div>
-    </GridItem>
-</GridContainer>
+    </div>
+    <div class="guide-area">
+        <GuideUI GameData="_vmData" />
+    </div>
+</div>

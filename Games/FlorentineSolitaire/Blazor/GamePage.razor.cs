@@ -1,5 +1,6 @@
 namespace FlorentineSolitaire.Blazor;
 public partial class GamePage
 {
-    public int TargetHeight { get; set; } = 19;
+    private static int TargetHeight =>
+    ll1.LayoutMode == EnumGameLayoutMode.Compact ? 22 : 25;
 }

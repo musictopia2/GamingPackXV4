@@ -21,7 +21,7 @@
 </StackLayout>
 <StackLayout>
     <StackItem>
-        <GameButtonComponent CommandObject="CompleteCommand" Display="Complete Phase" />
+        <GameActionButton CommandObject="CompleteCommand" Display="Complete Phase" />
     </StackItem>
     <StackItem>
         <LabelGridComponent DataContext="_vmData" Labels="_labels" />
@@ -29,21 +29,21 @@
 </StackLayout>
 <StackLayout>
     <StackItem>
-        <TempSetsBlazor TargetContainerSize="65vh"
+        <TempSetsBlazor HeightPercent="69"
                         TempPiles="_vmData.TempSets" />
     </StackItem>
 
     <StackItem>
         @if (NeedsToChooseSkip == false)
         {
-            <MainRummySetsBlazor ContainerHeight="65vh"
+            <MainRummySetsBlazor HeightPercent="69"
                              DataContext="_vmData.MainSets" />
         }
         else
         {
             <ListChooserBlazor ListPicker="@_vmData.PlayerPicker" />
             <div style="margin-top: 20px;">
-                <GameButtonComponent CommandObject="SKipCommand" Display="Submit Chosen Player To Skip" />
+                <GameActionButton CommandObject="SKipCommand" Display="Submit Chosen Player To Skip" />
             </div>
             
         }

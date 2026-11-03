@@ -3,19 +3,20 @@
     {
         <BaseHandBlazor D="LifeBaseCard" Hand="Hand"
                         HandType="EnumHandList.Vertical"
-                        TargetImageSize="@RealHeight"
+                        HeightPixels="TargetHeight.HeightPixels"
+                        
                         LegendExtraWidth="20"
                         Context="DeckObject">
-            <LifeCardBlazor CommandParameter="DeckObject" TargetHeight="@RealHeight" DeckObject="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
+            <LifeCardBlazor CommandParameter="DeckObject" HeightPercent="@TargetHeight" DeckObject="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
         </BaseHandBlazor>
         return;
     }
     <BaseHandBlazor D="LifeBaseCard" Hand="Hand"
                     HandType="EnumHandList.Vertical"
-                    TargetContainerSize="@TargetContainerSize"
-                    TargetImageSize="@RealHeight"
+                    TargetContainerSize="@HeightPixels"
+                    HeightPixels="TargetHeight.HeightPixels"
                     Context="DeckObject"
                     Divider="1.3">
-        <LifeCardBlazor CommandParameter="DeckObject" TargetHeight="@RealHeight" DeckObject="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
+        <LifeCardBlazor CommandParameter="DeckObject" HeightPercent="@TargetHeight" DeckObject="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
     </BaseHandBlazor>
 </StateContentView>

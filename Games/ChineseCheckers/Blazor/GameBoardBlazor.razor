@@ -1,6 +1,6 @@
 ﻿@inherits KeyComponentBase
 @using System.Drawing;
-@if (Graphics == null || TargetHeight == "" || Container == null || Container.SingleInfo == null)
+@if (Graphics == null || TargetHeight == 0 || Container == null || Container.SingleInfo == null)
 {
     return;
 }

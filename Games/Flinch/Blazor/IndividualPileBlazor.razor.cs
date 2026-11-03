@@ -7,7 +7,6 @@ public partial class IndividualPileBlazor
     public int TargetHeight { get; set; }
     [Parameter]
     public BasicPileInfo<FlinchCardInformation>? IndividualPile { get; set; }
-    private string RealHeight => TargetHeight.HeightString();
     private FlinchCardInformation? _card;
     protected override void OnParametersSet()
     {

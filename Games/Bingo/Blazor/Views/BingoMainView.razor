@@ -1,18 +1,18 @@
 @inherits CascadingGameView<BingoMainViewModel>
-@if (ParentElement!.BrowserInfo!.Height < 600 && ParentElement.BrowserInfo.Width < 600)
-{
-    //different layout completely.
-    <StateContentView DataContext="DataContext!.VMData">
-        <div style="font-size: 5vh">
-            Number Called: @DataContext!.VMData.NumberCalled
+
+<GridContainer Columns="@ColumnText">
+    <GridItem>
+        <div>
+            <StateContentView DataContext="DataContext!.VMData">
+
+                <GameLabel SizeCategory="EnumSize.Large">
+                    Number Called: @DataContext!.VMData.NumberCalled
+                </GameLabel>
+            </StateContentView>
         </div>
-    </StateContentView>
-    <StackLayout>
-        <StackItem>
+        <div>
             <GridGameBoard S="SpaceInfoCP"
                            SpaceList="_save!.BingoBoard"
-                           GridHeight="100%"
-                           GridWidth="100%"
                            TargetSpaceHeight="100"
                            TargetSpaceWidth="100">
                 <ItemTemplate Context="Space">
@@ -21,36 +21,11 @@
                     </StateContentView>
                 </ItemTemplate>
             </GridGameBoard>
-        </StackItem>
-        <StackItem>
-            <GameButtonComponent Display="Bingo" CommandObject="DataContext.BingoCommand" StartOnNewLine="true" />
-        </StackItem>
-    </StackLayout>
-    <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
-    return;
-}
-<GridContainer Columns="@ColumnText">
-    <GridItem>
-        <StateContentView DataContext="DataContext!.VMData">
-            <div style="font-size: 8vh">
-                Number Called: @DataContext!.VMData.NumberCalled
-            </div>
-        </StateContentView>
-        <GridGameBoard S="SpaceInfoCP"
-                       SpaceList="_save!.BingoBoard"
-                       GridHeight="75vh"
-                       GridWidth="95%"
-                       TargetSpaceHeight="100"
-                       TargetSpaceWidth="100">
-            <ItemTemplate Context="Space">
-                <StateContentView DataContext="Space">
-                    <BingoSpaceBlazor CommandObject="DataContext.SelectSpaceCommand" CommandParameter="Space" />
-                </StateContentView>
-            </ItemTemplate>
-        </GridGameBoard>
+        </div>
+        
     </GridItem>
     <GridItem Column="2">
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
-        <GameButtonComponent Display="Bingo" CommandObject="DataContext.BingoCommand" StartOnNewLine="true" />
+        <GameActionButton Display="Bingo" CommandObject="DataContext.BingoCommand" StartOnNewLine="true" />
     </GridItem>
 </GridContainer>

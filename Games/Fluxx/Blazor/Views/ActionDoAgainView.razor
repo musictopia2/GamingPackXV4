@@ -1,24 +1,28 @@
 ﻿@inherits SimpleActionView<ActionDoAgainViewModel>
-
 @if (CompleteContainer == null || DataContext == null)
 {
     return;
 }
-<BaseFrameBlazor Text="Card List">
-    <FinalActionLayout>
-        <StackLayout>
-            <StackItem>
-                <ListChooserBlazor TextWidth="400" TextHeight="3vh" ListPicker="CompleteContainer.ActionContainer.CardList1" />
-            </StackItem>
-            <StackItem>
-                <GameButtonComponent CommandObject="SelectCommand"
-                                     StartOnNewLine="true"
-                                     Display="Select Card" />
-                <GameButtonComponent CommandObject="ViewCommand"
-                                     StartOnNewLine="true"
-                                     Display="View Card" />
-                <KeeperButton DataContext="DataContext" @key="GetKey" StartsOnNewLine="true" />
-            </StackItem>
-        </StackLayout>
-    </FinalActionLayout>
+<BaseFrameBlazor>
+    <LegendContent>
+        Card List
+    </LegendContent>
+    <ChildContent>
+        <FinalActionLayout>
+            <StackLayout>
+                <StackItem>
+                    <ListChooserBlazor TextWidth="400" SizeCategory="EnumSize.Small" ListPicker="CompleteContainer.ActionContainer.CardList1" />
+                </StackItem>
+                <StackItem>
+                    <GameActionButton CommandObject="SelectCommand"
+                                      StartOnNewLine="true"
+                                      Display="Select Card" />
+                    <GameActionButton CommandObject="ViewCommand"
+                                      StartOnNewLine="true"
+                                      Display="View Card" />
+                    <KeeperButton DataContext="DataContext" @key="GetKey" StartsOnNewLine="true" />
+                </StackItem>
+            </StackLayout>
+        </FinalActionLayout>
+    </ChildContent>
 </BaseFrameBlazor>

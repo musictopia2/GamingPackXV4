@@ -1,6 +1,8 @@
 namespace DealCardGame.Blazor;
 public partial class OriginalActionComponent
 {
+    [CascadingParameter]
+    public int ImageHeight { get; set; }
     [Parameter]
     [EditorRequired]
     public DealCardGameSaveInfo? SaveRoot { get; set; }

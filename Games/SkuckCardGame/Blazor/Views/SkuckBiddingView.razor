@@ -3,13 +3,18 @@
 {
     return;
 }
-<BaseFrameBlazor Text="Bid Info">
+<BaseFrameBlazor>
+    <LegendContent>
+        Bid Info
+    </LegendContent>
+    <ChildContent>
     <NumberChooserBlazor Columns="9"
                          NumberPicker="DataContext.Model.Bid1"
-                         TextHeight="10vh"
                          />
     <div>
-        <GameButtonComponent CommandObject="BidCommand"
+        <GameActionButton CommandObject="BidCommand"
                              Display="Place Bid" />
     </div>
+    </ChildContent>
+    
 </BaseFrameBlazor>

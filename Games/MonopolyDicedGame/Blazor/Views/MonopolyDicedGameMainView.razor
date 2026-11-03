@@ -2,20 +2,21 @@
 <StackLayout>
     <StackItem>
         <GameBoardBlazor SaveInfo="_container!.SaveRoot"
-                         TargetHeight="75vh"
+                         TargetHeight="@Pixels"
                          HouseDice="_house"
                          MiscList="DataContext!.VMData.OtherActions"
                          UtilityClicked="UtilityV2Async"
                          TrainClicked="TrainV2Async"
                          PropertyClicked="PropertyV2Async"
                          IsEnabled = "true"
-                         ImageHeight="9vh" />
-        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+                         HeightPercent="10" />
+        
     </StackItem>
     <StackItem>
-        <GameButtonComponent Display="Roll Dice" CommandObject="RollDiceCommand" />
-        <GameButtonComponent Display="End Turn" CommandObject="EndTurnCommand" />
-        <MonopolyListBlazor ImageHeight="9vh" />
+        <GameActionButton Display="Roll Dice" CommandObject="RollDiceCommand" />
+        <GameActionButton Display="End Turn" CommandObject="EndTurnCommand" />
+        <MonopolyListBlazor HeightPercent="10" />
         <ScoreBoardBlazor P="MonopolyDicedGamePlayerItem" Players="DataContext!.MainGame.PlayerList" Columns="_scores" />
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
     </StackItem>
 </StackLayout>

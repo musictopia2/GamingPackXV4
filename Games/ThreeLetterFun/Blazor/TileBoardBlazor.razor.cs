@@ -22,9 +22,11 @@ public partial class TileBoardBlazor
         get
         {
             int totals = TargetHeight * DataContext!.GameBoard.Rows;
-            //can't do vh this time.  has to assume.
-            string output = totals.HeightString();
-            return output;
+            int output = totals.HeightPixels;
+            return $"{output}px";
         }
     }
+
+
+
 }

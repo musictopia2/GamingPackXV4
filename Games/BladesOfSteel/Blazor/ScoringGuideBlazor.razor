@@ -2,31 +2,35 @@
 {
     return;
 }
-<BaseFrameBlazor Text="Scoring Guide">
-
-    <GridContainer ColumnGap="10px" Columns="@GetColumns()">
-        <GridItem>
-            <div>
-                <b>@_data.OffenseText</b>
-            </div>
-            
-            @foreach (var offense in _offenseList)
-            {
+<BaseFrameBlazor>
+    <LegendContent>
+        Scoreing Guide
+    </LegendContent>
+    <ChildContent>
+        <GridContainer ColumnGap="10px" Columns="@GetColumns()">
+            <GridItem>
                 <div>
-                    @offense
+                    <b>@_data.OffenseText</b>
                 </div>
-            }
-        </GridItem>
-        <GridItem Column="2">
-             <div>
-                <b>@_data.DefenseText</b>
-            </div>
-            @foreach (var defense in _defenseList)
-            {
+                @foreach (var offense in _offenseList)
+                {
+                    <div>
+                        @offense
+                    </div>
+                }
+            </GridItem>
+            <GridItem Column="2">
                 <div>
-                    @defense
+                    <b>@_data.DefenseText</b>
                 </div>
-            }
-        </GridItem>
-    </GridContainer>
+                @foreach (var defense in _defenseList)
+                {
+                    <div>
+                        @defense
+                    </div>
+                }
+            </GridItem>
+        </GridContainer>
+    </ChildContent>
+    
 </BaseFrameBlazor>

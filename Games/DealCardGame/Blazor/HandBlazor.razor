@@ -1,8 +1,7 @@
 @inherits AbstractHandBlazor<DealCardGameCardInformation>
-<BaseHandBlazor D="DealCardGameCardInformation" Hand="Hand" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
-                HandType="HandType"
-                FontSizeForFrame="@FontSizeForFrame"
-                Bold=@Bold
-                TargetContainerSize="@TargetContainerSize" TargetImageSize="@TargetImageSize" Context="DeckObject">
-    <CardGraphicsBlazor DeckObject="DeckObject" TargetHeight="@RealHeight()" @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
+<BaseHandBlazor D="DealCardGameCardInformation" Hand="Hand" HeightPixels="RealHeight()" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
+                HandType="HandType" TargetContainerSize="@TargetContainerSize" Context="DeckObject">
+    <CardGraphicsBlazor DeckObject="DeckObject"
+                        HeightPixels="RealHeight()"
+                        @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
 </BaseHandBlazor>

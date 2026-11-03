@@ -1,4 +1,4 @@
-namespace Phase10.Core.Data;
+﻿namespace Phase10.Core.Data;
 [SingletonGame]
 public class Phase10DetailClass : IGameInfo, ICardInfo<Phase10CardInformation>
 {
@@ -6,13 +6,14 @@ public class Phase10DetailClass : IGameInfo, ICardInfo<Phase10CardInformation>
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly;
-    string IGameInfo.GameName => "Phase 10";
+    public const string GameName = "Phase 10";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 7;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<Phase10CardInformation>.CardsToPassOut => 10;
     BasicList<int> ICardInfo<Phase10CardInformation>.PlayerExcludeList => [];
     bool ICardInfo<Phase10CardInformation>.AddToDiscardAtBeginning => true;

@@ -3,17 +3,23 @@
 {
     return;
 }
-<BaseFrameBlazor  IsEnabled="@IsEnabled" Text="@Player.NickName">
-    <div @onclick="() => SorryPlayerAsync()">
-        <StackLayout ItemSpacing="0px">
-            @foreach (var card in _list)
-            {
-                <StackItem>
-                    <FlexibleDeckRenderComponent D="SorryCardGameCardInformation" DeckObject="card">
-                        <CardGraphicsBlazor TargetHeight="@RealHeight" DeckObject="card" />
-                    </FlexibleDeckRenderComponent>
-                </StackItem>
-            }
-        </StackLayout>
-    </div>
+<BaseFrameBlazor  IsEnabled="@IsEnabled">
+    <LegendContent>
+        @Player.NickName
+    </LegendContent>
+    <ChildContent>
+        <div @onclick="() => SorryPlayerAsync()">
+            <StackLayout ItemSpacing="0px">
+                @foreach (var card in _list)
+                {
+                    <StackItem>
+                        <FlexibleDeckRenderComponent D="SorryCardGameCardInformation" DeckObject="card">
+                            <CardGraphicsBlazor HeightPercent="TargetHeight" DeckObject="card" />
+                        </FlexibleDeckRenderComponent>
+                    </StackItem>
+                }
+            </StackLayout>
+        </div>
+    </ChildContent>
+    
 </BaseFrameBlazor>

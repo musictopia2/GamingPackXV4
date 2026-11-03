@@ -1,4 +1,4 @@
-namespace Chinazo.Core.Data;
+﻿namespace Chinazo.Core.Data;
 [SingletonGame]
 public class ChinazoDetailClass(ChinazoDelegates delegates) : IGameInfo, ICardInfo<ChinazoCard>,
     IBeginningRegularCards<ChinazoCard>
@@ -7,13 +7,14 @@ public class ChinazoDetailClass(ChinazoDelegates delegates) : IGameInfo, ICardIn
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Chinazo";
+    public const string GameName = "Chinazo";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<ChinazoCard>.CardsToPassOut => delegates.CardsToPassOut!.Invoke();
     BasicList<int> ICardInfo<ChinazoCard>.PlayerExcludeList => [];
     bool ICardInfo<ChinazoCard>.AddToDiscardAtBeginning => true;

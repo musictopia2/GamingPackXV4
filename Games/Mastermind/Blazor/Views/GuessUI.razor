@@ -7,7 +7,7 @@
 @foreach (Bead bead in Guess!.YourBeads)
 {
     <StateContentView DataContext="bead">
-        <BasePieceGraphics CommandParameter="bead" CommandObject="DataContext!.ChangeMindCommand" TargetWidth="@gg1.BeadHeight">
+        <BasePieceGraphics CommandParameter="bead" CommandObject="DataContext!.ChangeMindCommand" HeightPercent="@gg1.BeadHeight">
             <CirclePiece NeedsWhiteBorders="true" MainColor="@bead.ColorChosen.Color" />
         </BasePieceGraphics>
     </StateContentView>

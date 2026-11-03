@@ -25,13 +25,13 @@
     </StackItem>
 </StackLayout>
 <div>
-    <GameButtonComponent CommandObject="RollCommand"
+    <GameActionButton CommandObject="RollCommand"
                          Display="Roll Dice" />
-    <GameButtonComponent CommandObject="RemoveCommand"
+    <GameActionButton CommandObject="RemoveCommand"
                          Display="Remove Dice" />
-    <GameButtonComponent CommandObject="EndCommand"
+    <GameActionButton CommandObject="EndCommand"
                          Display="End Turn" />
 </div>
 <div>
-    <DiceListConrolBlazor D="SimpleDice" Cup="@_vmData.Cup" TargetHeight="20vh" />
+    <DiceListConrolBlazor D="SimpleDice" Cup="@_vmData.Cup" PercentHeight="30" />
 </div>

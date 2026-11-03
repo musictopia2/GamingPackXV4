@@ -9,8 +9,11 @@ public partial class LifeHandBlazor
     /// otherwise, its the height
     /// </summary>
     [Parameter]
-    public string TargetContainerSize { get; set; } = ""; //if not set, will keep going forever.
+    public double HeightPercent { get; set; } = 0;
+
+    private string HeightPixels => HeightPercent.HeightPixels;
+
+
     [CascadingParameter]
     public int TargetHeight { get; set; } = 15;
-    private string RealHeight => $"{TargetHeight}vh";
 }

@@ -1,7 +1,0 @@
-@inherits AbstractHandBlazor<MillebournesCardInformation>
-<BaseHandBlazor D="MillebournesCardInformation" Hand="Hand" HeightPixels="RealHeight()" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
-                HandType="HandType" LegendExtraWidth="LegendExtraWidth" TargetContainerSize="@TargetContainerSize" Context="DeckObject">
-    <CardGraphicsBlazor DeckObject="DeckObject"
-                        HeightPixels="RealHeight()"
-                        @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
-</BaseHandBlazor>

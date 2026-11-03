@@ -9,6 +9,6 @@ public partial class GamePage
     public BasicData? BasicData { get; set; }
     [CascadingParameter]
     public MultiplayerBasicParentShell? Shell { get; set; }
-    private static int TargetHeight => 15;
+    private static int TargetHeight => 18;
     private static BladesOfSteelVMData? GetData => Resolver!.Resolve<BladesOfSteelVMData>();
 }

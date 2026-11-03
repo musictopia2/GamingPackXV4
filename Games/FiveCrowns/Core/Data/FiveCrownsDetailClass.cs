@@ -1,4 +1,4 @@
-namespace FiveCrowns.Core.Data;
+﻿namespace FiveCrowns.Core.Data;
 [SingletonGame]
 public class FiveCrownsDetailClass(FiveCrownsDelegates delegates) : IGameInfo, ICardInfo<FiveCrownsCardInformation>
 {
@@ -10,7 +10,8 @@ public class FiveCrownsDetailClass(FiveCrownsDelegates delegates) : IGameInfo, I
 
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly;
 
-    string IGameInfo.GameName => "Five Crowns";
+    public const string GameName = "Five Crowns";
+    string IGameInfo.GameName => GameName;
 
     int IGameInfo.NoPlayers => 0;
 
@@ -20,9 +21,9 @@ public class FiveCrownsDetailClass(FiveCrownsDelegates delegates) : IGameInfo, I
 
     bool IGameInfo.CanAutoSave => true;
 
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
 
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
 
     int ICardInfo<FiveCrownsCardInformation>.CardsToPassOut => delegates.CardsToPassOut!.Invoke();
 

@@ -39,4 +39,6 @@ public partial class YaBlewItMainView
     {
         _showPopup = false;
     }
+    private static double _height => 18;
+    private static string Pixels => _height.HeightPixels;
 }

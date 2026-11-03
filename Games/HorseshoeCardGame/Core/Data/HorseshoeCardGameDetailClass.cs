@@ -1,4 +1,4 @@
-namespace HorseshoeCardGame.Core.Data;
+﻿namespace HorseshoeCardGame.Core.Data;
 [SingletonGame]
 public class HorseshoeCardGameDetailClass : IGameInfo, ICardInfo<HorseshoeCardGameCardInformation>, ITrickData,
     IBeginningRegularCards<HorseshoeCardGameCardInformation>
@@ -7,13 +7,14 @@ public class HorseshoeCardGameDetailClass : IGameInfo, ICardInfo<HorseshoeCardGa
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Horseshoe";
+    public const string GameName = "Horseshoe";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 2;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<HorseshoeCardGameCardInformation>.CardsToPassOut => 6;
     BasicList<int> ICardInfo<HorseshoeCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<HorseshoeCardGameCardInformation>.AddToDiscardAtBeginning => false;

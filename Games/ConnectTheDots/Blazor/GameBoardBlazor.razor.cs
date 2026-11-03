@@ -4,7 +4,7 @@ public partial class GameBoardBlazor
     [Parameter]
     public GameBoardGraphicsCP? Graphics { get; set; }
     [Parameter]
-    public string TargetHeight { get; set; } = "";
+    public double TargetHeight { get; set; }
     [Parameter]
     public ConnectTheDotsGameContainer? Container { get; set; }
     private string LineColor(LineInfo line)

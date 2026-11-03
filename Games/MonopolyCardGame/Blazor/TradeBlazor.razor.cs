@@ -1,6 +1,10 @@
 namespace MonopolyCardGame.Blazor;
 public partial class TradeBlazor
 {
+
+    [CascadingParameter]
+    public int TargetHeight { get; set; } = 15;
+
     [Parameter]
     [EditorRequired]
     public MonopolyCardGamePlayerItem? OppenentUsed { get; set; }
@@ -55,4 +59,13 @@ public partial class TradeBlazor
         TradeModel trade = new(_proposedOpponent, _proposedYours, OppenentUsed!.Id);
         await OnTraded.InvokeAsync(trade);
     }
+
+    private double _height => 40;
+
+    private string Pixels => _height.HeightPixels;
+
+
+    private static int TemporaryCardHeight =>
+        BasicGameFrameworkLibrary.Blazor.Helpers.LayoutInfo.GetHeight(10);
+
 }

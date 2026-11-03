@@ -5,7 +5,7 @@ public partial class HouseAnimationComponent : IDisposable
     public MonopolyDicedGameMainViewModel? DataContext { get; set; }
     [Parameter]
     [EditorRequired]
-    public string ImageHeight { get; set; } = "";
+    public double HeightPercent { get; set; }
     [Parameter]
     [EditorRequired]
     public HouseDice? HouseDice { get; set; }

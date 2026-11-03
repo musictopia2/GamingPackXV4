@@ -8,11 +8,8 @@
         <StackItem>
             <LabelGridComponent DataContext="@DataContext" Labels="@_labels" />
             <div>
-                <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
+                <GameActionButton CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
             </div>
-        </StackItem>
-        <StackItem>
-            
         </StackItem>
     </StackLayout>
     <div>

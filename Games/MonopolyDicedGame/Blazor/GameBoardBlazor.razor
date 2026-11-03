@@ -3,14 +3,14 @@
                   ContainerHeight="@TargetHeight"
                   ContainerWidth="@TargetHeight"
                   BackgroundColor="#6ecacc">
-        <PoliceBoardComponent PoliceUsed="@SaveInfo.NumberOfCops" TargetImageHeight="@ImageHeight" />
+        <PoliceBoardComponent PoliceUsed="@SaveInfo.NumberOfCops" HeightPercent="HeightPercent" />
         <SimpleRepeater HowMany=8 Context="item">
-            <PropertyBoardBlazor IsEnabled=IsEnabled OnClicked="() => PossiblePropertyClick(item)" OwnList=SaveInfo.Owns Group="@item" TargetHeight="@ImageHeight" />
+            <PropertyBoardBlazor IsEnabled=IsEnabled OnClicked="() => PossiblePropertyClick(item)" OwnList=SaveInfo.Owns Group="@item" HeightPercent="HeightPercent" />
         </SimpleRepeater>
-        <TrainSpaceBlazor IsEnabled=IsEnabled OnClicked=PossibleTrainClick OwnList="@SaveInfo.Owns" TargetHeight="@ImageHeight" />
-        <UtilitySpaceComponent IsEnabled=IsEnabled TargetImageHeight="@ImageHeight" OwnList="@SaveInfo.Owns" UtilityClicked="PossibleUtilityClick" />
-        <MiscSpaceComponent TargetImageHeight="@ImageHeight" MiscList="MiscList" />
-        <HouseSpaceComponent ImageHeight="@ImageHeight" HasHotel=SaveInfo.HasHotel HousesOwned="SaveInfo.NumberOfHouses" />
-        <HouseAnimationComponent HouseDice="HouseDice" ImageHeight="@ImageHeight" />
+        <TrainSpaceBlazor IsEnabled=IsEnabled OnClicked=PossibleTrainClick OwnList="@SaveInfo.Owns" HeightPercent="HeightPercent" />
+        <UtilitySpaceComponent IsEnabled=IsEnabled HeightPercent="HeightPercent" OwnList="@SaveInfo.Owns" UtilityClicked="PossibleUtilityClick" />
+        <MiscSpaceComponent HeightPercent="HeightPercent" MiscList="MiscList" />
+        <HouseSpaceComponent HeightPercent="HeightPercent" HasHotel=SaveInfo.HasHotel HousesOwned="SaveInfo.NumberOfHouses" />
+        <HouseAnimationComponent HouseDice="HouseDice" HeightPercent="HeightPercent" />
     </CanvasLayout>
 </StateContentView>

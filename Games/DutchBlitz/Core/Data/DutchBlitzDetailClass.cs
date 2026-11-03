@@ -1,4 +1,4 @@
-namespace DutchBlitz.Core.Data;
+﻿namespace DutchBlitz.Core.Data;
 [SingletonGame]
 public class DutchBlitzDetailClass : IGameInfo, ICardInfo<DutchBlitzCardInformation>
 {
@@ -6,13 +6,14 @@ public class DutchBlitzDetailClass : IGameInfo, ICardInfo<DutchBlitzCardInformat
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Dutch Blitz";
+    public const string GameName = "Dutch Blitz";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => false;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<DutchBlitzCardInformation>.CardsToPassOut => 0;
     BasicList<int> ICardInfo<DutchBlitzCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<DutchBlitzCardInformation>.AddToDiscardAtBeginning => false;

@@ -1,4 +1,4 @@
-namespace SorryCardGame.Core.Data;
+﻿namespace SorryCardGame.Core.Data;
 [SingletonGame]
 public class SorryCardGameDetailClass : IGameInfo, ICardInfo<SorryCardGameCardInformation>
 {
@@ -6,13 +6,14 @@ public class SorryCardGameDetailClass : IGameInfo, ICardInfo<SorryCardGameCardIn
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Sorry Card Game";
+    public const string GameName = "Sorry Card Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<SorryCardGameCardInformation>.CardsToPassOut => 5;
     BasicList<int> ICardInfo<SorryCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<SorryCardGameCardInformation>.AddToDiscardAtBeginning => false;

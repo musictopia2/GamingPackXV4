@@ -5,16 +5,22 @@
     {
         return;
     }
-    <BaseFrameBlazor Text="@_text">
-        <div style="width: @Width">
-            <GridContainer Inline="true" ColumnGap="10px" Columns="auto auto">
-                <GridItem>
-                    <CardGraphicsBlazor TargetHeight="@RealHeight" DeckObject="_detail.CurrentCard" @key="@GetKey" />
-                </GridItem>
-                <GridItem Column="2">
-                    @_detail.CurrentCard.Description
-                </GridItem>
-            </GridContainer>
-        </div>
+    <BaseFrameBlazor>
+        <LegendContent>
+            @_text
+        </LegendContent>
+        <ChildContent>
+            <div style="width: @Width">
+                <GridContainer Inline="true" ColumnGap="10px" Columns="auto auto">
+                    <GridItem>
+                        <CardGraphicsBlazor HeightPercent="TargetHeight" DeckObject="_detail.CurrentCard" @key="@GetKey" />
+                    </GridItem>
+                    <GridItem Column="2">
+                        @_detail.CurrentCard.Description
+                    </GridItem>
+                </GridContainer>
+            </div>
+        </ChildContent>
+        
     </BaseFrameBlazor>
 </ActionContentView>

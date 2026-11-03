@@ -1,7 +1,7 @@
 @inherits AbstractHandBlazor<SkipboCardInformation>
-<BaseHandBlazor D="SkipboCardInformation" Hand="Hand" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
-                HandType="HandType" TargetContainerSize="@TargetContainerSize" TargetImageSize="@TargetImageSize" Context="DeckObject">
+<BaseHandBlazor D="SkipboCardInformation" Hand="Hand" HeightPixels="RealHeight()" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
+                HandType="HandType" TargetContainerSize="@TargetContainerSize" Context="DeckObject">
     <CardGraphicsBlazor DeckObject="DeckObject"
-        TargetHeight="@RealHeight()"
-        @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
+                        HeightPixels="RealHeight()"
+                        @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
 </BaseHandBlazor>

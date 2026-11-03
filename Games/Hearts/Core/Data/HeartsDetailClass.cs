@@ -1,4 +1,4 @@
-namespace Hearts.Core.Data;
+﻿namespace Hearts.Core.Data;
 [SingletonGame]
 public class HeartsDetailClass : IGameInfo, ICardInfo<HeartsCardInformation>, ITrickData,
     IBeginningRegularCards<HeartsCardInformation>
@@ -7,13 +7,14 @@ public class HeartsDetailClass : IGameInfo, ICardInfo<HeartsCardInformation>, IT
     bool IGameInfo.CanHaveExtraComputerPlayers => true; //i think.
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked; //the computer can't skip turns. otherwise, gets stuck.
-    string IGameInfo.GameName => "Hearts";
+    public const string GameName = "Hearts";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 4;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<HeartsCardInformation>.CardsToPassOut => 13; //change to what you need.
     BasicList<int> ICardInfo<HeartsCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<HeartsCardInformation>.AddToDiscardAtBeginning => false;

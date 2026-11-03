@@ -11,5 +11,18 @@ public partial class DominosGameBoardBlazor
         SizeF size = new(domino.DefaultSize.Width * 2, domino.DefaultSize.Height);
         return $"0 0 {size.Width} {size.Height}";
     }
-    private string GetTargetString => TargetHeight.HeightString(); //hopefully this simple (?)
+    private string GetTargetString
+    {
+        get
+        {
+            SimpleDominoInfo domino = new();
+            SizeF size = domino.DefaultSize;
+
+            // Match the hand's scaling, including its 4-unit border allowance.
+            double scale = TargetHeight.HeightPixels /
+                (Math.Max(size.Width, size.Height) + 4.0);
+
+            return FormattableString.Invariant($"{size.Height * scale}px");
+        }
+    }
 }

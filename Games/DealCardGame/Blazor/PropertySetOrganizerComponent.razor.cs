@@ -2,6 +2,8 @@ namespace DealCardGame.Blazor;
 public partial class PropertySetOrganizerComponent
 {
     private YourOrganizerViewModel? DataContext { get; set; }
+    [CascadingParameter]
+    public int ImageHeight { get; set; }
     protected override void OnInitialized()
     {
         DataContext = Resolver!.Resolve<YourOrganizerViewModel>();
@@ -17,4 +19,9 @@ public partial class PropertySetOrganizerComponent
     private BasicGameCommand FinishCommand => DataContext!.FinishCommand!;
     private BasicGameCommand PutToTemporaryHandCommand => DataContext!.PutToTemporaryHandCommand!;
     private PropertySetHand GetHand(int index) => DataContext!.VMData.YourCompleteSets.SetList[index];
+
+    private static string StackHeight => $"{65.HeightPixels}px";
+    private static string HandHeight => $"{50.HeightPixels}px";
+
+
 }

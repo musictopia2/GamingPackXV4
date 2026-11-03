@@ -1,8 +1,13 @@
 ﻿<div @onclick="ChooseClick">
     <BaseFrameBlazor Text=@GetText>
-        @for (int i = 0; i < HowMany; i++)
-        {
-            <CardGraphicsBlazor DeckObject="RailRoad" TargetHeight="22vh" />
-        }
+        <LegendContent>
+            @GetText
+        </LegendContent>
+        <ChildContent>
+            @for (int i = 0; i < HowMany; i++)
+            {
+                <CardGraphicsBlazor DeckObject="RailRoad" HeightPercent="25" />
+            }
+        </ChildContent>
     </BaseFrameBlazor>
 </div>

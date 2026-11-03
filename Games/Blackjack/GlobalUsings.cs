@@ -34,3 +34,5 @@ global using BasicGameFrameworkLibrary.Blazor.Helpers;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using Microsoft.AspNetCore.Components;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using gg1 = BasicGameFrameworkLibrary.Blazor.Configuration.GameDisplayOptions;
+global using BasicGameFrameworkLibrary.Blazor.Configuration;

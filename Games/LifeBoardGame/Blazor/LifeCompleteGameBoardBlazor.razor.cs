@@ -3,7 +3,7 @@ namespace LifeBoardGame.Blazor;
 public partial class LifeCompleteGameBoardBlazor
 {
     [Parameter]
-    public string TargetHeight { get; set; } = "";
+    public double TargetHeight { get; set; }
     [Parameter]
     public GameBoardGraphicsCP? GraphicsData { get; set; }
     [CascadingParameter]

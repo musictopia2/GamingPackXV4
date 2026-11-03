@@ -1,4 +1,4 @@
-namespace DealCardGame.Core.Data;
+﻿namespace DealCardGame.Core.Data;
 [SingletonGame]
 public class DealCardGameDetailClass : IGameInfo, ICardInfo<DealCardGameCardInformation>
 {
@@ -6,13 +6,14 @@ public class DealCardGameDetailClass : IGameInfo, ICardInfo<DealCardGameCardInfo
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly;
-    string IGameInfo.GameName => "Deal Card Game";
+    public const string GameName = "Deal Card Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 5;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<DealCardGameCardInformation>.CardsToPassOut => 5; //change to what you need.
     BasicList<int> ICardInfo<DealCardGameCardInformation>.PlayerExcludeList => [];
     BasicList<int> ICardInfo<DealCardGameCardInformation>.DiscardExcludeList(IListShuffler<DealCardGameCardInformation> deckList)

@@ -59,6 +59,7 @@ public class MinesweeperMainGameClass(ISaveSinglePlayerClass thisState,
         }
         if (thisSquare.IsMine == true)
         {
+            thisSquare.WasClickedMine = true;
             BlowUp();
             await ProcessGameStateAsync(EnumGameStates.Lost);
             return; // you lost now.
@@ -132,15 +133,15 @@ public class MinesweeperMainGameClass(ISaveSinglePlayerClass thisState,
     }
     private void BlowUp()
     {
-        foreach (MineSquareModel obj_Square in _arr_Squares)
+        foreach (MineSquareModel square in _arr_Squares)
         {
-            if (obj_Square.IsMine)
+            if (square.IsMine && square.Flagged == false)
             {
-                obj_Square.IsFlipped = true;
+                square.IsFlipped = true;
             }
-            else if ((!obj_Square.IsMine) & (obj_Square.Flagged))
+            else if (square.Flagged && square.IsMine == false)
             {
-                obj_Square.IsFlipped = true;
+                square.IsFlipped = true;
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿@inherits CascadingGameView<MonopolyCardGameMainViewModel>
-
 @if (OppenentUsed is null)
 {
     <div>
@@ -15,12 +14,12 @@
             </StackItem>
             <StackItem>
                 <div>
-                    <GameButtonComponent Display="Cancel Trade" Width="14vh" CustomCallBack="OnCancelled" />
+                    <GameActionButton Display="Cancel Trade" UseSuggestedWidth="true" CustomCallBack="OnCancelled" />
                 </div>
                 @if (_used > 0)
                 {
                     <div>
-                        <GameButtonComponent Display="Confirm Trade" Width="14vh" CustomCallBack="ConfirmTrade" />
+                        <GameActionButton Display="Confirm Trade" UseSuggestedWidth="true" CustomCallBack="ConfirmTrade" />
                     </div>
                 }
             </StackItem>
@@ -31,60 +30,76 @@
         {
             <StackLayout>
                 <StackItem>
-                    <BaseFrameBlazor Text="@SelfPlayer!.NickName">
-                        <LeftOverLayout>
-                            <MainContent>
-                                @foreach (var item in _proposedOpponent)
-                                {
-                                    <div>
-                                        <CardGraphicsBlazor DeckObject="item" TargetHeight="12vh" />
-                                    </div>
-                                    
-                                }
-                            </MainContent>
-                        </LeftOverLayout>
+                    <BaseFrameBlazor>
+                        <LegendContent>
+                            @SelfPlayer!.NickName
+                        </LegendContent>
+                        <ChildContent>
+                            <LeftOverLayout>
+                                <MainContent>
+                                    @foreach (var item in _proposedOpponent)
+                                    {
+                                        <div>
+                                            <CardGraphicsBlazor DeckObject="item" HeightPercent="TargetHeight" />
+                                        </div>
+
+                                    }
+                                </MainContent>
+                            </LeftOverLayout>
+                        </ChildContent>
+                        
 
                     </BaseFrameBlazor>
                 </StackItem>
                 <StackItem>
-                    <BaseFrameBlazor Text="@OppenentUsed.NickName">
-                        <LeftOverLayout>
-                            <MainContent>
-                                @foreach (var item in _proposedYours)
-                                {
-                                    <div>
-                                        <CardGraphicsBlazor DeckObject="item" TargetHeight="12vh" />
-                                    </div>
-                                    
-                                }
-                            </MainContent>
-                        </LeftOverLayout>
+                    <BaseFrameBlazor>
+                        <LegendContent>
+                            @OppenentUsed.NickName
+                        </LegendContent>
+                        <ChildContent>
+                            <LeftOverLayout>
+                                <MainContent>
+                                    @foreach (var item in _proposedYours)
+                                    {
+                                        <div>
+                                            <CardGraphicsBlazor DeckObject="item" HeightPercent="@TargetHeight" />
+                                        </div>
+
+                                    }
+                                </MainContent>
+                            </LeftOverLayout>
+                        </ChildContent>
+                        
                     </BaseFrameBlazor>
                 </StackItem>
             </StackLayout>
         }
     </GridItem>
     <GridItem Column="3">
-        <BaseFrameBlazor Text="@StartText">
-            <div style="width: 60vw; height: 40vh;">
-                <LeftOverLayout>
-                    <MainContent>
-                        <WrapLayout ColumnWidth="6vw" RenderList="_opponentCards" Context="Card">
-                            <div @onclick="() => ClickCard(Card)">
-                                <CardGraphicsBlazor DeckObject="Card" TargetHeight="14vh" />
-                            </div>
-                        </WrapLayout>
-                    </MainContent>
-                </LeftOverLayout>
-            </div>
+        <BaseFrameBlazor>
+            <LegendContent>
+                @StartText
+            </LegendContent>
+            <ChildContent>
+                <div style="width: 60vw; height: @Pixels;">
+                    <LeftOverLayout>
+                        <MainContent>
+                            <WrapLayout ColumnWidth="6vw" RenderList="_opponentCards" Context="Card">
+                                <div @onclick="() => ClickCard(Card)">
+                                    <CardGraphicsBlazor DeckObject="Card" HeightPercent="@TargetHeight" />
+                                </div>
+                            </WrapLayout>
+                        </MainContent>
+                    </LeftOverLayout>
+                </div>
+            </ChildContent>
+            
         </BaseFrameBlazor>
-        <TempSetsBlazor TargetHeight="40vh"
-                        TargetImageSize="8vh"
+        <TempSetsBlazor TargetHeight="@Pixels"
+                        HeightPixels="TemporaryCardHeight"
                         TargetContainerSize="60vw"
                         Mode="EnumMode.Plain"
                         Divider="1.1"
                         TempPiles="Model!.TempSets1" />
-
-        
     </GridItem>
 </GridContainer>

@@ -1,12 +1,11 @@
 namespace Flinch.Blazor;
 [CustomTag("", AlsoNoTags = true)]
-public partial class PublicPilesBlazor : IDisposable, IHandleAsync<AnimateCardInPileEventModel<FlinchCardInformation>>
+public partial class PublicPilesBlazor : IDisposable, IHandleAsync<AnimateCardInPileEventModel<FlinchCardInformation>>, IHandleAsync<FlinchChangedEventModel>
 {
     [CascadingParameter]
     public FlinchVMData? GameData { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; }
-    private string RealHeight => TargetHeight.HeightString();
     private enum EnumLocation
     {
         None, Top, Bottom
@@ -14,7 +13,7 @@ public partial class PublicPilesBlazor : IDisposable, IHandleAsync<AnimateCardIn
     private readonly AnimateDeckImageTimer _animates; //had to use this one instead of the new animation i tried but failed to get to work properly.
     public PublicPilesBlazor()
     {
-        Aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
+        _aggregator = aa1.Resolver!.Resolve<IEventAggregator>();
         _animates = new AnimateDeckImageTimer(); //well see on desktop mode.
     }
     private partial void Subscribe(string tag);
@@ -26,7 +25,7 @@ public partial class PublicPilesBlazor : IDisposable, IHandleAsync<AnimateCardIn
             StateHasChanged();
         });
     }
-    private IEventAggregator Aggregator { get; set; }
+    private IEventAggregator? _aggregator;
     [Parameter]
     public string AnimationTag { get; set; } = "";
     protected override void OnInitialized()
@@ -84,5 +83,20 @@ public partial class PublicPilesBlazor : IDisposable, IHandleAsync<AnimateCardIn
     {
         Unsubscribe(AnimationTag);
     }
+    private int _renderVersion;
+    
+
+    async Task IHandleAsync<FlinchChangedEventModel>.HandleAsync(FlinchChangedEventModel message)
+    {
+        if (ReferenceEquals(message.Target, GameData!.PublicPiles.PileList))
+        {
+            await InvokeAsync(() =>
+            {
+                _renderVersion++;
+                StateHasChanged();
+            });
+        }
+    }
+    private string RealHeight => $"{TargetHeight.HeightPixels}px";
     private string GetTopText => $"Top: {_animates.CurrentYLocation}vh;";
 }

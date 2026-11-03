@@ -11,6 +11,8 @@ public partial class DisplayTradeComponent
     private DealCardGameCardInformation? _opponentCard;
     private DealCardGamePlayerItem? _mainPlayer;
     private DealCardGamePlayerItem? _tradePlayer;
+    [CascadingParameter]
+    public int ImageHeight { get; set; }
     protected override void OnInitialized()
     {
         _gameContainer = Resolver!.Resolve<DealCardGameGameContainer>();

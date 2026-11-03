@@ -2,15 +2,17 @@
 {
     return;
 }
-<CascadingValue Value="this">
-    @for (int r = 0; r < MainGame.NumberOfRows; r++)
-    {
-        <div>
-            @for (int c = 0; c < MainGame.NumberOfColumns; c++)
-            {
-                var piece = GetSquare(r + 1, c + 1);
-                <MineSquareBlazor CommandObject="DataContext!.MakeMoveCommand" CommandParameter="piece" />
-            }
-        </div>
-    }
-</CascadingValue>
+<ActionContentView Key="@MinesweeperActions.Board">
+    <CascadingValue Value="this">
+        @for (int r = 0; r < MainGame.NumberOfRows; r++)
+        {
+            <div>
+                @for (int c = 0; c < MainGame.NumberOfColumns; c++)
+                {
+                    var piece = GetSquare(r + 1, c + 1);
+                    <MineSquareBlazor CommandObject="DataContext!.MakeMoveCommand" CommandParameter="piece" />
+                }
+            </div>
+        }
+    </CascadingValue>
+</ActionContentView>

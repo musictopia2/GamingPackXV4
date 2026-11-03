@@ -20,4 +20,5 @@ public partial class CalculatorResultsComponent
         //return calculator.GetCards(_container!.DeckList);
     }
     private decimal GetTotal(CalculatorModel calculator) => calculator.GetMoneyEarned(_container!.DeckList);
+    private static string Pixels => $"{55.HeightPixels}px";
 }

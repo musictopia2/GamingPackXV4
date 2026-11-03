@@ -4,7 +4,7 @@
     <StackLayout>
         <StackItem Style="margin-right: 28vw">
             <MainClockBlazor DataContext="GetMainPiles()">
-                <GameButtonComponent CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
+                <GameActionButton CommandObject="@DataContext.AutoMoveCommand" Display="Auto Make Move" />
                 <div>
                     <LabelGridComponent Labels="_labels" DataContext="DataContext" />
                 </div>

@@ -3,14 +3,21 @@
 {
     return;
 }
-<BaseFrameBlazor Text="Bid Info">
-    <div>
+<BaseFrameBlazor>
+    <LegendContent>
+        Bid Info
+    </LegendContent>
+    <ChildContent>
+        <div>
         <NumberChooserBlazor Columns="5"
+            SizeCategory="EnumSize.Large"
                              Rows="2"
                              NumberPicker="DataContext.Model.Bid1" />
     </div>
     <div>
-        <GameButtonComponent CommandObject="BidCommand"
+        <GameActionButton CommandObject="BidCommand"
                              Display="Place Bid" />
     </div>
+    </ChildContent>
+    
 </BaseFrameBlazor>

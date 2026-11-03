@@ -11,6 +11,11 @@ public partial class MainScreen : IHandle<OpenMainEventModel>,
     public MainScreen()
     {
         _aggregator = Resolver!.Resolve<IEventAggregator>();
+        if (ll1.LayoutMode == EnumGameLayoutMode.Compact)
+        {
+            gg1.ButtonSize = BasicGameFrameworkLibrary.Blazor.Configuration.EnumSize.Small;
+            gg1.LabelSize = BasicGameFrameworkLibrary.Blazor.Configuration.EnumSize.Small;
+        }
         Subscribe();
     }
     protected override void OnInitialized()

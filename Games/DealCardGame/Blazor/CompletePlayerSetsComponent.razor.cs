@@ -50,4 +50,5 @@ public partial class CompletePlayerSetsComponent
         return list.RentForSet(color, hasHouse, hasHotel);
     }
     private int GetPlayerId(int row) => Players[row - 1].Id;
+    private static string GridHeight => $"{85.HeightPixels}px";
 }

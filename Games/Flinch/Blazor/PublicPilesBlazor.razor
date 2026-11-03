@@ -19,7 +19,7 @@
                     @if (AnimationTag != "" && _animates.CurrentYLocation != -1000 && AnimatePile != null && GameData.PublicPiles.PileList.IndexOf(pile) == _animateIndex)
                     {
                         <div style="position: absolute; @GetTopText">
-                            <CardGraphicsBlazor @key="CurrentObject!.Deck" TargetHeight="@RealHeight" DeckObject="CurrentObject!" />
+                            <CardGraphicsBlazor @key="CurrentObject!.Deck" HeightPercent="TargetHeight" DeckObject="CurrentObject!" />
                         </div>
                     }
                 </div>

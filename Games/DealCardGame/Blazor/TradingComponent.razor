@@ -7,12 +7,24 @@
     <HandBlazor TargetContainerSize="30vw" Hand="@_hand" />
 </div>
 <div>
-    <BaseFrameBlazor Text="@YourText">
-        <CardGraphicsBlazor DeckObject="@YourCard()" TargetHeight="10vh" />
+    <BaseFrameBlazor>
+        <LegendContent>
+            @YourText
+        </LegendContent>
+        <ChildContent>
+            <CardGraphicsBlazor DeckObject="@YourCard()" HeightPercent="ImageHeight" />
+        </ChildContent>
+        
     </BaseFrameBlazor>
-    <BaseFrameBlazor Text="@TradeText">
-        <CardGraphicsBlazor DeckObject="@TradeCard()" TargetHeight="10vh" />
+    <BaseFrameBlazor>
+        <LegendContent>
+            @TradeText
+        </LegendContent>
+        <ChildContent>
+            <CardGraphicsBlazor DeckObject="@TradeCard()" HeightPercent="ImageHeight" />
+        </ChildContent>
+        
     </BaseFrameBlazor>
-    <GameButtonComponent Display="Cancel" CommandObject="CancelCommand" />
-    <GameButtonComponent Display="Trade" CommandObject="TradeCommand" />
+    <GameActionButton Display="Cancel" CommandObject="CancelCommand" />
+    <GameActionButton Display="Trade" CommandObject="TradeCommand" />
 </div>

@@ -16,15 +16,15 @@
     }
 }
 <div>
-    <TileBoardBlazor @ref="Board" TargetHeight="10" />
+    <TileBoardBlazor @ref="Board" TargetHeight="@GetTargetHeight" />
 </div>
 <div>
-    <GameButtonComponent CommandObject="DataContext.PlayCommand" Display="Play" />
-    <GameButtonComponent CommandObject="DataContext.GiveUpCommand" Display="Give Up" />
-    <GameButtonComponent CommandObject="DataContext.TakeBackCommand" Display="Take Back" />
+    <GameActionButton CommandObject="DataContext.PlayCommand" Display="Play" />
+    <GameActionButton CommandObject="DataContext.GiveUpCommand" Display="Give Up" />
+    <GameActionButton CommandObject="DataContext.TakeBackCommand" Display="Take Back" />
 </div>
 <div>
-    <TileHandBlazor TargetHeight="10vh" Board="DataContext.VMData.TileBoard1" />
+    <TileHandBlazor TargetHeight="@GetTargetHeight" Board="DataContext.VMData.TileBoard1" />
 </div>
 @if (DataContext.MainGame.BasicData.MultiPlayer)
 {

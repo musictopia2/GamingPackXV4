@@ -49,3 +49,5 @@ global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using BasicGameFrameworkLibrary.Core.BasicDrawables.Interfaces;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using ll1 = BasicGameFrameworkLibrary.Blazor.Helpers.LayoutInfo;
+//global using gg1 = BasicGameFrameworkLibrary.Blazor.Configuration.GameDisplayOptions;

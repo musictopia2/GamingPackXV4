@@ -15,12 +15,13 @@ public partial class Pinochle2PlayerMainView
            .AddLabel("Trump", nameof(Pinochle2PlayerVMData.TrumpSuit))
            .AddLabel("Status", nameof(Pinochle2PlayerVMData.Status));
         _scores.Clear();
-        _scores.AddColumn("Cards Left", false, nameof(Pinochle2PlayerPlayerItem.ObjectCount))
-            .AddColumn("Tricks Won", false, nameof(Pinochle2PlayerPlayerItem.TricksWon))
-            .AddColumn("Current Score", false, nameof(Pinochle2PlayerPlayerItem.CurrentScore))
-            .AddColumn("Total Score", false, nameof(Pinochle2PlayerPlayerItem.TotalScore));
+        _scores.AddColumn("Cards Left", false, nameof(Pinochle2PlayerPlayerItem.ObjectCount), numberOfDigits: 2)
+            .AddColumn("Tricks Won", false, nameof(Pinochle2PlayerPlayerItem.TricksWon), numberOfDigits: 2)
+            .AddColumn("Current Score", false, nameof(Pinochle2PlayerPlayerItem.CurrentScore), numberOfDigits: 4)
+            .AddColumn("Total Score", false, nameof(Pinochle2PlayerPlayerItem.TotalScore), numberOfDigits: 4);
         base.OnInitialized();
     }
     private ICustomCommand EndCommand => DataContext!.EndTurnCommand!;
     private ICustomCommand MeldCommand => DataContext!.MeldCommand!;
+    
 }

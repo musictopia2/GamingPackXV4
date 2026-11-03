@@ -8,7 +8,8 @@ public partial class MonopolyListBlazor : IDisposable
     private StateList<BasicDiceModel> DiceList { get; set; } = [];
     [Parameter]
     [EditorRequired]
-    public string ImageHeight { get; set; } = "";
+    public double HeightPercent { get; set; }
+    private string ImageHeight => HeightPercent.HeightPixels;
     protected override void OnInitialized()
     {
         DataContext!.CommandContainer.AddSpecificAction("monopolydice", ShowChange);

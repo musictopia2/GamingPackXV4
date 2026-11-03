@@ -8,4 +8,5 @@ public class MineSquareModel(int pColumn, int pRow)
     public bool IsFlipped { get; set; }
     public int Column { get; set; } = pColumn;
     public int Row { get; set; } = pRow;
+    public bool WasClickedMine { get; set; }
 }

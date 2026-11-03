@@ -1,6 +1,0 @@
-namespace Concentration.Core.Data;
-[SingletonGame]
-public class CustomConfig : IRegularCardsSortCategory
-{
-    public EnumRegularCardsSortCategory SortCategory => EnumRegularCardsSortCategory.SuitNumber;
-}

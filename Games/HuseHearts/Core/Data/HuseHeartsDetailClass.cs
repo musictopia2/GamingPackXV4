@@ -1,4 +1,4 @@
-namespace HuseHearts.Core.Data;
+﻿namespace HuseHearts.Core.Data;
 [SingletonGame]
 public class HuseHeartsDetailClass(HuseHeartsDelegates delegates) : IGameInfo, ICardInfo<HuseHeartsCardInformation>, ITrickData,
     IBeginningRegularCards<HuseHeartsCardInformation>
@@ -7,13 +7,14 @@ public class HuseHeartsDetailClass(HuseHeartsDelegates delegates) : IGameInfo, I
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Huse Hearts";
+    public const string GameName = "Huse Hearts";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 2;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<HuseHeartsCardInformation>.CardsToPassOut => 16;
     BasicList<int> ICardInfo<HuseHeartsCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<HuseHeartsCardInformation>.AddToDiscardAtBeginning => false;

@@ -7,7 +7,12 @@ public partial class RackoUI
     public RackoGameContainer? GameContainer { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; } = 15;
-    private string RealHeight => $"{TargetHeight}vh";
+    private int RowHeight =>
+        (int)Math.Ceiling(TargetHeight.HeightPixels * 39.0 / 204.0);
+
+    private string LabelStyle =>
+        $"width: {RowHeight * 4 / 3}px; height: {RowHeight}px; flex-shrink: 0;";
+
     private bool IsEnabled
     {
         get

@@ -10,4 +10,5 @@ public partial class ActionDiscardRulesView : SimpleActionView<ActionDiscardRule
         _labels.AddLabel("Rules To Discard", nameof(ActionDiscardRulesViewModel.RulesToDiscard));
         base.OnInitialized();
     }
+    private static string _realHeight => $"{45.HeightPixels}px";
 }

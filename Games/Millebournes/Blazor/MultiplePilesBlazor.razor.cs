@@ -9,5 +9,4 @@ public partial class MultiplePilesBlazor
     public string AnimationTag { get; set; } = "";
     [Parameter]
     public bool Inline { get; set; } = true;
-    private string RealHeight => TargetHeight.HeightString();
 }

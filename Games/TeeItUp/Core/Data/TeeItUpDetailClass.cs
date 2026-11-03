@@ -1,4 +1,4 @@
-namespace TeeItUp.Core.Data;
+﻿namespace TeeItUp.Core.Data;
 [SingletonGame]
 public class TeeItUpDetailClass : IGameInfo, ICardInfo<TeeItUpCardInformation>
 {
@@ -6,13 +6,14 @@ public class TeeItUpDetailClass : IGameInfo, ICardInfo<TeeItUpCardInformation>
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.HumanOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Tee It Up";
+    public const string GameName = "Tee It Up";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 2;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<TeeItUpCardInformation>.CardsToPassOut => 8;
     BasicList<int> ICardInfo<TeeItUpCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<TeeItUpCardInformation>.AddToDiscardAtBeginning => true;

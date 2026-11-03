@@ -1,7 +1,0 @@
-@inherits AbstractHandBlazor<RageCardGameCardInformation>
-<BaseHandBlazor D="RageCardGameCardInformation" Hand="Hand" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
-                HandType="HandType" TargetContainerSize="@TargetContainerSize" HeightPixels="RealHeight()" Context="DeckObject">
-    <CardGraphicsBlazor DeckObject="DeckObject"
-                        HeightPercent="ImageHeight"
-        @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
-</BaseHandBlazor>

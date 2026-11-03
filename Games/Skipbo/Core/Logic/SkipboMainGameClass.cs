@@ -56,6 +56,9 @@ public class SkipboMainGameClass
         }
         await PlayOnPileAsync(index, decks, types, discardNum);
     }
+
+    
+
     public override Task FinishGetSavedAsync()
     {
         SaveRoot!.LoadMod(_model!);
@@ -347,11 +350,11 @@ public class SkipboMainGameClass
         await AnimateDiscardAsync(thisCard, pile, EnumAnimcationDirection.StartUpToCard);
         _model.DiscardPiles!.AddCardToPile(pile, thisCard);
         UpdateDiscardData(SingleInfo, pile);
-        await RefreshCardsAsync(_model.DiscardPiles);
         if (Test!.NoAnimations == false)
         {
             await Delay!.DelaySeconds(.5);
         }
+        await RefreshCardsAsync(_model.DiscardPiles);
         await EndTurnAsync();
     }
     public async Task AnimateDiscardAsync(SkipboCardInformation thisCard, int pile, EnumAnimcationDirection direction)
@@ -445,11 +448,11 @@ public class SkipboMainGameClass
         {
             _model.StockPile!.RemoveCard();
             _ = SingleInfo.StockList.RemoveObjectByDeck(thisCard.Deck);
-            SingleInfo.StockLeft = _model.StockPile.CardsLeft();
-            SingleInfo.InStock = _model.StockPile.NextCardInStock();
             await RefreshCardsAsync(_model.StockPile.StockFrame);
             await AnimateStockAsync(thisCard);
             await RefreshCardsAsync(_model.StockPile.StockFrame);
+            SingleInfo.StockLeft = _model.StockPile.CardsLeft();
+            SingleInfo.InStock = _model.StockPile.NextCardInStock();
         }
         else
         {
@@ -474,10 +477,14 @@ public class SkipboMainGameClass
             thisCard.Number = thisPile.ObjectList.Count + 1;
         }
         await Aggregator.AnimateCardAsync(thisCard, EnumAnimcationDirection.StartDownToCard, "public", thisPile);
-        _model.PublicPiles.AddCardToPile(pile, thisCard);
+        _model.PublicPiles.AddCardToPile(pile, thisCard); //hopefully this is still okay.
         await RefreshCardsAsync(_model.PublicPiles);
         if (_model.PublicPiles.NeedToRemovePile(pile))
         {
+            if (Test!.NoAnimations == false)
+            {
+                await Delay!.DelaySeconds(1);
+            }
             RemoveFromPile(pile);
             await RefreshCardsAsync(_model.PublicPiles);
         }

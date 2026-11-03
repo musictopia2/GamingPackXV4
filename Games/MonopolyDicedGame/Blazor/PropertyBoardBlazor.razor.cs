@@ -2,7 +2,8 @@ namespace MonopolyDicedGame.Blazor;
 public partial class PropertyBoardBlazor
 {
     [Parameter]
-    public string TargetHeight { get; set; } = "";
+    [EditorRequired]
+    public double HeightPercent { get; set; }
     [Parameter]
     public int Group { get; set; }
     [Parameter]

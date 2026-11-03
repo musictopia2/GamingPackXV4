@@ -108,6 +108,7 @@ public class GameBoardProcesses
     }
     public void LoadSavedGame()
     {
+        ApplyBoardColors();
         PopulateSpacesFromPlayers();
         if (_gameContainer.SaveRoot.PreviousSpace > 0)
         {
@@ -188,12 +189,13 @@ public class GameBoardProcesses
         MoveInfo thisMove;
         EnumColorChoice ourColor;
         ourColor = _gameContainer.SingleInfo!.Color;
+        // A landing in our starting triangle is allowed only while this piece is still inside it.
         if (thisSpace.LeftOnly > 0)
         {
             newSpace = _spaceList![thisSpace.LeftOnly];
             if ((newSpace.Player == 0) & (_turnContinued == false))
             {
-                if (newSpace.WhatColor == EnumColorChoice.None || newSpace.DestinationColor == ourColor || newSpace.WhatColor == ourColor)
+                if (newSpace.HomeRegion == 0 || newSpace.DestinationColor == ourColor || (newSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                 {
                     thisMove = new MoveInfo();
                     thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -207,7 +209,7 @@ public class GameBoardProcesses
                 furtherSpace = _spaceList[newSpace.LeftOnly];
                 if (furtherSpace.Player == 0)
                 {
-                    if (furtherSpace.WhatColor == EnumColorChoice.None || furtherSpace.DestinationColor == ourColor || furtherSpace.WhatColor == ourColor)
+                    if (furtherSpace.HomeRegion == 0 || furtherSpace.DestinationColor == ourColor || (furtherSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                     {
                         thisMove = new MoveInfo();
                         thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -222,7 +224,7 @@ public class GameBoardProcesses
             newSpace = _spaceList![thisSpace.RightOnly];
             if ((newSpace.Player == 0) & (_turnContinued == false))
             {
-                if (newSpace.WhatColor == EnumColorChoice.None || newSpace.DestinationColor == ourColor || newSpace.WhatColor == ourColor)
+                if (newSpace.HomeRegion == 0 || newSpace.DestinationColor == ourColor || (newSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                 {
                     thisMove = new MoveInfo();
                     thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -236,7 +238,7 @@ public class GameBoardProcesses
                 furtherSpace = _spaceList[newSpace.RightOnly];
                 if (furtherSpace.Player == 0)
                 {
-                    if (furtherSpace.WhatColor == EnumColorChoice.None || furtherSpace.DestinationColor == ourColor || furtherSpace.WhatColor == ourColor)
+                    if (furtherSpace.HomeRegion == 0 || furtherSpace.DestinationColor == ourColor || (furtherSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                     {
                         thisMove = new MoveInfo();
                         thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -251,7 +253,7 @@ public class GameBoardProcesses
             newSpace = _spaceList![thisSpace.UpLeft];
             if ((newSpace.Player == 0) & (_turnContinued == false))
             {
-                if (newSpace.WhatColor == EnumColorChoice.None || newSpace.DestinationColor == ourColor || newSpace.WhatColor == ourColor)
+                if (newSpace.HomeRegion == 0 || newSpace.DestinationColor == ourColor || (newSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                 {
                     thisMove = new MoveInfo();
                     thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -265,7 +267,7 @@ public class GameBoardProcesses
                 furtherSpace = _spaceList[newSpace.UpLeft];
                 if (furtherSpace.Player == 0)
                 {
-                    if (furtherSpace.WhatColor == EnumColorChoice.None || furtherSpace.DestinationColor == ourColor || furtherSpace.WhatColor == ourColor)
+                    if (furtherSpace.HomeRegion == 0 || furtherSpace.DestinationColor == ourColor || (furtherSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                     {
                         thisMove = new MoveInfo();
                         thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -280,7 +282,7 @@ public class GameBoardProcesses
             newSpace = _spaceList![thisSpace.UpRight];
             if ((newSpace.Player == 0) & (_turnContinued == false))
             {
-                if (newSpace.WhatColor == EnumColorChoice.None || newSpace.DestinationColor == ourColor || newSpace.WhatColor == ourColor)
+                if (newSpace.HomeRegion == 0 || newSpace.DestinationColor == ourColor || (newSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                 {
                     thisMove = new MoveInfo();
                     thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -294,7 +296,7 @@ public class GameBoardProcesses
                 furtherSpace = _spaceList[newSpace.UpRight];
                 if (furtherSpace.Player == 0)
                 {
-                    if (furtherSpace.WhatColor == EnumColorChoice.None || furtherSpace.DestinationColor == ourColor || furtherSpace.WhatColor == ourColor)
+                    if (furtherSpace.HomeRegion == 0 || furtherSpace.DestinationColor == ourColor || (furtherSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                     {
                         thisMove = new MoveInfo();
                         thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -309,7 +311,7 @@ public class GameBoardProcesses
             newSpace = _spaceList![thisSpace.DownLeft];
             if ((newSpace.Player == 0) & (_turnContinued == false))
             {
-                if (newSpace.WhatColor == EnumColorChoice.None || newSpace.DestinationColor == ourColor || newSpace.WhatColor == ourColor)
+                if (newSpace.HomeRegion == 0 || newSpace.DestinationColor == ourColor || (newSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                 {
                     thisMove = new MoveInfo();
                     thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -323,7 +325,7 @@ public class GameBoardProcesses
                 furtherSpace = _spaceList[newSpace.DownLeft];
                 if (furtherSpace.Player == 0)
                 {
-                    if (furtherSpace.WhatColor == EnumColorChoice.None || furtherSpace.DestinationColor == ourColor || furtherSpace.WhatColor == ourColor)
+                    if (furtherSpace.HomeRegion == 0 || furtherSpace.DestinationColor == ourColor || (furtherSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                     {
                         thisMove = new MoveInfo();
                         thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -338,7 +340,7 @@ public class GameBoardProcesses
             newSpace = _spaceList![thisSpace.DownRight];
             if ((newSpace.Player == 0) & (_turnContinued == false))
             {
-                if (newSpace.WhatColor == EnumColorChoice.None || newSpace.DestinationColor == ourColor || newSpace.WhatColor == ourColor)
+                if (newSpace.HomeRegion == 0 || newSpace.DestinationColor == ourColor || (newSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                 {
                     thisMove = new MoveInfo();
                     thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -352,7 +354,7 @@ public class GameBoardProcesses
                 furtherSpace = _spaceList[newSpace.DownRight];
                 if (furtherSpace.Player == 0)
                 {
-                    if (furtherSpace.WhatColor == EnumColorChoice.None || furtherSpace.DestinationColor == ourColor || furtherSpace.WhatColor == ourColor)
+                    if (furtherSpace.HomeRegion == 0 || furtherSpace.DestinationColor == ourColor || (furtherSpace.WhatColor == ourColor && thisSpace.WhatColor == ourColor))
                     {
                         thisMove = new MoveInfo();
                         thisMove.SpaceFrom = thisSpace.SpaceNumber;
@@ -421,31 +423,127 @@ public class GameBoardProcesses
         {
             return true; //because we are ending game to see how new game goes.
         }
-        var thisCol = _spaceList!.Values.Where(items => items.Player == WhoTurn).ToBasicList();
-        EnumColorChoice ourColor;
-        ourColor = _gameContainer.SingleInfo!.Color;
-        return !thisCol.Any(Items => Items.DestinationColor != ourColor);
-    }
-    public void ClearBoard()
-    {
-        int x = default;
-        foreach (var thisPlayer in _gameContainer.PlayerList!)
+        var ourColor = _gameContainer.SingleInfo!.Color;
+        var destinationSpaces = _spaceList!.Values
+            .Where(space => space.DestinationColor == ourColor).ToBasicList();
+        // A complete opposing blockade can prevent entry. Reaching the entrance also
+        // qualifies, but only if no empty destination space can still be reached below.
+        if (!destinationSpaces.Any(space => space.Player == WhoTurn)
+            && !destinationSpaces.Any(HasAdjacentOwnPiece))
         {
-            thisPlayer.PieceList.Clear();// because new game.
+            return false;
         }
-        foreach (var thisSpace in _spaceList!.Values)
+        if (destinationSpaces.All(space => space.Player != 0))
         {
-            if (thisSpace.WhatColor != EnumColorChoice.None)
+            return true;
+        }
+        return !HasReachableEmptyDestination(ourColor);
+    }
+    private bool HasAdjacentOwnPiece(SpaceInfo space)
+    {
+        for (int direction = 0; direction < 6; direction++)
+        {
+            int neighbor = NeighborInDirection(space, direction);
+            if (neighbor > 0 && _spaceList![neighbor].Player == WhoTurn)
             {
-                ChineseCheckersPlayerItem tempPlayer = _gameContainer.PlayerList.SingleOrDefault(Items => Items.Color == thisSpace.WhatColor)!;
-                if (tempPlayer != null)
+                return true;
+            }
+        }
+        return false;
+    }
+    private bool HasReachableEmptyDestination(EnumColorChoice ourColor)
+    {
+        HashSet<int> visited = [];
+        Queue<SpaceInfo> pending = new();
+        // Assume we can approach from anywhere in the center. This avoids awarding a win
+        // merely because our pieces cannot reach the entrance on the current turn.
+        foreach (var space in _spaceList!.Values.Where(space => space.HomeRegion == 0))
+        {
+            AddReachableSpace(space);
+        }
+        while (pending.Count > 0)
+        {
+            var space = pending.Dequeue();
+            if (space.DestinationColor == ourColor && space.Player == 0)
+            {
+                return true;
+            }
+            for (int direction = 0; direction < 6; direction++)
+            {
+                int next = NeighborInDirection(space, direction);
+                if (next == 0)
                 {
-                    x += 1;
-                    thisSpace.Player = tempPlayer.Id;
-                    tempPlayer.PieceList.Add(thisSpace.SpaceNumber);
+                    continue;
+                }
+                var neighbor = _spaceList[next];
+                if (neighbor.Player != 0 && neighbor.Player != WhoTurn)
+                {
+                    // Jump over one opposing piece; never over two consecutive pieces.
+                    int landing = NeighborInDirection(neighbor, direction);
+                    if (landing > 0)
+                    {
+                        AddReachableSpace(_spaceList[landing]);
+                    }
+                }
+                else
+                {
+                    AddReachableSpace(neighbor);
                 }
             }
         }
+        return false;
+
+        void AddReachableSpace(SpaceInfo space)
+        {
+            if (space.HomeRegion != 0 && space.DestinationColor != ourColor)
+            {
+                return;
+            }
+            if (space.Player != 0 && space.Player != WhoTurn)
+            {
+                return;
+            }
+            // Our own pieces can be rearranged; they must not be mistaken for an
+            // opposing blockade. Traversing them also covers jumps over our pieces.
+            if (visited.Add(space.SpaceNumber))
+            {
+                pending.Enqueue(space);
+            }
+        }
+    }
+    private static int NeighborInDirection(SpaceInfo space, int direction) => direction switch
+    {
+        0 => space.LeftOnly,
+        1 => space.RightOnly,
+        2 => space.UpLeft,
+        3 => space.UpRight,
+        4 => space.DownLeft,
+        5 => space.DownRight,
+        _ => throw new CustomBasicException("Invalid board direction")
+    };
+    private void ApplyBoardColors()
+    {
+        foreach (var space in _spaceList!.Values)
+        {
+            space.WhatColor = ChineseCheckersBoardLayout.HomeColor(_gameContainer, space.HomeRegion);
+            space.DestinationColor = space.HomeRegion == 0
+                ? EnumColorChoice.None
+                : ChineseCheckersBoardLayout.HomeColor(_gameContainer,
+                    ChineseCheckersBoardLayout.OppositeRegion(space.HomeRegion));
+        }
+    }
+    public void ClearBoard()
+    {
+        ApplyBoardColors();
+        foreach (var player in _gameContainer.PlayerList!)
+        {
+            player.PieceList.Clear();
+            foreach (var space in _spaceList!.Values.Where(space => space.WhatColor == player.Color))
+            {
+                player.PieceList.Add(space.SpaceNumber);
+            }
+        }
+        PopulateSpacesFromPlayers();
         _gameContainer.Aggregator.RepaintBoard();
     }
     private void LoadBoard()
@@ -475,8 +573,8 @@ public class GameBoardProcesses
                     {
                         thisSpace.UpLeft = 2;
                         thisSpace.UpRight = 3;
-                        thisSpace.WhatColor = EnumColorChoice.Green;
-                        thisSpace.DestinationColor = EnumColorChoice.Blue;
+                        thisSpace.HomeRegion = 1;
+
                         break;
                     }
                 case 2:
@@ -485,8 +583,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = 3;
                         thisSpace.UpLeft = 4;
                         thisSpace.UpRight = 5;
-                        thisSpace.WhatColor = EnumColorChoice.Green;
-                        thisSpace.DestinationColor = EnumColorChoice.Blue;
+                        thisSpace.HomeRegion = 1;
+
                         break;
                     }
                 case 3:
@@ -495,8 +593,8 @@ public class GameBoardProcesses
                         thisSpace.DownLeft = 1;
                         thisSpace.UpLeft = 5;
                         thisSpace.UpRight = 6;
-                        thisSpace.WhatColor = EnumColorChoice.Green;
-                        thisSpace.DestinationColor = EnumColorChoice.Blue;
+                        thisSpace.HomeRegion = 1;
+
                         break;
                     }
                 case 4:
@@ -505,8 +603,8 @@ public class GameBoardProcesses
                         thisSpace.DownRight = 2;
                         thisSpace.UpLeft = 7;
                         thisSpace.UpRight = 8;
-                        thisSpace.WhatColor = EnumColorChoice.Green;
-                        thisSpace.DestinationColor = EnumColorChoice.Blue;
+                        thisSpace.HomeRegion = 1;
+
                         break;
                     }
                 case 5:
@@ -517,8 +615,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = 9;
                         thisSpace.DownLeft = 2;
                         thisSpace.DownRight = 3;
-                        thisSpace.WhatColor = EnumColorChoice.Green;
-                        thisSpace.DestinationColor = EnumColorChoice.Blue;
+                        thisSpace.HomeRegion = 1;
+
                         break;
                     }
                 case 6:
@@ -527,8 +625,8 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = 9;
                         thisSpace.UpRight = 10;
                         thisSpace.DownLeft = 3;
-                        thisSpace.WhatColor = EnumColorChoice.Green;
-                        thisSpace.DestinationColor = EnumColorChoice.Blue;
+                        thisSpace.HomeRegion = 1;
+
                         break;
                     }
                 case 7:
@@ -537,8 +635,8 @@ public class GameBoardProcesses
                         thisSpace.DownRight = 4;
                         thisSpace.UpLeft = 15;
                         thisSpace.UpRight = 16;
-                        thisSpace.WhatColor = EnumColorChoice.Green;
-                        thisSpace.DestinationColor = EnumColorChoice.Blue;
+                        thisSpace.HomeRegion = 1;
+
                         break;
                     }
                 case 8:
@@ -549,8 +647,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = 17;
                         thisSpace.DownLeft = 4;
                         thisSpace.DownRight = 5;
-                        thisSpace.WhatColor = EnumColorChoice.Green;
-                        thisSpace.DestinationColor = EnumColorChoice.Blue;
+                        thisSpace.HomeRegion = 1;
+
                         break;
                     }
                 case 9:
@@ -561,8 +659,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = 18;
                         thisSpace.DownLeft = 5;
                         thisSpace.DownRight = 6;
-                        thisSpace.WhatColor = EnumColorChoice.Green;
-                        thisSpace.DestinationColor = EnumColorChoice.Blue;
+                        thisSpace.HomeRegion = 1;
+
                         break;
                     }
                 case 10:
@@ -571,16 +669,16 @@ public class GameBoardProcesses
                         thisSpace.DownLeft = 6;
                         thisSpace.UpLeft = 18;
                         thisSpace.UpRight = 19;
-                        thisSpace.WhatColor = EnumColorChoice.Green;
-                        thisSpace.DestinationColor = EnumColorChoice.Blue;
+                        thisSpace.HomeRegion = 1;
+
                         break;
                     }
                 case 11:
                     {
                         thisSpace.RightOnly = 12;
                         thisSpace.UpRight = 24;
-                        thisSpace.WhatColor = EnumColorChoice.Purple;
-                        thisSpace.DestinationColor = EnumColorChoice.Yellow;
+                        thisSpace.HomeRegion = 2;
+
                         break;
                     }
                 case 12:
@@ -589,8 +687,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = 13;
                         thisSpace.UpLeft = 24;
                         thisSpace.UpRight = 25;
-                        thisSpace.WhatColor = EnumColorChoice.Purple;
-                        thisSpace.DestinationColor = EnumColorChoice.Yellow;
+                        thisSpace.HomeRegion = 2;
+
                         break;
                     }
                 case 13:
@@ -599,8 +697,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = 14;
                         thisSpace.UpLeft = 25;
                         thisSpace.UpRight = 26;
-                        thisSpace.WhatColor = EnumColorChoice.Purple;
-                        thisSpace.DestinationColor = EnumColorChoice.Yellow;
+                        thisSpace.HomeRegion = 2;
+
                         break;
                     }
                 case 14:
@@ -609,8 +707,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = 15;
                         thisSpace.UpLeft = 26;
                         thisSpace.UpRight = 27;
-                        thisSpace.WhatColor = EnumColorChoice.Purple;
-                        thisSpace.DestinationColor = EnumColorChoice.Yellow;
+                        thisSpace.HomeRegion = 2;
+
                         break;
                     }
                 case 15:
@@ -667,8 +765,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = 21;
                         thisSpace.UpLeft = 32;
                         thisSpace.UpRight = 33;
-                        thisSpace.WhatColor = EnumColorChoice.Gray;
-                        thisSpace.DestinationColor = EnumColorChoice.Red;
+                        thisSpace.HomeRegion = 6;
+
                         break;
                     }
                 case 21:
@@ -677,8 +775,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = 22;
                         thisSpace.UpLeft = 33;
                         thisSpace.UpRight = 34;
-                        thisSpace.WhatColor = EnumColorChoice.Gray;
-                        thisSpace.DestinationColor = EnumColorChoice.Red;
+                        thisSpace.HomeRegion = 6;
+
                         break;
                     }
                 case 22:
@@ -687,16 +785,16 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = 23;
                         thisSpace.UpLeft = 34;
                         thisSpace.UpRight = 35;
-                        thisSpace.WhatColor = EnumColorChoice.Gray;
-                        thisSpace.DestinationColor = EnumColorChoice.Red;
+                        thisSpace.HomeRegion = 6;
+
                         break;
                     }
                 case 23:
                     {
                         thisSpace.LeftOnly = 22;
                         thisSpace.UpLeft = 35;
-                        thisSpace.WhatColor = EnumColorChoice.Gray;
-                        thisSpace.DestinationColor = EnumColorChoice.Red;
+                        thisSpace.HomeRegion = 6;
+
                         break;
                     }
                 case 24:
@@ -705,8 +803,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = 36;
                         thisSpace.DownLeft = 11;
                         thisSpace.DownRight = 12;
-                        thisSpace.WhatColor = EnumColorChoice.Purple;
-                        thisSpace.DestinationColor = EnumColorChoice.Yellow;
+                        thisSpace.HomeRegion = 2;
+
                         break;
                     }
                 case 25:
@@ -717,8 +815,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = 37;
                         thisSpace.DownLeft = 12;
                         thisSpace.DownRight = 13;
-                        thisSpace.WhatColor = EnumColorChoice.Purple;
-                        thisSpace.DestinationColor = EnumColorChoice.Yellow;
+                        thisSpace.HomeRegion = 2;
+
                         break;
                     }
                 case 26:
@@ -729,8 +827,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = thisSpace.UpLeft + 1;
                         thisSpace.DownLeft = 13;
                         thisSpace.DownRight = thisSpace.DownLeft + 1;
-                        thisSpace.WhatColor = EnumColorChoice.Purple;
-                        thisSpace.DestinationColor = EnumColorChoice.Yellow;
+                        thisSpace.HomeRegion = 2;
+
                         break;
                     }
                 case 27:
@@ -801,8 +899,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = thisSpace.UpLeft + 1;
                         thisSpace.DownLeft = x - 13;
                         thisSpace.DownRight = thisSpace.DownLeft + 1;
-                        thisSpace.WhatColor = EnumColorChoice.Gray;
-                        thisSpace.DestinationColor = EnumColorChoice.Red;
+                        thisSpace.HomeRegion = 6;
+
                         break;
                     }
                 case 34:
@@ -813,8 +911,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = thisSpace.UpLeft + 1;
                         thisSpace.DownLeft = x - 13;
                         thisSpace.DownRight = thisSpace.DownLeft + 1;
-                        thisSpace.WhatColor = EnumColorChoice.Gray;
-                        thisSpace.DestinationColor = EnumColorChoice.Red;
+                        thisSpace.HomeRegion = 6;
+
                         break;
                     }
                 case 35:
@@ -823,8 +921,8 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 11;
                         thisSpace.DownLeft = x - 13;
                         thisSpace.DownRight = x - 12;
-                        thisSpace.WhatColor = EnumColorChoice.Gray;
-                        thisSpace.DestinationColor = EnumColorChoice.Red;
+                        thisSpace.HomeRegion = 6;
+
                         break;
                     }
                 case 36:
@@ -833,8 +931,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = 47;
                         thisSpace.DownLeft = x - 12;
                         thisSpace.DownRight = x - 11;
-                        thisSpace.WhatColor = EnumColorChoice.Purple;
-                        thisSpace.DestinationColor = EnumColorChoice.Yellow;
+                        thisSpace.HomeRegion = 2;
+
                         break;
                     }
                 case 37:
@@ -845,8 +943,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 11;
                         thisSpace.DownLeft = x - 12;
                         thisSpace.DownRight = x - 11;
-                        thisSpace.WhatColor = EnumColorChoice.Purple;
-                        thisSpace.DestinationColor = EnumColorChoice.Yellow;
+                        thisSpace.HomeRegion = 2;
+
                         break;
                     }
                 case 38:
@@ -927,8 +1025,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 11;
                         thisSpace.DownLeft = x - 12;
                         thisSpace.DownRight = x - 11;
-                        thisSpace.WhatColor = EnumColorChoice.Gray;
-                        thisSpace.DestinationColor = EnumColorChoice.Red;
+                        thisSpace.HomeRegion = 6;
+
                         break;
                     }
                 case 46:
@@ -937,8 +1035,8 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 10;
                         thisSpace.DownLeft = x - 12;
                         thisSpace.DownRight = x - 11;
-                        thisSpace.WhatColor = EnumColorChoice.Gray;
-                        thisSpace.DestinationColor = EnumColorChoice.Red;
+                        thisSpace.HomeRegion = 6;
+
                         break;
                     }
                 case 47:
@@ -947,8 +1045,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 10;
                         thisSpace.DownLeft = x - 11;
                         thisSpace.DownRight = x - 10;
-                        thisSpace.WhatColor = EnumColorChoice.Purple;
-                        thisSpace.DestinationColor = EnumColorChoice.Yellow;
+                        thisSpace.HomeRegion = 2;
+
                         break;
                     }
                 case 48:
@@ -1037,8 +1135,8 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 9;
                         thisSpace.DownLeft = x - 11;
                         thisSpace.DownRight = x - 10;
-                        thisSpace.WhatColor = EnumColorChoice.Gray;
-                        thisSpace.DestinationColor = EnumColorChoice.Red;
+                        thisSpace.HomeRegion = 6;
+
                         break;
                     }
                 case 57:
@@ -1136,8 +1234,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 11;
                         thisSpace.DownLeft = x - 10;
                         thisSpace.DownRight = x - 9;
-                        thisSpace.WhatColor = EnumColorChoice.Red;
-                        thisSpace.DestinationColor = EnumColorChoice.Gray;
+                        thisSpace.HomeRegion = 3;
+
                         break;
                     }
                 case 67:
@@ -1226,8 +1324,8 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 10;
                         thisSpace.UpRight = x + 11;
                         thisSpace.DownLeft = x - 10;
-                        thisSpace.WhatColor = EnumColorChoice.Yellow;
-                        thisSpace.DestinationColor = EnumColorChoice.Purple;
+                        thisSpace.HomeRegion = 5;
+
                         break;
                     }
                 case 76:
@@ -1236,8 +1334,8 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 11;
                         thisSpace.UpRight = x + 12;
                         thisSpace.DownRight = x - 10;
-                        thisSpace.WhatColor = EnumColorChoice.Red;
-                        thisSpace.DestinationColor = EnumColorChoice.Gray;
+                        thisSpace.HomeRegion = 3;
+
                         break;
                     }
                 case 77:
@@ -1248,8 +1346,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 12;
                         thisSpace.DownLeft = x - 11;
                         thisSpace.DownRight = x - 10;
-                        thisSpace.WhatColor = EnumColorChoice.Red;
-                        thisSpace.DestinationColor = EnumColorChoice.Gray;
+                        thisSpace.HomeRegion = 3;
+
                         break;
                     }
                 case 78:
@@ -1330,8 +1428,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 12;
                         thisSpace.DownLeft = x - 11;
                         thisSpace.DownRight = x - 10;
-                        thisSpace.WhatColor = EnumColorChoice.Yellow;
-                        thisSpace.DestinationColor = EnumColorChoice.Purple;
+                        thisSpace.HomeRegion = 5;
+
                         break;
                     }
                 case 86:
@@ -1340,8 +1438,8 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 11;
                         thisSpace.UpRight = x + 12;
                         thisSpace.DownLeft = x - 11;
-                        thisSpace.WhatColor = EnumColorChoice.Yellow;
-                        thisSpace.DestinationColor = EnumColorChoice.Purple;
+                        thisSpace.HomeRegion = 5;
+
                         break;
                     }
                 case 87:
@@ -1350,8 +1448,8 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 12;
                         thisSpace.UpRight = x + 13;
                         thisSpace.DownRight = x - 11;
-                        thisSpace.WhatColor = EnumColorChoice.Red;
-                        thisSpace.DestinationColor = EnumColorChoice.Gray;
+                        thisSpace.HomeRegion = 3;
+
                         break;
                     }
                 case 88:
@@ -1362,8 +1460,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 13;
                         thisSpace.DownLeft = x - 12;
                         thisSpace.DownRight = x - 11;
-                        thisSpace.WhatColor = EnumColorChoice.Red;
-                        thisSpace.DestinationColor = EnumColorChoice.Gray;
+                        thisSpace.HomeRegion = 3;
+
                         break;
                     }
                 case 89:
@@ -1374,8 +1472,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 13;
                         thisSpace.DownLeft = x - 12;
                         thisSpace.DownRight = x - 11;
-                        thisSpace.WhatColor = EnumColorChoice.Red;
-                        thisSpace.DestinationColor = EnumColorChoice.Gray;
+                        thisSpace.HomeRegion = 3;
+
                         break;
                     }
                 case 90:
@@ -1446,8 +1544,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 13;
                         thisSpace.DownLeft = x - 12;
                         thisSpace.DownRight = x - 11;
-                        thisSpace.WhatColor = EnumColorChoice.Yellow;
-                        thisSpace.DestinationColor = EnumColorChoice.Purple;
+                        thisSpace.HomeRegion = 5;
+
                         break;
                     }
                 case 97:
@@ -1458,8 +1556,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 13;
                         thisSpace.DownLeft = x - 12;
                         thisSpace.DownRight = x - 11;
-                        thisSpace.WhatColor = EnumColorChoice.Yellow;
-                        thisSpace.DestinationColor = EnumColorChoice.Purple;
+                        thisSpace.HomeRegion = 5;
+
                         break;
                     }
                 case 98:
@@ -1468,16 +1566,16 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 12;
                         thisSpace.UpRight = x + 13;
                         thisSpace.DownLeft = x - 12;
-                        thisSpace.WhatColor = EnumColorChoice.Yellow;
-                        thisSpace.DestinationColor = EnumColorChoice.Purple;
+                        thisSpace.HomeRegion = 5;
+
                         break;
                     }
                 case 99:
                     {
                         thisSpace.RightOnly = x + 1;
                         thisSpace.DownRight = x - 12;
-                        thisSpace.WhatColor = EnumColorChoice.Red;
-                        thisSpace.DestinationColor = EnumColorChoice.Gray;
+                        thisSpace.HomeRegion = 3;
+
                         break;
                     }
                 case 100:
@@ -1486,8 +1584,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = x + 1;
                         thisSpace.DownLeft = x - 13;
                         thisSpace.DownRight = x - 12;
-                        thisSpace.WhatColor = EnumColorChoice.Red;
-                        thisSpace.DestinationColor = EnumColorChoice.Gray;
+                        thisSpace.HomeRegion = 3;
+
                         break;
                     }
                 case 101:
@@ -1496,8 +1594,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = x + 1;
                         thisSpace.DownLeft = x - 13;
                         thisSpace.DownRight = x - 12;
-                        thisSpace.WhatColor = EnumColorChoice.Red;
-                        thisSpace.DestinationColor = EnumColorChoice.Gray;
+                        thisSpace.HomeRegion = 3;
+
                         break;
                     }
                 case 102:
@@ -1506,8 +1604,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = x + 1;
                         thisSpace.DownLeft = x - 13;
                         thisSpace.DownRight = x - 12;
-                        thisSpace.WhatColor = EnumColorChoice.Red;
-                        thisSpace.DestinationColor = EnumColorChoice.Gray;
+                        thisSpace.HomeRegion = 3;
+
                         break;
                     }
                 case 103:
@@ -1564,8 +1662,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = x + 1;
                         thisSpace.DownLeft = x - 13;
                         thisSpace.DownRight = x - 12;
-                        thisSpace.WhatColor = EnumColorChoice.Yellow;
-                        thisSpace.DestinationColor = EnumColorChoice.Purple;
+                        thisSpace.HomeRegion = 5;
+
                         break;
                     }
                 case 109:
@@ -1574,8 +1672,8 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = x + 1;
                         thisSpace.DownLeft = x - 13;
                         thisSpace.DownRight = x - 12;
-                        thisSpace.WhatColor = EnumColorChoice.Yellow;
-                        thisSpace.DestinationColor = EnumColorChoice.Purple;
+                        thisSpace.HomeRegion = 5;
+
                         break;
                     }
                 case 110:
@@ -1584,16 +1682,16 @@ public class GameBoardProcesses
                         thisSpace.RightOnly = x + 1;
                         thisSpace.DownLeft = x - 13;
                         thisSpace.DownRight = x - 12;
-                        thisSpace.WhatColor = EnumColorChoice.Yellow;
-                        thisSpace.DestinationColor = EnumColorChoice.Purple;
+                        thisSpace.HomeRegion = 5;
+
                         break;
                     }
                 case 111:
                     {
                         thisSpace.LeftOnly = x - 1;
                         thisSpace.DownLeft = x - 13;
-                        thisSpace.WhatColor = EnumColorChoice.Yellow;
-                        thisSpace.DestinationColor = EnumColorChoice.Purple;
+                        thisSpace.HomeRegion = 5;
+
                         break;
                     }
                 case 112:
@@ -1602,8 +1700,8 @@ public class GameBoardProcesses
                         thisSpace.DownLeft = x - 9;
                         thisSpace.DownRight = x - 8;
                         thisSpace.UpRight = x + 4;
-                        thisSpace.WhatColor = EnumColorChoice.Blue;
-                        thisSpace.DestinationColor = EnumColorChoice.Green;
+                        thisSpace.HomeRegion = 4;
+
                         break;
                     }
                 case 113:
@@ -1614,8 +1712,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 4;
                         thisSpace.DownLeft = x - 9;
                         thisSpace.DownRight = x - 8;
-                        thisSpace.WhatColor = EnumColorChoice.Blue;
-                        thisSpace.DestinationColor = EnumColorChoice.Green;
+                        thisSpace.HomeRegion = 4;
+
                         break;
                     }
                 case 114:
@@ -1626,8 +1724,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 4;
                         thisSpace.DownLeft = x - 9;
                         thisSpace.DownRight = x - 8;
-                        thisSpace.WhatColor = EnumColorChoice.Blue;
-                        thisSpace.DestinationColor = EnumColorChoice.Green;
+                        thisSpace.HomeRegion = 4;
+
                         break;
                     }
                 case 115:
@@ -1636,8 +1734,8 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 3;
                         thisSpace.DownLeft = x - 9;
                         thisSpace.DownRight = x - 8;
-                        thisSpace.WhatColor = EnumColorChoice.Blue;
-                        thisSpace.DestinationColor = EnumColorChoice.Green;
+                        thisSpace.HomeRegion = 4;
+
                         break;
                     }
                 case 116:
@@ -1646,8 +1744,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 3;
                         thisSpace.DownLeft = x - 4;
                         thisSpace.DownRight = x - 3;
-                        thisSpace.WhatColor = EnumColorChoice.Blue;
-                        thisSpace.DestinationColor = EnumColorChoice.Green;
+                        thisSpace.HomeRegion = 4;
+
                         break;
                     }
                 case 117:
@@ -1658,8 +1756,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 3;
                         thisSpace.DownLeft = x - 4;
                         thisSpace.DownRight = x - 3;
-                        thisSpace.WhatColor = EnumColorChoice.Blue;
-                        thisSpace.DestinationColor = EnumColorChoice.Green;
+                        thisSpace.HomeRegion = 4;
+
                         break;
                     }
                 case 118:
@@ -1668,8 +1766,8 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 2;
                         thisSpace.DownLeft = x - 4;
                         thisSpace.DownRight = x - 3;
-                        thisSpace.WhatColor = EnumColorChoice.Blue;
-                        thisSpace.DestinationColor = EnumColorChoice.Green;
+                        thisSpace.HomeRegion = 4;
+
                         break;
                     }
                 case 119:
@@ -1678,8 +1776,8 @@ public class GameBoardProcesses
                         thisSpace.UpRight = x + 2;
                         thisSpace.DownLeft = x - 3;
                         thisSpace.DownRight = x - 2;
-                        thisSpace.WhatColor = EnumColorChoice.Blue;
-                        thisSpace.DestinationColor = EnumColorChoice.Green;
+                        thisSpace.HomeRegion = 4;
+
                         break;
                     }
                 case 120:
@@ -1688,16 +1786,16 @@ public class GameBoardProcesses
                         thisSpace.UpLeft = x + 1;
                         thisSpace.DownLeft = x - 3;
                         thisSpace.DownRight = x - 2;
-                        thisSpace.WhatColor = EnumColorChoice.Blue;
-                        thisSpace.DestinationColor = EnumColorChoice.Green;
+                        thisSpace.HomeRegion = 4;
+
                         break;
                     }
                 case 121:
                     {
                         thisSpace.DownLeft = x - 2;
                         thisSpace.DownRight = x - 1;
-                        thisSpace.WhatColor = EnumColorChoice.Blue;
-                        thisSpace.DestinationColor = EnumColorChoice.Green;
+                        thisSpace.HomeRegion = 4;
+
                         break;
                     }
             }

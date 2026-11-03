@@ -1,12 +1,12 @@
 @inherits CascadingGameView<ChineseCheckersMainViewModel>
 <StackLayout>
     <StackItem Length="40vw">
-        <GameButtonComponent Display="End Turn" StartOnNewLine="true" CommandObject="EndCommand" />
+        <GameActionButton Display="End Turn" StartOnNewLine="true" CommandObject="EndCommand" />
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
     </StackItem>
     <StackItem>
         <div style="margin-top: 5px">
-            <GameBoardBlazor TargetHeight="86vh"
+            <GameBoardBlazor TargetHeight="100"
                              Graphics="_graphics"
                              Container="_container" />
         </div>

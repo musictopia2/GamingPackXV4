@@ -4,5 +4,5 @@ public partial class TileHandBlazor
     [Parameter]
     public TileBoardObservable? Board { get; set; }
     [Parameter]
-    public string TargetHeight { get; set; } = "";
+    public int TargetHeight { get; set; }
 }

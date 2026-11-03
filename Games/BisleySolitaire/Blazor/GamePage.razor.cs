@@ -1,5 +1,5 @@
 namespace BisleySolitaire.Blazor;
 public partial class GamePage
 {
-    public int TargetHeight { get; set; } = 14;
+    public int TargetHeight { get; set; } = 18;
 }

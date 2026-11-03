@@ -4,9 +4,9 @@
     return;
 }
 <div style="margin-top:5px;">
-    <ListChooserBlazor TotalColumns="2" ListPicker="DataContext.Easy1" TextWidth="110" TextHeight="13vh" />
+    <ListChooserBlazor TotalColumns="2" ListPicker="DataContext.Easy1" TextWidth="110" SizeCategory="EnumSize.Large"/>
 </div>
 <div style="margin-top: 20px;">
-    <ListChooserBlazor TotalColumns="2" ListPicker="DataContext.Game1" TextWidth="110" TextHeight="13vh" />
+    <ListChooserBlazor TotalColumns="2" ListPicker="DataContext.Game1" TextWidth="110" SizeCategory="EnumSize.Large" />
 </div>
-<GameButtonComponent FontSize="20vh" Display="Submit" CommandObject="DataContext.SubmitCommand" />
+<GameActionButton SizeCategory="EnumSize.Large" Display="Submit" CommandObject="DataContext.SubmitCommand" />

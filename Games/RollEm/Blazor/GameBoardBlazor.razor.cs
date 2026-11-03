@@ -2,7 +2,7 @@ namespace RollEm.Blazor;
 public partial class GameBoardBlazor
 {
     [Parameter]
-    public string TargetHeight { get; set; } = "";
+    public double TargetHeight { get; set; }
     [Parameter]
     public GameBoardGraphicsCP? BoardData { get; set; }
     private BasicList<NumberInfo> _numbers = [];

@@ -5,7 +5,7 @@
 }
 @foreach (var bead in DataContext.SolutionList)
 {
-    <BasePieceGraphics TargetWidth="17vw">
+    <BasePieceGraphics HeightPercent="20">
         <CirclePiece NeedsWhiteBorders="true" MainColor="@bead.ColorChosen.Color" />
     </BasePieceGraphics>
 }

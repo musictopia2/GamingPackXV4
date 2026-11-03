@@ -17,4 +17,6 @@ public partial class BackgammonMainView
     }
     private ICustomCommand EndCommand => DataContext!.EndTurnCommand!;
     private ICustomCommand UndoCommand => DataContext!.UndoMoveCommand!;
+    private static double _height => 20;
+    private static string Pixels => _height.HeightPixels;
 }

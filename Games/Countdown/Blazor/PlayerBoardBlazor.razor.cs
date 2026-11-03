@@ -4,7 +4,7 @@ public partial class PlayerBoardBlazor
     [Parameter]
     public CountdownPlayerItem? Player { get; set; }
     [Parameter]
-    public string TargetHeight { get; set; } = "";
+    public double TargetHeight { get; set; } 
     private PlayerBoardCP? BoardProcesses { get; set; }
     protected override void OnParametersSet()
     {

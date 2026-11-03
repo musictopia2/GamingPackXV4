@@ -1,4 +1,4 @@
-namespace KlondikeSolitaire.Core.Data;
+﻿namespace KlondikeSolitaire.Core.Data;
 [SingletonGame]
 public class BasicData : IGameInfo, ISolitaireData
 {
@@ -21,11 +21,12 @@ public class BasicData : IGameInfo, ISolitaireData
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.Solitaire;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleOnly;
-    string IGameInfo.GameName => "Klondike Solitaire"; //replace with real name.
+    public const string GameName = "Klondike Solitaire";
+    string IGameInfo.GameName => GameName; //replace with real name.
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 0;
     int IGameInfo.MaxPlayers => 0;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //most solitaire games has to be landscape.
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
 }

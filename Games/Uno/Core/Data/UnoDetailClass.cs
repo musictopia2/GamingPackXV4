@@ -1,4 +1,4 @@
-namespace Uno.Core.Data;
+﻿namespace Uno.Core.Data;
 [SingletonGame]
 public class UnoDetailClass : IGameInfo, ICardInfo<UnoCardInformation>
 {
@@ -6,13 +6,14 @@ public class UnoDetailClass : IGameInfo, ICardInfo<UnoCardInformation>
     bool IGameInfo.CanHaveExtraComputerPlayers => true;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Uno";
+    public const string GameName = "Uno";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 6;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<UnoCardInformation>.CardsToPassOut => 7;
     BasicList<int> ICardInfo<UnoCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<UnoCardInformation>.AddToDiscardAtBeginning => true;

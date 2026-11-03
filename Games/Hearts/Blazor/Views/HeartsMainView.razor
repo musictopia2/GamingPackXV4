@@ -28,17 +28,25 @@
 <StateContentView DataContext="_gameContainer.SaveRoot">
     @if (_gameContainer.SaveRoot.GameStatus == EnumStatus.Passing)
     {
-        <GameButtonComponent CommandObject="PassCommand" Display="Pass" StartOnNewLine=true />
+        <GameActionButton CommandObject="PassCommand" Display="Pass" StartOnNewLine=true />
     }
     @if (_gameContainer.SaveRoot.GameStatus == EnumStatus.ShootMoon)
     {
-        <BaseFrameBlazor Text="Shoot Moon Options">
-            <GameButtonComponent CommandObject="MoonCommand"
-                                 CommandParameter="EnumMoonOptions.GiveEverybodyPlus"
-                                 Display="Give Other Players 26 Points" />
-            <GameButtonComponent CommandObject="MoonCommand"
-                                 CommandParameter="EnumMoonOptions.GiveSelfMinus"
-                                 Display="Reduce your score by 26 points" />
+        <BaseFrameBlazor>
+            <LegendContent>
+                Shoot Moon Options
+            </LegendContent>
+            <ChildContent>
+                <GameActionButton CommandObject="MoonCommand"
+                                  UseSuggestedWidth="true"
+                                  CommandParameter="EnumMoonOptions.GiveEverybodyPlus"
+                                  Display="Give Other Players 26 Points" />
+                <GameActionButton CommandObject="MoonCommand"
+                                  UseSuggestedWidth="true"
+                                  CommandParameter="EnumMoonOptions.GiveSelfMinus"
+                                  Display="Reduce your score by 26 points" />
+            </ChildContent>
+
         </BaseFrameBlazor>
     }
 </StateContentView>

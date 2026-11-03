@@ -27,20 +27,20 @@
                     </div>
 
                     <div>
-                        <GameButtonComponent CommandObject="HitCommand" Display="Hit Me" />
+                        <GameActionButton CommandObject="HitCommand" Display="Hit Me" />
                     </div>
                     <div>
-                        <GameButtonComponent CommandObject="StayCommand" Display="Stay" />
+                        <GameActionButton CommandObject="StayCommand" Display="Stay" />
                     </div>
                 </StackItem>
                 @if (DataContext.NeedsAceChoice)
                 {
                     <StackItem>
                         <div>
-                            <GameButtonComponent CommandObject="AceCommand" CommandParameter="EnumAceChoice.Low" Display="Use Ace As One (1)" />
+                            <GameActionButton CommandObject="AceCommand" CommandParameter="EnumAceChoice.Low" Display="Use Ace As One (1)" />
                         </div>
                         <div>
-                            <GameButtonComponent CommandObject="AceCommand" CommandParameter="EnumAceChoice.High" Display="Use Ace As 11 (11)" />
+                            <GameActionButton CommandObject="AceCommand" CommandParameter="EnumAceChoice.High" Display="Use Ace As 11 (11)" />
                         </div>
                     </StackItem>
                 }

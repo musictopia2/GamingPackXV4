@@ -1,4 +1,4 @@
-namespace GermanWhist.Core.Data;
+﻿namespace GermanWhist.Core.Data;
 [SingletonGame]
 public class GermanWhistDetailClass : IGameInfo, ICardInfo<GermanWhistCardInformation>, ITrickData,
     IBeginningRegularCards<GermanWhistCardInformation>
@@ -7,13 +7,14 @@ public class GermanWhistDetailClass : IGameInfo, ICardInfo<GermanWhistCardInform
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "German Whist";
+    public const string GameName = "German Whist";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 2;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<GermanWhistCardInformation>.CardsToPassOut => 13;
     BasicList<int> ICardInfo<GermanWhistCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<GermanWhistCardInformation>.AddToDiscardAtBeginning => false;

@@ -14,15 +14,15 @@ public partial class FlinchMainView
            .AddLabel("Status", nameof(FlinchVMData.Status))
            .AddLabel("RS Cards", nameof(FlinchVMData.CardsToShuffle));
         _scores.Clear();
-        _scores.AddColumn("In Stock", false, nameof(FlinchPlayerItem.InStock));
+        _scores.AddColumn("In Stock", false, nameof(FlinchPlayerItem.InStock), numberOfDigits: 2);
         int x;
         for (x = 1; x <= 5; x++)
         {
             var thisStr = "Discard" + x;
-            _scores.AddColumn(thisStr, false, thisStr);
+            _scores.AddColumn(thisStr, false, thisStr, numberOfDigits: 2);
         }
-        _scores.AddColumn("Stock Left", false, nameof(FlinchPlayerItem.StockLeft))
-        .AddColumn("Cards Left", false, nameof(FlinchPlayerItem.ObjectCount));
+        _scores.AddColumn("Stock Left", false, nameof(FlinchPlayerItem.StockLeft), numberOfDigits: 2)
+        .AddColumn("Cards Left", false, nameof(FlinchPlayerItem.ObjectCount), numberOfDigits: 1);
         base.OnInitialized();
     }
     private ICustomCommand EndCommand => DataContext!.EndTurnCommand!;

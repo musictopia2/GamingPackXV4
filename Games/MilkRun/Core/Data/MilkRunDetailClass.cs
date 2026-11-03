@@ -1,4 +1,4 @@
-namespace MilkRun.Core.Data;
+﻿namespace MilkRun.Core.Data;
 [SingletonGame]
 public class MilkRunDetailClass : IGameInfo, ICardInfo<MilkRunCardInformation>
 {
@@ -6,13 +6,14 @@ public class MilkRunDetailClass : IGameInfo, ICardInfo<MilkRunCardInformation>
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Milk Run";
+    public const string GameName = "Milk Run";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 2;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<MilkRunCardInformation>.CardsToPassOut => 6;
     BasicList<int> ICardInfo<MilkRunCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<MilkRunCardInformation>.AddToDiscardAtBeginning => false;

@@ -2,7 +2,8 @@ namespace SorryDicedGame.Blazor;
 public partial class CompleteStartComponent : IDisposable
 {
     [Parameter]
-    public string ImageHeight { get; set; } = "";
+    public double HeightPercent { get; set; }
+    private string ImageHeight => HeightPercent.HeightPixels;
     [Parameter]
     public PlayerCollection<SorryDicedGamePlayerItem> Players { get; set; } = [];
     [Parameter]
@@ -32,17 +33,17 @@ public partial class CompleteStartComponent : IDisposable
         DataContext!.CommandContainer.AddSpecificAction("sorrystart", ShowChange);
         base.OnInitialized();
     }
-    private bool _canRender;
+    //private bool _canRender;
     private void ShowChange()
     {
-        _canRender = true;
+        //_canRender = true;
         InvokeAsync(StateHasChanged);
     }
-    protected override void OnAfterRender(bool firstRender)
-    {
-        _canRender = false;
-        base.OnAfterRender(firstRender);
-    }
+    //protected override void OnAfterRender(bool firstRender)
+    //{
+    //    _canRender = false;
+    //    base.OnAfterRender(firstRender);
+    //}
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
     public void Dispose()
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize

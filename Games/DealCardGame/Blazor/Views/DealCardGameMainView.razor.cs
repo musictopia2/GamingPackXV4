@@ -2,7 +2,6 @@ namespace DealCardGame.Blazor.Views;
 public partial class DealCardGameMainView
 {
 
-    private readonly bool _isTesting = false;
 
     [CascadingParameter]
     public TestOptions? TestData { get; set; }
@@ -30,7 +29,8 @@ public partial class DealCardGameMainView
         var output = _gameContainer!.PlayerList!.GetAllPlayersStartingWithSelf();
         return output;
     }
-    private static string Rows => $"16vh {gg1.RepeatMinimum(1)}";
+    [CascadingParameter]
+    public int ImageHeight { get; set; }
     private BasicGameCommand PlayCommand => DataContext!.PlayCommand!;
     private BasicGameCommand EndTurnCommand => DataContext!.EndTurnCommand!;
     private BasicGameCommand BankCommand => DataContext!.BankCommand!;

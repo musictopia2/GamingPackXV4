@@ -5,10 +5,13 @@ public partial class CompleteDiceRollerComponent : IDisposable
     public SorryDicedGameMainViewModel? DataContext { get; set; }
     [Parameter]
     [EditorRequired]
-    public string ImageHeight { get; set; } = "";
+    public double HeightPercent { get; set; }
     [Parameter]
     [EditorRequired]
     public ICustomCommand? DiceCommand { get; set; }
+
+    private string ImageHeight => HeightPercent.HeightPixels;
+
     private BasicList<SorryDiceModel> DiceList { get; set; } = [];
     protected override void OnInitialized()
     {

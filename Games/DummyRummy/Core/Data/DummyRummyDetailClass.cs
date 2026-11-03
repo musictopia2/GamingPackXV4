@@ -1,4 +1,4 @@
-namespace DummyRummy.Core.Data;
+﻿namespace DummyRummy.Core.Data;
 [SingletonGame]
 public class DummyRummyDetailClass(DummyRummyDelegates delegates) : IGameInfo, ICardInfo<RegularRummyCard>,
     IBeginningRegularCards<RegularRummyCard>
@@ -7,13 +7,14 @@ public class DummyRummyDetailClass(DummyRummyDelegates delegates) : IGameInfo, I
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly;
-    string IGameInfo.GameName => "Dummy Rummy";
+    public const string GameName = "Dummy Rummy";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 3;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<RegularRummyCard>.CardsToPassOut => delegates.CardsToPassOut!.Invoke();
     BasicList<int> ICardInfo<RegularRummyCard>.PlayerExcludeList => [];
     bool ICardInfo<RegularRummyCard>.AddToDiscardAtBeginning => true;

@@ -3,10 +3,9 @@ public partial class MiscSpaceComponent
 {
     [Parameter]
     public StateList<EnumMiscType> MiscList { get; set; } = [];
-
     [Parameter]
-    public string TargetImageHeight { get; set; } = "";
-
+    [EditorRequired]
+    public double HeightPercent { get; set; }
 
     //has to repeat 3 times
 

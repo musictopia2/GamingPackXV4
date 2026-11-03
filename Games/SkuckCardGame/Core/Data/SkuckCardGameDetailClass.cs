@@ -1,4 +1,4 @@
-namespace SkuckCardGame.Core.Data;
+﻿namespace SkuckCardGame.Core.Data;
 [SingletonGame]
 public class SkuckCardGameDetailClass : IGameInfo, ICardInfo<SkuckCardGameCardInformation>, ITrickData,
     IBeginningRegularCards<SkuckCardGameCardInformation>
@@ -7,13 +7,14 @@ public class SkuckCardGameDetailClass : IGameInfo, ICardInfo<SkuckCardGameCardIn
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Skuck Card Game";
+    public const string GameName = "Skuck Card Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 2;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<SkuckCardGameCardInformation>.CardsToPassOut => 10;
     BasicList<int> ICardInfo<SkuckCardGameCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<SkuckCardGameCardInformation>.AddToDiscardAtBeginning => false;

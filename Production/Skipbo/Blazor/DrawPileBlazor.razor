@@ -1,8 +1,0 @@
-<BaseDrawPileBlazor D="SkipboCardInformation" DeckAnimationTag="@DeckAnimationTag" DeckPile="@DeckPile">
-    <CanvasTemplate Context="Card">
-        <CardGraphicsBlazor HeightPercent="TargetHeight" DeckObject="Card" />
-    </CanvasTemplate>
-    <MainTemplate Context="Card">
-        <CardGraphicsBlazor ClickBlank="true" @key="Card.Deck" HeightPercent="TargetHeight" DeckObject=" Card" CommandParameter="Card" CommandObject="DeckPile!.DeckObjectClickedCommand" />
-    </MainTemplate>
-</BaseDrawPileBlazor>

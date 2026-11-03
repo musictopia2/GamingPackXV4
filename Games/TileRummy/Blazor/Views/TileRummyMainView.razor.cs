@@ -7,6 +7,7 @@ public partial class TileRummyMainView
     private readonly BasicList<ScoreColumnModel> _scores = [];
     protected override void OnInitialized()
     {
+        gg1.ButtonSize = EnumSize.Small;
         _labels.Clear();
         _labels.AddLabel("Turn", nameof(TileRummyVMData.NormalTurn))
             .AddLabel("Status", nameof(TileRummyVMData.Status));

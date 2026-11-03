@@ -14,11 +14,11 @@ public partial class XactikaMainView
              .AddLabel("Round", nameof(XactikaVMData.RoundNumber))
              .AddLabel("Mode", nameof(XactikaVMData.GameModeText));
         _scores.Clear();
-        _scores.AddColumn("Cards Left", false, nameof(XactikaPlayerItem.ObjectCount))
-            .AddColumn("Bid Amount", false, nameof(XactikaPlayerItem.BidAmount))
-            .AddColumn("Tricks Won", false, nameof(XactikaPlayerItem.TricksWon))
-            .AddColumn("Current Score", false, nameof(XactikaPlayerItem.CurrentScore))
-            .AddColumn("Total Score", false, nameof(XactikaPlayerItem.TotalScore));
+        _scores.AddColumn("Cards Left", false, nameof(XactikaPlayerItem.ObjectCount), numberOfDigits: 1)
+            .AddColumn("Bid Amount", false, nameof(XactikaPlayerItem.BidAmount), numberOfDigits: 1)
+            .AddColumn("Tricks Won", false, nameof(XactikaPlayerItem.TricksWon), numberOfDigits: 1)
+            .AddColumn("Current Score", false, nameof(XactikaPlayerItem.CurrentScore), numberOfDigits: 3)
+            .AddColumn("Total Score", false, nameof(XactikaPlayerItem.TotalScore), numberOfDigits: 3);
         base.OnInitialized();
     }
 }

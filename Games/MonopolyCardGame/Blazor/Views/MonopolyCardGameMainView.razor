@@ -32,16 +32,16 @@
                     <DrawPileBlazor DeckPile="_vmData.Deck1" />
                 </StackItem>
                 <StackItem>
-                    <GameButtonComponent Display="Organize Cards"
+                    <GameActionButton Display="Organize Cards"
                         StartOnNewLine=true
                         CommandObject="OrganizeCardsCommand" />
-                    <GameButtonComponent Display="Resume"
+                    <GameActionButton Display="Resume"
                                          CommandObject="ResumeCommand"
                                          StartOnNewLine="true" />
-                    <GameButtonComponent Display="Go Out"
+                    <GameActionButton Display="Go Out"
                                          CommandObject="GoOutCommand"
                                          StartOnNewLine="true" />
-                    <GameButtonComponent Display="End Turn"
+                    <GameActionButton Display="End Turn"
                                          CommandObject="EndTurnCommand"
                                          StartOnNewLine=true
                         />
@@ -62,7 +62,7 @@
                     </div>
                 </StackItem>
                 <StackItem>
-                    <TempSetsBlazor TargetHeight="35vh"
+                    <TempSetsBlazor TargetHeight="22vh"
                                     Mode="EnumMode.Plain"
                                     Divider="1.5"
                                     TempPiles="_vmData.TempSets1" />

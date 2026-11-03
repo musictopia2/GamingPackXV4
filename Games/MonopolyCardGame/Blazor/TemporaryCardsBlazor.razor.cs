@@ -6,165 +6,69 @@ public partial class TemporaryCardsBlazor
     [Parameter]
     public RenderFragment<MonopolyCardGameCardInformation>? ChildContent { get; set; }
     [Parameter]
-    public string TargetContainerSize { get; set; } = ""; //if not set, will keep going forever.
+    public string TargetContainerSize { get; set; } = "";
     [Parameter]
-    public string TargetImageSize { get; set; } = "";
-    [Parameter]
-    public int TargetImageHeight { get; set; }
+    public int HeightPixels { get; set; }
     [Parameter]
     public double Divider { get; set; } = 1;
     [Parameter]
     public double AdditionalSpacing { get; set; } = -5;
-
     [Parameter]
     public EnumHandList HandType { get; set; } = EnumHandList.Horizontal;
 
-
-    private string GetViewBox()
+    private (double Width, double Height) GetCardSize()
     {
-        return $"0 0 {_viewBox.Width} {_viewBox.Height}";
+        var size = new MonopolyCardGameCardInformation().DefaultSize;
+        // Match BaseDeckGraphics' viewBox, including its four-unit border.
+        double scale = HeightPixels / (double)Math.Max(size.Width + 4, size.Height + 4);
+        return ((size.Width + 4) * scale, (size.Height + 4) * scale);
     }
 
-    private BasicList<PointF> _points = [];
-    private SizeF _viewBox = new();
+    private double GetStep()
+    {
+        var (width, height) = GetCardSize();
+        double length = HandType == EnumHandList.Horizontal ? width : height;
+        return Math.Max(1, length / Math.Max(1, Divider) + AdditionalSpacing);
+    }
+
+    private (double Width, double Height) GetContentSize()
+    {
+        var (width, height) = GetCardSize();
+        // Maximum reserves space; it must never clip cards already in the pile.
+        int count = Math.Max(1, Math.Max(Hand!.Maximum, Hand.HandList.Count));
+        double extra = (count - 1) * GetStep();
+        return HandType == EnumHandList.Horizontal
+            ? (width + extra, height)
+            : (width, height + extra);
+    }
+
     private string GetContainerStyle()
     {
-        if (TargetContainerSize == "")
-        {
-            if (HandType == EnumHandList.Horizontal)
-            {
-                return $"overflow-x: auto; margin-right: 10px;";
-            }
-            return $"overflow-y: auto; margin-bottom: 10px; padding-right: 3px;";
-        }
+        var (width, height) = GetContentSize();
         if (HandType == EnumHandList.Horizontal)
         {
-            return $"width: {TargetContainerSize}; overflow-x: auto;";
+            string containerWidth = TargetContainerSize == ""
+                ? FormattableString.Invariant($"{width}px") : TargetContainerSize;
+            return $"display:inline-block; vertical-align:top; width:{containerWidth}; max-width:100%; overflow:auto;";
         }
-        return $"height: {TargetContainerSize}; overflow-y: auto; padding-right: 3px;";
+        string containerHeight = TargetContainerSize == ""
+            ? FormattableString.Invariant($"{height}px") : TargetContainerSize;
+        return FormattableString.Invariant(
+            $"display:inline-block; vertical-align:top; width:{width}px; height:{containerHeight}; overflow:auto;");
     }
-    private string GetSvgStyle()
-    {
-        if (HandType == EnumHandList.Horizontal && TargetImageHeight > 0)
-        {
-            return $"height: {TargetImageHeight}vh";
-        }
-        if (HandType == EnumHandList.Vertical && TargetImageHeight > 0)
-        {
-            MonopolyCardGameCardInformation image = new();
-            SizeF size = image.DefaultSize;
-            var temps = TargetImageHeight * size.Width / size.Height;
-            return $"width: {temps}vh";
-        }
-        if (TargetImageSize == "")
-        {
-            return "";
-        }
-        if (HandType == EnumHandList.Horizontal)
-        {
 
-            return $"height: {TargetImageSize}";
-        }
-        return $"width: {TargetImageSize}";
-    }
-    private void CalculateHandMax()
+    private string GetContentStyle()
     {
-        var currentPoint = new PointF(0, 0);
-        MonopolyCardGameCardInformation card = new();
-        var defaultSize = card.DefaultSize;
-        double extras = 0;
-        for (int i = 0; i < Hand!.Maximum; i++)
-        {
-            if (HandType == EnumHandList.Horizontal)
-            {
-                extras = defaultSize.Width / Divider;
-                extras += AdditionalSpacing;
-                currentPoint.X += (float)extras;
-            }
-            else
-            {
-                extras = defaultSize.Height / Divider;
-                extras += AdditionalSpacing;
-                currentPoint.Y += (float)extras;
-            }
-        }
-        if (HandType == EnumHandList.Horizontal)
-        {
-            currentPoint.X += (float)extras;
-            _viewBox = new SizeF(currentPoint.X - defaultSize.Width + 10, defaultSize.Height);
-        }
-        else
-        {
-            currentPoint.Y += (float)extras;
-            _viewBox = new SizeF(defaultSize.Width, currentPoint.Y);
-        }
+        var (width, height) = GetContentSize();
+        return FormattableString.Invariant($"position:relative; width:{width}px; height:{height}px;");
     }
-    protected override void OnParametersSet()
-    {
-        _points = [];
-        if (Hand!.HandList.Count == 0)
-        {
-            MonopolyCardGameCardInformation image = new();
-            if (Hand.Maximum == 0)
-            {
-                SizeF size = new(image.DefaultSize.Width * 2, image.DefaultSize.Height);
-                _viewBox = size;
-            }
-            else
-            {
-                CalculateHandMax();
-            }
-        }
-        else
-        {
-            PointF currentPoint = new(0, 0);
-            SizeF defaultSize = new();
-            foreach (var hand in Hand.HandList)
-            {
-                defaultSize = hand.DefaultSize;
-                PointF nextPoint = new(currentPoint.X, currentPoint.Y);
-                _points.Add(nextPoint);
-                double extras;
-                if (HandType == EnumHandList.Horizontal)
-                {
-                    extras = hand.DefaultSize.Height / Divider;
-                    extras += AdditionalSpacing;
-                    currentPoint.X += (float)extras;
-                }
-                else
-                {
-                    extras = hand.DefaultSize.Width / Divider;
-                    extras += AdditionalSpacing;
 
-                    currentPoint.Y += (float)extras;
-                }
-            }
-            if (Hand.Maximum == 0)
-            {
-                float maxX;
-                if (Hand.HandList.Count == 1)
-                {
-                    maxX = defaultSize.Width;
-                }
-                else
-                {
-                    maxX = _points.Max(x => x.X);
-                }
-                float maxY = _points.Max(x => x.Y);
-                if (HandType == EnumHandList.Horizontal)
-                {
-                    _viewBox = new SizeF(maxX + defaultSize.Width, defaultSize.Height);
-                }
-                else
-                {
-                    _viewBox = new SizeF(defaultSize.Width, maxY + defaultSize.Height);
-                }
-                
-            }
-            else
-            {
-                CalculateHandMax();
-            }
-        }
+    private string GetCardStyle(int index)
+    {
+        var (width, height) = GetCardSize();
+        double left = HandType == EnumHandList.Horizontal ? index * GetStep() : 0;
+        double top = HandType == EnumHandList.Vertical ? index * GetStep() : 0;
+        return FormattableString.Invariant(
+            $"position:absolute; left:{left}px; top:{top}px; width:{width}px; height:{height}px; line-height:0;");
     }
 }

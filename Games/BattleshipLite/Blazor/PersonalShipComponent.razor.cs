@@ -3,9 +3,10 @@ public partial class PersonalShipComponent
 {
     [CascadingParameter]
     private BattleshipLiteMainViewModel? DataContext { get; set; }
-    [CascadingParameter]
-    private string TargetHeight { get; set; } = "";
+    //[CascadingParameter]
+    //private string TargetHeight { get; set; } = "";
 
+    private static string TargetHeight => $"{75.HeightPixels}px";
 
 
     private string PieceColor(ShipInfo ship)

@@ -11,13 +11,7 @@ public partial class ThreeLetterFunMainView : INewCard
         DataContext!.VMData.NewUI = this; //try this.
         base.OnInitialized();
     }
-    protected void RunTest() //just to make the suggestion message go away.
-    {
-        if (Board is null)
-        {
-
-        }
-    }
+    private static int GetTargetHeight => ll1.LayoutMode is EnumGameLayoutMode.Compact ? 18 : 12;
     private TileBoardBlazor? Board { get; set; }
     void INewCard.ShowNewCard()
     {

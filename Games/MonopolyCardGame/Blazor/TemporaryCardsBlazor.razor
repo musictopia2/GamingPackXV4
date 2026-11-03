@@ -1,18 +1,18 @@
-﻿@using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base
-@{
-    int x = 0;
+@using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base
+@if (Hand is null)
+{
+    return;
 }
-<div @key="Hand" style="@GetContainerStyle() display:inline-block; margin: 0px;">
-    <svg style="@GetSvgStyle()" viewBox="@GetViewBox()">
-        @foreach (var item in Hand!.HandList)
+<div @key="Hand" style="@GetContainerStyle()">
+    <div style="@GetContentStyle()">
+        @for (int i = 0; i < Hand.HandList.Count; i++)
         {
-            var point = _points[x];
-            <FlexibleDeckRenderComponent D="MonopolyCardGameCardInformation" DeckObject="item">
-                <svg x="@point.X" y="@point.Y" width="@item.DefaultSize.Width" height="@item.DefaultSize.Height">
+            var item = Hand.HandList[i];
+            <div @key="item" style="@GetCardStyle(i)">
+                <FlexibleDeckRenderComponent D="MonopolyCardGameCardInformation" DeckObject="item">
                     @ChildContent!(item)
-                </svg>
-            </FlexibleDeckRenderComponent>
-            x++;
+                </FlexibleDeckRenderComponent>
+            </div>
         }
-    </svg>
+    </div>
 </div>

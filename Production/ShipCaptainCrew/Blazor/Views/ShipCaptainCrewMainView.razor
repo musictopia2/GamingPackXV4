@@ -1,9 +1,0 @@
-@inherits CascadingGameView<ShipCaptainCrewMainViewModel>
-<div class="@cc1.CenteredFlex" style="height: @Pixels">
-    <GameActionButton SizeCategory="EnumSize.Large" CommandObject="RollCommand" Display="Roll Dice" />
-    <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" PercentHeight="_height" />
-</div>
-<LabelGridComponent SizeCategory="EnumSize.Large" DataContext="DataContext.VMData" Labels="_labels" />
-<div>
-    <ScoreBoardBlazor SizeCategory="EnumSize.Large" P="ShipCaptainCrewPlayerItem" Columns="@_scores" Players="@DataContext!.PlayerList" />
-</div>

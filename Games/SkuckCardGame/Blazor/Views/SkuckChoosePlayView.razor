@@ -4,12 +4,18 @@
     return;
 }
 <BaseFrameBlazor>
-    <GameButtonComponent CommandObject="PlayCommand"
-                         StartOnNewLine="true"
-                         CommandParameter="EnumChoiceOption.Play"
-                         Display="Play" />
-    <GameButtonComponent CommandObject="PlayCommand"
-                         StartOnNewLine="true"
-                         CommandParameter="EnumChoiceOption.Pass"
-                         Display="Pass" />
+    <LegendContent>
+
+    </LegendContent>
+    <ChildContent>
+        <GameActionButton CommandObject="PlayCommand"
+                          StartOnNewLine="true"
+                          CommandParameter="EnumChoiceOption.Play"
+                          Display="Play" />
+        <GameActionButton CommandObject="PlayCommand"
+                          StartOnNewLine="true"
+                          CommandParameter="EnumChoiceOption.Pass"
+                          Display="Pass" />
+    </ChildContent>
+    
 </BaseFrameBlazor>

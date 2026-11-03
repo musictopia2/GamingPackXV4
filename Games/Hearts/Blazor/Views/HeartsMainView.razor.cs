@@ -15,15 +15,13 @@ public partial class HeartsMainView
         _labels.AddLabel("Turn", nameof(HeartsVMData.NormalTurn))
             .AddLabel("Status", nameof(HeartsVMData.Status))
             .AddLabel("Round", nameof(HeartsVMData.RoundNumber))
-            .AddLabel("Pass", nameof(HeartsVMData.PassedPlayer))
-            ;
-
+            .AddLabel("Pass", nameof(HeartsVMData.PassedPlayer));
         _scores.Clear();
-        _scores.AddColumn("Cards Left", false, nameof(HeartsPlayerItem.ObjectCount))
-            .AddColumn("Tricks Won", false, nameof(HeartsPlayerItem.TricksWon))
-            .AddColumn("Current Score", false, nameof(HeartsPlayerItem.CurrentScore))
-            .AddColumn("Previous Score", false, nameof(HeartsPlayerItem.PreviousScore))
-            .AddColumn("Total Score", false, nameof(HeartsPlayerItem.TotalScore));
+        _scores.AddColumn("Cards Left", false, nameof(HeartsPlayerItem.ObjectCount), numberOfDigits: 2)
+            .AddColumn("Tricks Won", false, nameof(HeartsPlayerItem.TricksWon), numberOfDigits: 2)
+            .AddColumn("Current Score", false, nameof(HeartsPlayerItem.CurrentScore), numberOfDigits: 4)
+            .AddColumn("Previous Score", false, nameof(HeartsPlayerItem.PreviousScore), numberOfDigits: 4)
+            .AddColumn("Total Score", false, nameof(HeartsPlayerItem.TotalScore), numberOfDigits: 4);
         ; //cards left is common.  can be anything you need.
         base.OnInitialized();
     }

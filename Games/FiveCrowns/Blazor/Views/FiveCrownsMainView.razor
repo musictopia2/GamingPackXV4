@@ -5,13 +5,13 @@
 }
 <StackLayout>
     <StackItem>
-        <HandBlazor Hand="_vmData.PlayerHand1" TargetContainerSize="70vw" AdditionalSpacing="1" />
+        <HandBlazor Hand="_vmData.PlayerHand1" TargetContainerSize="50vw" AdditionalSpacing="1" />
     </StackItem>
     <StackItem>
-        <GameButtonComponent CommandObject="LayDownCommand"
+        <GameActionButton CommandObject="LayDownCommand"
                              Display="Lay Down"
                              StartOnNewLine="true" />
-        <GameButtonComponent CommandObject="BackCommand"
+        <GameActionButton CommandObject="BackCommand"
                              Display="Back"
                              StartOnNewLine="true" />
     </StackItem>
@@ -22,7 +22,7 @@
         <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
     </StackItem>
     <StackItem Length="1fr">
-        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        <LabelGridComponent SizeCategory="EnumSize.Small" DataContext="_vmData" Labels="_labels" />
     </StackItem>
 </StackLayout>
 <div>
@@ -32,11 +32,11 @@
 </div>
 <StackLayout>
     <StackItem>
-        <TempSetsBlazor TargetContainerSize="58vh"
+        <TempSetsBlazor HeightPercent="60"
                         TempPiles="_vmData.TempSets" />
     </StackItem>
     <StackItem>
-        <MainRummySetsBlazor ContainerHeight="58vh"
+        <MainRummySetsBlazor HeightPercent="60"
                              DataContext="_vmData.MainSets" />
     </StackItem>
 </StackLayout>

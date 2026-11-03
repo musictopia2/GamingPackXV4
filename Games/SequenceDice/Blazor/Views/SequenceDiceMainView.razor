@@ -7,8 +7,7 @@
     <GridItem>
         <GridGameBoard S="SpaceInfoCP"
                        SpaceList="@_saveRoot.GameBoard"
-                       GridHeight="88vh"
-                       GridWidth="100%"
+                       
                        TargetSpaceHeight="50"
                        TargetSpaceWidth="50">
             <ItemTemplate Context="Space">
@@ -21,9 +20,9 @@
         </GridGameBoard>
     </GridItem>
     <GridItem Column="2">
-        <div class="@css1.CenteredFlex" style="height: 22vh">
-            <GameButtonComponent CommandObject="RollCommand" Display="Roll Dice" />
-            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+        <div class="@css1.CenteredFlex" style="height: @Pixels">
+            <GameActionButton CommandObject="RollCommand" Display="Roll Dice" />
+            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" PercentHeight="@_height" />
         </div>
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
     </GridItem>

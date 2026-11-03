@@ -9,5 +9,5 @@ public partial class GamePage
     public BasicData? BasicData { get; set; }
     [CascadingParameter]
     public MultiplayerBasicParentShell? Shell { get; set; }
-    private int TargetHeight { get; set; } = 7;
+    private int TargetHeight { get; set; } = ll1.LayoutMode == EnumGameLayoutMode.Compact ? 13 : 10;
 }

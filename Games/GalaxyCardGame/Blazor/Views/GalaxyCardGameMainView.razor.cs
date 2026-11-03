@@ -6,6 +6,7 @@ public partial class GalaxyCardGameMainView
     private GalaxyCardGameVMData? _vmData;
     private GalaxyCardGameGameContainer? _gameContainer;
     private BasicList<GalaxyCardGamePlayerItem> _players = [];
+
     protected override void OnInitialized()
     {
         _vmData = Resolver!.Resolve<GalaxyCardGameVMData>();

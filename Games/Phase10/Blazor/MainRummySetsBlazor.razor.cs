@@ -4,7 +4,7 @@ public partial class MainRummySetsBlazor
     [Parameter]
     public string ContainerWidth { get; set; } = "";
     [Parameter]
-    public string ContainerHeight { get; set; } = "";
+    public double HeightPercent { get; set; }
     [Parameter]
     public double Divider { get; set; } = 1;
     [Parameter]

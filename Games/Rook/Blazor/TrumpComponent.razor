@@ -2,12 +2,17 @@
 {
     return;
 }
-<BaseFrameBlazor Text="Trump Info">
-    <EnumPickerBlazor TargetSize="22vh" E="EnumColorTypes" Context="Piece" ListPicker="DataContext.Model.Color1">
+<BaseFrameBlazor>
+    <LegendContent>
+        Trump Info
+    </LegendContent>
+    <ChildContent>
+        <EnumPickerBlazor SizeCategory="EnumSize.Small" E="EnumColorTypes" Context="Piece" ListPicker="DataContext.Model.Color1">
         <CheckerPiece MainColor="@GetColor(Piece)" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" />
     </EnumPickerBlazor>
     <div>
-        <GameButtonComponent CommandObject="TrumpCommand"
+        <GameActionButton CommandObject="TrumpCommand"
                              Display="Choose Color" />
     </div>
+    </ChildContent>
 </BaseFrameBlazor>

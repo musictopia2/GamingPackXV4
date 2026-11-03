@@ -36,6 +36,7 @@
     @if (GameContainer.MovePlayer > 0)
     {
         <BasePieceGraphics LongestSize="@SpaceWidth"
+                           @key="GetKey"
                            Location="GraphicsData.SpaceList[GameContainer.MovePlayer].Location">
             <MarblePiece MainColor="@GetColor()" />
         </BasePieceGraphics>

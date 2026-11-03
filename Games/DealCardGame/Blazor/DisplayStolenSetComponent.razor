@@ -5,16 +5,22 @@
     </div>
     return;
 }
-<BaseFrameBlazor Text="@DisplayName">
-    <StackLayout ItemSpacing="0px">
-        @{
-            var list = CardList;
-        }
-        @foreach (var item in list)
-        {
-        <StackItem>
-            <CardGraphicsBlazor DeckObject="item" TargetHeight="16vh" />
-        </StackItem>
-        }
-    </StackLayout>
+<BaseFrameBlazor>
+    <LegendContent>
+        @DisplayName
+    </LegendContent>
+    <ChildContent>
+        <StackLayout ItemSpacing="0px">
+            @{
+                var list = CardList;
+            }
+            @foreach (var item in list)
+            {
+                <StackItem>
+                    <CardGraphicsBlazor DeckObject="item" HeightPercent="ImageHeight" />
+                </StackItem>
+            }
+        </StackLayout>
+    </ChildContent>
+    
 </BaseFrameBlazor>

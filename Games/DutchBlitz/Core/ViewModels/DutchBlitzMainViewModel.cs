@@ -109,6 +109,7 @@ public partial class DutchBlitzMainViewModel(CommandContainer commandContainer,
                 viewModel.DiscardPiles.AddToEmptyDiscard(thisCard);
                 mainGame!.SingleInfo!.StockLeft--;
                 await mainGame.SendStockAsync();
+                await mainGame.RefreshCardsAsync(viewModel.StockPile.StockFrame); //i think
                 return;
             }
             if (viewModel.Pile1!.CardSelected() == 0)
@@ -120,6 +121,7 @@ public partial class DutchBlitzMainViewModel(CommandContainer commandContainer,
             thisCard.IsSelected = false;
             thisCard.Drew = false;
             viewModel.DiscardPiles.AddToEmptyDiscard(thisCard);
+            //await await mainGame.RefreshCardsAsync(viewModel.DiscardPiles.pi)
             viewModel.Pile1.RemoveFromPile();
             return;
         }

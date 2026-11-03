@@ -1,4 +1,3 @@
-using System.Reflection;
 namespace Aggravation.Blazor;
 public partial class GameBoardBlazor
 {
@@ -7,8 +6,7 @@ public partial class GameBoardBlazor
     [Parameter]
     public AggravationGameContainer? GameContainer { get; set; }
     [Parameter]
-    public string TargetHeight { get; set; } = "";
-    private Assembly GetAssembly => Assembly.GetAssembly(GetType())!;
+    public double TargetHeight { get; set; }
     private string GetColor() => GetColor(GameContainer!.SingleInfo!);
     private static string GetColor(AggravationPlayerItem player) => player.Color.Color;
     protected override bool ShouldRender()

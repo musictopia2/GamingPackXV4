@@ -1,12 +1,12 @@
 @inherits CascadingGameView<PassOutDiceGameMainViewModel>
 <StackLayout>
     <StackItem>
-        <GameBoardBlazor GraphicsData="_graphicsData" TargetHeight="88vh" />
+        <GameBoardBlazor GraphicsData="_graphicsData" TargetHeight="100" />
     </StackItem>
     <StackItem>
-        <div style="height: 22vh">
-            <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
-            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" TargetHeight="20vh" />
+        <div style="height: @Pixels">
+            <GameActionButton CommandObject="EndCommand" Display="End Turn" />
+            <DiceListConrolBlazor D="SimpleDice" Cup="@DataContext!.GetCup" PercentHeight="_height" />
         </div>
         <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
     </StackItem>

@@ -13,11 +13,11 @@ public partial class HuseHeartsMainView
             .AddLabel("Status", nameof(HuseHeartsVMData.Status))
             .AddLabel("Round", nameof(HuseHeartsVMData.RoundNumber));
         _scores.Clear();
-        _scores.AddColumn("Cards Left", false, nameof(HuseHeartsPlayerItem.ObjectCount))
-            .AddColumn("Tricks Won", false, nameof(HuseHeartsPlayerItem.TricksWon))
-            .AddColumn("Current Score", false, nameof(HuseHeartsPlayerItem.CurrentScore))
-            .AddColumn("Previous Score", false, nameof(HuseHeartsPlayerItem.PreviousScore))
-            .AddColumn("Total Score", false, nameof(HuseHeartsPlayerItem.TotalScore));
+        _scores.AddColumn("Cards Left", false, nameof(HuseHeartsPlayerItem.ObjectCount), numberOfDigits: 2)
+            .AddColumn("Tricks Won", false, nameof(HuseHeartsPlayerItem.TricksWon), numberOfDigits: 2)
+            .AddColumn("Current Score", false, nameof(HuseHeartsPlayerItem.CurrentScore), numberOfDigits: 3)
+            .AddColumn("Previous Score", false, nameof(HuseHeartsPlayerItem.PreviousScore), numberOfDigits: 3)
+            .AddColumn("Total Score", false, nameof(HuseHeartsPlayerItem.TotalScore), numberOfDigits: 3);
         base.OnInitialized();
     }
 }

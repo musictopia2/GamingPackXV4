@@ -10,7 +10,7 @@ public class GlobalClass(LevelClass level)
         {
             if (level.LevelChosen == 1)
             {
-                return 4;
+                return 6;
             }
             return level.LevelChosen + 4;
         }

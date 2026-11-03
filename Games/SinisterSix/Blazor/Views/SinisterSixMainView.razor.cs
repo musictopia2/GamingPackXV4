@@ -18,4 +18,6 @@ public partial class SinisterSixMainView
     private ICustomCommand EndCommand => DataContext!.EndTurnCommand!;
     private ICustomCommand RollCommand => DataContext!.RollDiceCommand!;
     private ICustomCommand RemoveCommand => DataContext!.RemoveDiceCommand!;
+    private static double _height => 30;
+    private static string Pixels => _height.HeightPixels;
 }

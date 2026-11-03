@@ -16,11 +16,29 @@ public partial class GameboardBlazor : IHandle<BeforeGameOverEventModel>, IDispo
         Subscribe();
     }
     private BasicList<MineSquareModel> SquareList => MainGame.GetSquares();
-    public string GetViewHeight()
+
+
+    public string GetSpaceSize()
     {
-        double totalNeeded = 90 / MainGame.NumberOfRows;
-        return $"{totalNeeded}vh";
+        double boardHeight = ll1.LayoutMode switch
+        {
+            EnumGameLayoutMode.Desktop => ll1.MaxedDesktopHeight,
+            EnumGameLayoutMode.Tablet => ll1.MaxedTabletHeight,
+            EnumGameLayoutMode.Compact => ll1.MaxedCompactHeight,
+            _ => throw new InvalidOperationException("Unknown layout mode.")
+        };
+
+        double size = boardHeight / MainGame.NumberOfRows;
+
+        return size.ToString(
+            System.Globalization.CultureInfo.InvariantCulture) + "px";
     }
+
+    //public string GetViewHeight()
+    //{
+    //    double totalNeeded = 90 / MainGame.NumberOfRows;
+    //    return $"{totalNeeded}vh";
+    //}
     private MineSquareModel GetSquare(int row, int column)
     {
         return SquareList.Single(x => x.Row == row && x.Column == column);
@@ -30,7 +48,6 @@ public partial class GameboardBlazor : IHandle<BeforeGameOverEventModel>, IDispo
     {
         InvokeAsync(StateHasChanged);
     }
-
     public void Dispose()
     {
         Unsubscribe();

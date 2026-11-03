@@ -1,4 +1,4 @@
-namespace Racko.Core.Data;
+﻿namespace Racko.Core.Data;
 [SingletonGame]
 public class RackoDetailClass : IGameInfo, ICardInfo<RackoCardInformation>
 {
@@ -6,13 +6,14 @@ public class RackoDetailClass : IGameInfo, ICardInfo<RackoCardInformation>
     bool IGameInfo.CanHaveExtraComputerPlayers => false; //can no longer have extra computer players because there was some bugs.  decided for now, not worth fixing.  not as important.
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
-    string IGameInfo.GameName => "Racko";
+    public const string GameName = "Racko";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyTablet;
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Portrait;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<RackoCardInformation>.CardsToPassOut => 10;
     BasicList<int> ICardInfo<RackoCardInformation>.PlayerExcludeList => [];
     bool ICardInfo<RackoCardInformation>.AddToDiscardAtBeginning => true;
