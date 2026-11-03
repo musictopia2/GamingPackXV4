@@ -1,0 +1,21 @@
+﻿@if (CompleteContainer == null)
+{
+    return;
+}
+<BaseFrameBlazor>
+    <LegendContent>
+        Rules Information
+    </LegendContent>
+    <ChildContent>
+        <div style="height: @RealHeight; overflow: auto; width: 20vw;">
+            <StateContentView DataContext="CompleteContainer.GameContainer.SaveRoot.RuleList">
+                @foreach (var rule in CompleteContainer.GameContainer.SaveRoot.RuleList)
+                {
+                    <div>@rule.Text()</div>
+                }
+            </StateContentView>
+
+        </div>
+    </ChildContent>
+    
+</BaseFrameBlazor>

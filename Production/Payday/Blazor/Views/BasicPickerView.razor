@@ -1,0 +1,20 @@
+﻿@typeparam V
+@inherits BasicSubmitView<V>
+@if (VMData is null || DataContext is null)
+{
+    return;
+}
+<ActionContentView Key="@PaydayActions.Popups">
+
+    
+
+    <StackLayout>
+        <StackItem>
+            <ListChooserBlazor SizeCategory="EnumSize.Small" ListPicker="VMData.PopUpList" />
+        </StackItem>
+        <StackItem>
+            <GameActionButton CommandObject="SubmitCommand"
+                                 Display="Submit" />
+        </StackItem>
+    </StackLayout>
+</ActionContentView>

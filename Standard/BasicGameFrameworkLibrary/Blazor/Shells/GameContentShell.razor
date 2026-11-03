@@ -1,0 +1,16 @@
+﻿<div class="game-content">
+    @{
+        bool supported = IsSupported();
+    }
+
+    <VisibleHiddenComponent Visible="supported">
+        @ChildContent
+    </VisibleHiddenComponent>
+    @if (IsSupported() == false)
+    {
+        <div>
+            This game is only supported on large tablets or desktops.
+        </div>
+    }
+    
+</div>

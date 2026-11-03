@@ -1,0 +1,25 @@
+﻿@inherits ParameterGameView<RageBiddingViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+<div style="margin: 5px">
+    <NumberChooserBlazor SizeCategory="EnumSize.Large" NumberPicker="DataContext.Model.Bid1" />
+</div>
+<div>
+    <GameActionButton CommandObject="BidCommand"
+                         StartOnNewLine="true"
+                         Display="Place Bid" />
+</div>
+<div>
+    <HandBlazor Hand="DataContext.Model.PlayerHand1" />
+</div>
+<div>
+    <LabelGridComponent DataContext="DataContext.Model"
+                        Labels="_labels" />
+</div>
+<div>
+    <ScoreBoardBlazor P="RageCardGamePlayerItem"
+                      Columns="_scores"
+                      Players="DataContext.GameContainer.PlayerList" />
+</div>

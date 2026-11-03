@@ -1,6 +1,4 @@
-﻿@using BasicGameFrameworkLibrary.Blazor.Views
-@using aa1 = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
-@using BasicBlazorLibrary.Components.MediaQueries.ParentClasses
+﻿@using aa1 = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
 @if (BasicData == null || GameData == null)
 {
     return;
@@ -13,84 +11,54 @@
     <p>Loading Game Package</p>
     return;
 }
-<CascadingValue Value="TestData">
-    <CascadingValue Value="BasicData">
-        <CascadingValue Value="GameData">
-            @*<Title Value="@GameData.GameName"></Title>*@
-            @if (BasicData.NickName == "")
-            {
-                <p>Enter Nick Name</p>
-                <div>
-                    <input type="text" @bind-value="BasicData.NickName" />
-                </div>
-                <div>
-                    <GameButtonComponent CustomCallBack="ProcessNickNameAsync" Display="Submit" />
-                </div>
-            }
-            else
-            {
-                <LeftOverLayout>
-                    <TopContent>
-                        <div style="width: 100%;  background-color: indigo; margin-bottom: 2px; margin-top: 2px; height: 8vh">
+<LandscapeShell>
+    <CascadingValue Value="TestData">
+        <CascadingValue Value="BasicData">
+            <CascadingValue Value="GameData">
+                @if (BasicData.NickName == "")
+                {
+                    <p>Enter Nick Name</p>
+                    <div>
+                        <input type="text" @bind-value="BasicData.NickName" />
+                    </div>
+                    <div>
+                        <GameActionButton CustomCallBack="ProcessNickNameAsync" Display="Submit" />
+                    </div>
+                }
+                else
+                {
+                    <div class="game-shell">
+                        <div class="top-bar">
                             @if (aa1.BackToMainDelegate is not null)
                             {
-                                @if (Media!.DeviceCategory == EnumDeviceCategory.Phone)
-                                {
-                                    <GameButtonComponent CustomCallBack="aa1.BackToMainDelegate" FontSize="2vh" Display="Back To Main" />
-                                }
-                                else
-                                {
-                                    <GameButtonComponent CustomCallBack="aa1.BackToMainDelegate" Display="Back To Main" />
-                                }
+                                <TopBarButton CustomCallBack="aa1.BackToMainDelegate" Display="Back To Main" />
                             }
                             @if (TestData!.ShowNickNameOnShell)
                             {
-                                <span style="font-size: 5vh; margin-right: 10px;">
-                                    @BasicData.NickName
-                                </span>
+                                <TopBarLabel Display="@BasicData.NickName" />
                             }
-                            <span style="font-size: 5vh">
-                                @GameData.GameName
-                            </span>
+                            @if (_fullScreen && ll1.LayoutMode == EnumGameLayoutMode.Compact)
+                            {
+                                <TopBarLabel Display="@GameData.GameName" MarginLeft="10px" />
+                            }
+                            else
+                            {
+                                <TopBarLabel Display="@GameData.GameName" />
+                            }
                             <NewGameView />
                             <NewRoundView />
                             <RestoreView />
-                            @if (TestData.AdvancedTestOptions && AdvancedState!.CanShowAdvancedButton)
-                            {
-                                <GameButtonComponent CustomCallBack="AdvancedState.CommitAndExitAsync" Display="Commit Test" />
-                            }
                             @if (NeedsFullScreen() == true)
                             {
-                                @if (Media!.DeviceCategory == EnumDeviceCategory.Phone)
-                                {
-                                    <GameButtonComponent CustomCallBack="ManuallyOpenCloseFullScreenAsync" FontSize="2vh" Display="@GetDisplay" />
-                                }
-                                else
-                                {
-                                    <GameButtonComponent CustomCallBack="ManuallyOpenCloseFullScreenAsync" Display="@GetDisplay" />
-                                }
+                                <TopBarButton CustomCallBack="ManuallyOpenCloseFullScreenAsync" Display="@GetDisplay" />
                             }
                         </div>
-                    </TopContent>
-                    <MainContent>
-                        @{
-                            bool supported = IsSupported();
-                        }
-                        <VisibleHiddenComponent Visible="supported">
-                            <div style="height: 88vh; font-size: @FontSize">
-                                @ChildContent
-                            </div>
-                            
-                        </VisibleHiddenComponent>
-                        @if (IsSupported() == false)
-                        {
-                            <div>
-                                This game is not supported on phones.
-                            </div>
-                        }
-                    </MainContent>
-                </LeftOverLayout>
-            }
+                        <GameContentShell>
+                            @ChildContent
+                        </GameContentShell>
+                    </div>
+                }
+            </CascadingValue>
         </CascadingValue>
     </CascadingValue>
-</CascadingValue>
+</LandscapeShell>

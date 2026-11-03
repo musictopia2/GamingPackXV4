@@ -1,0 +1,43 @@
+﻿namespace Hearts.Core.Data;
+[SingletonGame]
+public class HeartsDetailClass : IGameInfo, ICardInfo<HeartsCardInformation>, ITrickData,
+    IBeginningRegularCards<HeartsCardInformation>
+{
+    EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
+    bool IGameInfo.CanHaveExtraComputerPlayers => true; //i think.
+    EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
+    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked; //the computer can't skip turns. otherwise, gets stuck.
+    public const string GameName = "Hearts";
+    string IGameInfo.GameName => GameName;
+    int IGameInfo.NoPlayers => 0;
+    int IGameInfo.MinPlayers => 4;
+    int IGameInfo.MaxPlayers => 4;
+    bool IGameInfo.CanAutoSave => true;
+    public const bool SupportsCompactLayout = false;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
+    int ICardInfo<HeartsCardInformation>.CardsToPassOut => 13; //change to what you need.
+    BasicList<int> ICardInfo<HeartsCardInformation>.PlayerExcludeList => [];
+    bool ICardInfo<HeartsCardInformation>.AddToDiscardAtBeginning => false;
+    bool ICardInfo<HeartsCardInformation>.ReshuffleAllCardsFromDiscard => false;
+    bool ICardInfo<HeartsCardInformation>.ShowMessageWhenReshuffling => true;
+    bool ICardInfo<HeartsCardInformation>.PassOutAll => false;
+    bool ICardInfo<HeartsCardInformation>.PlayerGetsCards => true;
+    bool ICardInfo<HeartsCardInformation>.NoPass => false;
+    bool ICardInfo<HeartsCardInformation>.NeedsDummyHand => false; //no dummy hand.
+    DeckRegularDict<HeartsCardInformation> ICardInfo<HeartsCardInformation>.DummyHand { get; set; } = [];
+    BasicList<int> ICardInfo<HeartsCardInformation>.DiscardExcludeList(IListShuffler<HeartsCardInformation> deckList)
+    {
+        return [];
+    }
+    bool ICardInfo<HeartsCardInformation>.HasDrawAnimation => true;
+    bool ICardInfo<HeartsCardInformation>.CanSortCardsToBeginWith => true;
+    bool ITrickData.FirstPlayerAnySuit => true;
+    bool ITrickData.FollowSuit => true;
+    bool ITrickData.MustFollow => true;
+    bool ITrickData.HasTrump => false;
+    bool ITrickData.MustPlayTrump => false;
+    EnumTrickStyle ITrickData.TrickStyle => EnumTrickStyle.Hearts;
+    bool ITrickData.HasDummy => false;
+    bool IBeginningRegularCards<HeartsCardInformation>.AceLow => false;
+    bool IBeginningRegularCards<HeartsCardInformation>.CustomDeck => false;
+}

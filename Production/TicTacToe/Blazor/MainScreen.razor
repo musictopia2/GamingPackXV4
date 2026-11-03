@@ -1,0 +1,9 @@
+﻿@if (_dataContext == null)
+{
+    return;
+}
+<StateContentView DataContext="_dataContext">
+    <CascadingValue @key="_dataContext" Value="_dataContext">
+        @ChildContent
+    </CascadingValue>
+</StateContentView>

@@ -1,0 +1,11 @@
+@inherits CascadingGameView<CountdownMainViewModel>
+<div>
+    <GameBoardBlazor GameContainer="_gameContainer"
+                     TargetHeight="35" />
+</div>
+<div class="@cc1.CenteredFlex" style="height: @Pixels;">
+    <GameActionButton SizeCategory="EnumSize.Large" CommandObject="EndCommand" Display="End Turn" />
+    <GameActionButton SizeCategory="EnumSize.Large" CommandObject="HintsCommand" Display="Show Hints" />
+    <DiceListConrolBlazor D="CountdownDice" Cup="@DataContext!.GetCup" PercentHeight="@_height" />
+</div>
+<LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />

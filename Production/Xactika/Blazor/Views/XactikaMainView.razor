@@ -1,0 +1,43 @@
+@inherits CascadingGameView<XactikaMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem Length="1fr">
+        <StackLayout>
+            <StackItem>
+                <SeveralPlayersTrickBlazor DataContext="_vmData.TrickArea1" />
+            </StackItem>
+            <StackItem>
+                <ChooseShapeBlazor TargetHeight="22"
+                                   ShapeData="_vmData.ShapeChoose1" />
+                
+                <div>
+                    <XactikaSubmitShapeView DataContext="DataContext.ShapeScreen" />
+                </div>
+                <XactikaBidView DataContext="DataContext.BidScreen" />
+            </StackItem>
+        </StackLayout>
+        <div>
+            <HandBlazor Hand="_vmData.PlayerHand1" />
+        </div>
+        <div>
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </div>
+    </StackItem>
+    <StackItem>
+        <StackLayout>
+            <StackItem>
+                <ScoreBoardBlazor P="XactikaPlayerItem"
+                              Columns="_scores"
+                              Players="_gameContainer.SaveRoot.PlayerList" />
+            </StackItem>
+            <StackItem>
+                <RawGameBoard BoardSize="new SizeF(121, 225)" TargetHeight="85">
+                    <StatsBoardBlazor />
+                </RawGameBoard>
+            </StackItem>
+        </StackLayout>
+    </StackItem>
+</StackLayout>

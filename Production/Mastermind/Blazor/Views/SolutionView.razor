@@ -1,0 +1,11 @@
+﻿@inherits CascadingGameView<SolutionViewModel>
+@if (DataContext!.SolutionList.Count != 4)
+{
+    return;
+}
+@foreach (var bead in DataContext.SolutionList)
+{
+    <BasePieceGraphics HeightPercent="20">
+        <CirclePiece NeedsWhiteBorders="true" MainColor="@bead.ColorChosen.Color" />
+    </BasePieceGraphics>
+}

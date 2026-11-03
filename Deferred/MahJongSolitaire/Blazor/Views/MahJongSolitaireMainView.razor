@@ -1,11 +1,11 @@
-@inherits BasicGameView<MahJongSolitaireMainViewModel>
+@inherits CascadingGameView<MahJongSolitaireMainViewModel>
 <StackLayout>
     <StackItem>
         <GameBoardBlazor BoardList="@BoardList" />
     </StackItem>
     <StackItem>
         <div>
-            <GameButtonComponent CommandObject="DataContext!.GetHintCommand" Display="Hint" />
+            <GameActionButtonComponent CommandObject="DataContext!.GetHintCommand" Display="Hint" />
         </div>
         <div>
             Tiles Gone: @DataContext!.TilesGone

@@ -4,29 +4,35 @@
     return;
 }
 <StackItem>
-    <BaseFrameBlazor Text="Top Portion">
-        <div style="margin: 5px">
-            <svg style="height: 83vh" viewBox="0 0 900 1800">
-                <YahtzeeHeader />
-                @foreach (var row in TopList)
-                {
-                    <StateContentView DataContext="row">
-                        <YahtzeeRowBlazor RowNumber="@GetRow(row)"
-                                          Highlighted="row.IsRecent"
-                                          Header="@row.Description"
-                                          Possible="@row.RenderPointsPossible()"
-                                          Obtained="@row.RenderPointsObtained()"
-                                          RowClicked="() => RowClicked.InvokeAsync(row)" />
-                    </StateContentView>
-                    
-                }
-                <YahtzeeRowBlazor Header="Bonus"
-                                  RowNumber="8"
-                                  Obtained="@BonusInfo.RenderPointsObtained()" />
-                <YahtzeeFooter Text="Total Top Portion"
-                               RowNumber="9"
-                               TotalScore="@TopScore.RenderPointsObtained()" />
-            </svg>
-        </div>
+    <BaseFrameBlazor>
+        <LegendContent>
+            Top Portion
+        </LegendContent>
+        <ChildContent>
+            <div style="margin: 5px">
+                <svg style="height: @Pixels" viewBox="0 0 900 1800">
+                    <YahtzeeHeader />
+                    @foreach (var row in TopList)
+                    {
+                        <StateContentView DataContext="row">
+                            <YahtzeeRowBlazor RowNumber="@GetRow(row)"
+                                              Highlighted="row.IsRecent"
+                                              Header="@row.Description"
+                                              Possible="@row.RenderPointsPossible()"
+                                              Obtained="@row.RenderPointsObtained()"
+                                              RowClicked="() => RowClicked.InvokeAsync(row)" />
+                        </StateContentView>
+
+                    }
+                    <YahtzeeRowBlazor Header="Bonus"
+                                      RowNumber="8"
+                                      Obtained="@BonusInfo.RenderPointsObtained()" />
+                    <YahtzeeFooter Text="Total Top Portion"
+                                   RowNumber="9"
+                                   TotalScore="@TopScore.RenderPointsObtained()" />
+                </svg>
+            </div>
+        </ChildContent>
+        
     </BaseFrameBlazor>
 </StackItem>

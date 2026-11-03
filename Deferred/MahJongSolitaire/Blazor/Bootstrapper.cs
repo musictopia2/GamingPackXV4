@@ -1,6 +1,7 @@
 //i think this is the most common things i like to do
 namespace MahJongSolitaire.Blazor;
-public class Bootstrapper : SinglePlayerBootstrapper<MahJongSolitaireShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : SinglePlayerBootstrapper<MahJongSolitaireShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
     {

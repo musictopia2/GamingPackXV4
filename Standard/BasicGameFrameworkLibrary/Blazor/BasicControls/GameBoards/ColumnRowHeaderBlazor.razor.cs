@@ -1,4 +1,3 @@
-
 namespace BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
 public partial class ColumnRowHeaderBlazor<S>
    where S : class, IBasicSpace, new()

@@ -1,0 +1,13 @@
+﻿@inherits CascadingGameView<PickelBidViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+<div>
+    <BidControl />
+</div>
+<div>
+    <DeckOfCardsHandBlazor R="PickelCardGameCardInformation"
+        AdditionalSpacing="1"
+        Hand="DataContext.Model.PlayerHand1" />
+</div>

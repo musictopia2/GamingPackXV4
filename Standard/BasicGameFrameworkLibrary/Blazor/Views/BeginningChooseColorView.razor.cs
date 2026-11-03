@@ -5,8 +5,6 @@ public partial class BeginningChooseColorView<E, P> : IHandle<OpenBeginningColor
     where P : class, IPlayerWithColor<E>, new()
 {
     [Parameter]
-    public string TargetSize { get; set; } = "25vh"; //can be adjustable as needed.
-    [Parameter]
     public RenderFragment<BasicPickerData<E>>? ChildContent { get; set; }
     //[CascadingParameter]
     //public BeginningChooseColorViewModel<E, P>? DataContext { get; set; }

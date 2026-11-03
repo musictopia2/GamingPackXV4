@@ -1,6 +1,7 @@
 //i think this is the most common things i like to do
 namespace TriangleSolitaire.Blazor;
-public class Bootstrapper : SinglePlayerBootstrapper<TriangleSolitaireShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : SinglePlayerBootstrapper<TriangleSolitaireShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
     {

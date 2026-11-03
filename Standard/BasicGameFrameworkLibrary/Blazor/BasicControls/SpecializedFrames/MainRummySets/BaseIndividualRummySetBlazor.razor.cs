@@ -5,10 +5,7 @@ public partial class BaseIndividualRummySetBlazor<SU, CO, RU, SE, T>
         where RU : class, IRummmyObject<SU, CO>, IDeckObject, new()
         where SE : SetInfo<SU, CO, RU, T>
 {
-    protected override bool ShouldRender()
-    {
-        return DataContext!.HandList.Count == _points.Count;
-    }
+    
     [CascadingParameter]
     public BaseMainRummySetsBlazor<SU, CO, RU, SE, T>? MainSet { get; set; }
     [Parameter]
@@ -17,12 +14,19 @@ public partial class BaseIndividualRummySetBlazor<SU, CO, RU, SE, T>
     public SE? DataContext { get; set; }
     [CascadingParameter]
     public int TargetImageHeight { get; set; }
+
+
     private string GetSvgStyle()
     {
         RU image = new();
         SizeF size = image.DefaultSize;
-        var temps = TargetImageHeight * size.Width / size.Height;
-        return $"width: {temps}vh";
+
+        double targetSize = ll1.GetHeight(TargetImageHeight);
+        double width = targetSize * size.Width /
+            Math.Max(size.Width, size.Height);
+
+        return $"width: {width.ToString(
+            System.Globalization.CultureInfo.InvariantCulture)}px";
     }
     private async Task BoardClicked()
     {
@@ -34,7 +38,8 @@ public partial class BaseIndividualRummySetBlazor<SU, CO, RU, SE, T>
     }
     private BasicList<PointF> _points = new();
     private SizeF _viewBox = new();
-    protected override void OnParametersSet()
+
+    private void CalculateLayout()
     {
         _points = new();
         if (DataContext!.HandList.Count == 0)
@@ -60,5 +65,10 @@ public partial class BaseIndividualRummySetBlazor<SU, CO, RU, SE, T>
             float maxY = _points.Max(x => x.Y);
             _viewBox = new SizeF(defaultSize.Width, maxY + defaultSize.Height);
         }
+    }
+    protected override void OnParametersSet()
+    {
+        CalculateLayout();
+        
     }
 }

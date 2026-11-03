@@ -1,0 +1,68 @@
+@inherits CascadingGameView<LifeBoardGameMainViewModel>
+<CascadingValue Value="_vmData">
+    <CascadingValue Value="_gameContainer">
+        
+        <StackLayout>
+            <StackItem>
+                <LifeCompleteGameBoardBlazor BoardProcesses="_boardProcesses"
+                                             TargetHeight="75"
+                                             GraphicsData="_graphicsData" />
+            </StackItem>
+            <StackItem>
+                @* screens to render *@
+                <div>
+                    <ChooseCareerView DataContext="DataContext!.CareerScreen" />
+                </div>
+                <div>
+                    <ChooseSalaryView DataContext="DataContext!.ChooseSalaryScreen" />
+                </div>
+                <div>
+                    <ChooseHouseView DataContext="DataContext.HouseScreen" />
+                </div>
+                <div>
+                    <ChooseStockView DataContext="DataContext.ChooseStockScreen" />
+                </div>
+                <div>
+                    @if (DataContext.ShowScores)
+                    {
+                        <LifeScoreboardView />
+                    }
+                </div>
+                <div>
+                    <ReturnStockView DataContext="DataContext.ReturnStockScreen" />
+                </div>
+                <div>
+                    @if (DataContext.ShowCards)
+                    {
+                        <ShowCardView />
+                    }
+                </div>
+                <div>
+                    <SpinnerView DataContext="DataContext.SpinnerScreen" />
+                </div>
+                <div>
+                    <StealTilesView DataContext="DataContext.StealTilesScreen" />
+                </div>
+                <div>
+                    <TradeSalaryView DataContext="DataContext.TradeSalaryScreen" />
+                </div>
+            </StackItem>
+        </StackLayout>
+        <div>
+            <StackLayout>
+                <StackItem Length="25vw">
+                    <LabelGridComponent SizeCategory="EnumSize.Small" DataContext="DataContext!.VMData" Labels="_labels" />
+                </StackItem>
+                <StackItem>
+                    Space Details:
+                    <div>
+                        <StateContentView DataContext="DataContext!.VMData">
+                            @DataContext!.VMData.GameDetails
+                        </StateContentView>
+                        
+                    </div>
+                </StackItem>
+            </StackLayout>
+        </div>
+    </CascadingValue>
+</CascadingValue>

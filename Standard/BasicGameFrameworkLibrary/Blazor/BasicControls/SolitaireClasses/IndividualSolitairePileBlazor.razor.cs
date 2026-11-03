@@ -51,7 +51,8 @@ public partial class IndividualSolitairePileBlazor
             _viewBox = new SizeF(defaultSize.Width, currentPoint.Y + defaultSize.Height);
         }
     }
-    public string GetWidth => TargetHeight.WidthString<SolitaireCard>();
+    public string GetWidth =>
+        TargetHeight.HeightPixels.WidthString<SolitaireCard>();
     private SizeF _viewBox = new();
     private string GetViewBox()
     {

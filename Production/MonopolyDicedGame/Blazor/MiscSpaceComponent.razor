@@ -1,0 +1,19 @@
+﻿<StateContentView DataContext="MiscList">
+    <SimpleRepeater HowMany="3" Context="item">
+        @{
+            var vector = GetSpaceInfo(item);
+            var category = GetType(item);
+        }
+        <SpaceBlazor MarginLeft="4" MarginTop="5"
+                     Row="vector.Row" Column="vector.Column">
+            <ColorSpaceComponent Color="@GetActionColor"
+                                 HeightPercent="HeightPercent">
+                @if (category != EnumMiscType.None)
+                {
+                    <MiscDiceBlazor HeightPercent="HeightPercent"
+                                    Category="@category" />
+                }
+            </ColorSpaceComponent>
+        </SpaceBlazor>
+    </SimpleRepeater>
+</StateContentView>

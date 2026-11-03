@@ -12,18 +12,24 @@
 @if (DataContext.ShowCenter)
 {
     <div class="centerText">
-        @SingleClock.NumberGuide
+        <GameLabel>
+            @SingleClock.NumberGuide
+        </GameLabel>
+
     </div>
+    
 }
 <div>
     <FlexibleDeckRenderComponent D="SolitaireCard" DeckObject="_currentCard!">
         <DeckOfCardsImageBlazor R="SolitaireCard" CommandObject="DataContext.ClockCommand"
-                                TargetHeight="@TargetHeight.HeightString()"
+                                HeightPixels="@TargetHeight.HeightPixels"
                                 DeckObject="_currentCard"
                                 CommandParameter="_currentCard" />
     </FlexibleDeckRenderComponent>
 
 </div>
 <div class="centerText">
-    @SingleClock.LeftGuide
+    <GameLabel>
+        @SingleClock.LeftGuide
+    </GameLabel>
 </div>

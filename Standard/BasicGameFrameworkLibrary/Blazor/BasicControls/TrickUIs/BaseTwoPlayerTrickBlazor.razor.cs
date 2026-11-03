@@ -117,7 +117,7 @@ public partial class BaseTwoPlayerTrickBlazor<S, T> : IHandleAsync<AnimateTrickE
             float heights = _labelHeight + CalculateHeight() + _marginBottom + _marginBottom + _marginBottom;
             float firsts = CalculateWidth();
             float widths = firsts + _marginLeft + _marginLeft + 3;
-            return $"height: {heights}vh; width: {widths}vw;";
+            return $"height: {heights.HeightPixels}; width: {widths}vw;";
         }
     }
     private static string GetCardCss(T card)
@@ -148,7 +148,7 @@ public partial class BaseTwoPlayerTrickBlazor<S, T> : IHandleAsync<AnimateTrickE
         int lefts = _marginLeft + CalculateWidth();
         return $"left: {lefts}vw;";
     }
-    private string RealLabelHeight => $"font-size: {_labelHeight}vh;"; //can adjust as needed.
+    private string RealLabelHeight => $"font-size: {_labelHeight.HeightPixels}px;"; //can adjust as needed.
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposedValue)

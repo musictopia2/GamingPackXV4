@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
 public partial class BasePieceGraphics : GraphicsCommand
 {
@@ -18,12 +20,27 @@ public partial class BasePieceGraphics : GraphicsCommand
     public IPiecePicker? CustomPicker { get; set; }
     //[CascadingParameter]
     //public NumberChooserBlazor? NumberPicker { get; set; }
+
     [Parameter]
-    public string TargetSize { get; set; } = ""; //this is for the target that is longest.
+    public string HeightPixels { get; set; } = "";
+
+
+
     [Parameter]
-    public string TargetWidth { get; set; } = ""; //this focus on width alone.
-    [Parameter]
-    public string TargetHeight { get; set; } = ""; //this focus on height alone.
+    public double? HeightPercent { get; set; }
+
+    //may already be provided
+
+    //[Parameter]
+    //public int? CompactHeight { get; set; }
+
+    //[Parameter]
+    //public int? TabletHeight { get; set; }
+
+    //[Parameter]
+    //public int? DesktopHeight { get; set; }
+
+
     [Parameter]
     public float LongestSize { get; set; } //this means ui can't update it.
     public bool NeedsHighlighting { get; set; } //no longer needs to be observable object.  this way it can't anyways.
@@ -81,69 +98,119 @@ public partial class BasePieceGraphics : GraphicsCommand
         }
         return FillColor.ToWebColor;
     }
+    private int? GetHeight()
+    {
+        if (HeightPercent is null)
+        {
+            return null;
+        }
+        return ll1.GetHeight(HeightPercent.Value);
+        ////Use your existing layout classification here.
+        //return ll1.LayoutMode switch
+        //{
+        //    EnumGameLayoutMode.Compact => CompactHeight,
+        //    EnumGameLayoutMode.Tablet => TabletHeight,
+        //    EnumGameLayoutMode.Desktop => DesktopHeight,
+        //    _ => null
+        //};
+    }
+
+    private static string SvgNumber(float value)
+    {
+        return value.ToString(CultureInfo.InvariantCulture);
+    }
+
     private void PopulateCustomViewBox(SVG svg)
     {
-        var value = BorderWidth / 2 * -1;
-        svg.ViewBox = $"{value} {value} {OriginalSize.Width + BorderWidth} {OriginalSize.Height + BorderWidth}";
+        float offset = -BorderWidth / 2;
+        float width = OriginalSize.Width + BorderWidth;
+        float height = OriginalSize.Height + BorderWidth;
+
+        svg.ViewBox =
+            $"{SvgNumber(offset)} {SvgNumber(offset)} " +
+            $"{SvgNumber(width)} {SvgNumber(height)}";
     }
+
     public ISvg GetMainSvg(bool? controlhighlight = null)
     {
-        SVG output = new ();
-        if (TargetSize != "")
-        {
-            if (controlhighlight == null || controlhighlight == true)
-            {
-                NeedsHighlighting = true; //otherwise, the control can set either way.
-            }
-            if (OriginalSize.Width >= OriginalSize.Height)
-            {
-                output.Height = TargetSize;
-            }
-            else
-            {
-                output.Width = TargetSize;
-            }
-            PopulateCustomViewBox(output);
-            output.Style = "margin: .2vh;";
-        }
-        else if (TargetHeight != "")
-        {
-            output.Height = TargetHeight;
-            output.Style = "margin: .2vh;";
-            PopulateCustomViewBox(output);
-        }
-        else if (TargetWidth != "")
-        {
-            output.Width = TargetWidth;
-            output.Style = "margin: .2vw;";
-            PopulateCustomViewBox(output);
-        }
-        //the list will have view box height of 18 and number picker will have view box height of 40
-        else if (CustomPicker != null) //could do interfaces.  if so, then the interface can determine the text size.
-        {
-            NeedsHighlighting = CustomPicker.CanHighlight; //hopefully this simple this time.
-            output.Height = CustomPicker.TextHeight;
-            output.Style = "margin-right: .2vw; margin-bottom: .2vw; margin-left: .2vw;";
+        SVG output = new();
+        int? targetHeight = GetHeight();
 
-            output.ViewBox = $"0 0 {CustomPicker.TextWidth} {CustomPicker.ViewBoxHeight}";
+        if (targetHeight is int height)
+        {
+            if (height <= 0)
+            {
+                throw new InvalidOperationException(
+                    "The target piece height must be greater than zero.");
+            }
+
+            if (controlhighlight is not false)
+            {
+                NeedsHighlighting = true;
+            }
+
+            float viewBoxWidth = OriginalSize.Width + BorderWidth;
+            float viewBoxHeight = OriginalSize.Height + BorderWidth;
+            float width = height * viewBoxWidth / viewBoxHeight;
+
+            output.Height = $"{height}px";
+            output.Width = $"{SvgNumber(width)}px";
+
+            PopulateCustomViewBox(output);
+            output.Style = "margin: 2px;";
+        }
+        else if (string.IsNullOrWhiteSpace(HeightPixels) == false)
+        {
+            if (controlhighlight is not false)
+            {
+                NeedsHighlighting = true;
+            }
+
+            float viewBoxWidth = OriginalSize.Width + BorderWidth;
+            float viewBoxHeight = OriginalSize.Height + BorderWidth;
+            float aspectRatio = viewBoxWidth / viewBoxHeight;
+
+            output.Height = HeightPixels;
+            output.Width =
+                $"calc({HeightPixels} * {SvgNumber(aspectRatio)})";
+
+            PopulateCustomViewBox(output);
+            output.Style = "margin: 2px;";
+        }
+        else if (CustomPicker is not null)
+        {
+            //Keep the existing picker behavior until its redesign.
+            NeedsHighlighting = CustomPicker.CanHighlight;
+            output.Height = CustomPicker.TextHeight;
+            output.Style =
+                "margin-right: .2vw; margin-bottom: .2vw; margin-left: .2vw;";
+
+            output.ViewBox =
+                $"0 0 {CustomPicker.TextWidth} {CustomPicker.ViewBoxHeight}";
         }
         else
         {
-            output.X = Location.X.ToString();
-            output.Y = Location.Y.ToString();
-            var value = Scale() * OriginalSize.Width;
-            output.Width = value.ToString();
-            value = Scale() * OriginalSize.Height;
-            output.Height = value.ToString();
-            value = BorderWidth / 2 * -1;
-            output.ViewBox = $"{value} {value} {OriginalSize.Width + BorderWidth} {OriginalSize.Height + BorderWidth}";
+            //Keep the existing board and animation sizing.
+            float scale = Scale();
+
+            output.X = SvgNumber(Location.X);
+            output.Y = SvgNumber(Location.Y);
+            output.Width = SvgNumber(scale * OriginalSize.Width);
+            output.Height = SvgNumber(scale * OriginalSize.Height);
+
+            PopulateCustomViewBox(output);
         }
-        Rect rect = new();
-        rect.Width = "100%";
-        rect.Height = "100%";
-        rect.Fill = GetHighlightColor();
+
+        Rect rect = new()
+        {
+            Width = "100%",
+            Height = "100%",
+            Fill = GetHighlightColor()
+        };
+
         output.Children.Add(rect);
-        CreateClick(output); //now it can do automatically.
+        CreateClick(output);
+
         return output;
     }
 }

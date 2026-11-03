@@ -1,0 +1,74 @@
+﻿
+@inherits CascadingGameView<PromptViewModel>
+@if (DataContext is null)
+{
+    return;
+}
+
+<CascadingValue Value="GetContainer">
+
+    @switch (DataContext.ActionScreen)
+    {
+        case ActionDirectionViewModel vm:
+            <ActionDirectionView DataContext="vm" />
+            break;
+        case ActionTradeHandsViewModel vm:
+            <ActionTradeHandsView DataContext="vm" />
+            break;
+        case ActionDiscardRulesViewModel vm:
+            <ActionDiscardRulesView DataContext="vm" />
+            break;
+        case ActionDoAgainViewModel vm:
+            <ActionDoAgainView DataContext="vm" />
+            break;
+        case ActionDrawUseViewModel vm:
+            <ActionDrawUseView DataContext="vm" />
+            break;
+        case ActionEverybodyGetsOneViewModel vm:
+            <ActionEverybodyGetsOneView DataContext="vm" />
+            break;
+        case ActionFirstCardRandomViewModel vm:
+            <ActionFirstCardRandomView DataContext="vm" />
+            break;
+        case ActionTakeUseViewModel vm:
+            <ActionTakeUseView DataContext="vm" />
+            break;
+    }
+
+    @switch (DataContext.KeeperScreen)
+    {
+        case KeeperExchangeViewModel vm:
+            <KeeperExchangeView DataContext="vm" />
+            break;
+        case KeeperShowViewModel vm:
+            <KeeperShowView DataContext="vm" />
+            break;
+        case KeeperStealViewModel vm:
+            <KeeperStealView DataContext="vm" />
+            break;
+        case KeeperTrashViewModel vm:
+            <KeeperTrashView DataContext="vm" />
+            break;
+    }
+</CascadingValue>
+
+
+
+
+@* <CascadingValue Value="GetContainer">
+    <ActionDirectionView DataContext="@(DataContext.ActionScreen as ActionDirectionViewModel)" />
+    <ActionTradeHandsView DataContext="@(DataContext.ActionScreen as ActionTradeHandsViewModel)" />
+    <ActionDiscardRulesView DataContext="@(DataContext.ActionScreen as ActionDiscardRulesViewModel)" />
+    <ActionDoAgainView DataContext="@(DataContext.ActionScreen as ActionDoAgainViewModel)" />
+    <ActionDrawUseView DataContext="@(DataContext.ActionScreen as ActionDrawUseViewModel)" />
+    <ActionEverybodyGetsOneView DataContext="@(DataContext.ActionScreen as ActionEverybodyGetsOneViewModel)" />
+    <ActionFirstCardRandomView DataContext="@(DataContext.ActionScreen as ActionFirstCardRandomViewModel)" />
+    <ActionTakeUseView DataContext="@(DataContext.ActionScreen as ActionTakeUseViewModel)" />
+    <KeeperExchangeView DataContext="@(DataContext.KeeperScreen as KeeperExchangeViewModel)" />
+    <KeeperShowView DataContext="@(DataContext.KeeperScreen as KeeperShowViewModel)" />
+    <KeeperStealView DataContext="@(DataContext.KeeperScreen as KeeperStealViewModel)" />
+    <KeeperTrashView DataContext="@(DataContext.KeeperScreen as KeeperTrashViewModel)" />
+</CascadingValue>
+
+
+ *@

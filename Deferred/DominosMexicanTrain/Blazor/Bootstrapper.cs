@@ -1,5 +1,6 @@
 namespace DominosMexicanTrain.Blazor;
-public class Bootstrapper : MultiplayerBasicBootstrapper<DominosMexicanTrainShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : MultiplayerBasicBootstrapper<DominosMexicanTrainShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
     {

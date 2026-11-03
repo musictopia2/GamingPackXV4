@@ -1,0 +1,38 @@
+namespace DealCardGame.Blazor;
+public partial class ReadOnlyPlayerSetComponent
+{
+    [Parameter]
+    [EditorRequired]
+    public int Completed { get; set; } //from 0 to 4.
+    [Parameter]
+    [EditorRequired]
+    public int Rent { get; set; } //this is the rent charged (at the bottom)
+    [Parameter]
+    [EditorRequired]
+    public EnumColor Color { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public bool HasHouse { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public bool HasHotel { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public int PlayerId { get; set; }
+    [Parameter]
+    public EventCallback<SetPlayerModel> OnSetClicked { get; set; }
+    private static double _height => 4;
+
+    private static string Pixels => _height.HeightPixels;
+
+    private static string Rows => gg1.RepeatSpreadOut(3);
+    private void PrivateClicked()
+    {
+        SetPlayerModel set = new()
+        {
+            PlayerId = PlayerId,
+            Color = Color,
+        };
+        OnSetClicked.InvokeAsync(set);
+    }
+}

@@ -1,0 +1,6 @@
+﻿@inherits ParameterGameView<StealTilesViewModel>
+@if (DataContext is null)
+{
+    return;
+}
+<BasicPlayerPicker B="StealTilesViewModel" DataContext="DataContext" />

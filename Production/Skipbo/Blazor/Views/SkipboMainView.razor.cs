@@ -1,0 +1,27 @@
+namespace Skipbo.Blazor.Views;
+public partial class SkipboMainView
+{
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
+    private SkipboVMData? _vmData;
+    private SkipboGameContainer? _gameContainer;
+    protected override void OnInitialized()
+    {
+        _vmData = Resolver!.Resolve<SkipboVMData>();
+        _gameContainer = Resolver.Resolve<SkipboGameContainer>();
+        _labels.AddLabel("Turn", nameof(SkipboVMData.NormalTurn))
+           .AddLabel("Status", nameof(SkipboVMData.Status))
+           .AddLabel("RS Cards", nameof(SkipboVMData.CardsToShuffle));
+        _scores.Clear();
+        _scores.AddColumn("In Stock", false, nameof(SkipboPlayerItem.InStock), numberOfDigits: 2);
+        int x;
+        for (x = 1; x <= 4; x++)
+        {
+            var thisStr = "Discard" + x;
+            _scores.AddColumn(thisStr, false, thisStr, numberOfDigits: 2);
+        }
+        _scores.AddColumn("Stock Left", false, nameof(SkipboPlayerItem.StockLeft), numberOfDigits: 2)
+        .AddColumn("Cards Left", false, nameof(SkipboPlayerItem.ObjectCount), numberOfDigits: 1);
+        base.OnInitialized();
+    }
+}

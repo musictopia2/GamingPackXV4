@@ -5,9 +5,13 @@
 }
 <CascadingValue Value="true">
     <StackItem>
-        <BaseFrameBlazor Text="Bottom Portion">
-            <div style="margin: 5px">
-                <svg style="height: 83vh" viewBox="@GetViewBox">
+        <BaseFrameBlazor>
+            <LegendContent>
+                Bottom Portion
+            </LegendContent>
+            <ChildContent>
+                <div style="margin: 5px">
+                <svg style="height: @Pixels" viewBox="@GetViewBox">
                     <YahtzeeHeader />
                     @foreach (var row in BottomList)
                     {
@@ -26,6 +30,8 @@
                                    TotalScore="@BottomScore.RenderPointsObtained()" />
                 </svg>
             </div>
+            </ChildContent>
+            
         </BaseFrameBlazor>
     </StackItem>
 </CascadingValue>

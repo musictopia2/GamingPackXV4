@@ -1,0 +1,18 @@
+﻿@if (DataContext == null)
+{
+    return;
+}
+<BaseFrameBlazor>
+    <LegendContent>
+        Trump Info
+    </LegendContent>
+    <ChildContent>
+        <EnumPickerBlazor SizeCategory="EnumSize.Small" E="EnumColorTypes" Context="Piece" ListPicker="DataContext.Model.Color1">
+        <CheckerPiece MainColor="@GetColor(Piece)" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" />
+    </EnumPickerBlazor>
+    <div>
+        <GameActionButton CommandObject="TrumpCommand"
+                             Display="Choose Color" />
+    </div>
+    </ChildContent>
+</BaseFrameBlazor>

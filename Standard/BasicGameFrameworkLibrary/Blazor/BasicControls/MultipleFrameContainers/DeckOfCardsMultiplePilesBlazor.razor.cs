@@ -10,4 +10,13 @@ public partial class DeckOfCardsMultiplePilesBlazor<R>
     public string AnimationTag { get; set; } = "";
     [Parameter]
     public bool Inline { get; set; } = true;
+
+
+
+    [Parameter]
+    public bool UseOwnGrid { get; set; } = true;
+
+    [Parameter]
+    public int RowOffset { get; set; }
+
 }

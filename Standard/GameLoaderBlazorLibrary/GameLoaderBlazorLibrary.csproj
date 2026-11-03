@@ -10,8 +10,8 @@
 	  <PackageId>Musictopia2.GameLoaderBlazorLibrary</PackageId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="10.0.2" />
-    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.4" />
+    <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="10.0.3" />
+    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.6" />
   </ItemGroup>
   <ItemGroup>
     <SupportedPlatform Include="browser" />

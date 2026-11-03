@@ -1,71 +1,84 @@
 ﻿@page "/"
+@using BasicGameFrameworkLibrary.Blazor.Shells
 <GamePackageFullScreen>
-    @if (CanStartLoading() == false)
-    {
-        <div>
-            Sorry, native apps are no longer supported for the game package except for single player games because many issues.
-        </div>
-        return;
-    }
-    @if (_loadedOnce == false)
-    {
-        //attempt to do nothing.  since this now shows up for a second (freaky)
-        return;
-    }
-    @if (DataContext!.GameList.Count == 0)
-    {
-        return;
-    }
-    @if (_updateAvailable)
-    {
-        <div>
-            <GameButtonComponent CustomCallBack="RefreshAsync" Display="Update Available - Click to Refresh" />
-        </div>
-        return;
-    }
-    @if (DataContext.GameName == "")
-    {
-        @if (_showSettings)
+    <LandscapeShell>
+        @if (_loadedOnce == false)
         {
-            <GameSettingsComponent CloseSettings="ClosedSettings" />
+            //attempt to do nothing.  since this now shows up for a second (freaky)
             return;
         }
-        <LeftOverLayout>
-            <TopContent>
-                @if (GlobalClass.Multiplayer)
-                {
-                    <StackLayout>
-                        <StackItem>
-                            <GameButtonComponent CustomCallBack="OpenSettings" Display="Show Settings" />
-                        </StackItem>
-                        <StackItem>
-                            <GameButtonComponent CustomCallBack="RefreshAsync" Display="Refresh Manually" />
-                        </StackItem>
-                        @if (_previousGame != "")
-                        {
+        @if (_updateAvailable)
+        {
+            <div>
+                <TopBarButton CustomCallBack="RefreshAsync" Display="Update Available - Click to Refresh" />
+            </div>
+            return;
+        }
+        @if (DataContext!.GameList.Count == 0)
+        {
+            return;
+        }
+        @if (LayoutInfo.LayoutMode == EnumGameLayoutMode.Compact
+            && GetVisibleGames().Count == 0)
+        {
+            <div>
+                @DataContext.Title has no games that support compact devices.
+                Please use a larger tablet or desktop.
+            </div>
+            return;
+        }
+        @if (DataContext.GameName == "")
+        {
+            @if (_showSettings)
+            {
+                <GameSettingsComponent CloseSettings="ClosedSettings" />
+                return;
+            }
+            <LeftOverLayout>
+                <TopContent>
+                    @if (GlobalClass.Multiplayer)
+                    {
+                        <StackLayout>
                             <StackItem>
-                                <GameButtonComponent CustomCallBack="OpenPreviousGame" Display="@_previousGame" />
+                                <TopBarButton CustomCallBack="OpenSettings" Display="Show Settings" />
                             </StackItem>
+                            <StackItem>
+                                <TopBarButton CustomCallBack="RefreshAsync" Display="Refresh Manually" />
+                            </StackItem>
+                            @if (IsGameSupported(_previousGame))
+                            {
+                                <StackItem>
+                                    <TopBarButton CustomCallBack="OpenPreviousGame" Display="@_previousGame" />
+                                </StackItem>
+                            }
+                            <StackItem>
+                                <div style="font-size: 3vh; margin-top: 10px;">
+                                    Version @GlobalClass.Version
+                                </div>
+                            </StackItem>
+
+                        </StackLayout>
+                    }
+                </TopContent>
+                <MainContent>
+                    @if (CanShowGameList())
+                    {
+                        var visibleGames = GetVisibleGames();
+                        @if (visibleGames.Count == 0)
+                        {
+                            <div>No supported games are available for this device.</div>
                         }
-                        <StackItem>
-                            <div style="font-size: 3vh; margin-top: 10px;">
-                                Version @GlobalClass.Version
-                            </div>
-                        </StackItem>
-                        
-                    </StackLayout>  
-                }
-            </TopContent>
-            <MainContent>
-                @if (CanShowGameList())
-                {
-                    <WrapLayout ColumnWidth="22vw" Margins="3px" RenderList="DataContext.GameList" Context="game">
-                        <GameButtonComponent Width="95%" CustomCallBack="() => SelectGameAsync(game)" Display="@game" />
-                    </WrapLayout>
-                }
-            </MainContent>
-        </LeftOverLayout>
-        return;
-    }
-    @DataContext.GameRendered
+                        else
+                        {
+                            <WrapLayout ColumnWidth="22vw" Margins="3px" RenderList="visibleGames" Context="game">
+                                <GameSelectionButton OnClick="() => SelectGameAsync(game)" Display="@game" />
+                            </WrapLayout>
+                        }
+                    }
+                </MainContent>
+            </LeftOverLayout>
+            return;
+        }
+        @DataContext.GameRendered
+    </LandscapeShell>
 </GamePackageFullScreen>

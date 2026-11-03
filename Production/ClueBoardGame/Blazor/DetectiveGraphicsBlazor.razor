@@ -1,0 +1,15 @@
+﻿@if (DetectiveList == null || DataContext == null)
+{
+    return;
+}
+<DetectiveRawBoard TargetHeight="38"
+                   BoardSize="@pp1.MainSize">
+    @foreach (var item in DetectiveList.Values)
+    {
+        var current = GetButtonLocation(item);
+        <DetectiveButton @key="item"
+            DataContext="DataContext"
+                         Bounds="current"
+                         CommandParameter="item" />
+    }
+</DetectiveRawBoard>

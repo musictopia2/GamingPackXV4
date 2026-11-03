@@ -1,10 +1,49 @@
-namespace GameLoaderBlazorLibrary;
+﻿namespace GameLoaderBlazorLibrary;
 public partial class BasicLoaderPage : IAsyncDisposable
 {
     [Inject]
     public ILoaderVM? DataContext { get; set; }
     [Inject]
     public IJSRuntime? JS { get; set; }
+    [CascadingParameter]
+    private MediaQueryListComponent Media { get; set; } = null!;
+
+    protected override void OnParametersSet()
+    {
+        LayoutInfo.LayoutMode = Media.DeviceSize switch
+        {
+            EnumDeviceSize.SmallPhone or EnumDeviceSize.LargePhone
+                or EnumDeviceSize.SmallTablet => EnumGameLayoutMode.Compact,
+            EnumDeviceSize.LargeTablet => EnumGameLayoutMode.Tablet,
+            EnumDeviceSize.Desktop => EnumGameLayoutMode.Desktop,
+            _ => EnumGameLayoutMode.Desktop
+        };
+        base.OnParametersSet();
+    }
+
+    private bool IsGameSupported(string game)
+    {
+        if (DataContext!.GameList.Contains(game) == false)
+        {
+            return false;
+        }
+        return LayoutInfo.LayoutMode != EnumGameLayoutMode.Compact
+            || DataContext.SupportsCompactLayout(game);
+    }
+
+    private BasicList<string> GetVisibleGames()
+    {
+        BasicList<string> games = [];
+        foreach (string game in DataContext!.GameList)
+        {
+            if (IsGameSupported(game))
+            {
+                games.Add(game);
+            }
+        }
+        return games;
+    }
+
     private bool _loadedOnce;
     private bool _showSettings;
     private string _previousGame = "";
@@ -31,6 +70,10 @@ public partial class BasicLoaderPage : IAsyncDisposable
     }
     private async Task SelectGameAsync(string game)
     {
+        if (IsGameSupported(game) == false)
+        {
+            return;
+        }
         await JS!.SaveLatestGameAsync(game, BlazorUIHelpers.Toast!);
         _previousGame = game;
         DataContext!.ChoseGame(game);
@@ -89,7 +132,10 @@ public partial class BasicLoaderPage : IAsyncDisposable
     }
     private void OpenPreviousGame()
     {
-        //if you cannot find the previous game, then not found.
+        if (IsGameSupported(_previousGame) == false)
+        {
+            return;
+        }
         DataContext!.ChoseGame(_previousGame);
         //DataContext!.GameName = _previousGame; //hopefully this simple.
     }
@@ -109,18 +155,6 @@ public partial class BasicLoaderPage : IAsyncDisposable
         }
         return string.IsNullOrWhiteSpace(GlobalDataModel.DataContext.NickName) == false;
     }
-    private static bool CanStartLoading()
-    {
-        if (LoaderViewModel.IsSinglePlayerOnly)
-        {
-            return true;
-        }
-        if (bb1.OS == bb1.EnumOS.Wasm)
-        {
-            return true;
-        }
-        return false; //because if its not web assembly, then only single player games can now do loaders for quite a while.
-    }
     private async void BackToMain()
     {
         if (aa1.Resolver!.RegistrationExist<IGameNetwork>())
@@ -128,6 +162,7 @@ public partial class BasicLoaderPage : IAsyncDisposable
             IGameNetwork nets = aa1.Resolver!.Resolve<IGameNetwork>();
             await nets.BackToMainAsync();
         }
+        js1.RequireCustomSerialization = false;
         DataContext!.GameName = "";
         StateHasChanged();
     }

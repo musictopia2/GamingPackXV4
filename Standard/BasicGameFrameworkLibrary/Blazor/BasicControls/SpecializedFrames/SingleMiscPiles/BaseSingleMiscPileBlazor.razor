@@ -6,23 +6,30 @@
 }
 <SimpleControlView DataContext="SinglePile">
     <VisibleHiddenComponent Visible="SinglePile.Visible" FullHeight="false">
-        <BaseFrameBlazor @key="SinglePile" IsEnabled="SinglePile.IsEnabled" Text="@SinglePile.Text">
-            <div style="position:relative">
-                @if (_animates!.CurrentYLocation != -1000)
-                {
-                    <div style="position: absolute; @GetTopText">
-                        @CanvasTemplate!(AnimateDeckImage!)
-                    </div>
-                }
-                <FlexibleRenderComponent CanRender="(_animates.CurrentYLocation == -1000 || _showPrevious)">
-                    @{
-                        var card = GetCard;
+        <BaseFrameBlazor @key="SinglePile" IsEnabled="SinglePile.IsEnabled">
+            <LegendContent>
+                <CompactLabel>
+                    @SinglePile.Text
+                </CompactLabel>
+            </LegendContent>
+            <ChildContent>
+                <div style="position:relative">
+                    @if (_animates!.CurrentYLocation != -1000)
+                    {
+                        <div style="position: absolute; @GetTopText">
+                            @CanvasTemplate!(AnimateDeckImage!)
+                        </div>
                     }
-                    <FlexibleDeckRenderComponent D="D" DeckObject="card" UseKey="UseKey">
-                        @MainTemplate!(card)
-                    </FlexibleDeckRenderComponent>
-                </FlexibleRenderComponent>
-            </div>
+                    <FlexibleRenderComponent CanRender="(_animates.CurrentYLocation == -1000 || _showPrevious)">
+                        @{
+                            var card = GetCard;
+                        }
+                        <FlexibleDeckRenderComponent D="D" DeckObject="card" UseKey="UseKey">
+                            @MainTemplate!(card)
+                        </FlexibleDeckRenderComponent>
+                    </FlexibleRenderComponent>
+                </div>
+            </ChildContent>
         </BaseFrameBlazor>
     </VisibleHiddenComponent>
 </SimpleControlView>

@@ -14,3 +14,4 @@ global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
 global using vv1 = BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables;
 global using BasicGameFrameworkLibrary.Blazor.Helpers;
 global using static CommonBasicLibraries.BasicDataSettingsAndProcesses.BasicDataFunctions;
+global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.SavedGameClasses;

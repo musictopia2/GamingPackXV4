@@ -1,0 +1,28 @@
+@inherits CascadingGameView<RummyDiceMainViewModel>
+@if (DataContext == null || DataContext.MainGame.TempSets == null)
+{
+    return;
+}
+@foreach (var hand in DataContext.MainGame.TempSets)
+{
+    <div>
+        <RummyHandBlazor TargetHeight="@HeightPixels" DataContext="hand" />
+    </div>
+}
+<StackLayout ItemSpacing="10px">
+    <StackItem>
+        <GameActionButton CommandObject="RollCommand" Display="Roll" />
+        <GameActionButton CommandObject="PutBackCommand" Display="Put Back" />
+        <GameActionButton CommandObject="ScoreCommand" Display="Score Hand" />
+        <GameActionButton CommandObject="EndTurnCommand" Display="End Turn" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent SizeCategory="EnumSize.Small" DataContext="DataContext.VMData" Labels="_labels" />
+    </StackItem>
+    <StackItem>
+        <ScoreBoardBlazor P="RummyDicePlayerItem" Columns="_scores" Players="DataContext.MainGame.PlayerList" />
+    </StackItem>
+</StackLayout>
+<div>
+    <RummyListBlazor TargetHeight="@HeightPixels" GameBoard="DataContext.MainGame.MainBoard1" />
+</div>

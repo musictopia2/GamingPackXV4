@@ -1,0 +1,15 @@
+@inherits CascadingGameView<HeapSolitaireMainViewModel>
+<DeckOfCardsMultiplePilesBlazor R="HeapSolitaireCardInfo" Piles="DataContext!.Main1" />
+<StackLayout ItemSpacing="0px">
+    <StackItem>
+        <CustomWasteUI />
+    </StackItem>
+    <StateContentView DataContext="DataContext">
+        <StackItem>
+            <CompactLabel>
+                Score: @DataContext!.Score
+            </CompactLabel>
+            
+        </StackItem>
+    </StateContentView>
+</StackLayout>

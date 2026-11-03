@@ -1,0 +1,12 @@
+﻿@inherits ParameterGameView<ChooseSuitViewModel>
+@if (_data is null || DataContext is null)
+{
+    return;
+}
+<EnumPickerBlazor E="EnumSuitList"
+                  Context="piece"
+                  
+                  ListPicker="_data.SuitChooser">
+    <DeckPiece Suit="piece.EnumValue"
+               />
+</EnumPickerBlazor>

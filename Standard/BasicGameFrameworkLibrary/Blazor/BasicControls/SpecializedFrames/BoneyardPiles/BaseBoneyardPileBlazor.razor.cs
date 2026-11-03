@@ -7,6 +7,8 @@ public partial class BaseBoneyardPileBlazor<D, LI> : IDisposable
     //had to do a workaround because was unable to scatter for now.
     [Parameter]
     public ScatteringPiecesObservable<D, LI>? BoneyardPile { get; set; }
+    [Parameter]
+    public string LegendSizingText { get; set; } = "";
     private void ShowChange()
     {
         InvokeAsync(() =>

@@ -1,0 +1,16 @@
+@inherits CascadingGameView<SolitaireBoardGameMainViewModel>
+<SolitaireGameBoard SpaceList="GetSpaceList()"
+                    TargetSpaceHeight="125" TargetSpaceWidth="125">
+    <ItemTemplate Context="Space">
+        <StateContentView DataContext="Space">
+            <BasePieceGraphics LongestSize="125" CommandObject="DataContext!.MakeMoveCommand" CommandParameter="Space">
+                <CheckerPiece HasImage="@Space.HasImage" MainColor="@Space.Color" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" />
+            </BasePieceGraphics>
+        </StateContentView>
+    </ItemTemplate>
+    <Canvas>
+        <AnimationVectorCanvas S="GameSpace" Context="Space">
+            <AnimateCheckers Color="@Space.Color" LongestSize="125" PieceCategory="EnumCheckerPieceCategory.OnlyPiece" />
+        </AnimationVectorCanvas>
+    </Canvas>
+</SolitaireGameBoard>

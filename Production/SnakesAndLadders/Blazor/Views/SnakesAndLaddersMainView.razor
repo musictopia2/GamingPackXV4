@@ -1,0 +1,23 @@
+@inherits CascadingGameView<SnakesAndLaddersMainViewModel>
+@if (_current.PlayerId == 0)
+{
+    return; //hopefully this works too.
+}
+<StackLayout>
+    <StackItem>
+        <GameBoardBlazor PlayerList="DataContext!.GetPlayerList" />
+    </StackItem>
+    <StackItem>
+        <GameActionButton CommandObject="DataContext!.RollDiceCommand" Display="Roll Dice" />
+        <StateContentView DataContext="_current">
+            <BasePieceGraphics HeightPercent="12"
+                               LongestSize="50">
+                <PieceGraphicsBlazor Index="@_current.PlayerId" Number="@_current.SpaceNumber" />
+            </BasePieceGraphics>
+        </StateContentView>
+        <DiceListConrolBlazor Cup="DataContext!.GetCup" D="SimpleDice" />
+        <div>
+            <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+        </div>
+    </StackItem>
+</StackLayout>

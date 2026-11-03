@@ -1,0 +1,64 @@
+﻿<CardGraphicsBlazor HeightPercent="ImageHeight" DeckObject="ActionCard" />
+@if (ActionCard!.ActionCategory == EnumActionCategory.DealBreaker)
+{
+    <div>
+        <DisplayStolenSetComponent Color="SaveRoot!.OpponentColorChosen" 
+                                   PlayerToDisplay="OpponentPlayer" />
+    </div>
+
+}
+else if(ActionCard!.ActionCategory == EnumActionCategory.SlyDeal)
+{
+    <div>
+        <DisplayStolenPropertyComponent PlayerToDisplay="OpponentPlayer" />
+    </div>
+}
+else if (ActionCard.ActionCategory == EnumActionCategory.ForcedDeal)
+{
+    <div>
+        <DisplayTradeComponent PlayerToDisplay="OpponentPlayer" />
+    </div>
+}
+else if (ActionCard.ActionCategory == EnumActionCategory.DebtCollector)
+{
+    <div>
+        <DisplayMiscPaymentComponent 
+            ActionCard=ActionCard 
+            Players="Players"
+            Owed="5"
+            PlayerToDisplay="OpponentPlayer" />
+    </div>
+}
+else if (ActionCard.ActionCategory == EnumActionCategory.Birthday)
+{
+    <div>
+        <DisplayMiscPaymentComponent 
+            ActionCard="ActionCard"
+            Players="Players"
+            Owed="2" 
+            PlayerToDisplay="OpponentPlayer" />
+    </div>
+}
+else if (ActionCard.CardType == EnumCardType.ActionRent && ActionCard.AnyColor)
+{
+    <div>
+        <DisplaySinglePlayerRentComponent 
+            Owed="SaveRoot!.PaymentOwed"
+            PlayerToDisplay="OpponentPlayer" 
+            RentCategory="@SaveRoot.RentCategory" />
+    </div>
+}
+else if (ActionCard.CardType == EnumCardType.ActionRent)
+{
+    <div>
+        <DisplaySeveralPlayersRentComponent Players="Players"
+                                            Owed="SaveRoot!.PaymentOwed"
+                                            PlayerToDisplay="OpponentPlayer"
+                                            RentCategory="SaveRoot.RentCategory" />
+    </div>
+   
+}
+else
+{
+    <div>Not supported for now</div>
+}

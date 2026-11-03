@@ -144,7 +144,7 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
         await _client1!.SendMessageAsync(output);
     }
     public async Task SendSeveralSetsAsync<T>(T thisList, string finalPart)
-        where T : IBasicList<string>
+        where T: IBasicList<string>
     {
         SentMessage output = StartNewMessage(finalPart);
         output.Body = await js1.SerializeObjectAsync(thisList);
@@ -299,6 +299,15 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
             IsEnabled = false;
         }
     }
+
+    //public async Task BackToMainAsync()
+    //{
+    //    if (_client1 is null)
+    //    {
+    //        return; //because nothing was done anyways.  this will mean will not require internet access for future.
+    //    }
+    //    await _client1.BackToMainAsync();
+    //}
     async Task IGameNetwork.DisconnectEverybodyAsync()
     {
         await _client1!.DisconnectEverybodyAsync();

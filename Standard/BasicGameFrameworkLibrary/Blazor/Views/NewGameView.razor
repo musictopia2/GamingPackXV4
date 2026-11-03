@@ -1,6 +1,5 @@
-﻿@inherits KeyComponentBase
-@if (_dataContext == null)
+﻿@if (_dataContext == null)
 {
     return;
 }
-<GameButtonComponent @key="GetKey" CommandObject="_dataContext.StartNewGameCommand" Display="Start New Game" FontSize="3vh" />
+<TopBarButton CommandObject="_dataContext.StartNewGameCommand" Display="New Game" />

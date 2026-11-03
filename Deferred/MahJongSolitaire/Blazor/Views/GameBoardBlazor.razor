@@ -1,8 +1,7 @@
-﻿@inherits BasicGameView<MahJongSolitaireMainViewModel>
+﻿@inherits CascadingGameView<MahJongSolitaireMainViewModel>
 @using System.Drawing;
 @if (BoardList == null)
 {
-    <p></p>
     return;
 }
 <svg @key="@GetGameKey" height="80vh" viewBox="0 0 2040 1408">

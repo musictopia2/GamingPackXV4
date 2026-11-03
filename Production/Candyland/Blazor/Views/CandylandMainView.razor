@@ -1,0 +1,26 @@
+@inherits CascadingGameView<CandylandMainViewModel>
+<StateContentView DataContext="DataContext">
+    @if (DataContext!.CurrentPlayer == null)
+    {
+        return;
+    }
+    <div style="background-color: white;  color: black">
+        <StackLayout ItemSpacing="10px">
+            <StackItem>
+                <CandylandCardBlazor @key="DataContext!.CurrentCard" HeightPercent="20" DeckObject="DataContext!.CurrentCard" />
+                <div>
+                    <LabelGridComponent DataContext="DataContext.VMData" Labels="_labels" />
+                </div>
+                <div>
+                    <BasePieceGraphics @key="DataContext.CurrentPlayer" HeightPercent="20"
+                                       LongestSize="50">
+                        <CandylandPiece MainColor="@DataContext!.CurrentPlayer.GetColor()" />
+                    </BasePieceGraphics>
+                </div>
+            </StackItem>
+            <StackItem>
+                <CandylandBoardBlazor PlayerList="DataContext!.GetPlayerList" BoardViewModel="BoardModel" />
+            </StackItem>
+        </StackLayout>
+    </div>
+</StateContentView>

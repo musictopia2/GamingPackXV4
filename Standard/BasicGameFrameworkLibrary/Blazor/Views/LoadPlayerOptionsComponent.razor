@@ -14,13 +14,13 @@
 @if (PlayOption == EnumPlayOptions.Solitaire)
 {
     var temps = SolitaireData();
-    <GameButtonComponent StartOnNewLine="true" CommandObject="temps.Method" Display="@temps.Display" />
+    <GameActionButton SizeCategory="@GetSize" StartOnNewLine="true" CommandObject="temps.Method" Display="@temps.Display" />
 }
 @foreach (var id in _completeList)
 {
     var data = CommandData(id);
     if (data.Display != "")
     {
-        <GameButtonComponent StartOnNewLine="true" CommandObject="data.Method" Display="@data.Display"  CommandParameter="@data.Parameter" />
+        <GameActionButton SizeCategory="@GetSize" StartOnNewLine="true" CommandObject="data.Method" Display="@data.Display" CommandParameter="@data.Parameter" />
     }
 }

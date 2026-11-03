@@ -1,0 +1,33 @@
+﻿namespace Flinch.Core.Data;
+[SingletonGame]
+public class FlinchDetailClass : IGameInfo, ICardInfo<FlinchCardInformation>
+{
+    EnumGameType IGameInfo.GameType => EnumGameType.NewGame;
+    bool IGameInfo.CanHaveExtraComputerPlayers => true;
+    EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
+    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
+    public const string GameName = "Flinch";
+    string IGameInfo.GameName => GameName;
+    int IGameInfo.NoPlayers => 0;
+    int IGameInfo.MinPlayers => 2;
+    int IGameInfo.MaxPlayers => 4;
+    bool IGameInfo.CanAutoSave => true;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
+    int ICardInfo<FlinchCardInformation>.CardsToPassOut => 10;
+    BasicList<int> ICardInfo<FlinchCardInformation>.PlayerExcludeList => [];
+    bool ICardInfo<FlinchCardInformation>.AddToDiscardAtBeginning => false;
+    bool ICardInfo<FlinchCardInformation>.ReshuffleAllCardsFromDiscard => true;
+    bool ICardInfo<FlinchCardInformation>.ShowMessageWhenReshuffling => true;
+    bool ICardInfo<FlinchCardInformation>.PassOutAll => false;
+    bool ICardInfo<FlinchCardInformation>.PlayerGetsCards => true;
+    bool ICardInfo<FlinchCardInformation>.NoPass => false;
+    bool ICardInfo<FlinchCardInformation>.NeedsDummyHand => false;
+    DeckRegularDict<FlinchCardInformation> ICardInfo<FlinchCardInformation>.DummyHand { get; set; } = [];
+    bool ICardInfo<FlinchCardInformation>.HasDrawAnimation => true;
+    bool ICardInfo<FlinchCardInformation>.CanSortCardsToBeginWith => false;
+    BasicList<int> ICardInfo<FlinchCardInformation>.DiscardExcludeList(IListShuffler<FlinchCardInformation> deckList)
+    {
+        return [];
+    }
+}

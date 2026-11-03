@@ -20,5 +20,6 @@ public partial class BaseCardBoardBlazor<D>
         SizeF output = new(DefaultSize.Width * DataContext!.Columns, DefaultSize.Height * DataContext.Rows);
         return output;
     }
-    private string GetTargetString => (TargetHeight * DataContext!.Rows).HeightString();
+    private double GetStart => TargetHeight * DataContext!.Rows;
+    private string GetTargetString => GetStart.HeightPixels;
 }

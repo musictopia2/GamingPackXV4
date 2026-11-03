@@ -5,11 +5,24 @@
 {
     return;
 }
-
 <StateContentView DataContext="BoneyardPile">
-    <BaseFrameBlazor @key="BoneyardPile" IsEnabled="BoneyardPile.IsEnabled" Text="@BoneyardPile.TextToAppear">
-        <div @onclick="BoardClickedAsync" class="boneyardrelative">
-            @ChildContent
-        </div>
+    <BaseFrameBlazor @key="BoneyardPile" IsEnabled="BoneyardPile.IsEnabled">
+        <LegendContent>
+            <span style="display:inline-grid; white-space:nowrap;
+                font-variant-numeric:tabular-nums;">
+                <span aria-hidden="true"
+                      style="grid-area:1 / 1; visibility:hidden;">
+                    @LegendSizingText
+                </span>
+                <span style="grid-area:1 / 1;">
+                    @BoneyardPile.TextToAppear
+                </span>
+            </span>
+        </LegendContent>
+        <ChildContent>
+            <div @onclick="BoardClickedAsync" class="boneyardrelative">
+                @ChildContent
+            </div>
+        </ChildContent>
     </BaseFrameBlazor>
 </StateContentView>

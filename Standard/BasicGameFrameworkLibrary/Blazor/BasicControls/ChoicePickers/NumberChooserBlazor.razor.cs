@@ -1,8 +1,12 @@
 namespace BasicGameFrameworkLibrary.Blazor.BasicControls.ChoicePickers;
 public partial class NumberChooserBlazor : IPiecePicker
 {
+
     [Parameter]
-    public string TextHeight { get; set; } = "15vh"; //default to 15 now.  could change if necessary.
+    public EnumSize? SizeCategory { get; set; }
+
+    //[Parameter]
+    //public string TextHeight { get; set; } = "15vh"; //default to 15 now.  could change if necessary.
     [Parameter]
     public int TextWidth { get; set; } = 40;
     [Parameter]
@@ -17,6 +21,8 @@ public partial class NumberChooserBlazor : IPiecePicker
     public NumberPicker? NumberPicker { get; set; }
     float IPiecePicker.TextWidth => TextWidth;
     float IPiecePicker.ViewBoxHeight => 40;
+
+    string IPiecePicker.TextHeight => gg1.GetChooserItemHeight(SizeCategory);
 
     protected override void OnInitialized()
     {

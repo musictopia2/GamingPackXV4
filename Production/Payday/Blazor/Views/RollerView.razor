@@ -1,0 +1,12 @@
+﻿@inherits ParameterGameView<RollerViewModel>
+@if (VMData is null || DataContext is null)
+{
+    return;
+}
+<GameActionButton CommandObject="RollCommand"
+                     Display="Roll Dice"
+                     StartOnNewLine="true"
+                     />
+<DiceListConrolBlazor D="SimpleDice"
+                      Cup="VMData.Cup"
+                      PercentHeight="14" />

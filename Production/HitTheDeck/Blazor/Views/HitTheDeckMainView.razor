@@ -1,0 +1,29 @@
+@inherits CascadingGameView<HitTheDeckMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DrawPileBlazor DeckPile="_vmData.Deck1" />
+    </StackItem>
+    <StackItem>
+        <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+    </StackItem>
+    <StackItem>
+        <GameActionButton CommandObject="FlipCommand" Display="Flip Deck" StartOnNewLine="true" />
+        <GameActionButton CommandObject="CutCommand" Display="Cut Deck" StartOnNewLine="true" />
+        <GameActionButton CommandObject="EndCommand" Display="End Turn" StartOnNewLine="true" />
+    </StackItem>
+</StackLayout>
+<div>
+    <HandBlazor Hand="_vmData.PlayerHand1" TargetContainerSize="95vw" />
+</div>
+<div>
+    <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+</div>
+<div>
+    <ScoreBoardBlazor P="HitTheDeckPlayerItem"
+                      Columns="_scores"
+                      Players="_gameContainer.SaveRoot.PlayerList" />
+</div>

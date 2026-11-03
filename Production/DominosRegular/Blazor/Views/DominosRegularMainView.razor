@@ -1,0 +1,21 @@
+@inherits CascadingGameView<DominosRegularMainViewModel>
+<BaseBoneyardPileBlazor D="SimpleDominoInfo" LegendSizingText="Bone Yard (16)" BoneyardPile="DataContext!.BoneYard" LI="DominosBasicShuffler<SimpleDominoInfo>">
+    <BasicDominoBlazor D="SimpleDominoInfo" DeckObject="GetDomino" HeightPercent="@TargetHeight" />
+</BaseBoneyardPileBlazor>
+<div>
+    <DominosGameBoardBlazor DataContext="DataContext.GetBoard" />
+</div>
+<div>
+    <BaseHandBlazor TargetContainerSize="95vw" Hand="DataContext.PlayerHand" Divider="1.05" Context="Domino" D="SimpleDominoInfo">
+        <BasicDominoBlazor D="SimpleDominoInfo" DeckObject="Domino" CommandObject="DataContext.PlayerHand.ObjectSingleClickCommand" CommandParameter="Domino" />
+    </BaseHandBlazor>
+</div>
+<div>
+    <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+</div>
+<div>
+    <ScoreBoardBlazor P="DominosRegularPlayerItem" Players="DataContext.GetPlayerList" Columns="_scores" />
+</div>
+<div>
+    <GameActionButton Display="End Turn" CommandObject="EndTurnCommand" />
+</div>

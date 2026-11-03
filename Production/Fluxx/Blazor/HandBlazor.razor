@@ -1,0 +1,8 @@
+@inherits AbstractHandBlazor<D>
+@typeparam D
+<BaseHandBlazor D="D" Hand="Hand" HeightPixels="RealHeight()" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
+                HandType="HandType" TargetContainerSize="@TargetContainerSize" Context="DeckObject">
+    <CardGraphicsBlazor DeckObject="DeckObject"
+                        HeightPixels="RealHeight()"
+                        @key="GetKey" CommandParameter="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
+</BaseHandBlazor>

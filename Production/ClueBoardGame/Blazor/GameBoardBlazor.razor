@@ -1,0 +1,71 @@
+﻿@using CommonBasicLibraries.CollectionClasses;
+@using gg1 = ClueBoardGame.Core.Logic.GameBoardGraphicsCP;
+@if (GraphicsData == null)
+{
+    return;
+}
+<RawGameBoard TargetHeight="@TargetHeight" BoardSize="gg1.OriginalSize">
+    <ResourceImage 
+                   FileName="board.svg"
+                   Width="@gg1.OriginalSize.Width.ToString()"
+                   Height="@gg1.OriginalSize.Height.ToString()" />
+    @if (GraphicsData.GameContainer!.RoomList.Count != 9)
+    {
+        return;
+    }
+    @{
+        BasicList<CharacterInfo> characterList;
+        SizeF spaceSize = new SizeF(gg1.SpaceSize, gg1.SpaceSize);
+        PointF location;
+    }
+    <RoomGraphics GraphicsData="GraphicsData" />
+    
+    @{
+        characterList = GraphicsData.GameContainer.CharactersOnStart();
+    }
+    @foreach (var character in characterList)
+    {
+        location = GraphicsData.PositionForStartSpace(character.FirstNumber);
+        <BasePieceGraphics @key="character" Location="@location" Fixed="true" LongestSize="@gg1.SpaceSize">
+            <PawnPiece MainColor="@character.MainColor" />
+        </BasePieceGraphics>
+    }
+    @{
+        characterList = GraphicsData.GameContainer.CharactersOnBoard();
+    }
+    @foreach (var character in characterList)
+    {
+        location = GraphicsData.PositionForBoardPiece(character.Space);
+        <BasePieceGraphics @key="location" Location="@location" Fixed="true" LongestSize="@gg1.SpaceSize">
+            <PawnPiece MainColor="@character.MainColor" />
+        </BasePieceGraphics>
+    }
+    @*@if (GraphicsData.GameContainer.Command.IsExecuting || GraphicsData.GameContainer.CanClickSpace() == false)
+    {
+        return; //because if executing then no need for clicking options.
+    }*@
+
+    @* click processes last *@
+    @{
+        var clickRoomList = GraphicsData.ClickRoomList();
+    }
+    @foreach (var item in clickRoomList)
+    {
+        <BlankClickableSquare SpaceLocation="item.rect.Location"
+                          SpaceSize="item.rect.Size"
+                          Fixed="true"
+                          SpaceClicked="() => RoomClickedAsync(item.id)" />
+    }
+    @* take advantage that the square will override the room part. *@
+    @{
+        var clickSquareList = GraphicsData.ClickSquareList();
+    }
+    @foreach (var item in clickSquareList)
+    {
+        <BlankClickableSquare SpaceLocation="item.rect.Location"
+                          SpaceSize="item.rect.Size"
+                          Fixed="true"
+                          SpaceClicked="() => SpaceClickedAsync(item.id)" />
+    }
+    
+</RawGameBoard>

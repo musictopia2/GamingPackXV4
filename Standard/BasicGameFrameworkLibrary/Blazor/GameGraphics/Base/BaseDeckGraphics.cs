@@ -17,12 +17,12 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
     /// </summary>
     [Parameter]
     public bool PartOfBoard { get; set; } = false;
+
     [Parameter]
-    public string TargetWidth { get; set; } = ""; //this focus on width alone.
+    public int HeightPixels { get; set; } //must be 
+
     [Parameter]
-    public string TargetHeight { get; set; } = ""; //this focus on height alone.
-    [Parameter]
-    public string TargetSize { get; set; } = ""; //this focus on the largest of them.
+    public double? HeightPercent { get; set; }
     protected abstract SizeF DefaultSize { get; } //i think this makes the most sense now.
     [Parameter]
     public float LongestSize { get; set; } //needs to have many options on setting the sizes needed.
@@ -311,26 +311,34 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
             svg.Children.Add(MainGroup);
 
             string realHeight = "";
-            if (ImageHeight > 0 && TargetHeight == "" && TargetSize == "" && TargetWidth == "")
+
+            if (ImageHeight > 0 && HeightPercent is null && HeightPixels == 0)
             {
-                realHeight = $"{ImageHeight}vh";
+                int temps = ll1.GetHeight(ImageHeight);
+                realHeight = $"{temps}px";
             }
-            else if (TargetHeight != "")
+            else if (HeightPixels > 0)
             {
-                realHeight = TargetHeight;
+                realHeight = $"{HeightPixels}px";
+            }
+            else if (HeightPercent is not null)
+            {
+                int temps = ll1.GetHeight(HeightPercent.Value);
+                realHeight = $"{temps}px";
             }
 
-            if (TargetSize != "")
+
+            if (realHeight != "")
             {
                 if (DefaultSize.Width >= DefaultSize.Height)
                 {
-                    svg.Width = DeckObject!.Rotated ? null! : TargetSize;
-                    svg.Height = DeckObject!.Rotated ? TargetSize : null!;
+                    svg.Width = DeckObject!.Rotated ? null! : realHeight;
+                    svg.Height = DeckObject!.Rotated ? realHeight : null!;
                 }
                 else
                 {
-                    svg.Height = DeckObject!.Rotated ? null! : TargetSize;
-                    svg.Width = DeckObject!.Rotated ? TargetSize : null!;
+                    svg.Height = DeckObject!.Rotated ? null! : realHeight;
+                    svg.Width = DeckObject!.Rotated ? realHeight : null!;
                 }
 
                 svg.X = Location.X.ToString();
@@ -346,19 +354,6 @@ public abstract class BaseDeckGraphics<D> : GraphicsCommand
                 else
                 {
                     svg.Width = realHeight;
-                }
-
-                PopulateCustomViewBox(svg);
-            }
-            else if (TargetWidth != "")
-            {
-                if (DeckObject!.Rotated == false)
-                {
-                    svg.Width = TargetWidth;
-                }
-                else
-                {
-                    svg.Height = TargetWidth;
                 }
 
                 PopulateCustomViewBox(svg);

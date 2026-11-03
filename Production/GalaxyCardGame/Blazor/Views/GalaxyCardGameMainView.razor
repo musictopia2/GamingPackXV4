@@ -1,0 +1,57 @@
+@inherits BasicDeckView<GalaxyCardGameMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsTwoPlayerTrickBlazor T="GalaxyCardGameCardInformation" DataContext="_vmData.TrickArea1" />
+    </StackItem>
+    <StackItem>
+        <StateContentView DataContext="_gameContainer.SaveRoot">
+            <DeckOfCardsImageBlazor @key="@GetKey" R="GalaxyCardGameCardInformation" DeckObject="_gameContainer.SaveRoot.WinningCard" HeightPercent="18" />
+        </StateContentView>
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsDrawPileBlazor R="GalaxyCardGameCardInformation" DeckPile="_vmData.Deck1" />
+    </StackItem>
+</StackLayout>
+<StackLayout>
+    @foreach (var player in _players)
+    {
+        <StackItem>
+            <DeckOfCardsMainRummySetsBlazor HeightPercent="30"
+                                            ContainerWidth="45vw"
+                                            RU="GalaxyCardGameCardInformation"
+                                            SE="MoonClass"
+                                            T="SavedSet"
+                                            DataContext="player.Moons" />
+        </StackItem>
+    }
+</StackLayout>
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsHandBlazor AdditionalSpacing="1" R="GalaxyCardGameCardInformation" Hand="_vmData.PlayerHand1" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+</StackLayout>
+<StackLayout>
+    <StackItem>
+        <GameActionButton CommandObject="EndCommand"
+                             Display="End Turn" />
+        <GameActionButton CommandObject="MoonCommand"
+                             Display="Create New Moon" />
+    </StackItem>
+    <StackItem>
+        <GridList Columns="2" Context="player" RenderList="_players">
+            <DeckOfCardsHandBlazor R="GalaxyCardGameCardInformation" Hand="player.PlanetHand" />
+        </GridList>
+    </StackItem>
+    <StackItem>
+        <ScoreBoardBlazor P="GalaxyCardGamePlayerItem"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </StackItem>
+</StackLayout>

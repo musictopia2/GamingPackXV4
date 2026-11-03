@@ -8,7 +8,7 @@ public partial class BaseSingleMiscPileBlazor<D> : IDisposable, IHandleAsync<Ani
         None, Top, Bottom
     }
     [CascadingParameter]
-    public int TargetHeight { get; set; } = 15;
+    public int TargetHeight { get; set; } = 21;
     [Parameter]
     public SingleObservablePile<D>? SinglePile { get; set; }
     [Parameter]

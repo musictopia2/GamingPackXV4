@@ -1,0 +1,24 @@
+﻿<BaseMainRummySetsBlazor SU="EnumSuitList"
+                         CO="EnumColorList"
+                         SE="PhaseSet"
+                         RU="FiveCrownsCardInformation"
+                         T="SavedSet"
+                         HeightPercent="HeightPercent"
+                         ContainerWidth="@ContainerWidth"
+                         DataContext="DataContext"
+                         Divider="Divider"
+                         AdditionalSpacing="AdditionalSpacing"
+                         Context="Details">
+    <BaseIndividualRummySetBlazor SU="EnumSuitList"
+                                  CO="EnumColorList"
+                                  SE="PhaseSet"
+                                  RU="FiveCrownsCardInformation"
+                                  T="SavedSet"
+                                  Context="Item"
+                                  DataContext="Details">
+        <CardGraphicsBlazor CommandObject="Details.ObjectSingleClickCommand"
+                            PartOfBoard=true
+                            CommandParameter="Item"
+                            DeckObject="Item" />
+    </BaseIndividualRummySetBlazor>
+</BaseMainRummySetsBlazor>

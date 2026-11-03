@@ -5,11 +5,12 @@
 @typeparam SE
 @typeparam T
 <StateContentView DataContext="DataContext">
-    @if (MainSet == null || DataContext == null || DataContext.HandList.Count != _points.Count)
+    @if (MainSet == null || DataContext == null)
     {
         return;
     }
     @{
+        CalculateLayout();
         int x = 0;
     }
     <div @key="DataContext" @onclick="BoardClicked" class="baserummymain" style="display:inline-block; margin: 0px;">

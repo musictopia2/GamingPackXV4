@@ -1,0 +1,32 @@
+﻿<div>
+    <HandBlazor TargetContainerSize="50vw" HeightPixels="ImageHeight.HeightPixels" Hand="DataContext!.VMData.YourCompleteSets.TempHand" />
+</div>
+<StackLayout Height="@StackHeight" ItemSpacing="20px">
+    <SimpleRepeater HowMany="10" Context="index">
+        <StackItem>
+            @{
+                var pile = GetHand(index - 1);
+            }
+            <BaseHandBlazor D="DealCardGameCardInformation" Hand="GetHand(index - 1)"
+                            HandType="EnumHandList.Vertical"
+                            AdditionalSpacing="1"
+                            HeightPixels="ImageHeight.HeightPixels"
+                            Divider="1"
+                            TargetContainerSize="@HandHeight"
+                            PaddingRight="10"
+                            Context="item">
+
+                <CardGraphicsBlazor CommandObject="pile.ObjectSingleClickCommand"
+                                    CommandParameter="item"
+                                    HeightPercent="ImageHeight"
+                                    DeckObject="item" />
+            </BaseHandBlazor>
+        </StackItem>
+    </SimpleRepeater>
+</StackLayout>
+<div>
+    <GameActionButton Display="Cancel" CommandObject="CancelCommand" />
+    <GameActionButton Display="Reset" CommandObject="ResetCommand" />
+    <GameActionButton Display="Put To Temporary Hand" CommandObject="PutToTemporaryHandCommand" />
+    <GameActionButton Display="Finish" CommandObject="FinishCommand" />
+</div>

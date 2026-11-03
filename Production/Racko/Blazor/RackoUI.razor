@@ -1,0 +1,39 @@
+﻿@using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base;
+
+@if (GameContainer?.PlayerList == null || _otherList == null)
+{
+    return;
+}
+
+<StateContentView DataContext="GameContainer.PlayerList.GetSelf().MainHandList">
+    @{
+        Refresh();
+    }
+
+    <BaseFrameBlazor IsEnabled="@IsEnabled" >
+        <LegendContent>
+            Your Card List
+        </LegendContent>
+        <ChildContent>
+            @foreach (var card in _cardList!)
+            {
+                <div @key="card"
+                     @onclick="() => ClickedRowAsync(card)"
+                     style="display: flex; align-items: center; gap: 5px; line-height: 0;">
+                    <svg style="@LabelStyle"
+                         viewBox="0 0 40 30">
+                        <CenteredSvgText FontSize="30"
+                                         Text="@GetLabel(card)"
+                                         TextColor="aqua" />
+                    </svg>
+                    <FlexibleDeckRenderComponent D="RackoCardInformation"
+                                                 DeckObject="card">
+                        <CardGraphicsBlazor HeightPercent="TargetHeight"
+                                            DeckObject="card" />
+                    </FlexibleDeckRenderComponent>
+                </div>
+            }
+        </ChildContent>
+        
+    </BaseFrameBlazor>
+</StateContentView>

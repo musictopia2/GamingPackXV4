@@ -1,0 +1,56 @@
+@inherits CascadingGameView<LifeCardGameMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<CascadingValue Value="_vmData">
+    <GridContainer Inline="true" Columns="@GetColums" ColumnGap="5px">
+        <GridItem>
+            <StackLayout>
+                <StackItem>
+                    <DrawPileBlazor DeckPile="_vmData.Deck1" />
+                </StackItem>
+                <StackItem>
+                    <SingleMiscPileBlazor SinglePile="_vmData.Pile1" />
+                </StackItem>
+                <StackItem>
+                    <SingleMiscPileBlazor SinglePile="_vmData.CurrentPile" PileAnimationTag="" />
+                </StackItem>
+            </StackLayout>
+            <div>
+                <GameActionButton CommandObject="YearsCommand"
+                                     Display="Years Passed" />
+                <GameActionButton CommandObject="PlayCardCommand"
+                                     Display="Play Card" />
+                <OtherView DataContext="DataContext.OtherScreen" />
+            </div>
+            <div>
+                <HandBlazor AdditionalSpacing="1" Hand="_vmData.PlayerHand1" />
+            </div>
+            <div>
+                <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+            </div>
+            <div>
+                <ScoreBoardBlazor P="LifeCardGamePlayerItem"
+                                  Columns="_scores"
+                                  Players="_gameContainer.SaveRoot.PlayerList" />
+            </div>
+        </GridItem>
+        <GridItem Column="2">
+            <StackLayout>
+                @foreach (var player in _players)
+                {
+                    <StackItem>
+                        <HandBlazor Hand="player.LifeStory"
+                                    HandType="EnumHandList.Vertical"
+                                    TargetContainerSize="@Pixels"
+                                    LegendExtraWidth="20"
+                                    Divider="3.5" />
+                    </StackItem>
+                    
+                }
+            </StackLayout>
+            
+        </GridItem>
+    </GridContainer>
+</CascadingValue>

@@ -1,0 +1,12 @@
+﻿@if (IsDisabled() == false)
+{
+    <button class="basicbutton navigation-button top-button" @onclick="Submit">
+        @Display
+    </button>
+    return;
+}
+
+<button style="color:gray"
+        class="basicbutton  navigation-button top-button" @onclick="Submit">
+    @Display
+</button>

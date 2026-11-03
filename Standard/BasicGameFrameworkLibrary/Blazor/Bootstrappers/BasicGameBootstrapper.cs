@@ -58,10 +58,21 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         }
         _error = BlazorUIHelpers.SystemError;
         _message = BlazorUIHelpers.MessageBox;
+        ResetDisplay();
         js1.RequireCustomSerialization = true;
         ResetGlobals();
         _isInitialized = true;
         await StartRuntimeAsync();
+    }
+    private static void ResetDisplay()
+    {
+        gg1.ButtonSize = EnumSize.Standard;
+        gg1.ButtonWidth = EnumWidth.Standard;
+        gg1.LabelSize = EnumSize.Standard;
+        gg1.LabelWidth = EnumWidth.Standard;
+        gg1.UseSuggestedLabelWidth = false;
+        gg1.UseSuggestedButtonWidth = false;
+        gg1.ChooserItemHeight = EnumSize.Standard;
     }
     protected BasicData? GameData;
     private readonly IEventAggregator _aggregator;
@@ -137,7 +148,7 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
 
     private async Task<bool> CanDoFileTestOptionsAsync()
     {
-        if (_mode == EnumGamePackageMode.Production)
+        if (_mode == EnumGamePackageMode.Production || UseMultiplayerProcesses == false)
         {
             return false;
         }
@@ -146,22 +157,9 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         {
             return false;
         }
-
         _testOptions = options;
         _container!.RegisterSingleton(_testOptions);
-
-
         return true;
-        //if (OS != EnumOS.WindowsDT)
-        //{
-        //    return false; //only windows desktop can do this.
-        //}
-        //string path = TestOptions.GetTestPath();
-        //if (ff1.FileExists(path) == false)
-        //{
-        //    return false;
-        //}
-        //return true;
     }
     private bool _usingGlobalTestOptions = false;
     private async Task FirstRegisterAsync()
@@ -179,8 +177,6 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         MessengingGlobalClass.Aggregator = _aggregator;
         Subscribe(); //now i can use this.
         _container!.RegisterSingleton(_aggregator);
-        //TestOptions testOptions;
-
         if (await CanDoFileTestOptionsAsync() == false)
         {
             _testOptions = new();
@@ -259,7 +255,7 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     }
     async Task IHandleAsync<DisconnectEventModel>.HandleAsync(DisconnectEventModel message)
     {
-        await _message!.ShowMessageAsync("Disconnected.  Trying to reconnect to the host again");
+        await _message!.ShowMessageAsync("Disconnected.  Rethink connecting to host.");
         //await ReconnectToHostAsync();
     }
     async Task IHandleAsync<ClientNewGameEventModel>.HandleAsync(ClientNewGameEventModel message)

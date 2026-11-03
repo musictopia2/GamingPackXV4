@@ -1,10 +1,12 @@
 ﻿@typeparam R
 @inherits KeyComponentBase
-<BaseDrawPileBlazor D="R" DeckAnimationTag="@DeckAnimationTag" DeckPile="@DeckPile">
+<BaseDrawPileBlazor D="R" DeckAnimationTag="@DeckAnimationTag" DeckPile="@DeckPile"
+    SizeCategory="SizeCategory"    
+>
     <CanvasTemplate Context="Card">
-        <DeckOfCardsImageBlazor R="R" TargetHeight="@RealHeight" DeckObject="Card" />
+        <DeckOfCardsImageBlazor R="R" HeightPixels="@RealHeight" DeckObject="Card" />
     </CanvasTemplate>
     <MainTemplate Context="Card">
-        <DeckOfCardsImageBlazor R="R" AlwaysUnknown="@AlwaysUnknown" TargetHeight="@RealHeight" DeckObject="Card" CommandParameter="Card" CommandObject="DeckPile!.DeckObjectClickedCommand" />
+        <DeckOfCardsImageBlazor R="R" AlwaysUnknown="@AlwaysUnknown" HeightPixels="@RealHeight" DeckObject="Card" CommandParameter="Card" CommandObject="DeckPile!.DeckObjectClickedCommand" />
     </MainTemplate>
 </BaseDrawPileBlazor>

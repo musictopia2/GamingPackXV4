@@ -1,0 +1,62 @@
+﻿namespace Skipbo.Core.ViewModels;
+[InstanceGame]
+public class PlayerPilesViewModel
+{
+    public readonly SkipboVMData Model;
+    private readonly SkipboMainGameClass _mainGame;
+    public PlayerPilesViewModel(CommandContainer commandContainer, SkipboGameContainer gameContainer, SkipboVMData model, SkipboMainGameClass mainGame) 
+    {
+        Model = model;
+        Model.DiscardPiles = new DiscardPilesVM<SkipboCardInformation>(commandContainer);
+        Model.DiscardPiles.Init(HowManyDiscards);
+        Model.DiscardPiles.PileClickedAsync = DiscardPiles_PileClickedAsync;
+        Model.StockPile!.StockClickedAsync = StockPile_StockClickedAsync;
+        gameContainer.SingleInfo = gameContainer.PlayerList!.GetWhoPlayer();
+        CommandContainer = commandContainer;
+        GameContainer = gameContainer;
+        _mainGame = mainGame;
+        Model.StockPile.ClearCards();
+        gameContainer.SingleInfo!.StockList.ForEach(x =>
+        {
+            model.StockPile.AddCard(x);
+        });
+        if (gameContainer.SingleInfo!.DiscardList.Count > 0)
+        {
+            model.DiscardPiles!.PileList!.ReplaceRange(gameContainer.SingleInfo.DiscardList);
+        }
+    }
+    public CommandContainer CommandContainer { get; set; }
+    public SkipboGameContainer GameContainer { get; }
+    private async Task DiscardPiles_PileClickedAsync(int index, BasicPileInfo<SkipboCardInformation> thisPile)
+    {
+        int playerDeck = Model!.PlayerHand1!.ObjectSelected();
+        if (playerDeck > 0)
+        {
+            await _mainGame!.AddToDiscardAsync(index, playerDeck);
+            return;
+        }
+        if (Model.DiscardPiles!.HasCard(index) == false)
+        {
+            return;
+        }
+        if (Model.DiscardPiles.PileList![index].IsSelected == true)
+        {
+            Model.DiscardPiles.PileList[index].IsSelected = false;
+            return;
+        }
+        _mainGame!.UnselectAllCards();
+        Model.DiscardPiles.SelectUnselectSinglePile(index);
+    }
+    private Task StockPile_StockClickedAsync()
+    {
+        int nums = Model.StockPile!.CardSelected();
+        _mainGame!.UnselectAllCards();
+        if (nums > 0)
+        {
+            Model.StockPile.UnselectCard();
+            return Task.CompletedTask;
+        }
+        Model.StockPile.SelectCard();
+        return Task.CompletedTask;
+    }
+}

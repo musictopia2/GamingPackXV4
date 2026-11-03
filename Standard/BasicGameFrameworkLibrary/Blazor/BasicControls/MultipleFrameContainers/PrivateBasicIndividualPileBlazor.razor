@@ -1,5 +1,4 @@
 ﻿@typeparam D
-
 <StateContentView DataContext="IndividualPile">
     @if (MainGroup == null || MainGroup.Piles == null || _card == null)
     {
@@ -7,16 +6,25 @@
     }
     @if (MainGroup.Piles.HasFrame)
     {
-        <BaseFrameBlazor Text="@IndividualPile!.Text" IsEnabled="@IsEnabled">
-            <FlexibleDeckRenderComponent D="D" DeckObject="_card">
-                @ChildContent!(_card)
-            </FlexibleDeckRenderComponent>
-
+        <BaseFrameBlazor IsEnabled="@IsEnabled">
+            <LegendContent>
+                @if (string.IsNullOrWhiteSpace(IndividualPile!.Text) == false)
+                {
+                    <CompactLabel>
+                        @IndividualPile.Text
+                    </CompactLabel>
+                }
+            </LegendContent>
+            <ChildContent>
+                <FlexibleDeckRenderComponent D="D" DeckObject="_card">
+                    @ChildContent!(_card)
+                </FlexibleDeckRenderComponent>
+            </ChildContent>
         </BaseFrameBlazor>
         return;
     }
     <VisibleHiddenComponent Visible="_card.Visible == false">
-        <svg viewBox="@GetViewBox(_card)" style="height: @GetString">
+        <svg viewBox="@GetViewBox(_card)" style="height: @HeightPixels">
             <rect fill="none" width="100%" height="100%" />
         </svg>
     </VisibleHiddenComponent>

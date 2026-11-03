@@ -1,0 +1,16 @@
+﻿
+<table>
+    @foreach (var item in Labels)
+    {
+        <LabelItemComponent DataContext="DataContext"
+                            Model="item"
+                            DecimalPlaces="DecimalPlaces"
+                            SizeCategory="SizeCategory"
+                            NumberDigits="NumberDigits"
+                            HeaderWidthCategory="HeaderWidthCategory"
+                            SuggestContentWidth="SuggestContentWidth"
+                            SuggestHeaderWidth="SuggestHeaderWidth"
+                            ContentWidthCategory="ContentWidthCategory"
+                            />
+    }
+</table>

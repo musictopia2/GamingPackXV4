@@ -1,0 +1,21 @@
+@inherits CascadingGameView<XPuzzleMainViewModel>
+@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+
+<GridGameBoard S="XPuzzleSpaceInfo" SpaceList="GetSpaceList()"
+                Context="Item" 
+                TargetSpaceHeight="300" TargetSpaceWidth="300">
+    <ItemTemplate>
+        <BorderedSpace
+                       BorderColor="@cc1.Black" 
+                       BorderWidth="3"
+                       FillColor="@Item.Color"
+                       SpaceClicked="() => ClickedAsync(Item)">
+            <CenteredTextBlazor TextColor="@cc1.White"
+                                BorderWidth="3" 
+                                BorderColor="@cc1.Black"
+                                Text="@Item.Text"
+                                FontSize="300"
+                                />
+        </BorderedSpace>
+    </ItemTemplate>
+</GridGameBoard>

@@ -18,7 +18,7 @@
                     {
                         var piece = ListPicker.ItemList[index];
                         <StateContentView DataContext="piece">
-                            <BasePieceGraphics @key="@piece" IsSelected="@piece.IsSelected" TargetSize="@TargetSize" CommandParameter="@piece" CommandObject="@ListPicker.EnumChosenCommand">
+                            <BasePieceGraphics @key="@piece" IsSelected="@piece.IsSelected" HeightPixels="@GetEnumChooserItemHeight()" CommandParameter="@piece" CommandObject="@ListPicker.EnumChosenCommand">
                                 @ChildContent!(piece)
                             </BasePieceGraphics>
                         </StateContentView>

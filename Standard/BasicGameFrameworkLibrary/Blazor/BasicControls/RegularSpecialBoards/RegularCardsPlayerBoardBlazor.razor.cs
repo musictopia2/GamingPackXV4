@@ -68,7 +68,7 @@ public partial class RegularCardsPlayerBoardBlazor<T>
     }
     public string GetWidth()
     {
-        int totals = TargetHeight * 4;
+        int totals = TargetHeight.HeightPixels * 4;
         return totals.WidthString<T>();
     }
     [CascadingParameter]

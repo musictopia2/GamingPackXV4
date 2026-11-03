@@ -1,0 +1,32 @@
+@inherits CascadingGameView<FlinchMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<CascadingValue Value="_vmData">
+    <StackLayout>
+        <StackItem>
+            <DrawPileBlazor DeckPile="_vmData.Deck1" />
+        </StackItem>
+        <StackItem>
+            <ScoreBoardBlazor P="FlinchPlayerItem"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+        </StackItem>
+        <StackItem>
+            <GameActionButton CommandObject="EndCommand" Display="End Turn" />
+        </StackItem>
+        <StackItem>
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </StackItem>
+    </StackLayout>
+    <div>
+        <PublicPilesBlazor AnimationTag="public" />
+    </div>
+    <div>
+        <HandBlazor Hand="_vmData.PlayerHand1" />
+    </div>
+    <div>
+        <PlayerPilesView DataContext="DataContext.PlayerPilesScreen" />
+    </div>
+</CascadingValue>

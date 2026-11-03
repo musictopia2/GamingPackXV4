@@ -1,0 +1,13 @@
+﻿@inherits BasicDeckView<AccordianSolitaireMainViewModel>
+@if (DataContext!.GameBoard1 == null)
+{
+    return;
+}
+<SimpleControlView DataContext="DataContext.GameBoard1">
+    @foreach (var card in DataContext.GameBoard1!.HandList)
+    {
+        <FlexibleDeckRenderComponent D="AccordianSolitaireCardInfo" DeckObject="card">
+            <DeckOfCardsImageBlazor R="AccordianSolitaireCardInfo" CommandParameter="card" DeckObject="card" HeightPixels="@HeightPixels" CommandObject="DataContext.GameBoard1.ObjectSingleClickCommand" />
+        </FlexibleDeckRenderComponent>
+    }
+</SimpleControlView>

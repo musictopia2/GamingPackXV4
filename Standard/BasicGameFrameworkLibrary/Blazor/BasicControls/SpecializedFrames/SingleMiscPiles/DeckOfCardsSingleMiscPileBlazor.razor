@@ -2,9 +2,9 @@
 @inherits KeyComponentBase
 <BaseSingleMiscPileBlazor D="R" PileAnimationTag="@PileAnimationTag" SinglePile="SinglePile">
     <CanvasTemplate Context="Card">
-        <DeckOfCardsImageBlazor R="R" TargetHeight="@RealHeight" DeckObject="Card" />
+        <DeckOfCardsImageBlazor R="R" HeightPixels="@HeightPixels" DeckObject="Card" />
     </CanvasTemplate>
     <MainTemplate Context="Card">
-        <DeckOfCardsImageBlazor R="R" TargetHeight="@RealHeight" DeckObject="Card" CommandParameter="Card" CommandObject="SinglePile!.PileObjectClickedCommand" />
+        <DeckOfCardsImageBlazor R="R" HeightPixels="@HeightPixels" DeckObject="Card" CommandParameter="Card" CommandObject="SinglePile!.PileObjectClickedCommand" />
     </MainTemplate>
 </BaseSingleMiscPileBlazor>

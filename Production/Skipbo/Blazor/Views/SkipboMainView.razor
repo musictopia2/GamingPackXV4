@@ -1,0 +1,31 @@
+@inherits CascadingGameView<SkipboMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <StackLayout>
+            <StackItem>
+                <DrawPileBlazor DeckPile="_vmData.Deck1" />
+            </StackItem>
+            <StackItem>
+                <MultiplePilesBlazor AnimationTag="public" Piles="_vmData.PublicPiles" />
+            </StackItem>
+        </StackLayout>
+        <div>
+            <HandBlazor Hand="_vmData.PlayerHand1" />
+        </div>
+        <div>
+            <PlayerPilesView DataContext="DataContext.PlayerPilesScreen" />
+        </div>
+        <div>
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </div>
+    </StackItem>
+    <StackItem>
+        <ScoreBoardBlazor P="SkipboPlayerItem"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </StackItem>
+</StackLayout>

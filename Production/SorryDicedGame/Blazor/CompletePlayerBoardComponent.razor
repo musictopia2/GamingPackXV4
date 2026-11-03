@@ -1,0 +1,21 @@
+﻿<StateContentView DataContext="BoardList">
+    @if (SorryDicedGameGameContainer.CanStart == false)
+    {
+        return;
+    }
+    <GridTwoByTwo ColumnGap="5px" ColumnLength="@Columns">
+        <GridRepeater TotalColumns="2" TotalRows="2" Context="item">
+            @if (Players.Count >= item.index + 1)
+            {
+                <GridItem Column="item.column" Row="item.row">
+                    <PlayerBoard OnHomeClicked="OnHomeClicked"
+                                 BoardList="BoardList"
+                                 OnWaitingClicked="OnWaitingClicked"
+                                 Player="Players[item.index]"
+                                 ImageHeight="@ImageHeight" />
+                </GridItem>
+            }
+        </GridRepeater>
+    </GridTwoByTwo>
+    
+</StateContentView>

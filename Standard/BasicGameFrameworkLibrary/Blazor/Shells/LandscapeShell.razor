@@ -1,0 +1,10 @@
+﻿<VisibleHiddenComponent Visible="@IsLandscape()">
+    @ChildContent
+</VisibleHiddenComponent>
+
+@if (IsLandscape() == false)
+{
+    <div>
+        Please rotate your device to landscape to play.
+    </div>
+}

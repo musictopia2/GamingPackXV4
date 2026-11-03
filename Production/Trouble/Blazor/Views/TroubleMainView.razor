@@ -1,0 +1,13 @@
+@inherits CascadingGameView<TroubleMainViewModel>
+<StackLayout>
+    <StackItem>
+        <GameBoardBlazor Cup="DataContext!.GetCup"
+                         DiceHeight="25"
+                         TargetHeight="95"
+                         GameContainer="_gameContainer"
+                         GraphicsData="_graphicsData" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+    </StackItem>
+</StackLayout>

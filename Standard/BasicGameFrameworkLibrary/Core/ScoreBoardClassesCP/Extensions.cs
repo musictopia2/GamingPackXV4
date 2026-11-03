@@ -3,7 +3,10 @@ public static class ScoreExtensions
 {
     extension (BasicList<ScoreColumnModel> scores)
     {
-        public BasicList<ScoreColumnModel> AddColumn(string header, bool isHorizontal, string normalPath, string visiblePath = "", EnumScoreSpecialCategory category = EnumScoreSpecialCategory.None)
+        public BasicList<ScoreColumnModel> AddColumn(string header, bool isHorizontal, 
+            string normalPath, string visiblePath = "", EnumScoreSpecialCategory category = EnumScoreSpecialCategory.None,
+            int numberOfDigits = 0
+            )
         {
             if (scores.Count == 0 && header != "Nick Name")
             {
@@ -16,6 +19,7 @@ public static class ScoreExtensions
                 IsHorizontal = isHorizontal,
                 SpecialCategory = category,
                 VisiblePath = visiblePath,
+                NumberOfDigits = numberOfDigits
             };
             scores.Add(info);
             return scores;

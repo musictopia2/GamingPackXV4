@@ -33,4 +33,8 @@ public partial class YahtzeeBottomPortionBlazor
         }
     }
     private int GetBottomRow => BottomList.Count + 2;
+
+    private static double _height = 100;
+    private static string Pixels => _height.HeightPixels;
+
 }

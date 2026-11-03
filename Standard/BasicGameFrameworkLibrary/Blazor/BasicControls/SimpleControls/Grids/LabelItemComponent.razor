@@ -1,0 +1,30 @@
+﻿<tr>
+    <th style="vertical-align: top;">
+        <GameLabel 
+            UseSuggestedWidth="SuggestHeaderWidth"
+            SizeCategory="SizeCategory"
+            WidthCategory="HeaderWidthCategory"
+        >
+            @Model.Header:
+        </GameLabel>
+        
+    </th>
+    <td style="padding-right:10px;">
+        <GameLabel UseSuggestedWidth="SuggestContentWidth"
+            SizeCategory="SizeCategory"
+            WidthCategory="ContentWidthCategory"
+        >
+            @if (NumberDigits == 0)
+            {
+                @GetValue(Model)
+            }
+            else
+            {
+                <span style="@GetStyle()">
+                    @GetValue(Model)
+                </span>
+            }
+        </GameLabel>
+        
+    </td>
+</tr>

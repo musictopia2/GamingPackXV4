@@ -1,0 +1,160 @@
+namespace Fluxx.Core.Data;
+[SingletonGame]
+public class FluxxSaveInfo : BasicSavedCardClass<FluxxPlayerItem, FluxxCardInformation>, IMappable, ISaveInfo
+{
+    public DeckRegularDict<GoalCard> GoalList { get; set; } = [];
+    public DeckRegularDict<RuleCard> RuleList { get; set; } = [];
+    public BasicList<int> DelayedPlayList { get; set; } = [];
+    public bool DoAnalyze { get; set; }
+    public BasicList<int> QueList { get; set; } = [];
+    public SavedActionClass SavedActionData { get; set; } = new();
+    public int CurrentAction { get; set; }
+    private int _playsLeft;
+    public int PlaysLeft
+    {
+        get { return _playsLeft; }
+        set
+        {
+            if (SetProperty(ref _playsLeft, value))
+            {
+                _model?.PlaysLeft = value;
+            }
+        }
+    }
+    private int _handLimit;
+    public int HandLimit
+    {
+        get { return _handLimit; }
+        set
+        {
+            if (SetProperty(ref _handLimit, value))
+            {
+                _model?.HandLimit = value;
+            }
+        }
+    }
+    private int _keeperLimit;
+    public int KeeperLimit
+    {
+        get { return _keeperLimit; }
+        set
+        {
+            if (SetProperty(ref _keeperLimit, value))
+            {
+                _model?.KeeperLimit = value;
+            }
+        }
+    }
+    private int _playLimit;
+    public int PlayLimit
+    {
+        get { return _playLimit; }
+        set
+        {
+            if (SetProperty(ref _playLimit, value))
+            {
+                _model?.PlayLimit = value;
+            }
+        }
+    }
+    private bool _anotherTurn;
+    public bool AnotherTurn
+    {
+        get { return _anotherTurn; }
+        set
+        {
+            if (SetProperty(ref _anotherTurn, value))
+            {
+                _model?.AnotherTurn = value;
+            }
+        }
+    }
+    private int _drawBonus;
+    public int DrawBonus
+    {
+        get { return _drawBonus; }
+        set
+        {
+            if (SetProperty(ref _drawBonus, value))
+            {
+                _model?.DrawBonus = value;
+            }
+        }
+    }
+    private int _playBonus;
+    public int PlayBonus
+    {
+        get { return _playBonus; }
+        set
+        {
+            if (SetProperty(ref _playBonus, value))
+            {
+                _model?.PlayBonus = value;
+            }
+        }
+    }
+    private int _cardsDrawn;
+    public int CardsDrawn
+    {
+        get { return _cardsDrawn; }
+        set
+        {
+            if (SetProperty(ref _cardsDrawn, value))
+            {
+                _model?.CardsDrawn = value;
+            }
+        }
+    }
+    private int _cardsPlayed;
+    public int CardsPlayed
+    {
+        get { return _cardsPlayed; }
+        set
+        {
+            if (SetProperty(ref _cardsPlayed, value))
+            {
+                _model?.CardsPlayed = value;
+            }
+        }
+    }
+    private int _drawRules;
+    public int DrawRules
+    {
+        get { return _drawRules; }
+        set
+        {
+            if (SetProperty(ref _drawRules, value))
+            {
+                _model?.DrawRules = value;
+            }
+        }
+    }
+    private int _previousBonus;
+    public int PreviousBonus
+    {
+        get { return _previousBonus; }
+        set
+        {
+            if (SetProperty(ref _previousBonus, value))
+            {
+                _model?.PreviousBonus = value;
+            }
+        }
+    }
+    private FluxxVMData? _model;
+    internal void LoadMod(FluxxVMData model)
+    {
+        model.PlaysLeft = PlaysLeft;
+        model.HandLimit = HandLimit;
+        model.KeeperLimit = KeeperLimit;
+        model.PlayLimit = PlayLimit;
+        model.AnotherTurn = AnotherTurn;
+        model.DrawBonus = DrawBonus;
+        model.PlayBonus = PlayBonus;
+        model.CardsDrawn = CardsDrawn;
+        model.CardsPlayed = CardsPlayed;
+        model.DrawRules = DrawRules;
+        model.PreviousBonus = PreviousBonus;
+        _model = model;
+    }
+}

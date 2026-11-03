@@ -18,26 +18,88 @@ public partial class BaseHandBlazor<D>
     public double Divider { get; set; } = 1;
     [Parameter]
     public double AdditionalSpacing { get; set; } = 0;
-
     [Parameter]
-    public string FontSizeForFrame { get; set; } = "";
+    public EnumSize? SizeCategory { get; set; }
     [Parameter]
     public bool Bold { get; set; } = false;
     private string GetLegendStyle()
     {
-        if (FontSizeForFrame == "" && Bold == false)
+        if (Bold == false)
         {
             return "";
         }
-        if (Bold == false)
-        {
-            return $"font-size: {FontSizeForFrame};"; //so you can decide how it would be.
-        }
-        if (FontSizeForFrame != "")
-        {
-            return $"font-size: {FontSizeForFrame}; font-weight: bold;";
-        }
         return "font-weight: bold;";
+    }
+    private string GetContentStyle()
+    {
+        var size = GetHandSize(Hand!.HandList.Count);
+
+        return "position: relative;" +
+            $" width: {Pixels(size.Width)};" +
+            $" height: {Pixels(size.Height)};";
+    }
+    private (double Width, double Height) GetCardSize()
+    {
+        var original = new D().DefaultSize;
+        const double borderWidth = 4;
+
+        double targetSize = GetCardHeightPixels();
+        double originalWidth = original.Width + borderWidth;
+        double originalHeight = original.Height + borderWidth;
+
+        double scale = targetSize /
+            Math.Max(originalWidth, originalHeight);
+
+        double width = originalWidth * scale;
+        double height = originalHeight * scale;
+
+        return Rotated
+            ? (height, width)
+            : (width, height);
+    }
+
+    private double GetCardStep()
+    {
+        var (Width, Height) = GetCardSize();
+
+        double length = HandType == EnumHandList.Horizontal
+            ? Width
+            : Height;
+
+        return Math.Max(
+            1,
+            length / Math.Max(1, Divider) + AdditionalSpacing);
+    }
+
+    private (double Width, double Height) GetHandSize(int count)
+    {
+        var (Width, Height) = GetCardSize();
+
+        // Keep space for one card even when the hand is empty.
+        double length = HandType == EnumHandList.Horizontal
+            ? Width
+            : Height;
+
+        double total = length + GetCardStep() * Math.Max(0, count - 1);
+
+        return HandType == EnumHandList.Horizontal
+            ? (total, Height)
+            : (Width, total);
+    }
+
+    private double GetCardHeightPixels()
+    {
+        if (HeightPixels > 0)
+        {
+            return HeightPixels;
+        }
+
+        if (TargetImageHeight > 0)
+        {
+            return ll1.GetHeight(TargetImageHeight);
+        }
+
+        throw new CustomBasicException("A card height must be supplied.");
     }
 
     //we are doing to do a viewbox.
@@ -54,7 +116,7 @@ public partial class BaseHandBlazor<D>
     /// 
     /// </summary>
     [Parameter]
-    public string TargetImageSize { get; set; } = "";
+    public int HeightPixels { get; set; }
     [CascadingParameter]
     public int TargetImageHeight { get; set; }
 
@@ -75,69 +137,55 @@ public partial class BaseHandBlazor<D>
     }
     private string GetContainerStyle()
     {
-        double widthVH = 0, heightVH = 0;
-
-        if (Hand?.HandList.Count <= 2 && TargetContainerSize == "")
+        if (Hand == null)
         {
-            if ((Hand?.Maximum ?? 0) == 0)
-            {
-                (widthVH, heightVH) = GetMinimumSize();
-            }
-            else
-            {
-                (widthVH, heightVH) = CalculateHandMax();
-            }
+            return "";
         }
-        else if ((Hand?.Maximum ?? 0) > 0)
-        {
-            (widthVH, heightVH) = CalculateHandMax();
-        }
-        // else: let CSS auto-size based on content
 
-        string style = "position: relative; overflow: auto;";
-        if (widthVH == 0 && heightVH == 0)
-        {
-            return GetOldContainerStyle();
-        }
-        if (HandType == EnumHandList.Horizontal)
-        {
-            if (widthVH > 0)
-            {
-                //double extraWidthVH = 0;
-                if (LegendExtraWidth > 0)
-                {
-                    // If your layout is in vh, convert px to vh based on viewport height
-                    // 1vh = 1% of viewport height, so: px / window.innerHeight * 100
-                    // For simplicity, you can approximate or use JS interop for exact
-                    // Here, just add as px for demonstration
-                    style += $" width: calc({widthVH}vh + {LegendExtraWidth}px);";
-                }
-                else
-                {
-                    style += $" width: {widthVH}vh;";
-                }
-            }
+        (double Width, double Height) size;
 
-            if (heightVH > 0)
-            {
-                style += $" height: {heightVH}vh;";
-            }
-            style += "padding-bottom: 3vh;";
+        if (Hand.Maximum > 0)
+        {
+            size = CalculateHandMax();
+        }
+        else if (Hand.HandList.Count <= 2)
+        {
+            size = GetMinimumSize();
         }
         else
         {
-            if (heightVH > 0)
-            {
-                style += $" height: {heightVH}vh;";
-            }
-
-            if (widthVH > 0)
-            {
-                style += $" width: {widthVH}vh;";
-            }
+            size = GetHandSize(Hand.HandList.Count);
         }
-        style += $" padding-right: {PaddingRight}px;";
-        return style;
+
+        bool hasContainerSize =
+            !string.IsNullOrWhiteSpace(TargetContainerSize);
+
+        string common =
+            "position: relative; box-sizing: content-box;" +
+            $" padding-right: {PaddingRight}px;";
+
+        if (HandType == EnumHandList.Horizontal)
+        {
+            string width = hasContainerSize
+                ? TargetContainerSize
+                : $"min({Pixels(size.Width + LegendExtraWidth)}, 95vw)";
+
+            return common +
+                $" width: {width};" +
+                $" height: {Pixels(size.Height)};" +
+                " padding-bottom: 20px;" +
+                " overflow-x: auto; overflow-y: hidden;";
+        }
+
+        string height = hasContainerSize
+            ? TargetContainerSize
+            : Pixels(Math.Min(size.Height, ll1.GetHeight(95)));
+
+        return common +
+            $" width: {Pixels(size.Width + LegendExtraWidth)};" +
+            $" height: {height};" +
+            " padding-bottom: 20px;" +
+            " overflow-y: auto; overflow-x: hidden;";
     }
     private string GetHeightWithNoContainerSize()
     {
@@ -146,51 +194,13 @@ public partial class BaseHandBlazor<D>
             return "auto";
         }
 
-        var card = new D();
-        var defaultSize = card.DefaultSize;
-        double cardHeight = TargetImageHeight > 0
-            ? TargetImageHeight
-            : double.TryParse(TargetImageSize.Replace("vh", ""), out var h) ? h : defaultSize.Height;
+        double contentHeight = GetHandSize(Hand.HandList.Count).Height;
+        double maximumHeight = ll1.GetHeight(95);
 
-        double aspectRatio = defaultSize.Width / defaultSize.Height;
-        double cardWidth = cardHeight * aspectRatio;
-        double spacing = AdditionalSpacing;
-        double divider = Divider <= 0 ? 1 : Divider;
+        double height = Math.Min(contentHeight, maximumHeight);
 
-        double extras;
-        if (Rotated)
-        {
-            // When rotated, the "height" is actually the width of the card
-            extras = divider <= 1 ? cardWidth + spacing : (cardWidth / divider) + spacing;
-        }
-        else
-        {
-            extras = divider <= 1 ? cardHeight + spacing : (cardHeight / divider) + spacing;
-        }
-
-        int count = Hand.HandList.Count;
-        double totalHeightVH;
-        if (Rotated)
-        {
-            totalHeightVH = (extras * (count - 1)) + cardWidth + 1;
-        }
-        else
-        {
-            totalHeightVH = (extras * (count - 1)) + cardHeight + 1;
-        }
-
-        // Cap at 95vh
-        string heightStyle;
-        if (totalHeightVH > 95)
-        {
-            heightStyle = "95vh";
-        }
-        else
-        {
-            heightStyle = $"{totalHeightVH}vh";
-        }
-
-        return heightStyle;
+        return height.ToString(
+            System.Globalization.CultureInfo.InvariantCulture) + "px";
     }
     private string GetWidthWithNoContainerSize()
     {
@@ -199,242 +209,80 @@ public partial class BaseHandBlazor<D>
             return "auto";
         }
 
-        var card = new D();
-        var defaultSize = card.DefaultSize;
-        double aspectRatio = defaultSize.Width / defaultSize.Height;
-        double cardHeight = TargetImageHeight > 0
-            ? TargetImageHeight
-            : double.TryParse(TargetImageSize.Replace("vh", ""), out var h) ? h : defaultSize.Height;
+        double contentWidth = GetHandSize(Hand.HandList.Count).Width;
 
-        double cardWidth = cardHeight * aspectRatio;
-        double spacing = AdditionalSpacing;
-        double divider = Divider <= 0 ? 1 : Divider;
+        string pixels = contentWidth.ToString(
+            System.Globalization.CultureInfo.InvariantCulture);
 
-        double extras = divider <= 1 ? cardWidth + spacing : (cardWidth / divider) + spacing;
-        int count = Hand.HandList.Count;
-        double totalWidthVH = (extras * (count - 1)  +10);
-
-        //string widthStyle = $"{totalWidthVH}vh";
-
-        //// Cap at 95vw
-        string widthStyle;
-        if (totalWidthVH > 150)
-        {
-            //for now, set at 150
-            widthStyle = "95vw";
-        }
-        else
-        {
-            widthStyle = $"{totalWidthVH}vh";
-        }
-
-        return widthStyle;
+        return $"min({pixels}px, 95vw)";
     }
+    private static string Pixels(double value)
+    {
+        return value.ToString(
+            System.Globalization.CultureInfo.InvariantCulture) + "px";
+    }
+
     private string GetOldContainerStyle()
     {
-        string realSize;
-        if (TargetImageSize != "")
-        {
-            realSize = TargetImageSize;
-        }
-        else if (TargetImageHeight > 0)
-        {
-            realSize = $"{TargetImageHeight}vh";
-        }
-        else
-        {
-            throw new CustomBasicException("Unable to calculate container");
-        }
-        string widthValue;
-        //TargetContainerSize = "50vw"; //for now.
-        if (TargetContainerSize == "")
-        {
-            if (HandType == EnumHandList.Horizontal)
-            {
-                //figure out width.
-                string widths = GetWidthWithNoContainerSize();
-                //widths = "50vw";
-                return $"position: relative; overflow-x: auto; overflow-y: hidden; width: {widths}; hidden; margin-right: 10px; height: {realSize}; padding-bottom: 3vh; padding-right: {PaddingRight}px;";
-            }
-            //iffy now.
+        var (Width, Height) = GetCardSize();
 
-            string heights = GetHeightWithNoContainerSize();
-            if (LegendExtraWidth == 0)
-            {
-                return $"position: relative; overflow-x: auto; overflow-y: hidden; height: {heights}; hidden; margin-right: 10px; width: {realSize};  padding-right: {PaddingRight}px;";
-            }
-            widthValue = $"calc({realSize} + {LegendExtraWidth}px)";
-            return $"position: relative; overflow-x: auto; overflow-y: hidden; width: {widthValue}; margin-right: 10px; height: {heights}; padding-bottom: 3vh; padding-right: {PaddingRight}px;";
-        }
+        string common =
+            "position: relative; margin-right: 10px;" +
+            $" padding-right: {PaddingRight}px;";
+
         if (HandType == EnumHandList.Horizontal)
         {
-            return $"position: relative; width: {TargetContainerSize}; padding-bottom: 4vh; height: {realSize}; overflow-x: auto; overflow-y: hidden;";
+            string width = string.IsNullOrWhiteSpace(TargetContainerSize)
+                ? GetWidthWithNoContainerSize()
+                : TargetContainerSize;
+
+            return common +
+                $" width: {width};" +
+                $" height: {Pixels(Height)};" +
+                " overflow-x: auto; overflow-y: hidden;";
         }
-        else
-        {
-            if (Rotated == false)
-            {
-                if (LegendExtraWidth == 0)
-                {
-                    return $"position: relative; height: {TargetContainerSize}; width: {realSize}; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
-                }
-                widthValue = $"calc({realSize} + {LegendExtraWidth}px)";
-                return $"position: relative; height: {TargetContainerSize}; width: {widthValue}; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
-            }
-            //iffy now.
-            int cardHeight;
-            if (TargetImageHeight > 0)
-            {
-                cardHeight = TargetImageHeight;
-            }
-            else
-            {
-                if (TargetImageSize.ToLower().EndsWith("vh") == false)
-                {
-                    throw new CustomBasicException("Must end with view height for now");
-                }
-                string tempValue = TargetImageSize.ToLower().Replace("vh", "");
-                cardHeight = int.Parse(tempValue);
-            }
-            cardHeight += 2;
-            if (LegendExtraWidth == 0)
-            {
-                return $"position: relative; height: {TargetContainerSize}; width: {cardHeight}vh; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
-            }
-            widthValue = $"{cardHeight}vh";
-            if (LegendExtraWidth > 0)
-            {
-                widthValue = $"calc({cardHeight}vh + {LegendExtraWidth}px)";
-            }
-            return $"position: relative; height: {TargetContainerSize}; width: {widthValue}; overflow-y: auto; overflow-x: hidden; padding-right: {PaddingRight}px;";
-        }
+
+        string height = string.IsNullOrWhiteSpace(TargetContainerSize)
+            ? GetHeightWithNoContainerSize()
+            : TargetContainerSize;
+
+        return common +
+            $" width: {Pixels(Width + LegendExtraWidth)};" +
+            $" height: {height};" +
+            " overflow-y: auto; overflow-x: hidden;";
     }
     private string GetCardStyle(int index)
     {
-        //this should not channge.
-        int cardHeight;
-        if (TargetImageHeight > 0)
-        {
-            cardHeight = TargetImageHeight;
-        }
-        else
-        {
-            if (!TargetImageSize.ToLower().EndsWith("vh"))
-            {
-                throw new CustomBasicException("Must end with view height for now");
-            }
-            string tempValue = TargetImageSize.ToLower().Replace("vh", "");
-            cardHeight = int.Parse(tempValue);
-        }
-        double realSpacing;
-        if (AdditionalSpacing <= 0)
-        {
-            realSpacing = -1;
-        }
-        else if (AdditionalSpacing == 1)
-        {
-            realSpacing = 0;
-        }
-        else
-        {
-            realSpacing = AdditionalSpacing;
-        }
+        var (Width, _) = GetCardSize();
+        double offset = GetCardStep() * index;
+
         if (HandType == EnumHandList.Horizontal)
         {
-            var card = new D();
-            double aspectRatio = card.DefaultSize.Width / card.DefaultSize.Height;
-            double cardWidthVH = cardHeight * aspectRatio;
-
-            double spacingVH = Divider <= 1
-                ? cardWidthVH + realSpacing
-                : (cardWidthVH / Divider) + realSpacing;
-
-            double leftVH = spacingVH * index;
-            return $"position: absolute; top: 0; left: {leftVH}vh; width: {cardWidthVH}vh;";
+            return "position: absolute; top: 0;" +
+                $" left: {Pixels(offset)};" +
+                $" width: {Pixels(Width)};";
         }
 
-        // For vertical layout:
-        double spacingForTopVH;
-
-        if (Rotated)
-        {
-            var card = new D();
-            double aspectRatio = card.DefaultSize.Width / card.DefaultSize.Height;
-            double rotatedHeightVH = cardHeight * aspectRatio;
-
-            spacingForTopVH = Divider <= 1
-                ? rotatedHeightVH + realSpacing
-                : (rotatedHeightVH / Divider) + realSpacing;
-        }
-        else
-        {
-            spacingForTopVH = Divider <= 1
-                ? cardHeight + realSpacing
-                : (cardHeight / Divider) + realSpacing;
-        }
-
-        double topVH = spacingForTopVH * index;
-        return $"position: absolute; top: {topVH}vh; left: 0;";
+        return "position: absolute; left: 0;" +
+            $" top: {Pixels(offset)};" +
+            $" width: {Pixels(Width)};";
     }
 
-    private (double widthVH, double heightVH) CalculateHandMax()
+    private (double Width, double Height) CalculateHandMax()
     {
-        var card = new D();
-        var defaultSize = card.DefaultSize;
-        int max = Hand?.Maximum ?? 0;
-        double divider = Divider <= 0 ? 1 : Divider;
-        double spacing = AdditionalSpacing;
-
-        if (HandType == EnumHandList.Horizontal)
-        {
-            double aspectRatio = defaultSize.Width / defaultSize.Height;
-            double cardHeight = TargetImageHeight > 0
-                ? TargetImageHeight
-                : double.TryParse(TargetImageSize.Replace("vh", ""), out var h) ? h : defaultSize.Height;
-
-            double cardWidth = cardHeight * aspectRatio;
-            double extras = divider <= 1 ? cardWidth + spacing : (cardWidth / divider) + spacing;
-            // The last card's right edge is at extras * (max - 1) + cardWidth
-            double totalWidth = (extras * (max - 1)) + cardWidth;
-            totalWidth += 1;
-            cardHeight += 1;
-            return (totalWidth, cardHeight);
-        }
-        else
-        {
-            double cardHeight = TargetImageHeight > 0
-                ? TargetImageHeight
-                : double.TryParse(TargetImageSize.Replace("vh", ""), out var h) ? h : defaultSize.Height;
-
-            double extras = divider <= 1 ? cardHeight + spacing : (cardHeight / divider) + spacing;
-            // The last card's bottom edge is at extras * (max - 1) + cardHeight
-            double totalHeight = (extras * (max - 1)) + cardHeight;
-            double cardWidth = defaultSize.Width / defaultSize.Height * cardHeight;
-            cardWidth += 1;
-            totalHeight += 1;
-            return (cardWidth, totalHeight);
-        }
+        return GetHandSize(Hand?.Maximum ?? 0);
     }
 
-    private (double widthVH, double heightVH) GetMinimumSize()
+    private (double Width, double Height) GetMinimumSize()
     {
-        var card = new D();
-        var defaultSize = card.DefaultSize;
-        double cardHeight = TargetImageHeight > 0
-            ? TargetImageHeight
-            : double.TryParse(TargetImageSize.Replace("vh", ""), out var h) ? h : defaultSize.Height;
+        var (Width, Height) = GetCardSize();
 
-        double aspectRatio = defaultSize.Width / defaultSize.Height;
-        double cardWidth = cardHeight * aspectRatio;
-       
         if (HandType == EnumHandList.Horizontal)
         {
-            return (cardWidth * 3, cardHeight);
+            return (Width * 2, Height);
         }
-        else
-        {
-            return (cardWidth, cardHeight * 3);
-        }
+
+        return (Width, Height * 2);
     }
     private async Task BoardClicked()
     {

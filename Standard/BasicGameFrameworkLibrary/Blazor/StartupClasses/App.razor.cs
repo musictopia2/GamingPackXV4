@@ -6,9 +6,9 @@ public partial class App
     private BasicList<Assembly> _additionalAssemblies = [];
     public static string AppStyleName { get; set; } = "";
 
-    private BasicList<string> _files =
+    private readonly BasicList<string> _files =
 [
-    "_content/BasicGameFrameworkLibrary/basicgaming.css?v=3"
+    "_content/BasicGameFrameworkLibrary/basicgaming.css?v=5"
 ];
 
     //private BasicList<string> _files = ["_content/BasicGameFrameworkLibrary/basicgaming.css"];
@@ -21,6 +21,7 @@ public partial class App
                     AdditionalAssembly
                 ];
         }
+        //BasicBlazorLibrary.Components.Toasts.BlazoredToasts.Timeout = 30;
         BasicBlazorLibrary.Components.Toasts.BlazoredToasts.Timeout = 3;
     }
 }

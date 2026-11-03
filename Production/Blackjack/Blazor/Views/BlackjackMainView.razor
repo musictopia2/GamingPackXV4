@@ -1,0 +1,50 @@
+@inherits CascadingGameView<BlackjackMainViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+<StateContentView DataContext="DataContext">
+    <StackLayout ItemSpacing="10px">
+        <StackItem>
+            <div>
+                <DeckOfCardsDrawPileBlazor R="BlackjackCardInfo" DeckPile="DataContext.DeckPile" />
+            </div>
+            <div>
+                <LabelGridComponent Labels="WinLabels" DataContext="DataContext" />
+            </div>
+        </StackItem>
+        <StackItem>
+            <StackLayout>
+                <StackItem>
+                    <div>
+                        <DeckOfCardsHandBlazor R="BlackjackCardInfo" Hand="DataContext.ComputerStack" />
+                    </div>
+                    <div>
+                        <DeckOfCardsHandBlazor R="BlackjackCardInfo" Hand="DataContext.HumanStack" />
+                    </div>
+                    <div>
+                        <LabelGridComponent Labels="PointLabels" DataContext="DataContext" />
+                    </div>
+
+                    <div>
+                        <GameActionButton CommandObject="HitCommand" Display="Hit Me" />
+                    </div>
+                    <div>
+                        <GameActionButton CommandObject="StayCommand" Display="Stay" />
+                    </div>
+                </StackItem>
+                @if (DataContext.NeedsAceChoice)
+                {
+                    <StackItem>
+                        <div>
+                            <GameActionButton CommandObject="AceCommand" CommandParameter="EnumAceChoice.Low" Display="Use Ace As One (1)" />
+                        </div>
+                        <div>
+                            <GameActionButton CommandObject="AceCommand" CommandParameter="EnumAceChoice.High" Display="Use Ace As 11 (11)" />
+                        </div>
+                    </StackItem>
+                }
+            </StackLayout>
+        </StackItem>
+    </StackLayout>
+</StateContentView>

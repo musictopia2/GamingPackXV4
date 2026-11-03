@@ -111,12 +111,8 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
     {
         get
         {
-            float heights = _labelHeight + CalculateHeight();
-            if (TotalRows == 2)
-            {
-                heights *= 2;
-            }
-            heights += _marginBottom * 3;
+            // Reserve the same device-scaled pixels used by the card positions.
+            int heights = GetCardTop(TotalRows) + CalculateHeight() + _marginBottom.HeightPixels;
             if (TotalColumns == 2)
             {
                 float widths;
@@ -129,14 +125,14 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
                 {
                     widths = 70;
                 }
-                return $"height: {heights}vh; width: {widths}vw;";
+                return $"height: {heights}px; width: {widths}vw;";
             }
-            return $"height: {heights}vh; width: 50vw;";
+            return $"height: {heights}px; width: 50vw;";
         }
     }
     private static string GetCardCss(T card)
     {
-        return $"position: absolute; top: {card.Location.Y}vh; left: {card.Location.X}vw;";
+        return $"position: absolute; top: {card.Location.Y}px; left: {card.Location.X}vw;";
     }
     private T GetCardInfo(TrickCoordinate trick)
     {
@@ -158,32 +154,16 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
         int lefts = GetLeft(trick.Column);
         return $"left: {lefts}vw;";
     }
+    private int RowHeight => _labelHeight.HeightPixels + CalculateHeight() + 2 * _marginBottom.HeightPixels;
     private int GetCardTop(int row)
     {
-        int tops;
-        tops = _labelHeight + _marginBottom;
-        if (row == 1)
-        {
-            return tops;
-        }
-        int adds = TargetHeight;
-        tops *= 2;
-        tops += adds += _marginBottom;
-        return tops;
+        return (row - 1) * RowHeight + _labelHeight.HeightPixels + _marginBottom.HeightPixels;
     }
     private string GetLabelTop(TrickCoordinate trick)
     {
-        if (trick.Row == 1)
-        {
-            return "top: 0px;";
-        }
-        int tops;
-        tops = _labelHeight + _marginBottom;
-        tops += TargetHeight;
-        tops += _marginBottom;
-        return $"top: {tops}vh;";
+        return $"top: {(trick.Row - 1) * RowHeight}px;";
     }
-    private string RealLabelHeight => $"font-size: {_labelHeight}vh;";
+    private string RealLabelHeight => $"font-size: {_labelHeight.HeightPixels}px;";
     private string GetLabelCss(TrickCoordinate trick)
     {
         string lefts = GetLeft(trick);
@@ -198,8 +178,7 @@ public partial class BaseSeveralPlayersTrickBlazor<P, B, S, T> : IHandleAsync<An
     }
     private int CalculateHeight()
     {
-        var firsts = TargetHeight * _tempSize.Width;
-        return (int)firsts / (int)_tempSize.Width;
+        return TargetHeight.HeightPixels;
     }
 
     protected virtual void Dispose(bool disposing)

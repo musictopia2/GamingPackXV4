@@ -1,0 +1,17 @@
+@inherits CascadingGameView<FroggiesMainViewModel>
+<StackLayout>
+    <StackItem>
+        <StateContentView DataContext="DataContext">
+            <GameBoardBlazor @key="DataContext!.DrawVersion" />
+        </StateContentView>
+        
+    </StackItem>
+    <StackItem>
+        <div>
+            <GameActionButton CommandObject="DataContext!.RedoCommand" Display="Redo Game" />
+        </div>
+        <div>
+            <LabelGridComponent Labels="@Labels" DataContext="DataContext" />
+        </div>
+    </StackItem>
+</StackLayout>

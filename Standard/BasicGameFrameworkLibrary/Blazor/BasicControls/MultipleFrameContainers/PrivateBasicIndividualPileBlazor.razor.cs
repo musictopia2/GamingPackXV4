@@ -64,7 +64,7 @@ public partial class PrivateBasicIndividualPileBlazor<D>
     {
         return $"0 0 {card.DefaultSize.Width} {card.DefaultSize.Height}";
     }
-    private string GetString => TargetHeight.HeightString();
+    private int HeightPixels => ll1.GetHeight(TargetHeight);
     protected override bool ShouldRender()
     {
         return MainGroup!.CanRender();

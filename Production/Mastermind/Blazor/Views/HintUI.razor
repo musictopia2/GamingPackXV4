@@ -1,0 +1,27 @@
+﻿@using gg1 = Global;
+@using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
+@if (YourGuess == null)
+{
+    return;
+}
+@for (int i = 0; i < YourGuess.HowManyBlacks; i++)
+{
+    <BasePieceGraphics HeightPercent="@gg1.BeadHeight">
+        <CirclePiece NeedsWhiteBorders="true" MainColor="@cc1.Black" />
+    </BasePieceGraphics>
+}
+@for (int i = 0; i < YourGuess.HowManyAquas; i++)
+{
+    <BasePieceGraphics HeightPercent="@gg1.BeadHeight">
+        <CirclePiece NeedsWhiteBorders="true" MainColor="@cc1.Aqua" />
+    </BasePieceGraphics>
+}
+@{
+    int leftovers = LeftOvers;
+}
+@for (int i = 0; i < LeftOvers; i++)
+{
+    <BasePieceGraphics HeightPercent="@gg1.BeadHeight">
+        <CirclePiece NeedsWhiteBorders="true" MainColor="@cc1.Transparent" />
+    </BasePieceGraphics>
+}

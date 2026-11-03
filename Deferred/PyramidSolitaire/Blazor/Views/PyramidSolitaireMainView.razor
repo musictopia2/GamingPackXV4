@@ -1,4 +1,4 @@
-@inherits BasicGameView<PyramidSolitaireMainViewModel>
+@inherits CascadingGameView<PyramidSolitaireMainViewModel>
 @if (DataContext!.DeckPile != null)
 {
     <StackLayout ItemSpacing="10px">
@@ -18,7 +18,7 @@
                 <DeckOfCardsCardBoardBlazor R="SolitaireCard" DataContext="DataContext.PlayList1" />
             </div>
             <div>
-                <GameButtonComponent Display="Play Selected Cards" CommandObject="DataContext.PlaySelectedCardsCommand" />
+                <GameActionButtonComponent Display="Play Selected Cards" CommandObject="DataContext.PlaySelectedCardsCommand" />
             </div>
             <div>
                 Score @DataContext.Score

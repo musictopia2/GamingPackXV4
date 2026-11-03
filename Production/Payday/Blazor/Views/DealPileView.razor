@@ -1,0 +1,11 @@
+﻿@if (VMData == null)
+{
+    return;
+}
+<ActionContentView Key="@PaydayActions.Yardsale">
+    <BaseSingleMiscPileBlazor D="DealCard" SinglePile="VMData.DealPile" UseKey="false">
+        <MainTemplate Context="Card">
+            <PaydayCardBlazor HeightPixels="@TargetHeight.HeightPixels" DeckObject="Card" />
+        </MainTemplate>
+    </BaseSingleMiscPileBlazor>
+</ActionContentView>

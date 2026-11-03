@@ -1,52 +1,31 @@
 namespace PyramidSolitaire.Core.ViewModels;
 [InstanceGame]
-public partial class PyramidSolitaireMainViewModel : ScreenViewModel,
-        IBasicEnableProcess,
-        IBlankGameVM,
-        IAggregatorContainer,
+public partial class PyramidSolitaireMainViewModel(CommandContainer commandContainer,
+    IEventAggregator aggregator,
+    IGamePackageResolver resolver,
+        BasicData basicData,
+        IToast toast,
+        IMessageBox message
+
+        ) : IBasicEnableProcess,
+    IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>,
         IHandle<MoveEventModel>,
         IHandle<ScoreEventModel>,
         ITriangleVM
 {
-    private readonly BasicData _basicData;
-    private readonly IToast _toast;
-    private readonly IMessageBox _message;
-    private readonly PyramidSolitaireMainGameClass _mainGame;
-    public DeckObservablePile<SolitaireCard> DeckPile { get; set; }
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    private PyramidSolitaireMainGameClass _mainGame = null!;
+    public DeckObservablePile<SolitaireCard> DeckPile { get; set; } = null!;
     public int Score { get; set; }
-    public PlayList PlayList1;
-    public TriangleBoard GameBoard1;
-    public SingleObservablePile<SolitaireCard> Discard;
-    public SingleObservablePile<SolitaireCard> CurrentPile;
-    [Command(EnumCommandCategory.Plain)]
-    public async Task PlaySelectedCardsAsync()
+    public PlayList PlayList1 =  null!;
+    public TriangleBoard GameBoard1 = null!;
+    public SingleObservablePile<SolitaireCard> Discard = null!;
+    public SingleObservablePile<SolitaireCard> CurrentPile = null!;
+    void IMainGameVM.Initialize()
     {
-        if (_mainGame.HasPlayedCard() == false)
-        {
-            _toast.ShowUserErrorToast("Sorry, there is no card to play");
-            return;
-        }
-        if (_mainGame.IsValidMove() == false)
-        {
-            _toast.ShowUserErrorToast("Illegal Move");
-            _mainGame.PutBack();
-            return;
-        }
-        await _mainGame.PlayCardsAsync();
-    }
-    public PyramidSolitaireMainViewModel(IEventAggregator aggregator,
-        CommandContainer commandContainer,
-        IGamePackageResolver resolver,
-        BasicData basicData,
-        IToast toast,
-        IMessageBox message
-        ) : base(aggregator)
-    {
-        CommandContainer = commandContainer;
-        _basicData = basicData;
-        _toast = toast;
-        _message = message;
-        CommandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
+        Subscribe();
+        commandContainer.ExecutingChanged = CommandContainer_ExecutingChanged;
         DeckPile = resolver.ReplaceObject<DeckObservablePile<SolitaireCard>>();
         DeckPile.DeckClickedAsync = DeckPile_DeckClickedAsync;
         DeckPile.NeverAutoDisable = true;
@@ -64,15 +43,44 @@ public partial class PyramidSolitaireMainViewModel : ScreenViewModel,
         CurrentPile.Text = "Current";
         CurrentPile.CurrentOnly = true;
         CurrentPile.PileClickedAsync = CurrentPile_PileClickedAsync;
-        Discard = new SingleObservablePile<SolitaireCard>(CommandContainer);
+        Discard = new SingleObservablePile<SolitaireCard>(commandContainer);
         Discard.SendEnableProcesses(this, () => Discard.PileEmpty() == false);
         Discard.Text = "Discard";
         Discard.PileClickedAsync = Discard_PileClickedAsync;
-        PlayList1 = new PlayList(CommandContainer);
+        PlayList1 = new PlayList(commandContainer);
         PlayList1.SendEnableProcesses(this, () => PlayList1.HasChosenCards());
         PlayList1.Visible = true;
-        GameBoard1 = new TriangleBoard(this, CommandContainer, _mainGame);
-        CreateCommands(CommandContainer);
+        GameBoard1 = new TriangleBoard(this, commandContainer, _mainGame);
+        CreateCommands(commandContainer);
+    }
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
+    {
+        basicData.GameDataLoading = false;
+        await _mainGame.NewGameAsync(this);
+        DeckPile.IsEnabled = true;
+        commandContainer.UpdateAll();
+    }
+    async Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        commandContainer.ExecutingChanged = null;
+        Unsubscribe();
+    }
+
+    [Command(EnumCommandCategory.Plain)]
+    public async Task PlaySelectedCardsAsync()
+    {
+        if (_mainGame.HasPlayedCard() == false)
+        {
+            toast.ShowUserErrorToast("Sorry, there is no card to play");
+            return;
+        }
+        if (_mainGame.IsValidMove() == false)
+        {
+            toast.ShowUserErrorToast("Illegal Move");
+            _mainGame.PutBack();
+            return;
+        }
+        await _mainGame.PlayCardsAsync();
     }
     partial void CreateCommands(CommandContainer container);
     private async Task DeckPile_DeckClickedAsync()
@@ -81,7 +89,7 @@ public partial class PyramidSolitaireMainViewModel : ScreenViewModel,
     }
     private async void CommandContainer_ExecutingChanged()
     {
-        if (CommandContainer.IsExecuting)
+        if (commandContainer.IsExecuting)
         {
             return;
         }
@@ -90,18 +98,9 @@ public partial class PyramidSolitaireMainViewModel : ScreenViewModel,
             await _mainGame.SaveStateAsync();
         }
     }
-    public CommandContainer CommandContainer { get; set; }
     public bool CanEnableBasics()
     {
         return true; //because maybe you can't enable it.
-    }
-    protected override async Task ActivateAsync()
-    {
-        _basicData.GameDataLoading = false;
-        await base.ActivateAsync();
-        await _mainGame.NewGameAsync(this);
-        DeckPile.IsEnabled = true;
-        CommandContainer.UpdateAll();
     }
     void IHandle<MoveEventModel>.Handle(MoveEventModel message)
     {
@@ -119,7 +118,7 @@ public partial class PyramidSolitaireMainViewModel : ScreenViewModel,
         }
         if (PlayList1!.AlreadyHasTwoCards())
         {
-            await _message.ShowMessageAsync("Sorry, 2 has already been selected");
+            await message.ShowMessageAsync("Sorry, 2 has already been selected");
             return;
         }
         var thisCard = Discard.GetCardInfo();
@@ -135,7 +134,7 @@ public partial class PyramidSolitaireMainViewModel : ScreenViewModel,
         }
         if (PlayList1!.AlreadyHasTwoCards())
         {
-            await _message.ShowMessageAsync("Sorry, 2 has already been selected");
+            await message.ShowMessageAsync("Sorry, 2 has already been selected");
             return;
         }
         var thisCard = CurrentPile.GetCardInfo();
@@ -147,7 +146,7 @@ public partial class PyramidSolitaireMainViewModel : ScreenViewModel,
     {
         if (PlayList1!.AlreadyHasTwoCards())
         {
-            await _message.ShowMessageAsync("Sorry, 2 has already been selected");
+            await message.ShowMessageAsync("Sorry, 2 has already been selected");
             return;
         }
         PlayList1.AddCard(thisCard);

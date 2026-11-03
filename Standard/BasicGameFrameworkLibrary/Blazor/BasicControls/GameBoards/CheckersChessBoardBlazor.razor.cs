@@ -3,10 +3,17 @@ public partial class CheckersChessBoardBlazor<E, S>
     where E : IFastEnumColorSimple
     where S : CheckersChessSpace<E>, new()
 {
+
+
     [Parameter]
-    public string TargetHeight { get; set; } = "";
-    [Parameter]
-    public string TargetWidth { get; set; } = "";
+    public double HeightPercent { get; set; }
+
+    private string TargetHeight => HeightPercent.HeightPixels;
+
+    //[Parameter]
+    //public string TargetHeight { get; set; } = "";
+    //[Parameter]
+    //public string TargetWidth { get; set; } = "";
     [Parameter]
     public float X { get; set; }
     [Parameter]

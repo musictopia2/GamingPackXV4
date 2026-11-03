@@ -166,6 +166,14 @@ public class SimpleClientClass
             await connection.DisposeAsync();
         }
     }
+
+    //private async Task PrivateDisconnectAsync()
+    //{
+    //    await _hubConnection!.StopAsync();
+    //    await _hubConnection.DisposeAsync();
+    //    _hubConnection = null;
+    //    _isConnected = false;
+    //}
     public async Task HostGameAsync()
     {
         if (NickName == "")
@@ -182,6 +190,9 @@ public class SimpleClientClass
         }
         await _hubConnection!.InvokeAsync("ClientConnectingAsync", NickName, _gameInfo.GameName); //i think
     }
+
+
+
     public async Task BackToMainAsync()
     {
         try
@@ -198,6 +209,24 @@ public class SimpleClientClass
             await PrivateDisconnectAsync();
         }
     }
+
+    //public async Task BackToMainAsync()
+    //{
+    //    if (_isConnected == false)
+    //    {
+    //        return;
+    //    }
+    //    if (_hubConnection == null)
+    //    {
+    //        return;
+    //    }
+    //    if (NickName == "")
+    //    {
+    //        return; //i guess if there was no nick name, its okay.
+    //    }
+    //    await _hubConnection.InvokeAsync("BackToMain", NickName);
+    //    //i don't think there is any need to do the rest this time (?)
+    //}
     public async Task StartGameAsync()
     {
         await _hubConnection!.InvokeAsync("StartGameAsync");

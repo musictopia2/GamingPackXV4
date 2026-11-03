@@ -8,8 +8,42 @@ public partial class EnumPickerBlazor<E>
     public int Rows { get; set; } = 1;
     [Parameter]
     public int Columns { get; set; }
+
+
     [Parameter]
-    public string TargetSize { get; set; } = "25vh";
+    public EnumSize? SizeCategory { get; set; }
+
+
+    private string GetEnumChooserItemHeight()
+    {
+        EnumGameLayoutMode layoutMode = ll1.LayoutMode;
+        EnumSize size = SizeCategory ?? gg1.ChooserItemHeight;
+
+        return layoutMode switch
+        {
+            EnumGameLayoutMode.Desktop => size switch
+            {
+                EnumSize.Standard => "300px",
+                EnumSize.Large => "600px",
+                _ => "80px"
+            },
+            EnumGameLayoutMode.Tablet => size switch
+            {
+                EnumSize.Standard => "200px",
+                EnumSize.Large => "400px",
+                _ => "60px"
+            },
+            _ => size switch
+            {
+                EnumSize.Large => "200px",
+                EnumSize.Small => "40px",
+                _ => "80px"
+            }
+        };
+    }
+
+    //[Parameter]
+    //public string TargetSize { get; set; } = "25vh";
     [Parameter]
     public RenderFragment<BasicPickerData<E>>? ChildContent { get; set; }
     private int TotalRows()

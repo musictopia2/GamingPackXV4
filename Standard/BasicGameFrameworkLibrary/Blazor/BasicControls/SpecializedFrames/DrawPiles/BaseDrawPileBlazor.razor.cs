@@ -8,11 +8,25 @@ public partial class BaseDrawPileBlazor<D> : IDisposable, IHandleAsync<AnimateCa
         None, Top, Bottom
     }
     [CascadingParameter]
-    public int TargetHeight { get; set; } = 15; //can experiment to see what the default should be.
+    public int TargetHeight { get; set; } = 21; //can experiment to see what the default should be.
     [Parameter]
     public DeckObservablePile<D>? DeckPile { get; set; }
     [Parameter]
     public string DeckAnimationTag { get; set; } = "maindeck";
+
+
+    private RenderFragment DeckLegend => builder =>
+    {
+        builder.OpenComponent<DeckLegendComponent>(0);
+        builder.AddAttribute(
+            1, nameof(DeckLegendComponent.Count), DeckPile!.TextCount);
+        builder.AddAttribute(
+            2, nameof(DeckLegendComponent.SizeCategory), SizeCategory);
+        builder.CloseComponent();
+    };
+
+    [Parameter]
+    public EnumSize? SizeCategory { get; set; }
     private AnimateDeckImageTimer? _animates;
     public BaseDrawPileBlazor(){ }
     private partial void Subscribe(string tag);
@@ -33,13 +47,13 @@ public partial class BaseDrawPileBlazor<D> : IDisposable, IHandleAsync<AnimateCa
 #pragma warning restore IDE0052 // Remove unread private members
     private float GetHalfTop()
     {
-        var firsts = _defaultSize.Width * TargetHeight;
-        return firsts / _defaultSize.Height;
+        return ll1.GetHeight(TargetHeight) / 2f;
     }
+
     private string GetMarginsForTextCenter()
     {
         float tops = GetHalfTop();
-        return $"margin-top: -{tops}vh";
+        return FormattableString.Invariant($"margin-top: -{tops}px;");
     }
     private SizeF _defaultSize;
     private bool _disposedValue;

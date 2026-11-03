@@ -1,0 +1,46 @@
+﻿@inherits CascadingGameView<MonopolyCardGameMainViewModel>
+@if (Status == EnumManuelStatus.None)
+{
+    <div>Cannot use monopoly finder because the manuel status is none.  Rethink</div>
+    return;
+}
+@if (Model!.Calculator1.Status != EnumCalculatorStatus.None)
+{
+    var list = GetYourCards();
+    <CalculatorCreaterComponent 
+        StartCards="_calculatorStart"
+        Calculator1="Model.Calculator1"
+        YourCards=_allOwned />
+    return;
+}
+<div>
+    <ShowCardBlazor />
+</div>
+<div>
+    <HandBlazor Hand="Model!.TempHand1" TargetContainerSize="95vw" />
+</div>
+<div>
+    @GetInstructions()
+</div>
+<div>
+    <GameActionButton Display="Put Back"
+                         CommandObject="PutBackCommand" />
+    @if (Status == EnumManuelStatus.OrganizingCards)
+    {
+        <GameActionButton Display="Finish Organizing Cards" CustomCallBack="FinishedOrganizingAsync" />
+    }
+    else if (Status == EnumManuelStatus.Final || Status == EnumManuelStatus.OthersLayingDown)
+    {
+        <GameActionButton CommandObject="ManuelCommand" Display="Play Monopolies" />
+    }
+    <GameActionButton Display="Add To Calculator" CustomCallBack="CreateNewCalculator" />
+    <GameActionButton Display="Clear Calculator" CustomCallBack="ClearCalculator" />
+</div>
+<StackLayout>
+    <StackItem>
+        <TempSetsBlazor TargetContainerSize="50vh" Divider="1.5" TempPiles="Model.TempSets1" />
+    </StackItem>
+    <StackItem>
+        <CalculatorResultsComponent Calculations="GetCalculations" />
+    </StackItem>
+</StackLayout>

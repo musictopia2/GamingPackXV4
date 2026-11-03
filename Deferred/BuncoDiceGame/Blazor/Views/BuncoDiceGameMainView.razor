@@ -5,13 +5,13 @@
     </StackItem>
     <StackItem>
         <div>
-            <GameButtonComponent CommandObject="@RollCommand" Display="Roll" />
+            <GameActionButtonComponent CommandObject="@RollCommand" Display="Roll" />
             <DiceListConrolBlazor Cup="DataContext!.ThisCup" D="SimpleDice" />
         </div>
         <div>
-            <GameButtonComponent CommandObject="@BuncoCommand" Display="Bunco" />
-            <GameButtonComponent CommandObject="@Has21Command" Display="Has 21" />
-            <GameButtonComponent CommandObject="@EndTurnCommand" Display="End Turn" />
+            <GameActionButtonComponent CommandObject="@BuncoCommand" Display="Bunco" />
+            <GameActionButtonComponent CommandObject="@Has21Command" Display="Has 21" />
+            <GameActionButtonComponent CommandObject="@EndTurnCommand" Display="End Turn" />
         </div>
         <DetailGameInformationBlazor DataContext="GetStats()" Labels="@Details" Text="Your Statistics" />
     </StackItem>

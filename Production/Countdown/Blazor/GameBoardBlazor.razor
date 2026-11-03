@@ -1,0 +1,14 @@
+﻿@if (GameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <ActionContentView Key="@CountdownActions.Board">
+        @foreach (var player in _players)
+        {
+            <StackItem>
+                <PlayerBoardBlazor TargetHeight="@TargetHeight" Player="player" />
+            </StackItem>
+        }
+    </ActionContentView>
+</StackLayout>

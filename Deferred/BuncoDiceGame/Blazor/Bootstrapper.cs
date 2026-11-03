@@ -1,5 +1,6 @@
 namespace BuncoDiceGame.Blazor;
-public class Bootstrapper : SinglePlayerBootstrapper<BuncoDiceGameShellViewModel>
+public class Bootstrapper(IStartUp starts, EnumGamePackageMode mode,
+    string? globalTestOptionsUrl) : SinglePlayerBootstrapper<BuncoDiceGameShellViewModel>(starts, mode, globalTestOptionsUrl)
 {
     public Bootstrapper(IStartUp starts, EnumGamePackageMode mode) : base(starts, mode)
     {

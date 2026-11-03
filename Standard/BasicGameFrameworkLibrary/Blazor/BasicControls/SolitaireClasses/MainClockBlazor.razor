@@ -1,8 +1,8 @@
-﻿@using BasicGameFrameworkLibrary.Blazor.Views
-@if (DataContext == null || DataContext.ClockList == null)
+﻿@if (DataContext?.ClockList == null)
 {
     return;
 }
+
 <CascadingValue Value="DataContext">
     <div>
         @if (ChildContent != null)
@@ -11,12 +11,15 @@
                 @ChildContent
             </div>
         }
-        @foreach (var clock in DataContext.ClockList)
-        {
-            <div class="mainclockabsolute" style=" @GetPositionStyle(clock) ">
-                <IndividualClockBlazor SingleClock="clock" />
 
-            </div>
-        }
+        <div class="mainclockrelative">
+            @foreach (var clock in DataContext.ClockList)
+            {
+                <div class="mainclockabsolute"
+                     style="@GetPositionStyle(clock)">
+                    <IndividualClockBlazor SingleClock="clock" />
+                </div>
+            }
+        </div>
     </div>
 </CascadingValue>

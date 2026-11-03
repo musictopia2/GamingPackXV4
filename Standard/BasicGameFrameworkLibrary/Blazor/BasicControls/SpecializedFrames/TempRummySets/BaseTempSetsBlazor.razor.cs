@@ -11,7 +11,7 @@ public partial class BaseTempSetsBlazor<SU, CO, RU>
     [Parameter]
     public double AdditionalSpacing { get; set; } = -5;
     [Parameter]
-    public string TargetContainerSize { get; set; } = ""; //if not set, will keep going forever.
+    public double HeightPercent { get; set; } = 0;
     [Parameter]
     public TempSetsObservable<SU, CO, RU>? TempPiles { get; set; }
     private static TempSetInfoBlazor<SU, CO, RU> GetTempInfo(RU image, HandObservable<RU> hand)
@@ -23,5 +23,5 @@ public partial class BaseTempSetsBlazor<SU, CO, RU>
         };
         return output;
     }
-    private string GetStyle => $"height: {TargetContainerSize};";
+    private string GetStyle => $"height: {HeightPercent.HeightPixels};";
 }

@@ -1,0 +1,14 @@
+﻿namespace FourSuitRummy.Core.Data;
+public class SetInfo(CommandContainer command) : SetInfo<EnumSuitList, EnumRegularColorList, RegularRummyCard, SavedSet>(command)
+{
+    public override void LoadSet(SavedSet payLoad)
+    {
+        HandList.ReplaceRange(payLoad.CardList);
+    }
+    public override SavedSet SavedSet()
+    {
+        SavedSet output = new();
+        output.CardList = HandList.ToRegularDeckDict();
+        return output;
+    }
+}

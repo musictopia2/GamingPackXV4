@@ -1,0 +1,16 @@
+﻿@{
+    var list = GetSpaces();
+}
+@foreach (var item in list)
+{
+    var dice = GetDice(item.Own);
+    <SpaceBlazor OnClicked="PossibleClick" MarginTop="4"
+                 Column="item.Column" Row="item.Row">
+        <ColorSpaceComponent Color="@Color"
+                             HeightPercent="HeightPercent">
+            <BasicDiceBlazor HeightPercent="HeightPercent"
+                             Dice="dice"
+                             OnBoardNotOwned="@(item.Own.UsedOn == EnumBasicType.None)" />
+        </ColorSpaceComponent>
+    </SpaceBlazor>
+}

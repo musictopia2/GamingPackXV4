@@ -11,6 +11,10 @@ public partial class LoadPlayerOptionsComponent<P>
     public BasicData? BasicInfo { get; set; }
     [CascadingParameter]
     public MultiplayerOpeningViewModel<P>? DataContext { get; set; }
+
+
+    private EnumSize GetSize => _completeList.Count > 4 ? EnumSize.Small : EnumSize.Standard;
+
     private (ICustomCommand? Method, int Parameter, string Display) CommandData(int amount)
     {
         int increment;

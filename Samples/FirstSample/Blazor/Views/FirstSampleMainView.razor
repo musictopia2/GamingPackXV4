@@ -1,0 +1,16 @@
+@using BasicBlazorLibrary.Components.Repeaters
+@inherits CascadingGameView<FirstSampleMainViewModel>
+<GameLabel SizeCategory="EnumSize.Large" WidthCategory="EnumWidth.Wide">
+    Welcome to First Sample
+</GameLabel>
+<GameLabel SizeCategory="EnumSize.Large">
+    Next Entry
+</GameLabel>
+<SimpleRepeater HowMany="50" Context="item">
+
+    <GameActionButton Display="@GetDisplay(item)" 
+        
+        StartOnNewLine="true" UseSuggestedWidth="true" />
+
+</SimpleRepeater>
+

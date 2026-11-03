@@ -1,0 +1,22 @@
+﻿@using BasicGameFrameworkLibrary.Blazor.GameGraphics.Base
+@if (MainPiles == null || IndividualPile == null || IndividualPile.ObjectList.Count == 0)
+{
+    return;
+}
+
+<StateContentView DataContext="IndividualPile.ObjectList">
+    @if (IndividualPile.ObjectList.Count == 0)
+    {
+        return;
+    }
+    @{
+        var card = IndividualPile.ObjectList.Last();
+    }
+    <FlexibleDeckRenderComponent D="DutchBlitzCardInformation"
+                                 DeckObject="card">
+        <CardGraphicsBlazor DeckObject="card"
+                            CommandParameter="IndividualPile"
+                            CommandObject="MainPiles.PileCommand"
+                            HeightPercent="TargetHeight" />
+    </FlexibleDeckRenderComponent>
+</StateContentView>

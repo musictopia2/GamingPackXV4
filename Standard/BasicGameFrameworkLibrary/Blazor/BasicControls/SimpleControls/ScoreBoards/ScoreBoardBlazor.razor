@@ -1,0 +1,72 @@
+﻿@typeparam P
+@if (CurrentPlayers == null || Columns == null ||
+    CurrentPlayers.Count == 0 || Columns.Count == 0)
+{
+    return;
+}
+<div style="height: @Height; width: @Width; overflow: auto; display:inline-block">
+    <table class="a" style="width: @Width">
+        <thead>
+            <tr>
+                @foreach (var c in Columns)
+                {
+                    if (c.IsHorizontal)
+                    {
+                        <th style="vertical-align: bottom; padding-right: @(c.NumberOfDigits > 0 ? "0" : "10px"); text-align: @(c.NumberOfDigits > 0 ? "right" : "left");">
+                            <CompactLabel 
+                                       SizeCategory="SizeCategory">
+                                @c.Header
+                            </CompactLabel>
+                        </th>
+                    }
+                    else
+                    {
+                        <th style="vertical-align: bottom; padding-right: @(c.NumberOfDigits > 0 ? "0" : "10px"); text-align: @(c.NumberOfDigits > 0 ? "right" : "left");">
+                            <div style="margin-top: 8px">
+                                @foreach (var item in c.Header)
+                                {
+                                    <div class="vertical">
+                                        <CompactLabel SizeCategory="SizeCategory">
+                                            @if (char.IsWhiteSpace(item))
+                                            {
+                                                <text>&nbsp;</text>
+                                            }
+                                            else
+                                            {
+                                                @item
+                                            }
+                                        </CompactLabel>
+                                    </div>
+                                }
+                            </div>
+                        </th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in CurrentPlayers)
+            {
+                <tr>
+                    @foreach (var c in Columns)
+                    {
+                        <td style="margin-left: 2px; margin-right: 2px;">
+                            <CompactLabel SizeCategory="SizeCategory">
+                                @if (c.NumberOfDigits > 0)
+                                {
+                                    <span style="@GetStyle(c)">
+                                        @p.TextToDisplay(c, UseAbbreviationForTrueFalse)
+                                    </span>
+                                }
+                                else
+                                {
+                                    @p.TextToDisplay(c, UseAbbreviationForTrueFalse)
+                                }
+                            </CompactLabel>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

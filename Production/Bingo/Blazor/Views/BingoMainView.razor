@@ -1,0 +1,31 @@
+@inherits CascadingGameView<BingoMainViewModel>
+
+<GridContainer Columns="@ColumnText">
+    <GridItem>
+        <div>
+            <StateContentView DataContext="DataContext!.VMData">
+
+                <GameLabel SizeCategory="EnumSize.Large">
+                    Number Called: @DataContext!.VMData.NumberCalled
+                </GameLabel>
+            </StateContentView>
+        </div>
+        <div>
+            <GridGameBoard S="SpaceInfoCP"
+                           SpaceList="_save!.BingoBoard"
+                           TargetSpaceHeight="100"
+                           TargetSpaceWidth="100">
+                <ItemTemplate Context="Space">
+                    <StateContentView DataContext="Space">
+                        <BingoSpaceBlazor CommandObject="DataContext.SelectSpaceCommand" CommandParameter="Space" />
+                    </StateContentView>
+                </ItemTemplate>
+            </GridGameBoard>
+        </div>
+        
+    </GridItem>
+    <GridItem Column="2">
+        <LabelGridComponent DataContext="DataContext!.VMData" Labels="_labels" />
+        <GameActionButton Display="Bingo" CommandObject="DataContext.BingoCommand" StartOnNewLine="true" />
+    </GridItem>
+</GridContainer>

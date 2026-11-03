@@ -5,7 +5,9 @@ public partial class TriangleBlazor
     public TriangleObservable? DataContext { get; set; }
     [CascadingParameter]
     public int TargetHeight { get; set; }
-    private string TargetWidth => (TargetHeight * DataContext!.TotalColumns).WidthString<SolitaireCard>();
+    private string TargetWidth =>
+    (TargetHeight.HeightPixels * DataContext!.TotalColumns)
+        .WidthString<SolitaireCard>();
     private SizeF GetViewSize()
     {
         var card = new SolitaireCard();

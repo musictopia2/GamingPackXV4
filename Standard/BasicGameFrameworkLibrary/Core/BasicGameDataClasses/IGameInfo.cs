@@ -10,6 +10,5 @@ public interface IGameInfo
     int MinPlayers { get; }
     int MaxPlayers { get; }
     bool CanAutoSave { get; }
-    EnumSmallestSuggested SmallestSuggestedSize { get; } //decided to have just as suggestion.  however, something else will decide what to do.
-    EnumSuggestedOrientation SuggestedOrientation { get; } //decided to have each game decide the suggested orientation.
+    bool SupportsCompactLayout { get; }
 }

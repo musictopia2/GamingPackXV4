@@ -10,4 +10,9 @@ public partial class YahtzeeTopPortionBlazor
     private int GetRow(RowInfo row) => TopList.IndexOf(row) + 2;
     [Parameter]
     public EventCallback<RowInfo> RowClicked { get; set; }
+
+
+    private static double _height = 100;
+    private static string Pixels => _height.HeightPixels;
+
 }

@@ -1,24 +1,20 @@
-
 namespace MahJongSolitaire.Core.ViewModels;
 [InstanceGame]
-public partial class MahJongSolitaireMainViewModel : ScreenViewModel, IBasicEnableProcess, IBlankGameVM, IAggregatorContainer
+public partial class MahJongSolitaireMainViewModel(CommandContainer commandContainer,
+    BasicData basicData, IEventAggregator aggregator, IGamePackageResolver resolver,
+    IRandomGenerator rs
+        ) : IBasicEnableProcess,
+    IMainGameVM, IHandleAsync<OpenMainEventModel>, IHandleAsync<CloseMainEventModel>
 {
-    private readonly MahJongSolitaireSaveInfo _saveRoot;
-    private readonly MahJongSolitaireModGlobal _customGlobal;
-    private readonly BaseMahjongGlobals _mainGlobal;
-    private readonly IRandomGenerator _rs;
-    private readonly BasicData _basicData;
-    public readonly MahJongSolitaireMainGameClass MainGame;
-    public MahJongSolitaireMainViewModel(IEventAggregator aggregator,
-        CommandContainer commandContainer,
-        IRandomGenerator rs,
-        BasicData basicData,
-        IGamePackageResolver resolver) : base(aggregator)
+    private partial void Subscribe();
+    private partial void Unsubscribe();
+    private MahJongSolitaireSaveInfo _saveRoot = null!;
+    private MahJongSolitaireModGlobal _customGlobal = null!;
+    private BaseMahjongGlobals _mainGlobal = null!;
+    public MahJongSolitaireMainGameClass MainGame = null!;
+    void IMainGameVM.Initialize()
     {
-        CommandContainer = commandContainer;
-        _rs = rs;
-        _basicData = basicData;
-        //there are lots of things that has to be replaced here because of new game.
+        Subscribe();
         _saveRoot = resolver.ReplaceObject<MahJongSolitaireSaveInfo>();
         _mainGlobal = resolver.ReplaceObject<BaseMahjongGlobals>();
         _customGlobal = resolver.ReplaceObject<MahJongSolitaireModGlobal>();
@@ -38,7 +34,7 @@ public partial class MahJongSolitaireMainViewModel : ScreenViewModel, IBasicEnab
         TilesGone -= 2;
         MainGame.GameBoard1!.PopulateBoardFromUndo();
         _saveRoot.PreviousList.Clear();
-        CommandContainer.UpdateAll();
+        commandContainer.UpdateAll();
         return Task.CompletedTask;
     }
     public bool CanGetHint => _saveRoot.FirstSelected == 0;
@@ -65,7 +61,7 @@ public partial class MahJongSolitaireMainViewModel : ScreenViewModel, IBasicEnab
 
                         int TempFirst = _saveRoot.FirstSelected;
                         int TempSecond = _customGlobal.SecondSelected;
-                        int ask1 = _rs!.GetRandomNumber(2);
+                        int ask1 = rs.GetRandomNumber(2);
                         if (ask1 == 1)
                         {
                             _saveRoot.FirstSelected = tile1.Deck;
@@ -135,18 +131,20 @@ public partial class MahJongSolitaireMainViewModel : ScreenViewModel, IBasicEnab
         }
         await MainGame.PairSelectedManuallyAsync(() => TilesGone += 2);
     }
-    public CommandContainer CommandContainer { get; set; }
-    IEventAggregator IAggregatorContainer.Aggregator => Aggregator;
     public bool CanEnableBasics()
     {
         return true; //because maybe you can't enable it.
     }
-    protected override async Task ActivateAsync()
+    async Task IHandleAsync<OpenMainEventModel>.HandleAsync(OpenMainEventModel message)
     {
         GameDrawing++;
-        _basicData.GameDataLoading = false;
+        basicData.GameDataLoading = false;
         TilesGone = 0;
-        await base.ActivateAsync();
         await MainGame.NewGameAsync(x => TilesGone = x);
+    }
+
+    async Task IHandleAsync<CloseMainEventModel>.HandleAsync(CloseMainEventModel message)
+    {
+        Unsubscribe();
     }
 }

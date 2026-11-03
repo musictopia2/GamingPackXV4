@@ -1,0 +1,10 @@
+﻿<div @onclick="PrivateColorClick" style="height: @ImageHeight; width: @ImageHeight; background-color: @ColorUsed">
+    <SvgBoard TargetHeight="@ImageHeight" BoardSize="TargetSize">
+        @if (HasPiece)
+        {
+            <BasePieceGraphics LongestSize="36" Location="new(2, 2)" >
+                <PawnPiece MainColor="@ColorUsed.Color" />
+            </BasePieceGraphics>
+        }
+    </SvgBoard>
+</div>

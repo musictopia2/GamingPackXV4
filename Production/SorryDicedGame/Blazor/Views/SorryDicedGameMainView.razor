@@ -1,0 +1,32 @@
+@inherits CascadingGameView<SorryDicedGameMainViewModel>
+<StackLayout>
+    <StackItem Length="55vw">
+        <GameActionButton Display="End Turn" CommandObject="EndCommand" />
+        <GameActionButton Display="Roll Dice" CommandObject="RollCommand" />
+        <CompleteDiceRollerComponent HeightPercent="20" DiceCommand="DiceCommand" />
+        <LabelGridComponent DataContext="DataContext!.VMData" SizeCategory="EnumSize.Small" Labels="_labels" />
+        <StackLayout>
+            <StackItem>
+                <CompleteStartComponent HeightPercent="8"
+                                        BoardList="DataContext!.MainGame.SaveRoot.BoardList"
+                                        StartPieceChosen="ChooseStartCommand"
+                                        Players="DataContext!.MainGame.PlayerList" />
+            </StackItem>
+            @if (SorryDicedGameGameContainer.IsGameOver == false)
+            {
+                <StackItem>
+                    <ScoreBoardBlazor P="SorryDicedGamePlayerItem" Players="DataContext!.MainGame.PlayerList" Columns="_scores" />
+                </StackItem>
+            }
+        </StackLayout>
+        
+    </StackItem>
+    <StackItem>
+        <CompletePlayerBoardComponent HeightPercent="8"
+            BoardList="DataContext!.MainGame.SaveRoot.BoardList"
+            HomeCommand="HomeCommand"
+            WaitingCommand="WaitingCommand"
+            Players="@GetPlayerBoards()"  />
+        
+    </StackItem>
+</StackLayout>

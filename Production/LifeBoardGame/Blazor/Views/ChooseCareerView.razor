@@ -1,0 +1,6 @@
+﻿@inherits ParameterGameView<ChooseCareerViewModel>
+@if (DataContext is null)
+{
+    return;
+}
+<BasicHandChooser B="ChooseCareerViewModel" DataContext="DataContext" />

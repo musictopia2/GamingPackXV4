@@ -1,0 +1,16 @@
+﻿<StateContentView DataContext="SaveInfo">
+    <CanvasLayout ViewPort="@_size"
+                  ContainerHeight="@TargetHeight"
+                  ContainerWidth="@TargetHeight"
+                  BackgroundColor="#6ecacc">
+        <PoliceBoardComponent PoliceUsed="@SaveInfo.NumberOfCops" HeightPercent="HeightPercent" />
+        <SimpleRepeater HowMany=8 Context="item">
+            <PropertyBoardBlazor IsEnabled=IsEnabled OnClicked="() => PossiblePropertyClick(item)" OwnList=SaveInfo.Owns Group="@item" HeightPercent="HeightPercent" />
+        </SimpleRepeater>
+        <TrainSpaceBlazor IsEnabled=IsEnabled OnClicked=PossibleTrainClick OwnList="@SaveInfo.Owns" HeightPercent="HeightPercent" />
+        <UtilitySpaceComponent IsEnabled=IsEnabled HeightPercent="HeightPercent" OwnList="@SaveInfo.Owns" UtilityClicked="PossibleUtilityClick" />
+        <MiscSpaceComponent HeightPercent="HeightPercent" MiscList="MiscList" />
+        <HouseSpaceComponent HeightPercent="HeightPercent" HasHotel=SaveInfo.HasHotel HousesOwned="SaveInfo.NumberOfHouses" />
+        <HouseAnimationComponent HouseDice="HouseDice" HeightPercent="HeightPercent" />
+    </CanvasLayout>
+</StateContentView>

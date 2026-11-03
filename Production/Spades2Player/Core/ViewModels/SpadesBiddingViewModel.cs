@@ -1,0 +1,30 @@
+﻿namespace Spades2Player.Core.ViewModels;
+[InstanceGame]
+public partial class SpadesBiddingViewModel
+{
+    public readonly Spades2PlayerVMData Model;
+    private readonly Spades2PlayerMainGameClass _mainGame;
+    public SpadesBiddingViewModel(CommandContainer commandContainer, Spades2PlayerVMData model, Spades2PlayerMainGameClass mainGame)
+    {
+        Model = model;
+        _mainGame = mainGame;
+        Model.Bid1.ChangedNumberValueAsync = Bid1_ChangedNumberValueAsync;
+        CreateCommands(commandContainer);
+    }
+    partial void CreateCommands(CommandContainer command);
+    private Task Bid1_ChangedNumberValueAsync(int chosen)
+    {
+        Model.BidAmount = chosen;
+        return Task.CompletedTask;
+    }
+    public bool CanBid => Model.BidAmount > -1;
+    [Command(EnumCommandCategory.Plain)]
+    public async Task BidAsync()
+    {
+        if (_mainGame.BasicData!.MultiPlayer == true)
+        {
+            await _mainGame.Network!.SendAllAsync("bid", Model.BidAmount);
+        }
+        await _mainGame.ProcessBidAsync();
+    }
+}

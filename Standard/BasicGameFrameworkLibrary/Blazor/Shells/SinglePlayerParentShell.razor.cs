@@ -15,11 +15,6 @@ public partial class SinglePlayerParentShell
         IStartUp starts = Resolver!.Resolve<IStartUp>();
         starts.StartVariables(BasicData);
         BasicData.ChangeState = ShowChange;
-        //we don't have the command container anymore for now.
-
-
-        //CommandContainer command = Resolver!.Resolve<CommandContainer>();
-        //command.ParentAction = StateHasChanged;
         base.OnInitialized();
     }
     private async void ShowChange()

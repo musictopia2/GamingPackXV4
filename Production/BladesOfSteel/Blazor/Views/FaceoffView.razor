@@ -1,0 +1,18 @@
+﻿@if (VMData is null)
+{
+    return;
+}
+<DeckOfCardsDrawPileBlazor R="RegularSimpleCard" DeckPile="VMData.Deck1" />
+<div>
+    <LabelGridComponent DataContext="VMData" Labels="_labels" />
+</div>
+<StackLayout>
+    <StackItem>
+        <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard" SinglePile="VMData.YourFaceOffCard"
+                                         PileAnimationTag="yourfaceoff" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsSingleMiscPileBlazor R="RegularSimpleCard" SinglePile="VMData.OpponentFaceOffCard"
+                                         PileAnimationTag="opponentfaceoff" />
+    </StackItem>
+</StackLayout>

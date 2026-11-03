@@ -1,0 +1,33 @@
+@inherits CascadingGameView<HuseHeartsMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <ScoreBoardBlazor P="HuseHeartsPlayerItem"
+                          Columns="_scores"
+                          Players="_gameContainer.SaveRoot.PlayerList" />
+    </StackItem>
+    <StackItem>
+        <LabelGridComponent SizeCategory="EnumSize.Small" DataContext="_vmData" Labels="_labels" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsSeveralPlayersTrickBlazor B="HuseHeartsTrickAreaCP" P="HuseHeartsPlayerItem" T="HuseHeartsCardInformation" DataContext="_vmData.TrickArea1" />
+    </StackItem>
+    <StackItem>
+        <PassingView DataContext="DataContext.PassingScreen" />
+    </StackItem>
+    <StackItem>
+        <MoonView DataContext="DataContext.MoonScreen" />
+    </StackItem>
+    <StackItem>
+        <DeckOfCardsHandBlazor AdditionalSpacing="1" R="HuseHeartsCardInformation" Hand="_vmData.Blind1" />
+    </StackItem>
+</StackLayout>
+<div>
+    <DeckOfCardsHandBlazor R="HuseHeartsCardInformation" Divider="1.4" Hand="_vmData.PlayerHand1" />
+</div>
+<div>
+    <DeckOfCardsHandBlazor R="HuseHeartsCardInformation" Divider="1.4" Hand="_vmData.Dummy1" />
+</div>

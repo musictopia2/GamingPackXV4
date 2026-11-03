@@ -1,0 +1,29 @@
+﻿@inherits CascadingGameView<PickelBidViewModel>
+@if (DataContext == null)
+{
+    return;
+}
+<BaseFrameBlazor>
+    <LegendContent>
+        Bid Info
+    </LegendContent>
+    <ChildContent>
+        <div>
+        <NumberChooserBlazor NumberPicker="DataContext.Model.Bid1" />
+    </div>
+    <div>
+        <EnumPickerBlazor E="EnumSuitList"
+                          Context="piece"
+                          ListPicker="DataContext.Model.Suit1">
+            <DeckPiece Suit="piece.EnumValue" />
+        </EnumPickerBlazor>
+    </div>
+    <div>
+        <GameActionButton CommandObject="BidCommand"
+                             Display="Place Bid" />
+        <GameActionButton CommandObject="PassCommand"
+                             Display="Pass" />
+    </div>
+    </ChildContent>
+    
+</BaseFrameBlazor>

@@ -10,8 +10,8 @@
             </BaseBoneyardPileBlazor>
         </div>
         <div>
-            <GameButtonComponent CommandObject="EndCommand" Display="End Turn" />
-            <GameButtonComponent CommandObject="LongestCommand" Display="Longest Train" />
+            <GameActionButtonComponent CommandObject="EndCommand" Display="End Turn" />
+            <GameActionButtonComponent CommandObject="LongestCommand" Display="Longest Train" />
         </div>
         <ScoreBoardBlazor P="DominosMexicanTrainPlayerItem" Players="DataContext.GetPlayerList" Columns="_scores" />
         <div>

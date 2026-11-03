@@ -1,0 +1,7 @@
+﻿@inherits ParameterGameView<SayUnoViewModel>
+@if (DataContext is null)
+{
+    return;
+}
+<GameActionButton CommandObject="UnoCommand"
+                     Display="Uno" />

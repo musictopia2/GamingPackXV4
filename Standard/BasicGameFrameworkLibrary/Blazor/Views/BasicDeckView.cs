@@ -3,5 +3,5 @@ public class BasicDeckView<V> : CascadingGameView<V>
 {
     [CascadingParameter]
     private int TargetHeight { get; set; }
-    protected string HeightString => $"{TargetHeight}vh";
+    protected int HeightPixels => ll1.GetHeight(TargetHeight);
 }

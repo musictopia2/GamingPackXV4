@@ -1,0 +1,33 @@
+﻿@if (IsDisabled() == false)
+{
+    @if (StartOnNewLine)
+    {
+        <div>
+            <button class="basicbutton navigation-button action-button" style=" background-color: @BackgroundColor.ToWebColor; @ExtraInfo()" @onclick="Submit">
+                @Display
+            </button>
+        </div>
+        return;
+    }
+    <button class="basicbutton navigation-button action-button" style="background-color: @BackgroundColor.ToWebColor; @ExtraInfo()" @onclick="Submit">
+        @Display
+    </button>
+    return;
+}
+
+@if (StartOnNewLine)
+{
+    <div>
+        <button style="color:gray; background-color: @BackgroundColor.ToWebColor; @ExtraInfo()"
+            class="basicbutton  navigation-button action-button" @onclick="Submit">
+            @Display
+        </button>
+
+    </div>
+    return;
+}
+
+<button style="color:gray; background-color: @BackgroundColor.ToWebColor; @ExtraInfo()"
+        class="basicbutton  navigation-button action-button" @onclick="Submit">
+    @Display
+</button>

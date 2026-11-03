@@ -1,0 +1,19 @@
+﻿@if (CompleteContainer == null)
+{
+    return;
+}
+<BaseFrameBlazor>
+    <LegendContent>
+        Player List
+    </LegendContent>
+    <ChildContent>
+        <ListChooserBlazor SizeCategory="EnumSize.Small"
+                           TextWidth="@ItemWidth"
+                           ListPicker="CompleteContainer.ActionContainer.Player1" />
+        @if (UsePlayerButton && CompleteContainer.ActionContainer.ButtonChoosePlayerVisible)
+        {
+            <GameActionButton CommandObject="Command"
+                                 Display="Choose Player" />
+        }
+    </ChildContent>
+</BaseFrameBlazor>

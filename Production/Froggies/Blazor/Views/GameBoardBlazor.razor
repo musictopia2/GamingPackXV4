@@ -1,0 +1,17 @@
+﻿@inherits CascadingGameView<FroggiesMainViewModel>
+@using System.Drawing;
+@if (Lilies == null || Lilies.Count == 0)
+{
+    return;
+}
+<svg  height="@BoardSize" width="@BoardSize">
+    @foreach (var item in Lilies)
+    {
+        Point point = GetPoint(item);
+        <svg x="@point.X" y="@point.Y" width="@SpaceSize" height="@SpaceSize">
+            <StateContentView DataContext="item">
+                <LilyPadBlazor CommandObject="DataContext!.MakeMoveCommand" CommandParameter="item" Space="item" />
+            </StateContentView>
+        </svg>
+    }
+</svg>

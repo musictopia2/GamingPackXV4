@@ -1,5 +1,6 @@
 ﻿global using CommonBasicLibraries.CollectionClasses;
 global using Microsoft.AspNetCore.Components;
+global using BasicBlazorLibrary.Components.MediaQueries.ParentClasses;
 global using BasicGameFrameworkLibrary.Core.CommonInterfaces;
 global using BasicGameFrameworkLibrary.Blazor.StartupClasses;
 global using Microsoft.Extensions.DependencyInjection;
@@ -18,3 +19,4 @@ global using BasicBlazorLibrary.Helpers;
 global using bb1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.BasicDataFunctions;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.NewGameClasses;
 global using BasicBlazorLibrary.BasicJavascriptClasses;
+global using js1 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.SystemTextJsonStrings;

@@ -1,0 +1,33 @@
+﻿namespace Racko.Core.Data;
+[SingletonGame]
+public class RackoDetailClass : IGameInfo, ICardInfo<RackoCardInformation>
+{
+    EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
+    bool IGameInfo.CanHaveExtraComputerPlayers => false; //can no longer have extra computer players because there was some bugs.  decided for now, not worth fixing.  not as important.
+    EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
+    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
+    public const string GameName = "Racko";
+    string IGameInfo.GameName => GameName;
+    int IGameInfo.NoPlayers => 0;
+    int IGameInfo.MinPlayers => 2;
+    int IGameInfo.MaxPlayers => 4;
+    bool IGameInfo.CanAutoSave => true;
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
+    int ICardInfo<RackoCardInformation>.CardsToPassOut => 10;
+    BasicList<int> ICardInfo<RackoCardInformation>.PlayerExcludeList => [];
+    bool ICardInfo<RackoCardInformation>.AddToDiscardAtBeginning => true;
+    bool ICardInfo<RackoCardInformation>.ReshuffleAllCardsFromDiscard => false;
+    bool ICardInfo<RackoCardInformation>.ShowMessageWhenReshuffling => true;
+    bool ICardInfo<RackoCardInformation>.PassOutAll => false;
+    bool ICardInfo<RackoCardInformation>.PlayerGetsCards => true;
+    bool ICardInfo<RackoCardInformation>.NoPass => false;
+    bool ICardInfo<RackoCardInformation>.NeedsDummyHand => false;
+    DeckRegularDict<RackoCardInformation> ICardInfo<RackoCardInformation>.DummyHand { get; set; } = [];
+    bool ICardInfo<RackoCardInformation>.HasDrawAnimation => true;
+    bool ICardInfo<RackoCardInformation>.CanSortCardsToBeginWith => false;
+    BasicList<int> ICardInfo<RackoCardInformation>.DiscardExcludeList(IListShuffler<RackoCardInformation> deckList)
+    {
+        return [];
+    }
+}

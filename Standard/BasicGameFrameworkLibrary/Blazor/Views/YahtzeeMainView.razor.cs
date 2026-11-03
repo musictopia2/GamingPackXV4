@@ -19,7 +19,7 @@ public partial class YahtzeeMainView<D>
             .AddLabel("Status", nameof(YahtzeeVMData<>.Status))
             .AddLabel("Turn #", nameof(YahtzeeVMData<>.Round));
         _scores.Clear();
-        _scores.AddColumn("Points", false, nameof(YahtzeePlayerItem<>.Points));
+        _scores.AddColumn("Points", true, nameof(YahtzeePlayerItem<>.Points)); //can be horizontal actually.
         base.OnInitialized();
     }
     private ICustomCommand RollCommand => DataContext!.RollDiceCommand!;

@@ -18,10 +18,17 @@ public partial class RawGameBoard : IDisposable, IHandle<RepaintEventModel>
     private partial void Subscribe();
     private partial void Unsubscribe();
     protected virtual bool UseBuiltInAnimations { get; } = true;
+
+
     [Parameter]
-    public string TargetHeight { get; set; } = "";
-    [Parameter]
-    public string TargetWidth { get; set; } = "";
+    [EditorRequired]
+    public double TargetHeight { get; set; }
+
+
+    //[Parameter]
+    //public string TargetHeight { get; set; } = "";
+    //[Parameter]
+    //public string TargetWidth { get; set; } = "";
     [Parameter]
     public float X { get; set; }
     [Parameter]
@@ -37,20 +44,11 @@ public partial class RawGameBoard : IDisposable, IHandle<RepaintEventModel>
 
     private string GetSvgStyle()
     {
-        if (TargetHeight == "" && TargetWidth == "")
+        if (TargetHeight == 0)
         {
             return "";
         }
-        if (TargetHeight != "" && TargetWidth != "")
-        {
-            return "";
-        }
-
-        if (TargetHeight != "")
-        {
-            return $"height: {TargetHeight}";
-        }
-        return $"width: {TargetWidth}";
+        return $"height: {TargetHeight.HeightPixels}";
     }
     private string GetViewBox()
     {

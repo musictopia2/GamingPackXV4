@@ -7,6 +7,6 @@ public abstract partial class BasicSubmitView<VM>
     public VM? DataContext { get; set; }
     private string GetText => DataContext!.Text;
     [Parameter]
-    public string FontSize { get; set; } = "3vh";
+    public EnumSize Size { get; set; }
     protected virtual ICustomCommand Command => DataContext!.Command;
 }

@@ -3,9 +3,10 @@
 <BaseHandBlazor D="R" Hand="Hand" AdditionalSpacing="AdditionalSpacing" Divider="Divider"
                 HandType="HandType" TargetContainerSize="@TargetContainerSize"
                 Rotated="Rotated"
-                FontSizeForFrame="@FontSizeForFrame"
+                SizeCategory="SizeCategory"
                 Bold=@Bold
                 UseKey="UseKey"
-                TargetImageSize="@TargetImageSize" Context="DeckObject">
-    <DeckOfCardsImageBlazor TargetHeight="@RealHeight()" CommandParameter="DeckObject" DeckObject="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" R="R" />
+                LegendExtraWidth="LegendExtraWidth"
+                HeightPixels="@HeightPixels" Context="DeckObject">
+    <DeckOfCardsImageBlazor HeightPixels="@RealHeight()" CommandParameter="DeckObject" DeckObject="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" R="R" />
 </BaseHandBlazor>

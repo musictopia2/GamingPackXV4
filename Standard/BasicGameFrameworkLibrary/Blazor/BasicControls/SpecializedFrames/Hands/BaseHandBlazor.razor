@@ -6,7 +6,6 @@
     return;
 }
 <CascadingValue Value="this">
-
     <SimpleControlView DataContext="Hand">
         @if (Hand.Visible == false)
         {
@@ -14,17 +13,31 @@
         }
         @if (Hand.HasFrame)
         {
-            <fieldset @key="Hand" @onclick="BoardClicked" style="@GetContainerStyle() @GetColorStyle();" disabled="@IsDisabled">
-                <legend style="float:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; max-width:100%; @GetLegendStyle()">@Hand.Text</legend>
-                @for (int i = 0; i < Hand.HandList.Count; i++)
-                {
-                    D card = Hand.HandList[i];
-                    <div style="@GetCardStyle(i)">
-                        <FlexibleDeckRenderComponent D="D" DeckObject="card" UseKey="UseKey">
-                            @ChildContent!(card)
-                        </FlexibleDeckRenderComponent>
+            <fieldset @key="Hand"
+                      @onclick="BoardClicked"
+                      style="display:inline-block; min-width:0; @GetColorStyle();"
+                      disabled="@IsDisabled">
+                <legend style="float:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; max-width:100%; @GetLegendStyle()">
+                    <CompactLabel SizeCategory="SizeCategory">
+                        @Hand.Text
+                    </CompactLabel>
+                </legend>
+
+                <div style="@GetContainerStyle()">
+                    <div style="@GetContentStyle()">
+                        @for (int i = 0; i < Hand.HandList.Count; i++)
+                        {
+                            D card = Hand.HandList[i];
+                            <div style="@GetCardStyle(i)">
+                                <FlexibleDeckRenderComponent D="D"
+                                                             DeckObject="card"
+                                                             UseKey="UseKey">
+                                    @ChildContent!(card)
+                                </FlexibleDeckRenderComponent>
+                            </div>
+                        }
                     </div>
-                }
+                </div>
             </fieldset>
         }
         else

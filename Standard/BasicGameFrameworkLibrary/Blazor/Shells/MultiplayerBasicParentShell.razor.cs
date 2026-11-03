@@ -16,15 +16,6 @@ public partial class MultiplayerBasicParentShell
     private bool _hadNickName;
     private bool _fullScreen;
     private string GetDisplay => _fullScreen == false ? "Open Full Screen" : "Exit Full Screen";
-    private string FontSize => Media!.DeviceCategory == EnumDeviceCategory.Phone ? ".8rem;" : "1rem;";
-    private bool IsSupported()
-    {
-        if (Media!.DeviceCategory == EnumDeviceCategory.Phone && GameData!.SmallestSuggestedSize != EnumSmallestSuggested.AnyDevice)
-        {
-            return false;
-        }
-        return true; //for now.
-    }
     protected override void OnInitialized()
     {
         BasicData = Resolver!.Resolve<BasicData>();
@@ -43,8 +34,6 @@ public partial class MultiplayerBasicParentShell
         AdvancedState = Resolver!.Resolve<AdvancedTestStateService>();
         AdvancedState.StateChanged = StateHasChanged;
         Toast = Resolver!.Resolve<IToast>();
-        //CommandContainer command = Resolver!.Resolve<CommandContainer>();
-        //command.ParentAction = StateHasChanged;
         IStartUp starts = Resolver!.Resolve<IStartUp>();
         starts.StartVariables(BasicData);
         if (BasicData.NickName != "")
@@ -88,6 +77,7 @@ public partial class MultiplayerBasicParentShell
     {
         if (_loadedGame == false && GameData!.GameName != "")
         {
+            await JS!.SaveLatestGameAsync(GameData!.GameName, Toast!);
             _loadedGame = true;
         }
         if (BasicData == null || JS == null || _hadNickName)

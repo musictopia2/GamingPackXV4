@@ -12,7 +12,7 @@ public partial class BaseMainRummySetsBlazor<SU, CO, RU, SE, T>
     [Parameter]
     public string ContainerWidth { get; set; } = "";
     [Parameter]
-    public string ContainerHeight { get; set; } = "";
+    public double HeightPercent { get; set; }
     [Parameter]
     public double Divider { get; set; } = 1;
     [Parameter]
@@ -22,6 +22,6 @@ public partial class BaseMainRummySetsBlazor<SU, CO, RU, SE, T>
     private bool IsDisabled => !DataContext!.IsEnabled;
     private string GetContainerStyle()
     {
-        return $"width: {ContainerWidth}; height: {ContainerHeight}; overflow: auto; white-space: nowrap; ";
+        return $"width: {ContainerWidth}; height: {HeightPercent.HeightPixels}; overflow: auto; white-space: nowrap; ";
     }
 }

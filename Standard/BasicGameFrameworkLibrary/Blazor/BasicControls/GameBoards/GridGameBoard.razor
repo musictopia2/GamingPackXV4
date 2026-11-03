@@ -4,9 +4,11 @@
     return;
 }
 <CascadingValue Value="this">
-    <svg height="@GridHeight" width="@GridWidth" preserveAspectRatio="@PreserveAspectRatio" viewBox="0 0 @ImageWidth @ImageHeight">
+    <svg height="@DisplayHeightPixels" width="@DisplayWidthPixels" preserveAspectRatio="@PreserveAspectRatio" viewBox="0 0 @ImageWidth @ImageHeight">
         @if (ColumnList.Count > 0 && RowList.Count > 0)
         {
+
+
             <ColumnRowHeaderBlazor S="S" />
         }
         @for (int r = 0; r < SpaceList!.GetTotalRows(); r++)

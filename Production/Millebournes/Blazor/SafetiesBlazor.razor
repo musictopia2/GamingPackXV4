@@ -1,0 +1,28 @@
+﻿@if (GameContainer == null || Team == null || GameContainer.SingleInfo == null)
+{
+    return;
+}
+<StateContentView DataContext="Team.SafetyList">
+    @foreach (var safety in Team.SafetyList)
+    {
+        @if (safety.WasCoupe)
+        {
+            <div style="font-weight: bold">
+                @safety.SafetyName
+            </div>
+        }
+        else
+        {
+            <div>
+                @safety.SafetyName
+            </div>
+        }
+    }
+</StateContentView>
+@if (Index == 1)
+{
+    <GameActionButton StartOnNewLine="true"
+                         Display="Safety"
+                         CommandObject="SafetyCommand"
+                         CommandParameter="Team" />
+}

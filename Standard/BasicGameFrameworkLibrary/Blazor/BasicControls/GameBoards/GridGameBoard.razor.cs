@@ -2,31 +2,40 @@ namespace BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
 public partial class GridGameBoard<S>
      where S : class, IBasicSpace, new()
 {
+    
     [Parameter]
-    public IBoardCollection<S>? SpaceList { get; set; }
+    public double TargetHeight { get; set; } = 90;
+
+
     [Parameter]
     public string PreserveAspectRatio { get; set; } = "xMinYMin meet";
+
+    protected int HeaderFontSize { get; set; } = 30;
+
+    [Parameter]
+    [EditorRequired]
+    public int TargetSpaceWidth { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public int TargetSpaceHeight { get; set; }
+
+    [Parameter]
+    public int HeaderWidth { get; set; } = 50;
+    [Parameter]
+    public int HeaderHeight { get; set; } = 40;
+    [Parameter]
+    public IBoardCollection<S>? SpaceList { get; set; }
     [Parameter]
     public RenderFragment? Canvas { get; set; }
     [Parameter]
     public RenderFragment<S>? ItemTemplate { get; set; }
     [Parameter]
-    public int TargetSpaceHeight { get; set; }
-    [Parameter]
-    public string GridHeight { get; set; } = "";
-    [Parameter]
-    public string GridWidth { get; set; } = "";
-    [Parameter]
-    public int TargetSpaceWidth { get; set; }
-    [Parameter]
     public BasicList<string> RowList { get; set; } = new();
     [Parameter]
     public BasicList<string> ColumnList { get; set; } = new();
-    protected int HeaderFontSize { get; set; } = 30;
-    [Parameter]
-    public int HeaderWidth { get; set; } = 50;
-    [Parameter]
-    public int HeaderHeight { get; set; } = 40;
+    
+
+
     private float ImageHeight
     {
         get
@@ -57,13 +66,13 @@ public partial class GridGameBoard<S>
         {
             return false;
         }
+        if (TargetHeight <= 0)
+        {
+            return false;
+        }
         if (ColumnList.Count == 0 && RowList.Count == 0)
         {
-            if (GridWidth != "" && GridHeight != "" && SpaceList!.Any() && TargetSpaceHeight > 0)
-            {
-                return true;
-            }
-            return false;
+            return SpaceList!.Any() && TargetSpaceHeight > 0;
         }
         if (ColumnList.Count > 0 && RowList.Count == 0)
         {
@@ -104,4 +113,17 @@ public partial class GridGameBoard<S>
         float nexty = TargetSpaceHeight * (row - 1);
         return new PointF(nextx + startX, nexty + startY);
     }
+
+    private int DisplayHeight => ll1.GetHeight(TargetHeight);
+
+    private double DisplayWidth =>
+        DisplayHeight * (double)ImageWidth / ImageHeight;
+
+    private string DisplayHeightPixels =>
+        DisplayHeight.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px";
+
+    private string DisplayWidthPixels =>
+        DisplayWidth.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px";
+
+
 }

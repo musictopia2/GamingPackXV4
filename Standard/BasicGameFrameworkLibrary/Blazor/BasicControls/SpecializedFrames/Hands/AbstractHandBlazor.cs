@@ -15,7 +15,8 @@ public abstract class AbstractHandBlazor<D> : KeyComponentBase
 
     [Parameter]
     public EnumHandList HandType { get; set; } = EnumHandList.Horizontal;
-
+    [Parameter]
+    public EnumSize? SizeCategory { get; set; }
     [Parameter]
     public double Divider { get; set; } = 1;
     [Parameter]
@@ -34,25 +35,20 @@ public abstract class AbstractHandBlazor<D> : KeyComponentBase
     [Parameter]
 
     public string TargetContainerSize { get; set; } = ""; //if not set, will keep going forever.
-    /// <summary>
-    /// this is where you set the percentage which represents how big the images are
-    /// if horizontal is used, then its the height.  otherwise, its the width.
-    /// 
-    /// </summary>
     [Parameter]
-    public string TargetImageSize { get; set; } = "";
+    public int HeightPixels { get; set; }
     [Parameter]
     public int LegendExtraWidth { get; set; } = 0; // in pixels, default is no extra width
 
-    protected string RealHeight()
+    protected int RealHeight()
     {
-        if (TargetImageSize != "")
+        if (HeightPixels > 0)
         {
-            return TargetImageSize;
+            return HeightPixels;
         }
         if (ImageHeight > 0)
         {
-            return $"{ImageHeight}vh";
+            return ll1.GetHeight(ImageHeight);
         }
         throw new CustomBasicException("Cannot get real height");
     }

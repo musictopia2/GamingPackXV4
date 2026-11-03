@@ -31,13 +31,16 @@
 
             @if (DataContext.OpeningStatus == EnumOpeningStatus.WaitingForHost)
             {
-                <div>Either wait for host to start or cancel</div>
+                <CompactLabel>
+                    Either wait for host to start or cancel
+                </CompactLabel>
+                
             }
             else if (DataContext.OpeningStatus == EnumOpeningStatus.WaitingForOtherPlayersForNewGame)
             {
-                <div>
+                <CompactLabel>
                     Waiting for others players to join for new game.
-                </div>
+                </CompactLabel>
                 <div>
                     <LabelGridComponent DataContext="DataContext" Labels="_labels" />
                 </div>
@@ -49,48 +52,49 @@
                 {
                     @if (DataContext.HostCanStart)
                     {
-                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeMultiplayerGameCommand" Display="Auto Resume Networked Game" />
+                        <GameActionButton  StartOnNewLine="true" CommandObject="DataContext.ResumeMultiplayerGameCommand" Display="Auto Resume Networked Game" />
                     }
                     @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.HostOnly)
                     {
-                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.RejoinMultiplayerGameCommand" Display="Host rejoin Multiplayer Game" />
+                        <GameActionButton StartOnNewLine="true" CommandObject="DataContext.RejoinMultiplayerGameCommand" Display="Host Rejoin Multiplayer Game" />
                     }
                     @if (DataContext.CanShowTransferToDesktop())
                     {
-                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.TransferToDesktopCommand" Display="Transfer To Desktop" />
+                        <GameActionButton StartOnNewLine="true" CommandObject="DataContext.TransferToDesktopCommand" Display="Transfer To Desktop" />
                     }
                     @if (mode == EnumPlayerMode.Any)
                     {
-                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ResumeSinglePlayerCommand" Display="Auto Resume Local Game" />
+                        <GameActionButton StartOnNewLine="true" CommandObject="DataContext.ResumeSinglePlayerCommand" Display="Auto Resume Local Game" />
                     }
                 }
                 @if (DataContext.HasServer)
                 {
                     @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.HostOnly)
                     {
-                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.HostCommand" Display="Start Network Game (Host)" />
+                        <GameActionButton  StartOnNewLine="true" CommandObject="DataContext.HostCommand" Display="Start Network Game (Host)" />
                     }
                     @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.JoinOnly)
                     {
-                        <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.ConnectCommand" Display="Join Network Game" />
+                        <GameActionButton StartOnNewLine="true" CommandObject="DataContext.ConnectCommand" Display="Join Network Game" />
                     }
                 }
 
                 @if (GameData.MinPlayers == 2 && DataContext.HostCanStart)
                 {
-                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game With No Extra Players" />
-                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
+                    <GameActionButton StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game With No Extra Players" />
+                    <GameActionButton StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
                 }
                 if (GameData.MinPlayers > 2 && DataContext.ExtraOptionsVisible == false)
                 {
-                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game With No Extra Players" />
-                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
+                    <GameActionButton  StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game With No Extra Players" />
+                    <GameActionButton  StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
                 }
                 @if (GameData.MinPlayers == 4 && DataContext.HostCanStart)
                 {
-                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game" />
-                    <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
+                    <GameActionButton  CommandObject="DataContext.StartCommand" CommandParameter="0" Display="Start Game" />
+                    <GameActionButton CommandObject="DataContext.DisconnectEverybodyCommand" Display="Disconnect Everybody" />
                 }
+                <GameActionButton StartOnNewLine="true" CommandObject="DataContext.CancelConnectionCommand" Display="Cancel Selection" />
                 @if (DataContext.HostCanStart)
                 {
                     <LabelGridComponent DataContext="DataContext" Labels="_labels" />
@@ -129,7 +133,7 @@
                     }
                 }
             }
-            <GameButtonComponent StartOnNewLine="true" CommandObject="DataContext.CancelConnectionCommand" Display="Cancel Selection" />
+            
         </div>
     </CascadingValue>
 </StateContentView>

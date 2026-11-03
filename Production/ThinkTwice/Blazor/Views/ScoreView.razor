@@ -1,0 +1,30 @@
+﻿@inherits ParameterGameView<ScoreViewModel>
+@if (DataContext is null)
+{
+    return;
+}
+<BaseFrameBlazor
+                 IsEnabled="@DataContext.IsEnabled"
+                 >
+                 <LegendContent>
+                     @DataContext.VMData.DisplayScoreText
+                </LegendContent>
+                <ChildContent>
+                    <ActionContentView Key="@ThinkTwiceActions.Score">
+                        <GridList Context="text" Columns="2" RenderList="DataContext.VMData.TextList">
+                            <GameActionButton CommandObject="ChangeCommand"
+                                                 BackgroundColor="@GetButtonColor(text)"
+                                                 Display="@text"
+                                                 CommandParameter="@text" />
+                        </GridList>
+                    </ActionContentView>
+    
+                    <div>
+                        <GameActionButton CommandObject="ScoreCommand"
+                                             Display="Your Score" />
+                        <GameActionButton CommandObject="DescriptionCommand"
+                                             Display="Description" />
+                    </div>
+                </ChildContent>
+    
+</BaseFrameBlazor>

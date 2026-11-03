@@ -1,0 +1,10 @@
+@inherits CascadingGameView<AccordianSolitaireMainViewModel>
+<StateContentView DataContext="DataContext">
+    @if (DataContext!.DeckPile != null)
+    {
+        <BoardBlazor />
+        <GameLabel>
+            Score: @DataContext.Score
+        </GameLabel>
+    }
+</StateContentView>

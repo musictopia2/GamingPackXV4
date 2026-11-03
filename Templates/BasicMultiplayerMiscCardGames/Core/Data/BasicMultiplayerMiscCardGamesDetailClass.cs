@@ -1,4 +1,4 @@
-namespace BasicMultiplayerMiscCardGames.Core.Data;
+﻿namespace BasicMultiplayerMiscCardGames.Core.Data;
 [SingletonGame]
 public class BasicMultiplayerMiscCardGamesDetailClass : IGameInfo, ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>
 {
@@ -6,13 +6,14 @@ public class BasicMultiplayerMiscCardGamesDetailClass : IGameInfo, ICardInfo<Bas
     bool IGameInfo.CanHaveExtraComputerPlayers => false;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.HumanOnly;
     EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly;
-    string IGameInfo.GameName => "Game";
+    public const string GameName = "Game";
+    string IGameInfo.GameName => GameName;
     int IGameInfo.NoPlayers => 0;
     int IGameInfo.MinPlayers => 2;
     int IGameInfo.MaxPlayers => 4;
     bool IGameInfo.CanAutoSave => true;
-    EnumSmallestSuggested IGameInfo.SmallestSuggestedSize => EnumSmallestSuggested.AnyDevice; //default to smallest but can change as needed.
-    EnumSuggestedOrientation IGameInfo.SuggestedOrientation => EnumSuggestedOrientation.Landscape; //default to portrait but can change to what is needed.
+    public const bool SupportsCompactLayout = true;
+    bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;
     int ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.CardsToPassOut => 7; //change to what you need.
     BasicList<int> ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.PlayerExcludeList => [];
     BasicList<int> ICardInfo<BasicMultiplayerMiscCardGamesCardInformation>.DiscardExcludeList(IListShuffler<BasicMultiplayerMiscCardGamesCardInformation> deckList)

@@ -1,0 +1,24 @@
+namespace Xactika.Blazor.Views;
+public partial class XactikaMainView
+{
+    private readonly BasicList<LabelGridModel> _labels = [];
+    private readonly BasicList<ScoreColumnModel> _scores = [];
+    private XactikaVMData? _vmData;
+    private XactikaGameContainer? _gameContainer;
+    protected override void OnInitialized()
+    {
+        _vmData = Resolver!.Resolve<XactikaVMData>();
+        _gameContainer = Resolver.Resolve<XactikaGameContainer>();
+        _labels.AddLabel("Turn", nameof(XactikaVMData.NormalTurn))
+             .AddLabel("Status", nameof(XactikaVMData.Status))
+             .AddLabel("Round", nameof(XactikaVMData.RoundNumber))
+             .AddLabel("Mode", nameof(XactikaVMData.GameModeText));
+        _scores.Clear();
+        _scores.AddColumn("Cards Left", false, nameof(XactikaPlayerItem.ObjectCount), numberOfDigits: 1)
+            .AddColumn("Bid Amount", false, nameof(XactikaPlayerItem.BidAmount), numberOfDigits: 1)
+            .AddColumn("Tricks Won", false, nameof(XactikaPlayerItem.TricksWon), numberOfDigits: 1)
+            .AddColumn("Current Score", false, nameof(XactikaPlayerItem.CurrentScore), numberOfDigits: 3)
+            .AddColumn("Total Score", false, nameof(XactikaPlayerItem.TotalScore), numberOfDigits: 3);
+        base.OnInitialized();
+    }
+}

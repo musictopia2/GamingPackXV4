@@ -1,26 +1,24 @@
 ﻿@using aa1 = BasicGameFrameworkLibrary.Blazor.Helpers.LoaderGlobalClass;
-@using BasicGameFrameworkLibrary.Blazor.Views
-<CascadingValue Value="BasicData">
-    @if (BasicData.GameDataLoading)
-    {
-        return;
-    }
-    <LeftOverLayout>
-        <TopContent>
-            <div style="width: 100%;  background-color: indigo; margin-bottom: 2px; margin-top: 2px; height: 8vh">
-                @if (aa1.BackToMainDelegate is not null)
-                {
-                    <GameButtonComponent CustomCallBack="aa1.BackToMainDelegate" Display="Back To Main" />
-                }
-                <span style="font-size: 5vh">
-                    @GameInfo.GameName
-                </span>
-                <NewGameView />
-                
+<LandscapeShell>
+    <CascadingValue Value="BasicData">
+        <CascadingValue Value="GameInfo">
+            @if (BasicData.GameDataLoading)
+            {
+                return;
+            }
+            <div class="game-shell">
+                <div class="top-bar">
+                    @if (aa1.BackToMainDelegate is not null)
+                    {
+                        <TopBarButton CustomCallBack="aa1.BackToMainDelegate" Display="Back To Main" />
+                    }
+                    <TopBarLabel Display="@GameInfo.GameName" />
+                    <NewGameView />
+                </div>
+                <GameContentShell>
+                    @ChildContent
+                </GameContentShell>
             </div>
-        </TopContent>
-        <MainContent>
-            @ChildContent
-        </MainContent>
-    </LeftOverLayout>
-</CascadingValue>
+        </CascadingValue>
+    </CascadingValue>
+</LandscapeShell>

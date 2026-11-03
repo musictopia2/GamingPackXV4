@@ -1,0 +1,23 @@
+﻿@{
+    var list = GetSpaces();
+}
+@foreach (var item in list)
+{
+    var dice = GetDice(item.Own);
+    <SpaceBlazor OnClicked="PossibleClick"
+                 Column="item.Column" Row="item.Row">
+        <ColorSpaceComponent Color="@Group.Color"
+                             HeightPercent="HeightPercent">
+            @if (item.Own.Group != Group)
+            {
+                <ValueSpaceComponent HeightPercent="HeightPercent"
+                                     Value="@Group.MonopolyValue" />
+            }
+            else
+            {
+                <BasicDiceBlazor HeightPercent="HeightPercent"
+                                 Dice="dice" />
+            }
+        </ColorSpaceComponent>
+    </SpaceBlazor>
+}

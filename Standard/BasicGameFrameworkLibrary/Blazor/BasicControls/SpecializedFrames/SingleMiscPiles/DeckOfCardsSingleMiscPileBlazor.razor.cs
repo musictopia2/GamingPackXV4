@@ -5,13 +5,13 @@ public partial class DeckOfCardsSingleMiscPileBlazor<R>
     [Parameter]
     public bool IsTesting { get; set; }
     [CascadingParameter]
-    public int TargetHeight { get; set; } = 15;
+    public int TargetHeight { get; set; } = 21;
     [Parameter]
     public SingleObservablePile<R>? SinglePile { get; set; }
     [Parameter]
     public bool UseKey { get; set; } = true;
     [Parameter]
     public string PileAnimationTag { get; set; } = "maindiscard";
-    private string RealHeight => $"{TargetHeight}vh";
+    public int HeightPixels => ll1.GetHeight(TargetHeight);
 
 }

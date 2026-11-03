@@ -1,0 +1,16 @@
+﻿<BasicMultiplePilesBlazor D="FlinchCardInformation" Inline="@Inline"
+                          AnimationTag="@AnimationTag"
+                          Piles="@Piles">
+    <CanvasTemplate Context="Card">
+        <CardGraphicsBlazor HeightPercent="TargetHeight" DeckObject="Card" />
+    </CanvasTemplate>
+    <MainTemplate Context="Pile">
+        <PrivateBasicIndividualPileBlazor Context="Card" D="FlinchCardInformation" IndividualPile="Pile">
+            <CardGraphicsBlazor HeightPercent="TargetHeight"
+                                ClickBlank="true"
+                                DeckObject="Card"
+                                CommandParameter="Pile"
+                                CommandObject="Piles!.PileCommand" />
+        </PrivateBasicIndividualPileBlazor>
+    </MainTemplate>
+</BasicMultiplePilesBlazor>

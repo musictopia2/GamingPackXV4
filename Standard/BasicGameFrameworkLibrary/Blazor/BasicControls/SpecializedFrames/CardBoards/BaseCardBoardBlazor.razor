@@ -43,30 +43,32 @@
         }
         else
         {
-            <BaseFrameBlazor @key="DataContext" IsEnabled="DataContext.IsEnabled" Text="@DataContext.Text">
-                <svg height="@GetTargetString" viewBox="0 0 @size.Width @size.Height">
-                    @for (int r = 0; r < rows; r++)
-                    {
-                        x = 0;
-                        for (int c = 0; c < columns; c++)
+            <BaseFrameBlazor @key="DataContext" IsEnabled="DataContext.IsEnabled">
+                <LegendContent>
+                    @DataContext.Text
+                </LegendContent>
+                <ChildContent>
+                    <svg height="@GetTargetString" viewBox="0 0 @size.Width @size.Height">
+                        @for (int r = 0; r < rows; r++)
                         {
-                            if (z + 1 > DataContext.ObjectList.Count)
+                            x = 0;
+                            for (int c = 0; c < columns; c++)
                             {
-                                break;
+                                if (z + 1 > DataContext.ObjectList.Count)
+                                {
+                                    break;
+                                }
+                                var card = DataContext.ObjectList[z];
+                                <g transform="translate(@x, @y)">
+                                    @ChildContent!(card)
+                                </g>
+                                x += DefaultSize.Width;
+                                z++;
                             }
-                            var card = DataContext.ObjectList[z];
-                            <g transform="translate(@x, @y)">
-                                @ChildContent!(card)
-                                @* <FlexibleDeckRenderComponent D="D" DeckObject="card">
-                                
-                            </FlexibleDeckRenderComponent> *@
-                            </g>
-                            x += DefaultSize.Width;
-                            z++;
+                            y += DefaultSize.Height;
                         }
-                        y += DefaultSize.Height;
-                    }
-                </svg>
+                    </svg>
+                </ChildContent>
             </BaseFrameBlazor>
         }
     </VisibleHiddenComponent>

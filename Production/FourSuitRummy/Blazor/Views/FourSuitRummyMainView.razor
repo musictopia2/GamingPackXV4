@@ -1,0 +1,42 @@
+@inherits CascadingGameView<FourSuitRummyMainViewModel>
+@if (_vmData == null || DataContext == null || _gameContainer == null)
+{
+    return;
+}
+<CascadingValue Value="_gameContainer">
+    <div style="height: @HeightPixels">
+        <DeckOfCardsHandBlazor AdditionalSpacing="1" R="RegularRummyCard" Hand="_vmData.PlayerHand1" />
+    </div>
+    <StackLayout>
+        <StackItem>
+            <GameActionButton Display="Play Sets" CommandObject="PlayCommand" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsDrawPileBlazor R="RegularRummyCard" DeckPile="_vmData.Deck1" />
+        </StackItem>
+        <StackItem>
+            <DeckOfCardsSingleMiscPileBlazor R="RegularRummyCard" SinglePile="_vmData.Pile1" />
+        </StackItem>
+        <StackItem>
+            <LabelGridComponent DataContext="_vmData" Labels="_labels" />
+        </StackItem>
+        <StackItem>
+            <ScoreBoardBlazor P="FourSuitRummyPlayerItem"
+                              Columns="_scores"
+                              Players="_gameContainer.SaveRoot.PlayerList" />
+        </StackItem>
+    </StackLayout>
+    <StackLayout>
+        <StackItem>
+            <DeckOfCardsTempSetsBlazor RU="RegularRummyCard"
+                                       HeightPercent="50"
+                                       TempPiles="_vmData.TempSets" />
+        </StackItem>
+        <StackItem>
+            <PlayerSetsView PlayerUsed="GetSelf" />
+        </StackItem>
+        <StackItem>
+            <PlayerSetsView PlayerUsed="GetOpponent" />
+        </StackItem>
+    </StackLayout>
+</CascadingValue>

@@ -1,0 +1,12 @@
+﻿@if (StartsOnNewLine)
+{
+    <div style="line-height: 1.1;  @GetStyle()">
+        @ChildContent
+    </div>
+}
+else
+{
+    <span style="display: inline-block; line-height: 1.1; @GetStyle()">
+        @ChildContent
+    </span>
+}

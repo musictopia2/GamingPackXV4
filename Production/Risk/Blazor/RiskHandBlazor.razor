@@ -1,0 +1,5 @@
+﻿@using BasicGameFrameworkLibrary.Blazor.BasicControls.SpecializedFrames.Hands
+@using Risk.Core.Cards
+<BaseHandBlazor D="RiskCardInfo" AdditionalSpacing="0" Hand="@Hand" Context="DeckObject">
+    <RiskCardsBlazor CommandParameter="DeckObject" DeckObject="DeckObject" CommandObject="Hand!.ObjectSingleClickCommand" />
+</BaseHandBlazor>

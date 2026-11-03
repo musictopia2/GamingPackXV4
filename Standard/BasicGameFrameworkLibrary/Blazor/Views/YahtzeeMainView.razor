@@ -3,6 +3,8 @@
 @using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Data
 @using aa1 = BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 @using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.Containers
+@using BasicGameFrameworkLibrary.Blazor.BasicControls.SimpleControls.ScoreBoards
+@using BasicGameFrameworkLibrary.Blazor.BasicControls.SimpleControls.Dice
 @typeparam D
 @inherits CascadingGameView<YahtzeeMainViewModel<D>>
 @{ 
@@ -31,7 +33,7 @@
         <div>
             <ScoreBoardBlazor P="YahtzeePlayerItem<D>" Columns="@_scores" Players="@DataContext!.PlayerList" />
         </div>
-        <GameButtonComponent CommandObject="RollCommand" StartOnNewLine="true" Display="Roll Dice" />
-        <DiceListConrolBlazor D="D" Cup="@DataContext!.GetCup" TargetHeight="14vh" />
+        <GameActionButton CommandObject="RollCommand" StartOnNewLine="true" Display="Roll Dice" />
+        <DiceListConrolBlazor D="D" Cup="@DataContext!.GetCup" PercentHeight="20" />
     </StackItem>
 </StackLayout>

@@ -51,8 +51,14 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
             }
         });
     }
+
+    //blazor has to show the words Deck.
+
     [StateProperty]
-    public partial string TextToAppear { get; private set; } = "";
+    public partial int TextCount { get; private set; } //this way i can make it smarter for part.
+
+    //[StateProperty]
+    //public partial string TextToAppear { get; private set; } = "";
 
     public D CurrentCard { get; private set; } = new D();
     [StateProperty]
@@ -251,14 +257,15 @@ public partial class DeckObservablePile<D> : SimpleControlObservable where D : I
     }
     private void UpdateText()
     {
-        if (DrawInCenter == false)
-        {
-            TextToAppear = $"{_newText} ({_objectList.Count})";
-        }
-        else
-        {
-            TextToAppear = _objectList.Count.ToString();
-        }
+        TextCount = _objectList.Count;
+        //if (DrawInCenter == false)
+        //{
+        //    TextToAppear = $"{_newText} ({_objectList.Count})";
+        //}
+        //else
+        //{
+        //    TextToAppear = _objectList.Count.ToString();
+        //}
     }
     [StateProperty]
     public partial bool DrawInCenter { get; set; }

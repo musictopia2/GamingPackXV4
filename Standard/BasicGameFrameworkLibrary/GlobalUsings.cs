@@ -51,7 +51,7 @@ global using BasicGameFrameworkLibrary.Core.DrawableListsObservable;
 global using BasicGameFrameworkLibrary.Core.MultiplePilesObservable;
 global using BasicGameFrameworkLibrary.Blazor.Extensions;
 global using rr2 = BasicGameFrameworkLibrary.Resources.SvgPngImageResource;
-//global using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
+global using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
 //global using BasicGameFrameworkLibrary.Blazor.BasicControls.ChoicePickers;
 
 global using BasicGameFrameworkLibrary.Core.SolitaireClasses.Cards;
@@ -63,7 +63,7 @@ global using BasicGameFrameworkLibrary.Core.SolitaireClasses.BasicVMInterfaces;
 global using BasicGameFrameworkLibrary.Core.SolitaireClasses.ClockClasses;
 global using BasicGameFrameworkLibrary.Core.SolitaireClasses.TriangleClasses;
 global using ab1 = BasicBlazorLibrary.Components.CssGrids.Helpers;
-global using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
+//global using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
 global using BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNativeFileAccessClasses; //looks like became common enough because transfer to desktop.
 //global using BasicGameFrameworkLibrary.Core.StandardImplementations.Settings;
 global using ff2 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileContentRegistry;
@@ -102,3 +102,7 @@ global using pp1 = SvgHelper.Blazor.Logic.Classes.SubClasses.Path;
 
 
 global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
+global using ll1 = BasicGameFrameworkLibrary.Blazor.Helpers.LayoutInfo;
+global using gg1 = BasicGameFrameworkLibrary.Blazor.Configuration.GameDisplayOptions;
+global using BasicGameFrameworkLibrary.Blazor.Configuration;
+global using BasicGameFrameworkLibrary.Blazor.BasicControls.SimpleControls.Labels;
