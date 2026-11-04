@@ -20,7 +20,7 @@ public partial class BasicLoaderPage : IAsyncDisposable
         };
         base.OnParametersSet();
     }
-
+    private static string Version => $"Version: {GlobalClass.Version}";
     private bool IsGameSupported(string game)
     {
         if (DataContext!.GameList.Contains(game) == false)
