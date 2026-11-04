@@ -4,15 +4,16 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>9.0.1</Version>
     <FeedType>Public</FeedType>
     <RunPostBuildAppCondition Condition="'$(Configuration)' == 'Release'">true</RunPostBuildAppCondition>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.6" />
+    
+    <PackageReference Include="Musictopia2.CommonBasicLibraries" Version="10.0.2" />
+    
+    <PackageReference Include="Musictopia2.GamePackageContractsLibrary" Version="10.0.1" />
     <PackageReference Include="Musictopia2.GamePackageSerializeGenerator" Version="1.0.1" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.13" />
-    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.33.1" />
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="C:\VS\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net10.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />
