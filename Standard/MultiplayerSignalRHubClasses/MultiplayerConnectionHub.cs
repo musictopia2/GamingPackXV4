@@ -24,9 +24,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     {
         await Clients.Caller.SendAsync("ConnectionError", errorMessage);
     }
-
-    private readonly static BasicList<string> _excludeList = [];
-    public static BasicList<string> ExcludedList => _excludeList; //if there is any on the list, then only those can host.  this would stop the problems where 2 people are hosting the same time.
+    public static BasicList<string> AllowedHosts { get; } = []; //if there is any on the list, then only those can host.  this would stop the problems where 2 people are hosting the same time.
     public void BackToMain(string nickName)
     {
         //don't worry about game anymore.
@@ -80,9 +78,9 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             await SendErrorAsync("You must now enter the game name in order to host");
             return; //this means i have to break all older versions of game package.
         }
-        if (ExcludedList.Count > 0)
+        if (AllowedHosts.Count > 0)
         {
-            if (ExcludedList.Any(xx => xx.Equals(nickName, StringComparison.CurrentCultureIgnoreCase)) == false)
+            if (AllowedHosts.Any(xx => xx.Equals(nickName, StringComparison.CurrentCultureIgnoreCase)) == false)
             {
                 await SendErrorAsync("You do not have permission to host game");
                 return;
