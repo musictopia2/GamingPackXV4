@@ -7,6 +7,14 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     private static bool _gameStarted = false;
 
     private static int _maxPlayers;
+    private static long _nextWaitingOrder;
+    private static string _sessionHostName = "";
+    private static string _sessionGame = "";
+    private static string _nextGameHost = "";
+    private static readonly HashSet<string> _nextGamePlayers = new(StringComparer.Ordinal);
+    private static readonly HashSet<string> _reservedPlayers = new(StringComparer.Ordinal);
+    // Frozen when play starts; pending/rejected clients are never participants.
+    private static readonly HashSet<string> _startedPlayers = new(StringComparer.Ordinal);
 
     private const string _waitingForHostedGameGroup = "WaitingForHostedGame";
 
@@ -14,28 +22,43 @@ public class MultiplayerConnectionHub : Hub, ISerializable
 
     public async Task WaitForHostedGameAsync()
     {
-        await Groups.AddToGroupAsync(
-            Context.ConnectionId,
-            _waitingForHostedGameGroup);
-
-        if (_hostGame != "")
+        await _joinLock.WaitAsync();
+        try
         {
-            await Clients.Caller.SendAsync("HostedGameChosen", _hostGame);
+            await Groups.AddToGroupAsync(
+                Context.ConnectionId,
+                _waitingForHostedGameGroup);
+
+            if (_hostGame != "")
+            {
+                await Clients.Caller.SendAsync("HostedGameChosen", _hostGame);
+            }
+        }
+        finally
+        {
+            _joinLock.Release();
         }
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        ConnectionInfo thisCon = _playerList!.Where(x => x.Value.ConnectionID == Context.ConnectionId).Select(xx => xx.Value).SingleOrDefault()!;
-        if (thisCon != null)
+        await _joinLock.WaitAsync();
+        try
         {
-            thisCon.IsConnected = false; //no longer connected
-            if (thisCon.UserID == _hostName)
+            ConnectionInfo? connection = FindCaller();
+            if (connection is not null)
             {
-                _hostName = "";
-                _hostGame = "";
-                _gameStarted = false; //game not started anymore.
+                connection.IsConnected = false;
+                // Keep admission and the started roster for client reconnections.
+                if (connection.UserID == _hostName)
+                {
+                    ClearHost();
+                }
             }
+        }
+        finally
+        {
+            _joinLock.Release();
         }
         await base.OnDisconnectedAsync(exception);
     }
@@ -44,42 +67,54 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         await Clients.Caller.SendAsync("ConnectionError", errorMessage);
     }
     public static BasicList<string> AllowedHosts { get; } = []; //if there is any on the list, then only those can host.  this would stop the problems where 2 people are hosting the same time.
-    public void BackToMain(string nickName)
+    public async Task BackToMain(string nickName)
     {
-        //don't worry about game anymore.
-        ConnectionInfo thisCon = _playerList!.Where(x => x.Value.ConnectionID == Context.ConnectionId).Select(xx => xx.Value).SingleOrDefault()!;
-        if (thisCon is not null)
+        await _joinLock.WaitAsync();
+        try
         {
-            thisCon.IsConnected = false; //no longer connected because you are going back to main.
+            ConnectionInfo? connection = FindCaller();
+            if (connection is null)
+            {
+                return;
+            }
+            connection.IsConnected = false;
+            // Use the calling connection, not a supplied nickname, to identify the host.
+            if (connection.UserID == _hostName)
+            {
+                ClearHost();
+            }
         }
-        if (nickName == _hostName)
+        finally
         {
-            _hostName = "";
-            _hostGame = "";
-            _gameStarted = false;
-            //try to not automatically disconnect them anymore.  that way i can attempt to make it where the host can rejoin game later.
-
-            //foreach (var item in _playerList)
-            //{
-            //    item.Value.IsConnected = false; //act like its not connected.  try this way to start with.
-            //}
+            _joinLock.Release();
         }
-        //i don't think the client part has the problem.
     }
     //hopefully this is okay because somebody has to request to close connection.  if i am wrong, rethink.
-    public void CloseConnection()
+    public async Task CloseConnection()
     {
-        //you already know the connectionid.  will literally delete from the playerlist now.  that would be best.
-        ConnectionInfo thisCon = _playerList!.Where(x => x.Value.ConnectionID == Context.ConnectionId).Select(xx => xx.Value).SingleOrDefault()!;
-        if (thisCon is not null)
+        await _joinLock.WaitAsync();
+        try
         {
-            if (thisCon.UserID == _hostName)
+            ConnectionInfo? connection = FindCaller();
+            if (connection is not null)
             {
-                _hostName = "";
-                _hostGame = "";
-                _gameStarted = false;
-                _playerList.Clear(); //try to clear at this point if the host name matches.  gives extra options.
+                connection.IsConnected = false;
+                if (connection.UserID == _hostName)
+                {
+                    ClearHost();
+                    _playerList.Clear();
+                    _startedPlayers.Clear();
+                    _sessionHostName = "";
+                    _sessionGame = "";
+                    _reservedPlayers.Clear();
+                    _nextGameHost = "";
+                    _nextGamePlayers.Clear();
+                }
             }
+        }
+        finally
+        {
+            _joinLock.Release();
         }
     }
 
@@ -91,115 +126,202 @@ public class MultiplayerConnectionHub : Hub, ISerializable
 
     public async Task WaitForNextHostedGameAsync(string hostName)
     {
-        if (string.IsNullOrWhiteSpace(hostName))
+        await _joinLock.WaitAsync();
+        try
         {
-            await SendErrorAsync("A host name is required.");
-            return;
+            if (string.IsNullOrWhiteSpace(hostName))
+            {
+                await SendErrorAsync("A host name is required.");
+                return;
+            }
+
+            await Groups.AddToGroupAsync(
+                Context.ConnectionId,
+                GetNextGameGroup(hostName));
+
+            // Covers clients that arrive after the host has chosen.
+            if (_hostGame != "" &&
+                string.Equals(_hostName, hostName,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                await Clients.Caller.SendAsync("HostedGameChosen", _hostGame);
+            }
         }
-
-        await Groups.AddToGroupAsync(
-            Context.ConnectionId,
-            GetNextGameGroup(hostName));
-
-        // Covers clients that arrive after the host has chosen.
-        if (_hostGame != "" &&
-            string.Equals(_hostName, hostName,
-                StringComparison.OrdinalIgnoreCase))
+        finally
         {
-            await Clients.Caller.SendAsync("HostedGameChosen", _hostGame);
+            _joinLock.Release();
         }
     }
 
     public async Task PrepareForNextGameAsync()
     {
-        ConnectionInfo? host = _playerList.Values
-            .SingleOrDefault(x => x.ConnectionID == Context.ConnectionId);
-
-        if (host is null || host.UserID != _hostName)
+        await _joinLock.WaitAsync();
+        try
         {
-            await SendErrorAsync("Only the host can choose the next game.");
-            return;
+            if (!IsHostCaller())
+            {
+                await SendErrorAsync("Only the host can choose the next game.");
+                return;
+            }
+            string hostName = _hostName;
+            _nextGameHost = hostName;
+            _nextGamePlayers.Clear();
+            foreach (var player in _playerList.Values.Where(x =>
+                x.IsAdmitted && x.GameName == _hostGame))
+            {
+                _nextGamePlayers.Add(player.UserID);
+            }
+            // Carry forward places reserved for a group member still arriving.
+            _nextGamePlayers.UnionWith(_reservedPlayers);
+            _reservedPlayers.Clear();
+            var clients = _playerList.Values
+                .Where(x => x.IsConnected && x.IsAdmitted
+                    && x.UserID != hostName && x.GameName == _hostGame)
+                .Select(x => x.ConnectionID)
+                .ToArray();
+
+            // Stop advertising and routing the old game before notifying clients.
+            _hostGame = "";
+            _maxPlayers = 0;
+            _gameStarted = false;
+            _startedPlayers.Clear();
+            _sessionHostName = "";
+            _sessionGame = "";
+            foreach (var player in _playerList.Values)
+            {
+                player.IsAdmitted = false;
+            }
+            foreach (string connectionId in clients)
+            {
+                await Clients.Client(connectionId)
+                    .SendAsync("WaitingForNextGame", hostName);
+            }
         }
-
-        string hostName = _hostName;
-        string previousGame = _hostGame;
-
-        var clients = _playerList.Values
-            .Where(x => x.IsConnected
-                && x.UserID != hostName
-                && x.GameName == previousGame)
-            .Select(x => x.ConnectionID)
-            .ToArray();
-
-        // Discovery must no longer offer the finished game.
-        _hostGame = "";
-        _gameStarted = false;
-
-        foreach (string connectionId in clients)
+        finally
         {
-            await Clients.Client(connectionId)
-                .SendAsync("WaitingForNextGame", hostName);
+            _joinLock.Release();
         }
     }
 
-    public async Task HostingAsync(string nickName, string gameName, int maxPlayers) //send message only to user.
+    public async Task HostingAsync(string nickName, string gameName, int maxPlayers)
     {
-        //we can't clear the playerlist anymore.  because if its cleared, then clients can't connect first.
-        //for now, will also show the game.
-        // _playerList.Clear();
-        if (nickName == "")
+        await _joinLock.WaitAsync();
+        try
         {
-            await SendErrorAsync("You must have a nick name in order to host");
-            return;
-        }
-        if (gameName == "")
-        {
-            await SendErrorAsync("You must now enter the game name in order to host");
-            return; //this means i have to break all older versions of game package.
-        }
-        if (maxPlayers < 1)
-        {
-            await SendErrorAsync("The game must specify a valid maximum player count.");
-            return;
-        }
-        _maxPlayers = maxPlayers;
-        if (AllowedHosts.Count > 0)
-        {
-            if (AllowedHosts.Any(xx => xx.Equals(nickName, StringComparison.CurrentCultureIgnoreCase)) == false)
+            if (string.IsNullOrWhiteSpace(nickName) || string.IsNullOrWhiteSpace(gameName))
+            {
+                await SendErrorAsync("A nickname and game name are required to host.");
+                return;
+            }
+            if (maxPlayers < 1)
+            {
+                await SendErrorAsync("The game must specify a valid maximum player count.");
+                return;
+            }
+            if (AllowedHosts.Count > 0 && !AllowedHosts.Any(x =>
+                x.Equals(nickName, StringComparison.CurrentCultureIgnoreCase)))
             {
                 await SendErrorAsync("You do not have permission to host game");
                 return;
             }
-        }
-        ConnectionInfo connect = new()
-        {
-            ConnectionID = Context.ConnectionId,
-            UserID = nickName,
-            GameName = gameName,
-            IsConnected = true
-        };
-        _hostName = nickName;
-        _hostGame = gameName;
-        _gameStarted = false; //hopefully can later restart a game (?)
-        _playerList.AddOrUpdate(_hostName, connect, (key, temps) =>
-        {
-            return connect;
-        });
+            if (_hostName != "" && _hostName != nickName)
+            {
+                await SendErrorAsync("Another player is already hosting.");
+                return;
+            }
 
+            // Existing admitted players take precedence when a host returns.
+            // Otherwise, waiting clients are considered in arrival order.
+            bool returningHost = _sessionHostName == nickName && _sessionGame == gameName;
+            var reserved = new HashSet<string>(StringComparer.Ordinal);
+            if (_nextGameHost == nickName)
+            {
+                reserved.UnionWith(_nextGamePlayers);
+            }
+            else if (returningHost)
+            {
+                reserved.UnionWith(_reservedPlayers);
+                reserved.UnionWith(_playerList.Values
+                    .Where(x => x.IsAdmitted && x.GameName == gameName)
+                    .Select(x => x.UserID));
+            }
+            reserved.Remove(nickName);
+            if (reserved.Count > maxPlayers - 1)
+            {
+                await SendErrorAsync("This game cannot accommodate the group moving with the host.");
+                return;
+            }
+            var waiting = _playerList.Values
+                .Where(x => x.UserID != nickName && x.GameName == gameName
+                    && (x.IsConnected || (returningHost && x.IsAdmitted)))
+                .OrderByDescending(x => reserved.Contains(x.UserID))
+                .ThenByDescending(x => x.IsAdmitted)
+                .ThenBy(x => x.WaitingOrder)
+                .ToArray();
+            int missingReservedPlayers = reserved.Count(name =>
+                !waiting.Any(x => x.UserID == name));
+            int availablePlaces = maxPlayers - 1 - missingReservedPlayers;
+            var accepted = waiting.Take(availablePlaces).ToArray();
+            var rejected = waiting.Skip(availablePlaces).ToArray();
 
-        //_playerList.TryAdd(nickName, connect);
-        //when host gets the hosting message, the host can decide what to do.
-        await Clients.Caller.SendAsync("Hosting"); //all you need to know is you are hosting now.
-        var list = _playerList.Where(xx => xx.Value.IsConnected && xx.Value.UserID != _hostName);
-        foreach (var player in list)
-        {
-            await Clients.Client(player.Value.ConnectionID).SendAsync("HostName", _hostName); //hopefully this is what is needed (?)
-            //hopefully does not hurt when host rejoining (?)
+            foreach (var player in _playerList.Values)
+            {
+                player.IsAdmitted = false;
+            }
+            _reservedPlayers.Clear();
+            _reservedPlayers.UnionWith(reserved);
+            if (_nextGameHost == nickName)
+            {
+                _nextGameHost = "";
+                _nextGamePlayers.Clear();
+            }
+            _maxPlayers = maxPlayers;
+            _hostName = nickName;
+            _hostGame = gameName;
+            _sessionHostName = nickName;
+            _sessionGame = gameName;
+            _gameStarted = false;
+            _startedPlayers.Clear();
+            _playerList[nickName] = new ConnectionInfo
+            {
+                ConnectionID = Context.ConnectionId,
+                UserID = nickName,
+                GameName = gameName,
+                IsConnected = true,
+                IsAdmitted = true
+            };
+            // Establish the complete admission decision before sending notifications.
+            foreach (var client in accepted)
+            {
+                client.IsAdmitted = true;
+            }
+            foreach (var client in rejected)
+            {
+                client.IsConnected = false;
+            }
+
+            await Clients.Caller.SendAsync("Hosting");
+            foreach (var client in rejected)
+            {
+                await Clients.Client(client.ConnectionID)
+                    .SendAsync("JoinRejected", "This game is full.");
+            }
+            foreach (var client in accepted)
+            {
+                if (client.IsConnected)
+                {
+                    await Clients.Client(client.ConnectionID).SendAsync("HostName", _hostName);
+                }
+            }
+            await Clients.Group(_waitingForHostedGameGroup)
+                .SendAsync("HostedGameChosen", _hostGame);
+            await Clients.Group(GetNextGameGroup(_hostName))
+                .SendAsync("HostedGameChosen", _hostGame);
         }
-        await Clients.Group(_waitingForHostedGameGroup)
-            .SendAsync("HostedGameChosen", _hostGame);
-        await Clients.Group(GetNextGameGroup(_hostName))
-            .SendAsync("HostedGameChosen", _hostGame);
+        finally
+        {
+            _joinLock.Release();
+        }
     }
     public async Task RestoreGameForReconnectionAsync(string nickNameReconnected) //iffy now (?)
     {
@@ -220,7 +342,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             await SendErrorAsync("Only the host can restore game for reconnection");
             return;
         }
-        BasicList<ConnectionInfo> sendTo = _playerList.Where(x => x.Key != _hostName && x.Value.IsConnected == true && x.Key != nickNameReconnected).Select(xx => xx.Value).ToBasicList();
+        BasicList<ConnectionInfo> sendTo = _playerList.Where(x => x.Key != _hostName && x.Value.IsConnected == true && x.Value.IsAdmitted && x.Value.GameName == _hostGame && x.Key != nickNameReconnected).Select(xx => xx.Value).ToBasicList();
         await sendTo.ForEachAsync(async x =>
         {
             await Clients.Client(x.ConnectionID).SendAsync("RestoreForReconnection");
@@ -245,7 +367,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             await SendErrorAsync("Only the host can end game early");
             return;
         }
-        BasicList<ConnectionInfo> sendTo = _playerList.Where(x => x.Key != _hostName && x.Value.IsConnected == true && x.Key != nickNameReconnected).Select(xx => xx.Value).ToBasicList();
+        BasicList<ConnectionInfo> sendTo = _playerList.Where(x => x.Key != _hostName && x.Value.IsConnected == true && x.Value.IsAdmitted && x.Value.GameName == _hostGame && x.Key != nickNameReconnected).Select(xx => xx.Value).ToBasicList();
         await sendTo.ForEachAsync(async x =>
         {
             await Clients.Client(x.ConnectionID).SendAsync("EndGameEarly");
@@ -277,26 +399,40 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     //}
     public async Task StartGameAsync()
     {
-        if (_hostName == "")
+        await _joinLock.WaitAsync();
+        try
         {
-            await SendErrorAsync("Nobody is even hosting to start game");
-            return;
+            if (!IsHostCaller() || _hostGame == "")
+            {
+                await SendErrorAsync("Only the connected host can start the game.");
+                return;
+            }
+            if (_gameStarted)
+            {
+                return;
+            }
+            var participants = _playerList.Values
+                .Where(x => x.IsAdmitted && x.GameName == _hostGame)
+                .Select(x => x.UserID)
+                .ToArray();
+            if (participants.Length > _maxPlayers)
+            {
+                await SendErrorAsync("There are too many admitted players to start this game.");
+                return;
+            }
+            _startedPlayers.Clear();
+            foreach (string player in participants)
+            {
+                _startedPlayers.Add(player);
+            }
+            // Starting is manual: freeze actual admissions, not unfilled reservations.
+            _reservedPlayers.Clear();
+            _gameStarted = true;
         }
-        //don't trust the clients.  if the one sending is not host, then ignore.
-        //i propose a message to make sure they know there is a serious bug.
-        string connectionId = Context.ConnectionId;
-        var connectionInfo = _playerList.SingleOrDefault(xx => xx.Value.ConnectionID == connectionId).Value;
-        if (connectionInfo is null)
+        finally
         {
-            await SendErrorAsync("Could not find the connection info to even start game");
-            return;
+            _joinLock.Release();
         }
-        if (connectionInfo.UserID != _hostName)
-        {
-            await SendErrorAsync("Only the host can start the game");
-            return;
-        }
-        _gameStarted = true;
     }
     public async Task NewGameAsync()
     {
@@ -309,162 +445,145 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     }
     private async Task DisconnectEverybodyAsync(string message)
     {
-        if (_hostName == "")
+        await _joinLock.WaitAsync();
+        try
         {
-            await SendErrorAsync("Nobody is hosting to even allow disconnecting everybody");
-        }
-        ConnectionInfo connect = new()
-        {
-            ConnectionID = Context.ConnectionId,
-            UserID = _hostName,
-            GameName = _hostGame,
-            IsConnected = true
-        };
-        foreach (var item in _playerList)
-        {
-            if (item.Value.IsConnected && item.Key != _hostName)
+            if (!IsHostCaller())
             {
-                //await Clients.Client(thisInfo.ConnectionID).SendAsync("ReceiveMessage", thisMessage.Message);
-                await Clients.Client(item.Value.ConnectionID).SendAsync(message);
-                //await Clients.Caller.SendAsync("ConnectionError", errorMessage);
+                await SendErrorAsync("Only the host can disconnect everybody.");
+                return;
+            }
+            var clients = _playerList.Values
+                .Where(x => x.IsAdmitted && x.GameName == _hostGame && x.UserID != _hostName)
+                .ToArray();
+            var recipients = clients.Where(x => x.IsConnected)
+                .Select(x => x.ConnectionID).ToArray();
+            foreach (var client in clients)
+            {
+                client.IsConnected = false;
+                client.IsAdmitted = false;
+            }
+            _gameStarted = false;
+            _startedPlayers.Clear();
+            _reservedPlayers.Clear();
+            foreach (string connectionId in recipients)
+            {
+                await Clients.Client(connectionId).SendAsync(message);
             }
         }
-        _playerList.Clear();
-        _playerList.AddOrUpdate(_hostName, connect, (key, temps) =>
+        finally
         {
-            return connect;
-        });
+            _joinLock.Release();
+        }
     }
 
     public async Task ReconnectionAsync(string nickName)
     {
-        if (_playerList.ContainsKey(nickName) == true)
+        await _joinLock.WaitAsync();
+        try
         {
-            var connect = _playerList[nickName];
-            connect.ConnectionID = Context.ConnectionId;
-            connect.IsConnected = true;
+            if (!_playerList.TryGetValue(nickName, out var connection)
+                || !connection.IsAdmitted
+                || connection.GameName != _hostGame
+                || (_gameStarted && !_startedPlayers.Contains(nickName)))
+            {
+                await Clients.Caller.SendAsync("JoinRejected",
+                    "You are not a participant in this game.");
+                return;
+            }
+            connection.ConnectionID = Context.ConnectionId;
+            connection.IsConnected = true;
         }
-        else
+        finally
         {
-            await SendErrorAsync($"The name {nickName} was never connected"); //i think no problem showing popup.
+            _joinLock.Release();
         }
     }
 
     //the purpose of game name is to make sure if a client connects to wrong game, they will get an error.
     public async Task ClientConnectingAsync(string nickName, string gameName)
     {
-        //if (_hostName == "")
-        //{
-        //    await Clients.Caller.SendAsync("NoHost"); //because nobody is hosting.
-        //    return;
-        //}
-        //Console.WriteLine("Client Connecting");
         await _joinLock.WaitAsync();
         try
         {
-            if (nickName == "")
+            if (string.IsNullOrWhiteSpace(nickName) || string.IsNullOrWhiteSpace(gameName))
             {
-                await SendErrorAsync("You must have a nick name in order to connect to host");
+                await SendErrorAsync("A nickname and game name are required to join.");
                 return;
             }
-            if (gameName == "")
+            if (nickName == _hostName)
             {
-                await SendErrorAsync("You must now enter the game name in order to connect to host");
+                await Clients.Caller.SendAsync("JoinRejected",
+                    "That nickname is already being used by the host.");
+                return;
             }
 
-            if (_hostName != "" &&
-                _hostGame == gameName &&
-                _gameStarted == false)
+            bool currentGame = _hostName != "" && _hostGame == gameName;
+            if (currentGame && _gameStarted)
             {
-                // Exclude this nickname so repeated requests do not
-                // count the same player twice. The host is included.
-                int otherPlayers = _playerList.Values.Count(x =>
-                    x.IsConnected &&
-                    x.GameName == gameName &&
-                    x.UserID != nickName);
-
+                if (!_startedPlayers.Contains(nickName))
+                {
+                    await Clients.Caller.SendAsync("JoinRejected",
+                        "This game has already started. Only its existing players can reconnect.");
+                    return;
+                }
+            }
+            else if (currentGame)
+            {
+                // Reserve admitted players' places even while temporarily disconnected.
+                // Excluding this nickname makes repeated joins/reconnections idempotent.
+                int otherPlayers = _playerList.Values
+                    .Where(x => x.IsAdmitted && x.GameName == gameName)
+                    .Select(x => x.UserID)
+                    .Concat(_reservedPlayers)
+                    .Where(name => name != nickName)
+                    .Distinct(StringComparer.Ordinal)
+                    .Count();
                 if (otherPlayers >= _maxPlayers)
                 {
-                    await Clients.Caller.SendAsync(
-                        "JoinRejected",
-                        "This game is full.");
-
+                    await Clients.Caller.SendAsync("JoinRejected", "This game is full.");
                     return;
                 }
             }
 
-
-            ConnectionInfo connect;
-            if (_playerList.ContainsKey(nickName) == false)
+            if (!_playerList.TryGetValue(nickName, out var connection))
             {
-                //this happened too often.
-
-
-                //await SendErrorAsync("You are already registered.  Rethink if intended this time");
-                //return;
-                connect = new()
-                {
-                    UserID = nickName
-                };
-                _playerList.TryAdd(nickName, connect);
+                connection = new ConnectionInfo { UserID = nickName };
+                _playerList[nickName] = connection;
             }
-            else
+            if (!connection.IsConnected || connection.ConnectionID != Context.ConnectionId
+                || connection.GameName != gameName)
             {
-                connect = _playerList[nickName];
-
-
+                connection.WaitingOrder = ++_nextWaitingOrder;
             }
-            connect.IsConnected = true;
-            connect.ConnectionID = Context.ConnectionId;
-            connect.GameName = gameName; //you can still show as connected even if there is no host.  the host may appear later.
-            //even if no host, can have host later though.
+            connection.ConnectionID = Context.ConnectionId;
+            connection.GameName = gameName;
+            connection.IsConnected = true;
+            connection.IsAdmitted = currentGame;
 
-            //try this way.  would mean the client is still connected.
-            if (_hostGame != "" && _hostGame != gameName)
+            if (!currentGame)
             {
-                await Clients.Caller.SendAsync("NoHost"); //try this.  can mean the client refreshed and went to a game but waiting for host to join the game
-                //await SendErrorAsync($"The host chose {_hostGame} but you chose {gameName}");
-                //if you get the error, you have to go back to main to choose different game (that is the solution to that problem).
-                return;
+                await Clients.Caller.SendAsync("NoHost");
             }
-
-            if (_hostName != "" && _gameStarted == false)
+            else if (!_gameStarted)
             {
                 await Clients.Caller.SendAsync("HostName", _hostName);
             }
-            else if (_gameStarted == false)
-            {
-                //can be iffy now.
-                await Clients.Caller.SendAsync("NoHost");
-                //if nobody is hosting, they may be hosting eventually.
-            }
-            else if (_hostName == "")
-            {
-                await SendErrorAsync("The host was blank even though a game has started.  This is wrong");
-            }
             else
             {
-                //this means send message to host.  so host can send information to client.
-                //obviously there has to be a host.
-                await Clients.Caller.SendAsync("WaitForGame"); //this means its going back into the game.
-
-                connect = _playerList[_hostName];
-
-                await Clients.Client(connect.ConnectionID).SendAsync("GameState", nickName); //even if its not the hosts turn, the host has to send the state so the clients can join in and play.
-                //i think its best for the host to know who reconnected so they send game state just to that player.
-
-
+                await Clients.Caller.SendAsync("WaitForGame");
+                await Clients.Client(_playerList[_hostName].ConnectionID)
+                    .SendAsync("GameState", nickName);
             }
         }
         catch (Exception ex)
         {
-            await SendErrorAsync(ex.Message); //to get hints.
+            await SendErrorAsync(ex.Message);
         }
         finally
         {
             _joinLock.Release();
         }
-
     }
     //this means work needs to be done on the client as well.
     //the server knows if it gets disconnected, then go ahead and close all.
@@ -481,57 +600,63 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     //}
     public async Task SendMessageAsync(string tempMessage, string gameName)
     {
-        //since there is a ready message, this means i am unable to use this to show its in game.
-
-        string errorMessage = "";
-        //needs another parameter now.
-        ConnectionInfo thisInfo;
-        NetworkMessage thisMessage = await js1.DeserializeObjectAsync<NetworkMessage>(tempMessage);
-        //still only supports one game (to make it simplier).
-        if (gameName != _hostGame && _hostGame != "")
+        await _joinLock.WaitAsync();
+        try
         {
-            //this means that you cannot send errors anymore for sending messages.
-            //because they may be at the old game but have not yet moved over to the new game.
-            //await SendErrorAsync($"The host game was {_hostGame} but the game sent was {gameName}");
-            return;
-        }
-        if (_playerList.IsEmpty)
-        {
-            await SendErrorAsync("There are no players to send messages to");
-            return;
-        }
-        if (thisMessage.SpecificPlayer != "")
-        {
-            //for now, when sending to specific player, this should be okay.  may have to rethink eventually.
-            if (_playerList.ContainsKey(thisMessage.SpecificPlayer) == false)
+            // Pending clients and old-game traffic must not enter the active game.
+            ConnectionInfo? sender = FindCaller();
+            if (_hostGame == "" || gameName != _hostGame || sender is null
+                || !sender.IsConnected || !sender.IsAdmitted || sender.GameName != _hostGame)
             {
-                errorMessage = $"{thisMessage.SpecificPlayer} was not even registered to receive messages";
-            }
-            thisInfo = _playerList[thisMessage.SpecificPlayer];
-            if (thisInfo.IsConnected == false)
-            {
-                errorMessage = $"{thisMessage.SpecificPlayer} was disconnected even though it showed it was registered";
-            }
-            if (errorMessage != "")
-            {
-                await SendErrorAsync(errorMessage);
                 return;
             }
-            await Clients.Client(thisInfo.ConnectionID).SendAsync("ReceiveMessage", thisMessage.Message);
-            return; //i think
+            NetworkMessage message = await js1.DeserializeObjectAsync<NetworkMessage>(tempMessage);
+            if (message.SpecificPlayer != "")
+            {
+                if (!_playerList.TryGetValue(message.SpecificPlayer, out var recipient)
+                    || !recipient.IsConnected || !recipient.IsAdmitted
+                    || recipient.GameName != _hostGame)
+                {
+                    await SendErrorAsync($"{message.SpecificPlayer} is not connected to this game.");
+                    return;
+                }
+                await Clients.Client(recipient.ConnectionID)
+                    .SendAsync("ReceiveMessage", message.Message);
+                return;
+            }
+            var recipients = _playerList.Values.Where(x => x.IsConnected && x.IsAdmitted
+                && x.GameName == _hostGame && x.UserID != sender.UserID)
+                .Select(x => x.ConnectionID).ToArray();
+            foreach (string connectionId in recipients)
+            {
+                await Clients.Client(connectionId).SendAsync("ReceiveMessage", message.Message);
+            }
         }
-        BasicList<ConnectionInfo> sendTo = _playerList.Where(x => x.Key != thisMessage.YourNickName && x.Value.IsConnected == true).Select(xx => xx.Value).ToBasicList();
-        //ignore anybody who is not connected.  when they connect, will get the state.
-
-
-        //if (SendTo.Any(Items => Items.IsConnected == false))
-        //{
-        //    await SendErrorAsync("Somebody got disconnected when trying to send a message.");
-        //    return;
-        //}
-        await sendTo.ForEachAsync(async x =>
+        finally
         {
-            await Clients.Client(x.ConnectionID).SendAsync("ReceiveMessage", thisMessage.Message);
-        });
+            _joinLock.Release();
+        }
     }
+    private ConnectionInfo? FindCaller()
+    {
+        return _playerList.Values.SingleOrDefault(x => x.ConnectionID == Context.ConnectionId);
+    }
+
+    private bool IsHostCaller()
+    {
+        ConnectionInfo? caller = FindCaller();
+        return caller is not null && caller.IsConnected && caller.UserID == _hostName;
+    }
+
+    private static void ClearHost()
+    {
+        _hostName = "";
+        _hostGame = "";
+        _gameStarted = false;
+        _maxPlayers = 0;
+        // Preserve admission while the host is temporarily away. HostingAsync
+        // gives those players priority if the host returns to the same game.
+        // Starting another game explicitly clears admission in PrepareForNextGameAsync.
+    }
+
 }
