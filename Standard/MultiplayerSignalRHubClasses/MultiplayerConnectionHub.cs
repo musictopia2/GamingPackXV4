@@ -189,6 +189,8 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         }
         await Clients.Group(_waitingForHostedGameGroup)
             .SendAsync("HostedGameChosen", _hostGame);
+        await Clients.Group(GetNextGameGroup(_hostName))
+            .SendAsync("HostedGameChosen", _hostGame);
     }
     public async Task RestoreGameForReconnectionAsync(string nickNameReconnected) //iffy now (?)
     {
