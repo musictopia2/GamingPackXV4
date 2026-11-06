@@ -5,6 +5,22 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     private static string _hostName = "";
     private static string _hostGame = "";
     private static bool _gameStarted = false;
+
+
+    private const string _waitingForHostedGameGroup = "WaitingForHostedGame";
+
+    public async Task WaitForHostedGameAsync()
+    {
+        await Groups.AddToGroupAsync(
+            Context.ConnectionId,
+            _waitingForHostedGameGroup);
+
+        if (_hostGame != "")
+        {
+            await Clients.Caller.SendAsync("HostedGameChosen", _hostGame);
+        }
+    }
+
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         ConnectionInfo thisCon = _playerList!.Where(x => x.Value.ConnectionID == Context.ConnectionId).Select(xx => xx.Value).SingleOrDefault()!;
@@ -111,6 +127,8 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             await Clients.Client(player.Value.ConnectionID).SendAsync("HostName", _hostName); //hopefully this is what is needed (?)
             //hopefully does not hurt when host rejoining (?)
         }
+        await Clients.Group(_waitingForHostedGameGroup)
+            .SendAsync("HostedGameChosen", _hostGame);
     }
     public async Task RestoreGameForReconnectionAsync(string nickNameReconnected) //iffy now (?)
     {
