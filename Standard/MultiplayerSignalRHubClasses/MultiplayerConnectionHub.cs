@@ -80,6 +80,33 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         }
     }
 
+
+    private static string GetNextGameGroup(string hostName)
+    {
+        return $"WaitingForNextGame:{hostName.ToUpperInvariant()}";
+    }
+
+    public async Task WaitForNextHostedGameAsync(string hostName)
+    {
+        if (string.IsNullOrWhiteSpace(hostName))
+        {
+            await SendErrorAsync("A host name is required.");
+            return;
+        }
+
+        await Groups.AddToGroupAsync(
+            Context.ConnectionId,
+            GetNextGameGroup(hostName));
+
+        // Covers clients that arrive after the host has chosen.
+        if (_hostGame != "" &&
+            string.Equals(_hostName, hostName,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            await Clients.Caller.SendAsync("HostedGameChosen", _hostGame);
+        }
+    }
+
     public async Task PrepareForNextGameAsync()
     {
         ConnectionInfo? host = _playerList.Values
