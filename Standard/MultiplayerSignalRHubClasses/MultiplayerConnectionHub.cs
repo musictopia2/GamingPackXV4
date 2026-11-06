@@ -79,6 +79,39 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             }
         }
     }
+
+    public async Task PrepareForNextGameAsync()
+    {
+        ConnectionInfo? host = _playerList.Values
+            .SingleOrDefault(x => x.ConnectionID == Context.ConnectionId);
+
+        if (host is null || host.UserID != _hostName)
+        {
+            await SendErrorAsync("Only the host can choose the next game.");
+            return;
+        }
+
+        string hostName = _hostName;
+        string previousGame = _hostGame;
+
+        var clients = _playerList.Values
+            .Where(x => x.IsConnected
+                && x.UserID != hostName
+                && x.GameName == previousGame)
+            .Select(x => x.ConnectionID)
+            .ToArray();
+
+        // Discovery must no longer offer the finished game.
+        _hostGame = "";
+        _gameStarted = false;
+
+        foreach (string connectionId in clients)
+        {
+            await Clients.Client(connectionId)
+                .SendAsync("WaitingForNextGame", hostName);
+        }
+    }
+
     public async Task HostingAsync(string nickName, string gameName) //send message only to user.
     {
         //we can't clear the playerlist anymore.  because if its cleared, then clients can't connect first.
