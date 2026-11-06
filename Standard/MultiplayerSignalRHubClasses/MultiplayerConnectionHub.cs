@@ -6,8 +6,11 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     private static string _hostGame = "";
     private static bool _gameStarted = false;
 
+    private static int _maxPlayers;
 
     private const string _waitingForHostedGameGroup = "WaitingForHostedGame";
+
+    private static readonly SemaphoreSlim _joinLock = new(1, 1);
 
     public async Task WaitForHostedGameAsync()
     {
@@ -139,7 +142,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         }
     }
 
-    public async Task HostingAsync(string nickName, string gameName) //send message only to user.
+    public async Task HostingAsync(string nickName, string gameName, int maxPlayers) //send message only to user.
     {
         //we can't clear the playerlist anymore.  because if its cleared, then clients can't connect first.
         //for now, will also show the game.
@@ -154,6 +157,12 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             await SendErrorAsync("You must now enter the game name in order to host");
             return; //this means i have to break all older versions of game package.
         }
+        if (maxPlayers < 1)
+        {
+            await SendErrorAsync("The game must specify a valid maximum player count.");
+            return;
+        }
+        _maxPlayers = maxPlayers;
         if (AllowedHosts.Count > 0)
         {
             if (AllowedHosts.Any(xx => xx.Equals(nickName, StringComparison.CurrentCultureIgnoreCase)) == false)
@@ -350,6 +359,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         //    return;
         //}
         //Console.WriteLine("Client Connecting");
+        await _joinLock.WaitAsync();
         try
         {
             if (nickName == "")
@@ -361,7 +371,29 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             {
                 await SendErrorAsync("You must now enter the game name in order to connect to host");
             }
-            
+
+            if (_hostName != "" &&
+                _hostGame == gameName &&
+                _gameStarted == false)
+            {
+                // Exclude this nickname so repeated requests do not
+                // count the same player twice. The host is included.
+                int otherPlayers = _playerList.Values.Count(x =>
+                    x.IsConnected &&
+                    x.GameName == gameName &&
+                    x.UserID != nickName);
+
+                if (otherPlayers >= _maxPlayers)
+                {
+                    await Clients.Caller.SendAsync(
+                        "JoinRejected",
+                        "This game is full.");
+
+                    return;
+                }
+            }
+
+
             ConnectionInfo connect;
             if (_playerList.ContainsKey(nickName) == false)
             {
@@ -427,6 +459,10 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         catch (Exception ex)
         {
             await SendErrorAsync(ex.Message); //to get hints.
+        }
+        finally
+        {
+            _joinLock.Release();
         }
 
     }
