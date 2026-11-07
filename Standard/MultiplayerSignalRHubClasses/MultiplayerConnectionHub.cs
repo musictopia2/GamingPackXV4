@@ -975,4 +975,73 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             _joinLock.Release();
         }
     }
+    public async Task CompleteHostStartOverAsync(
+        string networkSessionId,
+        string gameState)
+    {
+        await _joinLock.WaitAsync();
+        try
+        {
+            if (!IsHostCaller())
+            {
+                throw new HubException(
+                    "Only the connected host can complete Start Over.");
+            }
+
+            if (!_hostRecovering || !_hostStartingOver)
+            {
+                throw new HubException(
+                    "The host is not currently preparing a replacement game.");
+            }
+
+            if (networkSessionId != _networkSessionId)
+            {
+                throw new HubException(
+                    "The network session changed during Start Over.");
+            }
+
+            if (string.IsNullOrWhiteSpace(gameState))
+            {
+                throw new HubException(
+                    "The replacement game state is required.");
+            }
+
+            SentMessage newGameMessage = new()
+            {
+                Status = "newgame",
+                Body = gameState,
+                NetworkSessionId = _networkSessionId,
+                SequenceNumber = ++_nextMessageSequence
+            };
+
+            string serializedMessage =
+                await js1.SerializeObjectAsync(newGameMessage);
+
+            var recipients = _playerList.Values
+                .Where(x =>
+                    x.IsConnected &&
+                    x.IsAdmitted &&
+                    x.GameName == _sessionGame &&
+                    x.UserID != _sessionHostName)
+                .Select(x => x.ConnectionID)
+                .ToArray();
+
+            foreach (string connectionId in recipients)
+            {
+                await Clients.Client(connectionId)
+                    .SendAsync("RestoreForReconnection");
+
+                await Clients.Client(connectionId)
+                    .SendAsync("ReceiveMessage", serializedMessage);
+            }
+
+            _gameStarted = true;
+            _hostStartingOver = false;
+            _hostRecovering = false;
+        }
+        finally
+        {
+            _joinLock.Release();
+        }
+    }
 }
