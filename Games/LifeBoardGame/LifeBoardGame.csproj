@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<?xml version="1.0" encoding="utf-8"?><Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -26,7 +26,7 @@
     <ProjectReference Include="..\..\Standard\BasicGameFrameworkLibrary\BasicGameFrameworkLibrary.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.6" />
+    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.7" />
   </ItemGroup>
   <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
     <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />
