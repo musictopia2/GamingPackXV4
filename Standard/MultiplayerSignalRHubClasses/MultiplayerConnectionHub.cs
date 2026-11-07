@@ -20,7 +20,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     private static long _nextMessageSequence;
     private static readonly List<SentMessage> _hostMessageJournal = [];
     private const string _waitingForHostedGameGroup = "WaitingForHostedGame";
-
+    private static bool _hostStartingOver;
     private static readonly SemaphoreSlim _joinLock = new(1, 1);
 
 
@@ -692,7 +692,12 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             {
                 return;
             }
-
+            if (_hostStartingOver)
+            {
+                // The host explicitly chose to discard the previous game.
+                // Its remaining traffic must not enter the replacement game.
+                return;
+            }
             NetworkMessage message =
                 await js1.DeserializeObjectAsync<NetworkMessage>(tempMessage);
 
@@ -777,11 +782,13 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     }
 
     // Caller must hold _joinLock.
+    // Caller must hold _joinLock.
     private static void ClearHostMessageJournal()
     {
         _hostMessageJournal.Clear();
         _networkSessionId = Guid.NewGuid().ToString("N");
         _hostRecovering = false;
+        _hostStartingOver = false;
     }
 
     public async Task<string> GetHostCatchUpAsync(
@@ -791,6 +798,11 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         await _joinLock.WaitAsync();
         try
         {
+            if (_hostStartingOver)
+            {
+                throw new HubException(
+                    "The host has chosen Start Over. Catch-up is no longer available.");
+            }
             if (!IsHostCaller())
             {
                 throw new HubException(
@@ -868,7 +880,11 @@ public class MultiplayerConnectionHub : Hub, ISerializable
                 throw new HubException(
                     "The network session changed during recovery.");
             }
-
+            if (_hostStartingOver)
+            {
+                throw new HubException(
+                    "The host has chosen Start Over. Catch-up is no longer available.");
+            }
             if (caughtUpThroughSequence < 0 ||
                 caughtUpThroughSequence > _nextMessageSequence)
             {
@@ -926,5 +942,37 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             _joinLock.Release();
         }
     }
+    public async Task<string> BeginHostStartOverAsync()
+    {
+        await _joinLock.WaitAsync();
+        try
+        {
+            if (!IsHostCaller())
+            {
+                throw new HubException(
+                    "Only the connected host can start over.");
+            }
 
+            if (!_hostRecovering)
+            {
+                throw new HubException(
+                    "The host is not awaiting a recovery decision.");
+            }
+
+            // Retrying this request must preserve the new session ID.
+            if (!_hostStartingOver)
+            {
+                ClearHostMessageJournal();
+
+                _hostRecovering = true;
+                _hostStartingOver = true;
+            }
+
+            return _networkSessionId;
+        }
+        finally
+        {
+            _joinLock.Release();
+        }
+    }
 }
