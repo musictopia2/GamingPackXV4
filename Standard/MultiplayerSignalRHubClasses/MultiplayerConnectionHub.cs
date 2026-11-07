@@ -5,7 +5,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     private static string _hostName = "";
     private static string _hostGame = "";
     private static bool _gameStarted = false;
-
+    private static bool _hostRecovering;
     private static int _maxPlayers;
     private static long _nextWaitingOrder;
     private static string _sessionHostName = "";
@@ -16,9 +16,42 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     // Frozen when play starts; pending/rejected clients are never participants.
     private static readonly HashSet<string> _startedPlayers = new(StringComparer.Ordinal);
 
+
+    private static long _nextMessageSequence;
+    private static readonly List<SentMessage> _hostMessageJournal = [];
     private const string _waitingForHostedGameGroup = "WaitingForHostedGame";
 
     private static readonly SemaphoreSlim _joinLock = new(1, 1);
+
+
+    private static string _networkSessionId =
+        Guid.NewGuid().ToString("N");
+
+    // Caller must hold _joinLock.
+    private static async Task PrepareMessageAsync(
+        NetworkMessage message,
+        string senderName)
+    {
+        SentMessage data =
+            await js1.DeserializeObjectAsync<SentMessage>(message.Message);
+
+        // Always assign this on the server.
+        data.NetworkSessionId = _networkSessionId;
+        data.SequenceNumber = ++_nextMessageSequence;
+
+        message.Message = await js1.SerializeObjectAsync(data);
+        message.Message = await js1.SerializeObjectAsync(data);
+
+        bool intendedForHost =
+            senderName != _sessionHostName &&
+            (message.SpecificPlayer == "" ||
+             message.SpecificPlayer == _sessionHostName);
+
+        if (intendedForHost)
+        {
+            _hostMessageJournal.Add(data);
+        }
+    }
 
     public async Task WaitForHostedGameAsync()
     {
@@ -102,7 +135,9 @@ public class MultiplayerConnectionHub : Hub, ISerializable
                 if (connection.UserID == _hostName)
                 {
                     ClearHost();
+                    ClearHostMessageJournal();
                     _playerList.Clear();
+                    _gameStarted = false;
                     _startedPlayers.Clear();
                     _sessionHostName = "";
                     _sessionGame = "";
@@ -185,6 +220,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             _maxPlayers = 0;
             _gameStarted = false;
             _startedPlayers.Clear();
+            ClearHostMessageJournal();
             _sessionHostName = "";
             _sessionGame = "";
             foreach (var player in _playerList.Values)
@@ -233,6 +269,41 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             // Existing admitted players take precedence when a host returns.
             // Otherwise, waiting clients are considered in arrival order.
             bool returningHost = _sessionHostName == nickName && _sessionGame == gameName;
+
+            if (returningHost && _gameStarted)
+            {
+                if (!_startedPlayers.Contains(nickName))
+                {
+                    await SendErrorAsync(
+                        "The returning host is not in the started game's roster.");
+                    return;
+                }
+
+                if (_startedPlayers.Count > maxPlayers)
+                {
+                    await SendErrorAsync(
+                        "This game cannot accommodate the existing players.");
+                    return;
+                }
+
+                _hostName = nickName;
+                _hostGame = gameName;
+                _maxPlayers = maxPlayers;
+                _hostRecovering = true;
+
+                _playerList[nickName] = new ConnectionInfo
+                {
+                    ConnectionID = Context.ConnectionId,
+                    UserID = nickName,
+                    GameName = gameName,
+                    IsConnected = true,
+                    IsAdmitted = true
+                };
+
+                await Clients.Caller.SendAsync("ReturningHost");
+                return;
+            }
+
             var reserved = new HashSet<string>(StringComparer.Ordinal);
             if (_nextGameHost == nickName)
             {
@@ -263,7 +334,10 @@ public class MultiplayerConnectionHub : Hub, ISerializable
             int availablePlaces = maxPlayers - 1 - missingReservedPlayers;
             var accepted = waiting.Take(availablePlaces).ToArray();
             var rejected = waiting.Skip(availablePlaces).ToArray();
-
+            if (returningHost == false)
+            {
+                ClearHostMessageJournal();
+            }
             foreach (var player in _playerList.Values)
             {
                 player.IsAdmitted = false;
@@ -463,6 +537,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
                 client.IsConnected = false;
                 client.IsAdmitted = false;
             }
+            ClearHostMessageJournal();
             _gameStarted = false;
             _startedPlayers.Clear();
             _reservedPlayers.Clear();
@@ -603,33 +678,75 @@ public class MultiplayerConnectionHub : Hub, ISerializable
         await _joinLock.WaitAsync();
         try
         {
-            // Pending clients and old-game traffic must not enter the active game.
+            string routingGame =
+                _hostGame != "" ? _hostGame : _sessionGame;
+
             ConnectionInfo? sender = FindCaller();
-            if (_hostGame == "" || gameName != _hostGame || sender is null
-                || !sender.IsConnected || !sender.IsAdmitted || sender.GameName != _hostGame)
+
+            if (routingGame == "" ||
+                gameName != routingGame ||
+                sender is null ||
+                !sender.IsConnected ||
+                !sender.IsAdmitted ||
+                sender.GameName != routingGame)
             {
                 return;
             }
-            NetworkMessage message = await js1.DeserializeObjectAsync<NetworkMessage>(tempMessage);
+
+            NetworkMessage message =
+                await js1.DeserializeObjectAsync<NetworkMessage>(tempMessage);
+
+            // Use the verified connection identity.
+            message.YourNickName = sender.UserID;
+
             if (message.SpecificPlayer != "")
             {
-                if (!_playerList.TryGetValue(message.SpecificPlayer, out var recipient)
-                    || !recipient.IsConnected || !recipient.IsAdmitted
-                    || recipient.GameName != _hostGame)
+                if (!_playerList.TryGetValue(
+                        message.SpecificPlayer, out var recipient) ||
+                    !recipient.IsAdmitted ||
+                    recipient.GameName != routingGame)
                 {
-                    await SendErrorAsync($"{message.SpecificPlayer} is not connected to this game.");
+                    await SendErrorAsync(
+                        $"{message.SpecificPlayer} is not a participant in this game.");
                     return;
                 }
-                await Clients.Client(recipient.ConnectionID)
-                    .SendAsync("ReceiveMessage", message.Message);
+
+                // Messages for an absent host are retained for catch-up.
+                // Other private recipients must still be connected.
+                if (!recipient.IsConnected &&
+                    recipient.UserID != _sessionHostName)
+                {
+                    await SendErrorAsync(
+                        $"{message.SpecificPlayer} is not connected to this game.");
+                    return;
+                }
+
+                await PrepareMessageAsync(message, sender.UserID);
+
+                if (CanReceiveLiveMessages(recipient))
+                {
+                    await Clients.Client(recipient.ConnectionID)
+                        .SendAsync("ReceiveMessage", message.Message);
+                }
+
                 return;
             }
-            var recipients = _playerList.Values.Where(x => x.IsConnected && x.IsAdmitted
-                && x.GameName == _hostGame && x.UserID != sender.UserID)
-                .Select(x => x.ConnectionID).ToArray();
+
+            await PrepareMessageAsync(message, sender.UserID);
+
+            var recipients = _playerList.Values
+                .Where(x =>
+                    CanReceiveLiveMessages(x) &&
+                    x.IsAdmitted &&
+                    x.GameName == routingGame &&
+                    x.UserID != sender.UserID)
+                .Select(x => x.ConnectionID)
+                .ToArray();
+
             foreach (string connectionId in recipients)
             {
-                await Clients.Client(connectionId).SendAsync("ReceiveMessage", message.Message);
+                await Clients.Client(connectionId)
+                    .SendAsync("ReceiveMessage", message.Message);
             }
         }
         finally
@@ -652,11 +769,162 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     {
         _hostName = "";
         _hostGame = "";
-        _gameStarted = false;
+        //_gameStarted = false;
         _maxPlayers = 0;
         // Preserve admission while the host is temporarily away. HostingAsync
         // gives those players priority if the host returns to the same game.
         // Starting another game explicitly clears admission in PrepareForNextGameAsync.
+    }
+
+    // Caller must hold _joinLock.
+    private static void ClearHostMessageJournal()
+    {
+        _hostMessageJournal.Clear();
+        _networkSessionId = Guid.NewGuid().ToString("N");
+        _hostRecovering = false;
+    }
+
+    public async Task<string> GetHostCatchUpAsync(
+        string networkSessionId,
+        long lastProcessedMessageSequence)
+    {
+        await _joinLock.WaitAsync();
+        try
+        {
+            if (!IsHostCaller())
+            {
+                throw new HubException(
+                    "Only the connected host can request catch-up messages.");
+            }
+
+            if (lastProcessedMessageSequence < 0)
+            {
+                throw new HubException(
+                    "The saved message sequence cannot be negative.");
+            }
+
+            HostCatchUpResult result = new()
+            {
+                NetworkSessionId = _networkSessionId,
+                LatestSequenceNumber = _nextMessageSequence,
+                SessionMatches =
+                    networkSessionId != "" &&
+                    networkSessionId == _networkSessionId
+            };
+
+            if (result.SessionMatches)
+            {
+                if (lastProcessedMessageSequence > _nextMessageSequence)
+                {
+                    throw new HubException(
+                        "The saved message sequence is ahead of the server.");
+                }
+
+                result.Messages = _hostMessageJournal
+                    .Where(x =>
+                        x.SequenceNumber > lastProcessedMessageSequence)
+                    .OrderBy(x => x.SequenceNumber)
+                    .ToList();
+            }
+
+            return await js1.SerializeObjectAsync(result);
+        }
+        finally
+        {
+            _joinLock.Release();
+        }
+    }
+    // Caller must hold _joinLock.
+    private static bool CanReceiveLiveMessages(ConnectionInfo recipient)
+    {
+        return recipient.IsConnected &&
+            (!_hostRecovering ||
+             recipient.UserID != _sessionHostName);
+    }
+
+
+    public async Task<bool> TryCompleteHostCatchUpAsync(
+        string networkSessionId,
+        long caughtUpThroughSequence,
+        string gameState)
+    {
+        await _joinLock.WaitAsync();
+        try
+        {
+            if (!IsHostCaller())
+            {
+                throw new HubException(
+                    "Only the connected host can complete catch-up.");
+            }
+
+            if (!_hostRecovering)
+            {
+                throw new HubException(
+                    "The host is not currently recovering.");
+            }
+
+            if (networkSessionId != _networkSessionId)
+            {
+                throw new HubException(
+                    "The network session changed during recovery.");
+            }
+
+            if (caughtUpThroughSequence < 0 ||
+                caughtUpThroughSequence > _nextMessageSequence)
+            {
+                throw new HubException(
+                    "The catch-up message sequence is invalid.");
+            }
+
+            // More traffic arrived after the host retrieved its snapshot.
+            // The host must retrieve and process another batch.
+            if (caughtUpThroughSequence != _nextMessageSequence)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(gameState))
+            {
+                throw new HubException(
+                    "The recovered game state is required.");
+            }
+
+            SentMessage restoreMessage = new()
+            {
+                Status = "restoregame",
+                Body = gameState,
+                NetworkSessionId = _networkSessionId,
+                SequenceNumber = ++_nextMessageSequence
+            };
+
+            string serializedMessage =
+                await js1.SerializeObjectAsync(restoreMessage);
+
+            var recipients = _playerList.Values
+                .Where(x =>
+                    x.IsConnected &&
+                    x.IsAdmitted &&
+                    x.GameName == _sessionGame &&
+                    x.UserID != _sessionHostName)
+                .Select(x => x.ConnectionID)
+                .ToArray();
+
+            foreach (string connectionId in recipients)
+            {
+                await Clients.Client(connectionId)
+                    .SendAsync("RestoreForReconnection");
+
+                await Clients.Client(connectionId)
+                    .SendAsync("ReceiveMessage", serializedMessage);
+            }
+
+            _hostRecovering = false;
+            return true;
+        }
+        finally
+        {
+            _joinLock.Release();
+        }
     }
 
 }
