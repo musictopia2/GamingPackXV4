@@ -11,7 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="10.0.3" />
-    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.6" />
+    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="10.0.7" />
   </ItemGroup>
   <ItemGroup>
     <SupportedPlatform Include="browser" />

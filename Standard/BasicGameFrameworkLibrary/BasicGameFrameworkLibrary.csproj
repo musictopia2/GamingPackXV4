@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="10.0.3" />
+	<PackageReference Include="Musictopia2.GamePackageContractsLibrary" Version="10.0.8" />
     <PackageReference Include="Musictopia2.CommonBasicLibraries" Version="10.0.2" />
     <PackageReference Include="Musictopia2.GamePackageDIGenerator" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="Musictopia2.GamePackageSerializeGenerator" Version="1.0.1" PrivateAssets="all" />
