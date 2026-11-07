@@ -1,0 +1,32 @@
+<PopupCenteredFull Width="80vw" Height="60vh" HeaderTitle="Player Settings Help" ShowCloseButton="true" ShowHeader="true" @bind-Visible="_showHelp">
+    <PlayerSettingsHelpComponent />
+</PopupCenteredFull>
+<div style="position: fixed; inset: 0; overflow: hidden; box-sizing: border-box; padding: 8px; padding-bottom: max(16px, env(safe-area-inset-bottom));">
+    <GameLabel SizeCategory="EnumSize.Large">
+        Setting Chosen: @PlayerMode
+    </GameLabel>
+    <div>
+        <GameActionButton SizeCategory="EnumSize.Large" Display="Show Help" CustomCallBack="ShowHelp" />
+        <GameActionButton SizeCategory="EnumSize.Large" Display="Cancel" CustomCallBack="() => OnCancel.InvokeAsync()" />
+    </div>
+    <div>
+        <GameActionButton SizeCategory="EnumSize.Large"
+                          Display="Single Player Only Options"
+                          CustomCallBack="() => OnPlayerSelectionChosen.InvokeAsync(EnumPlayerMode.SinglePlayer)" />
+
+        <GameActionButton SizeCategory="EnumSize.Large"
+                          Display="Host Game Only"
+                          CustomCallBack="() => OnPlayerSelectionChosen.InvokeAsync(EnumPlayerMode.Host)" />
+        <GameActionButton SizeCategory="EnumSize.Large"
+                          Display="All Game Options"
+                          CustomCallBack="() => OnPlayerSelectionChosen.InvokeAsync(EnumPlayerMode.AllOptions)" />
+    </div>
+    <div>
+        <GameActionButton SizeCategory="EnumSize.Large"
+                          Display="Let Host Choose Game"
+                          CustomCallBack="() => OnPlayerSelectionChosen.InvokeAsync(EnumPlayerMode.LetHostChoose)" />
+        <GameActionButton SizeCategory="EnumSize.Large"
+                          Display="Join Specific Game Only"
+                          CustomCallBack="() => OnPlayerSelectionChosen.InvokeAsync(EnumPlayerMode.JoinSpecificGame)" />
+    </div>
+</div>

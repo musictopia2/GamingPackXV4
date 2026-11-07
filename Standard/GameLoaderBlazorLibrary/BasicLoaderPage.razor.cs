@@ -1,4 +1,4 @@
-﻿namespace GameLoaderBlazorLibrary;
+namespace GameLoaderBlazorLibrary;
 public partial class BasicLoaderPage : IAsyncDisposable
 {
     [Inject]
@@ -7,6 +7,56 @@ public partial class BasicLoaderPage : IAsyncDisposable
     public IJSRuntime? JS { get; set; }
     [CascadingParameter]
     private MediaQueryListComponent Media { get; set; } = null!;
+
+
+    private string _nextGameHost = "";
+    private string _gameToReload = "";
+
+    private Task ReloadGameAsync()
+    {
+        return InvokeAsync(async () =>
+        {
+            if (DataContext!.GameName == "" ||
+                LoaderGlobalClass.PendingReload is not null)
+            {
+                return;
+            }
+
+            BasicData data = aa1.Resolver!.Resolve<BasicData>(); //not sure maybe.
+
+            ReloadGameRequest request = new()
+            {
+                GameName = DataContext.GameName,
+                IsClient = data.Client,
+                IsLocalGame = data.MultiPlayer == false
+            };
+
+            LoaderGlobalClass.PendingReload = request;
+
+            try
+            {
+                await BackToMainAsync();
+            }
+            catch
+            {
+                LoaderGlobalClass.PendingReload = null;
+                throw;
+            }
+
+            _gameToReload = request.GameName;
+            StateHasChanged();
+        });
+    }
+
+
+    private Task WaitForNextGameAsync(string hostName)
+    {
+        return InvokeAsync(async () =>
+        {
+            _nextGameHost = hostName;
+            await BackToMainAsync();
+        });
+    }
 
     protected override void OnParametersSet()
     {
@@ -21,16 +71,52 @@ public partial class BasicLoaderPage : IAsyncDisposable
         base.OnParametersSet();
     }
     private static string Version => $"Version: {GlobalClass.Version}";
+
+    private bool _showHostDiscovery = false;
+
+    private bool _showCompactCompatibleOnly;
+    //should be obvious because less games when its compact only.
+    //refreshing puts back to entire list.
+    public void ToggleCompactCompatible()
+    {
+        _showCompactCompatibleOnly = !_showCompactCompatibleOnly;
+    }
+    public void ShowHostDiscovery()
+    {
+        _showHostDiscovery = true;
+    }
+    public void CancelWaiting()
+    {
+        _showHostDiscovery = false;
+        _nextGameHost = "";
+    }
+
+
     private bool IsGameSupported(string game)
     {
         if (DataContext!.GameList.Contains(game) == false)
         {
             return false;
         }
-        return LayoutInfo.LayoutMode != EnumGameLayoutMode.Compact
+        if (LoaderGlobalClass.ChoosingNextGameAsHost)
+        {
+            GameRegistration? registration =
+                DataContext!.GetGameRegistration(game);
+
+            if (registration is null ||
+                registration.SupportsHumanGroup(
+                    LoaderGlobalClass.NextGameHumanCount) == false)
+            {
+                return false;
+            }
+        }
+        bool requiresCompact =
+            LayoutInfo.LayoutMode == EnumGameLayoutMode.Compact
+            || _showCompactCompatibleOnly;
+
+        return requiresCompact == false
             || DataContext.SupportsCompactLayout(game);
     }
-
     private BasicList<string> GetVisibleGames()
     {
         BasicList<string> games = [];
@@ -68,6 +154,19 @@ public partial class BasicLoaderPage : IAsyncDisposable
         }
         return "";
     }
+    private async Task SelectDiscoveredGameAsync(string game)
+    {
+        _nextGameHost = "";
+        _showHostDiscovery = false;
+        if (IsGameSupported(game) == false)
+        {
+            BlazorUIHelpers.Toast!.ShowWarningToast(
+                $"The host chose {game}, which is not available on this device.");
+            return;
+        }
+        await SelectGameAsync(game);
+    }
+
     private async Task SelectGameAsync(string game)
     {
         if (IsGameSupported(game) == false)
@@ -76,6 +175,10 @@ public partial class BasicLoaderPage : IAsyncDisposable
         }
         await JS!.SaveLatestGameAsync(game, BlazorUIHelpers.Toast!);
         _previousGame = game;
+        LoaderGlobalClass.AutoHostGameName =
+            LoaderGlobalClass.ChoosingNextGameAsHost ? game : "";
+
+        LoaderGlobalClass.ChoosingNextGameAsHost = false;
         DataContext!.ChoseGame(game);
     }
     private async Task OnUpdateAvailableAsync()
@@ -89,6 +192,15 @@ public partial class BasicLoaderPage : IAsyncDisposable
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (_gameToReload != "" && DataContext!.GameName == "")
+        {
+            string game = _gameToReload;
+            _gameToReload = "";
+
+            await SelectGameAsync(game);
+            return;
+        }
+
         if (firstRender && bb1.OS == bb1.EnumOS.Wasm && _worker != null)
         {
             await _worker.RegisterAsync(OnUpdateAvailableAsync);
@@ -111,18 +223,18 @@ public partial class BasicLoaderPage : IAsyncDisposable
             }
             if (GlobalDataModel.DataContext!.ServerMode == EnumServerMode.HomeHosting)
             {
-                BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = true;
+                HomeNetworkConfiguration.DoUseHome = true;
             }
             else
             {
-                BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = false;
+                HomeNetworkConfiguration.DoUseHome = false;
             }
             if (_showSettings == false)
             {
                 _previousGame = await GetAutomatedGameToLoadAsync();
                 if (_previousGame != "")
                 {
-                    OpenPreviousGame();
+                    await OpenPreviousGameAsync();
                     StateHasChanged(); //i think.
                 }
             }
@@ -130,14 +242,9 @@ public partial class BasicLoaderPage : IAsyncDisposable
             StateHasChanged();
         }
     }
-    private void OpenPreviousGame()
+    private async Task OpenPreviousGameAsync()
     {
-        if (IsGameSupported(_previousGame) == false)
-        {
-            return;
-        }
-        DataContext!.ChoseGame(_previousGame);
-        //DataContext!.GameName = _previousGame; //hopefully this simple.
+        await SelectGameAsync(_previousGame);
     }
     private bool CanShowGameList()
     {
@@ -155,7 +262,7 @@ public partial class BasicLoaderPage : IAsyncDisposable
         }
         return string.IsNullOrWhiteSpace(GlobalDataModel.DataContext.NickName) == false;
     }
-    private async void BackToMain()
+    private async Task BackToMainAsync()
     {
         if (aa1.Resolver!.RegistrationExist<IGameNetwork>())
         {
@@ -178,20 +285,20 @@ public partial class BasicLoaderPage : IAsyncDisposable
     protected override void OnInitialized()
     {
         //no longer a need to change latest game.  because it usually refreshes anyways.
-        LoaderGlobalClass.BackToMainDelegate = BackToMain;
+        LoaderGlobalClass.BackToMainDelegate = BackToMainAsync;
+        LoaderGlobalClass.ReloadGameAsync = ReloadGameAsync;
         if (bb1.OS == bb1.EnumOS.Wasm)
         {
             _worker = new(JS!);
         }
-        //LoaderGlobalClass.ChangeLatestGame = (string game) =>
-        //{
-        //    _previousGame = game;
-        //};
         DataContext!.StateChanged = () => InvokeAsync(StateHasChanged);
-        
         if (GlobalClass.Multiplayer == false)
         {
             _loadedOnce = true; //because not important since not using the settings.
+        }
+        else
+        {
+            LoaderGlobalClass.WaitForNextGameAsync = WaitForNextGameAsync;
         }
         base.OnInitialized();
     }
@@ -204,7 +311,9 @@ public partial class BasicLoaderPage : IAsyncDisposable
         }
 
         _disposed = true;
-
+        LoaderGlobalClass.WaitForNextGameAsync = null;
+        LoaderGlobalClass.ReloadGameAsync = null;
+        LoaderGlobalClass.PendingReload = null;
         DataContext?.StateChanged = null;
 
         if (_worker is not null)

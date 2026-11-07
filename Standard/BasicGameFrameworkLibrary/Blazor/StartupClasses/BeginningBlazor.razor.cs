@@ -21,6 +21,6 @@ public partial class BeginningBlazor
         }
         await GlobalStartUp.StartBootStrap.Invoke();
         //_mode = EnumGamePackageMode.Debug;
-        _mode = GlobalVariables.GetGamePackageMode;
+        _mode = GamePackageModeContext.GetGamePackageMode;
     }
 }

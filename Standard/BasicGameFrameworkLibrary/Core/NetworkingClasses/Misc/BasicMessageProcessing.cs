@@ -43,6 +43,12 @@ public class BasicMessageProcessing(IGamePackageResolver thisContainer,
                 await Task.Delay(100);
             } while (true);
         }
+        BasicData basic = thisContainer.Resolve<BasicData>();
+
+        SentMessage? previousProcessingMessage =
+            basic.ProcessingNetworkMessage;
+
+        basic.ProcessingNetworkMessage = thisMessage;
         try
         {
             InProgressHelpers.MoveInProgress = true;
@@ -129,18 +135,45 @@ public class BasicMessageProcessing(IGamePackageResolver thisContainer,
                     await thisMisc.MiscDataReceived(thisMessage.Status, thisMessage.Body);
                     break;
             }
+            if (thisMessage.SequenceNumber > 0 &&
+                !string.IsNullOrEmpty(thisMessage.NetworkSessionId))
+            {
+                if (basic.NetworkSessionId == thisMessage.NetworkSessionId)
+                {
+                    basic.LastProcessedMessageSequence = Math.Max(
+                        basic.LastProcessedMessageSequence,
+                        thisMessage.SequenceNumber);
+                }
+                else
+                {
+                    basic.NetworkSessionId = thisMessage.NetworkSessionId;
+                    basic.LastProcessedMessageSequence =
+                        thisMessage.SequenceNumber;
+                }
+            }
             InProgressHelpers.MoveInProgress = false;
         }
         catch (Exception ex)
         {
+            if (basic.HostCatchUpPending)
+            {
+                InProgressHelpers.MoveInProgress = false;
+                throw;
+            }
+
             if (thisTest.ShowErrorMessageBoxes == true)
             {
-                error.ShowSystemError(ex.Message); //which will close out but at least you get a messagebox.
+                error.ShowSystemError(ex.Message);
             }
             else
             {
                 throw;
             }
+        }
+        finally
+        {
+            basic.ProcessingNetworkMessage =
+                previousProcessingMessage;
         }
     }
 }

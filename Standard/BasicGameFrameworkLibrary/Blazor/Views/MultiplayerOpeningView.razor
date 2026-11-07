@@ -54,7 +54,7 @@
                     {
                         <GameActionButton  StartOnNewLine="true" CommandObject="DataContext.ResumeMultiplayerGameCommand" Display="Auto Resume Networked Game" />
                     }
-                    @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.HostOnly)
+                    @if (mode == EnumPlayerMode.AllOptions || mode == EnumPlayerMode.Host)
                     {
                         <GameActionButton StartOnNewLine="true" CommandObject="DataContext.RejoinMultiplayerGameCommand" Display="Host Rejoin Multiplayer Game" />
                     }
@@ -62,18 +62,18 @@
                     {
                         <GameActionButton StartOnNewLine="true" CommandObject="DataContext.TransferToDesktopCommand" Display="Transfer To Desktop" />
                     }
-                    @if (mode == EnumPlayerMode.Any)
+                    @if (mode == EnumPlayerMode.AllOptions || mode == EnumPlayerMode.SinglePlayer)
                     {
                         <GameActionButton StartOnNewLine="true" CommandObject="DataContext.ResumeSinglePlayerCommand" Display="Auto Resume Local Game" />
                     }
                 }
                 @if (DataContext.HasServer)
                 {
-                    @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.HostOnly)
+                    @if (mode == EnumPlayerMode.AllOptions || mode == EnumPlayerMode.Host)
                     {
                         <GameActionButton  StartOnNewLine="true" CommandObject="DataContext.HostCommand" Display="Start Network Game (Host)" />
                     }
-                    @if (mode == EnumPlayerMode.Any || mode == EnumPlayerMode.JoinOnly)
+                    @if (mode == EnumPlayerMode.AllOptions || mode == EnumPlayerMode.JoinSpecificGame)
                     {
                         <GameActionButton StartOnNewLine="true" CommandObject="DataContext.ConnectCommand" Display="Join Network Game" />
                     }
@@ -103,7 +103,7 @@
                 {
                     <LoadPlayerOptionsComponent P="P" PlayOption="EnumPlayOptions.ComputerExtra" />
                 }
-                @if (mode == EnumPlayerMode.Any)
+                @if (mode == EnumPlayerMode.AllOptions || mode == EnumPlayerMode.SinglePlayer)
                 {
                     @if (DataContext.CanShowSingleOptions)
                     {

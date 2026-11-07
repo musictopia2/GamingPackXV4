@@ -12,6 +12,11 @@
                     {
                         <TopBarButton CustomCallBack="aa1.BackToMainDelegate" Display="Back To Main" />
                     }
+                    @if (CanReloadGame)
+                    {
+                        <TopBarButton CustomCallBack="ReloadGameAsync"
+                                      Display="Reload Game" />
+                    }
                     <TopBarLabel Display="@GameInfo.GameName" />
                     <NewGameView />
                 </div>

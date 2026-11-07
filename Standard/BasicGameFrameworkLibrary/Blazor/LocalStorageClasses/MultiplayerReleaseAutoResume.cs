@@ -52,7 +52,17 @@ public class MultiplayerReleaseAutoResume : IMultiplayerSaveState
     }
     async Task IMultiplayerSaveState.DeleteMultiplayerGameAsync()
     {
-        await DeleteGameAsync();
+        if (CanChange() == false)
+        {
+            return;
+        }
+
+        if (_js.ContainsKey(_multiName) == false)
+        {
+            return;
+        }
+
+        await _js.StorageRemoveItemAsync(_multiName);
     }
     async Task<EnumRestoreCategory> IMultiplayerSaveState.MultiplayerRestoreCategoryAsync()
     {

@@ -54,13 +54,15 @@ public partial class MultiplayerOpeningView<P> : IHandle<OpenMultiplayerOpeningE
     {
         if (GlobalDataModel.DataContext is null)
         {
-            return EnumPlayerMode.Any;
+            return EnumPlayerMode.AllOptions; //this means for test game package, all options are available.
         }
         return GlobalDataModel.DataContext.PlayerMode;
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (_realLoad == false &&
+            DataContext?.IsOpeningReady == true &&
+            GameData is not null)
         {
             _hostNewGameInfo = await JS!.GetHostNewGameAsync();
             _clientNewGameInfo = await JS!.GetClientNewGameAsync();
@@ -70,6 +72,60 @@ public partial class MultiplayerOpeningView<P> : IHandle<OpenMultiplayerOpeningE
             }
             await JS!.DeleteNewGameDataAsync(); //go ahead and delete.  so if i start over again, has to do over again.
             _realLoad = true;
+            ReloadGameRequest? reload = LoaderGlobalClass.PendingReload;
+
+            if (reload is not null)
+            {
+                LoaderGlobalClass.PendingReload = null;
+
+                if (reload.GameName != GameData.GameName ||
+                    GameData.CanAutoSave == false)
+                {
+                    BasicBlazorLibrary.Helpers.BlazorUIHelpers.Toast!
+                        .ShowWarningToast("This game cannot be reloaded.");
+
+                    StateHasChanged();
+                    return;
+                }
+                BasicData basic = Resolver!.Resolve<BasicData>();
+
+                if (reload.IsLocalGame)
+                {
+                    if (DataContext!.CanResumeSinglePlayer == false)
+                    {
+                        BasicBlazorLibrary.Helpers.BlazorUIHelpers.Toast!
+                            .ShowWarningToast(
+                                "No saved local game is available to reload.");
+
+                        StateHasChanged();
+                        return;
+                    }
+
+                    basic.ReloadInProgress = true;
+                    await DataContext.ResumeSinglePlayerAsync();
+                    return;
+                }
+
+                if (reload.IsClient)
+                {
+                    basic.ReloadInProgress = true;
+                    await DataContext!.ConnectAsync();
+                    return;
+                }
+
+                if (DataContext!.CanRejoinMultiplayerGame() == false)
+                {
+                    BasicBlazorLibrary.Helpers.BlazorUIHelpers.Toast!
+                        .ShowWarningToast(
+                            "No saved multiplayer game is available to reload.");
+
+                    StateHasChanged();
+                    return;
+                }
+                basic.ReloadInProgress = true;
+                await DataContext.RejoinMultiplayerGameAsync();
+                return;
+            }
             if (_hostNewGameInfo is not null)
             {
                 NewGameContainer.NewGameHost = _hostNewGameInfo;
@@ -83,7 +139,18 @@ public partial class MultiplayerOpeningView<P> : IHandle<OpenMultiplayerOpeningE
             }
             if (_clientNewGameInfo is not null)
             {
-                await DataContext!.ConnectAsync(); //try this way (?)
+                await DataContext!.ConnectAsync();
+                return;
+            }
+            if (LoaderGlobalClass.AutoHostGameName == GameData!.GameName)
+            {
+                LoaderGlobalClass.AutoHostGameName = "";
+                await DataContext!.HostAsync();
+                return;
+            }
+            if (GetPlayerMode() == EnumPlayerMode.LetHostChoose)
+            {
+                await DataContext!.ConnectAsync();
                 return;
             }
             StateHasChanged(); //has to reload the state now.

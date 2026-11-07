@@ -741,4 +741,7 @@ public abstract partial class BasicMultiplayerShellViewModel<P>(IGamePackageReso
         ClosePrompt();
         await AfterClosingPromptAsync();
     }
+
+
+   
 }

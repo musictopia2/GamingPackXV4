@@ -33,6 +33,16 @@
                             {
                                 <TopBarButton CustomCallBack="aa1.BackToMainDelegate" Display="Back To Main" />
                             }
+                            @if (CanChooseAnotherGame)
+                            {
+                                <TopBarButton CustomCallBack="ChooseAnotherGameAsync"
+                                              Display="Choose Another Game" />
+                            }
+                            @if (CanReloadGame)
+                            {
+                                <TopBarButton CustomCallBack="ReloadGameAsync"
+                                              Display="Reload Game" />
+                            }
                             @if (TestData!.ShowNickNameOnShell)
                             {
                                 <TopBarLabel Display="@BasicData.NickName" />

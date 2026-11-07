@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using BasicGameFrameworkLibrary.Blazor.Shells
 <GamePackageFullScreen>
     <LandscapeShell>
@@ -27,6 +27,14 @@
             </div>
             return;
         }
+        @if (_nextGameHost != "")
+        {
+            <div>Waiting for @_nextGameHost to choose the next game...</div>
+            <HostedGameDiscoveryComponent OnCancel="CancelWaiting"
+                                          HostName="@_nextGameHost"
+                                          OnGameChosen="SelectDiscoveredGameAsync" />
+            return;
+        }
         @if (DataContext.GameName == "")
         {
             @if (_showSettings)
@@ -38,24 +46,96 @@
                 <div style="flex: 0 0 auto;">
                     @if (GlobalClass.Multiplayer)
                     {
-                        <StackLayout>
-                            <StackItem>
-                                <TopBarButton CustomCallBack="OpenSettings" Display="Show Settings" />
-                            </StackItem>
-                            <StackItem>
-                                <TopBarButton CustomCallBack="RefreshAsync" Display="Refresh Manually" />
-                            </StackItem>
+                        <div style="display: flex; align-items: center;
+                            flex-wrap: nowrap; gap: 0.5rem;
+                            overflow-x: auto;">
+
+                            <div style="flex: 0 0 auto;">
+                                <TopBarButton CustomCallBack="OpenSettings"
+                                              Display="Show Settings" />
+                            </div>
+
+                            <div style="flex: 0 0 auto;">
+                                <TopBarButton CustomCallBack="RefreshAsync"
+                                              Display="Refresh Manually" />
+                            </div>
+
                             @if (IsGameSupported(_previousGame))
                             {
-                                <StackItem>
-                                    <TopBarButton CustomCallBack="OpenPreviousGame" Display="@_previousGame" />
-                                </StackItem>
+                                <div style="flex: 0 0 auto;">
+                                    @if (GlobalDataModel.DataContext?.PlayerMode
+                                        == EnumPlayerMode.LetHostChoose)
+                                    {
+                                        <TopBarLabel Display="@_previousGame" />
+                                    }
+                                    else
+                                    {
+                                        <TopBarButton CustomCallBack="OpenPreviousGameAsync"
+                                                      Display="@_previousGame" />
+                                    }
+                                </div>
                             }
-                            <StackItem>
-                                <TopBarLabel Display="@Version" />
-                            </StackItem>
 
-                        </StackLayout>
+                            <div style="flex: 0 0 auto;">
+                                <TopBarLabel Display="@Version" />
+                            </div>
+
+                            @if (GlobalClass.HasServer &&
+                                (GlobalDataModel.DataContext?.PlayerMode
+                                    == EnumPlayerMode.LetHostChoose ||
+                                 GlobalDataModel.DataContext?.PlayerMode
+                                    == EnumPlayerMode.AllOptions))
+                            {
+                                <div style="display: flex; align-items: center; flex: 0 0 auto;">
+                                    @if (_showHostDiscovery == false)
+                                    {
+                                        <TopBarButton CustomCallBack="ShowHostDiscovery"
+                                                      Display="Connect To Host" />
+                                    }
+                                    else
+                                    {
+                                        <HostedGameDiscoveryComponent OnCancel="CancelWaiting"
+                                                                      OnGameChosen="SelectDiscoveredGameAsync" />
+                                    }
+                                </div>
+                            }
+                            @if (GlobalClass.HasServer && LayoutInfo.LayoutMode is not EnumGameLayoutMode.Compact &&
+                                (GlobalDataModel.DataContext?.PlayerMode
+                                    == EnumPlayerMode.Host ||
+                                 GlobalDataModel.DataContext?.PlayerMode
+                                    == EnumPlayerMode.AllOptions))
+                            {
+                                <TopBarButton CustomCallBack="ToggleCompactCompatible"
+                                              Display="@(_showCompactCompatibleOnly
+                                              ? "Show All Games"
+                                              : "Show Small-Device Games Only")" />
+                            }
+                        </div>
+                    }
+                </div>
+                <div>
+                    @if (LoaderGlobalClass.ChoosingNextGameAsHost)
+                    {
+                        <div>
+                            Showing games that support your group of
+                            @LoaderGlobalClass.NextGameHumanCount human players.
+                        </div>
+                    }
+
+                    @if (LayoutInfo.LayoutMode == EnumGameLayoutMode.Compact)
+                    {
+                        <div>
+                            Showing games for this device.
+                            Larger devices support additional games.
+                        </div>
+                    }
+                    else if (_showCompactCompatibleOnly)
+                    {
+                        <div>Filter: Small-device compatible games</div>
+                    }
+                    else if (LoaderGlobalClass.ChoosingNextGameAsHost == false)
+                    {
+                        <div>Showing all games in this bundle</div>
                     }
                 </div>
                 <div style="flex: 1 1 0; min-height: 0; min-width: 0; overflow-y: auto;">
@@ -69,7 +149,15 @@
                         else
                         {
                             <WrapLayout ColumnWidth="22vw" Margins="3px" RenderList="visibleGames" Context="game">
-                                <GameSelectionButton OnClick="() => SelectGameAsync(game)" Display="@game" />
+                                @if (GlobalClass.Multiplayer
+                                    && GlobalDataModel.DataContext?.PlayerMode == EnumPlayerMode.LetHostChoose)
+                                {
+                                    <div style="font-size: 2rem;">@game</div>
+                                }
+                                else
+                                {
+                                    <GameSelectionButton OnClick="() => SelectGameAsync(game)" Display="@game" />
+                                }
                             </WrapLayout>
                         }
                     }

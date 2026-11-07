@@ -25,12 +25,72 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
     {
         if (GlobalHelpers.LoadGameScreenAsync == null)
         {
-            throw new CustomBasicException("Did not set the load game function when finishing up.  Rethink");
+            throw new CustomBasicException(
+                "Did not set the load game function when finishing up. Rethink");
         }
+
         await GlobalHelpers.LoadGameScreenAsync.Invoke();
+
+        if (basic.HostStartOverPending)
+        {
+            await FinishStartAsync();
+            await FinishHostStartOverAsync();
+            return;
+        }
+
         await Step1FinishAsync(isBeginning);
-        //command.UpdateAll();
         await FinishStartAsync();
+    }
+    private async Task FinishHostStartOverAsync()
+    {
+        if (!basic.HostCatchUpPending ||
+            !basic.HostStartOverPending ||
+            !basic.MultiPlayer ||
+            basic.Client)
+        {
+            throw new CustomBasicException(
+                "The host is not currently preparing a replacement game.");
+        }
+
+        if (_gameSetUp!.Network is not IHostCatchUpNetwork recovery)
+        {
+            throw new CustomBasicException(
+                "The current network does not support host Start Over.");
+        }
+
+        if (string.IsNullOrEmpty(basic.NetworkSessionId))
+        {
+            throw new CustomBasicException(
+                "The replacement game's network session is missing.");
+        }
+
+        await _gameSetUp.PopulateSaveRootAsync();
+
+        _gameSetUp.SaveRoot!.NetworkSessionId =
+            basic.NetworkSessionId;
+
+        _gameSetUp.SaveRoot.LastProcessedMessageSequence =
+            basic.LastProcessedMessageSequence;
+
+        string gameState =
+            await js1.SerializeObjectAsync(_gameSetUp.SaveRoot);
+
+        // Save the prepared replacement before distributing it.
+        await state.SaveStateAsync(_gameSetUp.SaveRoot);
+
+        await recovery.CompleteHostStartOverAsync(
+            basic.NetworkSessionId,
+            gameState);
+
+        basic.HostStartOverPending = false;
+        basic.HostCatchUpPending = false;
+        command.HostCatchUpInProgress = false;
+
+        InProgressHelpers.Reconnecting = false;
+
+        await ContinueLoadedGameAsync();
+
+        command.Processing = false;
     }
     private async Task Step1FinishAsync(bool isBeginning)
     {
@@ -88,23 +148,54 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
     }
     private async Task FinishStartAsync()
     {
-        bool rets;
-        rets = resolver.RegistrationExist<IFinishStart>();
-        if (rets == true)
+        await InitializeLoadedGameAsync();
+
+        if (basic.HostCatchUpPending)
         {
-            IFinishStart thisFinish = resolver.Resolve<IFinishStart>();
-            await thisFinish.FinishStartAsync();
+            command.ManuelFinish = true;
+            command.IsExecuting = true;
+            command.Processing = true;
+
+            InProgressHelpers.MoveInProgress = false;
+            return;
         }
+
+        await ContinueLoadedGameAsync();
+    }
+
+    private async Task InitializeLoadedGameAsync()
+    {
+        if (resolver.RegistrationExist<IFinishStart>())
+        {
+            IFinishStart finish = resolver.Resolve<IFinishStart>();
+            await finish.FinishStartAsync();
+        }
+
         _gameSetUp!.StartingStatus();
+
         if (_gameSetUp!.PlayerList?.Count > 0)
         {
-            _gameSetUp.SingleInfo = _gameSetUp.PlayerList.GetWhoPlayer();
+            _gameSetUp.SingleInfo =
+                _gameSetUp.PlayerList.GetWhoPlayer();
         }
+
         _gameSetUp.ShowTurn();
 
-
         await aggregator.PublishAsync(
-            new RefreshScoreBoardEventModel<P>(_gameSetUp!.PlayerList!));
+            new RefreshScoreBoardEventModel<P>(
+                _gameSetUp.PlayerList!));
+    }
+
+    private async Task ContinueLoadedGameAsync()
+    {
+        if (_gameSetUp!.PlayerList?.Count > 0)
+        {
+            _gameSetUp.SingleInfo =
+                _gameSetUp.PlayerList.GetWhoPlayer();
+        }
+
+        _gameSetUp.ShowTurn();
+
         if (_gameSetUp.SaveRoot!.ImmediatelyStartTurn)
         {
             await _gameSetUp.StartNewTurnAsync();
@@ -112,6 +203,12 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
         else
         {
             await _gameSetUp.ContinueTurnAsync();
+        }
+
+        if (basic.ReloadInProgress)
+        {
+            basic.ReloadInProgress = false;
+            toast.ShowSuccessToast("Game reloaded successfully.");
         }
     }
     async Task IStartMultiPlayerGame<P>.LoadNewGameAsync(PlayerCollection<P> startList)
@@ -178,24 +275,142 @@ public sealed class BasicGameLoader<P, S>(BasicData basic,
     private async Task<bool> GetSavedRootAsync()
     {
         string payLoad = await state.SavedDataAsync<S>();
+        
         if (payLoad == "")
         {
             _gameSetUp!.SaveRoot = resolver.Resolve<S>();
             return false;
         }
-        _gameSetUp!.SaveRoot = await js1.DeserializeObjectAsync<S>(payLoad);
+
+        _gameSetUp!.SaveRoot =
+            await js1.DeserializeObjectAsync<S>(payLoad);
+
+        if (basic.MultiPlayer && !basic.Client)
+        {
+            basic.NetworkSessionId =
+                _gameSetUp.SaveRoot.NetworkSessionId;
+
+            basic.LastProcessedMessageSequence =
+                _gameSetUp.SaveRoot.LastProcessedMessageSequence;
+
+            basic.ProcessingNetworkMessage = null;
+        }
+
         return true;
     }
     private async Task FinishHostSavedAsync()
     {
+        command.HostCatchUpInProgress = basic.HostCatchUpPending;
         await FinishGetSavedAsync();
-        if (basic.MultiPlayer == true)
+
+        if (basic.HostCatchUpPending)
         {
-            await _gameSetUp!.Network!.SendLoadGameMessageAsync(_gameSetUp.SaveRoot!);
+            if (_gameSetUp!.Network is not IHostCatchUpNetwork recovery)
+            {
+                throw new CustomBasicException(
+                    "The current network does not support host catch-up.");
+            }
+
+            await FinishStartAsync();
+            await CatchUpHostAsync(recovery);
+            return;
         }
-        //command.UpdateAll();
+
+        if (basic.MultiPlayer)
+        {
+            await _gameSetUp!.Network!
+                .SendLoadGameMessageAsync(_gameSetUp.SaveRoot!);
+        }
+
         await FinishStartAsync();
         command.Processing = false;
+    }
+    private async Task CatchUpHostAsync(IHostCatchUpNetwork recovery)
+    {
+        InProgressHelpers.Reconnecting = false;
+
+        while (true)
+        {
+            HostCatchUpResult batch = await recovery.GetHostCatchUpAsync(
+                basic.NetworkSessionId,
+                basic.LastProcessedMessageSequence);
+            
+            if (!batch.SessionMatches ||
+                batch.NetworkSessionId != basic.NetworkSessionId)
+            {
+                string savedSession = string.IsNullOrEmpty(basic.NetworkSessionId)
+                    ? "<empty>"
+                    : basic.NetworkSessionId;
+
+                                throw new CustomBasicException(
+                                    $"Saved session: {savedSession}\n" +
+                                    $"Server session: {batch.NetworkSessionId}\n" +
+                                    $"Saved sequence: {basic.LastProcessedMessageSequence}");
+            }
+
+            int previousSequence =
+                basic.LastProcessedMessageSequence;
+
+            if (batch.LatestSequenceNumber < previousSequence)
+            {
+                throw new CustomBasicException(
+                    "The server returned an invalid catch-up position.");
+            }
+
+            foreach (SentMessage message in batch.Messages)
+            {
+                if (message.NetworkSessionId != batch.NetworkSessionId ||
+                    message.SequenceNumber <= previousSequence ||
+                    message.SequenceNumber > batch.LatestSequenceNumber)
+                {
+                    throw new CustomBasicException(
+                        "The server returned an invalid catch-up message.");
+                }
+
+                await recovery.ReplayHostMessageAsync(message);
+
+                previousSequence = message.SequenceNumber;
+            }
+
+            // The entire batch has now been applied.
+            // Gaps can represent messages addressed to other players.
+            basic.LastProcessedMessageSequence =
+                batch.LatestSequenceNumber;
+
+            await _gameSetUp!.PopulateSaveRootAsync();
+
+            _gameSetUp.SaveRoot!.NetworkSessionId =
+                basic.NetworkSessionId;
+
+            _gameSetUp.SaveRoot.LastProcessedMessageSequence =
+                basic.LastProcessedMessageSequence;
+
+            string gameState =
+                await js1.SerializeObjectAsync(_gameSetUp.SaveRoot);
+
+            // Persist this completed batch before asking the server
+            // to distribute its resulting state.
+            await state.SaveStateAsync(_gameSetUp.SaveRoot);
+
+            bool completed = await recovery.TryCompleteHostCatchUpAsync(
+                basic.NetworkSessionId,
+                batch.LatestSequenceNumber,
+                gameState);
+
+            if (!completed)
+            {
+                // More messages arrived while this batch was processing.
+                continue;
+            }
+
+            basic.HostCatchUpPending = false;
+            command.HostCatchUpInProgress = false;
+
+            await ContinueLoadedGameAsync();
+
+            command.Processing = false;
+            return;
+        }
     }
     async Task IRequestNewGameRound.RequestNewGameAsync()
     {

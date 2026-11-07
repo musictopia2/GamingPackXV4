@@ -35,17 +35,37 @@ public abstract partial class SinglePlayerShellViewModel(IGamePackageResolver ma
     //protected virtual Task HandleGameOverFlowAsync() => Task.CompletedTask;
 
 
-    
 
     async Task IStartShell.InitAsync()
     {
-        //this was where i had the older activate one.
-        Unsubscribe(); //hopefully i can have here just in case.
-        Subscribe(); //here is where i have to now subscribe
+        Unsubscribe();
+        Subscribe();
+
+        ReloadGameRequest? reload = LoaderGlobalClass.PendingReload;
+        IGameInfo game = mainContainer.Resolve<IGameInfo>();
+
+        bool isReload =
+            reload is not null &&
+            reload.IsLocalGame &&
+            reload.GameName == game.GameName;
+
+        if (isReload)
+        {
+            LoaderGlobalClass.PendingReload = null;
+
+            if (game.CanAutoSave == false ||
+                await saves.CanOpenSavedSinglePlayerGameAsync() == false)
+            {
+                throw new CustomBasicException(
+                    "The saved game is no longer available to reload.");
+            }
+        }
+
         if (AlwaysNewGame)
         {
             ShowNewGame();
         }
+
         if (AutoStartNewGame)
         {
             await StartNewGameAsync();
@@ -53,6 +73,12 @@ public abstract partial class SinglePlayerShellViewModel(IGamePackageResolver ma
         else
         {
             await OpenStartingOptionsAsync();
+        }
+
+        if (isReload)
+        {
+            mainContainer.Resolve<IToast>().ShowSuccessToast(
+                "Game reloaded successfully.");
         }
     }
     async Task IHandleAsync<NewGameEventModel>.HandleAsync(NewGameEventModel message)

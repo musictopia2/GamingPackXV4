@@ -5,7 +5,7 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
     IGameInfo gameInfo,
     IEventAggregator aggregator,
     IToast toast
-        ) : IGameNetwork //not necessarily local anymore.
+        ) : IGameNetwork, IHostCatchUpNetwork //not necessarily local anymore.
 {
     private readonly Queue<SentMessage> _messages = new();
     private readonly Lock _synLock = new();
@@ -15,13 +15,15 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
     public bool HasServer => true;
     public Task InitAsync()
     {
+        GamePackageSignalRClasses.Core.AutoResumeContexts
+            .GlobalRegistrations.Register();
         _client1 = new SimpleClientClass(thisTCP, gameInfo, toast);
         _client1.OnReceivedMessage += Client1_OnReceivedMessage;
         _client1.NickName = NickName;
         _thisOpen = resolver.Resolve<IOpeningMessenger>();
         return Task.CompletedTask;
     }
-    private async void Client1_OnReceivedMessage(object? sender, CustomEventHandler e)
+    private async Task ProcessReceivedMessageAsync(CustomEventHandler e)
     {
         switch (e.Category)
         {
@@ -36,6 +38,15 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
                 break;
             case EnumNetworkCategory.Hosting:
                 IsEnabled = false;
+                resolver.Resolve<BasicData>().HostCatchUpPending = false;
+                resolver.Resolve<BasicData>().HostStartOverPending = false;
+                await _thisOpen!.HostConnectedAsync(this);
+                break;
+
+            case EnumNetworkCategory.ReturningHost:
+                IsEnabled = false;
+                resolver.Resolve<BasicData>().HostCatchUpPending = true;
+                resolver.Resolve<BasicData>().HostStartOverPending = false;
                 await _thisOpen!.HostConnectedAsync(this);
                 break;
             case EnumNetworkCategory.Client:
@@ -80,8 +91,39 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
                 toast.ShowInfoToast("Game is being restored which means redoing turns in progress since body got disconnected then reconnected again");
                 //hopefully nothing else is needed (?)
                 break;
+            case EnumNetworkCategory.WaitingForNextGame:
+                IsEnabled = false;
+                ClearMessages();
+                await aggregator.PublishAsync(
+                    new WaitingForNextGameEventModel(e.Message));
+                break;
+            case EnumNetworkCategory.JoinRejected:
+                IsEnabled = false;
+                ClearMessages();
+
+                await aggregator.PublishAsync(
+                    new JoinRejectedEventModel(e.Message));
+                break;
             default:
                 break;
+        }
+    }
+    private async void Client1_OnReceivedMessage(
+        object? sender,
+        CustomEventHandler e)
+    {
+        try
+        {
+            await ProcessReceivedMessageAsync(e);
+        }
+        catch (Exception ex)
+        {
+            Exception cause = ex.GetBaseException();
+
+            IMessageBox messages = resolver.Resolve<IMessageBox>();
+            //for now, showing error as message box with basics is okay.
+            await messages.ShowMessageAsync(
+                $"{cause.GetType().Name}\n\n{cause.Message}");
         }
     }
     public async Task ProcessDataAsync(SentMessage thisData) //done.
@@ -138,9 +180,15 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
     }
     public async Task SendAllAsync(SentMessage tmessage)
     {
+        if (resolver.Resolve<BasicData>().HostCatchUpPending)
+        {
+            return;
+        }
+
         NetworkMessage output = new();
         output.Message = await js1.SerializeObjectAsync(tmessage);
         output.YourNickName = NickName;
+
         await _client1!.SendMessageAsync(output);
     }
     public async Task SendSeveralSetsAsync<T>(T thisList, string finalPart)
@@ -155,12 +203,19 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
         SentMessage output = StartNewMessage(message);
         await SendToParticularPlayerAsync(output, toWho);
     }
-    public async Task SendToParticularPlayerAsync(SentMessage message, string toWho)
+    public async Task SendToParticularPlayerAsync(
+        SentMessage message,
+        string toWho)
     {
+        if (resolver.Resolve<BasicData>().HostCatchUpPending)
+        {
+            return;
+        }
         NetworkMessage output = new();
         output.SpecificPlayer = toWho;
         output.YourNickName = NickName;
         output.Message = await js1.SerializeObjectAsync(message);
+
         await _client1!.SendMessageAsync(output);
     }
     public static SentMessage StartNewMessage(string message)
@@ -181,6 +236,11 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
         get { return _isEnabled; }
         set
         {
+            if (value &&
+                resolver.Resolve<BasicData>().HostCatchUpPending)
+            {
+                return;
+            }
             if (SetProperty(ref _isEnabled, value))
             {
                 if (value == true)
@@ -315,5 +375,98 @@ public class SignalRMessageService(ISignalRInfo thisTCP,
     public async Task NewGameAsync()
     {
         await _client1!.NewGameAsync();
+    }
+
+    async Task IGameNetwork.PrepareForNextGameAsync()
+    {
+        if (_client1 is null)
+        {
+            throw new CustomBasicException(
+                "The network client has not been initialized.");
+        }
+
+        await _client1.PrepareForNextGameAsync();
+    }
+
+    public async Task<HostCatchUpResult> GetHostCatchUpAsync(
+        string networkSessionId,
+        long lastProcessedMessageSequence)
+    {
+        if (_client1 is null)
+        {
+            throw new CustomBasicException(
+                "The network client has not been initialized.");
+        }
+
+        return await _client1.GetHostCatchUpAsync(
+            networkSessionId,
+            lastProcessedMessageSequence);
+    }
+
+    public async Task<bool> TryCompleteHostCatchUpAsync(
+        string networkSessionId,
+        long caughtUpThroughSequence,
+        string gameState)
+    {
+        if (_client1 is null)
+        {
+            throw new CustomBasicException(
+                "The network client has not been initialized.");
+        }
+
+        return await _client1.TryCompleteHostCatchUpAsync(
+            networkSessionId,
+            caughtUpThroughSequence,
+            gameState);
+    }
+    public async Task ReplayHostMessageAsync(SentMessage message)
+    {
+        if (!resolver.Resolve<BasicData>().HostCatchUpPending)
+        {
+            throw new CustomBasicException(
+                "Host messages can only be replayed during catch-up.");
+        }
+
+        IsEnabled = false;
+
+        // Lobby notifications are not missed gameplay.
+        if (string.Equals(
+            message.Status, "ready", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        try
+        {
+            await thisMessage.ProcessMessageAsync(message);
+        }
+        finally
+        {
+            IsEnabled = false;
+        }
+    }
+    public async Task<string> BeginHostStartOverAsync()
+    {
+        if (_client1 is null)
+        {
+            throw new CustomBasicException(
+                "The network client has not been initialized.");
+        }
+        return await _client1.BeginHostStartOverAsync();
+    }
+
+    public async Task CompleteHostStartOverAsync(
+        string networkSessionId,
+        string gameState)
+    {
+        if (_client1 is null)
+        {
+            throw new CustomBasicException(
+                "The network client has not been initialized.");
+        }
+
+        await _client1.CompleteHostStartOverAsync(
+            networkSessionId,
+            gameState);
     }
 }

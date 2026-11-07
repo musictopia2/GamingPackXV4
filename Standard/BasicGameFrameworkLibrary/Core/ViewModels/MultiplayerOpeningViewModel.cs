@@ -18,6 +18,7 @@ public partial class MultiplayerOpeningViewModel<P>
 
     where P : class, IPlayerItem, new()
 {
+    public bool IsOpeningReady { get; private set; }
     private EnumRestoreCategory _singleRestore;
     private EnumRestoreCategory _multiRestore;
     private PlayerCollection<P> _playerList = new();
@@ -29,6 +30,7 @@ public partial class MultiplayerOpeningViewModel<P>
     partial void CreateCommands(CommandContainer container);
     async Task IHandleAsync<OpenMultiplayerOpeningEventModel<P>>.HandleAsync(OpenMultiplayerOpeningEventModel<P> message)
     {
+        IsOpeningReady = false;
         _singleRestore = await state.SinglePlayerRestoreCategoryAsync();
         _multiRestore = await state.MultiplayerRestoreCategoryAsync();
         if (_multiRestore != EnumRestoreCategory.NoRestore)
@@ -44,16 +46,22 @@ public partial class MultiplayerOpeningViewModel<P>
         OpeningStatus = EnumOpeningStatus.None;
         ShowOtherChangesBecauseOfNetworkChange();
         commandContainer.OpenBusy = false;
+        IsOpeningReady = true;
         StateChanged?.Invoke();
     }
-
-    async Task IHandleAsync<CloseMultiplayerOpeningEventModel<P>>.HandleAsync(CloseMultiplayerOpeningEventModel<P> message)
+    
+    async Task IHandleAsync<CloseMultiplayerOpeningEventModel<P>>.HandleAsync(
+        CloseMultiplayerOpeningEventModel<P> message)
     {
+        data.GetOpeningHumanPlayerCount = null;
         Unsubscribe();
     }
-
     void IMultiplayerOpeningVM<P>.Initialize()
     {
+        data.GetOpeningHumanPlayerCount = () =>
+            _playerList.GetTemporaryList().Count(
+                player => player.PlayerCategory != EnumPlayerCategory.Computer);
+
         Subscribe();
         commandContainer.OpenBusy = true;
         CreateCommands(commandContainer);
@@ -138,16 +146,28 @@ public partial class MultiplayerOpeningViewModel<P>
             {
                 return false;
             }
+
             if (_multiRestore == EnumRestoreCategory.NoRestore)
             {
                 return false;
             }
-            BasicList<P> temporaryList = _playerList.GetTemporaryList();
+
             if (_saveList == null)
             {
-                throw new CustomBasicException("Save list was never created to figure out whether can resume multiplayer game.  Rethink");
+                return false;
             }
-            return temporaryList.DoesReconcile(_saveList, Items => Items.NickName);
+
+            if (data.HostCatchUpPending)
+            {
+                return _saveList.Any(player =>
+                    player.IsHost &&
+                    player.NickName == data.NickName);
+            }
+
+            BasicList<P> temporaryList = _playerList.GetTemporaryList();
+
+            return temporaryList.DoesReconcile(
+                _saveList, player => player.NickName);
         }
     }
     [Command(EnumCommandCategory.Open)]
@@ -214,51 +234,59 @@ public partial class MultiplayerOpeningViewModel<P>
     }
     public bool CanStart(int howManyExtra)
     {
-        //return false;
-        if (_multiRestore == EnumRestoreCategory.MustRestore)
+        if (OpeningStatus != EnumOpeningStatus.HostingReadyToStart ||
+            _multiRestore == EnumRestoreCategory.MustRestore ||
+            howManyExtra < 0)
         {
             return false;
         }
-        int tempCount = _playerList.GetTemporaryCount;
-        if (tempCount == 0)
+
+        int humanCount;
+
+        if (data.HostCatchUpPending)
+        {
+            if (string.IsNullOrEmpty(_savedData))
+            {
+                return false;
+            }
+
+            humanCount = _saveList?.Count ?? 0;
+        }
+        else
+        {
+            humanCount = _playerList.GetTemporaryCount;
+        }
+
+        if (humanCount == 0)
         {
             return false;
         }
-        if (howManyExtra > 0 && game.CanHaveExtraComputerPlayers == false)
+
+        if (howManyExtra > 0 && !game.CanHaveExtraComputerPlayers)
         {
             return false;
         }
-        if (howManyExtra > 0)
-        {
-            if (howManyExtra + tempCount > game.MaxPlayers)
-            {
-                return false;
-            }
-            if (howManyExtra + tempCount < game.MinPlayers)
-            {
-                return false;
-            }
-            if (howManyExtra + tempCount == game.NoPlayers)
-            {
-                return false;
-            }
-        }
-        if (howManyExtra == 0)
-        {
-            if (tempCount < game.MinPlayers)
-            {
-                return false; //because not enough players.
-            }
-        }
-        return OpeningStatus == EnumOpeningStatus.HostingReadyToStart;
+
+        int totalPlayers = humanCount + howManyExtra;
+
+        return totalPlayers >= game.MinPlayers &&
+            totalPlayers <= game.MaxPlayers &&
+            totalPlayers != game.NoPlayers;
     }
     [Command(EnumCommandCategory.Open)]
     public async Task StartAsync(int howManyExtra)
     {
+        if (data.HostCatchUpPending)
+        {
+            await StartOverMultiplayerGameAsync(howManyExtra);
+            return;
+        }
+
         if (howManyExtra > 0)
         {
             _playerList.LoadPlayers(0, howManyExtra);
         }
+
         data.MultiPlayer = true;
         await StartNewGameAsync();
     }
@@ -429,6 +457,34 @@ public partial class MultiplayerOpeningViewModel<P>
     async Task IOpeningMessenger.HostConnectedAsync(IGameNetwork network)
     {
         data.Client = false;
+        data.NickName = network.NickName;
+
+        if (data.HostCatchUpPending)
+        {
+            data.MultiPlayer = true;
+            network.IsEnabled = false;
+
+            if (_rejoin)
+            {
+                await ResumeMultiplayerGameAsync();
+                return;
+            }
+
+            _playerList = new();
+            AddHostPlayer();
+
+            if (_saveList != null)
+            {
+                PreviousNonComputerNetworkedPlayers = _saveList.Count - 1;
+            }
+
+            OpeningStatus = EnumOpeningStatus.HostingReadyToStart;
+            commandContainer.OpenBusy = false;
+            ShowOtherChangesBecauseOfNetworkChange();
+            StateChanged?.Invoke();
+            return;
+        }
+
         if (_rejoin)
         {
             await ResumeMultiplayerGameAsync();
@@ -438,12 +494,15 @@ public partial class MultiplayerOpeningViewModel<P>
         network.IsEnabled = true;
         _playerList = new();
         AddHostPlayer();
+
         if (_saveList != null)
         {
             PreviousNonComputerNetworkedPlayers = _saveList.Count - 1;
         }
+
         OpeningStatus = EnumOpeningStatus.HostingWaitingForAtLeastOnePlayer;
         commandContainer.OpenBusy = false;
+        ShowOtherChangesBecauseOfNetworkChange();
         StateChanged?.Invoke();
     }
     private void AddHostPlayer()
@@ -521,5 +580,80 @@ public partial class MultiplayerOpeningViewModel<P>
     {
         return FinishWaitingForHostAsync(network);
     }
+    private async Task StartOverMultiplayerGameAsync(int howManyExtra)
+    {
+        if (!data.HostCatchUpPending || !CanStart(howManyExtra))
+        {
+            throw new CustomBasicException(
+                "Starting a replacement multiplayer game is not currently available.");
+        }
 
+        if (nets is not IHostCatchUpNetwork recovery)
+        {
+            throw new CustomBasicException(
+                "The current network does not support host Start Over.");
+        }
+
+        IRetrieveSavedPlayers<P> retrieve =
+            Resolver!.Resolve<IRetrieveSavedPlayers<P>>();
+
+        PlayerCollection<P> savedPlayers =
+            await retrieve.GetPlayerListAsync(_savedData);
+
+        if (savedPlayers.Count == 0 ||
+            !savedPlayers.Any(player =>
+                player.IsHost &&
+                player.NickName == data.NickName))
+        {
+            throw new CustomBasicException(
+                "The saved player roster is unavailable or has a different host.");
+        }
+
+        PlayerCollection<P> freshPlayers = new();
+
+        foreach (P previous in savedPlayers)
+        {
+            if (previous.PlayerCategory == EnumPlayerCategory.Computer)
+            {
+                continue;
+            }
+
+            P player = new()
+            {
+                Id = previous.Id,
+                NickName = previous.NickName,
+                IsHost = previous.IsHost,
+                PlayerCategory = previous.PlayerCategory,
+                IsReady = true
+            };
+
+            player.InGame = player.CanStartInGame;
+            freshPlayers.AddPlayer(player);
+        }
+
+        if (howManyExtra > 0)
+        {
+            freshPlayers.LoadPlayers(0, howManyExtra);
+        }
+
+        string sessionId = await recovery.BeginHostStartOverAsync();
+
+        data.NetworkSessionId = sessionId;
+        data.LastProcessedMessageSequence = 0;
+        data.ProcessingNetworkMessage = null;
+
+        data.MultiPlayer = true;
+        data.Client = false;
+        data.HostStartOverPending = true;
+
+        nets.IsEnabled = false;
+        commandContainer.HostCatchUpInProgress = true;
+
+        _rejoin = false;
+        _playerList = freshPlayers;
+
+        NewGameContainer.NewGameHost = null;
+
+        await StartNewGameAsync();
+    }
 }

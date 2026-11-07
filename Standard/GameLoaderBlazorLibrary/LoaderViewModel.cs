@@ -9,15 +9,17 @@ public abstract class LoaderViewModel : ILoaderVM
     protected IStartUp Starts;
     protected EnumGamePackageMode Mode;
     public BasicList<string> GameList { get; protected set; } = [];
-    private readonly Dictionary<string, bool> _compactSupport = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, GameRegistration> _games =
+        new(StringComparer.Ordinal);
 
     // Call from GenerateGameList so the catalog uses the game's existing metadata.
-    protected void RegisterGame(string gameName, bool supportsCompact)
+    protected void RegisterGame(GameRegistration game)
     {
-        _compactSupport[gameName] = supportsCompact;
-        if (GameList.Contains(gameName) == false)
+        _games[game.GameName] = game;
+
+        if (GameList.Contains(game.GameName) == false)
         {
-            GameList.Add(gameName);
+            GameList.Add(game.GameName);
         }
     }
 
@@ -25,7 +27,14 @@ public abstract class LoaderViewModel : ILoaderVM
     // it is hidden on phones because its compact support has not been supplied.
     public bool SupportsCompactLayout(string game)
     {
-        return _compactSupport.TryGetValue(game, out bool supported) && supported;
+        return GetGameRegistration(game)?.SupportsCompactLayout == true;
+    }
+
+    public GameRegistration? GetGameRegistration(string game)
+    {
+        return _games.TryGetValue(game, out var registration)
+            ? registration
+            : null;
     }
     public LoaderViewModel(IStartUp starts)
     {

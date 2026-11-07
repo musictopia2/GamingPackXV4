@@ -21,6 +21,10 @@ public class BasicGameContainer<P, S>
     IRandomGenerator random)
     {
         BasicData = basicData;
+        BasicData.GetHumanPlayerCount = () =>
+            PlayerList?.Count(
+                player => player.PlayerCategory != EnumPlayerCategory.Computer)
+            ?? 0;
         Network = BasicData.GetNetwork();
         Test = test;
         GlobalDelegates.GetGameID = () => SaveRoot.GameID;

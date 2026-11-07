@@ -45,4 +45,5 @@ public interface IGameNetwork
     bool IsEnabled { get; set; } //this for sure is needed.
     Task InitAsync(); //we reserve the right for it to be async.
     void ClearMessages();
+    Task PrepareForNextGameAsync();
 }

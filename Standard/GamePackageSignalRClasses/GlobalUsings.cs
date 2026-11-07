@@ -1,4 +1,4 @@
-﻿global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Data;
+﻿global using GamePackageContractsLibrary;
 global using BasicGameFrameworkLibrary.Core.BasicGameDataClasses;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
 global using CommonBasicLibraries.BasicDataSettingsAndProcesses;

@@ -2,6 +2,8 @@
 public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrapper, ISetGamePackageMode
     , IHandleAsync<SocketErrorEventModel>,
     IHandleAsync<ClientNewGameEventModel>,
+    IHandleAsync<WaitingForNextGameEventModel>,
+    IHandleAsync<JoinRejectedEventModel>,
     IHandleAsync<DisconnectEventModel>, IDisposable
     where TViewModel : IMainGPXShellVM //needs generic so its able to do the part to active a screen if any.
 {
@@ -20,7 +22,7 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
         _mode = mode;
         _globalTestOptionsUrl = globalTestOptionsUrl;
         _aggregator = new EventAggregator();
-        GlobalVariables.SetMode(this);
+        GamePackageModeContext.SetMode(this);
         InitializationTask = InitalizeAsync();
     }
     protected void ConfigureTestOptions(Action<TestOptions> configure)
@@ -262,10 +264,34 @@ public abstract partial class BasicGameBootstrapper<TViewModel> : IGameBootstrap
     {
         //await ReconnectToHostAsync();
     }
-
     public void Dispose()
     {
         Unsubscribe();
         GC.SuppressFinalize(this);
+    }
+    async Task IHandleAsync<WaitingForNextGameEventModel>.HandleAsync(WaitingForNextGameEventModel message)
+    {
+        var callback = LoaderGlobalClass.WaitForNextGameAsync;
+        if (callback is null)
+        {
+            throw new CustomBasicException(
+                "The loader must handle waiting for the next game.");
+        }
+        await callback.Invoke(message.HostName);
+    }
+
+    async Task IHandleAsync<JoinRejectedEventModel>.HandleAsync(JoinRejectedEventModel message)
+    {
+        var backToMain = LoaderGlobalClass.BackToMainDelegate;
+
+        if (backToMain is null)
+        {
+            throw new CustomBasicException(
+                "The loader must handle returning from a rejected join.");
+        }
+
+        await backToMain.Invoke();
+
+        BlazorUIHelpers.Toast!.ShowUserErrorToast(message.Reason); //this is still a user error i think.
     }
 }

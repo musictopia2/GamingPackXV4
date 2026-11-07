@@ -1,0 +1,14 @@
+﻿<div style="display: inline-flex; align-items: center;
+    flex-wrap: nowrap; gap: 0.5rem;">
+
+    <div style="@(_loading
+         ? "visibility: visible; flex-shrink: 0;"
+         : "visibility: hidden; flex-shrink: 0;")">
+        <TopBarButton Display="Cancel Waiting"
+                      CustomCallBack="CancelAsync" />
+    </div>
+
+    <div style="white-space: nowrap;">
+        <TopBarLabel Display="@_message" />
+    </div>
+</div>

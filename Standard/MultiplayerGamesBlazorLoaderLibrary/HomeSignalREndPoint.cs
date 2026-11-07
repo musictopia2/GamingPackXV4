@@ -5,16 +5,12 @@ public class HomeSignalREndPoint : ISignalRInfo
     {
         return Task.FromResult("/hubs/gamepackage/messages"); //this is if using the public nuget packages for your server.
     }
-    Task<string> ITCPInfo.GetIPAddressAsync()
+    Task<string> ISignalRInfo.GetIPAddressAsync()
     {
-        return Task.FromResult(vv1.HomeIPAddress);
+        return Task.FromResult(HomeNetworkConfiguration.HomeIPAddress);
     }
-    Task<int> ITCPInfo.GetPortAsync()
+    Task<int?> ISignalRInfo.GetPortAsync()
     {
-        return Task.FromResult(vv1.HomePort);
-    }
-    Task<bool> ISignalRInfo.IsAzureAsync()
-    {
-        return Task.FromResult(false); //not azure for sure.
+        return Task.FromResult<int?>(HomeNetworkConfiguration.HomePort);
     }
 }

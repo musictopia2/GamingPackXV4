@@ -3,79 +3,104 @@ public partial class GameSettingsComponent
 {
     [Parameter]
     public EventCallback CloseSettings { get; set; }
+
     [Inject]
-    IJSRuntime? JS { get; set; } //this should have its own js.
+    private IJSRuntime? JS { get; set; }
+
     [Inject]
     private IToast? Toast { get; set; }
-    private static string GetRows => gg1.RepeatAuto(11); //for now, 6 instead of 7 (?)
-    private static string GetColumns => gg1.RepeatMaximum(2); //may eventually do a special grid control that specialize in adding in data and it would just work.
+
+    private static string GetRows => gg1.RepeatAuto(8);
+    private static string GetColumns => gg1.RepeatMaximum(2);
+    private bool _showPlayerSettings = false;
+
+    private void CancelPlayerSettings()
+    {
+        _showPlayerSettings = false;
+    }
+
+    
+
+
+    private void ShowPlayerSettings()
+    {
+        _showPlayerSettings = true;
+    }
+
     private bool _beginaccept;
+
     protected override void OnInitialized()
     {
         _beginaccept = GlobalDataModel.NickNameAcceptable();
         base.OnInitialized();
     }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && GlobalDataModel.NickNameAcceptable() == false)
+        if (firstRender
+            && GlobalDataModel.DataContext != null
+            && GlobalDataModel.NickNameAcceptable() == false)
         {
             await _nickElement.FocusAsync();
-            return;
-        }
-        if (_useCustom)
-        {
-            await _customElement.FocusAsync();
-            _useCustom = false;
         }
     }
-    private bool _useCustom;
-    private void UpdateAzureServerOptions(EnumAzureMode mode)
-    {
-        GlobalDataModel.DataContext!.AzureMode = mode;
-        if (mode == EnumAzureMode.CustomAzure)
-        {
-            _useCustom = true;
-        }
-        GlobalDataModel.DataContext.ServerMode = EnumServerMode.AzureHosting; //in this case, do azure hosting.
-        BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = false;
-    }
-    private static void UpdateMiscServerOptions(EnumServerMode mode)
+
+    private static void UpdateServerOptions(EnumServerMode mode)
     {
         GlobalDataModel.DataContext!.ServerMode = mode;
-        //will not update the azure mode though.
-        if (mode == EnumServerMode.HomeHosting)
-        {
-            BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = true;
-        }
-        else
-        {
-            BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables.DoUseHome = false;
-        }
+
+        HomeNetworkConfiguration.DoUseHome =
+            mode == EnumServerMode.HomeHosting;
     }
-    private static void UpdatePlayerOptions(EnumPlayerMode mode)
+
+    private void UpdatePlayerOptions(EnumPlayerMode mode)
     {
+        if (mode == EnumPlayerMode.None)
+        {
+            return;
+        }
         GlobalDataModel.DataContext!.PlayerMode = mode;
+        _showPlayerSettings = false;
     }
+
     private async Task SaveChangesAsync()
     {
-        if (GlobalDataModel.DataContext == null || JS == null)
+        var settings = GlobalDataModel.DataContext;
+
+        if (settings == null || JS == null)
         {
+            return;
+        }
+        if (settings.PlayerMode == EnumPlayerMode.None)
+        {
+            Toast!.ShowUserErrorToast("Must choose player mode option");
+            //nothing to focus on (for now, hopefully okay).
+            //when going to the screen, don't show old options.
             return;
         }
         if (GlobalDataModel.NickNameAcceptable() == false)
         {
-            Toast!.ShowUserErrorToast("Needs to enter nick name at least");
+            Toast!.ShowUserErrorToast(
+                "Enter a nickname using only letters a–z.");
             await _nickElement.FocusAsync();
             return;
         }
+
         if (LoaderGlobalClass.SaveSettingsAsync is null)
         {
-            throw new CustomBasicException("Nobody is handling the saving of the settings");
+            throw new CustomBasicException(
+                "Nobody is handling the saving of the settings");
         }
+
+        settings.CustomHostedServerUrl =
+            settings.CustomHostedServerUrl?.Trim() ?? "";
+
         await LoaderGlobalClass.SaveSettingsAsync.Invoke(JS);
+
         Toast!.ShowSuccessToast($"Saved Changes On {DateTime.Now}");
         await CloseSettings.InvokeAsync();
     }
+
     private async Task CancelAsync()
     {
         await CloseSettings.InvokeAsync();

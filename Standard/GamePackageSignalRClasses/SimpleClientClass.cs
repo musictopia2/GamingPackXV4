@@ -1,5 +1,5 @@
 ﻿namespace GamePackageSignalRClasses;
-public class SimpleClientClass
+public class SimpleClientClass : ISerializable
 {
     public string NickName { get; set; } = "";
     private readonly ISignalRInfo _connectInfo;
@@ -25,21 +25,17 @@ public class SimpleClientClass
         {
             throw new CustomBasicException("Already connected.  Rethink");
         }
-        bool isAzure = await _connectInfo.IsAzureAsync();
-        int port = 0;
-        if (isAzure == false)
-        {
-            port = await _connectInfo.GetPortAsync();
-        }
+        int? port = await _connectInfo.GetPortAsync();
+        
         string ipAddress = await _connectInfo.GetIPAddressAsync();
         string endPoint = await _connectInfo.GetEndPointAsync(); //i do like the interface method for this.
-        if (isAzure == false)
+        if (port.HasValue)
         {
             _hubConnection = new HubConnectionBuilder()
-        .WithUrl($"{ipAddress}:{port}{endPoint}"
-        )
-        .WithAutomaticReconnect()
-        .Build();
+            .WithUrl($"{ipAddress}:{port}{endPoint}"
+            )
+            .WithAutomaticReconnect()
+            .Build();
         }
         else
         {
@@ -102,6 +98,21 @@ public class SimpleClientClass
         _hubConnection.On("RestoreForReconnection", () =>
         {
             _thisProgress.Report(new CustomEventHandler(EnumNetworkCategory.RestoreForReconnection));
+        });
+        _hubConnection.On<string>("WaitingForNextGame", hostName =>
+        {
+            _thisProgress.Report(new CustomEventHandler(
+                EnumNetworkCategory.WaitingForNextGame, hostName));
+        });
+        _hubConnection.On<string>("JoinRejected", reason =>
+        {
+            _thisProgress.Report(new CustomEventHandler(
+                EnumNetworkCategory.JoinRejected, reason));
+        });
+        _hubConnection.On("ReturningHost", () =>
+        {
+            _thisProgress.Report(
+                new CustomEventHandler(EnumNetworkCategory.ReturningHost));
         });
         try
         {
@@ -180,7 +191,11 @@ public class SimpleClientClass
         {
             throw new CustomBasicException("You need to specify a nick name in order to host game");
         }
-        await _hubConnection!.InvokeAsync("HostingAsync", NickName, _gameInfo.GameName); //hopefully it works.
+        await _hubConnection!.InvokeAsync(
+            "HostingAsync",
+            NickName,
+            _gameInfo.GameName,
+            _gameInfo.MaxPlayers); //hopefully it works.
     }
     public async Task ConnectToHostAsync()
     {
@@ -268,4 +283,83 @@ public class SimpleClientClass
         await _hubConnection.InvokeAsync("CloseConnection");
         await PrivateDisconnectAsync();
     }
+    public async Task PrepareForNextGameAsync()
+    {
+        if (_hubConnection is null ||
+            _hubConnection.State != HubConnectionState.Connected)
+        {
+            throw new CustomBasicException(
+                "Must be connected before choosing the next game.");
+        }
+
+        await _hubConnection.InvokeAsync("PrepareForNextGameAsync");
+    }
+
+    public async Task<HostCatchUpResult> GetHostCatchUpAsync(
+        string networkSessionId,
+        long lastProcessedMessageSequence)
+    {
+        if (_hubConnection is null ||
+            _hubConnection.State != HubConnectionState.Connected)
+        {
+            throw new CustomBasicException(
+                "Must be connected before requesting host catch-up.");
+        }
+
+        string result = await _hubConnection.InvokeAsync<string>(
+            "GetHostCatchUpAsync",
+            networkSessionId,
+            lastProcessedMessageSequence);
+
+        return await js1.DeserializeObjectAsync<HostCatchUpResult>(result);
+    }
+
+    public async Task<bool> TryCompleteHostCatchUpAsync(
+        string networkSessionId,
+        long caughtUpThroughSequence,
+        string gameState)
+    {
+        if (_hubConnection is null ||
+            _hubConnection.State != HubConnectionState.Connected)
+        {
+            throw new CustomBasicException(
+                "Must be connected before completing host catch-up.");
+        }
+
+        return await _hubConnection.InvokeAsync<bool>(
+            "TryCompleteHostCatchUpAsync",
+            networkSessionId,
+            caughtUpThroughSequence,
+            gameState);
+    }
+    public async Task<string> BeginHostStartOverAsync()
+    {
+        if (_hubConnection is null ||
+            _hubConnection.State != HubConnectionState.Connected)
+        {
+            throw new CustomBasicException(
+                "Must be connected before starting over.");
+        }
+
+        return await _hubConnection.InvokeAsync<string>(
+            "BeginHostStartOverAsync");
+    }
+
+    public async Task CompleteHostStartOverAsync(
+        string networkSessionId,
+        string gameState)
+    {
+        if (_hubConnection is null ||
+            _hubConnection.State != HubConnectionState.Connected)
+        {
+            throw new CustomBasicException(
+                "Must be connected before completing Start Over.");
+        }
+
+        await _hubConnection.InvokeAsync(
+            "CompleteHostStartOverAsync",
+            networkSessionId,
+            gameState);
+    }
+
 }

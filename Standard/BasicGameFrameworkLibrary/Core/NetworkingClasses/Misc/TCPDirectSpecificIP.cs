@@ -252,4 +252,10 @@ public class TCPDirectSpecificIP(ITCPInfo thisTCP,
     {
         return Task.CompletedTask; //still not sure how tcp will  let everybody know about new game either.
     }
+
+    Task IGameNetwork.PrepareForNextGameAsync()
+    {
+        throw new NotSupportedException(
+        "Switching games together requires the SignalR server.");
+    }
 }

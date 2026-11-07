@@ -8,4 +8,5 @@ public interface ILoaderVM
     void ChoseGame(string game);
     BasicList<string> GameList { get; }
     bool SupportsCompactLayout(string game) => false;
+    GameRegistration? GetGameRegistration(string game);
 }

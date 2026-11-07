@@ -1,0 +1,51 @@
+V04 compact-device filtering
+
+LayoutInfo.LayoutMode was originally set in GameContentShell.OnInitialized.
+BasicLoaderPage now also sets it in OnParametersSet, before listing games,
+using the same device-size mapping:
+SmallPhone, LargePhone, SmallTablet => Compact
+LargeTablet => Tablet
+Desktop => Desktop
+Filtering checks LayoutInfo.LayoutMode == Compact, so small tablets are
+restricted along with phones. Cascading media updates recalculate the mode.
+The visible list, previous-game button, and automatic reopening all use it.
+The original full GameList is retained, so later device changes can show it again.
+No changes to BasicGameFrameworkLibrary or individual game projects are needed.
+
+Required bundle integration
+In each bundle's GenerateGameList(), replace the name-only list with calls to
+RegisterGame, passing each game's existing IGameInfo details object.
+These two registrations use the supplied and verified game classes:
+
+protected override void GenerateGameList()
+{
+    RegisterGame(new ConnectFour.Core.Data.ConnectFourDetailClass());
+    RegisterGame(new Risk.Core.Data.RiskDetailClass());
+}
+
+This is an example for a bundle referencing those two games, not a replacement
+for SimpleMultiplayerBundle's four-game list. Use the actual details classes for
+Tic Tac Toe, Kismet, and Concentration when updating that sample. Their sources
+were not supplied, so this archive does not guess their class names.
+
+RegisterGame reads GameName and SupportsCompactLayout from IGameInfo. Keep
+ChooseGame() and GetGameType() unchanged, with their existing matching names.
+Preserve game order by calling RegisterGame in the desired display order.
+
+Older name-only registrations still compile and remain visible on tablets and
+desktops. They are hidden on compact devices until their details have been registered.
+Register every catalog game before deploying the updated loader to compact devices.
+
+Deployment/build
+This remains a V04 change. Update the shared loader library and each affected
+bundle's GenerateGameList; rebuilding and deploying the affected bundles can
+use the established full-loader build process. No V05 game copies are required.
+This archive does not alter or replace that build process.
+
+Validation
+Source review only: this environment has no .NET SDK, so no C#/Razor build or
+browser/device execution was possible. The full 90-plus-game build was not run.
+After registration and a build with your existing process, check that Connect
+Four is present on phones/small tablets and Risk is absent. Both should remain
+visible on large tablets and desktops. A saved Risk entry must not reopen Risk
+on a compact device. Actual small-tablet testing remains outstanding.

@@ -136,11 +136,43 @@ public abstract class BasicGameClass<P, S> :
     }
     public async Task SaveStateAsync()
     {
-        if (BasicData!.MultiPlayer == true && BasicData.Client == true)
+        if (BasicData!.MultiPlayer && BasicData.Client)
         {
             return;
         }
+
         await PopulateSaveRootAsync();
+
+        if (BasicData.MultiPlayer)
+        {
+            SentMessage? currentMessage =
+                BasicData.ProcessingNetworkMessage;
+
+            if (currentMessage is not null &&
+                currentMessage.SequenceNumber > 0 &&
+                !string.IsNullOrEmpty(currentMessage.NetworkSessionId))
+            {
+                SaveRoot!.NetworkSessionId =
+                    currentMessage.NetworkSessionId;
+
+                SaveRoot.LastProcessedMessageSequence =
+                    currentMessage.SequenceNumber;
+            }
+            else
+            {
+                SaveRoot!.NetworkSessionId =
+                    BasicData.NetworkSessionId;
+
+                SaveRoot.LastProcessedMessageSequence =
+                    BasicData.LastProcessedMessageSequence;
+            }
+        }
+
+        if (BasicData.HostCatchUpPending)
+        {
+            return;
+        }
+
         await State!.SaveStateAsync(SaveRoot!);
     }
     public virtual async Task ShowWinAsync() //because board games has to also do something else.
@@ -169,6 +201,14 @@ public abstract class BasicGameClass<P, S> :
         await SaveStateAsync();
         GetPlayerToContinueTurn();
         await LoadPossibleOtherScreensAsync();
+        if (BasicData!.HostCatchUpPending)
+        {
+            _command.ManuelFinish = true;
+            _command.IsExecuting = true;
+            _command.Processing = true;
+            InProgressHelpers.MoveInProgress = false;
+            return;
+        }
         if (SingleInfo!.PlayerCategory == EnumPlayerCategory.Self)
         {
             await ShowHumanCanPlayAsync();

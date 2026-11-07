@@ -1,7 +1,15 @@
 @using BasicGameFrameworkLibrary.Core.StandardImplementations.Settings;
-@using bb1 = BasicGameFrameworkLibrary.Core.MiscProcesses.GlobalVariables;
+@using bb1 = GameLoaderBlazorLibrary.HomeNetworkConfiguration;
 @if (GlobalDataModel.DataContext == null)
 {
+    return;
+}
+@if (_showPlayerSettings)
+{
+    <PlayerSettingsMainComponent
+        PlayerMode="GlobalDataModel.DataContext.PlayerMode"
+        OnCancel="CancelPlayerSettings"
+        OnPlayerSelectionChosen="UpdatePlayerOptions" />
     return;
 }
 <div style="position: fixed; inset: 0; overflow: auto; box-sizing: border-box; padding: 8px; padding-bottom: max(16px, env(safe-area-inset-bottom));">
@@ -9,118 +17,114 @@
                    RowGap="10px"
                    Columns="@GetColumns"
                    Rows="@GetRows">
+
         <GridItem Row="1" Column="1">
             <div class="margins">
                 Server Option Chosen
             </div>
         </GridItem>
+
         <GridItem Row="1" Column="2">
             <div class="margins">
-                @if (bb1.CanUseHome == false)
-                {
-                    @GlobalDataModel.DataContext.AzureMode
-                }
-                else if (GlobalDataModel.DataContext.ServerMode != EnumServerMode.AzureHosting)
-                {
-                    @GlobalDataModel.DataContext.ServerMode
-                }
-                else
-                {
-                    @GlobalDataModel.DataContext.AzureMode
-                }
-                
+                @GlobalDataModel.DataContext.ServerMode
             </div>
-
         </GridItem>
+
         <GridItem Row="2" Column="1">
             <div class="margins">
                 Nick Name
             </div>
-
         </GridItem>
+
         <GridItem Row="2" Column="2">
-            <input @ref="_nickElement" class="margins" @bind="GlobalDataModel.DataContext.NickName" @bind:event="oninput" />
+            <input @ref="_nickElement"
+                   class="margins"
+                   autocapitalize="none"
+                   @bind="GlobalDataModel.DataContext.NickName"
+                   @bind:event="oninput" />
         </GridItem>
-
-        @if (GlobalDataModel.DataContext.AzureMode == EnumAzureMode.CustomAzure)
-        {
-            <GridItem Row="3" Column="1">
-                Server Address
-            </GridItem>
-        }
-
 
         <GridItem Row="3" Column="2">
-            @if (GlobalDataModel.DataContext.AzureMode == EnumAzureMode.CustomAzure)
-            {
-                <input class="margins" @ref="_customElement" @bind="GlobalDataModel.DataContext.CustomAzureEndPoint" />
-            }
-            else
-            {
-                <GameActionButton CustomCallBack="() => UpdateAzureServerOptions(EnumAzureMode.CustomAzure)" Display="Use Custom Azure Server" />
-            }
+            <GameActionButton CustomCallBack="() => UpdateServerOptions(EnumServerMode.HostedServer)"
+                              Display="Use Hosted Server" />
         </GridItem>
-        <GridItem Row="4" Column="1">
 
-        </GridItem>
-        <GridItem Row="4" Column="2">
-            <GameActionButton CustomCallBack="() => UpdateAzureServerOptions(EnumAzureMode.PublicAzure)" Display="Use Public Azure Server" />
-        </GridItem>
-        <GridItem Row="5" Column="1">
-
-        </GridItem>
-        <GridItem Row="5" Column="2">
-            <GameActionButton CustomCallBack="() => UpdateAzureServerOptions(EnumAzureMode.PrivateAzure)" Display="Use Private Azure Server" />
-            <div class="margins">
-                For private option, only a few select people can host a game.
-            </div>
-        </GridItem>
-        @if (bb1.CanUseHome)
+        @if (GlobalDataModel.DataContext.ServerMode == EnumServerMode.HostedServer)
         {
-            <GridItem Row="6" Column="1">
-
-            </GridItem>
-            <GridItem Row="6" Column="2">
-                <GameActionButton CustomCallBack="() => UpdateMiscServerOptions(EnumServerMode.HomeHosting)" Display="Use Home Hosting" />
+            <GridItem Row="4" Column="1">
                 <div class="margins">
-                    This allows hosting on your own network.  You are responsible for making sure that server exists.
+                    Custom Server URL
+                </div>
+            </GridItem>
+
+            <GridItem Row="4" Column="2">
+                <input class="margins"
+                       @bind="GlobalDataModel.DataContext.CustomHostedServerUrl" />
+
+                <div class="margins">
+                    Leave blank to use the default server.
                 </div>
             </GridItem>
         }
-        <GridItem Row="7" Column="1">
 
+        @if (bb1.CanUseHome)
+        {
+            <GridItem Row="5" Column="2">
+                <GameActionButton CustomCallBack="() => UpdateServerOptions(EnumServerMode.HomeHosting)"
+                                  Display="Use Home Hosting" />
+
+                <div class="margins">
+                    This allows hosting on your own network.
+                    You are responsible for making sure that server exists.
+                </div>
+            </GridItem>
+        }
+
+
+        <GridItem Row="6" Column="1">
+            Change Player Options
         </GridItem>
+        <GridItem Row="6" Column="2">
+            <GameActionButton CustomCallBack="ShowPlayerSettings" Display="Change Player Settings" />
+        </GridItem>
+
+
+        @* <GridItem Row="6" Column="2">
+            <GameActionButton CustomCallBack="() => UpdatePlayerOptions(EnumPlayerMode.Any)"
+                              Display="Use Any Player Option" />
+        </GridItem>
+
         <GridItem Row="7" Column="2">
-            <GameActionButton CustomCallBack="() => UpdatePlayerOptions(EnumPlayerMode.Any)" Display="Use Any Player Option" />
+            <GameActionButton CustomCallBack="() => UpdatePlayerOptions(EnumPlayerMode.HostOnly)"
+                              Display="Host Game Only" />
         </GridItem>
-        <GridItem Row="8" Column="1">
 
-        </GridItem>
         <GridItem Row="8" Column="2">
-            <GameActionButton CustomCallBack="() => UpdatePlayerOptions(EnumPlayerMode.HostOnly)" Display="Host Game Only" />
-        </GridItem>
-        <GridItem Row="9" Column="1">
+            <GameActionButton CustomCallBack="() => UpdatePlayerOptions(EnumPlayerMode.JoinOnly)"
+                              Display="Join Game Only" />
+        </GridItem> *@
 
-        </GridItem>
-        <GridItem Row="9" Column="2">
-            <GameActionButton CustomCallBack="() => UpdatePlayerOptions(EnumPlayerMode.JoinOnly)" Display="Join Game Only" />
-        </GridItem>
-        <GridItem Row="10" Column="1">
+        <GridItem Row="7" Column="1">
             Player Mode
         </GridItem>
-        <GridItem Row="10" Column="2">
-            @GlobalDataModel.DataContext!.PlayerMode
+
+        <GridItem Row="7" Column="2">
+            @GlobalDataModel.DataContext.PlayerMode
         </GridItem>
-        <GridItem Row="11" Column="2">
-            <GameActionButton CustomCallBack="SaveChangesAsync" Display="Save Changes" />
+
+        <GridItem Row="8" Column="2">
+            <GameActionButton CustomCallBack="SaveChangesAsync"
+                              Display="Save Changes" />
+
             @if (_beginaccept)
             {
-                <GameActionButton CustomCallBack="CancelAsync" Display="Cancel" />
+                <GameActionButton CustomCallBack="CancelAsync"
+                                  Display="Cancel" />
             }
         </GridItem>
     </GridContainer>
 </div>
-@code{
-    ElementReference _nickElement;
-    ElementReference _customElement;
+
+@code {
+    private ElementReference _nickElement;
 }

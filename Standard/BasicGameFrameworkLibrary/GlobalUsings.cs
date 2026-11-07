@@ -68,7 +68,6 @@ global using BasicGameFrameworkLibrary.Core.StandardImplementations.AutoResumeNa
 //global using BasicGameFrameworkLibrary.Core.StandardImplementations.Settings;
 global using ff2 = CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.FileFunctions.FileContentRegistry;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Interfaces;
-global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Data;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfaceMessages;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.GameContainers;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
@@ -106,3 +105,4 @@ global using ll1 = BasicGameFrameworkLibrary.Blazor.Helpers.LayoutInfo;
 global using gg1 = BasicGameFrameworkLibrary.Blazor.Configuration.GameDisplayOptions;
 global using BasicGameFrameworkLibrary.Blazor.Configuration;
 global using BasicGameFrameworkLibrary.Blazor.BasicControls.SimpleControls.Labels;
+global using GamePackageContractsLibrary;

@@ -5,12 +5,22 @@ public class CommandContainer
     private readonly BasicList<IGameCommand> _commands = [];
     private readonly BasicList<IControlObservable> _controls = new();
     private readonly BasicList<IGameCommand> _opens = new();
+    private bool _hostCatchUpInProgress;
+    public bool HostCatchUpInProgress
+    {
+        get => _hostCatchUpInProgress;
+        set
+        {
+            if (_hostCatchUpInProgress == value)
+            {
+                return;
+            }
 
-    //public static void UpdateScreen(string key)
-    //{
-    //    CommandContainer container = Resolver!.Resolve<CommandContainer>();
-    //    container.UpdateSpecificAction(key);
-    //}
+            _hostCatchUpInProgress = value;
+            ReportAllCommandStates();
+            ExecutingChanged?.Invoke();
+        }
+    }
 
     private readonly HashSet<string> _pendingRefreshes = [];
     public void QueueRefreshAfterCommand(string key)
@@ -156,10 +166,7 @@ public class CommandContainer
     /// as the other variable is false.</remarks>
     public bool IsExecuting
     {
-        get
-        {
-            return _executing; //eventually have to change once i have multiplayer processes completed.
-        }
+        get => _executing || _hostCatchUpInProgress;
         set
         {
             if (value == _executing)
@@ -181,7 +188,7 @@ public class CommandContainer
     private bool _processing = true;
     public bool Processing
     {
-        get { return _processing; }
+        get => _processing || _hostCatchUpInProgress;
         set
         {
             if (value == _processing)

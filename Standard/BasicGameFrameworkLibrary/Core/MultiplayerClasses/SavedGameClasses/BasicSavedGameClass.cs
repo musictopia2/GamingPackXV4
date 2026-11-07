@@ -10,4 +10,6 @@ public abstract class BasicSavedGameClass<P> : SimpleSave, IMappable where P : c
     public PlayOrderClass PlayOrder { get; set; } = new();
     public PlayerCollection<P> PlayerList { get; set; } = new();
     public bool ImmediatelyStartTurn { get; set; }
+    public int LastProcessedMessageSequence { get; set; }
+    public string NetworkSessionId { get; set; } = "";
 }

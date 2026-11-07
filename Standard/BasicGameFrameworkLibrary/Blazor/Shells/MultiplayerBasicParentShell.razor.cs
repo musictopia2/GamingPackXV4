@@ -21,10 +21,11 @@ public partial class MultiplayerBasicParentShell
         BasicData = Resolver!.Resolve<BasicData>();
         BasicData.DoFullScreen = async () =>
         {
-            if (BasicData.GamePackageMode is not EnumGamePackageMode.Debug)
+            if (NeedsFullScreen() == false)
             {
                 return;
             }
+
             await JS!.OpenFullScreen();
             _fullScreen = true;
             StateHasChanged();
@@ -62,15 +63,9 @@ public partial class MultiplayerBasicParentShell
     }
     private bool NeedsFullScreen()
     {
-        if (BasicData!.GamePackageMode == EnumGamePackageMode.Debug)
-        {
-            if (OS == EnumOS.Wasm)
-            {
-                return true;
-            }
-            return false;
-        }
-        return false;
+        return OS == EnumOS.Wasm &&
+            (BasicData!.GamePackageMode == EnumGamePackageMode.Debug ||
+             LoaderGlobalClass.ShowFullScreenButton);
     }
     private bool _loadedGame;
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -124,4 +119,88 @@ public partial class MultiplayerBasicParentShell
             await JS.StorageSetStringAsync("nickname", BasicData.NickName);
         }
     }
+
+
+    private bool CanChooseAnotherGame =>
+       BasicData!.MultiPlayer &&
+       BasicData.Client == false &&
+       LoaderGlobalClass.BackToMainDelegate is not null &&
+       Resolver!.Resolve<IGameNetwork>().HasServer;
+
+    private async Task ChooseAnotherGameAsync()
+    {
+        if (CanChooseAnotherGame == false)
+        {
+            return;
+        }
+        int humanCount =
+            BasicData!.GetOpeningHumanPlayerCount?.Invoke()
+            ?? BasicData.GetHumanPlayerCount?.Invoke()
+            ?? 0;
+
+        if (humanCount == 0)
+        {
+            throw new CustomBasicException(
+                "The human player roster is not available.");
+        }
+
+        LoaderGlobalClass.NextGameHumanCount = humanCount;
+        IGameNetwork network = Resolver!.Resolve<IGameNetwork>();
+
+        await network.PrepareForNextGameAsync();
+        LoaderGlobalClass.ChoosingNextGameAsHost = true;
+        network.IsEnabled = false;
+        network.ClearMessages();
+
+        await LoaderGlobalClass.BackToMainDelegate!.Invoke();
+    }
+
+    private bool _reloading;
+
+    private bool CanReloadGame =>
+        GameData!.CanAutoSave &&
+        BasicData!.GameDataLoading == false &&
+        TestData!.SaveOption != EnumTestSaveCategory.NoSave &&
+        LoaderGlobalClass.ReloadGameAsync is not null &&
+        LoaderGlobalClass.PendingReload is null &&
+        _reloading == false;
+
+    private async Task ReloadGameAsync()
+    {
+        if (CanReloadGame == false)
+        {
+            return;
+        }
+
+        _reloading = true;
+
+        try
+        {
+            bool isLocalGame = BasicData!.MultiPlayer == false;
+
+            if (isLocalGame || BasicData.Client == false)
+            {
+                IMultiplayerSaveState state =
+                    Resolver!.Resolve<IMultiplayerSaveState>();
+
+                EnumRestoreCategory restore = isLocalGame
+                    ? await state.SinglePlayerRestoreCategoryAsync()
+                    : await state.MultiplayerRestoreCategoryAsync();
+
+                if (restore == EnumRestoreCategory.NoRestore)
+                {
+                    Toast!.ShowWarningToast(
+                        "No saved game is available to reload.");
+                    return;
+                }
+            }
+
+            await LoaderGlobalClass.ReloadGameAsync!.Invoke();
+        }
+        finally
+        {
+            _reloading = false;
+        }
+    }
+
 }

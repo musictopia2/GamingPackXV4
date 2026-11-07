@@ -21,4 +21,47 @@ public partial class SinglePlayerParentShell
     {
         await InvokeAsync(StateHasChanged);
     }
+
+
+    private bool _reloading;
+
+    private bool CanReloadGame =>
+        GameInfo.CanAutoSave &&
+        BasicData.GameDataLoading == false &&
+        LoaderGlobalClass.ReloadGameAsync is not null &&
+        LoaderGlobalClass.PendingReload is null &&
+        _reloading == false;
+
+    private async Task ReloadGameAsync()
+    {
+        if (CanReloadGame == false)
+        {
+            return;
+        }
+
+        _reloading = true;
+
+        try
+        {
+            ISaveSinglePlayerClass saves =
+                Resolver!.Resolve<ISaveSinglePlayerClass>();
+
+            bool hasSavedGame =
+                await saves.CanOpenSavedSinglePlayerGameAsync();
+
+            if (hasSavedGame == false)
+            {
+                Resolver!.Resolve<IToast>().ShowWarningToast(
+                    "No saved game is available to reload.");
+                return;
+            }
+
+            await LoaderGlobalClass.ReloadGameAsync!.Invoke();
+        }
+        finally
+        {
+            _reloading = false;
+        }
+    }
+
 }

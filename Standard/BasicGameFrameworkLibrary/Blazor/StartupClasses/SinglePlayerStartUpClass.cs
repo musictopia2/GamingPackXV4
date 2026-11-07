@@ -1,4 +1,5 @@
-﻿namespace BasicGameFrameworkLibrary.Blazor.StartupClasses;
+﻿using BasicGameFrameworkLibrary.Blazor.LocalStorageClasses; //not common enough.
+namespace BasicGameFrameworkLibrary.Blazor.StartupClasses;
 public class SinglePlayerStartUpClass : IStartUp
 {
     public static bool? IsWasm { get; set; }
@@ -14,7 +15,8 @@ public class SinglePlayerStartUpClass : IStartUp
         }
         if (IsWasm.Value == true)
         {
-            container.RegisterType<SinglePlayerNoSave>();
+            container.RegisterType<
+            SinglePlayerReleaseAutoResume>();
         }
         else
         {
