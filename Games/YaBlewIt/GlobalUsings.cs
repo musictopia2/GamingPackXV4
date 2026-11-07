@@ -65,3 +65,4 @@ global using mm1 = BasicGameFrameworkLibrary.Core.Extensions.CommonMessageString
 global using rr1 = YaBlewIt.Resources.SvgPngImageResource;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

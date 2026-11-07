@@ -42,3 +42,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
 global using BasicGameFrameworkLibrary.Core.Dice;
 global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using GamePackageContractsLibrary;

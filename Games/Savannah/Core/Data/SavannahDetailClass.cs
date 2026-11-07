@@ -4,14 +4,19 @@ public class SavannahDetailClass : IGameInfo, ICardInfo<RegularSimpleCard>,
     IBeginningRegularCards<RegularSimpleCard>
 {
     EnumGameType IGameInfo.GameType => EnumGameType.NewGame;
-    bool IGameInfo.CanHaveExtraComputerPlayers => false;
+    public const bool CanHaveExtraComputerPlayers = false;
+    bool IGameInfo.CanHaveExtraComputerPlayers => CanHaveExtraComputerPlayers;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
-    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.NetworkOnly; //the computer player will skip turn on this one though. (unless i decide to have computer ai).
+    public const EnumPlayerType PlayerType = EnumPlayerType.NetworkOnly;
+    EnumPlayerType IGameInfo.PlayerType => PlayerType; //the computer player will skip turn on this one though. (unless i decide to have computer ai).
     public const string GameName = "Savannah";
     string IGameInfo.GameName => GameName;
-    int IGameInfo.NoPlayers => 0;
-    int IGameInfo.MinPlayers => 2;
-    int IGameInfo.MaxPlayers => 4;
+    public const int NoPlayers = 0;
+    int IGameInfo.NoPlayers => NoPlayers;
+    public const int MinPlayers = 2;
+    int IGameInfo.MinPlayers => MinPlayers;
+    public const int MaxPlayers = 4;
+    int IGameInfo.MaxPlayers => MaxPlayers;
     bool IGameInfo.CanAutoSave => true;
     //this time, attempt to make work on even phones.
     public const bool SupportsCompactLayout = true;

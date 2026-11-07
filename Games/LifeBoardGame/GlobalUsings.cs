@@ -65,3 +65,4 @@ global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
 global using rr1 = LifeBoardGame.Resources.SvgPngImageResource;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

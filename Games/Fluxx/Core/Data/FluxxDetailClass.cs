@@ -3,14 +3,19 @@
 public class FluxxDetailClass : IGameInfo, ICardInfo<FluxxCardInformation>, INewCard<FluxxCardInformation>
 {
     EnumGameType IGameInfo.GameType => EnumGameType.NewGame;
-    bool IGameInfo.CanHaveExtraComputerPlayers => false;
+    public const bool CanHaveExtraComputerPlayers = false;
+    bool IGameInfo.CanHaveExtraComputerPlayers => CanHaveExtraComputerPlayers;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
-    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
+    public const EnumPlayerType PlayerType = EnumPlayerType.SingleAndNetworked;
+    EnumPlayerType IGameInfo.PlayerType => PlayerType;
     public const string GameName = "Fluxx";
     string IGameInfo.GameName => GameName;
-    int IGameInfo.NoPlayers => 0;
-    int IGameInfo.MinPlayers => 2;
-    int IGameInfo.MaxPlayers => 4; //originally was 6 but had to reduce to 4.  otherwise, not enough room.
+    public const int NoPlayers = 0;
+    int IGameInfo.NoPlayers => NoPlayers;
+    public const int MinPlayers = 2;
+    int IGameInfo.MinPlayers => MinPlayers;
+    public const int MaxPlayers = 4;
+    int IGameInfo.MaxPlayers => MaxPlayers; //originally was 6 but had to reduce to 4.  otherwise, not enough room.
     bool IGameInfo.CanAutoSave => true;
     public const bool SupportsCompactLayout = false;
     bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;

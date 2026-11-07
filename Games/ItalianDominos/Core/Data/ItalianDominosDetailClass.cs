@@ -3,14 +3,19 @@
 public class ItalianDominosDetailClass : IGameInfo
 {
     EnumGameType IGameInfo.GameType => EnumGameType.NewGame;
-    bool IGameInfo.CanHaveExtraComputerPlayers => true;
+    public const bool CanHaveExtraComputerPlayers = true;
+    bool IGameInfo.CanHaveExtraComputerPlayers => CanHaveExtraComputerPlayers;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
-    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
+    public const EnumPlayerType PlayerType = EnumPlayerType.SingleAndNetworked;
+    EnumPlayerType IGameInfo.PlayerType => PlayerType;
     public const string GameName = "Italian Dominos";
     string IGameInfo.GameName => GameName;
-    int IGameInfo.NoPlayers => 0;
-    int IGameInfo.MinPlayers => 3;
-    int IGameInfo.MaxPlayers => 5;
+    public const int NoPlayers = 0;
+    int IGameInfo.NoPlayers => NoPlayers;
+    public const int MinPlayers = 3;
+    int IGameInfo.MinPlayers => MinPlayers;
+    public const int MaxPlayers = 5;
+    int IGameInfo.MaxPlayers => MaxPlayers;
     bool IGameInfo.CanAutoSave => false;
     public const bool SupportsCompactLayout = true;
     bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;

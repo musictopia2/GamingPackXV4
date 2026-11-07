@@ -32,3 +32,4 @@ global using BasicGameFrameworkLibrary.Core.Extensions;
 global using BasicGameFrameworkLibrary.Core.SolitaireClasses.Cards;
 global using BasicGameFrameworkLibrary.Core.SolitaireClasses.TriangleClasses;
 global using System.Collections.Generic;
+global using GamePackageContractsLibrary;

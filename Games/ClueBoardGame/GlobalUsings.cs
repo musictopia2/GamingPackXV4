@@ -65,3 +65,4 @@ global using pg1 = ClueBoardGame.Blazor.GlobalDetectiveGrid;
 global using rr1 = ClueBoardGame.Resources.SvgPngImageResource;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

@@ -46,3 +46,4 @@ global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHel
 global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.YahtzeeStyleHelpers.ViewModels;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using GamePackageContractsLibrary;

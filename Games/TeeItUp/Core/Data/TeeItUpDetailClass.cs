@@ -3,14 +3,19 @@
 public class TeeItUpDetailClass : IGameInfo, ICardInfo<TeeItUpCardInformation>
 {
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
-    bool IGameInfo.CanHaveExtraComputerPlayers => false;
+    public const bool CanHaveExtraComputerPlayers = false;
+    bool IGameInfo.CanHaveExtraComputerPlayers => CanHaveExtraComputerPlayers;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.HumanOnly;
-    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
+    public const EnumPlayerType PlayerType = EnumPlayerType.SingleAndNetworked;
+    EnumPlayerType IGameInfo.PlayerType => PlayerType;
     public const string GameName = "Tee It Up";
     string IGameInfo.GameName => GameName;
-    int IGameInfo.NoPlayers => 0;
-    int IGameInfo.MinPlayers => 2;
-    int IGameInfo.MaxPlayers => 2;
+    public const int NoPlayers = 0;
+    int IGameInfo.NoPlayers => NoPlayers;
+    public const int MinPlayers = 2;
+    int IGameInfo.MinPlayers => MinPlayers;
+    public const int MaxPlayers = 2;
+    int IGameInfo.MaxPlayers => MaxPlayers;
     bool IGameInfo.CanAutoSave => true;
     public const bool SupportsCompactLayout = false;
     bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;

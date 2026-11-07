@@ -3,14 +3,19 @@
 public class YaBlewItDetailClass : IGameInfo, ICardInfo<YaBlewItCardInformation>
 {
     EnumGameType IGameInfo.GameType => EnumGameType.NewGame;
-    bool IGameInfo.CanHaveExtraComputerPlayers => false;
+    public const bool CanHaveExtraComputerPlayers = false;
+    bool IGameInfo.CanHaveExtraComputerPlayers => CanHaveExtraComputerPlayers;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
-    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked; //can't be networked only.   otherwise, can't test.
+    public const EnumPlayerType PlayerType = EnumPlayerType.SingleAndNetworked;
+    EnumPlayerType IGameInfo.PlayerType => PlayerType; //can't be networked only.   otherwise, can't test.
     public const string GameName = "Ya Blew It";
     string IGameInfo.GameName => GameName;
-    int IGameInfo.NoPlayers => 0;
-    int IGameInfo.MinPlayers => 2;
-    int IGameInfo.MaxPlayers => 6;
+    public const int NoPlayers = 0;
+    int IGameInfo.NoPlayers => NoPlayers;
+    public const int MinPlayers = 2;
+    int IGameInfo.MinPlayers => MinPlayers;
+    public const int MaxPlayers = 6;
+    int IGameInfo.MaxPlayers => MaxPlayers;
     bool IGameInfo.CanAutoSave => true;
     public const bool SupportsCompactLayout = false;
     bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;

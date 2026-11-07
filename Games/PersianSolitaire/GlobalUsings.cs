@@ -43,3 +43,4 @@ global using BasicGameFrameworkLibrary.Core.GeneratorHelpers;
 global using Microsoft.AspNetCore.Components;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

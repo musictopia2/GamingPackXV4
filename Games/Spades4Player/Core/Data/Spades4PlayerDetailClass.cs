@@ -4,14 +4,19 @@ public class Spades4PlayerDetailClass : IGameInfo, ICardInfo<Spades4PlayerCardIn
     IBeginningRegularCards<Spades4PlayerCardInformation>
 {
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
-    bool IGameInfo.CanHaveExtraComputerPlayers => true;
+    public const bool CanHaveExtraComputerPlayers = true;
+    bool IGameInfo.CanHaveExtraComputerPlayers => CanHaveExtraComputerPlayers;
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
-    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked; //otherwise, can't play
+    public const EnumPlayerType PlayerType = EnumPlayerType.SingleAndNetworked;
+    EnumPlayerType IGameInfo.PlayerType => PlayerType; //otherwise, can't play
     public const string GameName = "Spades";
     string IGameInfo.GameName => GameName;
-    int IGameInfo.NoPlayers => 0;
-    int IGameInfo.MinPlayers => 4;
-    int IGameInfo.MaxPlayers => 4;
+    public const int NoPlayers = 0;
+    int IGameInfo.NoPlayers => NoPlayers;
+    public const int MinPlayers = 4;
+    int IGameInfo.MinPlayers => MinPlayers;
+    public const int MaxPlayers = 4;
+    int IGameInfo.MaxPlayers => MaxPlayers;
     bool IGameInfo.CanAutoSave => true;
     public const bool SupportsCompactLayout = false;
     bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;

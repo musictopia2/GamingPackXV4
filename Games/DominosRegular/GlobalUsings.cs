@@ -49,3 +49,4 @@ global using System.Drawing;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 global using ll1 = BasicGameFrameworkLibrary.Blazor.Helpers.LayoutInfo;
+global using GamePackageContractsLibrary;

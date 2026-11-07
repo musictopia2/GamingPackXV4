@@ -52,3 +52,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelp
 global using static DominosMexicanTrain.Core.Logic.TrainStationBoardProcesses;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
+global using GamePackageContractsLibrary;

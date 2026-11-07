@@ -3,14 +3,19 @@
 public class HitTheDeckDetailClass : IGameInfo, ICardInfo<HitTheDeckCardInformation>
 {
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
-    bool IGameInfo.CanHaveExtraComputerPlayers => false; //too many bugs with extra computer players.  this means for multiplayer games can't have extra computer players.  hint.  with draw 4 cards.
+    public const bool CanHaveExtraComputerPlayers = false;
+    bool IGameInfo.CanHaveExtraComputerPlayers => CanHaveExtraComputerPlayers; //too many bugs with extra computer players.  this means for multiplayer games can't have extra computer players.  hint.  with draw 4 cards.
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
-    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked;
+    public const EnumPlayerType PlayerType = EnumPlayerType.SingleAndNetworked;
+    EnumPlayerType IGameInfo.PlayerType => PlayerType;
     public const string GameName = "Hit The Deck";
     string IGameInfo.GameName => GameName;
-    int IGameInfo.NoPlayers => 0;
-    int IGameInfo.MinPlayers => 2;
-    int IGameInfo.MaxPlayers => 6;
+    public const int NoPlayers = 0;
+    int IGameInfo.NoPlayers => NoPlayers;
+    public const int MinPlayers = 2;
+    int IGameInfo.MinPlayers => MinPlayers;
+    public const int MaxPlayers = 6;
+    int IGameInfo.MaxPlayers => MaxPlayers;
     bool IGameInfo.CanAutoSave => true;
     public const bool SupportsCompactLayout = true;
     bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;

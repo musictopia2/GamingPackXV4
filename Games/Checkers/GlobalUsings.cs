@@ -47,3 +47,4 @@ global using cs1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorStri
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.GamePieces;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

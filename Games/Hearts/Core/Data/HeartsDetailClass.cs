@@ -4,14 +4,19 @@ public class HeartsDetailClass : IGameInfo, ICardInfo<HeartsCardInformation>, IT
     IBeginningRegularCards<HeartsCardInformation>
 {
     EnumGameType IGameInfo.GameType => EnumGameType.Rounds;
-    bool IGameInfo.CanHaveExtraComputerPlayers => true; //i think.
+    public const bool CanHaveExtraComputerPlayers = true;
+    bool IGameInfo.CanHaveExtraComputerPlayers => CanHaveExtraComputerPlayers; //i think.
     EnumPlayerChoices IGameInfo.SinglePlayerChoice => EnumPlayerChoices.ComputerOnly;
-    EnumPlayerType IGameInfo.PlayerType => EnumPlayerType.SingleAndNetworked; //the computer can't skip turns. otherwise, gets stuck.
+    public const EnumPlayerType PlayerType = EnumPlayerType.SingleAndNetworked;
+    EnumPlayerType IGameInfo.PlayerType => PlayerType; //the computer can't skip turns. otherwise, gets stuck.
     public const string GameName = "Hearts";
     string IGameInfo.GameName => GameName;
-    int IGameInfo.NoPlayers => 0;
-    int IGameInfo.MinPlayers => 4;
-    int IGameInfo.MaxPlayers => 4;
+    public const int NoPlayers = 0;
+    int IGameInfo.NoPlayers => NoPlayers;
+    public const int MinPlayers = 4;
+    int IGameInfo.MinPlayers => MinPlayers;
+    public const int MaxPlayers = 4;
+    int IGameInfo.MaxPlayers => MaxPlayers;
     bool IGameInfo.CanAutoSave => true;
     public const bool SupportsCompactLayout = false;
     bool IGameInfo.SupportsCompactLayout => SupportsCompactLayout;

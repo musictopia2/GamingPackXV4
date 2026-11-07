@@ -51,3 +51,4 @@ global using System.Drawing;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 global using rr1 = BowlingDiceGame.Resources.SvgPngImageResource;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using GamePackageContractsLibrary;

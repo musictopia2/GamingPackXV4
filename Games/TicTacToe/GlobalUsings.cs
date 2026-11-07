@@ -49,3 +49,4 @@ global using SvgHelper.Blazor.Logic.Classes.SubClasses;
 global using System.Drawing;
 global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorString;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using GamePackageContractsLibrary;

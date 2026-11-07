@@ -57,3 +57,4 @@ global using BasicGameFrameworkLibrary.Core.SpecializedGameTypes.RummyClasses;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfacesForHelpers;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

@@ -54,3 +54,4 @@ global using BasicGameFrameworkLibrary.Core.RegularDeckOfCards;
 global using BasicGameFrameworkLibrary.Core.DrawableListsObservable;
 global using BasicGameFrameworkLibrary.Core.Extensions;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using GamePackageContractsLibrary;

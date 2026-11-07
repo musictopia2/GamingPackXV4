@@ -44,3 +44,4 @@ global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
 global using System.Diagnostics;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

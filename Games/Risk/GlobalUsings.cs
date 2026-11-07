@@ -62,3 +62,4 @@ global using Microsoft.AspNetCore.Components.Rendering;
 global using rr1 = Risk.Resources.SvgPngImageResource;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

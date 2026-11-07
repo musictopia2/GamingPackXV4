@@ -29,3 +29,4 @@ global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using Microsoft.AspNetCore.Components;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 global using BasicGameFrameworkLibrary.Core.Extensions;
+global using GamePackageContractsLibrary;

@@ -41,3 +41,4 @@ global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.InterfaceModels;
 global using BasicGameFrameworkLibrary.Core.MultiplayerClasses.Extensions;
 global using System.Drawing; //very common
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using GamePackageContractsLibrary;

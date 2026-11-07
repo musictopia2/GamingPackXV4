@@ -34,3 +34,4 @@ global using BasicGameFrameworkLibrary.Blazor.Views;
 global using BasicGameFrameworkLibrary.Blazor.Extensions;
 global using BasicGameFrameworkLibrary.Blazor.Helpers;
 global using BasicGameFrameworkLibrary.Core.ScoreBoardClassesCP;
+global using GamePackageContractsLibrary;

@@ -48,3 +48,4 @@ global using SvgHelper.Blazor.Logic.Classes.Interfaces;
 global using BasicGameFrameworkLibrary.Blazor.BasicControls.GameBoards;
 global using System.Drawing;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using GamePackageContractsLibrary;

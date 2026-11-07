@@ -43,3 +43,4 @@ global using Microsoft.AspNetCore.Components;
 global using System.Drawing;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

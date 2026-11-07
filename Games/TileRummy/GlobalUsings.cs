@@ -56,3 +56,4 @@ global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
 global using gg1 = BasicGameFrameworkLibrary.Blazor.Configuration.GameDisplayOptions;
 global using BasicGameFrameworkLibrary.Blazor.Configuration;
+global using GamePackageContractsLibrary;

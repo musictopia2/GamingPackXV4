@@ -33,3 +33,4 @@ global using ll1 = BasicGameFrameworkLibrary.Blazor.Helpers.LayoutInfo;
 global using BasicGameFrameworkLibrary.Blazor.Helpers;
 global using gg1 = BasicGameFrameworkLibrary.Blazor.Configuration.GameDisplayOptions;
 global using BasicGameFrameworkLibrary.Blazor.Configuration;
+global using GamePackageContractsLibrary;

@@ -59,3 +59,4 @@ global using gg1 = BasicBlazorLibrary.Components.CssGrids.RowColumnHelpers;
 global using BasicGameFrameworkLibrary.Core.CombinationHelpers;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

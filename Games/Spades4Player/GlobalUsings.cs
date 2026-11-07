@@ -63,3 +63,4 @@ global using BasicGameFrameworkLibrary.Core.ChooserClasses;
 global using CommonBasicLibraries.AdvancedGeneralFunctionsAndProcesses.Misc;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

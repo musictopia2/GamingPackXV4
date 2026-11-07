@@ -54,3 +54,4 @@ global using Aggravation.Core.Graphics;
 global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

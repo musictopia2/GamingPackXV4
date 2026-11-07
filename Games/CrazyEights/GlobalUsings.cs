@@ -58,3 +58,4 @@ global using mm1 = BasicGameFrameworkLibrary.Core.Extensions.CommonMessageString
 global using co1 = CrazyEights.Core.Logic.CrazyEightsComputerAI;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

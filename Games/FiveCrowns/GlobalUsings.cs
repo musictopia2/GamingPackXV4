@@ -64,3 +64,4 @@ global using cc1 = CommonBasicLibraries.BasicDataSettingsAndProcesses.SColorStri
 global using rr1 = FiveCrowns.Resources.SvgPngImageResource;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

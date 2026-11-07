@@ -67,3 +67,4 @@ global using BasicGameFrameworkLibrary.Blazor.Views;
 global using rr1 = Fluxx.Resources.SvgPngImageResource;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

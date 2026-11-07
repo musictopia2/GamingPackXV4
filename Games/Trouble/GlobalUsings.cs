@@ -54,3 +54,4 @@ global using BasicGameFrameworkLibrary.Core.NetworkingClasses.Extensions;
 global using rr1 = Trouble.Resources.SvgPngImageResource;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

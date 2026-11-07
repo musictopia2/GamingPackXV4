@@ -60,3 +60,4 @@ global using cc1 = GoFish.Core.Logic.GoFishComputerAI;
 global using BasicGameFrameworkLibrary.Blazor.GameGraphics.GamePieces;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;

@@ -38,3 +38,4 @@ global using Microsoft.AspNetCore.Components;
 global using BasicGameFrameworkLibrary.Blazor.Extensions;
 global using BasicGameFrameworkLibrary.Blazor.Helpers;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
+global using GamePackageContractsLibrary;

@@ -55,3 +55,4 @@ global using BasicGameFrameworkLibrary.Core.DrawableListsObservable;
 global using BasicGameFrameworkLibrary.Core.Extensions;
 global using BasicGameFrameworkLibrary.Core.SystemEventModels;
 global using static BasicGameFrameworkLibrary.Core.DIContainers.Helpers;
+global using GamePackageContractsLibrary;
