@@ -1,5 +1,5 @@
 namespace BasicGameFrameworkLibrary.Blazor.Shells;
-public partial class MultiplayerBasicParentShell
+public partial class MultiplayerBasicParentShell : IDisposable
 {
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
@@ -19,6 +19,7 @@ public partial class MultiplayerBasicParentShell
     protected override void OnInitialized()
     {
         BasicData = Resolver!.Resolve<BasicData>();
+        BasicData.ChangeState = RefreshShell;
         BasicData.DoFullScreen = async () =>
         {
             if (NeedsFullScreen() == false)
@@ -202,5 +203,28 @@ public partial class MultiplayerBasicParentShell
             _reloading = false;
         }
     }
+    private bool _disposed;
 
+    private void RefreshShell()
+    {
+        _ = InvokeAsync(() =>
+        {
+            if (_disposed == false)
+            {
+                StateHasChanged();
+            }
+        });
+    }
+
+    public void Dispose()
+    {
+        _disposed = true;
+
+        if (BasicData is not null)
+        {
+            BasicData.ChangeState = null;
+        }
+
+        GC.SuppressFinalize(this);
+    }
 }
