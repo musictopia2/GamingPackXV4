@@ -17,7 +17,7 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     private static readonly HashSet<string> _startedPlayers = new(StringComparer.Ordinal);
 
 
-    private static long _nextMessageSequence;
+    private static int _nextMessageSequence; //long not supported for now.
     private static readonly List<SentMessage> _hostMessageJournal = [];
     private const string _waitingForHostedGameGroup = "WaitingForHostedGame";
     private static bool _hostStartingOver;
@@ -34,7 +34,9 @@ public class MultiplayerConnectionHub : Hub, ISerializable
     {
         SentMessage data =
             await js1.DeserializeObjectAsync<SentMessage>(message.Message);
+       
 
+        Console.WriteLine(message.Message);
         // Always assign this on the server.
         data.NetworkSessionId = _networkSessionId;
         data.SequenceNumber = ++_nextMessageSequence;
