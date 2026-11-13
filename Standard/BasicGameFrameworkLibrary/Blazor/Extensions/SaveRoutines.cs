@@ -62,13 +62,28 @@ public static class SaveRoutines
         }
         private async Task<string> KeyAsync(int index)
         {
-            string output = await js.InvokeAsync<string>("localStorage.key", index);
-            return output;
+            try
+            {
+                string output = await js.InvokeAsync<string>("localStorage.key", index);
+                return output;
+            }
+            catch (JSException)
+            {
+                throw;
+            }
         }
+
         private async Task<int> GetLengthAsync()
         {
-            int output = await js.InvokeAsync<int>("eval", "localStorage.length");
-            return output;
+            try
+            {
+                int output = await js.InvokeAsync<int>("eval", "localStorage.length");
+                return output;
+            }
+            catch (JSException)
+            {
+                throw;
+            }
         }
     }   
 }

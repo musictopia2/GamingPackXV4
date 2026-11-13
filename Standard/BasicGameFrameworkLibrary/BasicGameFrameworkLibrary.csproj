@@ -1,33 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <FeedType>Public</FeedType>
     <RunPostBuildAppCondition Condition="'$(Configuration)' == 'Release'">true</RunPostBuildAppCondition>
-	  <StaticWebAssetBasePath>_content/BasicGameFrameworkLibrary</StaticWebAssetBasePath>
-	  <PackageId>Musictopia2.BasicGameFrameworkLibrary</PackageId>
+    <StaticWebAssetBasePath>_content/BasicGameFrameworkLibrary</StaticWebAssetBasePath>
+    <PackageId>Musictopia2.BasicGameFrameworkLibrary</PackageId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="10.0.3" />
-	<PackageReference Include="Musictopia2.GamePackageContractsLibrary" Version="10.0.8" />
-    <PackageReference Include="Musictopia2.CommonBasicLibraries" Version="10.0.2" />
+    <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="11.0.4" />
+    <PackageReference Include="Musictopia2.GamePackageContractsLibrary" Version="11.0.1" />
+    <PackageReference Include="Musictopia2.CommonBasicLibraries" Version="11.0.4" />
     <PackageReference Include="Musictopia2.GamePackageDIGenerator" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="Musictopia2.GamePackageSerializeGenerator" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="Musictopia2.LabelGridGenerator" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="Musictopia2.EventAggregatorGenerator" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="Musictopia2.FastEnumGenerator" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="Musictopia2.ScoreBoardGenerator" Version="1.0.1" PrivateAssets="all" />
-    <PackageReference Include="Musictopia2.SvgHelper.Blazor" Version="10.0.1" />
+    <PackageReference Include="Musictopia2.SvgHelper.Blazor" Version="11.0.1" />
     <PackageReference Include="Musictopia2.MappingCloningExtensions" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="Musictopia2.CommandsGenerator" Version="1.0.6" PrivateAssets="all" />
-    <PackageReference Include="Musictopia2.MessengingHelpers" Version="10.0.1" />
+    <PackageReference Include="Musictopia2.MessengingHelpers" Version="11.0.1" />
     <PackageReference Include="Musictopia2.GamePackageObservableGenerator" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
   <Target Name="RunImageEmbedder" BeforeTargets="BeforeBuild">
     <Exec Command="SvgPngEmbedTool $(ProjectName) $(ProjectDir) $(ProjectFileName)" ContinueOnError="true" />
   </Target>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="C:\VS\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net10.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />
+    <Exec Command="C:\VS\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net11.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />
   </Target>
 </Project>
