@@ -108,5 +108,6 @@ public partial class SorryMainViewModel(CommandContainer commandContainer,
         mainGame.SaveRoot.DidDraw = true;
         mainGame.SaveRoot.AdvancedCardPreview = false;
         await mainGame.ContinueTurnAsync();
+        gameContainer.RepaintBoard();
     }
 }
