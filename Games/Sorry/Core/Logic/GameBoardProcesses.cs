@@ -1184,7 +1184,8 @@ public class GameBoardProcesses(SorryGameContainer gameContainer, GameBoardGraph
                         SlideWouldRemovePiece(
                             nextSpace1,
                             secondSpace.Index) == false &&
-                        GetFinalSplitPosition(nextSpace1) != nextSpace2;
+                        (nextSpace2 == 100 ||
+                         GetFinalSplitPosition(nextSpace1) != nextSpace2);
 
                     bool secondThenFirstValid =
                         secondMoveOpen &&
@@ -1192,7 +1193,8 @@ public class GameBoardProcesses(SorryGameContainer gameContainer, GameBoardGraph
                         SlideWouldRemovePiece(
                             nextSpace2,
                             firstSpace.Index) == false &&
-                        GetFinalSplitPosition(nextSpace2) != nextSpace1;
+                        (nextSpace1 == 100 ||
+                         GetFinalSplitPosition(nextSpace2) != nextSpace1);
 
                     if (firstThenSecondValid)
                     {
