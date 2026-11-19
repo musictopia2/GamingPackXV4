@@ -11,6 +11,6 @@
     <Exec Command="C:\VS\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net11.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />
   </Target>
   <ItemGroup>
-    <PackageReference Include="Musictopia2.CommonBasicLibraries" Version="11.0.1" />
+    <PackageReference Include="Musictopia2.CommonBasicLibraries" Version="11.0.12" />
   </ItemGroup>
 </Project>

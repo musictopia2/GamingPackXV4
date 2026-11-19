@@ -4,7 +4,6 @@
     <TargetFramework>net11.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>9.0.1</Version>
     <FeedType>Public</FeedType>
     <RunPostBuildAppCondition Condition="'$(Configuration)' == 'Release'">true</RunPostBuildAppCondition>
   </PropertyGroup>
@@ -12,10 +11,10 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Musictopia2.GameLoaderBlazorLibrary" Version="11.0.1" />
-    <PackageReference Include="Musictopia2.GamePackageDIGenerator" Version="1.0.1" PrivateAssets="all" />
-    <PackageReference Include="Musictopia2.GamePackageSignalRClasses" Version="11.0.1" />
-    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="11.0.1" />
+    <PackageReference Include="Musictopia2.GameLoaderBlazorLibrary" Version="11.0.3" />
+    <PackageReference Include="Musictopia2.GamePackageDIGenerator" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="Musictopia2.GamePackageSignalRClasses" Version="11.0.3" />
+    <PackageReference Include="Musictopia2.BasicGameFrameworkLibrary" Version="11.0.4" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="C:\VS\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net11.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />

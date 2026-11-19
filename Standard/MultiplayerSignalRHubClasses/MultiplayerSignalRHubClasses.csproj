@@ -8,9 +8,9 @@
     <RunPostBuildAppCondition Condition="'$(Configuration)' == 'Release'">true</RunPostBuildAppCondition>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Musictopia2.CommonBasicLibraries" Version="11.0.1" />
-    <PackageReference Include="Musictopia2.GamePackageContractsLibrary" Version="11.0.1" />
-    <PackageReference Include="Musictopia2.GamePackageSerializeGenerator" Version="1.0.1" PrivateAssets="all" />
+    <PackageReference Include="Musictopia2.CommonBasicLibraries" Version="11.0.12" />
+    <PackageReference Include="Musictopia2.GamePackageContractsLibrary" Version="11.0.2" />
+    <PackageReference Include="Musictopia2.GamePackageSerializeGenerator" Version="1.0.3" PrivateAssets="all" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -10,11 +10,19 @@
                 <SeveralPlayersTrickBlazor DataContext="_vmData.TrickArea1" />
             </StackItem>
             <StackItem>
-                <ChooseShapeBlazor TargetHeight="22"
-                                   ShapeData="_vmData.ShapeChoose1" />
-                
-                <div>
-                    <XactikaSubmitShapeView DataContext="DataContext.ShapeScreen" />
+                @* Keep space for the chooser even when it is hidden or empty. *@
+                <div style="min-height: @(22.HeightPixels + 8)px;">
+                    <ChooseShapeBlazor TargetHeight="22"
+                                       ShapeData="_vmData.ShapeChoose1" />
+                </div>
+                @* Reserve the actual device-sized submit button height while absent. *@
+                <div style="display: grid;">
+                    <div style="grid-area: 1 / 1; visibility: hidden;" aria-hidden="true">
+                        <GameActionButton Display="Choose Shape" SizeCategory="default(EnumSize)" />
+                    </div>
+                    <div style="grid-area: 1 / 1;">
+                        <XactikaSubmitShapeView DataContext="DataContext.ShapeScreen" />
+                    </div>
                 </div>
                 <XactikaBidView DataContext="DataContext.BidScreen" />
             </StackItem>
