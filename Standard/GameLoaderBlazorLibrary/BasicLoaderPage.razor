@@ -2,6 +2,11 @@
 @using BasicGameFrameworkLibrary.Blazor.Shells
 <GamePackageFullScreen>
     <LandscapeShell>
+        @if (_homeSetupMessage is not null)
+        {
+            <p role="status">@_homeSetupMessage</p>
+            return;
+        }
         @if (_loadedOnce == false)
         {
             //attempt to do nothing.  since this now shows up for a second (freaky)
@@ -18,6 +23,10 @@
         {
             return;
         }
+
+
+
+
         @if (LayoutInfo.LayoutMode == EnumGameLayoutMode.Compact
             && GetVisibleGames().Count == 0)
         {

@@ -67,7 +67,7 @@
             </GridItem>
         }
 
-        @if (bb1.CanUseHome)
+        @if (bb1.HomeHostingAvailable)
         {
             <GridItem Row="5" Column="2">
                 <GameActionButton CustomCallBack="() => UpdateServerOptions(EnumServerMode.HomeHosting)"

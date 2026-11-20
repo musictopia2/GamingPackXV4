@@ -1,3 +1,5 @@
+using System.Web;
+
 namespace GameLoaderBlazorLibrary;
 public partial class BasicLoaderPage : IAsyncDisposable
 {
@@ -5,6 +7,8 @@ public partial class BasicLoaderPage : IAsyncDisposable
     public ILoaderVM? DataContext { get; set; }
     [Inject]
     public IJSRuntime? JS { get; set; }
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
     [CascadingParameter]
     private MediaQueryListComponent Media { get; set; } = null!;
 
@@ -130,6 +134,9 @@ public partial class BasicLoaderPage : IAsyncDisposable
         return games;
     }
 
+    private const string _homeSetupQuery = "setup-home";
+    private const string _homeAddressKey = "HomeAddress";
+    private string? _homeSetupMessage;
     private bool _loadedOnce;
     private bool _showSettings;
     private string _previousGame = "";
@@ -192,6 +199,20 @@ public partial class BasicLoaderPage : IAsyncDisposable
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (_homeSetupMessage is not null)
+        {
+            return;
+        }
+
+        if (firstRender && GlobalClass.Multiplayer && bb1.OS == bb1.EnumOS.Wasm)
+        {
+            if (await ReadBrowserHomeSettingsAsync())
+            {
+                StateHasChanged();
+                return;
+            }
+        }
+
         if (_gameToReload != "" && DataContext!.GameName == "")
         {
             string game = _gameToReload;
@@ -211,7 +232,6 @@ public partial class BasicLoaderPage : IAsyncDisposable
         }
         if (firstRender)
         {
-            _loadedOnce = true;
             if (LoaderGlobalClass.LoadSettingsAsync is null)
             {
                 throw new CustomBasicException("Nobody is handling the loading of the settings");
@@ -221,14 +241,15 @@ public partial class BasicLoaderPage : IAsyncDisposable
             {
                 _showSettings = true;
             }
-            if (GlobalDataModel.DataContext!.ServerMode == EnumServerMode.HomeHosting)
+            var settings = GlobalDataModel.DataContext!;
+            if (settings.ServerMode == EnumServerMode.HomeHosting &&
+                HomeNetworkConfiguration.HomeHostingAvailable == false)
             {
-                HomeNetworkConfiguration.DoUseHome = true;
+                settings.ServerMode = EnumServerMode.HostedServer;
             }
-            else
-            {
-                HomeNetworkConfiguration.DoUseHome = false;
-            }
+            HomeNetworkConfiguration.DoUseHome =
+                settings.ServerMode == EnumServerMode.HomeHosting;
+            _loadedOnce = true;
             if (_showSettings == false)
             {
                 _previousGame = await GetAutomatedGameToLoadAsync();
@@ -242,6 +263,55 @@ public partial class BasicLoaderPage : IAsyncDisposable
             StateHasChanged();
         }
     }
+    private async Task<bool> ReadBrowserHomeSettingsAsync()
+    {
+        string[]? addresses = HttpUtility.ParseQueryString(
+            new Uri(Navigation.Uri).Query).GetValues(_homeSetupQuery);
+
+        if (addresses is null)
+        {
+            string? savedAddress = await JS!.ContainsKeyAsync(_homeAddressKey)
+                ? await JS!.StorageGetStringAsync(_homeAddressKey)
+                : null;
+            HomeNetworkConfiguration.SavedBrowserHomeServerUrl =
+                GetValidHomeServerUrl(savedAddress);
+            return false;
+        }
+
+        string? address = addresses.Length == 1 ? GetValidHomeServerUrl(addresses[0]) : null;
+        if (address is null)
+        {
+            _homeSetupMessage = "This link does not contain a valid HTTPS home server address.";
+            return true;
+        }
+
+        try
+        {
+            await JS!.StorageSetStringAsync(_homeAddressKey, address);
+            _homeSetupMessage = "Home server address saved. Open the game app as usual. " +
+                "If it’s already open, close and reopen it.";
+        }
+        catch (JSException)
+        {
+            _homeSetupMessage = "The home server address could not be saved. Open the setup link again to retry.";
+        }
+        return true;
+    }
+
+    private static string? GetValidHomeServerUrl(string? value)
+    {
+        if (Uri.TryCreate(value, UriKind.Absolute, out Uri? address) &&
+            address.Scheme == Uri.UriSchemeHttps &&
+            address.Host.Length > 0 &&
+            address.UserInfo.Length == 0 &&
+            address.Query.Length == 0 &&
+            address.Fragment.Length == 0)
+        {
+            return address.AbsoluteUri.TrimEnd('/');
+        }
+        return null;
+    }
+
     private async Task OpenPreviousGameAsync()
     {
         await SelectGameAsync(_previousGame);
@@ -290,6 +360,10 @@ public partial class BasicLoaderPage : IAsyncDisposable
         if (bb1.OS == bb1.EnumOS.Wasm)
         {
             _worker = new(JS!);
+            if (GlobalClass.Multiplayer && GlobalStartUp.KeysToSave.Contains(_homeAddressKey) == false)
+            {
+                GlobalStartUp.KeysToSave.Add(_homeAddressKey);
+            }
         }
         DataContext!.StateChanged = () => InvokeAsync(StateHasChanged);
         if (GlobalClass.Multiplayer == false)

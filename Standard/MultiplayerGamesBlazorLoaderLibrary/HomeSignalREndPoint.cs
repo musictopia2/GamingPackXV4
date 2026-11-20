@@ -7,10 +7,14 @@ public class HomeSignalREndPoint : ISignalRInfo
     }
     Task<string> ISignalRInfo.GetIPAddressAsync()
     {
-        return Task.FromResult(HomeNetworkConfiguration.HomeIPAddress);
+        return Task.FromResult(HomeNetworkConfiguration.ActiveBrowserHomeServerUrl
+            ?? HomeNetworkConfiguration.HomeIPAddress);
     }
     Task<int?> ISignalRInfo.GetPortAsync()
     {
-        return Task.FromResult<int?>(HomeNetworkConfiguration.HomePort);
+        int? port = HomeNetworkConfiguration.ActiveBrowserHomeServerUrl is null
+            ? HomeNetworkConfiguration.HomePort
+            : null;
+        return Task.FromResult(port);
     }
 }
